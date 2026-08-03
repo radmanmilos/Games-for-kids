@@ -1,0 +1,18 @@
+/* Accessibility overrides for touch targets and contrast */
+button, .hub-btn, .next-btn, .kitty-control, .back-btn, .btn, .play-again-btn, .animal-card {
+  min-width: 64px;
+  min-height: 64px;
+  padding: 10px;
+  touch-action: manipulation;
+}
+.hub-btn { min-width: 96px; min-height: 96px; }
+.back-btn { min-width: 56px; min-height: 56px; }
+button:focus, .hub-btn:focus, .back-btn:focus, .kitty-control:focus { outline: 4px solid #FFD23F; outline-offset: 4px; }
+.animal-card:focus, .candy:focus, .piece:focus, .slot:focus, .coloring-region:focus, .board-slot:focus,
+.kb-selected { outline: 4px solid #FFD23F; outline-offset: 4px; }
+.high-contrast { color: #111 !important; background: #FFF !important; }
+@media (pointer: coarse) {
+  .hub-btn, .kitty-control, .btn { min-width: 84px; min-height: 84px; }
+}
+/* Increase hit area without changing visual size */
+.hit-area { padding: 12px; margin: -6px; }

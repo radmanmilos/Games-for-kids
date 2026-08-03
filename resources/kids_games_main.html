@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Little Play</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF8ED;
+    --sky:#4FC3F7;
+    --sky-deep:#2FA6DA;
+    --yellow:#FFD23F;
+    --green:#67C971;
+    --pink:#FF6F91;
+    --plum:#4A3F6B;
+    --plum-soft:#7A6FA0;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none;}
+  html,body{
+    margin:0; padding:0; width:100%; height:100%;
+    overflow:hidden; overscroll-behavior:none; touch-action:manipulation;
+    background:var(--cream);
+    font-family:'Fredoka', sans-serif;
+  }
+  #app{position:fixed; inset:0; overflow:hidden;}
+  .screen{
+    position:absolute; inset:0; display:none;
+    flex-direction:column; align-items:center; justify-content:center;
+  }
+  .screen.active{display:flex;}
+
+  /* ambient floating blobs, used on every screen for a calm consistent world */
+  .blob{
+    position:absolute; border-radius:50%; opacity:.35; filter:blur(2px);
+    animation: drift 8s ease-in-out infinite;
+  }
+  @keyframes drift{
+    0%,100%{ transform: translateY(0) scale(1); }
+    50%{ transform: translateY(-18px) scale(1.05); }
+  }
+
+  /* ---------- HUB ---------- */
+  #hub-title{
+    position:absolute; top:6%; font-size:8vmin; margin:0; color:var(--plum);
+    text-shadow: 0 3px 0 rgba(255,255,255,.6);
+  }
+  .hub-grid{
+    display:flex; gap:6vmin; align-items:center; justify-content:center;
+    flex-wrap:wrap; max-width:80vmin;
+  }
+  .hub-btn{
+    width:32vmin; height:32vmin; border-radius:50%; border:none;
+    display:flex; align-items:center; justify-content:center;
+    font-size:15vmin; cursor:pointer;
+    box-shadow: 0 1.5vmin 0 rgba(0,0,0,.15), 0 2vmin 4vmin rgba(0,0,0,.12);
+    animation: bob 3.2s ease-in-out infinite;
+    transition: transform .12s ease;
+  }
+  .hub-btn:active{ transform: scale(.92) translateY(4px); }
+  .hub-btn.sky{ background: radial-gradient(circle at 35% 30%, #7FDBFF, var(--sky)); animation-delay:0s;}
+  .hub-btn.pink{ background: radial-gradient(circle at 35% 30%, #FF9FB6, var(--pink)); animation-delay:.4s;}
+  .hub-btn.candy{ background: radial-gradient(circle at 35% 30%, #C9A6FF, #9B6DFF); animation-delay:.8s;}
+  @keyframes bob{
+    0%,100%{ transform: translateY(0) rotate(-2deg); }
+    50%{ transform: translateY(-14px) rotate(2deg); }
+  }
+  .hub-btn.ghost{
+    background:transparent; border:.8vmin dashed var(--plum-soft); opacity:.55;
+    box-shadow:none; animation:none; cursor:default;
+  }
+  .hub-btn.ghost:active{ transform:none; }
+
+
+  /* ---------- BACK BUTTON (shared) ---------- */
+  .back-btn{
+    position:absolute; top:4vmin; left:4vmin; z-index:20;
+    width:12vmin; height:12vmin; border-radius:50%; border:none;
+    background:var(--plum); color:white; font-size:6vmin;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.2);
+    cursor:pointer;
+  }
+  .back-btn:active{ transform:scale(.9) translateY(3px); }
+
+  /* ---------- ANIMALS GAME ---------- */
+  #game-animals .card-wrap{
+    display:flex; flex-direction:column; align-items:center; gap:6vmin;
+  }
+  .animal-card{
+    width:52vmin; height:52vmin; border-radius:12%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:30vmin; cursor:pointer;
+    box-shadow: 0 2vmin 0 rgba(0,0,0,.12), 0 3vmin 5vmin rgba(0,0,0,.15);
+    transition: transform .18s cubic-bezier(.34,1.56,.64,1), background .3s;
+  }
+  .animal-card.bounce{ transform: scale(1.15) rotate(-4deg); }
+  .next-btn{
+    width:14vmin; height:14vmin; border-radius:50%; border:none;
+    background:var(--yellow); color:var(--plum); font-size:7vmin;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.15); cursor:pointer;
+  }
+  .next-btn:active{ transform:scale(.9) translateY(3px); }
+
+  /* ---------- SHAPES GAME ---------- */
+  #game-shapes .stage{ position:relative; width:100%; height:100%; }
+  .slot, .piece{
+    position:absolute; width:20vmin; height:20vmin;
+    transform: translate(-50%,-50%);
+  }
+  .slot{
+    top:26%; border:.9vmin dashed rgba(74,63,107,.4); border-radius:14%;
+    background: rgba(255,255,255,.35);
+  }
+  .slot.circle{ border-radius:50%; }
+  .slot.triangle{ border-radius:14%; clip-path:none; border:none;
+    background-image: linear-gradient(rgba(255,255,255,.35),rgba(255,255,255,.35));
+  }
+  .piece{
+    top:72%; cursor:grab; touch-action:none;
+    box-shadow: 0 1vmin 0 rgba(0,0,0,.15);
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+    z-index:5;
+  }
+  .piece.dragging{ transition:none; z-index:10; cursor:grabbing; }
+  .shape-fill.circle{ border-radius:50%; }
+  .shape-fill.square{ border-radius:14%; }
+  .shape-fill.triangle{
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    border-radius:6%;
+  }
+  .shape-fill.star{
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+  /* ---------- CANDY POP GAME ---------- */
+  .candy-grid{
+    position:relative;
+    width: calc(4*17vmin + 3*2.2vmin);
+    height: calc(4*17vmin + 3*2.2vmin);
+  }
+  .candy{
+    position:absolute;
+    width:17vmin; height:17vmin; border-radius:32%;
+    cursor:grab; touch-action:none;
+    display:flex; align-items:center; justify-content:center;
+    font-size:9.5vmin;
+    box-shadow: inset 0 -1.4vmin 0 rgba(0,0,0,.15), inset 0 1.4vmin 1.4vmin rgba(255,255,255,.45), 0 1vmin 2vmin rgba(0,0,0,.15);
+    transition: top .32s cubic-bezier(.34,1.02,.64,1), left .28s ease;
+  }
+  .candy:active{ cursor:grabbing; }
+  .candy.dragging{ z-index:10; transition:none; }
+  .candy.swapped{ animation: pulse .3s ease; }
+  .candy.star{
+    background: radial-gradient(circle at 35% 30%, #FFF3B0, #FFD23F 55%, #FFB800);
+    box-shadow: 0 0 3.2vmin 1vmin rgba(255,210,63,.65), inset 0 -1.4vmin 0 rgba(0,0,0,.12);
+    animation: starGlow .5s ease-in-out infinite alternate, dropIn .35s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes starGlow{
+    0%{ transform:scale(1); filter:brightness(1); }
+    100%{ transform:scale(1.12); filter:brightness(1.25); }
+  }
+  .candy-score{
+    position:absolute; top:4vmin; right:4vmin; z-index:20;
+    background:var(--plum); color:#fff; font-size:5vmin; font-weight:600;
+    padding:1.2vmin 3.4vmin; border-radius:999px;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.2);
+  }
+  .candy.popping{
+    animation: popOut .28s ease forwards;
+    pointer-events:none;
+  }
+  @keyframes pulse{
+    0%{ transform:scale(1); } 50%{ transform:scale(1.18); } 100%{ transform:scale(1); }
+  }
+  @keyframes dropIn{
+    0%{ transform: translateY(-60%) scale(.4); opacity:0; }
+    100%{ transform: translateY(0) scale(1); opacity:1; }
+  }
+  @keyframes popOut{
+    0%{ transform: scale(1); opacity:1; }
+    50%{ transform: scale(1.35); opacity:.8; }
+    100%{ transform: scale(0); opacity:0; }
+  }
+
+  .celebrate{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:22vmin; pointer-events:none;
+  }
+  .celebrate.show{ animation: pop .6s ease; }
+  @keyframes pop{
+    0%{ transform:scale(0); opacity:0; }
+    60%{ transform:scale(1.2); opacity:1; }
+    100%{ transform:scale(1); opacity:1; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HUB -->
+  <div class="screen active" id="hub">
+    <div class="blob" style="width:20vmin;height:20vmin;background:var(--yellow);top:10%;left:8%;"></div>
+    <div class="blob" style="width:14vmin;height:14vmin;background:var(--green);bottom:14%;right:10%;animation-delay:1.5s;"></div>
+    <div class="blob" style="width:10vmin;height:10vmin;background:var(--pink);bottom:8%;left:14%;animation-delay:2.5s;"></div>
+    <h1 id="hub-title">🌈 Little Play</h1>
+    <div class="hub-grid">
+      <button class="hub-btn sky" data-go="game-animals">🐾</button>
+      <button class="hub-btn pink" data-go="game-shapes">⭐</button>
+      <button class="hub-btn candy" data-go="game-candy">🍬</button>
+      <div class="hub-btn ghost">✨</div>
+    </div>
+  </div>
+
+  <!-- ANIMALS GAME -->
+  <div class="screen" id="game-animals">
+    <button class="back-btn" data-go="hub">←</button>
+    <div class="card-wrap">
+      <div class="animal-card" id="animalCard">🐶</div>
+      <button class="next-btn" id="animalNext">➜</button>
+    </div>
+  </div>
+
+  <!-- SHAPES GAME -->
+  <div class="screen" id="game-shapes">
+    <button class="back-btn" data-go="hub">←</button>
+    <div class="stage" id="shapesStage">
+      <div class="celebrate" id="shapesCelebrate">🎉</div>
+    </div>
+  </div>
+
+  <!-- CANDY POP GAME -->
+  <div class="screen" id="game-candy">
+    <button class="back-btn" data-go="hub">←</button>
+    <div class="candy-score" id="candyScore">🍬 0</div>
+    <div class="candy-grid" id="candyGrid"></div>
+  </div>
+
+
+</div>
+
+<script>
+/* ---------------- navigation ---------------- */
+const screens = document.querySelectorAll('.screen');
+function goTo(id){
+  screens.forEach(s => s.classList.toggle('active', s.id === id));
+  if(id === 'game-animals') startAnimals();
+  if(id === 'game-shapes') startShapesRound();
+  if(id === 'game-candy') startCandy();
+  if(id === 'hub') { speechSynthesis.cancel(); }
+}
+document.querySelectorAll('[data-go]').forEach(el=>{
+  el.addEventListener('click', ()=> goTo(el.dataset.go));
+});
+
+
+/* ---------------- audio ---------------- */
+let actx;
+function ctx(){ if(!actx) actx = new (window.AudioContext||window.webkitAudioContext)(); return actx; }
+function tone(freq, dur, delay=0, type='sine'){
+  const a = ctx();
+  const osc = a.createOscillator();
+  const gain = a.createGain();
+  osc.type = type; osc.frequency.value = freq;
+  osc.connect(gain); gain.connect(a.destination);
+  const t0 = a.currentTime + delay;
+  gain.gain.setValueAtTime(0.0001, t0);
+  gain.gain.exponentialRampToValueAtTime(0.25, t0+0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+  osc.start(t0); osc.stop(t0+dur+0.05);
+}
+function popSound(){ tone(600,0.15); tone(900,0.12,0.06); }
+function successChime(){ [523,659,784,1047].forEach((f,i)=> tone(f,0.22,i*0.11)); }
+function gentleMiss(){ tone(220,0.25,0,'sine'); }
+
+/* playful synthesized "critter" sounds — no audio files needed, works fully offline */
+function sweep(f0,f1,dur,delay=0,type='sine',vol=0.3){
+  const a = ctx();
+  const osc = a.createOscillator();
+  const gain = a.createGain();
+  osc.type = type;
+  const t0 = a.currentTime + delay;
+  osc.frequency.setValueAtTime(f0, t0);
+  osc.frequency.exponentialRampToValueAtTime(f1, t0+dur);
+  osc.connect(gain); gain.connect(a.destination);
+  gain.gain.setValueAtTime(0.0001, t0);
+  gain.gain.exponentialRampToValueAtTime(vol, t0+Math.min(0.03,dur/3));
+  gain.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+  osc.start(t0); osc.stop(t0+dur+0.05);
+}
+const animalSounds = {
+  Dog: ()=>{ sweep(600,220,0.12,0,'square',0.35); sweep(650,230,0.12,0.16,'square',0.35); },
+  Cat: ()=>{ sweep(420,850,0.15,0,'sine',0.3); sweep(850,500,0.22,0.15,'sine',0.3); },
+  Cow: ()=>{ sweep(160,100,0.65,0,'sawtooth',0.28); },
+  Lion: ()=>{ sweep(130,80,0.5,0,'sawtooth',0.35); sweep(95,60,0.4,0.32,'sawtooth',0.3); },
+  Elephant: ()=>{ sweep(320,950,0.3,0,'square',0.3); sweep(950,700,0.28,0.28,'square',0.25); },
+  Frog: ()=>{ sweep(260,180,0.1,0,'square',0.3); sweep(250,170,0.1,0.13,'square',0.3); sweep(240,160,0.1,0.26,'square',0.3); },
+  Pig: ()=>{ sweep(320,190,0.15,0,'sawtooth',0.3); sweep(300,180,0.15,0.18,'sawtooth',0.3); },
+  Duck: ()=>{ sweep(520,360,0.1,0,'square',0.32); sweep(490,340,0.1,0.13,'square',0.32); },
+};
+function playAnimalSound(name){ (animalSounds[name] || popSound)(); }
+
+function speak(text){
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 0.85; u.pitch = 1.25;
+  speechSynthesis.speak(u);
+}
+
+/* ---------------- ANIMALS GAME ---------------- */
+const animals = [
+  {emoji:'🐶', name:'Dog', bg:'#FFE7A3'},
+  {emoji:'🐱', name:'Cat', bg:'#FFD1DC'},
+  {emoji:'🐮', name:'Cow', bg:'#E4E4E4'},
+  {emoji:'🦁', name:'Lion', bg:'#FFDD9E'},
+  {emoji:'🐘', name:'Elephant', bg:'#D9E6F2'},
+  {emoji:'🐸', name:'Frog', bg:'#D8F5D0'},
+  {emoji:'🐷', name:'Pig', bg:'#FFDCE5'},
+  {emoji:'🦆', name:'Duck', bg:'#FFF6C9'},
+];
+let animalIdx = 0;
+const animalCard = document.getElementById('animalCard');
+
+function showAnimal(){
+  const a = animals[animalIdx];
+  animalCard.textContent = a.emoji;
+  animalCard.style.background = a.bg;
+}
+function startAnimals(){
+  animalIdx = Math.floor(Math.random()*animals.length);
+  showAnimal();
+}
+animalCard.addEventListener('pointerdown', ()=>{
+  const a = animals[animalIdx];
+  animalCard.classList.add('bounce');
+  playAnimalSound(a.name);
+  setTimeout(()=> speak(a.name), 450);
+  setTimeout(()=> animalCard.classList.remove('bounce'), 200);
+});
+document.getElementById('animalNext').addEventListener('click', ()=>{
+  let next;
+  do{ next = Math.floor(Math.random()*animals.length); } while(next === animalIdx && animals.length>1);
+  animalIdx = next;
+  showAnimal();
+  popSound();
+});
+
+/* ---------------- SHAPES GAME ---------------- */
+const shapeDefs = [
+  {type:'circle', color:'#FF6F91', name:'Circle'},
+  {type:'square', color:'#4FC3F7', name:'Square'},
+  {type:'triangle', color:'#67C971', name:'Triangle'},
+  {type:'star', color:'#FFD23F', name:'Star'},
+];
+const stage = document.getElementById('shapesStage');
+const celebrate = document.getElementById('shapesCelebrate');
+let placedCount = 0;
+let roundShapes = [];
+
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-0.5); }
+
+function startShapesRound(){
+  stage.querySelectorAll('.slot,.piece').forEach(el=>el.remove());
+  celebrate.classList.remove('show');
+  placedCount = 0;
+  roundShapes = shuffle(shapeDefs).slice(0,3);
+  const slotOrder = shuffle(roundShapes);
+  const trayOrder = shuffle(roundShapes);
+  const xPositions = [22,50,78];
+
+  slotOrder.forEach((s,i)=>{
+    const el = document.createElement('div');
+    el.className = 'slot ' + s.type;
+    el.dataset.type = s.type;
+    el.style.left = xPositions[i] + '%';
+    stage.appendChild(el);
+  });
+
+  trayOrder.forEach((s,i)=>{
+    const el = document.createElement('div');
+    el.className = 'piece shape-fill ' + s.type;
+    el.dataset.type = s.type;
+    el.dataset.name = s.name;
+    el.style.left = xPositions[i] + '%';
+    el.style.background = s.color;
+    stage.appendChild(el);
+    attachDrag(el);
+  });
+}
+
+function attachDrag(piece){
+  let startX, startY, origLeftPx, origTopPx, dx=0, dy=0;
+  piece.addEventListener('pointerdown', (e)=>{
+    if(piece.dataset.done) return;
+    piece.setPointerCapture(e.pointerId);
+    piece.classList.add('dragging');
+    startX = e.clientX; startY = e.clientY;
+    dx = 0; dy = 0;
+  });
+  piece.addEventListener('pointermove', (e)=>{
+    if(!piece.classList.contains('dragging')) return;
+    dx = e.clientX - startX;
+    dy = e.clientY - startY;
+    piece.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(1.08)`;
+  });
+  piece.addEventListener('pointerup', (e)=>{
+    if(!piece.classList.contains('dragging')) return;
+    piece.classList.remove('dragging');
+    const rect = piece.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    const slots = stage.querySelectorAll('.slot');
+    let matched = null;
+    slots.forEach(slot=>{
+      if(slot.dataset.filled) return;
+      const r = slot.getBoundingClientRect();
+      if(cx > r.left && cx < r.right && cy > r.top && cy < r.bottom && slot.dataset.type === piece.dataset.type){
+        matched = slot;
+      }
+    });
+    if(matched){
+      const sr = matched.getBoundingClientRect();
+      const pr0 = piece.parentElement.getBoundingClientRect();
+      const targetLeft = matched.style.left;
+      piece.style.left = targetLeft;
+      piece.style.top = matched.style.top || '26%';
+      piece.style.transform = 'translate(-50%,-50%) scale(1)';
+      piece.dataset.done = '1';
+      piece.style.cursor = 'default';
+      matched.dataset.filled = '1';
+      matched.style.border = 'none';
+      matched.style.background = 'transparent';
+      successChime();
+      speak(piece.dataset.name);
+      placedCount++;
+      if(placedCount >= roundShapes.length){
+        setTimeout(()=>{
+          celebrate.classList.add('show');
+          popSound();
+          setTimeout(()=>{ startShapesRound(); }, 1400);
+        }, 250);
+      }
+    } else {
+      piece.style.transform = 'translate(-50%,-50%) scale(1)';
+      gentleMiss();
+    }
+  });
+}
+
+/* ---------------- CANDY POP GAME (swap-to-match, animal boxes) ---------------- */
+const candyTypes = [
+  {color:'#FF6F61', name:'Dog',      emoji:'🐶'},
+  {color:'#FFA84D', name:'Lion',     emoji:'🦁'},
+  {color:'#FFD23F', name:'Duck',     emoji:'🦆'},
+  {color:'#67C971', name:'Frog',     emoji:'🐸'},
+  {color:'#4FC3F7', name:'Elephant', emoji:'🐘'},
+];
+const COLS = 4, ROWS = 4;
+const CELL_VMIN = 17, GAP_VMIN = 2.2, PITCH_VMIN = CELL_VMIN + GAP_VMIN;
+let board = [];      // type values; -1 = star, null = transiently empty
+let tileEls = [];    // DOM element currently occupying each board cell
+let candyBusy = false;
+let score = 0;
+const candyGrid = document.getElementById('candyGrid');
+const candyScore = document.getElementById('candyScore');
+
+function updateScore(add){
+  if(add) score += add;
+  candyScore.textContent = '🍬 ' + score;
+}
+
+function randType(){ return Math.floor(Math.random()*candyTypes.length); }
+function vminToPx(v){ return v/100*Math.min(window.innerWidth, window.innerHeight); }
+
+function applyTileVisual(el, type){
+  el.classList.toggle('star', type === -1);
+  if(type === -1){ el.textContent = '⭐'; el.style.background = ''; }
+  else { el.textContent = candyTypes[type].emoji; el.style.background = candyTypes[type].color; }
+}
+
+function setTilePos(el, r, c, instant){
+  if(instant) el.style.transition = 'none';
+  el.style.left = (c*PITCH_VMIN) + 'vmin';
+  el.style.top = (r*PITCH_VMIN) + 'vmin';
+  el.style.transform = 'translate(0,0)';
+  el.dataset.r = r; el.dataset.c = c;
+  if(instant){ void el.offsetWidth; el.style.transition = ''; }
+}
+
+function createTile(type, r, c, dropFromAbove){
+  const el = document.createElement('div');
+  el.className = 'candy';
+  applyTileVisual(el, type);
+  candyGrid.appendChild(el);
+  attachCandyDrag(el);
+  if(dropFromAbove){
+    el.style.transition = 'none';
+    el.style.left = (c*PITCH_VMIN) + 'vmin';
+    el.style.top = (-PITCH_VMIN*1.3) + 'vmin';
+    el.style.transform = 'translate(0,0)';
+    el.dataset.r = r; el.dataset.c = c;
+    void el.offsetWidth;
+    el.style.transition = '';
+    requestAnimationFrame(()=> setTilePos(el, r, c, false));
+  } else {
+    setTilePos(el, r, c, true);
+  }
+  return el;
+}
+
+function startCandy(){
+  candyBusy = false;
+  score = 0;
+  updateScore(0);
+  candyGrid.innerHTML = '';
+  board = []; tileEls = [];
+  for(let r=0;r<ROWS;r++){
+    board.push([]); tileEls.push([]);
+    for(let c=0;c<COLS;c++){
+      let t;
+      do{ t = randType(); }
+      while(
+        (c>=2 && board[r][c-1]===t && board[r][c-2]===t) ||
+        (r>=2 && board[r-1][c]===t && board[r-2][c]===t)
+      );
+      board[r].push(t);
+      tileEls[r].push(createTile(t, r, c, false));
+    }
+  }
+  setTimeout(()=>{ if(!hasPossibleMove()) spawnStar(); }, 400);
+}
+
+/* ---- swap dragging, with a real-time mirrored preview of the neighbor ---- */
+function attachCandyDrag(el){
+  let startX, startY, dragging = false, locked = false, dir = null, neighborEl = null;
+  let r1, c1, r2, c2;
+
+  el.addEventListener('pointerdown', (e)=>{
+    const r = +el.dataset.r, c = +el.dataset.c;
+    if(board[r][c] === -1){
+      dragging = 'star';
+      startX = e.clientX; startY = e.clientY;
+      el.setPointerCapture(e.pointerId);
+      return;
+    }
+    if(candyBusy) return;
+    dragging = true; locked = false; dir = null; neighborEl = null;
+    r1 = r; c1 = c;
+    el.classList.add('dragging');
+    el.setPointerCapture(e.pointerId);
+    startX = e.clientX; startY = e.clientY;
+  });
+
+  el.addEventListener('pointermove', (e)=>{
+    if(dragging === 'star' || !dragging) return;
+    const dx = e.clientX - startX, dy = e.clientY - startY;
+    const max = vminToPx(PITCH_VMIN);
+    if(!locked){
+      if(Math.abs(dx) > 10 || Math.abs(dy) > 10){
+        locked = true;
+        dir = Math.abs(dx) > Math.abs(dy) ? (dx>0?'right':'left') : (dy>0?'down':'up');
+        let nr = r1, nc = c1;
+        if(dir==='right') nc++; else if(dir==='left') nc--; else if(dir==='down') nr++; else nr--;
+        if(nr>=0 && nr<ROWS && nc>=0 && nc<COLS){
+          r2 = nr; c2 = nc;
+          neighborEl = tileEls[nr][nc];
+          if(neighborEl) neighborEl.classList.add('dragging');
+        } else { neighborEl = null; }
+      }
+    }
+    if(!locked) return;
+    let mx=0, my=0;
+    if(dir==='right') mx = Math.max(0, Math.min(dx, max));
+    else if(dir==='left') mx = Math.min(0, Math.max(dx, -max));
+    else if(dir==='down') my = Math.max(0, Math.min(dy, max));
+    else if(dir==='up') my = Math.min(0, Math.max(dy, -max));
+    el.style.transform = `translate(${mx}px, ${my}px)`;
+    if(neighborEl) neighborEl.style.transform = `translate(${-mx}px, ${-my}px)`;
+  });
+
+  el.addEventListener('pointerup', (e)=>{
+    if(dragging === 'star'){
+      dragging = false;
+      const r = +el.dataset.r, c = +el.dataset.c;
+      const dx = e.clientX - startX, dy = e.clientY - startY;
+      if(Math.abs(dx) < 18 && Math.abs(dy) < 18) explodeStarAt(r,c);
+      return;
+    }
+    if(!dragging) return;
+    dragging = false;
+    el.classList.remove('dragging');
+    if(locked && neighborEl){
+      neighborEl.classList.remove('dragging');
+      const max = vminToPx(PITCH_VMIN);
+      let mx=0, my=0;
+      if(dir==='right') mx=max; else if(dir==='left') mx=-max; else if(dir==='down') my=max; else my=-max;
+      el.style.transition = 'transform .15s ease';
+      neighborEl.style.transition = 'transform .15s ease';
+      el.style.transform = `translate(${mx}px, ${my}px)`;
+      neighborEl.style.transform = `translate(${-mx}px, ${-my}px)`;
+      candyBusy = true;
+      const elA = el, elB = neighborEl, rr1=r1, cc1=c1, rr2=r2, cc2=c2;
+      setTimeout(()=> commitSwap(rr1,cc1,rr2,cc2, elA, elB), 160);
+    } else {
+      el.style.transform = 'translate(0,0)';
+    }
+  });
+}
+
+function commitSwap(r1,c1,r2,c2, elA, elB){
+  [board[r1][c1], board[r2][c2]] = [board[r2][c2], board[r1][c1]];
+  tileEls[r1][c1] = elB; tileEls[r2][c2] = elA;
+  setTilePos(elA, r2, c2, true);
+  setTilePos(elB, r1, c1, true);
+  elA.style.transition = ''; elB.style.transition = '';
+
+  const matched = findMatches();
+  if(matched.size === 0){
+    gentleMiss();
+    setTimeout(()=>{
+      [board[r1][c1], board[r2][c2]] = [board[r2][c2], board[r1][c1]];
+      tileEls[r1][c1] = elA; tileEls[r2][c2] = elB;
+      setTilePos(elA, r1, c1, false);
+      setTilePos(elB, r2, c2, false);
+      setTimeout(()=>{ candyBusy = false; }, 340);
+    }, 380);
+  } else {
+    resolveMatches();
+  }
+}
+
+function findMatches(){
+  const matched = new Set();
+  const isCandy = (v)=> v !== null && v !== -1;
+  for(let r=0;r<ROWS;r++){
+    let start = 0;
+    for(let c=1;c<=COLS;c++){
+      const same = c<COLS && board[r][c] === board[r][start] && isCandy(board[r][start]);
+      if(same){ continue; }
+      if(c - start >= 3){ for(let k=start;k<c;k++) matched.add(r+','+k); }
+      start = c;
+    }
+  }
+  for(let c=0;c<COLS;c++){
+    let start = 0;
+    for(let r=1;r<=ROWS;r++){
+      const same = r<ROWS && board[r][c] === board[start][c] && isCandy(board[start][c]);
+      if(same){ continue; }
+      if(r - start >= 3){ for(let k=start;k<r;k++) matched.add(k+','+c); }
+      start = r;
+    }
+  }
+  return matched;
+}
+
+function hasPossibleMove(){
+  for(let r=0;r<ROWS;r++){
+    for(let c=0;c<COLS;c++){
+      if(board[r][c] === -1) continue;
+      if(c+1<COLS && board[r][c+1] !== -1){
+        [board[r][c], board[r][c+1]] = [board[r][c+1], board[r][c]];
+        const found = findMatches().size > 0;
+        [board[r][c], board[r][c+1]] = [board[r][c+1], board[r][c]];
+        if(found) return true;
+      }
+      if(r+1<ROWS && board[r+1][c] !== -1){
+        [board[r][c], board[r+1][c]] = [board[r+1][c], board[r][c]];
+        const found = findMatches().size > 0;
+        [board[r][c], board[r+1][c]] = [board[r+1][c], board[r][c]];
+        if(found) return true;
+      }
+    }
+  }
+  return false;
+}
+
+function starSound(){ [784,988,1175,1568].forEach((f,i)=> tone(f,0.15,i*0.07,'sine')); }
+function starBoom(){ [300,450,650,900,1250].forEach((f,i)=> tone(f,0.25,i*0.05,'triangle')); }
+
+function spawnStar(){
+  candyBusy = true;
+  const r = Math.floor(Math.random()*ROWS), c = Math.floor(Math.random()*COLS);
+  const old = tileEls[r][c];
+  if(old) old.remove();
+  board[r][c] = -1;
+  tileEls[r][c] = createTile(-1, r, c, false);
+  starSound();
+  /* candyBusy stays true — the star waits for a tap to explode */
+}
+
+function explodeStarAt(r,c){
+  if(board[r][c] !== -1) return;
+  candyBusy = true;
+  const cells = [];
+  for(let dr=-1;dr<=1;dr++) for(let dc=-1;dc<=1;dc++){
+    const rr=r+dr, cc=c+dc;
+    if(rr>=0&&rr<ROWS&&cc>=0&&cc<COLS) cells.push([rr,cc]);
+  }
+  cells.forEach(([rr,cc])=>{
+    const el = tileEls[rr][cc];
+    if(el) el.classList.add('popping');
+  });
+  starBoom();
+  updateScore(cells.length);
+  setTimeout(()=>{
+    const cols = new Set();
+    cells.forEach(([rr,cc])=>{
+      const el = tileEls[rr][cc];
+      if(el) el.remove();
+      board[rr][cc] = null; tileEls[rr][cc] = null;
+      cols.add(cc);
+    });
+    applyGravityAnimated(cols);
+    setTimeout(resolveMatches, 420);
+  }, 260);
+}
+
+function applyGravityAnimated(cols){
+  cols.forEach(c=>{
+    const survivors = [];
+    for(let r=0;r<ROWS;r++){ if(board[r][c] !== null) survivors.push({type:board[r][c], el:tileEls[r][c]}); }
+    const missing = ROWS - survivors.length;
+    const newTileEls = new Array(ROWS).fill(null);
+    survivors.forEach((s,i)=>{
+      const newR = missing + i;
+      newTileEls[newR] = s.el;
+      setTilePos(s.el, newR, c, false); // animated slide down
+    });
+    for(let i=0;i<missing;i++){
+      const t = randType();
+      newTileEls[i] = createTile(t, i, c, true); // animated drop-in from above
+      board[i][c] = t;
+    }
+    for(let i=0;i<survivors.length;i++){ board[missing+i][c] = survivors[i].type; }
+    for(let r=0;r<ROWS;r++){ tileEls[r][c] = newTileEls[r]; }
+  });
+}
+
+function resolveMatches(){
+  const matched = findMatches();
+  if(matched.size === 0){
+    if(!hasPossibleMove()) spawnStar();
+    else candyBusy = false;
+    return;
+  }
+  const cells = [...matched].map(k => k.split(',').map(Number));
+  const types = [...new Set(cells.map(([r,c]) => board[r][c]))];
+  types.forEach((t,i) => setTimeout(()=> playAnimalSound(candyTypes[t].name), i*170));
+  speak(candyTypes[types[0]].name + '!');
+  updateScore(cells.length);
+  cells.forEach(([r,c])=>{
+    const el = tileEls[r][c];
+    if(el) el.classList.add('popping');
+  });
+  setTimeout(()=>{
+    const cols = new Set();
+    cells.forEach(([r,c])=>{
+      const el = tileEls[r][c];
+      if(el) el.remove();
+      board[r][c] = null; tileEls[r][c] = null;
+      cols.add(c);
+    });
+    applyGravityAnimated(cols);
+    setTimeout(resolveMatches, 420);
+  }, 240);
+}
+
+/* wake audio context on first touch anywhere (browser requirement) */
+document.body.addEventListener('pointerdown', ()=>{ ctx(); }, {once:true});
+</script>
+</body>
+</html>

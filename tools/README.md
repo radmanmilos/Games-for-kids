@@ -1,0 +1,43 @@
+# tools/ — Dev tooling (never deployed)
+
+Headless-Chrome test harnesses and helpers for this project. Everything in here
+is dev-only; `game/` stays deployable-only and never requires `tools/` at runtime.
+
+Run any tool from anywhere with `node` (Node >= 22 — uses global `fetch` +
+`WebSocket`). No npm install needed. `CHROME_PATH` env overrides the Chrome
+binary.
+
+## Files
+
+| File | What it is |
+| --- | --- |
+| `headless.js` | Shared harness: serves `game/` over HTTP, boots headless Chrome on a **unique temp profile**, returns `{ evalv, navigate, close, port }`. Also exports `check(name, ok, info)` (prints `PASS`/`FAIL`), `sleep`, `getFails()`. Kills only this run's Chrome on `close()` — stale-Chrome profile locks were the historical "Chrome did not start" cause. |
+| `tracing_smoke.js` | Canonical validation for the Писање (Tracing) free-draw game — 22 checks: hub, dashed guide present, layout (no ref/caption overlap), pointer drawing, clear, correct А/0/circle accepted, sloppy Б accepted (forgiving), line/scribble/blob rejected, success auto-advance, shape wrap, hub wiring. |
+| `tracing_probe.js` | Matching-metric table for threshold tuning. Prints `cov` (guide coverage), `ink`, `ratio`, `near` (fraction of ink within 2 cells of the guide) and the distance histogram `hist` for each good/bad drawing. |
+| `dilate_test.js` | Standalone check that the integral-image `dilate()` in `tracing.js` produces a correct symmetric dilation (center/corner/corners cases). |
+
+## Commands
+
+```
+node tools/dilate_test.js       # visual: r=1 dilation is a 3x3 box
+node tools/tracing_probe.js     # metrics table (uses window.__traceDebug)
+node tools/tracing_smoke.js     # full game smoke test — expect ALL PASS
+```
+
+## Rules / gotchas
+
+- Always test over HTTP, never `file://` — `file://` breaks audio, the kitty
+  iframe, and throws Unsafe-attempt warnings. `headless.js` serves `game/`
+  automatically.
+- Each `start()` uses a fresh unique Chrome profile, so parallel harnesses
+  cannot collide; `close()` kills that run's Chrome by profile tag. If a run is
+  interrupted and a later run says "Chrome did not start", kill stale Chrome:
+  `Get-Process chrome | Where-Object { $_.CommandLine -match 'pkv-' } | Stop-Process -Force`.
+- `celebration.js` caches its overlay element in a closure — a harness must hide
+  overlays by removing the `.show` class, never by removing the element.
+- `tracing_probe.js` needs the `window.__traceDebug` hook that `tracing.js`
+  exposes (`matchResult` / `refGrid` / `inkGrid`) — do not delete it.
+- Matching rule to re-verify after touching `tracing.js` constants:
+  pass = `coverage >= MIN_COVER && near >= MIN_NEAR && ink <= MAX_INK`, where
+  `near` is the fraction of ink cells within 2 grid cells of the guide line.
+  Measured separation: genuine traces `near ≈ 0.98–1.0`, blobs/scribbles ≤ 0.70.

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Памтилица животиња — Петрин свет</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+  <link rel="stylesheet" href="../shared/accessibility.css">
+  <style>
+    body { font-family: sans-serif; padding: 1rem; margin:0; min-height:100vh; background:#FFF8ED; color:#4A3F6B; }
+    h1 { text-align:center; margin:1rem 0; }
+    #board { display: grid; gap: clamp(8px, 2vmin, 16px); grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 640px; margin: 0 auto; }
+    .card { min-height:clamp(64px, 16vmin, 130px); border:0; border-radius:12px; padding:0; background:#9B6DFF; color:#fff; font-size:clamp(28px, 7vmin, 64px); cursor:pointer; user-select:none; perspective:600px; }
+    .card-inner { position:relative; width:100%; height:100%; min-height:inherit; transform-style:preserve-3d; transition:transform .25s ease; }
+    .card.flipped .card-inner, .card.matched .card-inner { transform:rotateY(180deg); }
+    .card-face { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; border-radius:inherit; backface-visibility:hidden; }
+    .card-back { background:radial-gradient(circle at 30% 25%, #C9A6FF, #9B6DFF 68%, #7B4FD8); box-shadow: inset 0 0 0 clamp(2px,0.6vmin,4px) rgba(255,255,255,.4), inset 0 0 0 clamp(5px,1.6vmin,10px) rgba(255,255,255,.18); }
+    .card-back::before { content:'🐾'; font-size:clamp(26px, 7vmin, 52px); filter:drop-shadow(0 3px 3px rgba(0,0,0,.25)); }
+    .card-front { background:#fff; transform:rotateY(180deg); }
+    .card.matched { opacity: 0.6; transform: scale(0.98); pointer-events: none; }
+    .next-btn { width:14vmin; height:14vmin; border-radius:50%; border:none; background:#FFD23F; color:#4A3F6B; font-size:7vmin; display:flex; align-items:center; justify-content:center; box-shadow:0 1vmin 0 rgba(0,0,0,.15); cursor:pointer; }
+    .next-btn:active { transform:scale(.9) translateY(3px); }
+    #controls { display:flex; justify-content:center; gap:8px; margin-top:1rem }.
+  </style>
+  <style>
+    /* Override / enhanced memory styles (matching visual language) */
+    :root{ --cream:#FFF8ED; --plum:#4A3F6B; }
+    body { font-family: 'Fredoka', sans-serif; }
+    .back-btn { position:fixed; top:4vmin; left:4vmin; z-index:2; width:12vmin; height:12vmin; border:0; border-radius:50%; background:#4A3F6B; color:#fff; font-size:6vmin; }
+  </style>
+</head>
+<body>
+  <h1>Памтилица животиња</h1>
+  <div id="board" aria-live="polite"></div>
+  <div id="controls">
+    <button id="restart" class="next-btn" aria-label="Почни поново" title="Почни поново">↻</button>
+    <button class="back-btn" aria-label="Назад на игре">←</button>
+  </div>
+
+  <script src="../shared/navigation.js"></script>
+  <script src="../shared/celebration.js"></script>
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/speech.js"></script>
+  <script src="../games/animal_memory.js"></script>
+</body>
+</html>

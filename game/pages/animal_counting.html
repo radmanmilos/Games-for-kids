@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Бројање животиња — Петрин свет</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔢</text></svg>">
+<link rel="stylesheet" href="../shared/accessibility.css">
+<style>
+:root{ --cream:#FFF8ED; --sky:#4FC3F7; --sky-deep:#2FA6DA; --yellow:#FFD23F; --green:#67C971; --pink:#FF6F91; --plum:#4A3F6B; --plum-soft:#7A6FA0; }
+body{font-family:Fredoka, sans-serif;background:var(--cream);margin:0;height:100vh;color:var(--plum)}
+#app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.back-btn{position:absolute;top:4vmin;left:4vmin;width:12vmin;height:12vmin;border-radius:50%;border:none;background:var(--plum);color:white;font-size:6vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);}
+.candy-score{position:absolute;top:2vmin;right:4vmin;z-index:30;background:var(--plum);color:#fff;font-size:4vmin;font-weight:700;padding:1.2vmin 3.4vmin;border-radius:999px;box-shadow:0 1vmin 0 rgba(0,0,0,.2)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="../shared/navigation.js"></script>
+<script src="../shared/celebration.js"></script>
+<script src="../shared/audio.js"></script>
+<script src="../shared/speech.js"></script>
+<script src="../shared/utils.js"></script>
+<script src="../games/animal_counting.js"></script>
+<script>document.addEventListener('DOMContentLoaded', ()=>{ if(typeof startAnimalCounting==='function') startAnimalCounting(); });</script>
+<style>
+  /* Local tweaks to better match Little Play visuals */
+  /* Keep the scene tall enough to show up to 3 tiles even when fewer are rendered */
+  #countScene{background:rgba(255,255,255,0.95);padding:2.4vmin;border-radius:12px;box-shadow:0 2vmin 4vmin rgba(0,0,0,.08); position:relative; min-height:calc(20vmin + 4.8vmin);}
+  /* animal tile visuals follow matching_game color patterns */
+  #countScene .count-tile{display:flex;align-items:center;justify-content:center;width:20vmin;height:20vmin;border-radius:12px;background:linear-gradient(#fff,#fff);box-shadow:0 1.2vmin 0 rgba(0,0,0,.06);font-size:9vmin}
+  #countScene .count-tile[data-animal="Dog"]{background:radial-gradient(circle at 35% 30%, #FFF3B0, #FFD23F 55%, #FFB800);}
+  #countScene .count-tile[data-animal="Cat"]{background:radial-gradient(circle at 35% 30%, #FFB6D0,#FF7FA8);}
+  #countScene .count-tile[data-animal="Cow"]{background:radial-gradient(circle at 35% 30%, #C9A6FF, #9B6DFF);}
+  #countScene .count-tile[data-animal="Pig"]{background:radial-gradient(circle at 35% 30%, #FFD6E6, #FF9FB6);}
+  #countScene .count-tile[data-animal="Fox"]{background:radial-gradient(circle at 35% 30%, #FFD8B0, #FFB56A);}
+  #countScene .count-tile[data-animal="Frog"]{background:radial-gradient(circle at 35% 30%, #CFFFD6, #67C971);}
+
+  #countButtons{display:flex;gap:2.4vmin;justify-content:center}
+  /* number choice tiles - larger and match animals 'next' circular style */
+  #countButtons .count-choice{min-width:16vmin;min-height:16vmin;border-radius:12px;background:var(--yellow);color:var(--plum);font-weight:800;border:3px solid rgba(74,63,107,.12);box-shadow:0 1.2vmin 0 rgba(0,0,0,.06);font-size:5vmin}
+  #countButtons .count-choice:active{transform:translateY(4px)}
+
+  /* NEXT button style matches animals.html next-btn */
+  .next-btn{width:14vmin;height:14vmin;border-radius:50%;border:none;background:var(--yellow);color:var(--plum);font-size:7vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.15);z-index:20;}
+
+  #countResult{color:var(--plum);font-size:1.6vmin;margin-top:1.6vmin}
+  .collected{transform:scale(1.12);transition:transform .14s ease}
+  .floating-plus{position:relative;left:8px;font-weight:800;color:var(--yellow);text-shadow:0 2px 0 rgba(0,0,0,.14);opacity:0}
+  .floating-plus.float{transform:translateY(-30px);opacity:1;transition:all .85s cubic-bezier(.2,.8,.2,1)}
+  @media (min-width:800px){
+    #countScene .count-tile{width:24vmin;height:24vmin;font-size:11vmin}
+    /* increase scene min-height for larger tiles */
+    #countScene{ min-height: calc(24vmin + 4.8vmin); }
+    #countButtons .count-choice{min-width:80px;min-height:80px;font-size:22px}
+  }
+  /* celebrate animation — positioned near top-right so it doesn't overlap tiles or next button */
+    .celebrate{ pointer-events:none; }
+    /* positioned as a flow element before Next button (hidden by default) */
+    #countCelebrate{ display:none; margin:-3vmin 0 0 0; z-index:25; font-size:10vmin; align-items:center; justify-content:center; }
+    .celebrate.show{ animation: pop .6s ease; display:flex; }
+    @keyframes pop{ 0%{ transform:scale(0); opacity:0; } 60%{ transform:scale(1.2); opacity:1; } 100%{ transform:scale(1); opacity:1; } }
+    /* highlight correct choice and keep visible */
+    #countButtons .count-choice.correct{ transform:scale(1.06); box-shadow:0 1.6vmin 0 rgba(0,0,0,.08); border:4px solid rgba(74,63,107,.16); }
+
+</style>
+</body>
+</html>

@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Paper Kitty World - Mario Kids Edition</title>
+    <!-- Super Mario style pixel font -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #5c94fc;
+            font-family: 'Press Start 2P', 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        canvas {
+            flex: 1;
+            width: 100%;
+            height: 70%;
+            display: block;
+        }
+
+        /* Large Touch Controls for Kids */
+        #controls {
+            height: 30%;
+            max-height: 220px;
+            background: #00a800;
+            border-top: 8px solid #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            box-shadow: inset 0 10px 15px rgba(0,0,0,0.2);
+        }
+
+        .d-pad {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 6px solid #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            color: white;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.3), inset 0 -4px 0 rgba(0,0,0,0.2);
+            cursor: pointer;
+            text-shadow: 3px 3px 0 #000;
+        }
+
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+        }
+
+        .btn-left { background-color: #e52521; }
+        .btn-right { background-color: #fbd000; }
+
+        .btn-jump {
+            width: 120px;
+            height: 120px;
+            background-color: #43b047;
+            border-color: #fff;
+            font-size: 50px;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+
+        #score-board {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 16px;
+            color: #fff;
+            text-shadow: 3px 3px 0px #000;
+            pointer-events: none;
+            z-index: 10;
+            background: rgba(0,0,0,0.4);
+            padding: 10px 18px;
+            border-radius: 12px;
+            border: 4px solid #fff;
+            line-height: 1.6;
+        }
+
+        #win-modal {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+        }
+
+        #win-modal h1 {
+            font-size: 24px;
+            color: #fbd000;
+            text-shadow: 4px 4px #e52521;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.5;
+            padding: 0 20px;
+        }
+
+        .play-again-btn {
+            padding: 20px 40px;
+            font-size: 18px;
+            font-family: 'Press Start 2P', sans-serif;
+            border-radius: 20px;
+            background: #43b047;
+            color: white;
+            border: 6px solid white;
+            box-shadow: 0 8px 0 #006800;
+            cursor: pointer;
+            text-shadow: 2px 2px 0 #000;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="score-board">
+        WORLD <span id="level-num">1</span><br>
+        🪙 <span id="coin-count">0</span>
+    </div>
+    
+    <div id="win-modal">
+        <h1 id="win-title">WORLD CLEAR!</h1>
+        <button class="play-again-btn" id="modal-btn" onclick="nextLevel()">NEXT WORLD! 🚀</button>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <div id="controls">
+        <div class="d-pad">
+            <div class="btn btn-left" id="btn-left">◀</div>
+            <div class="btn btn-right" id="btn-right">▶</div>
+        </div>
+        <div class="btn btn-jump" id="btn-jump">🐾</div>
+    </div>
+</div>
+
+<script>
+// --- Web Audio Synthesizer ---
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function initAudio() {
+    if (!audioCtx) audioCtx = new AudioContext();
+}
+
+function playSound(type) {
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+
+    if (type === 'jump') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(200, now);
+        osc.frequency.exponentialRampToValueAtTime(500, now + 0.12);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
+        osc.start(now);
+        osc.stop(now + 0.12);
+    } else if (type === 'coin') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(987.77, now); // B5
+        osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.linearRampToValueAtTime(0.01, now + 0.22);
+        osc.start(now);
+        osc.stop(now + 0.22);
+    } else if (type === 'win') {
+        const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
+        notes.forEach((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            const start = now + (idx * 0.07);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, start);
+            
+            gain.gain.setValueAtTime(0, start);
+            gain.gain.linearRampToValueAtTime(0.2, start + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, start + 0.12);
+            
+            osc.start(start);
+            osc.stop(start + 0.12);
+        });
+    }
+}
+
+// --- Canvas Setup ---
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let coinCount = 0;
+let currentLevel = 1;
+const totalLevels = 4;
+
+function resizeCanvas() {
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+// --- Input Controls ---
+const keys = { left: false, right: false, jump: false };
+
+function bindButton(id, keyProp) {
+    const el = document.getElementById(id);
+    const start = (e) => {
+        e.preventDefault();
+        initAudio();
+        keys[keyProp] = true;
+    };
+    const end = (e) => {
+        e.preventDefault();
+        keys[keyProp] = false;
+    };
+    el.addEventListener('touchstart', start, {passive: false});
+    el.addEventListener('touchend', end, {passive: false});
+    el.addEventListener('mousedown', start);
+    el.addEventListener('mouseup', end);
+    el.addEventListener('mouseleave', end);
+}
+
+bindButton('btn-left', 'left');
+bindButton('btn-right', 'right');
+bindButton('btn-jump', 'jump');
+
+window.addEventListener('keydown', (e) => {
+    initAudio();
+    if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = true;
+    if (e.key === 'ArrowRight' || e.key === 'd') keys.right = true;
+    if (e.key === 'ArrowUp' || e.key === ' ' || e.key === 'w') keys.jump = true;
+});
+window.addEventListener('keyup', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = false;
+    if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
+    if (e.key === 'ArrowUp' || e.key === ' ' || e.key === 'w') keys.jump = false;
+});
+
+// --- Level Themes & Data ---
+let player, platforms, movingPlatforms, pipes, coins, castle, particles, theme, levelCompleted;
+
+const levelThemes = {
+    1: { name: "1-1 SPRING DAY", bgSky: '#5c94fc', groundColor: '#70c838', hillColor: '#00a800', pipeColor: '#00a800', isNight: false },
+    2: { name: "1-2 SUMMER SUNSET", bgSky: '#fc7438', groundColor: '#f8b800', hillColor: '#d88000', pipeColor: '#00a800', isNight: false },
+    3: { name: "1-3 AUTUMN NIGHT", bgSky: '#00003c', groundColor: '#cc5500', hillColor: '#882200', pipeColor: '#387800', isNight: true },
+    4: { name: "1-4 WINTER SNOW", bgSky: '#a0c0f8', groundColor: '#f8f8f8', hillColor: '#c0d8f8', pipeColor: '#3888c8', isNight: false }
+};
+
+function loadLevel(lvl) {
+    document.getElementById('level-num').innerText = lvl;
+    document.getElementById('win-modal').style.display = 'none';
+    theme = levelThemes[lvl];
+    levelCompleted = false;
+
+    player = {
+        x: 60,
+        y: 100,
+        width: 48,
+        height: 48,
+        vx: 0,
+        vy: 0,
+        speed: 5.2,
+        jumpPower: -13.5,
+        grounded: false,
+        facingRight: true,
+        squish: 1,
+        tailAngle: 0
+    };
+
+    const gY = canvas.height - 50;
+
+    if (lvl === 1) { // Spring Day (Extended length)
+        platforms = [
+            { x: 0, y: gY, width: 750, height: 50, color: theme.groundColor },
+            { x: 850, y: gY, width: 700, height: 50, color: theme.groundColor },
+            { x: 1700, y: gY, width: 800, height: 50, color: theme.groundColor },
+            { x: 2700, y: gY, width: 900, height: 50, color: theme.groundColor },
+            { x: 3800, y: gY, width: 1000, height: 50, color: theme.groundColor },
+            
+            // Floating blocks
+            { x: 250, y: gY - 110, width: 140, height: 26, color: '#f8b800' },
+            { x: 500, y: gY - 180, width: 140, height: 26, color: '#f83800' },
+            { x: 1220, y: gY - 180, width: 160, height: 26, color: '#f8b800' },
+            { x: 1900, y: gY - 120, width: 140, height: 26, color: '#f83800' },
+            { x: 2900, y: gY - 150, width: 180, height: 26, color: '#f8b800' },
+            { x: 3300, y: gY - 190, width: 140, height: 26, color: '#f83800' }
+        ];
+
+        movingPlatforms = [
+            { x: 1550, y: gY - 80, width: 120, height: 22, minX: 1550, maxX: 1690, vx: 1.5, color: '#f8b800' },
+            { x: 2520, y: gY - 100, width: 130, height: 22, minX: 2500, maxX: 2680, vx: 2.0, color: '#f8b800' },
+            { x: 3600, y: gY - 120, width: 120, height: 22, minX: 3550, maxX: 3780, vx: 2.2, color: '#f8b800' }
+        ];
+
+        pipes = [
+            { x: 400, y: gY - 60, width: 60, height: 60, hasPlant: false },
+            { x: 1000, y: gY - 90, width: 60, height: 90, hasPlant: true },
+            { x: 2000, y: gY - 80, width: 60, height: 80, hasPlant: false },
+            { x: 3100, y: gY - 100, width: 60, height: 100, hasPlant: true }
+        ];
+
+        coins = [
+            { x: 290, y: gY - 150, collected: false },
+            { x: 430, y: gY - 110, collected: false },
+            { x: 550, y: gY - 220, collected: false },
+            { x: 1030, y: gY - 140, collected: false },
+            { x: 1280, y: gY - 220, collected: false },
+            { x: 1600, y: gY - 140, collected: false },
+            { x: 1950, y: gY - 160, collected: false },
+            { x: 2580, y: gY - 150, collected: false },
+            { x: 2950, y: gY - 190, collected: false },
+            { x: 3350, y: gY - 230, collected: false }
+        ];
+
+        castle = { x: 4500, y: gY - 220, width: 220, height: 220 };
+    } 
+    else if (lvl === 2) { // Summer Sunset (Extended length)
+        platforms = [
+            { x: 0, y: gY, width: 600, height: 50, color: theme.groundColor },
+            { x: 750, y: gY, width: 800, height: 50, color: theme.groundColor },
+            { x: 1750, y: gY, width: 750, height: 50, color: theme.groundColor },
+            { x: 2700, y: gY, width: 850, height: 50, color: theme.groundColor },
+            { x: 3750, y: gY, width: 1000, height: 50, color: theme.groundColor },
+            
+            { x: 200, y: gY - 110, width: 140, height: 26, color: '#f83800' },
+            { x: 900, y: gY - 130, width: 160, height: 26, color: '#00a800' },
+            { x: 1350, y: gY - 140, width: 150, height: 26, color: '#f8b800' },
+            { x: 2000, y: gY - 150, width: 160, height: 26, color: '#00a800' },
+            { x: 3000, y: gY - 130, width: 160, height: 26, color: '#f83800' }
+        ];
+
+        movingPlatforms = [
+            { x: 610, y: gY - 70, width: 120, height: 22, minX: 600, maxX: 740, vx: 1.8, color: '#f8b800' },
+            { x: 1560, y: gY - 90, width: 140, height: 22, minX: 1550, maxX: 1730, vx: 2.1, color: '#f8b800' },
+            { x: 2520, y: gY - 110, width: 130, height: 22, minX: 2500, maxX: 2680, vx: 2.5, color: '#f8b800' },
+            { x: 3560, y: gY - 90, width: 130, height: 22, minX: 3550, maxX: 3730, vx: 2.0, color: '#f8b800' }
+        ];
+
+        pipes = [
+            { x: 350, y: gY - 80, width: 60, height: 80, hasPlant: true },
+            { x: 1100, y: gY - 100, width: 60, height: 100, hasPlant: false },
+            { x: 2150, y: gY - 90, width: 60, height: 90, hasPlant: true },
+            { x: 3200, y: gY - 80, width: 60, height: 80, hasPlant: false }
+        ];
+
+        coins = [
+            { x: 230, y: gY - 150, collected: false },
+            { x: 380, y: gY - 130, collected: false },
+            { x: 670, y: gY - 120, collected: false },
+            { x: 950, y: gY - 170, collected: false },
+            { x: 1400, y: gY - 180, collected: false },
+            { x: 1630, y: gY - 140, collected: false },
+            { x: 2050, y: gY - 190, collected: false },
+            { x: 2600, y: gY - 160, collected: false },
+            { x: 3050, y: gY - 170, collected: false }
+        ];
+
+        castle = { x: 4450, y: gY - 220, width: 220, height: 220 };
+    } 
+    else if (lvl === 3) { // Autumn Night (Extended length)
+        platforms = [
+            { x: 0, y: gY, width: 500, height: 50, color: theme.groundColor },
+            { x: 650, y: gY, width: 900, height: 50, color: theme.groundColor },
+            { x: 1700, y: gY, width: 850, height: 50, color: theme.groundColor },
+            { x: 2750, y: gY, width: 800, height: 50, color: theme.groundColor },
+            { x: 3700, y: gY, width: 1100, height: 50, color: theme.groundColor },
+            
+            { x: 180, y: gY - 100, width: 130, height: 26, color: '#f8b800' },
+            { x: 800, y: gY - 130, width: 150, height: 26, color: '#f83800' },
+            { x: 1250, y: gY - 140, width: 150, height: 26, color: '#f8b800' },
+            { x: 2000, y: gY - 160, width: 160, height: 26, color: '#f83800' },
+            { x: 3000, y: gY - 140, width: 150, height: 26, color: '#f8b800' }
+        ];
+
+        movingPlatforms = [
+            { x: 510, y: gY - 80, width: 120, height: 22, minX: 500, maxX: 640, vx: 2.0, color: '#f8b800' },
+            { x: 1560, y: gY - 100, width: 130, height: 22, minX: 1550, maxX: 1690, vx: 2.3, color: '#f8b800' },
+            { x: 2560, y: gY - 90, width: 130, height: 22, minX: 2550, maxX: 2730, vx: 2.5, color: '#f8b800' },
+            { x: 3560, y: gY - 110, width: 120, height: 22, minX: 3550, maxX: 3680, vx: 2.2, color: '#f8b800' }
+        ];
+
+        pipes = [
+            { x: 300, y: gY - 70, width: 60, height: 70, hasPlant: true },
+            { x: 980, y: gY - 110, width: 60, height: 110, hasPlant: true },
+            { x: 1850, y: gY - 85, width: 60, height: 85, hasPlant: false },
+            { x: 2900, y: gY - 95, width: 60, height: 95, hasPlant: true }
+        ];
+
+        coins = [
+            { x: 220, y: gY - 140, collected: false },
+            { x: 570, y: gY - 130, collected: false },
+            { x: 850, y: gY - 170, collected: false },
+            { x: 1010, y: gY - 160, collected: false },
+            { x: 1300, y: gY - 180, collected: false },
+            { x: 1620, y: gY - 150, collected: false },
+            { x: 2050, y: gY - 200, collected: false },
+            { x: 2620, y: gY - 140, collected: false },
+            { x: 3050, y: gY - 180, collected: false }
+        ];
+
+        castle = { x: 4450, y: gY - 220, width: 220, height: 220 };
+    }
+    else { // Winter Snow (Extended length)
+        platforms = [
+            { x: 0, y: gY, width: 550, height: 50, color: theme.groundColor },
+            { x: 700, y: gY, width: 850, height: 50, color: theme.groundColor },
+            { x: 1750, y: gY, width: 800, height: 50, color: theme.groundColor },
+            { x: 2750, y: gY, width: 850, height: 50, color: theme.groundColor },
+            { x: 3800, y: gY, width: 1000, height: 50, color: theme.groundColor },
+            
+            { x: 200, y: gY - 110, width: 140, height: 26, color: '#3888c8' },
+            { x: 450, y: gY - 180, width: 140, height: 26, color: '#f8b800' },
+            { x: 880, y: gY - 120, width: 150, height: 26, color: '#3888c8' },
+            { x: 1350, y: gY - 170, width: 150, height: 26, color: '#f83800' },
+            { x: 2000, y: gY - 140, width: 160, height: 26, color: '#3888c8' },
+            { x: 3000, y: gY - 160, width: 150, height: 26, color: '#f8b800' }
+        ];
+
+        movingPlatforms = [
+            { x: 560, y: gY - 90, width: 130, height: 22, minX: 550, maxX: 690, vx: 2.2, color: '#3888c8' },
+            { x: 1560, y: gY - 110, width: 140, height: 22, minX: 1550, maxX: 1730, vx: 2.6, color: '#3888c8' },
+            { x: 2560, y: gY - 100, width: 130, height: 22, minX: 2550, maxX: 2730, vx: 2.8, color: '#3888c8' },
+            { x: 3610, y: gY - 90, width: 130, height: 22, minX: 3600, maxX: 3780, vx: 2.4, color: '#3888c8' }
+        ];
+
+        pipes = [
+            { x: 380, y: gY - 80, width: 60, height: 80, hasPlant: true },
+            { x: 1100, y: gY - 100, width: 60, height: 100, hasPlant: false },
+            { x: 2150, y: gY - 80, width: 60, height: 80, hasPlant: true },
+            { x: 3200, y: gY - 90, width: 60, height: 90, hasPlant: true }
+        ];
+
+        coins = [
+            { x: 240, y: gY - 150, collected: false },
+            { x: 410, y: gY - 130, collected: false },
+            { x: 620, y: gY - 140, collected: false },
+            { x: 930, y: gY - 160, collected: false },
+            { x: 1130, y: gY - 150, collected: false },
+            { x: 1400, y: gY - 210, collected: false },
+            { x: 1620, y: gY - 160, collected: false },
+            { x: 2050, y: gY - 180, collected: false },
+            { x: 2620, y: gY - 150, collected: false },
+            { x: 3050, y: gY - 200, collected: false }
+        ];
+
+        castle = { x: 4500, y: gY - 220, width: 220, height: 220 };
+    }
+
+    particles = [];
+}
+
+function nextLevel() {
+    if (currentLevel < totalLevels) {
+        currentLevel++;
+        loadLevel(currentLevel);
+    } else {
+        currentLevel = 1;
+        coinCount = 0;
+        document.getElementById('coin-count').innerText = coinCount;
+        loadLevel(currentLevel);
+    }
+}
+
+function spawnParticles(x, y, color) {
+    for (let i = 0; i < 14; i++) {
+        particles.push({
+            x: x, y: y,
+            vx: (Math.random() - 0.5) * 7,
+            vy: (Math.random() - 0.5) * 7,
+            radius: Math.random() * 6 + 4,
+            color: color,
+            alpha: 1
+        });
+    }
+}
+
+// --- Main Game Loop ---
+let cameraX = 0;
+
+function update() {
+    if (keys.left) {
+        player.vx = -player.speed;
+        player.facingRight = false;
+    } else if (keys.right) {
+        player.vx = player.speed;
+        player.facingRight = true;
+    } else {
+        player.vx *= 0.8;
+    }
+
+    if (keys.jump && player.grounded) {
+        player.vy = player.jumpPower;
+        player.grounded = false;
+        player.squish = 1.35;
+        playSound('jump');
+    }
+
+    player.vy += 0.55; // Gravity
+    player.x += player.vx;
+    player.y += player.vy;
+    player.squish += (1 - player.squish) * 0.12;
+    player.tailAngle = Math.sin(Date.now() * 0.01) * 0.3;
+
+    // Moving Platform Update & Riding logic
+    movingPlatforms.forEach(mp => {
+        mp.x += mp.vx;
+        if (mp.x <= mp.minX || mp.x + mp.width >= mp.maxX) {
+            mp.vx *= -1;
+        }
+
+        // Carry player on moving platform
+        if (player.x + player.width > mp.x &&
+            player.x < mp.x + mp.width &&
+            player.y + player.height >= mp.y &&
+            player.y + player.height <= mp.y + 20 &&
+            player.vy >= 0) {
+            
+            player.grounded = true;
+            player.vy = 0;
+            player.y = mp.y - player.height;
+            player.x += mp.vx; // Transfer movement
+        }
+    });
+
+    // Static Platform & Pipe Collisions
+    player.grounded = false;
+    const allSolid = [...platforms, ...pipes];
+    
+    allSolid.forEach(p => {
+        if (player.x + player.width > p.x &&
+            player.x < p.x + p.width &&
+            player.y + player.height >= p.y &&
+            player.y + player.height <= p.y + 22 &&
+            player.vy >= 0) {
+            
+            player.grounded = true;
+            player.vy = 0;
+            player.y = p.y - player.height;
+        }
+    });
+
+    // Forgiving Toddler Teleport
+    if (player.y > canvas.height + 100) {
+        player.y = 50;
+        player.x = Math.max(50, player.x - 220);
+        player.vy = 0;
+    }
+
+    // Camera follow
+    cameraX += (player.x - canvas.width / 3 - cameraX) * 0.1;
+    cameraX = Math.max(0, cameraX);
+
+    // Coin Collection
+    coins.forEach(c => {
+        if (!c.collected &&
+            player.x + player.width > c.x - 18 &&
+            player.x < c.x + 18 &&
+            player.y + player.height > c.y - 18 &&
+            player.y < c.y + 18) {
+            
+            c.collected = true;
+            coinCount++;
+            document.getElementById('coin-count').innerText = coinCount;
+            playSound('coin');
+            spawnParticles(c.x, c.y, '#f8b800');
+        }
+    });
+
+    // Level Clear Castle Goal
+    if (!levelCompleted && player.x + player.width > castle.x + 30 && player.x < castle.x + castle.width) {
+        levelCompleted = true;
+        playSound('win');
+        const modal = document.getElementById('win-modal');
+        const title = document.getElementById('win-title');
+        const btn = document.getElementById('modal-btn');
+        
+        if (currentLevel < totalLevels) {
+            title.innerText = theme.name + "\nCLEAR!";
+            btn.innerText = "NEXT WORLD! 🚀";
+        } else {
+            title.innerText = "🌟 YOU BEAT ALL WORLDS! 🌟";
+            btn.innerText = "PLAY AGAIN! 🔄";
+        }
+        modal.style.display = 'flex';
+    }
+
+    // Particles
+    particles.forEach((p, index) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.035;
+        if (p.alpha <= 0) particles.splice(index, 1);
+    });
+}
+
+function drawPaperStitchLine(x1, y1, x2, y2) {
+    ctx.save();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([8, 8]);
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.restore();
+}
+
+function draw() {
+    // Sky Background
+    ctx.fillStyle = theme.bgSky;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.save();
+    ctx.translate(-cameraX, 0);
+
+    // Night Sky Stars
+    if (theme.isNight) {
+        ctx.fillStyle = "#ffffff";
+        [100, 400, 800, 1200, 1600, 2000, 2400, 2800, 3200, 3600, 4000].forEach(sx => {
+            ctx.fillRect(sx, 40, 4, 4);
+            ctx.fillRect(sx + 120, 90, 4, 4);
+        });
+    }
+
+    // Distant Hills
+    ctx.fillStyle = theme.hillColor;
+    for (let hx = 300; hx < 4800; hx += 800) {
+        ctx.beginPath();
+        ctx.arc(hx, canvas.height, 280, Math.PI, 0);
+        ctx.fill();
+    }
+
+    // Clouds
+    ctx.fillStyle = theme.isNight ? "rgba(255, 255, 255, 0.3)" : "#ffffff";
+    for (let cx = 200; cx < 4800; cx += 550) {
+        ctx.beginPath();
+        ctx.arc(cx, 80, 45, 0, Math.PI * 2);
+        ctx.arc(cx + 40, 70, 55, 0, Math.PI * 2);
+        ctx.arc(cx + 80, 80, 45, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Draw Static Platforms
+    platforms.forEach(p => {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(p.x - 4, p.y - 4, p.width + 8, p.height + 8);
+
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.width, p.height);
+
+        drawPaperStitchLine(p.x + 10, p.y + p.height / 2, p.x + p.width - 10, p.y + p.height / 2);
+    });
+
+    // Draw Moving Platforms
+    movingPlatforms.forEach(mp => {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(mp.x - 4, mp.y - 4, mp.width + 8, mp.height + 8);
+
+        ctx.fillStyle = mp.color;
+        ctx.fillRect(mp.x, mp.y, mp.width, mp.height);
+
+        drawPaperStitchLine(mp.x + 10, mp.y + mp.height / 2, mp.x + mp.width - 10, mp.y + mp.height / 2);
+    });
+
+    // Draw Mario Green Warp Pipes & Plants
+    pipes.forEach(pipe => {
+        // Pipe White Outline
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(pipe.x - 4, pipe.y - 4, pipe.width + 8, pipe.height + 8);
+
+        // Pipe Body
+        ctx.fillStyle = theme.pipeColor;
+        ctx.fillRect(pipe.x, pipe.y, pipe.width, pipe.height);
+
+        // Pipe Rim Header
+        ctx.fillRect(pipe.x - 6, pipe.y, pipe.width + 12, 24);
+
+        // Pipe Highlights
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.fillRect(pipe.x + 6, pipe.y + 24, 8, pipe.height - 24);
+        ctx.fillRect(pipe.x, pipe.y, 8, 24);
+
+        // Piranha Plant Element
+        if (pipe.hasPlant) {
+            const plantOffsetY = Math.sin(Date.now() * 0.004) * 22;
+            const plantY = pipe.y - 25 + plantOffsetY;
+            
+            // Stem
+            ctx.fillStyle = '#00a800';
+            ctx.fillRect(pipe.x + 24, plantY, 12, 30);
+            
+            // Head
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(pipe.x + 30, plantY, 18, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#e52521';
+            ctx.beginPath();
+            ctx.arc(pipe.x + 30, plantY, 15, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Spots
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(pipe.x + 24, plantY - 5, 4, 0, Math.PI * 2);
+            ctx.arc(pipe.x + 36, plantY + 4, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    });
+
+    // Draw Coins
+    coins.forEach(c => {
+        if (!c.collected) {
+            ctx.save();
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(c.x, c.y, 18, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#f8b800';
+            ctx.beginPath();
+            ctx.arc(c.x, c.y, 15, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#d88000';
+            ctx.font = 'bold 16px sans-serif';
+            ctx.fillText('$', c.x - 5, c.y + 6);
+            ctx.restore();
+        }
+    });
+
+    // Draw Grounded Paper Castle
+    const c = castle;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(c.x - 6, c.y - 6, c.width + 12, c.height + 12);
+    
+    ctx.fillStyle = '#f8edeb';
+    ctx.fillRect(c.x, c.y, c.width, c.height);
+
+    ctx.fillStyle = '#e52521';
+    ctx.beginPath();
+    ctx.moveTo(c.x - 10, c.y);
+    ctx.lineTo(c.x + 40, c.y - 60);
+    ctx.lineTo(c.x + 90, c.y);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(c.x + c.width - 90, c.y);
+    ctx.lineTo(c.x + c.width - 40, c.y - 60);
+    ctx.lineTo(c.x + c.width + 10, c.y);
+    ctx.fill();
+
+    ctx.fillStyle = '#000000';
+    ctx.beginPath();
+    ctx.roundRect(c.x + c.width / 2 - 35, c.y + c.height - 100, 70, 100, [35, 35, 0, 0]);
+    ctx.fill();
+
+    ctx.fillStyle = '#fbd000';
+    ctx.fillRect(c.x + c.width / 2 - 4, c.y - 90, 8, 90);
+    ctx.fillStyle = '#e52521';
+    ctx.beginPath();
+    ctx.moveTo(c.x + c.width / 2 + 4, c.y - 90);
+    ctx.lineTo(c.x + c.width / 2 + 50, c.y - 70);
+    ctx.lineTo(c.x + c.width / 2 + 4, c.y - 50);
+    ctx.fill();
+
+    // --- CUTE KITTY HERO ---
+    ctx.save();
+    ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
+    ctx.scale(player.facingRight ? 1 : -1, player.squish);
+
+    // White Outline
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(0, 2, player.width / 2 + 4, 0, Math.PI * 2);
+    ctx.arc(-14, -18, 12, 0, Math.PI * 2);
+    ctx.arc(14, -18, 12, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Tail
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.moveTo(-15, 10);
+    ctx.quadraticCurveTo(-28, 5 + Math.sin(player.tailAngle) * 8, -22, -10);
+    ctx.stroke();
+
+    ctx.strokeStyle = '#ffa6c9';
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(-15, 10);
+    ctx.quadraticCurveTo(-28, 5 + Math.sin(player.tailAngle) * 8, -22, -10);
+    ctx.stroke();
+
+    // Body
+    ctx.fillStyle = '#ffa6c9';
+    ctx.beginPath();
+    ctx.arc(0, 2, player.width / 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Ears
+    ctx.fillStyle = '#ffa6c9';
+    ctx.beginPath();
+    ctx.moveTo(-22, -8); ctx.lineTo(-14, -24); ctx.lineTo(-4, -14); ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(22, -8); ctx.lineTo(14, -24); ctx.lineTo(4, -14); ctx.fill();
+
+    // Inner Ears
+    ctx.fillStyle = '#ffdde1';
+    ctx.beginPath();
+    ctx.moveTo(-19, -9); ctx.lineTo(-14, -20); ctx.lineTo(-7, -13); ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(19, -9); ctx.lineTo(14, -20); ctx.lineTo(7, -13); ctx.fill();
+
+    // Cheeks
+    ctx.fillStyle = '#ff758f';
+    ctx.beginPath();
+    ctx.arc(-11, 6, 4.5, 0, Math.PI * 2);
+    ctx.arc(11, 6, 4.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Eyes
+    ctx.fillStyle = '#2b2d42';
+    ctx.beginPath();
+    ctx.arc(-7, -2, 4, 0, Math.PI * 2);
+    ctx.arc(7, -2, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Eye Sparkles
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(-8, -4, 1.5, 0, Math.PI * 2);
+    ctx.arc(6, -4, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Nose
+    ctx.fillStyle = '#ff4d6d';
+    ctx.beginPath();
+    ctx.arc(0, 3, 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Whiskers
+    ctx.strokeStyle = '#2b2d42';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(-10, 4); ctx.lineTo(-20, 2);
+    ctx.moveTo(-10, 6); ctx.lineTo(-19, 8);
+    ctx.moveTo(10, 4); ctx.lineTo(20, 2);
+    ctx.moveTo(10, 6); ctx.lineTo(19, 8);
+    ctx.stroke();
+
+    ctx.restore();
+
+    // Particles
+    particles.forEach(p => {
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+    });
+
+    ctx.restore();
+}
+
+function loop() {
+    update();
+    draw();
+    requestAnimationFrame(loop);
+}
+
+// Start Game
+loadLevel(1);
+loop();
+</script>
+</body>
+</html>
