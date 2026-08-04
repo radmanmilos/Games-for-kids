@@ -375,6 +375,18 @@ Paper Kitty Adventure has been fully integrated into Petrin svet and the placeho
 
 ---
 
+# Deployment (GitHub Pages)
+
+The live site is auto-deployed with GitHub Actions. **Every push to `main` rebuilds and publishes the app.**
+
+- Workflow: `.github/workflows/deploy.yml` — on push to `main`, it checks out the repo and deploys the **`game/`** folder (the deployable app) to the **`gh-pages`** branch via `JamesIves/github-pages-deploy-action@v4`.
+- Site URL: **https://radmanmilos.github.io/Games-for-kids/**
+- One-time setup: in the repo's Settings → Pages, set **Source** to **`Deploy from a branch` → `gh-pages` → `/ (root)`**. No build step is needed (the site is plain static HTML).
+- Manual deploy: `tools/deploy-game-gh-pages.sh` (creates a `deploy-game-gh-pages` branch containing the workflow and opens a PR to `main`; run once, then the workflow does it automatically on every push).
+- Local preview: use Live Server on `game/` over HTTP — never `file://` (breaks audio, the kitty iframe, and throws Unsafe-attempt warnings).
+
+---
+
 # Navigation Model
 
 The app follows a hybrid model:
