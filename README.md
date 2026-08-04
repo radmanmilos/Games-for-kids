@@ -325,7 +325,7 @@ Gameplay:
 - Tap the outline regions of an SVG animal scene to fill them.
 - A next-skip button (➡) lets the child jump to the next animal at any time.
 - When every region matches the reference, celebrate, play the animal's real sound, and auto-advance to the next animal.
-- Scenes: Dog, Cat, Cow, Lion, Elephant, Frog, Pig, Duck, Fox, Sheep, Horse.
+- Scenes: Dog, Cat, Cow, Lion, Elephant, Frog, Pig, Duck, Fox, Sheep, Horse, Chicken.
 
 Educational goals:
 
@@ -521,13 +521,7 @@ Main UI
 
 - Fredoka
 
-Used throughout the application.
-
-Paper Kitty HUD
-
-- Press Start 2P
-
-Only used inside the platformer.
+Used throughout the application, including the Paper Kitty HUD (bundled locally as `game/assets/fonts/fredoka-latin.woff2` + `fredoka-latin-ext.woff2`, no external requests at runtime).
 
 ---
 
@@ -540,6 +534,10 @@ PetrinSvet/
 
 resources/
 game/
+tools/
+AGENTS.md
+PROJECT_TASKS.md
+HANDOVER_PROMPT.md
 README.md
 ```
 
@@ -601,6 +599,7 @@ pages/
   animal_memory.html
   coloring.html
   classroom.html
+  tracing.html
   papper_kitty.html
 
 games/
@@ -609,7 +608,7 @@ assets/
 ```
 
 - `index.html` is the hub. It loads every game module and embeds Kitty.
-- The standalone pages (`pages/animals.html`, `pages/shapes.html`, `pages/matching_game.html`, `pages/animal_puzzle.html`, `pages/animal_counting.html`, `pages/animal_memory.html`, `pages/coloring.html`, `pages/classroom.html`) each load only the modules they need.
+- The standalone pages (`pages/animals.html`, `pages/shapes.html`, `pages/matching_game.html`, `pages/animal_puzzle.html`, `pages/animal_counting.html`, `pages/animal_memory.html`, `pages/coloring.html`, `pages/classroom.html`, `pages/tracing.html`) each load only the modules they need.
 - `papper_kitty.html` is the self-contained Kitty runtime, embedded in the hub via iframe.
 
 ```
@@ -624,6 +623,7 @@ animal_counting.js
 animal_memory.js
 coloring.js
 classroom.js
+tracing.js
 ```
 
 ```
@@ -691,6 +691,7 @@ pages/
   animal_memory.html
   coloring.html
   classroom.html
+  tracing.html
   papper_kitty.html
 
 games/
@@ -704,6 +705,7 @@ animal_counting.js
 animal_memory.js
 coloring.js
 classroom.js
+tracing.js
 
 shared/
 
@@ -936,7 +938,7 @@ Per game:
 - Animal Scene Puzzle: more scenes + 2×2/3×3 grid — **DONE** (task 31; jigsaw-shaped pieces rejected by user, deferred).
 - Animal Counting: speak the number aloud; more levels; bigger celebration — **DONE** (task 32).
 - Animal Memory: flip sound and spoken animal name; optional difficulty (fewer pairs); prettier card back — **DONE** (task 33: flip sound + paw-print card back; difficulty deferred by user). Animal sound + name speech now fire **only on matched pairs**, not on every flip (task 46, 2026-08-03).
-- Coloring: show scene progress (e.g. "Животиња 3 од 11") and a sticker/reward when all 11 are done; human visual pass on the 11 scenes — **DONE** (task 34: randomized order, "Животиња N од 12" progress, all-12 🏅 reward with restart; ref + coloring images enlarged via side-by-side layout; smallest paint regions enlarged; human visual pass still recommended).
+- Coloring: show scene progress (e.g. "Животиња 3 од 12") and a sticker/reward when all 12 are done; human visual pass on the 12 scenes — **DONE** (task 34: randomized order, "Животиња N од 12" progress, all-12 🏅 reward with restart; ref + coloring images enlarged via side-by-side layout; smallest paint regions enlarged; human visual pass still recommended).
 
 Big-ticket (deferred to a later phase 2026-08-03):
 
