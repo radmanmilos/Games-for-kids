@@ -371,7 +371,7 @@ Paper Kitty Adventure has been fully integrated into Petrin svet and the placeho
 - All other games open as standalone pages launched from the hub.
 - Navigation, audio, speech, and utilities are shared modules.
 
-**Current focus: Phase 3 (Учионица kids tier).** All ten games are playable. Phase 3 is reactivated (2026-08-04) as **full-fledged games delivered inside Учионица**: the classroom keeps its 4 baby-tier learn-and-repeat activities and gains a second menu set "За децу" with full games for the same content (Азбука/Бројеви/Боје/Облици) — e.g. "Бројеви" (for babies) next to "Бројеви" (for kids). Писање (Tracing) shipped as task 53 — it covers Letter Tracing + Number Tracing (and shape tracing) from the Future Mini Games list in one hub, as **free draw on a dashed guide** (draw over the dashed outline; validated by forgiving ink-proximity metrics). See the [Development Roadmap](#development-roadmap) for phase status.
+**Current focus: Phase 3 (Учионица kids tier) + Phase 4 start.** All **eleven** games are playable. Phase 3 is reactivated (2026-08-04) as **full-fledged games delivered inside Учионица**: the classroom keeps its 4 baby-tier learn-and-repeat activities and gains a second menu set "За децу" with full games for the same content (Азбука/Бројеви/Боје/Облици) — e.g. "Бројеви" (for babies) next to "Бројеви" (for kids). **Phase 4 kicked off (2026-08-04) with Клавир (Piano, task 58)** — 8-key keyboard with free play and a "Свирај песму" follow-the-melody mode ("Трепери, трепери звездице"), synthesized Web Audio, no new audio assets. Писање (Tracing) shipped as task 53 — it covers Letter Tracing + Number Tracing (and shape tracing) from the Future Mini Games list in one hub, as **free draw on a dashed guide** (draw over the dashed outline; validated by forgiving ink-proximity metrics). See the [Development Roadmap](#development-roadmap) for phase status.
 
 ---
 
@@ -745,7 +745,7 @@ Each mini-game is self-contained and uses shared systems where possible.
 
 Planned additions include (note: Alphabet, Numbers, and Colors are now covered as Учионица activities; Phase 4 builds from this list; ✅ = already shipped):
 
-- 🎵 Piano
+- 🎵 Piano — ✅ (Клавир, task 58; 3 songs: Трепери, Срећан ти рођендан, Џингл белс — task 59)
 - 🥁 Musical Instruments
 - 🎈 Balloon Pop
 - 🚜 Farm
@@ -910,7 +910,7 @@ Done in Phase 3 before the deferral (kept as-is, separate standalone games):
 
 Build the next batch of mini-games, one per task, picked from the [Future Mini Games](#future-mini-games) list:
 
-- 🎵 Piano
+- 🎵 Piano — ✅ built (2026-08-04, as **Клавир**, task 58: 8-key one-octave keyboard, free play + "Свирај песму" follow-the-melody mode; **3 songs** since task 59: Трепери, Срећан ти рођендан, Џингл белс — chip picker in song mode)
 - 🥁 Musical Instruments
 - 🎈 Balloon Pop
 - 🚜 Farm

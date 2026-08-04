@@ -8,7 +8,8 @@ const standaloneMap = {
     'matching_game': ['candy-back', 'startCandy'],
     'coloring': ['coloring-back', 'startColoring'],
     'classroom': ['classroom-back', 'startClassroom'],
-    'tracing': ['tracing-back', 'startTracing']
+    'tracing': ['tracing-back', 'startTracing'],
+    'piano': ['piano-back', 'startPiano']
 };
 const standaloneGame = standaloneMap[standalonePage];
 
