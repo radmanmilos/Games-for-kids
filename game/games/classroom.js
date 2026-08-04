@@ -192,6 +192,25 @@
     buildGrid();
   }
 
+  function enterKidsGame(kind) {
+    stopAutoplay();
+    currentActivity = 'kids';
+    $('classroomTitle').hidden = true;
+    $('classroomHub').hidden = true;
+    $('classroomActivity').hidden = true;
+    $('classroomAutoplay').hidden = true;
+    $('kidsGame').hidden = false;
+    if (window.kidsGame && window.kidsGame.start) window.kidsGame.start(kind);
+  }
+
+  function leaveKidsGame() {
+    stopAutoplay();
+    currentActivity = null;
+    $('kidsGame').hidden = true;
+    $('classroomTitle').hidden = false;
+    $('classroomHub').hidden = false;
+  }
+
   function leaveActivity() {
     stopAutoplay();
     currentActivity = null;
@@ -242,9 +261,19 @@
         enterActivity(btn.dataset.activity);
       });
     });
+    document.querySelectorAll('#classroomHub .kids-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (window.popSound) window.popSound();
+        enterKidsGame(btn.dataset.kids);
+      });
+    });
     $('classroomBack').addEventListener('click', () => {
       if (window.popSound) window.popSound();
       leaveActivity();
+    });
+    $('kidsBack').addEventListener('click', () => {
+      if (window.popSound) window.popSound();
+      leaveKidsGame();
     });
     $('classroomAutoplay').addEventListener('click', () => {
       if (window.popSound) window.popSound();
@@ -253,5 +282,6 @@
     });
   }
 
+  window.classroomData = { alphabet: ALPHABET, numbers: NUMBERS, shapes: SHAPES, colors: COLORS };
   window.startClassroom = startClassroom;
 }());

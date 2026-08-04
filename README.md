@@ -348,6 +348,8 @@ Activities:
 - 🔷 Облици — Круг, Квадрат, Троугао, Звезда, plus 3D shapes Лопта, Коцка, Квадар, Ваљак, Купа, Пирамида (drawn as inline SVG so the real 3D form is visible). Tap a shape to hear its name.
 - 🎨 Боје — the 11-color palette. Tap a color to hear its name.
 
+The hub carries **two button sets** — "За малишане" (the 4 learn-and-repeat activities above) and "За децу" (full-fledged quiz games, Phase 3): Азбука за децу (hear a letter sound → pick the letter), Бројеви за децу (count the animal emojis → pick the number), Боје за децу (hear a color → pick the swatch), Облици за децу (hear a shape → pick the shape). Each is a forgiving 8-question multiple-choice game: pop + bounce on correct, gentle shake and "Покушај још једном!" on wrong (no punishment), 🏅 + "Све си урадио!" panel with score on completion, and a replay button. Tap the prompt card to replay the sound.
+
 Every activity has an autoplay button (▶) that walks through the tiles one by one, advancing only after the spoken word finishes plus a short pause, so the child has time to repeat. No celebration icon — the goal is to learn and repeat the words. All text is Serbian Cyrillic, and all speech is Serbian (pre-generated MP3 assets).
 
 Educational goals:
@@ -369,7 +371,7 @@ Paper Kitty Adventure has been fully integrated into Petrin svet and the placeho
 - All other games open as standalone pages launched from the hub.
 - Navigation, audio, speech, and utilities are shared modules.
 
-**Current focus: a new game set (Phase 4).** All ten games are playable. Phase 3 (standalone Alphabet/Numbers/Colors games) is deferred per user decision (2026-08-03); Учионица keeps covering that content. Писање (Tracing) shipped as task 53 — it covers Letter Tracing + Number Tracing (and shape tracing) from the Future Mini Games list in one hub, as **free draw on a dashed guide** (draw over the dashed outline; validated by forgiving ink-proximity metrics). See the [Development Roadmap](#development-roadmap) for phase status.
+**Current focus: Phase 3 (Учионица kids tier).** All ten games are playable. Phase 3 is reactivated (2026-08-04) as **full-fledged games delivered inside Учионица**: the classroom keeps its 4 baby-tier learn-and-repeat activities and gains a second menu set "За децу" with full games for the same content (Азбука/Бројеви/Боје/Облици) — e.g. "Бројеви" (for babies) next to "Бројеви" (for kids). Писање (Tracing) shipped as task 53 — it covers Letter Tracing + Number Tracing (and shape tracing) from the Future Mini Games list in one hub, as **free draw on a dashed guide** (draw over the dashed outline; validated by forgiving ink-proximity metrics). See the [Development Roadmap](#development-roadmap) for phase status.
 
 ---
 
@@ -872,11 +874,18 @@ Created:
 
 ---
 
-## Phase 3 — DEFERRED (per user decision, 2026-08-03)
+## Phase 3 — ACTIVE (reactivated 2026-08-04 as the Учионица kids tier)
 
-Standalone educational mini-games (Alphabet, Numbers, Colors, Shapes as full games) are **not being built now**. Учионица continues to deliver this content as learn-and-repeat activities (task 39): all 30 letters, numbers 0–10, 4 flat + 6 3D shapes, 11 colors, each with spoken Serbian audio and autoplay.
+Full-fledged games for the classroom content, delivered **inside Учионица** as a second menu set ("За децу") beside the existing baby-tier learn-and-repeat activities ("За малишане"). Two buttons per content area — e.g. "Бројеви" for babies and "Бројеви" for kids:
 
-Done in Phase 3 before the deferral:
+- **Азбука за децу** — hear a letter sound or word, pick the matching letter.
+- **Бројеви за децу** — count animal emojis (or hear a number), pick the matching number.
+- **Боје за децу** — hear a color name, pick the matching color.
+- **Облици за децу** — hear a shape name, pick the matching shape.
+
+Style: forgiving multiple-choice quiz (4 big answer tiles), pop on correct, gentle "try again" on wrong (no punishment/time pressure), celebration + progress, short sessions. Reuses existing speech MP3s, celebrate(), and Учионица styling. One shared quiz engine configurable per content area (YAGNI), plus a headless smoke test.
+
+Done in Phase 3 before the deferral (kept as-is, separate standalone games):
 
 - Memory (Animal Memory)
 - Puzzles (Animal Scene Puzzle)
@@ -885,7 +894,7 @@ Done in Phase 3 before the deferral:
 
 ---
 
-## Phase 4 — New game set (CURRENT FOCUS)
+## Phase 4 — New game set (NEXT, queued after Phase 3)
 
 Build the next batch of mini-games, one per task, picked from the [Future Mini Games](#future-mini-games) list:
 

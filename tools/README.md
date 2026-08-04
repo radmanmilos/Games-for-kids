@@ -15,6 +15,7 @@ binary.
 | `tracing_smoke.js` | Canonical validation for the Писање (Tracing) free-draw game — 22 checks: hub, dashed guide present, layout (no ref/caption overlap), pointer drawing, clear, correct А/0/circle accepted, sloppy Б accepted (forgiving), line/scribble/blob rejected, success auto-advance, shape wrap, hub wiring. |
 | `tracing_probe.js` | Matching-metric table for threshold tuning. Prints `cov` (guide coverage), `ink`, `ratio`, `near` (fraction of ink within 2 cells of the guide) and the distance histogram `hist` for each good/bad drawing. |
 | `dilate_test.js` | Standalone check that the integral-image `dilate()` in `tracing.js` produces a correct symmetric dilation (center/corner/corners cases). |
+| `kids_smoke.js` | Validation for the Учионица kids tier (Phase 3, "За децу" quiz games) — 12 checks: two-set hub (4 baby + 4 kids buttons + labels), each of the 4 games renders its screen (title/4 options/1 answer/prompt), numbers prompt shows the countable emoji row, wrong tap nudges without advancing, 8 corrects → finish panel + score, replay restarts, back → hub. |
 
 ## Commands
 
@@ -22,6 +23,7 @@ binary.
 node tools/dilate_test.js       # visual: r=1 dilation is a 3x3 box
 node tools/tracing_probe.js     # metrics table (uses window.__traceDebug)
 node tools/tracing_smoke.js     # full game smoke test — expect ALL PASS
+node tools/kids_smoke.js        # classroom kids-tier smoke test — expect ALL PASS
 ```
 
 ## Rules / gotchas

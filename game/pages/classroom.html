@@ -142,6 +142,84 @@
   }
   .show-svg svg{ width:20vmin; height:20vmin; display:block; }
   #activityCaption{ font-size:5vmin; font-weight:700; color:var(--plum); margin:0; }
+
+  /* ---------- KIDS TIER (за децу) ---------- */
+  .hub-group{ display:flex; flex-direction:column; align-items:center; gap:2.5vmin; }
+  .hub-group-title{ margin:0; font-size:3.2vmin; font-weight:700; color:var(--plum-soft); letter-spacing:.12em; }
+  .hub-group-btns{ display:flex; flex-direction:row; gap:4vmin; }
+  .kids-btn{
+    width:min(28vmin, 24vh); height:min(28vmin, 24vh); border-radius:50%; border:none;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vmin;
+    background:#fff;
+    box-shadow:0 1.5vmin 0 rgba(0,0,0,.12), 0 2vmin 4vmin rgba(0,0,0,.1);
+    cursor:pointer;
+  }
+  .kids-btn:active{ transform:scale(.92) translateY(4px); }
+  .kids-btn .a-emoji{ font-size:10vmin; line-height:1; }
+  .kids-btn .a-label{ font-size:3.4vmin; font-weight:700; color:var(--plum); }
+
+  #kidsGame{
+    width:100%; height:100%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2.2vmin;
+    padding:16vmin 4vmin 3vmin;
+  }
+  #kidsGame[hidden]{ display:none; }
+  #kidsBack{ top:4vmin; left:4vmin; background:var(--plum-soft); }
+  #kidsTitle{
+    position:absolute; top:4.5vmin; left:50%; transform:translateX(-50%);
+    margin:0; font-size:5.5vmin; color:var(--plum-soft);
+  }
+  #kidsPrompt{
+    border:none; cursor:pointer; font-family:inherit;
+    width:min(72vmin, 74vw); min-height:22vmin;
+    background:#fff; border-radius:8%;
+    box-shadow:0 1.5vmin 0 rgba(0,0,0,.12), 0 2vmin 5vmin rgba(0,0,0,.15);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5vmin;
+    padding:2.5vmin 3vmin;
+  }
+  .kids-question{ font-size:5vmin; font-weight:700; color:var(--plum); margin:0; }
+  .kids-sound{ font-size:9vmin; line-height:1; }
+  .kids-count-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:1vmin; font-size:6vmin; line-height:1.3; max-width:62vmin; }
+  #kidsProgress{ margin:0; font-size:3.4vmin; font-weight:600; color:var(--plum-soft); }
+  #kidsOptions{ display:grid; grid-template-columns:repeat(2, min(24vmin, 20vh)); gap:3vmin; }
+  .kids-option{
+    aspect-ratio:1; border:none; border-radius:18%;
+    background:#fff; color:var(--plum); font-family:inherit;
+    box-shadow:0 1.2vmin 0 rgba(0,0,0,.14), 0 2vmin 4vmin rgba(0,0,0,.1),
+               inset 0 0 0 .5vmin rgba(0,0,0,.08);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    font-size:11vmin; font-weight:700;
+  }
+  .kids-option:active{ filter:brightness(.87); }
+  .kids-option .kids-glyph{ line-height:1; }
+  .kids-option .kids-shape{ display:flex; align-items:center; justify-content:center; width:100%; height:100%; }
+  .kids-option .kids-shape svg{ width:70%; height:70%; }
+  .kids-option.correct{ animation:kids-correct .5s ease; }
+  @keyframes kids-correct{ 0%{transform:scale(1)} 40%{transform:scale(1.14)} 100%{transform:scale(1)} }
+  .kids-option.wrong{ animation:kids-wrong .4s ease; }
+  @keyframes kids-wrong{ 0%,100%{transform:translateX(0)} 25%{transform:translateX(-1.6vmin)} 75%{transform:translateX(1.6vmin)} }
+  #kidsFeedback{ min-height:4.6vmin; margin:0; font-size:4vmin; font-weight:700; color:var(--plum-soft); }
+  #kidsFinished{
+    position:absolute; inset:0; z-index:30;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(74,63,107,.3);
+  }
+  #kidsFinished[hidden]{ display:none; }
+  .kids-finished-card{
+    background:#fff; border-radius:8%; padding:6vmin 8vmin;
+    display:flex; flex-direction:column; align-items:center; gap:3vmin;
+    box-shadow:0 2vmin 0 rgba(0,0,0,.12), 0 3vmin 5vmin rgba(0,0,0,.15);
+  }
+  .kids-finished-title{ margin:0; font-size:6vmin; font-weight:700; color:var(--plum); }
+  .kids-finished-sub{ margin:0; font-size:4vmin; color:var(--plum-soft); }
+  .kids-finished-row{ display:flex; gap:3vmin; }
+  .kids-finished-btn{
+    border:none; border-radius:50vmin; padding:2.2vmin 6vmin; font-family:inherit;
+    font-size:4.2vmin; font-weight:700; color:#fff; background:var(--green);
+    box-shadow:0 1vmin 0 rgba(0,0,0,.2); cursor:pointer;
+  }
+  .kids-finished-btn.alt{ background:var(--pink); }
+  .kids-finished-btn:active{ transform:scale(.94) translateY(3px); }
 </style>
 <link rel="stylesheet" href="../shared/accessibility.css">
 </head>
@@ -154,10 +232,24 @@
     <button id="classroomAutoplay" hidden aria-label="Аутоматски приказ">▶</button>
 
     <div id="classroomHub">
-      <button class="activity-btn" data-activity="alphabet"><span class="a-emoji">🔤</span><span class="a-label">Азбука</span></button>
-      <button class="activity-btn" data-activity="numbers"><span class="a-emoji">🔢</span><span class="a-label">Бројеви</span></button>
-      <button class="activity-btn" data-activity="shapes"><span class="a-emoji">🔷</span><span class="a-label">Облици</span></button>
-      <button class="activity-btn" data-activity="colors"><span class="a-emoji">🎨</span><span class="a-label">Боје</span></button>
+      <div class="hub-group">
+        <h2 class="hub-group-title">За малишане</h2>
+        <div class="hub-group-btns">
+          <button class="activity-btn" data-activity="alphabet"><span class="a-emoji">🔤</span><span class="a-label">Азбука</span></button>
+          <button class="activity-btn" data-activity="numbers"><span class="a-emoji">🔢</span><span class="a-label">Бројеви</span></button>
+          <button class="activity-btn" data-activity="shapes"><span class="a-emoji">🔷</span><span class="a-label">Облици</span></button>
+          <button class="activity-btn" data-activity="colors"><span class="a-emoji">🎨</span><span class="a-label">Боје</span></button>
+        </div>
+      </div>
+      <div class="hub-group">
+        <h2 class="hub-group-title">За децу</h2>
+        <div class="hub-group-btns">
+          <button class="kids-btn" data-kids="alphabet"><span class="a-emoji">🔤</span><span class="a-label">Азбука</span></button>
+          <button class="kids-btn" data-kids="numbers"><span class="a-emoji">🔢</span><span class="a-label">Бројеви</span></button>
+          <button class="kids-btn" data-kids="shapes"><span class="a-emoji">🔷</span><span class="a-label">Облици</span></button>
+          <button class="kids-btn" data-kids="colors"><span class="a-emoji">🎨</span><span class="a-label">Боје</span></button>
+        </div>
+      </div>
     </div>
 
     <div id="classroomActivity" hidden>
@@ -169,14 +261,38 @@
         <p id="activityCaption">Додирни сличицу!</p>
       </div>
     </div>
+
+    <div id="kidsGame" hidden>
+      <button id="kidsBack" class="back-btn"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+      <h2 id="kidsTitle"></h2>
+      <button id="kidsPrompt" aria-label="Понови звук">
+        <div class="kids-question">?</div>
+      </button>
+      <p id="kidsProgress"></p>
+      <div id="kidsOptions"></div>
+      <p id="kidsFeedback"></p>
+      <div id="kidsFinished" hidden>
+        <div class="kids-finished-card">
+          <p class="kids-finished-title">Све си урадио!</p>
+          <p class="kids-finished-sub" id="kidsFinishedSub"></p>
+          <div class="kids-finished-row">
+            <button id="kidsReplay" class="kids-finished-btn">Играј поново</button>
+            <button id="kidsExit" class="kids-finished-btn alt">Назад</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
 
 <script src="../shared/navigation.js"></script>
+<script src="../shared/celebration.js"></script>
 <script src="../shared/audio.js"></script>
 <script src="../shared/speech.js"></script>
+<script src="../shared/utils.js"></script>
 <script src="../games/classroom.js"></script>
+<script src="../games/kids_games.js"></script>
 <script src="../shared/main.js"></script>
 </body>
 </html>
