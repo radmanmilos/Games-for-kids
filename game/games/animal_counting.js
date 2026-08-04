@@ -4,7 +4,7 @@
     let screen = document.getElementById('game-counting');
     if(!screen){
       screen = document.createElement('div'); screen.id='game-counting'; screen.className='screen';
-      screen.innerHTML = `<button class="back-btn" aria-label="Назад на игре">←</button>
+      screen.innerHTML = `<button class="back-btn" aria-label="Назад на игре"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
         <div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:8vh">
           <div style="display:flex;gap:12px;align-items:center;">
             <h2 style="margin:0 8px 0 0">Изброј животиње</h2>
