@@ -16,6 +16,7 @@ binary.
 | `tracing_probe.js` | Matching-metric table for threshold tuning. Prints `cov` (guide coverage), `ink`, `ratio`, `near` (fraction of ink within 2 cells of the guide) and the distance histogram `hist` for each good/bad drawing. |
 | `dilate_test.js` | Standalone check that the integral-image `dilate()` in `tracing.js` produces a correct symmetric dilation (center/corner/corners cases). |
 | `kids_smoke.js` | Validation for the Учионица kids tier (Phase 3, "За децу" quiz games) — 12 checks: two-set hub (4 baby + 4 kids buttons + labels), each of the 4 games renders its screen (title/4 options/1 answer/prompt), numbers prompt shows the countable emoji row, wrong tap nudges without advancing, 8 corrects → finish panel + score, replay restarts, back → hub. |
+| `sync-docs.sh` | Publish helper: replaces the ENTIRE `docs/` content with the current `game/` content (GitHub Pages serves main → `/docs`). Run after every change to `game/`, then commit + push to `main`. Bash; run from anywhere in the repo. |
 
 ## Commands
 
@@ -24,9 +25,15 @@ node tools/dilate_test.js       # visual: r=1 dilation is a 3x3 box
 node tools/tracing_probe.js     # metrics table (uses window.__traceDebug)
 node tools/tracing_smoke.js     # full game smoke test — expect ALL PASS
 node tools/kids_smoke.js        # classroom kids-tier smoke test — expect ALL PASS
+bash tools/sync-docs.sh         # mirror game/ -> docs/ for GitHub Pages
 ```
 
 ## Rules / gotchas
+
+- **Deployment:** `game/` is the single source of truth; `docs/` is only the
+  published copy. On every change to `game/`, run `tools/sync-docs.sh` (it
+  deletes `docs/` and re-copies `game/`) and push to `main`. Never edit
+  `docs/` by hand.
 
 - Always test over HTTP, never `file://` — `file://` breaks audio, the kitty
   iframe, and throws Unsafe-attempt warnings. `headless.js` serves `game/`

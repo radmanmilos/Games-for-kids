@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Петрин свет</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+<style>
+  :root{
+    --cream:#FFF8ED;
+    --sky:#4FC3F7;
+    --sky-deep:#2FA6DA;
+    --yellow:#FFD23F;
+    --green:#67C971;
+    --pink:#FF6F91;
+    --plum:#4A3F6B;
+    --plum-soft:#7A6FA0;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none;}
+  html,body{
+    margin:0; padding:0; width:100%; height:100%;
+    overflow:hidden; overscroll-behavior:none; touch-action:manipulation;
+    background:var(--cream);
+    font-family:'Fredoka', sans-serif;
+  }
+  #app{position:fixed; inset:0; overflow:hidden;}
+  .screen{
+    position:absolute; inset:0; display:none;
+    flex-direction:column; align-items:center; justify-content:center;
+    overflow:auto; -webkit-overflow-scrolling: touch;
+  }
+  .screen.active{display:flex;}
+
+  /* ---------- BACK BUTTON (shared) ---------- */
+  .back-btn{
+    position:absolute; top:4vmin; left:4vmin; z-index:20;
+    width:12vmin; height:12vmin; border-radius:50%; border:none;
+    background:var(--plum); color:white; font-size:6vmin;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.2);
+    cursor:pointer;
+  }
+  .back-btn:active{ transform:scale(.9) translateY(3px); }
+
+  /* ---------- COLORING GAME ---------- */
+  #game-coloring .coloring-wrap{
+    display:flex; flex-direction:column; align-items:center; gap:1.5vmin;
+    width:100%; height:100%; padding:14vmin 4vmin 1vmin; overflow:auto;
+  }
+  .coloring-stage{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    flex:1; min-height:0; gap:1vmin; width:100%;
+  }
+  .coloring-stage-row{
+    display:flex; flex-direction:row; align-items:center; justify-content:center; gap:3vmin;
+    flex:1; min-height:0;
+  }
+  .coloring-ref-wrap{
+    display:flex; flex-direction:column; align-items:center; gap:1.2vmin;
+  }
+  .coloring-ref{
+    width:min(32vmin, 24vh); height:auto; aspect-ratio:1;
+    background:white; border-radius:12%; padding:1vmin;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.12), 0 2vmin 4vmin rgba(0,0,0,.15);
+    pointer-events:none;
+  }
+  .coloring-ref-label{
+    font-size:2.4vmin; font-weight:600; color:var(--plum-soft); margin:0;
+  }
+  .coloring-ref .coloring-region{ stroke-width:1; }
+  .coloring-svg{
+    width:min(56vmin, 48vh); height:auto; aspect-ratio:1;
+    background:white; border-radius:6%;
+    box-shadow:0 2vmin 0 rgba(0,0,0,.12), 0 3vmin 5vmin rgba(0,0,0,.15);
+    touch-action:manipulation;
+  }
+  .coloring-region{
+    fill:#FFF8ED; stroke:var(--plum); stroke-width:1.4; stroke-linejoin:round; stroke-linecap:round;
+    cursor:pointer;
+  }
+  .coloring-region:active{ opacity:.85; }
+  .coloring-region.ok{ pointer-events:none; }
+  .coloring-name{
+    font-size:4.2vmin; font-weight:600; color:var(--plum);
+    margin:0;
+  }
+  .coloring-progress{
+    font-size:2.8vmin; font-weight:500; color:var(--plum-soft);
+    margin:0;
+  }
+  .coloring-palette{
+    display:grid;
+    grid-template-columns:repeat(6, 9vmin);
+    gap:1.5vmin; justify-content:center;
+    padding-bottom:4vmin; flex-shrink:0;
+  }
+  .coloring-swatch{
+    width:8vmin; height:8vmin; border-radius:50%; border:none;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.15); cursor:pointer;
+    transition: transform .12s ease;
+  }
+  .coloring-swatch.selected{
+    transform: scale(1.15);
+    outline: .8vmin solid var(--plum); outline-offset: .8vmin;
+  }
+  .coloring-swatch:active{ transform: scale(.9) translateY(3px); }
+
+  /* ---------- ALL-11 REWARD ---------- */
+  .coloring-reward{
+    position:fixed; inset:0; z-index:15;
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(74,63,107,.55);
+  }
+  .coloring-reward[hidden]{ display:none; }
+  .coloring-reward-box{
+    display:flex; flex-direction:column; align-items:center; gap:2vmin;
+    background:#fff; border-radius:8%; padding:5vmin 6vmin;
+    box-shadow:0 2vmin 0 rgba(0,0,0,.2);
+    max-width:80vmin; text-align:center;
+  }
+  .coloring-reward-sticker{ font-size:18vmin; line-height:1; animation:reward-bounce .6s ease; }
+  @keyframes reward-bounce{ 0%{transform:scale(.3)} 60%{transform:scale(1.2)} 100%{transform:scale(1)} }
+  .coloring-reward-title{ font-size:4.5vmin; font-weight:700; color:var(--plum); margin:0; }
+  .coloring-reward-sub{ font-size:3vmin; color:var(--plum-soft); margin:0; }
+  .coloring-reward-btn{
+    width:30vmin; height:10vmin; border-radius:50vmin; border:none;
+    background:var(--yellow); color:var(--plum); font-size:3.6vmin; font-weight:700;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.18); cursor:pointer;
+  }
+  .coloring-reward-btn:active{ transform:scale(.92) translateY(3px); }
+</style>
+<style>
+  #hub,#game-animals,#game-shapes,#game-candy,#game-kitty,#game-puzzle,#game-counting,#game-memory{display:none!important;}
+  #game-coloring{display:flex!important;}
+</style>
+<link rel="stylesheet" href="../shared/accessibility.css">
+</head>
+<body>
+<div id="app">
+
+  <div class="screen active" id="game-coloring">
+    <button class="back-btn" id="coloring-back"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <button class="back-btn" id="coloring-next" style="left:auto;right:4vmin;">➡</button>
+    <div class="coloring-wrap">
+      <div class="coloring-stage">
+        <p class="coloring-name" id="coloringName"></p>
+        <p class="coloring-progress" id="coloringProgress"></p>
+        <div class="coloring-stage-row">
+          <div class="coloring-ref-wrap">
+            <svg class="coloring-ref" id="coloringRef" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"></svg>
+            <p class="coloring-ref-label">✨ Обој ово овако!</p>
+          </div>
+          <svg class="coloring-svg" id="coloringSvg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+      </div>
+      <div class="coloring-palette" id="coloringPalette"></div>
+    </div>
+    <div class="coloring-reward" id="coloringReward" hidden>
+      <div class="coloring-reward-box">
+        <div class="coloring-reward-sticker">🏅</div>
+        <p class="coloring-reward-title">Све животиње су обојене!</p>
+        <p class="coloring-reward-sub">Зарадио си стикер!</p>
+        <button class="coloring-reward-btn" id="coloringRestart">Играј поново</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="../shared/navigation.js"></script>
+<script src="../shared/celebration.js"></script>
+<script src="../shared/audio.js"></script>
+<script src="../shared/speech.js"></script>
+<script src="../shared/utils.js"></script>
+<script src="../games/coloring.js"></script>
+<script src="../shared/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Петрин свет</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+<style>
+  :root{
+    --cream:#FFF8ED;
+    --sky:#4FC3F7;
+    --sky-deep:#2FA6DA;
+    --yellow:#FFD23F;
+    --green:#67C971;
+    --pink:#FF6F91;
+    --plum:#4A3F6B;
+    --plum-soft:#7A6FA0;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none;}
+  html,body{
+    margin:0; padding:0; width:100%; height:100%;
+    overflow:hidden; overscroll-behavior:none; touch-action:manipulation;
+    background:var(--cream);
+    font-family:'Fredoka', sans-serif;
+  }
+  #app{position:fixed; inset:0; overflow:hidden;}
+  .screen{
+    position:absolute; inset:0; display:none;
+    flex-direction:column; align-items:center; justify-content:center;
+  }
+  .screen.active{display:flex;}
+
+  /* ambient floating blobs, used on every screen for a calm consistent world */
+  .blob{
+    position:absolute; border-radius:50%; opacity:.35; filter:blur(2px);
+    animation: drift 8s ease-in-out infinite;
+  }
+  @keyframes drift{
+    0%,100%{ transform: translateY(0) scale(1); }
+    50%{ transform: translateY(-18px) scale(1.05); }
+  }
+
+  /* ---------- HUB ---------- */
+  #hub-title{
+    position:absolute; top:6%; font-size:8vmin; margin:0; color:var(--plum);
+    text-shadow: 0 3px 0 rgba(255,255,255,.6);
+  }
+  .hub-grid{
+    display:flex; gap:6vmin; align-items:center; justify-content:center;
+    flex-wrap:wrap; max-width:80vmin;
+  }
+  .hub-btn{
+    width:32vmin; height:32vmin; border-radius:50%; border:none;
+    display:flex; align-items:center; justify-content:center;
+    font-size:15vmin; cursor:pointer;
+    box-shadow: 0 1.5vmin 0 rgba(0,0,0,.15), 0 2vmin 4vmin rgba(0,0,0,.12);
+    animation: bob 3.2s ease-in-out infinite;
+    transition: transform .12s ease;
+  }
+  .hub-btn:active{ transform: scale(.92) translateY(4px); }
+  .hub-btn.sky{ background: radial-gradient(circle at 35% 30%, #7FDBFF, var(--sky)); animation-delay:0s;}
+  .hub-btn.pink{ background: radial-gradient(circle at 35% 30%, #FF9FB6, var(--pink)); animation-delay:.4s;}
+  .hub-btn.matching{ background: radial-gradient(circle at 35% 30%, #C9A6FF, #9B6DFF); animation-delay:.8s;}
+  .matching-icon{display:inline-flex;flex-direction:column;align-items:center;font-size:.58em;line-height:.72;}
+  .hub-btn.kitty{ background: radial-gradient(circle at 35% 30%, #FFB6D0, #FF7FA8); animation-delay:1.2s;}
+  @keyframes bob{
+    0%,100%{ transform: translateY(0) rotate(-2deg); }
+    50%{ transform: translateY(-14px) rotate(2deg); }
+  }
+  .hub-btn.ghost{
+    background:transparent; border:.8vmin dashed var(--plum-soft); opacity:.55;
+    box-shadow:none; animation:none; cursor:default;
+  }
+  .hub-btn.ghost:active{ transform:none; }
+
+  /* ---------- KITTY ADVENTURE ---------- */
+  #game-kitty{background:#5c94fc;}
+  #kitty-container{position:relative;width:100%;height:100%;display:flex;flex-direction:column;}
+  #kitty-canvas{flex:1;width:100%;min-height:0;display:block;}
+  #kitty-score{position:absolute;top:2vmin;left:20vmin;z-index:4;color:white;background:rgba(0,0,0,.45);border:4px solid white;border-radius:12px;padding:1vmin 2vmin;font:600 clamp(12px,2.4vmin,22px)/1.5 'Fredoka',sans-serif;pointer-events:none;}
+  #kitty-controls{height:min(24vh,180px);min-height:110px;background:#00a800;border-top:6px solid white;display:flex;align-items:center;justify-content:space-between;padding:12px 5vmin;}
+  .kitty-control{width:clamp(72px,13vmin,120px);aspect-ratio:1;border-radius:50%;border:5px solid white;color:white;font-size:clamp(28px,6vmin,54px);background:#e52521;box-shadow:0 7px 0 rgba(0,0,0,.3);touch-action:none;}
+  .kitty-control.right{background:#fbd000;color:#4A3F6B;}
+  .kitty-control.jump{background:#43b047;width:clamp(84px,15vmin,135px);}
+  .kitty-control:active{transform:translateY(4px);box-shadow:0 3px 0 rgba(0,0,0,.3);}
+  #kitty-win{display:none;position:absolute;inset:0;z-index:5;align-items:center;justify-content:center;flex-direction:column;background:rgba(0,0,0,.7);color:#FFD23F;text-align:center;padding:5vmin;}
+  #kitty-win.show{display:flex;}
+  #kitty-win h2{font-size:clamp(22px,5vmin,48px);margin:0 0 4vmin;}
+  #kitty-next{border:4px solid white;border-radius:12px;background:#67C971;color:white;padding:2vmin 4vmin;font:600 clamp(14px,2.5vmin,24px) 'Fredoka',sans-serif;box-shadow:0 6px 0 #267b35;}
+  #kitty-embedded{position:absolute;inset:0;width:100%;height:100%;border:0;background:#5c94fc;}
+  #game-kitty #kitty-score,#game-kitty #kitty-canvas,#game-kitty #kitty-win,#game-kitty #kitty-controls{display:none;}
+
+  /* ---------- BACK BUTTON (shared) ---------- */
+  .back-btn{
+    position:absolute; top:4vmin; left:4vmin; z-index:20;
+    width:12vmin; height:12vmin; border-radius:50%; border:none;
+    background:var(--plum); color:white; font-size:6vmin;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.2);
+    cursor:pointer;
+  }
+  .back-btn:active{ transform:scale(.9) translateY(3px); }
+
+  /* ---------- ANIMALS GAME ---------- */
+  #game-animals .card-wrap{
+    display:flex; flex-direction:column; align-items:center; gap:6vmin;
+  }
+  .animal-card{
+    width:52vmin; height:52vmin; border-radius:12%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:30vmin; cursor:pointer;
+    box-shadow: 0 2vmin 0 rgba(0,0,0,.12), 0 3vmin 5vmin rgba(0,0,0,.15);
+    transition: transform .18s cubic-bezier(.34,1.56,.64,1), background .3s;
+  }
+  .animal-card.bounce{ transform: scale(1.15) rotate(-4deg); }
+  .next-btn{
+    width:14vmin; height:14vmin; border-radius:50%; border:none;
+    background:var(--yellow); color:var(--plum); font-size:7vmin;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.15); cursor:pointer;
+  }
+  .next-btn:active{ transform:scale(.9) translateY(3px); }
+
+  /* ---------- SHAPES GAME ---------- */
+  #game-shapes .stage{ position:relative; width:100%; height:100%; }
+  .slot, .piece{
+    position:absolute; width:20vmin; height:20vmin;
+    transform: translate(-50%,-50%);
+  }
+  .slot{
+    top:26%; border:.9vmin dashed rgba(74,63,107,.4); border-radius:14%;
+    background: rgba(255,255,255,.35);
+  }
+  .slot.circle{ border-radius:50%; }
+  .slot.triangle{ border:none; clip-path:polygon(50% 0%, 0% 100%, 100% 100%); background:rgba(74,63,107,.2); filter:drop-shadow(0 .4vmin 0 rgba(74,63,107,.35)); }
+  .slot.star{ border:none; clip-path:polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); background:rgba(74,63,107,.2); filter:drop-shadow(0 .4vmin 0 rgba(74,63,107,.35)); }
+  .piece{
+    top:72%; cursor:grab; touch-action:none;
+    box-shadow: 0 1vmin 0 rgba(0,0,0,.15);
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+    z-index:5;
+  }
+  .piece.dragging{ transition:none; z-index:10; cursor:grabbing; }
+  .shape-fill.circle{ border-radius:50%; }
+  .shape-fill.square{ border-radius:14%; }
+  .shape-fill.triangle{
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    border-radius:6%;
+  }
+  .shape-fill.star{
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+  /* ---------- CANDY POP GAME ---------- */
+  .candy-grid{
+    position:relative;
+    width: calc(4*17vmin + 3*2.2vmin);
+    height: calc(4*17vmin + 3*2.2vmin);
+  }
+  .candy-grid .candy{
+    position:absolute;
+    width:17vmin; height:17vmin; border-radius:32%;
+    cursor:grab; touch-action:none;
+    display:flex; align-items:center; justify-content:center;
+    font-size:9.5vmin;
+    box-shadow: inset 0 -1.4vmin 0 rgba(0,0,0,.15), inset 0 1.4vmin 1.4vmin rgba(255,255,255,.45), 0 1vmin 2vmin rgba(0,0,0,.15);
+    transition: top .32s cubic-bezier(.34,1.02,.64,1), left .28s ease;
+  }
+  .candy-grid .candy:active{ cursor:grabbing; }
+  .candy-grid .candy.dragging{ z-index:10; transition:none; }
+  .candy-grid .candy.swapped{ animation: pulse .3s ease; }
+  .candy-grid .candy.star{
+    background: radial-gradient(circle at 35% 30%, #FFF3B0, #FFD23F 55%, #FFB800);
+    box-shadow: 0 0 3.2vmin 1vmin rgba(255,210,63,.65), inset 0 -1.4vmin 0 rgba(0,0,0,.12);
+    animation: starGlow .5s ease-in-out infinite alternate, dropIn .35s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes starGlow{
+    0%{ transform:scale(1); filter:brightness(1); }
+    100%{ transform:scale(1.12); filter:brightness(1.25); }
+  }
+  .candy-score{
+    position:absolute; top:4vmin; right:4vmin; z-index:20;
+    background:var(--plum); color:#fff; font-size:5vmin; font-weight:600;
+    padding:1.2vmin 3.4vmin; border-radius:999px;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.2);
+  }
+  .candy-grid .candy.popping{
+    animation: popOut .28s ease forwards;
+    pointer-events:none;
+  }
+  @keyframes pulse{
+    0%{ transform:scale(1); } 50%{ transform:scale(1.18); } 100%{ transform:scale(1); }
+  }
+  @keyframes dropIn{
+    0%{ transform: translateY(-60%) scale(.4); opacity:0; }
+    100%{ transform: translateY(0) scale(1); opacity:1; }
+  }
+  @keyframes popOut{
+    0%{ transform: scale(1); opacity:1; }
+    50%{ transform: scale(1.35); opacity:.8; }
+    100%{ transform: scale(0); opacity:0; }
+  }
+</style>
+<style>
+  #hub,#game-animals,#game-shapes,#game-kitty{display:none!important;}
+  #game-candy{display:flex!important;}
+</style>
+<link rel="stylesheet" href="../shared/accessibility.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- CANDY POP GAME -->
+  <div class="screen" id="game-candy">
+    <button class="back-btn" id="candy-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <div class="candy-score" id="candyScore"><span class="matching-icon">🐱🐶<br>🐶🐱</span> <span class="matching-score-value">0</span></div>
+    <div class="candy-grid" id="candyGrid"></div>
+  </div>
+
+</div>
+
+<script src="../shared/navigation.js"></script>
+<script src="../shared/celebration.js"></script>
+<script src="../shared/audio.js"></script>
+<script src="../shared/utils.js"></script>
+<script src="../games/candy.js"></script>
+<script src="../shared/main.js"></script>
+</body>
+</html>

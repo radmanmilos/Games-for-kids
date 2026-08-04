@@ -377,12 +377,12 @@ Paper Kitty Adventure has been fully integrated into Petrin svet and the placeho
 
 # Deployment (GitHub Pages)
 
-The live site is auto-deployed with GitHub Actions. **Every push to `main` rebuilds and publishes the app.**
+The live site is served by GitHub Pages from the **`docs/` folder on the `main` branch** — so the site updates on every push to `main`. Site URL: **https://radmanmilos.github.io/Games-for-kids/**
 
-- Workflow: `.github/workflows/deploy.yml` — on push to `main`, it checks out the repo and deploys the **`game/`** folder (the deployable app) to the **`gh-pages`** branch via `JamesIves/github-pages-deploy-action@v4`.
-- Site URL: **https://radmanmilos.github.io/Games-for-kids/**
-- One-time setup: in the repo's Settings → Pages, set **Source** to **`Deploy from a branch` → `gh-pages` → `/ (root)`**. No build step is needed (the site is plain static HTML).
-- Manual deploy: `tools/deploy-game-gh-pages.sh` (creates a `deploy-game-gh-pages` branch containing the workflow and opens a PR to `main`; run once, then the workflow does it automatically on every push).
+- **`game/` is the single source of truth.** `docs/` is just the published copy — never edit `docs/` directly.
+- **When `game/` changes, replace the ENTIRE `docs/` content with the new `game/` content.** Run `tools/sync-docs.sh` (deletes `docs/` and copies `game/` into it), then commit and push — the site is live.
+- One-time setup (already done): Settings → Pages → **Source: `Deploy from a branch`** → `main` → `/docs`. No build step (plain static HTML; the app uses only relative paths, so it works under the `/Games-for-kids/` subpath).
+- The earlier GitHub Actions workflow (`.github/workflows/deploy.yml`, deploy `game/` → `gh-pages`) was **abandoned** — GitHub Pages refused to deploy from `game/`, so it was removed per user decision. Keep it that way: no workflow, `docs/` mirror only.
 - Local preview: use Live Server on `game/` over HTTP — never `file://` (breaks audio, the kitty iframe, and throws Unsafe-attempt warnings).
 
 ---

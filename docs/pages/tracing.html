@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Писање — Петрин свет</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✏️</text></svg>">
+<style>
+  :root{
+    --cream:#FFF8ED;
+    --sky:#4FC3F7;
+    --yellow:#FFD23F;
+    --green:#67C971;
+    --pink:#FF6F91;
+    --plum:#4A3F6B;
+    --plum-soft:#7A6FA0;
+    --violet:#9B6DFF;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none;}
+  html,body{
+    margin:0; padding:0; width:100%; height:100%;
+    overflow:hidden; overscroll-behavior:none; touch-action:manipulation;
+    background:var(--cream);
+    font-family:'Fredoka', sans-serif;
+  }
+  #app{position:fixed; inset:0; overflow:hidden;}
+  .screen{
+    position:absolute; inset:0; display:none;
+    flex-direction:column; align-items:center; justify-content:center;
+    overflow:auto; -webkit-overflow-scrolling: touch;
+  }
+  .screen.active{display:flex;}
+
+  /* ---------- BACK BUTTON (shared) ---------- */
+  .back-btn{
+    position:absolute; top:4vmin; left:4vmin; z-index:20;
+    width:12vmin; height:12vmin; border-radius:50%; border:none;
+    background:var(--plum); color:white; font-size:6vmin;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.2);
+    cursor:pointer;
+  }
+  .back-btn:active{ transform:scale(.9) translateY(3px); }
+
+  /* ---------- HUB ---------- */
+  #tracingTitle{
+    position:absolute; top:4vmin; left:50%; transform:translateX(-50%);
+    margin:0; font-size:6.5vmin; color:var(--plum);
+    text-shadow:0 3px 0 rgba(255,255,255,.6);
+    pointer-events:none;
+  }
+  #tracingHub{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:5vmin; padding:0 4vmin;
+  }
+  #tracingHub[hidden]{ display:none; }
+
+  /* intro: reference letter + pencil drawing a dashed-guide letter (partially drawn), looping */
+  #introDemo{
+    position:relative; width:min(52vmin, 42vh); aspect-ratio:5/3;
+    margin-top:4vh;
+  }
+  #introSvg{ width:100%; height:100%; display:block; }
+  /* partially-drawn solid ink over the dashed guide: draws the left leg + halfway
+     up the right leg (stopping at the crossbar where the pencil sits), holds, wipes */
+  #introInk{
+    stroke-dasharray:105 2000; stroke-dashoffset:0;
+    animation:introDraw 2.4s ease-in-out infinite;
+  }
+  @keyframes introDraw{
+    0%{ stroke-dashoffset:105; }
+    30%{ stroke-dashoffset:0; }
+    70%{ stroke-dashoffset:0; }
+    100%{ stroke-dashoffset:105; }
+  }
+  #introPencil{ animation:introBob 2.4s ease-in-out infinite; }
+  @keyframes introBob{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-3px); }
+  }
+  #introCaption{
+    margin:1vmin 0 0; font-size:3.2vmin; font-weight:600; color:var(--plum-soft);
+  }
+  @media (prefers-reduced-motion: reduce){
+    #introInk, #introPencil{ animation:none; }
+  }
+
+  #tracingHubRow{
+    display:flex; flex-direction:row; flex-wrap:wrap; align-items:center;
+    justify-content:center; gap:6vmin;
+  }
+  .activity-btn{
+    width:min(30vmin, 26vh); height:min(30vmin, 26vh); border-radius:50%; border:none;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vmin;
+    background:radial-gradient(circle at 35% 30%, #C9A6FF, var(--violet));
+    box-shadow:0 1.5vmin 0 rgba(0,0,0,.15), 0 2vmin 4vmin rgba(0,0,0,.12);
+    cursor:pointer;
+  }
+  .activity-btn:nth-child(2){ background:radial-gradient(circle at 35% 30%, #FF9FB6, var(--pink)); }
+  .activity-btn:nth-child(3){ background:radial-gradient(circle at 35% 30%, #7FDBFF, var(--sky)); }
+  .activity-btn:active{ transform:scale(.92) translateY(4px); }
+  .activity-btn .a-emoji{ font-size:11vmin; line-height:1; }
+  .activity-btn .a-label{ font-size:3.4vmin; font-weight:700; color:#fff; text-shadow:0 1vmin 1vmin rgba(0,0,0,.2); }
+
+  /* ---------- ACTIVITY ---------- */
+  #tracingActivity{
+    width:100%; height:100%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2vmin;
+    padding:14vmin 4vmin 3vmin;
+    overflow-y:auto; -webkit-overflow-scrolling:touch;
+  }
+  #tracingActivity[hidden]{ display:none; }
+  #tracingBack{
+    position:absolute; top:4vmin; left:19vmin; z-index:20;
+    height:12vmin; min-width:12vmin; padding:0 3vmin;
+    border-radius:50vmin; border:none;
+    background:var(--plum-soft); color:#fff; font-size:4vmin; font-weight:600;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.2); cursor:pointer;
+  }
+  #tracingBack:active{ transform:scale(.92) translateY(3px); }
+  #tracingTitle2{
+    position:absolute; top:4.5vmin; left:50%; transform:translateX(-50%);
+    margin:0; font-size:5.5vmin; color:var(--plum-soft);
+    pointer-events:none;
+  }
+  #tracingNext{
+    position:absolute; top:4vmin; right:4vmin; z-index:20;
+    width:12vmin; height:12vmin; border-radius:50%; border:none;
+    background:var(--yellow); color:var(--plum); font-size:6vmin;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.2); cursor:pointer;
+  }
+  #tracingNext:active{ transform:scale(.9) translateY(3px); }
+
+  #tracingRef{
+    width:min(18vmin, 14vh); height:min(18vmin, 14vh);
+    background:linear-gradient(160deg,#F3E8FF,#E9DFFF);
+    border-radius:14%; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 1.5vmin 0 rgba(0,0,0,.10), 0 2vmin 4vmin rgba(0,0,0,.10);
+    flex:none;
+  }
+  #tracingRefSvg{ width:86%; height:86%; display:block; }
+  #tracingStage{
+    flex:1; min-height:0; display:flex; align-items:center; justify-content:center;
+    width:100%;
+  }
+  #tracingBoard{
+    position:relative; flex:none;
+    width:min(50vmin, 34vh); aspect-ratio:1/1;
+    max-width:100%;
+  }
+  #tracingCanvas, #tracingGuide{
+    position:absolute; inset:0; width:100%; height:100%;
+  }
+  #tracingCanvas{
+    background:#fff; border-radius:8%;
+    box-shadow:0 2vmin 0 rgba(0,0,0,.12), 0 3vmin 5vmin rgba(0,0,0,.15);
+    touch-action:none; display:block;
+  }
+  #tracingGuide{ pointer-events:none; border-radius:8%; }
+  #tracingCaption{
+    margin:0; font-size:4.6vmin; font-weight:700; color:var(--plum); text-align:center;
+  }
+  #tracingControls{
+    display:flex; align-items:center; justify-content:center; gap:3vmin;
+  }
+  .tr-btn{
+    height:11vmin; min-width:11vmin; padding:0 4vmin;
+    border-radius:50vmin; border:none; cursor:pointer;
+    font-family:inherit; font-weight:700; font-size:3.8vmin;
+    color:#fff; box-shadow:0 1vmin 0 rgba(0,0,0,.2);
+  }
+  .tr-btn:active{ transform:scale(.92) translateY(3px); }
+  #tracingClear{ background:var(--plum-soft); }
+  #tracingDone{ background:var(--green); color:#0B3D1A; }
+  #tracingCounter{
+    margin:0; font-size:3vmin; font-weight:600; color:var(--plum-soft);
+  }
+</style>
+<link rel="stylesheet" href="../shared/accessibility.css">
+</head>
+<body>
+<div id="app">
+
+  <div class="screen active" id="game-tracing">
+    <button class="back-btn" id="tracing-back"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <h1 id="tracingTitle">Писање</h1>
+
+    <div id="tracingHub">
+      <div id="introDemo" aria-hidden="true">
+        <svg id="introSvg" viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet">
+          <rect x="6" y="26" width="66" height="66" rx="12" fill="#F3E8FF" stroke="#C9A6FF" stroke-width="2.5"></rect>
+          <text id="introRefText" x="39" y="65" text-anchor="middle" dominant-baseline="middle" font-size="40" font-weight="700" fill="#9B6DFF" font-family="Fredoka, 'Segoe UI', Arial, sans-serif">А</text>
+          <rect x="86" y="12" width="108" height="96" rx="12" fill="#ffffff" stroke="#E3D9FF" stroke-width="2.5"></rect>
+          <path id="introGuide" d="M 137 30 L 121 98 M 137 30 L 153 98 M 128 64 L 146 64" fill="none" stroke="#9B6DFF" stroke-opacity=".35" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 5"></path>
+          <path id="introInk" d="M 137 30 L 121 98 M 137 30 L 153 98" fill="none" stroke="#9B6DFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="105 2000" stroke-dashoffset="0"></path>
+          <text id="introPencil" x="145" y="64" text-anchor="middle" dominant-baseline="middle" font-size="26">✏️</text>
+        </svg>
+      </div>
+      <p id="introCaption">Нацртај сам, прстом!</p>
+      <div id="tracingHubRow">
+        <button class="activity-btn" data-activity="letters"><span class="a-emoji">🔤</span><span class="a-label">Слова</span></button>
+        <button class="activity-btn" data-activity="numbers"><span class="a-emoji">🔢</span><span class="a-label">Бројеви</span></button>
+        <button class="activity-btn" data-activity="shapes"><span class="a-emoji">🔷</span><span class="a-label">Облици</span></button>
+      </div>
+    </div>
+
+    <div id="tracingActivity" hidden>
+      <button id="tracingBack"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+      <h2 id="tracingTitle2">Слова</h2>
+      <button id="tracingNext" aria-label="Следеће">➡</button>
+      <div id="tracingRef" aria-label="Слика за цртање"></div>
+      <div id="tracingStage">
+        <div id="tracingBoard">
+          <canvas id="tracingCanvas" width="400" height="400"></canvas>
+          <canvas id="tracingGuide" width="400" height="400"></canvas>
+        </div>
+      </div>
+      <p id="tracingCaption">Нацртај А</p>
+      <div id="tracingControls">
+        <button id="tracingClear" class="tr-btn">Обриши</button>
+        <button id="tracingDone" class="tr-btn">Готово!</button>
+      </div>
+      <p id="tracingCounter">1 од 30</p>
+    </div>
+  </div>
+
+</div>
+
+<script src="../shared/navigation.js"></script>
+<script src="../shared/audio.js"></script>
+<script src="../shared/speech.js"></script>
+<script src="../shared/celebration.js"></script>
+<script src="../games/tracing.js"></script>
+<script src="../shared/main.js"></script>
+</body>
+</html>
