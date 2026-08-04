@@ -81,7 +81,7 @@ Deliverable
 
 ## Verification summary (2026-08-03)
 
-All 108 speech assets under `game/assets/audio/speech/` are present (~773 KB), including `nul.mp3`, `bravo.mp3`, and all letter/word files referenced by speech.js. All 15 game/shared JS files plus the 1,955-line inline papper_kitty script pass `node --check`. No missing-script-dependency bugs found (puzzle needs neither speech.js nor utils.js; classroom needs no utils.js; memory ships its own shuffle). Existing findings verified: 1 fixed, 4 still present, 2 design notes intentional, frog.oga note stands.
+All 108 speech assets under `game/assets/audio/speech/` are present (~773 KB), including `nula.mp3`, `bravo.mp3`, and all letter/word files referenced by speech.js. All 15 game/shared JS files plus the 1,955-line inline papper_kitty script pass `node --check`. No missing-script-dependency bugs found (puzzle needs neither speech.js nor utils.js; classroom needs no utils.js; memory ships its own shuffle). Existing findings verified: 1 fixed, 4 still present, 2 design notes intentional, frog.oga note stands.
 
 ## Fresh review 2026-08-03 (Big Pickle — deep re-verification)
 
@@ -124,7 +124,7 @@ New findings from this pass, none of which are regressions or user-visible bugs 
 
 ## Suggested fixes (high-priority → low-priority)
 
-1. Fix classroom zero-case mismatch — add lowercase `'нула'` alias to speechFiles (one line) so the numbers tile's first phrase plays nul.mp3 instead of browser TTS/silence. (Medium — verified present)
+1. Fix classroom zero-case mismatch — add lowercase `'нула'` alias to speechFiles (one line) so the numbers tile's first phrase plays nula.mp3 instead of browser TTS/silence. (Medium — verified present)
 2. Make interactive elements keyboard-focusable (animals card, candy tiles, shapes pieces, puzzle pieces, coloring regions) — convert to buttons or add tabindex+keydown handlers; add aria-labels in Cyrillic. (High)
 3. Scope / dedupe data-go bindings (use container.querySelectorAll) to avoid duplicated handlers — also removes the counting/puzzle back-button blank flash + double popSound. (Medium)
 4. Improve audio fallback robustness (attach audio.onerror when creating Audio objects for a robust fallback flag; consider preloading critical short assets). (Medium)
@@ -175,7 +175,7 @@ All actionable findings from the "Fresh review" section were implemented in one 
 
 1. **Classroom zero-case mismatch — 'нула' alias (Suggested fix #1)**
    - Files: `game/shared/speech.js`
-   - Change: added lowercase alias `'нула'` → `assets/audio/speech/nul.mp3` next to the existing `'Нула'` mapping so classroom.js's `name: 'нула'` (first phrase) plays the mp3 instead of browser TTS/silence.
+   - Change: added lowercase alias `'нула'` → `assets/audio/speech/nula.mp3` next to the existing `'Нула'` mapping so classroom.js's `name: 'нула'` (first phrase) plays the mp3 instead of browser TTS/silence.
 
 2. **Keyboard accessibility — interactive tiles (Suggested fix #2)**
    - Files: `game/games/animals.js`, `game/games/coloring.js`, `game/games/candy.js`, `game/games/shapes.js`, `game/games/animal_puzzle.js`, `game/shared/accessibility.css`

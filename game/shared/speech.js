@@ -64,7 +64,7 @@
         'Квадар': 'assets/audio/speech/kvadar.mp3', 'Ваљак': 'assets/audio/speech/valjak.mp3',
         'Купа': 'assets/audio/speech/kupa.mp3', 'Пирамида': 'assets/audio/speech/piramida.mp3',
         // Учионица: numbers — zero + sentences
-        'нула': 'assets/audio/speech/nul.mp3', 'Нула': 'assets/audio/speech/nul.mp3',
+        'нула': 'assets/audio/speech/nula.mp3', 'Нула': 'assets/audio/speech/nula.mp3',
         'Један пас': 'assets/audio/speech/jedan_pas.mp3', 'Два пса': 'assets/audio/speech/dva_psa.mp3',
         'Три мачке': 'assets/audio/speech/tri_macke.mp3', 'Четири краве': 'assets/audio/speech/cetiri_krave.mp3',
         'Пет слонова': 'assets/audio/speech/pet_slonova.mp3', 'Шест лавова': 'assets/audio/speech/sest_lavova.mp3',

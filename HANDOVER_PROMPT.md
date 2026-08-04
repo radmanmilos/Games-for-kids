@@ -138,7 +138,7 @@ Session log — 2026-08-03 (Писање / Tracing game, task 53)
 Session log — 2026-08-03 (code-review fixes round)
 
 - All actionable findings from `CodeReview_Findings.md` were fixed in one pass; full action log + validation is in that doc ("Fixes performed (2026-08-03, per user request)"). Summary:
-  - speech.js: lowercase `'нула'` alias added → classroom zero tile plays nul.mp3.
+  - speech.js: lowercase `'нула'` alias added → classroom zero tile plays nula.mp3.
   - Keyboard accessibility: animals card, candy tiles, shapes pieces/slots, puzzle pieces, coloring regions are now focusable with Enter/Space (and Arrows for candy swaps); Cyrillic aria-labels; shared focus outline in accessibility.css.
   - data-go dedupe: counting/puzzle/memory back buttons now have exactly one handler (blank flash + double popSound gone).
   - audio.js: `_failed` flag via `{once:true}` error listener; playAnimalSound falls back on it.
