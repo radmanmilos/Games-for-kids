@@ -12,7 +12,8 @@ const standaloneMap = {
     'piano': ['piano-back', 'startPiano'],
     'driving': ['driving-back', 'startDriving'],
     'ocean': ['ocean-back', 'startOcean'],
-    'dino': ['dino-back', 'startDino']
+    'dino': ['dino-back', 'startDino'],
+    'space': ['space-back', 'startSpace']
 };
 const standaloneGame = standaloneMap[standalonePage];
 

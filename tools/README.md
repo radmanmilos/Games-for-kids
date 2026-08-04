@@ -20,6 +20,7 @@ binary.
 | `driving_smoke.js` | Canonical validation for Возила (Driving, task 60) — 17 checks: boot + engine/theme HUD match, page chrome + background, 10 world configs, 10 music themes (32-step melody / 16-beat bass / root), up/right steering, drive clamps, coin pickup + HUD, obstacle knockback, goal → win modal, next level, worlds picker (10 buttons + jump to world 6), music toggle, hub route + standalone-boot + page wiring (static file checks). |
 | `ocean_smoke.js` | Canonical validation for Океан (Ocean, task 61, fly mode) — 20 checks: boot + engine/theme HUD match, page chrome + background, fly controls split into two tablet clusters (left/right pad + up/down pad), 10 world configs, 10 music themes, 4-way steering, fly clamps, coin pickup + HUD, obstacle knockback, patrolling shark (vx flips at maxX and minX), goal → win modal, next level, worlds picker (10 buttons + jump to world 6), music toggle, hub route + standalone-boot + page wiring (static file checks, incl. `heroFlip`/`heroBob` config). |
 | `dino_smoke.js` | Canonical validation for Дино (Dino, task 62, ground mode) — 25 checks: boot + engine/theme HUD match, page chrome + background, ground controls (left/right D-pad cluster + standalone jump button), 10 world configs, ground-features variety (floats/moves/stairs/pipes/ceiling/night all present), 10 music themes, fall-and-land physics, run left/right, jump, coin pickup delta + HUD, ground mode has no fly obstacles, pipe wall-stop collision, raptor 3s pop cycle, raptor hit knockback, goal → win modal, next level, worlds picker (10 buttons + jump to world 6), music toggle, hub route + standalone-boot + page wiring (static file checks). |
+| `space_smoke.js` | Canonical validation for Свемир (Space, task 63, fly mode, final Phase 4 game) — 18 checks: boot + engine/theme HUD match, page chrome + background, fly controls split into two tablet clusters (left/right pad + up/down pad), 10 world configs, 10 music themes, 4-way steering, fly clamps, coin pickup + HUD, obstacle knockback, patrolling UFO (vx flips at maxX and minX), goal → win modal, next level, worlds picker (10 buttons + jump to world 6), music toggle, hub route + standalone-boot + page wiring (static file checks, incl. no-`heroFlip` — 🚀 faces right natively — + `heroBob` config). |
 | `sync-docs.sh` | Publish helper: replaces the ENTIRE `docs/` content with the current `game/` content (GitHub Pages serves main → `/docs`). Run after every change to `game/`, then commit + push to `main`. Bash; run from anywhere in the repo. |
 
 ## Commands
@@ -33,6 +34,7 @@ node tools/piano_smoke.js       # piano (Клавир) smoke test — expect ALL
 node tools/driving_smoke.js     # driving (Возила) smoke test — expect ALL PASS
 node tools/ocean_smoke.js       # ocean (Океан) smoke test — expect ALL PASS
 node tools/dino_smoke.js        # dino (Дино) smoke test — expect ALL PASS
+node tools/space_smoke.js       # space (Свемир) smoke test — expect ALL PASS
 bash tools/sync-docs.sh         # mirror game/ -> docs/ for GitHub Pages
 ```
 

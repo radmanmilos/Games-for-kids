@@ -320,6 +320,29 @@ Educational goals:
 
 ---
 
+## 🚀 Свемир (Space)
+
+Purpose:
+
+Fly a little rocket through ten different space worlds, weaving between meteors, asteroids and UFOs and collecting the world's emoji on the way to the glowing "ЦИЉ" portal.
+
+Gameplay:
+
+- Fly-mode adventure (free 2D movement, no gravity); the child steers with two thumb clusters — ◀▶ on the left edge and ▲▼ on the right edge.
+- Dodge meteors, asteroids, comets, UFOs (some patrol side to side), ring bands, planets, satellites and black holes — bumping just knocks the rocket back a little (no fail states). A friendly alien makes a cameo.
+- Collect the world's emoji (⭐🌙🔴💫🪐🌪️❄️🛰️🌌🕳️) and reach the "ЦИЉ" portal gate.
+- 10 themed worlds: Звездано небо, Месечева стаза, Црвена планета, Астероидни појас, Сатурнови прстенови, Јупитеров вихор, Ледени месец, Свемирска станица, Галаксија, Дубоки свемир.
+- Every world has its own synthesized music theme with an ambient layer (twinkling bells, moon flutes, desert wind, asteroid rumble, icy rings, station chimes, galaxy waves).
+
+Educational goals:
+
+- Motor skills
+- Timing
+- Cause and effect
+- Exploration
+
+---
+
 ## 🧩 Animal Scene Puzzle
 
 Purpose:
@@ -438,7 +461,7 @@ Paper Kitty Adventure has been fully integrated into Petrin svet and the placeho
 - All other games open as standalone pages launched from the hub.
 - Navigation, audio, speech, and utilities are shared modules.
 
-**Current focus: Phase 3 (Учионица kids tier) + Phase 4.** All **fourteen** games are playable. Phase 3 is reactivated (2026-08-04) as **full-fledged games delivered inside Учионица**: the classroom keeps its 4 baby-tier learn-and-repeat activities and gains a second menu set "За децу" with full games for the same content (Азбука/Бројеви/Боје/Облици) — e.g. "Бројеви" (for babies) next to "Бројеви" (for kids). **Phase 4 (2026-08-04)**: Клавир (Piano, task 58) — 8-key keyboard with free play and a "Свирај песму" follow-the-melody mode ("Трепери, трепери звездице"), synthesized Web Audio, no new audio assets; then **Возила (Driving, task 60)** — 10 themed road worlds (Градски трг → Космичка стаза) on a new shared adventure engine (`adventure.js`, drive mode), each world with its own synthesized music theme and ambient layer; then **Океан (Ocean, task 61)** — 10 underwater worlds (Корални гребен → Ноћни океан) on the same engine in fly mode, with patrolling sharks and per-world music + ambient; then **Дино (Dino, task 62)** — 10 prehistoric worlds (Прашума → Острво диносауруса) on the same engine in ground mode (jump/gravity/platforms), with pop-out raptor enemies and per-world music + ambient. Писање (Tracing) shipped as task 53 — it covers Letter Tracing + Number Tracing (and shape tracing) from the Future Mini Games list in one hub, as **free draw on a dashed guide** (draw over the dashed outline; validated by forgiving ink-proximity metrics). See the [Development Roadmap](#development-roadmap) for phase status.
+**Current focus: Phase 3 (Учионица kids tier) + Phase 4.** All **fifteen** games are playable. Phase 3 is reactivated (2026-08-04) as **full-fledged games delivered inside Учионица**: the classroom keeps its 4 baby-tier learn-and-repeat activities and gains a second menu set "За децу" with full games for the same content (Азбука/Бројеви/Боје/Облици) — e.g. "Бројеви" (for babies) next to "Бројеви" (for kids). **Phase 4 (2026-08-04)**: Клавир (Piano, task 58) — 8-key keyboard with free play and a "Свирај песму" follow-the-melody mode ("Трепери, трепери звездице"), synthesized Web Audio, no new audio assets; then **Возила (Driving, task 60)** — 10 themed road worlds (Градски трг → Космичка стаза) on a new shared adventure engine (`adventure.js`, drive mode), each world with its own synthesized music theme and ambient layer; then **Океан (Ocean, task 61)** — 10 underwater worlds (Корални гребен → Ноћни океан) on the same engine in fly mode, with patrolling sharks and per-world music + ambient; then **Дино (Dino, task 62)** — 10 prehistoric worlds (Прашума → Острво диносауруса) on the same engine in ground mode (jump/gravity/platforms), with pop-out raptor enemies and per-world music + ambient; then **Свемир (Space, task 63)** — 10 space worlds (Звездано небо → Дубоки свемир) on the same engine in fly mode, with patrolling UFOs and per-world music + ambient, **completing Phase 4**. Писање (Tracing) shipped as task 53 — it covers Letter Tracing + Number Tracing (and shape tracing) from the Future Mini Games list in one hub, as **free draw on a dashed guide** (draw over the dashed outline; validated by forgiving ink-proximity metrics). See the [Development Roadmap](#development-roadmap) for phase status.
 
 ---
 
@@ -785,6 +808,7 @@ pages/
   driving.html
   ocean.html
   dino.html
+  space.html
 
 games/
 
@@ -802,6 +826,7 @@ adventure.js
 driving.js
 ocean.js
 dino.js
+space.js
 
 shared/
 
@@ -840,7 +865,7 @@ Planned additions include (note: Alphabet, Numbers, and Colors are now covered a
 - ✏ Number Tracing — ✅ (Писање / Tracing, task 53)
 - 🎂 Birthday Cake Builder
 - 🐠 Ocean Discovery — ✅ (Океан, task 61)
-- 🚀 Space Explorer
+- 🚀 Space Explorer — ✅ (Свемир, task 63)
 
 ---
 
@@ -1005,9 +1030,9 @@ Build the next batch of mini-games, one per task, picked from the [Future Mini G
 - ✏ Number Tracing — ✅ built (same game, see above)
 - 🎂 Birthday Cake Builder
 - 🐠 Ocean Discovery — ✅ built (2026-08-05, as **Океан**, task 61: fly-mode swimming on the shared adventure engine from task 60 — free 2D movement, no gravity; 10 underwater worlds — Корални гребен, Лагуна, Морске траве, Каменита обала, Потопљени брод, Морска пећина, Ледени океан, Морски ров, Пиратско благо, Ноћни океан; hero 🐟, patrolling sharks + jellyfish/rocks/mines/seaweed/pufferfish/crabs/anchors, 13 coins + goal banner per world, per-world synthesized music + ambient; hub button + page + standalone wiring; canonical check `node tools/ocean_smoke.js` → 18/18 PASS)
-- 🚀 Space Explorer
+- 🚀 Space Explorer — ✅ built (2026-08-05, as **Свемир**, task 63: fly-mode rocket on the shared adventure engine from task 60 — free 2D movement, no gravity; 10 space worlds — Звездано небо, Месечева стаза, Црвена планета, Астероидни појас, Сатурнови прстенови, Јупитеров вихор, Ледени месец, Свемирска станица, Галаксија, Дубоки свемир; hero 🚀, meteors/asteroids/UFOs (patrol)/comets/ring bands/planets/satellites/black holes, 13 coins + ЦИЉ portal per world, per-world synthesized music + ambient; hub button + page + standalone wiring; canonical check `node tools/space_smoke.js` → 18/18 PASS — **Phase 4 adventure series complete**)
 
-Built so far from this list: **Писање (Tracing)** (task 53), **Возила (Driving)** (task 60), **Океан (Ocean)** (task 61), **Дино (Dino)** (task 62). No commitment yet for the rest — the user picks which games to build; each chosen game gets its own task.
+Built so far from this list: **Писање (Tracing)** (task 53), **Возила (Driving)** (task 60), **Океан (Ocean)** (task 61), **Дино (Dino)** (task 62), **Свемир (Space)** (task 63). No commitment yet for the rest — the user picks which games to build; each chosen game gets its own task.
 
 ---
 
@@ -1085,7 +1110,11 @@ The Возила car uses the updated transparent PNG asset with a red tint, for
 
 ## Dino task 62 (2026-08-05)
 
-Дино shipped — the third Phase 4 adventure game on the shared engine. Ground mode (jump/gravity/platforms). New files: `game/games/dino.js` (10 prehistoric worlds, mini-raptor enemies popping out of pipes, 10 music + ambient themes), `game/pages/dino.html` (◀▶ D-pad + big ⬆ jump button, new `.adv-ground-controls` CSS), `tools/dino_smoke.js` (25/25 PASS). Wired into the hub. Fixed a latent engine bug while shipping: ground-mode `loadWorld` called `w.floats.map`/`w.moves.map`/`w.pipes.map` unguarded (worlds missing those keys threw and left `goal` null) — dino is the first ground-mode game on this engine; all three now default to `[]`. Also added `get mice()` to the `window.__adv` debug handle for the enemy smoke checks. Task 63 (🚀 Свемир, fly mode) is next and remains pending until the user gives feedback.
+Дино shipped — the third Phase 4 adventure game on the shared engine. Ground mode (jump/gravity/platforms). New files: `game/games/dino.js` (10 prehistoric worlds, mini-raptor enemies popping out of pipes, 10 music + ambient themes), `game/pages/dino.html` (◀▶ D-pad + big ⬆ jump button, new `.adv-ground-controls` CSS), `tools/dino_smoke.js` (25/25 PASS). Wired into the hub. Fixed a latent engine bug while shipping: ground-mode `loadWorld` called `w.floats.map`/`w.moves.map`/`w.pipes.map` unguarded (worlds missing those keys threw and left `goal` null) — dino is the first ground-mode game on this engine; all three now default to `[]`. Also added `get mice()` to the `window.__adv` debug handle for the enemy smoke checks. Task 63 (🚀 Свемир, fly mode) shipped next.
+
+## Space task 63 (2026-08-05)
+
+Свемир shipped — the fourth and **final Phase 4 adventure game** on the shared engine. Fly mode (free 2D, no gravity). New files: `game/games/space.js` (10 space worlds, meteors/asteroids/patrolling UFOs/comets/ring bands/planets/satellites/black holes, 10 music + ambient themes, `drawSpaceGoal` portal arch), `game/pages/space.html` (reuses the existing `.adv-fly-controls` — ◀▶ left pad, ▲▼ right pad, no new CSS), `tools/space_smoke.js` (18/18 PASS). Wired into the hub. No new engine work — reused the hooks from tasks 60–62 (`drawObstacle`, `drawDecor`, `drawGoal`, `heroBob`, `obstacleScale`, `speed`; no `heroFlip` — 🚀 faces right natively, unlike 🐟/🦕). All four adventure smokes re-run — all PASS. **Phase 4 is complete.** Task-62 + task-63 work is still uncommitted (user commit/push pending).
 
 ## Project Activities
 
