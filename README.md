@@ -297,6 +297,29 @@ Educational goals:
 
 ---
 
+## 🦕 Дино (Dino)
+
+Purpose:
+
+Run and jump a little dinosaur through ten different prehistoric worlds, hopping across gaps and floating platforms and dodging raptors.
+
+Gameplay:
+
+- Ground-mode platformer (jump/gravity/physics); the child steers with two thumb-friendly controls — ◀▶ on the left edge and a big ⬆ jump button on the right edge.
+- Solid ground, floating and moving platforms, auto step-up stairs, and pipes that pop out a mini-raptor every few seconds — bumping just knocks the dino back a little (no fail states).
+- Collect the world's emoji (🌺🦜💧🌋💎🐸❄️🌵🌙🏝️) and reach the "ЦИЉ" stone-temple gate.
+- 10 themed worlds: Прашума, Тропска долина, Језеро, Вулкан, Пећина, Мочвара, Ледено доба, Пустиња, Ноћни свет, Острво диносауруса.
+- Every world has its own synthesized music theme with an ambient layer (jungle birds, lake waves, volcano rumble, cave drips, swamp crickets, ice bells, desert wind, night coos, island surf).
+
+Educational goals:
+
+- Motor skills
+- Timing
+- Cause and effect
+- Exploration
+
+---
+
 ## 🧩 Animal Scene Puzzle
 
 Purpose:
@@ -415,7 +438,7 @@ Paper Kitty Adventure has been fully integrated into Petrin svet and the placeho
 - All other games open as standalone pages launched from the hub.
 - Navigation, audio, speech, and utilities are shared modules.
 
-**Current focus: Phase 3 (Учионица kids tier) + Phase 4.** All **thirteen** games are playable. Phase 3 is reactivated (2026-08-04) as **full-fledged games delivered inside Учионица**: the classroom keeps its 4 baby-tier learn-and-repeat activities and gains a second menu set "За децу" with full games for the same content (Азбука/Бројеви/Боје/Облици) — e.g. "Бројеви" (for babies) next to "Бројеви" (for kids). **Phase 4 (2026-08-04)**: Клавир (Piano, task 58) — 8-key keyboard with free play and a "Свирај песму" follow-the-melody mode ("Трепери, трепери звездице"), synthesized Web Audio, no new audio assets; then **Возила (Driving, task 60)** — 10 themed road worlds (Градски трг → Космичка стаза) on a new shared adventure engine (`adventure.js`, drive mode), each world with its own synthesized music theme and ambient layer; then **Океан (Ocean, task 61)** — 10 underwater worlds (Корални гребен → Ноћни океан) on the same engine in fly mode, with patrolling sharks and per-world music + ambient. Писање (Tracing) shipped as task 53 — it covers Letter Tracing + Number Tracing (and shape tracing) from the Future Mini Games list in one hub, as **free draw on a dashed guide** (draw over the dashed outline; validated by forgiving ink-proximity metrics). See the [Development Roadmap](#development-roadmap) for phase status.
+**Current focus: Phase 3 (Учионица kids tier) + Phase 4.** All **fourteen** games are playable. Phase 3 is reactivated (2026-08-04) as **full-fledged games delivered inside Учионица**: the classroom keeps its 4 baby-tier learn-and-repeat activities and gains a second menu set "За децу" with full games for the same content (Азбука/Бројеви/Боје/Облици) — e.g. "Бројеви" (for babies) next to "Бројеви" (for kids). **Phase 4 (2026-08-04)**: Клавир (Piano, task 58) — 8-key keyboard with free play and a "Свирај песму" follow-the-melody mode ("Трепери, трепери звездице"), synthesized Web Audio, no new audio assets; then **Возила (Driving, task 60)** — 10 themed road worlds (Градски трг → Космичка стаза) on a new shared adventure engine (`adventure.js`, drive mode), each world with its own synthesized music theme and ambient layer; then **Океан (Ocean, task 61)** — 10 underwater worlds (Корални гребен → Ноћни океан) on the same engine in fly mode, with patrolling sharks and per-world music + ambient; then **Дино (Dino, task 62)** — 10 prehistoric worlds (Прашума → Острво диносауруса) on the same engine in ground mode (jump/gravity/platforms), with pop-out raptor enemies and per-world music + ambient. Писање (Tracing) shipped as task 53 — it covers Letter Tracing + Number Tracing (and shape tracing) from the Future Mini Games list in one hub, as **free draw on a dashed guide** (draw over the dashed outline; validated by forgiving ink-proximity metrics). See the [Development Roadmap](#development-roadmap) for phase status.
 
 ---
 
@@ -661,6 +684,7 @@ pages/
   papper_kitty.html
   driving.html
   ocean.html
+  dino.html
 
 games/
 shared/
@@ -668,7 +692,7 @@ assets/
 ```
 
 - `index.html` is the hub. It loads every game module and embeds Kitty.
-- The standalone pages (`pages/animals.html`, `pages/shapes.html`, `pages/matching_game.html`, `pages/animal_puzzle.html`, `pages/animal_counting.html`, `pages/animal_memory.html`, `pages/coloring.html`, `pages/classroom.html`, `pages/tracing.html`, `pages/driving.html`, `pages/ocean.html`) each load only the modules they need.
+- The standalone pages (`pages/animals.html`, `pages/shapes.html`, `pages/matching_game.html`, `pages/animal_puzzle.html`, `pages/animal_counting.html`, `pages/animal_memory.html`, `pages/coloring.html`, `pages/classroom.html`, `pages/tracing.html`, `pages/driving.html`, `pages/ocean.html`, `pages/dino.html`) each load only the modules they need.
 - `papper_kitty.html` is the self-contained Kitty runtime, embedded in the hub via iframe.
 
 ```
@@ -687,6 +711,7 @@ tracing.js
 adventure.js
 driving.js
 ocean.js
+dino.js
 ```
 
 ```
@@ -759,6 +784,7 @@ pages/
   papper_kitty.html
   driving.html
   ocean.html
+  dino.html
 
 games/
 
@@ -775,6 +801,7 @@ tracing.js
 adventure.js
 driving.js
 ocean.js
+dino.js
 
 shared/
 
@@ -807,7 +834,7 @@ Planned additions include (note: Alphabet, Numbers, and Colors are now covered a
 - 🚜 Farm
 - 🚗 Vehicles — ✅ (Возила, task 60)
 - 🍎 Fruit Matching
-- 🦕 Dinosaurs
+- 🦕 Dinosaurs — ✅ (Дино, task 62)
 - 📚 Story Time
 - ✏ Letter Tracing — ✅ (Писање / Tracing, task 53)
 - ✏ Number Tracing — ✅ (Писање / Tracing, task 53)
@@ -972,7 +999,7 @@ Build the next batch of mini-games, one per task, picked from the [Future Mini G
 - 🚜 Farm
 - 🚗 Vehicles — ✅ built (2026-08-04, as **Возила**, task 60: new shared adventure engine in `game/games/adventure.js` (drive mode) + 10 road worlds — Градски трг ⭐, Поље сунцокрета 🍭, Јесења шума 🍂, Зимски пут ⛄, Планински пут 🎿, Ноћни град 🌙, Пустињска магистрала 🌵, Тропско острво 🌴, Морска обала 🐚, Космичка стаза 🪐; 13 coins + 7–8 obstacles per world, no fail states, per-world synthesized music + ambient; hub button + page + standalone wiring; canonical check `node tools/driving_smoke.js` → 17/17 PASS)
 - 🍎 Fruit Matching
-- 🦕 Dinosaurs
+- 🦕 Dinosaurs — ✅ built (2026-08-05, as **Дино**, task 62: ground-mode platformer on the shared adventure engine from task 60 — jump/gravity/platforms; 10 prehistoric worlds — Прашума, Тропска долина, Језеро, Вулкан, Пећина, Мочвара, Ледено доба, Пустиња, Ноћни свет, Острво диносауруса; hero 🦕, floating + moving platforms, auto step-up stairs, pipes that pop out a mini-raptor every 3s, 15 coins + ЦИЉ temple gate per world, per-world synthesized music + ambient; hub button + page + standalone wiring; canonical check `node tools/dino_smoke.js` → 25/25 PASS)
 - 📚 Story Time
 - ✏ Letter Tracing — ✅ built (2026-08-03, as part of **Писање (Tracing)**, task 53: all 30 Serbian Cyrillic letters + numbers 0–10 + 4 flat shapes in one hub; redesigned to FREE DRAW on a dashed guide — the child draws over a faint dashed outline, matched by ink-proximity metrics with a forgiving "nearness" threshold)
 - ✏ Number Tracing — ✅ built (same game, see above)
@@ -980,7 +1007,7 @@ Build the next batch of mini-games, one per task, picked from the [Future Mini G
 - 🐠 Ocean Discovery — ✅ built (2026-08-05, as **Океан**, task 61: fly-mode swimming on the shared adventure engine from task 60 — free 2D movement, no gravity; 10 underwater worlds — Корални гребен, Лагуна, Морске траве, Каменита обала, Потопљени брод, Морска пећина, Ледени океан, Морски ров, Пиратско благо, Ноћни океан; hero 🐟, patrolling sharks + jellyfish/rocks/mines/seaweed/pufferfish/crabs/anchors, 13 coins + goal banner per world, per-world synthesized music + ambient; hub button + page + standalone wiring; canonical check `node tools/ocean_smoke.js` → 18/18 PASS)
 - 🚀 Space Explorer
 
-Built so far from this list: **Писање (Tracing)** (task 53), **Возила (Driving)** (task 60), **Океан (Ocean)** (task 61). No commitment yet for the rest — the user picks which games to build; each chosen game gets its own task.
+Built so far from this list: **Писање (Tracing)** (task 53), **Возила (Driving)** (task 60), **Океан (Ocean)** (task 61), **Дино (Dino)** (task 62). No commitment yet for the rest — the user picks which games to build; each chosen game gets its own task.
 
 ---
 
@@ -1055,6 +1082,10 @@ The Возила car uses the updated transparent PNG asset with a red tint, for
 ## Ocean task 61 (2026-08-05)
 
 Океан shipped — the second Phase 4 adventure game on the shared engine (`game/games/adventure.js`). Added 3 engine hooks for game-specific visuals: `cfg.drawObstacle`, `cfg.drawDecor`, `cfg.heroFontSize`. Three new files: `game/games/ocean.js` (10 underwater worlds, fly mode, patrolling sharks, 10 music + ambient themes), `game/pages/ocean.html` (4-way fly D-pad), `tools/ocean_smoke.js` (18/18 PASS). Wired into the hub. Task 62 (🦕 Дино, ground mode) is next and remains pending until the user gives feedback.
+
+## Dino task 62 (2026-08-05)
+
+Дино shipped — the third Phase 4 adventure game on the shared engine. Ground mode (jump/gravity/platforms). New files: `game/games/dino.js` (10 prehistoric worlds, mini-raptor enemies popping out of pipes, 10 music + ambient themes), `game/pages/dino.html` (◀▶ D-pad + big ⬆ jump button, new `.adv-ground-controls` CSS), `tools/dino_smoke.js` (25/25 PASS). Wired into the hub. Fixed a latent engine bug while shipping: ground-mode `loadWorld` called `w.floats.map`/`w.moves.map`/`w.pipes.map` unguarded (worlds missing those keys threw and left `goal` null) — dino is the first ground-mode game on this engine; all three now default to `[]`. Also added `get mice()` to the `window.__adv` debug handle for the enemy smoke checks. Task 63 (🚀 Свемир, fly mode) is next and remains pending until the user gives feedback.
 
 ## Project Activities
 

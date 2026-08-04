@@ -14,6 +14,7 @@
         if (id === 'game-piano') { location.href = 'pages/piano.html'; return; }
         if (id === 'game-driving') { location.href = 'pages/driving.html'; return; }
         if (id === 'game-ocean') { location.href = 'pages/ocean.html'; return; }
+        if (id === 'game-dino') { location.href = 'pages/dino.html'; return; }
         if (id !== 'game-kitty' && typeof window.stopKitty === 'function') window.stopKitty();
         screens.forEach(screen => screen.classList.toggle('active', screen.id === id));
         if (id === 'game-animals' && typeof window.startAnimals === 'function') window.startAnimals();

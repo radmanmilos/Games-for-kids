@@ -530,7 +530,7 @@
 
             if (mode === 'ground') {
                 platforms = w.grounds.map(g => ({ x: g.x, y: gy, width: g.w, height: 50, color: w.groundColor }))
-                    .concat(w.floats.map(f => ({ x: f.x, y: gy - f.dy, width: f.w, height: 26, color: f.color })));
+                    .concat((w.floats || []).map(f => ({ x: f.x, y: gy - f.dy, width: f.w, height: 26, color: f.color })));
 
                 coins = w.coins.map(c => ({ x: c.x, y: gy - c.dy, collected: false }));
 
@@ -552,12 +552,12 @@
                 });
                 platforms = platforms.concat(stairSteps);
 
-                movingPlatforms = w.moves.map(m => ({
+                movingPlatforms = (w.moves || []).map(m => ({
                     x: m.x, y: gy - m.dy, width: m.w, height: 22,
                     minX: m.minX, maxX: m.maxX, vx: m.vx, color: m.color
                 }));
 
-                pipes = w.pipes.map(p => ({ x: p.x, y: gy - p.h, width: 60, height: p.h }));
+                pipes = (w.pipes || []).map(p => ({ x: p.x, y: gy - p.h, width: 60, height: p.h }));
 
                 goal = { x: w.goalX, y: gy - 220, width: 220, height: 220 };
 
@@ -1848,6 +1848,7 @@
             get player() { return player; },
             get obstacles() { return obstacles; },
             get coins() { return coins; },
+            get mice() { return mice; },
             get goal() { return goal; },
             get theme() { return theme; },
             get music() { return cfg.music; },

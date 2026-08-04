@@ -205,6 +205,18 @@ body, html {
     justify-content: space-between;
 }
 
+/* Ground-mode controls (Дино): left/right cluster on the LEFT edge and one
+   big jump button on the RIGHT edge — thumbs rest on their natural sides. */
+#adv-controls.adv-ground-controls {
+    justify-content: space-between;
+    align-items: center;
+}
+
+#adv-controls.adv-ground-controls .adv-d-pad {
+    display: flex;
+    gap: 16px;
+}
+
 /* Tablet-friendly fly controls (Океан, later Свемир): left/right sit in a
    horizontal cluster on the LEFT edge, up/down in a vertical cluster on the
    RIGHT edge — big targets where a child's thumbs naturally rest. */
