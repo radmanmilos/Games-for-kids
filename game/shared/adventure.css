@@ -205,6 +205,38 @@ body, html {
     justify-content: space-between;
 }
 
+/* Tablet-friendly fly controls (Океан, later Свемир): left/right sit in a
+   horizontal cluster on the LEFT edge, up/down in a vertical cluster on the
+   RIGHT edge — big targets where a child's thumbs naturally rest. */
+#adv-controls.adv-fly-controls {
+    justify-content: space-between;
+    align-items: center;
+}
+
+#adv-controls.adv-fly-controls .adv-d-pad {
+    display: flex;
+    gap: 16px;
+}
+
+#adv-controls.adv-fly-controls .adv-pad-horizontal {
+    flex-direction: row;
+}
+
+#adv-controls.adv-fly-controls .adv-pad-vertical {
+    flex-direction: column;
+}
+
+#adv-controls.adv-fly-controls .adv-btn {
+    width: 92px;
+    height: 92px;
+    font-size: 34px;
+}
+
+#adv-controls.adv-fly-controls .adv-btn-up { order: 0; }
+#adv-controls.adv-fly-controls .adv-btn-down { order: 1; }
+#adv-controls.adv-fly-controls .adv-btn-left { order: 0; }
+#adv-controls.adv-fly-controls .adv-btn-right { order: 1; }
+
 .adv-btn {
     width: 100px;
     height: 100px;

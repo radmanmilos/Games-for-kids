@@ -1363,6 +1363,7 @@
         }
 
         function drawDecor(t) {
+            if (cfg.drawDecor) { cfg.drawDecor(ctx, t, cameraX, canvas, theme); return; }
             const baseY = roadTopY();
             switch (theme.decor) {
                 case 'city': drawCity(baseY); break;
@@ -1410,6 +1411,7 @@
         }
 
         function drawObstacle(type, o) {
+            if (cfg.drawObstacle) { cfg.drawObstacle(ctx, o, theme); return; }
             const x = o.x, y = o.y, w = o.width, h = o.height;
             // soft drop shadow so obstacles sit on the road
             ctx.fillStyle = 'rgba(0,0,0,0.16)';
@@ -1730,7 +1732,8 @@
 
             ctx.save();
             const carBob = mode === 'drive' ? Math.sin(t * 10) * 2 : 0;
-            ctx.translate(player.x + player.width / 2, player.y + player.height / 2 + carBob);
+            const heroBob = cfg.heroBob ? Math.sin(t * 6) * cfg.heroBob : 0;
+            ctx.translate(player.x + player.width / 2, player.y + player.height / 2 + carBob + heroBob);
             ctx.globalAlpha = 1;
             if (mode === 'drive') {
                 if (heroImage && heroImage.complete && heroImage.naturalWidth) {
@@ -1742,8 +1745,8 @@
                     drawDriveCar(player.width, player.height, 0);
                 }
             } else {
-                ctx.scale(player.facingRight ? 1 : -1, player.squish);
-                ctx.font = '48px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+                ctx.scale((cfg.heroFlip ? !player.facingRight : player.facingRight) ? 1 : -1, player.squish);
+                ctx.font = (cfg.heroFontSize || 48) + 'px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(cfg.hero, 0, 0);

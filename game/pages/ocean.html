@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Океан: Пустоловина</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐟</text></svg>">
+    <link rel="stylesheet" href="../shared/adventure.css">
+    <link rel="stylesheet" href="../shared/accessibility.css">
+</head>
+<body>
+<div id="adv-game">
+    <button class="adv-back" id="ocean-back"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <h1 id="adv-title">Океан</h1>
+
+    <div id="adv-score">
+        СВЕТ <span id="adv-level">1</span><br>
+        <span id="adv-collect-emoji">🐚</span> <span id="adv-coin-count">0</span><br>
+        <span class="sb-small" id="adv-world-name">Корални гребен</span>
+    </div>
+    <button id="adv-worlds-btn" aria-label="Светови">🌍</button>
+    <button id="adv-music-btn" aria-label="Музика">🔊</button>
+
+    <div id="adv-win-modal">
+        <h1 id="adv-win-title">СВЕТ ПРЕЂЕН!</h1>
+        <button class="adv-play-again-btn" id="adv-modal-btn">СЛЕДЕЋИ СВЕТ! 🚀</button>
+    </div>
+
+    <div id="adv-worlds-modal">
+        <h2>🌍 Светови</h2>
+        <div id="adv-worlds-grid"></div>
+        <button id="adv-worlds-close">Затвори</button>
+    </div>
+
+    <canvas id="adv-canvas"></canvas>
+
+    <div id="adv-controls" class="adv-fly-controls">
+        <div class="adv-d-pad adv-pad-horizontal">
+            <div class="adv-btn adv-btn-left" data-adv="left">◀</div>
+            <div class="adv-btn adv-btn-right" data-adv="right">▶</div>
+        </div>
+        <div class="adv-d-pad adv-pad-vertical">
+            <div class="adv-btn adv-btn-up" data-adv="up">▲</div>
+            <div class="adv-btn adv-btn-down" data-adv="down">▼</div>
+        </div>
+    </div>
+</div>
+
+<script src="../games/adventure.js"></script>
+<script src="../games/ocean.js"></script>
+<script src="../shared/main.js"></script>
+</body>
+</html>

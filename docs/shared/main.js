@@ -10,7 +10,8 @@ const standaloneMap = {
     'classroom': ['classroom-back', 'startClassroom'],
     'tracing': ['tracing-back', 'startTracing'],
     'piano': ['piano-back', 'startPiano'],
-    'driving': ['driving-back', 'startDriving']
+    'driving': ['driving-back', 'startDriving'],
+    'ocean': ['ocean-back', 'startOcean']
 };
 const standaloneGame = standaloneMap[standalonePage];
 
