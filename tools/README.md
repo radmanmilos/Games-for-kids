@@ -17,6 +17,7 @@ binary.
 | `dilate_test.js` | Standalone check that the integral-image `dilate()` in `tracing.js` produces a correct symmetric dilation (center/corner/corners cases). |
 | `kids_smoke.js` | Validation for the Учионица kids tier (Phase 3, "За децу" quiz games) — 12 checks: two-set hub (4 baby + 4 kids buttons + labels), each of the 4 games renders its screen (title/4 options/1 answer/prompt), numbers prompt shows the countable emoji row, wrong tap nudges without advancing, 8 corrects → finish panel + score, replay restarts, back → hub. |
 | `piano_smoke.js` | Validation for the Клавир (Piano) game (Phase 4) — 14 checks: boot, 8 keys render, free-play tap glows, song mode shows "1 од 42" with a single lit C, song picker (3 emoji chips ⭐/🎂/🔔 with aria-label titles + active state), switching to birthday/jingle resets counter + lit key, wrong key nudges + keeps the note, preview button toggles, re-entering song mode resets, 42 correct taps → finish panel, replay restarts, hub route + standalone-boot wiring (static file checks). |
+| `driving_smoke.js` | Canonical validation for Возила (Driving, task 60) — 17 checks: boot + engine/theme HUD match, page chrome + background, 10 world configs, 10 music themes (32-step melody / 16-beat bass / root), up/right steering, drive clamps, coin pickup + HUD, obstacle knockback, goal → win modal, next level, worlds picker (10 buttons + jump to world 6), music toggle, hub route + standalone-boot + page wiring (static file checks). |
 | `sync-docs.sh` | Publish helper: replaces the ENTIRE `docs/` content with the current `game/` content (GitHub Pages serves main → `/docs`). Run after every change to `game/`, then commit + push to `main`. Bash; run from anywhere in the repo. |
 
 ## Commands
@@ -27,6 +28,7 @@ node tools/tracing_probe.js     # metrics table (uses window.__traceDebug)
 node tools/tracing_smoke.js     # full game smoke test — expect ALL PASS
 node tools/kids_smoke.js        # classroom kids-tier smoke test — expect ALL PASS
 node tools/piano_smoke.js       # piano (Клавир) smoke test — expect ALL PASS
+node tools/driving_smoke.js     # driving (Возила) smoke test — expect ALL PASS
 bash tools/sync-docs.sh         # mirror game/ -> docs/ for GitHub Pages
 ```
 

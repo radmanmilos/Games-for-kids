@@ -9,7 +9,8 @@ const standaloneMap = {
     'coloring': ['coloring-back', 'startColoring'],
     'classroom': ['classroom-back', 'startClassroom'],
     'tracing': ['tracing-back', 'startTracing'],
-    'piano': ['piano-back', 'startPiano']
+    'piano': ['piano-back', 'startPiano'],
+    'driving': ['driving-back', 'startDriving']
 };
 const standaloneGame = standaloneMap[standalonePage];
 

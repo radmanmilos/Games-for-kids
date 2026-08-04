@@ -253,6 +253,28 @@ Educational goals:
 
 ---
 
+## 🚗 Возила (Driving)
+
+Purpose:
+
+Drive a little car through ten different road worlds, dodging vehicles and road works.
+
+Gameplay:
+
+- The road rolls forward automatically; the child steers the car up/down/left/right.
+- Avoid cars, trucks, buses, cones and barriers — bumping just knocks the car back a little (no fail states).
+- Collect the world's emoji (⭐🍭🍂⛄🎿🌙🌵🌴🐚🪐) and reach the "ЦИЉ" finish gate.
+- 10 themed worlds: Градски трг, Поље сунцокрета, Јесења шума, Зимски пут, Планински пут, Ноћни град, Пустињска магистрала, Тропско острво, Морска обала, Космичка стаза.
+- Every world has its own synthesized music theme with an ambient layer (horns, crickets, birdsong, wind, rumble, owl hoots, desert wind, waves, sleigh bells).
+
+Educational goals:
+
+- Motor skills
+- Cause and effect
+- Observation
+
+---
+
 ## 🧩 Animal Scene Puzzle
 
 Purpose:
@@ -371,7 +393,7 @@ Paper Kitty Adventure has been fully integrated into Petrin svet and the placeho
 - All other games open as standalone pages launched from the hub.
 - Navigation, audio, speech, and utilities are shared modules.
 
-**Current focus: Phase 3 (Учионица kids tier) + Phase 4 start.** All **eleven** games are playable. Phase 3 is reactivated (2026-08-04) as **full-fledged games delivered inside Учионица**: the classroom keeps its 4 baby-tier learn-and-repeat activities and gains a second menu set "За децу" with full games for the same content (Азбука/Бројеви/Боје/Облици) — e.g. "Бројеви" (for babies) next to "Бројеви" (for kids). **Phase 4 kicked off (2026-08-04) with Клавир (Piano, task 58)** — 8-key keyboard with free play and a "Свирај песму" follow-the-melody mode ("Трепери, трепери звездице"), synthesized Web Audio, no new audio assets. Писање (Tracing) shipped as task 53 — it covers Letter Tracing + Number Tracing (and shape tracing) from the Future Mini Games list in one hub, as **free draw on a dashed guide** (draw over the dashed outline; validated by forgiving ink-proximity metrics). See the [Development Roadmap](#development-roadmap) for phase status.
+**Current focus: Phase 3 (Учионица kids tier) + Phase 4 start.** All **twelve** games are playable. Phase 3 is reactivated (2026-08-04) as **full-fledged games delivered inside Учионица**: the classroom keeps its 4 baby-tier learn-and-repeat activities and gains a second menu set "За децу" with full games for the same content (Азбука/Бројеви/Боје/Облици) — e.g. "Бројеви" (for babies) next to "Бројеви" (for kids). **Phase 4 (2026-08-04)**: Клавир (Piano, task 58) — 8-key keyboard with free play and a "Свирај песму" follow-the-melody mode ("Трепери, трепери звездице"), synthesized Web Audio, no new audio assets; then **Возила (Driving, task 60)** — 10 themed road worlds (Градски трг → Космичка стаза) on a new shared adventure engine (`adventure.js`, drive mode), each world with its own synthesized music theme and ambient layer. Писање (Tracing) shipped as task 53 — it covers Letter Tracing + Number Tracing (and shape tracing) from the Future Mini Games list in one hub, as **free draw on a dashed guide** (draw over the dashed outline; validated by forgiving ink-proximity metrics). See the [Development Roadmap](#development-roadmap) for phase status.
 
 ---
 
@@ -615,6 +637,7 @@ pages/
   classroom.html
   tracing.html
   papper_kitty.html
+  driving.html
 
 games/
 shared/
@@ -622,7 +645,7 @@ assets/
 ```
 
 - `index.html` is the hub. It loads every game module and embeds Kitty.
-- The standalone pages (`pages/animals.html`, `pages/shapes.html`, `pages/matching_game.html`, `pages/animal_puzzle.html`, `pages/animal_counting.html`, `pages/animal_memory.html`, `pages/coloring.html`, `pages/classroom.html`, `pages/tracing.html`) each load only the modules they need.
+- The standalone pages (`pages/animals.html`, `pages/shapes.html`, `pages/matching_game.html`, `pages/animal_puzzle.html`, `pages/animal_counting.html`, `pages/animal_memory.html`, `pages/coloring.html`, `pages/classroom.html`, `pages/tracing.html`, `pages/driving.html`) each load only the modules they need.
 - `papper_kitty.html` is the self-contained Kitty runtime, embedded in the hub via iframe.
 
 ```
@@ -638,6 +661,8 @@ animal_memory.js
 coloring.js
 classroom.js
 tracing.js
+adventure.js
+driving.js
 ```
 
 ```
@@ -649,6 +674,7 @@ speech.js
 utils.js
 main.js
 accessibility.css
+adventure.css
 ```
 
 ```
@@ -707,6 +733,7 @@ pages/
   classroom.html
   tracing.html
   papper_kitty.html
+  driving.html
 
 games/
 
@@ -720,6 +747,8 @@ animal_memory.js
 coloring.js
 classroom.js
 tracing.js
+adventure.js
+driving.js
 
 shared/
 
@@ -729,6 +758,7 @@ navigation.js
 utils.js
 main.js
 accessibility.css
+adventure.css
 
 assets/
 
@@ -749,7 +779,7 @@ Planned additions include (note: Alphabet, Numbers, and Colors are now covered a
 - 🥁 Musical Instruments
 - 🎈 Balloon Pop
 - 🚜 Farm
-- 🚗 Vehicles
+- 🚗 Vehicles — ✅ (Возила, task 60)
 - 🍎 Fruit Matching
 - 🦕 Dinosaurs
 - 📚 Story Time
@@ -914,7 +944,7 @@ Build the next batch of mini-games, one per task, picked from the [Future Mini G
 - 🥁 Musical Instruments
 - 🎈 Balloon Pop
 - 🚜 Farm
-- 🚗 Vehicles
+- 🚗 Vehicles — ✅ built (2026-08-04, as **Возила**, task 60: new shared adventure engine in `game/games/adventure.js` (drive mode) + 10 road worlds — Градски трг ⭐, Поље сунцокрета 🍭, Јесења шума 🍂, Зимски пут ⛄, Планински пут 🎿, Ноћни град 🌙, Пустињска магистрала 🌵, Тропско острво 🌴, Морска обала 🐚, Космичка стаза 🪐; 13 coins + 7–8 obstacles per world, no fail states, per-world synthesized music + ambient; hub button + page + standalone wiring; canonical check `node tools/driving_smoke.js` → 17/17 PASS)
 - 🍎 Fruit Matching
 - 🦕 Dinosaurs
 - 📚 Story Time
@@ -924,7 +954,7 @@ Build the next batch of mini-games, one per task, picked from the [Future Mini G
 - 🐠 Ocean Discovery
 - 🚀 Space Explorer
 
-Built so far from this list: **Писање (Tracing)** (task 53). No commitment yet for the rest — the user picks which games to build; each chosen game gets its own task.
+Built so far from this list: **Писање (Tracing)** (task 53), **Возила (Driving)** (task 60). No commitment yet for the rest — the user picks which games to build; each chosen game gets its own task.
 
 ---
 
@@ -991,6 +1021,10 @@ Any developer or AI assistant working on Petrin svet should read this document b
 Whenever significant architectural decisions are made, this document should be updated to reflect them.
 
 All future development should align with the goals, architecture, folder structure, and philosophy defined here.
+
+## Driving task 60 final polish (2026-08-04)
+
+The Возила car uses the updated transparent PNG asset with a red tint, forgiving car/obstacle hitboxes, and a higher upper-road movement limit. Task 60 is complete; task 61 (Океан) is next and remains pending until the user starts it.
 
 ## Project Activities
 
