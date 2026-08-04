@@ -8,18 +8,19 @@ const path = require('path');
 const DIR = path.join(__dirname, '..', 'game', 'assets', 'audio', 'speech');
 
 const pairs = [
-  // [filename, serbian text] — letter names
-  ['a','а'],['be','бе'],['ve','ве'],['ge','ге'],['de','де'],['dje','ђе'],['e','е'],
-  ['zhe','же'],['ze','зе'],['i','и'],['je','је'],['ka','ка'],['el','ел'],['elj','ељ'],
-  ['em','ем'],['en','ен'],['enj','ењ'],['o','о'],['pe','пе'],['er','ер'],['es','ес'],
-  ['te','те'],['cje','ће'],['u','у'],['ef','еф'],['ha','ха'],['ce','це'],['che','че'],
-  ['dze','џе'],['sha','ша'],
+  // [filename, serbian text] — letter sounds
+  // а/у use elongated text (ааа/ууу): single-character TTS renders clip the vowel onset
+  ['a','ааа'],['b','б'],['v','в'],['g','г'],['d','д'],['dj','ђ'],['e','е'],
+  ['zh','ж'],['z','з'],['i','и'],['j','ј'],['k','к'],['l','л'],['lj','љ'],
+  ['m','м'],['n','н'],['nj','њ'],['o','ооо'],['p','п'],['r','р'],['s','с'],
+  ['t','т'],['cj','ћ'],['u','ууу'],['f','ф'],['h','х'],['c','ц'],['ch','ч'],
+  ['dz','џ'],['sh','ш'],
   // alphabet words
   ['automobil','Аутомобил'],['banana','Банана'],['vuk','Вук'],['gusenica','Гусеница'],
-  ['drvo','Дрво'],['djak','Ђак'],['ez','Еж'],['igracka','Играчка'],['jabuka','Јабука'],
+  ['drvo','Дрво'],['djak','Ђак'],['ekran','Екран'],['igla','Игла'],['jabuka','Јабука'],
   ['ljubav','Љубав'],['nos','Нос'],['njuska','Њушка'],['oko','Око'],['riba','Риба'],
   ['torta','Торта'],['cjuran','Ћуран'],['uvo','Уво'],['flamingo','Фламинго'],
-  ['helikopter','Хеликоптер'],['cvet','Цвет'],['chamac','Чамац'],['dzem','Џем'],['sesir','Шешир'],
+  ['helikopter','Хеликоптер'],['cvet','Цвет'],['chamac','Чамац'],['dzemper','Џемпер'],['sesir','Шешир'],
   // colors
   ['crvena','Црвена'],['narandzasta','Наранџаста'],['zuta','Жута'],['zelena','Зелена'],
   ['plava','Плава'],['ljubicasta','Љубичаста'],['roze','Розе'],['braon','Браон'],

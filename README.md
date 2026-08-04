@@ -343,7 +343,7 @@ A learning hub where the child sees a word, hears it, and repeats it.
 
 Activities:
 
-- 🔤 Азбука — all 30 Serbian Cyrillic letters. Tap a letter to hear its name and a word that starts with it (with an emoji picture).
+- 🔤 Азбука — all 30 Serbian Cyrillic letters. Tap a letter to hear its sound and a word that starts with it (with an emoji picture).
 - 🔢 Бројеви — numbers 0–10. Tap a number to hear it and a sentence like "Пет слонова" (Five elephants), shown with that many animal pictures.
 - 🔷 Облици — Круг, Квадрат, Троугао, Звезда, plus 3D shapes Лопта, Коцка, Квадар, Ваљак, Купа, Пирамида (drawn as inline SVG so the real 3D form is visible). Tap a shape to hear its name.
 - 🎨 Боје — the 11-color palette. Tap a color to hear its name.
@@ -947,7 +947,6 @@ Big-ticket (deferred to a later phase 2026-08-03):
 
 Open items in Phase 5:
 
-- **Учионица alphabet pronunciation + image audit** — open (task 43), waiting on the human to list the exact letters/words that sound or look wrong.
 - Visual pass on the 12 coloring scenes (task 51 redraw) — screenshots in `resources/coloring-redraw/*.png`; review with MiMo V2.5 Free.
 
 ---
