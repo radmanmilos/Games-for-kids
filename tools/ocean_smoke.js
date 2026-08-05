@@ -105,15 +105,16 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const coin = await h.evalv(`(() => {
     const a = window.__adv;
     a.loadWorld();
+    const before = a.coinCount;
     const c = a.coins[0];
     a.coins.slice(1).forEach(other => { other.collected = true; });
     a.player.x = c.x;
     a.player.y = c.y;
     a.update();
-    return JSON.stringify({ count: a.coinCount, collected: c.collected, hud: document.getElementById('adv-coin-count').textContent });
+    return JSON.stringify({ before: before, count: a.coinCount, collected: c.collected, hud: document.getElementById('adv-coin-count').textContent });
   })()`);
   const coj = JSON.parse(coin);
-  check('coin pickup: count 1, HUD updated', coj.count === 1 && coj.collected === true && coj.hud === '1', coin);
+  check('coin pickup: count +1, HUD updated', coj.count === coj.before + 1 && coj.collected === true && coj.hud === String(coj.before + 1), coin);
 
   await sleep(1100);
   await h.evalv(`(() => {

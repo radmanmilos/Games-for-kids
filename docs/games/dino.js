@@ -77,18 +77,16 @@
     // ~250px across, so gaps stay <= 210 and floats <= 150 above ground.
     const LEVELS = [
         {
-            name: 'Прашума', collectible: '🌺', goal: 'finish', music: 'jungle', decor: 'jungle',
+            name: 'Прашума', collectible: '🌺', goal: 'finish', music: 'jungle', decor: 'jungle', pitHazard: 'spikes',
             bgSky: '#6ecf6a', bgPage: '#6ecf6a', isNight: false, noHills: true,
             groundColor: '#4a9e4a', stairColor: '#5aa85a', pipeColor: '#2f8a3c', enemy: 'raptor',
             hillColor: '#3d8a3d',
             grounds: [
                 { x: 0, w: 900 }, { x: 1100, w: 700 }, { x: 1900, w: 900 }, { x: 3000, w: 800 },
-                { x: 3900, w: 800 }, { x: 4900, w: 900 }, { x: 5900, w: 1000 }
+                { x: 3900, w: 800 }, { x: 4900, w: 900 }, { x: 5900, w: 1260 }
             ],
             floats: [
-                { x: 960, w: 110, dy: 80, color: '#5aa85a' },
-                { x: 2960, w: 110, dy: 90, color: '#5aa85a' },
-                { x: 4860, w: 110, dy: 80, color: '#5aa85a' }
+                { x: 2960, w: 110, dy: 90, color: '#5aa85a' }
             ],
             pipes: [
                 { x: 600, h: 130 }, { x: 2300, h: 110 }, { x: 4400, h: 140 }
@@ -105,13 +103,13 @@
             goalX: 6900
         },
         {
-            name: 'Тропска долина', collectible: '🦜', goal: 'finish', music: 'valley', decor: 'valley',
+            name: 'Тропска долина', collectible: '🦜', goal: 'finish', music: 'valley', decor: 'valley', pitHazard: 'spikes',
             bgSky: '#7fd4ff', bgPage: '#7fd4ff', isNight: false, noHills: true,
             groundColor: '#8a6a3a', stairColor: '#9a7a4a', pipeColor: '#6b9e5a', enemy: 'raptor',
             hillColor: '#5a8a4a',
             grounds: [
                 { x: 0, w: 1000 }, { x: 1150, w: 800 }, { x: 2100, w: 900 }, { x: 3150, w: 800 },
-                { x: 4100, w: 900 }, { x: 5150, w: 900 }, { x: 6200, w: 900 }
+                { x: 4100, w: 900 }, { x: 5190, w: 860 }, { x: 6240, w: 1120 }
             ],
             floats: [
                 { x: 1200, w: 100, dy: 60, color: '#9a7a4a' },
@@ -136,22 +134,20 @@
             goalX: 7100
         },
         {
-            name: 'Језеро', collectible: '💧', goal: 'finish', music: 'lake', decor: 'lake',
+            name: 'Језеро', collectible: '💧', goal: 'finish', music: 'lake', decor: 'lake', pitHazard: 'water',
             bgSky: '#5fc8f0', bgPage: '#5fc8f0', isNight: false, noHills: true,
             groundColor: '#5a6a4a', stairColor: '#6a7a5a', pipeColor: '#5a6a78', enemy: 'raptor',
             hillColor: '#4a5a3a',
             grounds: [
                 { x: 0, w: 700 }, { x: 850, w: 650 }, { x: 1650, w: 650 }, { x: 2450, w: 650 },
-                { x: 3250, w: 650 }, { x: 4050, w: 700 }, { x: 4900, w: 700 }, { x: 5750, w: 800 }
+                { x: 3250, w: 650 }, { x: 4080, w: 670 }, { x: 4900, w: 700 }, { x: 5750, w: 1060 }
             ],
             floats: [
                 { x: 780, w: 90, dy: 50, color: '#7a8a5a' },
                 { x: 1600, w: 90, dy: 60, color: '#7a8a5a' },
                 { x: 2400, w: 90, dy: 50, color: '#7a8a5a' },
                 { x: 3200, w: 90, dy: 60, color: '#7a8a5a' },
-                { x: 4000, w: 90, dy: 50, color: '#7a8a5a' },
-                { x: 4850, w: 90, dy: 60, color: '#7a8a5a' },
-                { x: 5700, w: 90, dy: 50, color: '#7a8a5a' }
+                { x: 4850, w: 90, dy: 60, color: '#7a8a5a' }
             ],
             pipes: [
                 { x: 1200, h: 110 }
@@ -165,13 +161,13 @@
             goalX: 6550
         },
         {
-            name: 'Вулкан', collectible: '🌋', goal: 'finish', music: 'volcano', decor: 'volcano',
+            name: 'Вулкан', collectible: '🌋', goal: 'finish', music: 'volcano', decor: 'volcano', pitHazard: 'lava',
             bgSky: '#d97742', bgPage: '#d97742', isNight: false, noHills: true,
             groundColor: '#5a4a3a', stairColor: '#6a5a4a', pipeColor: '#8a3a2a', enemy: 'raptor',
             hillColor: '#4a3a2a',
             grounds: [
-                { x: 0, w: 900 }, { x: 1100, w: 800 }, { x: 2000, w: 900 }, { x: 3000, w: 900 },
-                { x: 4000, w: 900 }, { x: 5000, w: 900 }, { x: 6000, w: 900 }
+                { x: 0, w: 900 }, { x: 1100, w: 800 }, { x: 2080, w: 820 }, { x: 3000, w: 900 },
+                { x: 4000, w: 900 }, { x: 5080, w: 820 }, { x: 6000, w: 1160 }
             ],
             moves: [
                 { x: 1010, w: 130, dy: 70, minX: 940, maxX: 1170, vx: 1.5, color: '#6a5a4a' }
@@ -191,14 +187,14 @@
             goalX: 6900
         },
         {
-            name: 'Пећина', collectible: '💎', goal: 'finish', music: 'cave', decor: 'cave',
+            name: 'Пећина', collectible: '💎', goal: 'finish', music: 'cave', decor: 'cave', pitHazard: 'lava',
             bgSky: '#0e1c30', bgPage: '#0e1c30', isNight: false, noHills: true, noClouds: true,
             ceiling: true, ceilingColor: '#1a2c46',
             groundColor: '#3a3a4a', stairColor: '#4a4a5a', pipeColor: '#2a4a6a', enemy: 'raptor',
             hillColor: '#2a2a3a',
             grounds: [
                 { x: 0, w: 900 }, { x: 1100, w: 800 }, { x: 2000, w: 900 }, { x: 3000, w: 900 },
-                { x: 4000, w: 900 }, { x: 5000, w: 900 }, { x: 6000, w: 900 }
+                { x: 4000, w: 900 }, { x: 5070, w: 830 }, { x: 6000, w: 1160 }
             ],
             floats: [
                 { x: 1150, w: 110, dy: 100, color: '#4a4a5a' },
@@ -217,13 +213,13 @@
             goalX: 6900
         },
         {
-            name: 'Мочвара', collectible: '🐸', goal: 'finish', music: 'swamp', decor: 'swamp',
+            name: 'Мочвара', collectible: '🐸', goal: 'finish', music: 'swamp', decor: 'swamp', pitHazard: 'water',
             bgSky: '#7a8a4a', bgPage: '#7a8a4a', isNight: false, noHills: true,
             groundColor: '#5a6a3a', stairColor: '#6a7a4a', pipeColor: '#3a5a2a', enemy: 'raptor',
             hillColor: '#4a5a2a',
             grounds: [
-                { x: 0, w: 800 }, { x: 950, w: 700 }, { x: 1800, w: 800 }, { x: 2750, w: 700 },
-                { x: 3600, w: 800 }, { x: 4550, w: 800 }, { x: 5500, w: 800 }
+                { x: 0, w: 800 }, { x: 950, w: 700 }, { x: 1800, w: 800 }, { x: 2820, w: 630 },
+                { x: 3600, w: 800 }, { x: 4550, w: 800 }, { x: 5500, w: 1060 }
             ],
             moves: [
                 { x: 950, w: 100, dy: 80, minX: 880, maxX: 1050, vx: 1.4, color: '#6a7a4a' }
@@ -243,13 +239,13 @@
             goalX: 6300
         },
         {
-            name: 'Ледено доба', collectible: '❄️', goal: 'finish', music: 'ice', decor: 'ice',
+            name: 'Ледено доба', collectible: '❄️', goal: 'finish', music: 'ice', decor: 'ice', pitHazard: 'spikes',
             bgSky: '#bfe8ff', bgPage: '#bfe8ff', isNight: false, noHills: true,
             groundColor: '#dff0ff', stairColor: '#cfeaff', pipeColor: '#8fc4e8', enemy: 'raptor',
             hillColor: '#cfeaff',
             grounds: [
                 { x: 0, w: 900 }, { x: 1050, w: 800 }, { x: 1950, w: 900 }, { x: 2950, w: 800 },
-                { x: 3850, w: 900 }, { x: 4850, w: 900 }, { x: 5850, w: 900 }
+                { x: 3850, w: 900 }, { x: 4930, w: 820 }, { x: 5930, w: 1080 }
             ],
             floats: [
                 { x: 1100, w: 110, dy: 70, color: '#cfeaff' },
@@ -270,13 +266,13 @@
             goalX: 6750
         },
         {
-            name: 'Пустиња', collectible: '🌵', goal: 'finish', music: 'desert', decor: 'desert',
+            name: 'Пустиња', collectible: '🌵', goal: 'finish', music: 'desert', decor: 'desert', pitHazard: 'spikes',
             bgSky: '#f0d8a0', bgPage: '#f0d8a0', isNight: false, noHills: true,
             groundColor: '#d8c080', stairColor: '#e0c890', pipeColor: '#b0884a', enemy: 'raptor',
             hillColor: '#c8b070',
             grounds: [
                 { x: 0, w: 800 }, { x: 1000, w: 700 }, { x: 1850, w: 800 }, { x: 2800, w: 800 },
-                { x: 3750, w: 800 }, { x: 4700, w: 800 }, { x: 5650, w: 800 }
+                { x: 3750, w: 800 }, { x: 4700, w: 800 }, { x: 5720, w: 990 }
             ],
             floats: [
                 { x: 1050, w: 110, dy: 90, color: '#e0c890' },
@@ -297,13 +293,13 @@
             goalX: 6450
         },
         {
-            name: 'Ноћни свет', collectible: '🌙', goal: 'finish', music: 'night', decor: 'night',
+            name: 'Ноћни свет', collectible: '🌙', goal: 'finish', music: 'night', decor: 'night', pitHazard: 'spikes',
             bgSky: '#1a2a5a', bgPage: '#1a2a5a', isNight: true, noHills: true,
             groundColor: '#3a3a5a', stairColor: '#4a4a6a', pipeColor: '#4a3a6a', enemy: 'raptor',
             hillColor: '#2a2a4a',
             grounds: [
                 { x: 0, w: 900 }, { x: 1100, w: 800 }, { x: 2000, w: 900 }, { x: 3000, w: 900 },
-                { x: 4000, w: 900 }, { x: 5000, w: 900 }, { x: 6000, w: 900 }
+                { x: 4000, w: 900 }, { x: 5090, w: 810 }, { x: 6070, w: 1090 }
             ],
             moves: [
                 { x: 1010, w: 120, dy: 90, minX: 940, maxX: 1180, vx: 1.6, color: '#4a4a6a' }
@@ -320,13 +316,13 @@
             goalX: 6900
         },
         {
-            name: 'Острво диносауруса', collectible: '🏝️', goal: 'finish', music: 'island', decor: 'island',
+            name: 'Острво диносауруса', collectible: '🏝️', goal: 'finish', music: 'island', decor: 'island', pitHazard: 'water',
             bgSky: '#4fc8e8', bgPage: '#4fc8e8', isNight: false, noHills: true,
             groundColor: '#e0c080', stairColor: '#e8c890', pipeColor: '#a87848', enemy: 'raptor',
             hillColor: '#4a9e4a',
             grounds: [
-                { x: 0, w: 800 }, { x: 1000, w: 700 }, { x: 1800, w: 800 }, { x: 2700, w: 800 },
-                { x: 3600, w: 800 }, { x: 4500, w: 800 }, { x: 5400, w: 800 }, { x: 6300, w: 800 }
+                { x: 0, w: 800 }, { x: 1000, w: 700 }, { x: 1900, w: 700 }, { x: 2700, w: 800 },
+                { x: 3600, w: 800 }, { x: 4500, w: 800 },                 { x: 5400, w: 800 }, { x: 6370, w: 990 }
             ],
             floats: [
                 { x: 2750, w: 110, dy: 90, color: '#e8c890' },
@@ -390,7 +386,7 @@
     function drawJungle(ctx, t, cameraX, w, h) {
         const gy = h - 50;
         drawFalling(ctx, t, w, h, 'leaf');
-        const xs = bxs(cameraX, 420, 0.3, w);
+        const xs = bxs(cameraX, 420, 1, w);
         for (let i = 0; i < xs.length; i++) {
             drawTrunkTree(ctx, xs[i] + (i % 3) * 90, gy, 90 + (i % 3) * 40, '#3d9e3d', '#6a4a2a');
         }
@@ -405,7 +401,7 @@
 
     function drawValley(ctx, t, cameraX, w, h) {
         const gy = h - 50;
-        const xs = bxs(cameraX, 300, 0.4, w);
+        const xs = bxs(cameraX, 300, 1, w);
         for (let i = 0; i < xs.length; i++) {
             const x = xs[i];
             ctx.fillStyle = i % 2 ? '#e8a060' : '#e08050';
@@ -437,7 +433,7 @@
             ctx.ellipse(x, gy + 14 + (i % 3) * 22, 16, 5, 0, 0, Math.PI * 2);
             ctx.fill();
         }
-        const xs = bxs(cameraX, 300, 0.5, w);
+        const xs = bxs(cameraX, 300, 1, w);
         ctx.fillStyle = '#4a9e4a';
         for (let i = 0; i < xs.length; i++) {
             ctx.beginPath();
@@ -455,7 +451,7 @@
         const gy = h - 50;
         ctx.fillStyle = '#5a3a2a';
         for (const [vx, vw, vh] of [[260, 260, 300], [900, 320, 360], [1600, 280, 240]]) {
-            const sx = vx - cameraX * 0.25;
+            const sx = vx - cameraX;
             ctx.beginPath();
             ctx.moveTo(sx - vw / 2, gy + 4);
             ctx.lineTo(sx, gy - vh);
@@ -481,7 +477,7 @@
     function drawCave(ctx, t, cameraX, w, h) {
         const gy = h - 50;
         ctx.fillStyle = 'rgba(127,211,255,0.5)';
-        const xs = bxs(cameraX, 300, 0.5, w);
+        const xs = bxs(cameraX, 300, 1, w);
         for (let i = 0; i < xs.length; i++) {
             ctx.save();
             ctx.translate(xs[i], gy - 8);
@@ -511,7 +507,7 @@
         for (let i = 0; i < 4; i++) {
             ctx.fillRect(0, gy - 30 - i * 34, w, 10);
         }
-        const xs = bxs(cameraX, 130, 0.6, w);
+        const xs = bxs(cameraX, 130, 1, w);
         ctx.strokeStyle = 'rgba(47,98,28,0.7)';
         ctx.lineWidth = 4;
         for (let i = 0; i < xs.length; i++) {
@@ -534,7 +530,7 @@
     function drawIce(ctx, t, cameraX, w, h) {
         const gy = h - 50;
         drawFalling(ctx, t, w, h, 'snow');
-        const xs = bxs(cameraX, 380, 0.3, w);
+        const xs = bxs(cameraX, 380, 1, w);
         for (let i = 0; i < xs.length; i++) {
             const x = xs[i];
             ctx.fillStyle = '#5a9e5a';
@@ -556,13 +552,14 @@
 
     function drawDesert(ctx, t, cameraX, w, h) {
         const gy = h - 50;
+        const ds = bxs(cameraX, 700, 1, w);
         ctx.fillStyle = 'rgba(240,210,150,0.5)';
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < ds.length; i++) {
             ctx.beginPath();
-            ctx.arc(w * (0.2 + i * 0.3) - cameraX * 0.1, gy + 20, 70 + i * 20, Math.PI, 0);
+            ctx.arc(ds[i], gy + 20, 70 + (i % 3) * 20, Math.PI, 0);
             ctx.fill();
         }
-        const xs = bxs(cameraX, 380, 0.4, w);
+        const xs = bxs(cameraX, 380, 1, w);
         for (let i = 0; i < xs.length; i++) {
             const x = xs[i];
             ctx.fillStyle = '#4a7a2a';
@@ -587,7 +584,7 @@
             ctx.arc(x, y, 3, 0, Math.PI * 2);
             ctx.fill();
         }
-        const xs = bxs(cameraX, 340, 0.4, w);
+        const xs = bxs(cameraX, 340, 1, w);
         ctx.fillStyle = 'rgba(127,211,255,0.7)';
         for (let i = 0; i < xs.length; i++) {
             ctx.save();
@@ -608,30 +605,25 @@
         const gy = h - 50;
         ctx.fillStyle = '#3fb0e0';
         ctx.fillRect(0, gy, w, h - gy);
-        const xs = bxs(cameraX, 480, 0.3, w);
+        const xs = bxs(cameraX, 480, 1, w);
         for (let i = 0; i < xs.length; i++) {
             const x = xs[i];
-            ctx.fillStyle = '#8a6a3a';
-            ctx.beginPath();
-            ctx.moveTo(x, gy + 4);
-            ctx.quadraticCurveTo(x, gy - 70, x, gy - 110);
-            ctx.stroke();
-            ctx.lineWidth = 10;
             ctx.strokeStyle = '#8a6a3a';
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
             ctx.beginPath();
             ctx.moveTo(x, gy - 4);
-            ctx.quadraticCurveTo(x, gy - 100, x, gy - 110);
+            ctx.quadraticCurveTo(x, gy - 60, x, gy - 104);
             ctx.stroke();
             ctx.strokeStyle = '#3d9e3d';
             ctx.lineWidth = 12;
-            ctx.lineCap = 'round';
             ctx.beginPath();
-            ctx.moveTo(x, gy - 105);
-            ctx.quadraticCurveTo(x - 36, gy - 130, x - 30, gy - 90);
+            ctx.moveTo(x, gy - 99);
+            ctx.quadraticCurveTo(x - 36, gy - 132, x - 30, gy - 88);
             ctx.stroke();
             ctx.beginPath();
-            ctx.moveTo(x, gy - 110);
-            ctx.quadraticCurveTo(x + 36, gy - 140, x + 30, gy - 96);
+            ctx.moveTo(x, gy - 104);
+            ctx.quadraticCurveTo(x + 36, gy - 142, x + 30, gy - 94);
             ctx.stroke();
         }
         ctx.fillStyle = 'rgba(255,255,255,0.35)';
@@ -714,6 +706,260 @@
         ctx.fillText('ЦИЉ', gx + gw / 2, by + bh / 2 + 2);
     }
 
+    // --- Playable dinosaur heroes (drawn facing right; the engine mirrors
+    // them when the dino moves left — no heroFlip, sprites already face right) ---
+    const DINO_PALETTE = {
+        t_rex: { body: '#3d9e3d', dark: '#2f7d2f', belly: '#8fce6b' },
+        triceratops: { body: '#3a8a8a', dark: '#2c6a6a', belly: '#7fbfbf' },
+        stego: { body: '#c8733a', dark: '#9c5a2c', belly: '#f0b060' },
+        diplodocus: { body: '#5a7ab0', dark: '#45628f', belly: '#9db8d8' }
+    };
+
+    function dinoEye(ctx, x, y, r) {
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#1b2430';
+        ctx.beginPath();
+        ctx.arc(x + r * 0.3, y, r * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    function dinoQuadLegs(ctx, y, dark) {
+        ctx.fillStyle = dark;
+        ctx.fillRect(-24, y, 17, 24);
+        ctx.fillRect(8, y, 17, 24);
+        ctx.beginPath();
+        ctx.arc(-16, y + 28, 9, 0, Math.PI * 2);
+        ctx.arc(16, y + 28, 9, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    function drawTRex(ctx, p) {
+        ctx.fillStyle = p.dark;
+        ctx.beginPath();
+        ctx.moveTo(-26, -14);
+        ctx.quadraticCurveTo(-48, -18, -60, 2);
+        ctx.quadraticCurveTo(-44, -2, -26, -4);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = p.body;
+        ctx.beginPath();
+        ctx.ellipse(-8, -6, 32, 26, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = p.belly;
+        ctx.beginPath();
+        ctx.ellipse(-4, 4, 20, 14, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = p.dark;
+        ctx.fillRect(-22, 18, 18, 24);
+        ctx.fillRect(4, 18, 18, 24);
+        ctx.beginPath();
+        ctx.arc(-13, 45, 10, 0, Math.PI * 2);
+        ctx.arc(13, 45, 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = p.body;
+        ctx.beginPath();
+        ctx.moveTo(-2, -28);
+        ctx.quadraticCurveTo(6, -44, 18, -46);
+        ctx.lineTo(22, -22);
+        ctx.lineTo(0, -14);
+        ctx.closePath();
+        ctx.fill();
+        ctx.beginPath();
+        ctx.roundRect(6, -50, 34, 26, 8);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(8, -24);
+        ctx.lineTo(38, -24);
+        ctx.lineTo(36, -14);
+        ctx.lineTo(8, -14);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = '#1b2430';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(8, -24);
+        ctx.lineTo(36, -24);
+        ctx.stroke();
+        ctx.fillStyle = '#ffffff';
+        for (let tx = 14; tx < 36; tx += 6) {
+            ctx.beginPath();
+            ctx.moveTo(tx, -24);
+            ctx.lineTo(tx + 3, -19);
+            ctx.lineTo(tx + 6, -24);
+            ctx.closePath();
+            ctx.fill();
+        }
+        dinoEye(ctx, 22, -38, 6);
+        ctx.strokeStyle = p.dark;
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(2, -10);
+        ctx.lineTo(8, -4);
+        ctx.stroke();
+    }
+
+    function drawTriceratops(ctx, p) {
+        ctx.fillStyle = p.dark;
+        ctx.beginPath();
+        ctx.moveTo(-30, -16);
+        ctx.quadraticCurveTo(-52, -20, -64, -2);
+        ctx.quadraticCurveTo(-46, -6, -28, -6);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = p.body;
+        ctx.beginPath();
+        ctx.ellipse(-4, -4, 36, 22, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = p.belly;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 24, 14, 0, 0, Math.PI * 2);
+        ctx.fill();
+        dinoQuadLegs(ctx, 16, p.dark);
+        ctx.fillStyle = p.body;
+        ctx.beginPath();
+        ctx.arc(24, -38, 20, Math.PI * 0.5, Math.PI * 1.5);
+        ctx.closePath();
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(34, -30, 16, 13, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = p.dark;
+        ctx.beginPath();
+        ctx.ellipse(36, -30, 8, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+        dinoEye(ctx, 34, -32, 5);
+        ctx.strokeStyle = '#fff8ed';
+        ctx.lineCap = 'round';
+        ctx.lineWidth = 6;
+        ctx.beginPath(); ctx.moveTo(44, -30); ctx.lineTo(54, -38); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(38, -40); ctx.lineTo(42, -50); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(30, -42); ctx.lineTo(30, -52); ctx.stroke();
+        ctx.fillStyle = '#8a5a2a';
+        ctx.beginPath();
+        ctx.moveTo(46, -26);
+        ctx.quadraticCurveTo(50, -24, 46, -22);
+        ctx.lineTo(44, -22);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    function drawStego(ctx, p) {
+        ctx.fillStyle = p.dark;
+        ctx.beginPath();
+        ctx.moveTo(-26, -12);
+        ctx.quadraticCurveTo(-50, -14, -62, 4);
+        ctx.lineTo(-46, 0);
+        ctx.lineTo(-54, -8);
+        ctx.lineTo(-38, -4);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = p.body;
+        ctx.beginPath();
+        ctx.ellipse(-2, -2, 40, 22, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = p.belly;
+        ctx.beginPath();
+        ctx.ellipse(2, 4, 26, 12, 0, 0, Math.PI * 2);
+        ctx.fill();
+        dinoQuadLegs(ctx, 16, p.dark);
+        ctx.fillStyle = '#ffd23f';
+        const plates = [[-28, -22, 16], [-12, -32, 18], [4, -36, 18], [20, -30, 15]];
+        for (const [px, py, pr] of plates) {
+            ctx.beginPath();
+            ctx.moveTo(px - pr / 2, py + pr / 2);
+            ctx.lineTo(px, py - pr / 2);
+            ctx.lineTo(px + pr / 2, py + pr / 2);
+            ctx.closePath();
+            ctx.fill();
+        }
+        ctx.fillStyle = p.body;
+        ctx.beginPath();
+        ctx.ellipse(38, -12, 13, 11, 0, 0, Math.PI * 2);
+        ctx.fill();
+        dinoEye(ctx, 40, -14, 4);
+    }
+
+    function drawDiplodocus(ctx, p) {
+        ctx.fillStyle = p.dark;
+        ctx.beginPath();
+        ctx.moveTo(-18, -8);
+        ctx.quadraticCurveTo(-46, 0, -64, 26);
+        ctx.quadraticCurveTo(-52, 18, -40, 14);
+        ctx.quadraticCurveTo(-30, 6, -18, 2);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = p.body;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 26, 20, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = p.belly;
+        ctx.beginPath();
+        ctx.ellipse(2, 6, 14, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+        dinoQuadLegs(ctx, 16, p.dark);
+        ctx.strokeStyle = p.body;
+        ctx.lineCap = 'round';
+        ctx.lineWidth = 13;
+        ctx.beginPath();
+        ctx.moveTo(12, -6);
+        ctx.quadraticCurveTo(26, -24, 30, -42);
+        ctx.stroke();
+        ctx.fillStyle = p.body;
+        ctx.beginPath();
+        ctx.ellipse(34, -44, 10, 7, 0.3, 0, Math.PI * 2);
+        ctx.fill();
+        dinoEye(ctx, 36, -46, 3.5);
+    }
+
+    function drawDinoHero(ctx, type) {
+        const p = DINO_PALETTE[type] || DINO_PALETTE.t_rex;
+        if (type === 'triceratops') drawTriceratops(ctx, p);
+        else if (type === 'stego') drawStego(ctx, p);
+        else if (type === 'diplodocus') drawDiplodocus(ctx, p);
+        else drawTRex(ctx, p);
+    }
+
+    // --- Level-start dino picker ---
+    const DINO_OPTIONS = [
+        { type: 't_rex', name: 'Тиранозаур' },
+        { type: 'triceratops', name: 'Трицератопс' },
+        { type: 'stego', name: 'Стегосаурус' },
+        { type: 'diplodocus', name: 'Диплодок' }
+    ];
+
+    function showDinoPicker(game) {
+        const modal = document.getElementById('adv-dino-picker');
+        if (!modal) return;
+        const grid = document.getElementById('adv-dino-grid');
+        grid.innerHTML = '';
+        DINO_OPTIONS.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'adv-dino-btn';
+            btn.dataset.dino = opt.type;
+            const canvas = document.createElement('canvas');
+            canvas.width = 110;
+            canvas.height = 100;
+            const c2d = canvas.getContext('2d');
+            c2d.translate(55, 50);
+            drawDinoHero(c2d, opt.type);
+            btn.appendChild(canvas);
+            const label = document.createElement('span');
+            label.textContent = opt.name;
+            btn.appendChild(label);
+            btn.addEventListener('click', () => {
+                game.setHeroType(opt.type);
+                modal.classList.remove('show');
+                game.setPaused(false);
+            });
+            grid.appendChild(btn);
+        });
+        modal.classList.add('show');
+    }
+
     window.startDino = function () {
         if (window.__adv) return;
         AdventureEngine.create({
@@ -723,7 +969,12 @@
             heroFontSize: 78,
             heroW: 110,
             heroH: 100,
-            heroFlip: true,
+            heroBob: 2,
+            pickHero: true,
+            heroType: 't_rex',
+            drawHero: drawDinoHero,
+            onHeroNeeded: showDinoPicker,
+            decorBehind: true,
             speed: 5.2,
             jumpPower: -13.5,
             pickupFontSize: 58,

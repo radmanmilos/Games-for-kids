@@ -53,7 +53,6 @@
         canvas {
             flex: 1;
             width: 100%;
-            height: 70%;
             display: block;
         }
 
@@ -185,25 +184,28 @@
         }
         #worlds-close:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
 
-        /* Large Touch Controls for Kids */
+        /* Touch controls float over the canvas bottom edges (full-screen canvas,
+           mirroring the adventure games) so no play area is wasted. */
         #controls {
-            height: 30%;
-            max-height: 220px;
-            background: #4A3F6B;
-            border-top: 6px solid #fff;
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 12;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            padding: 10px 30px;
-            box-shadow: inset 0 10px 15px rgba(0,0,0,0.2);
+            align-items: flex-end;
+            padding: 10px 18px calc(14px + env(safe-area-inset-bottom));
+            pointer-events: none;
         }
 
         .d-pad {
             display: flex;
-            gap: 20px;
+            gap: 16px;
         }
 
         .btn {
+            pointer-events: auto;
             width: 100px;
             height: 100px;
             border-radius: 50%;
@@ -744,10 +746,22 @@ function ambDesert(vol, t) {
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 let coinCount = 0;
+let worldLoaded = false;
 
 function resizeCanvas() {
+    const oldH = canvas.height;
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
+    if (!worldLoaded || Math.abs(canvas.height - oldH) < 2) return;
+    const dy = canvas.height - oldH;
+    groundY += dy;
+    platforms.forEach(p => { p.y += dy; });
+    movingPlatforms.forEach(mp => { mp.y += dy; });
+    pipes.forEach(pp => { pp.y += dy; });
+    coins.forEach(c => { c.y += dy; });
+    if (goal) goal.y += dy;
+    mice.forEach(m => { m.pipeY += dy; m.hiddenY += dy; m.visibleY += dy; m.y += dy; });
+    walkers.forEach(w => { w.y += dy; });
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
@@ -793,10 +807,12 @@ window.addEventListener('keyup', (e) => {
 
 // --- World data (11 worlds, data-driven) ---
 // Fields per world:
-//   name, collectible (emoji), enemy (pop-out type), costume (cat accessory),
-//   goal (goal building type), colors, isNight, decor, noClouds, ceiling(+ceilingColor),
+//   name, collectible (emoji), enemy (pop-out type), walker (ground-walker type),
+//   costume (cat accessory), goal (goal building type), music,
+//   colors, isNight, decor, noClouds, ceiling(+ceilingColor),
 //   grounds [{x,width}], floats [{x,width,dy,color}], moves [{x,width,dy,minX,maxX,vx,color}],
-//   pipes [{x,height}], coins [{x,dy}], goalX.
+//   pipes [{x,height}], walkers [{x,range}] (patrol [x, x+range] on the ground),
+//   coins [{x,dy}], goalX.
 // Four layout patterns (so levels feel different):
 //   A "islands"     — separated islands, one float per gap (Spring, Summer)
 //   B "towers"      — long runs with tall stacked floats (Autumn, Winter, Japan)
@@ -804,7 +820,8 @@ window.addEventListener('keyup', (e) => {
 //   D "long run"    — long flat ground, very sparse floats (Savanna, North Pole, Egypt)
 const WORLDS = [
   {
-    name: 'Пролећни дан', collectible: '🍓', enemy: 'mouse', costume: 'flower', goal: 'house', music: 'spring',
+    name: 'Пролећни дан', collectible: '🍓', enemy: 'mouse', costume: 'flower', goal: 'house', music: 'spring', pitHazard: 'water',
+    walker: 'ladybug',
     bgSky: '#5c94fc', groundColor: '#70c838', hillColor: '#00a800', pipeColor: '#00a800',
     stairColor: '#4f9a24',
     isNight: false, decor: null, noClouds: false,
@@ -820,11 +837,13 @@ const WORLDS = [
       {x:3600,dy:60,w:140,minX:3500,maxX:3800,vx:2.4,color:'#f8b800'}
     ],
     pipes: [{x:250,h:70},{x:1000,h:90},{x:1700,h:80},{x:3300,h:90},{x:4800,h:70}],
+    walkers: [{x:330,range:150},{x:1500,range:150},{x:3100,range:150},{x:4860,range:300}],
     coins: [{x:150,dy:90},{x:420,dy:120},{x:650,dy:160},{x:980,dy:140},{x:1380,dy:170},{x:1650,dy:120},{x:2080,dy:150},{x:2550,dy:120},{x:2920,dy:180},{x:3350,dy:110},{x:3750,dy:160},{x:4550,dy:170},{x:5000,dy:100}],
     goalX: 5350
   },
   {
-    name: 'Летњи залазак', collectible: '🍉', enemy: 'mouse', costume: 'sunglasses', goal: 'house', music: 'summer',
+    name: 'Летњи залазак', collectible: '🍉', enemy: 'mouse', costume: 'sunglasses', goal: 'house', music: 'summer', pitHazard: 'water',
+    walker: 'bee',
     bgSky: '#fc7438', groundColor: '#f8b800', hillColor: '#d88000', pipeColor: '#00a800',
     stairColor: '#c89100',
     isNight: false, decor: null, noClouds: false,
@@ -840,11 +859,13 @@ const WORLDS = [
       {x:3450,dy:170,w:130,minX:3400,maxX:3650,vx:2.0,color:'#f8b800'}
     ],
     pipes: [{x:350,h:80},{x:1000,h:90},{x:1800,h:80},{x:4200,h:80},{x:5300,h:70}],
+    walkers: [{x:430,range:150},{x:1070,range:180},{x:1560,range:180},{x:3250,range:200}],
     coins: [{x:200,dy:90},{x:420,dy:130},{x:760,dy:170},{x:1000,dy:140},{x:1450,dy:160},{x:1800,dy:100},{x:2220,dy:180},{x:2600,dy:130},{x:3070,dy:160},{x:3500,dy:200},{x:4450,dy:140},{x:5300,dy:100}],
     goalX: 5450
   },
   {
-    name: 'Јесења ноћ', collectible: '🍎', enemy: 'mouse', costume: 'leaf', goal: 'house', music: 'autumn',
+    name: 'Јесења ноћ', collectible: '🍎', enemy: 'mouse', costume: 'leaf', goal: 'house', music: 'autumn', pitHazard: 'spikes',
+    walker: 'hedgehog',
     bgSky: '#00003c', groundColor: '#cc5500', hillColor: '#882200', pipeColor: '#387800',
     stairColor: '#994000',
     isNight: true, decor: 'leaves', noClouds: false,
@@ -867,11 +888,13 @@ const WORLDS = [
       {x:5180,dy:170,w:130,minX:5100,maxX:5320,vx:2.0,color:'#f8b800'}
     ],
     pipes: [{x:200,h:70},{x:900,h:90},{x:1600,h:80},{x:4300,h:80},{x:5800,h:70}],
+    walkers: [{x:300,range:420},{x:1700,range:400},{x:4400,range:400},{x:5900,range:400}],
     coins: [{x:150,dy:90},{x:460,dy:160},{x:660,dy:230},{x:860,dy:300},{x:1150,dy:170},{x:1840,dy:170},{x:2020,dy:240},{x:2450,dy:190},{x:3240,dy:160},{x:3420,dy:230},{x:3900,dy:110},{x:5950,dy:160}],
     goalX: 6500
   },
   {
-    name: 'Зимски снег', collectible: '🥕', enemy: 'mouse', costume: 'scarf', goal: 'house', music: 'winter',
+    name: 'Зимски снег', collectible: '🥕', enemy: 'mouse', costume: 'scarf', goal: 'house', music: 'winter', pitHazard: 'spikes',
+    walker: 'snowman',
     bgSky: '#a0c0f8', groundColor: '#f8f8f8', hillColor: '#c0d8f8', pipeColor: '#3888c8',
     stairColor: '#d8e0f0',
     isNight: false, decor: 'snow', noClouds: false,
@@ -893,11 +916,13 @@ const WORLDS = [
       {x:3750,dy:60,w:150,minX:3680,maxX:3900,vx:2.2,color:'#3888c8'}
     ],
     pipes: [{x:200,h:80},{x:1300,h:90},{x:2000,h:80},{x:3900,h:90},{x:5900,h:80}],
+    walkers: [{x:300,range:420},{x:1400,range:400},{x:3000,range:400},{x:6000,range:300}],
     coins: [{x:150,dy:90},{x:420,dy:170},{x:600,dy:240},{x:1150,dy:180},{x:1740,dy:160},{x:1920,dy:230},{x:2430,dy:190},{x:3040,dy:170},{x:3220,dy:240},{x:3730,dy:180},{x:5830,dy:160},{x:6130,dy:230}],
     goalX: 6450
   },
   {
-    name: 'Подземље', collectible: '🍄', enemy: 'mole', costume: 'miner', goal: 'mine', music: 'underground',
+    name: 'Подземље', collectible: '🍄', enemy: 'mole', costume: 'miner', goal: 'mine', music: 'underground', pitHazard: 'lava',
+    walker: 'worm',
     bgSky: '#3a2a1a', groundColor: '#8a5a33', hillColor: '#6b4526', pipeColor: '#7a4f2a',
     stairColor: '#6b4526',
     isNight: false, decor: null, noClouds: true, ceiling: true, ceilingColor: '#5a3f28',
@@ -914,11 +939,13 @@ const WORLDS = [
       {x:3000,dy:70,w:120,minX:2950,maxX:3150,vx:2.2,color:'#c88a30'}
     ],
     pipes: [{x:150,h:70},{x:700,h:90},{x:2400,h:80},{x:3450,h:90},{x:4600,h:80},{x:5000,h:70}],
+    walkers: [{x:220,range:150},{x:760,range:160},{x:2460,range:180},{x:4680,range:250}],
     coins: [{x:180,dy:100},{x:500,dy:150},{x:750,dy:130},{x:1080,dy:170},{x:1500,dy:120},{x:2220,dy:160},{x:2450,dy:130},{x:2760,dy:140},{x:2950,dy:110},{x:3320,dy:170},{x:4100,dy:120},{x:4700,dy:100}],
     goalX: 5250
   },
   {
-    name: 'Пећина', collectible: '🍇', enemy: 'bat', costume: 'explorer', goal: 'cave', music: 'cave',
+    name: 'Пећина', collectible: '🍇', enemy: 'bat', costume: 'explorer', goal: 'cave', music: 'cave', pitHazard: 'lava',
+    walker: 'spider',
     bgSky: '#2a2a3a', groundColor: '#5a4a3a', hillColor: '#453a2e', pipeColor: '#5c5246',
     stairColor: '#453a2e',
     isNight: true, decor: null, noClouds: true, ceiling: true, ceilingColor: '#3a3340',
@@ -935,11 +962,13 @@ const WORLDS = [
       {x:2950,dy:60,w:120,minX:2900,maxX:3100,vx:2.2,color:'#8a7a60'}
     ],
     pipes: [{x:150,h:70},{x:700,h:90},{x:2300,h:90},{x:4550,h:80}],
+    walkers: [{x:220,range:140},{x:760,range:130},{x:2380,range:200},{x:4650,range:250}],
     coins: [{x:140,dy:100},{x:500,dy:150},{x:760,dy:130},{x:1040,dy:170},{x:1350,dy:120},{x:2250,dy:150},{x:2520,dy:130},{x:2710,dy:140},{x:3080,dy:110},{x:3260,dy:170},{x:3980,dy:120},{x:4700,dy:100}],
     goalX: 5150
   },
   {
-    name: 'Подводни свет', collectible: '🐚', enemy: 'piranha', costume: 'snorkel', goal: 'arch', music: 'water',
+    name: 'Подводни свет', collectible: '🐚', enemy: 'piranha', costume: 'snorkel', goal: 'submarine', music: 'water', pitHazard: 'water',
+    walker: 'crab',
     bgSky: '#1a6a9a', groundColor: '#d9b98a', hillColor: '#1a5a8a', pipeColor: '#3a8ac0',
     stairColor: '#b09868',
     isNight: false, decor: 'bubbles', noClouds: true,
@@ -955,11 +984,13 @@ const WORLDS = [
       {x:3050,dy:80,w:130,minX:3000,maxX:3200,vx:2.2,color:'#7ac8e8'}
     ],
     pipes: [{x:200,h:70},{x:900,h:90},{x:2500,h:80},{x:3700,h:80}],
+    walkers: [{x:260,range:200},{x:960,range:220},{x:1430,range:200},{x:2880,range:200}],
     coins: [{x:180,dy:90},{x:420,dy:130},{x:640,dy:160},{x:950,dy:140},{x:1300,dy:180},{x:2000,dy:160},{x:2450,dy:130},{x:2750,dy:180},{x:3150,dy:120},{x:3480,dy:170},{x:4250,dy:160},{x:4800,dy:100}],
     goalX: 5250
   },
   {
-    name: 'Савана', collectible: '🍌', enemy: 'snake', costume: 'safari', goal: 'hut', music: 'savanna',
+    name: 'Савана', collectible: '🍌', enemy: 'snake', costume: 'safari', goal: 'hut', music: 'savanna', pitHazard: 'spikes',
+    walker: 'meerkat',
     bgSky: '#f8d870', groundColor: '#e0a860', hillColor: '#c89050', pipeColor: '#a87830',
     stairColor: '#bd8a44',
     isNight: false, decor: null, noClouds: false,
@@ -974,11 +1005,13 @@ const WORLDS = [
       {x:5000,dy:80,w:140,minX:4900,maxX:5150,vx:2.4,color:'#e8c878'}
     ],
     pipes: [{x:300,h:80},{x:1600,h:90},{x:3500,h:80},{x:4400,h:90},{x:6200,h:70}],
+    walkers: [{x:390,range:380},{x:1700,range:450},{x:4500,range:350},{x:6300,range:300}],
     coins: [{x:150,dy:90},{x:500,dy:120},{x:900,dy:130},{x:1250,dy:160},{x:1700,dy:120},{x:2200,dy:110},{x:2650,dy:170},{x:3200,dy:120},{x:3800,dy:100},{x:4080,dy:160},{x:5000,dy:130},{x:6000,dy:100}],
     goalX: 6750
   },
   {
-    name: 'Јапан', collectible: '🍙', enemy: 'oni', costume: 'headband', goal: 'torii', music: 'japan',
+    name: 'Јапан', collectible: '🍙', enemy: 'oni', costume: 'headband', goal: 'torii', music: 'japan', pitHazard: 'water',
+    walker: 'panda',
     bgSky: '#f8a0c0', groundColor: '#e0707f', hillColor: '#c85a6a', pipeColor: '#b05060',
     stairColor: '#b84f5e',
     isNight: false, decor: 'petals', noClouds: false,
@@ -1000,11 +1033,13 @@ const WORLDS = [
       {x:3650,dy:60,w:140,minX:3600,maxX:3800,vx:2.2,color:'#f0a0b0'}
     ],
     pipes: [{x:200,h:70},{x:900,h:90},{x:1600,h:80},{x:2500,h:90},{x:4400,h:80}],
+    walkers: [{x:260,range:450},{x:1280,range:250},{x:2950,range:400},{x:5800,range:400}],
     coins: [{x:150,dy:90},{x:440,dy:160},{x:620,dy:230},{x:1100,dy:170},{x:1640,dy:170},{x:1820,dy:240},{x:2330,dy:190},{x:2990,dy:160},{x:3170,dy:230},{x:3650,dy:180},{x:5850,dy:160},{x:6030,dy:230}],
     goalX: 6400
   },
   {
-    name: 'Северни пол', collectible: '🎁', enemy: 'penguin', costume: 'beanie', goal: 'igloo', music: 'northpole',
+    name: 'Северни пол', collectible: '🎁', enemy: 'penguin', costume: 'beanie', goal: 'igloo', music: 'northpole', pitHazard: 'spikes',
+    walker: 'seal',
     bgSky: '#b8d8f0', groundColor: '#f0f8fc', hillColor: '#c8e0f0', pipeColor: '#a0c0d8',
     stairColor: '#d0e4f0',
     isNight: false, decor: 'snow', noClouds: false,
@@ -1019,11 +1054,13 @@ const WORLDS = [
       {x:5100,dy:80,w:140,minX:5000,maxX:5250,vx:2.4,color:'#a0d0f0'}
     ],
     pipes: [{x:300,h:80},{x:1700,h:90},{x:3300,h:80},{x:4500,h:90},{x:6300,h:70}],
+    walkers: [{x:390,range:410},{x:1800,range:450},{x:3400,range:400},{x:6400,range:300}],
     coins: [{x:150,dy:90},{x:500,dy:120},{x:900,dy:130},{x:1350,dy:160},{x:1750,dy:120},{x:2250,dy:110},{x:2780,dy:170},{x:3250,dy:120},{x:3900,dy:100},{x:4180,dy:160},{x:5100,dy:130},{x:6100,dy:100}],
     goalX: 6850
   },
   {
-    name: 'Египат', collectible: '🌴', enemy: 'scorpion', costume: 'headdress', goal: 'pyramid', music: 'egypt',
+    name: 'Египат', collectible: '🌴', enemy: 'scorpion', costume: 'headdress', goal: 'pyramid', music: 'egypt', pitHazard: 'spikes',
+    walker: 'scarab',
     bgSky: '#f8d878', groundColor: '#e8c878', hillColor: '#d0a860', pipeColor: '#b89038',
     stairColor: '#c8a758',
     isNight: false, decor: null, noClouds: false,
@@ -1038,6 +1075,7 @@ const WORLDS = [
       {x:5050,dy:80,w:140,minX:4950,maxX:5200,vx:2.4,color:'#f0d898'}
     ],
     pipes: [{x:300,h:80},{x:1650,h:90},{x:3300,h:80},{x:4450,h:90},{x:6300,h:70}],
+    walkers: [{x:390,range:410},{x:1750,range:450},{x:3400,range:400},{x:6400,range:300}],
     coins: [{x:150,dy:90},{x:500,dy:120},{x:900,dy:130},{x:1300,dy:160},{x:1700,dy:120},{x:2200,dy:110},{x:2730,dy:170},{x:3200,dy:120},{x:3800,dy:100},{x:4130,dy:160},{x:5050,dy:130},{x:6050,dy:100}],
     goalX: 6800
   }
@@ -1055,7 +1093,15 @@ function shuffleArr(arr) {
 let worldOrder = shuffleArr(WORLDS.map((_, i) => i));
 let worldPos = 0;
 
-let player, platforms, movingPlatforms, pipes, coins, goal, particles, mice, theme, levelCompleted, stairSteps;
+// Ground-walkers (task 68): how far below the drawing origin each walker sprite's
+// feet sit, so the sprite stands flush on the ground. All walkers are smaller
+// than the kitty (48px tall).
+const WALKER_FOOT = {
+    ladybug: 10, bee: 10, hedgehog: 14, snowman: 18, worm: 10,
+    spider: 8, crab: 10, meerkat: 15, panda: 14, seal: 13, scarab: 9
+};
+
+let player, platforms, movingPlatforms, pipes, coins, goal, particles, mice, walkers, theme, levelCompleted, stairSteps, groundY = 0;
 
 function loadWorld() {
     const w = WORLDS[worldOrder[worldPos]];
@@ -1068,7 +1114,7 @@ function loadWorld() {
     levelCompleted = false;
 
     player = {
-        x: 60,
+        x: Math.max(280, Math.min(w.grounds[0].x + w.grounds[0].w - 70, canvas.width * 0.3)),
         y: 100,
         width: 48,
         height: 48,
@@ -1079,12 +1125,14 @@ function loadWorld() {
         grounded: false,
         facingRight: true,
         squish: 1,
-        tailAngle: 0
+        tailAngle: 0,
+        bobPhase: 0
     };
 
-    const gY = canvas.height - 50;
+    const gY = canvas.height - 140;
+    groundY = gY;
 
-    platforms = w.grounds.map(g => ({ x: g.x, y: gY, width: g.w, height: 50, color: w.groundColor }))
+    platforms = w.grounds.map(g => ({ x: g.x, y: gY, width: g.w, height: 140, color: w.groundColor }))
         .concat(w.floats.map(f => ({ x: f.x, y: gY - f.dy, width: f.w, height: 26, color: f.color })));
 
     coins = w.coins.map(c => ({ x: c.x, y: gY - c.dy, collected: false }));
@@ -1133,6 +1181,19 @@ function loadWorld() {
         nextPopAt: nextMousePop,
         animationStart: 0
     }));
+
+    // Ground-walking enemies: patrol [x, x+range] on the ground, flip at the ends.
+    walkers = (w.walkers || []).map(wk => ({
+        x: wk.x,
+        minX: wk.x,
+        maxX: wk.x + wk.range,
+        dir: 1,
+        vx: 1.3,
+        dead: false,
+        phase: Math.random() * Math.PI * 2,
+        y: groundY - WALKER_FOOT[w.walker]
+    }));
+    worldLoaded = true;
 }
 
 function nextLevel() {
@@ -1236,11 +1297,13 @@ function update() {
         player.vx *= 0.8;
     }
 
+    const previousY = player.y;
     player.vy += 0.55; // Gravity
     player.x += player.vx;
     player.y += player.vy;
     player.squish += (1 - player.squish) * 0.12;
     player.tailAngle = Math.sin(Date.now() * 0.01) * 0.3;
+    player.bobPhase += player.grounded ? (Math.abs(player.vx) > 0.5 ? 0.18 : 0.06) : 0;
 
     // Moving Platform Update & Riding logic
     movingPlatforms.forEach(mp => {
@@ -1253,9 +1316,9 @@ function update() {
         // Carry player on moving platform
         if (player.x + player.width > mp.x &&
             player.x < mp.x + mp.width &&
+            player.vy >= 0 &&
             player.y + player.height >= mp.y &&
-            player.y + player.height <= mp.y + 20 &&
-            player.vy >= 0) {
+            previousY + player.height <= mp.y + 24) {
 
             player.grounded = true;
             player.vy = 0;
@@ -1271,9 +1334,9 @@ function update() {
     allSolid.forEach(p => {
         if (player.x + player.width > p.x &&
             player.x < p.x + p.width &&
+            player.vy >= 0 &&
             player.y + player.height >= p.y &&
-            player.y + player.height <= p.y + 22 &&
-            player.vy >= 0) {
+            previousY + player.height <= p.y + 24) {
 
             player.grounded = true;
             player.vy = 0;
@@ -1368,6 +1431,35 @@ function update() {
         hitMouse.visible = false;
         hitMouse.nextPopAt = now + 3000;
         respawnKitty();
+    }
+
+    // Ground-walking enemies: patrol left/right on the ground, gently bobbing.
+    if (!levelCompleted) {
+        walkers.forEach(w => {
+            w.x += w.vx * w.dir;
+            if (w.x <= w.minX) { w.x = w.minX; w.dir = 1; }
+            else if (w.x >= w.maxX) { w.x = w.maxX; w.dir = -1; }
+            w.phase += 0.14;
+        });
+    }
+
+    // Walkers: land on top → defeated + a coin; touch their side → kitty respawns.
+    const hitWalker = walkers.find(w => !w.dead &&
+        player.x + player.width > w.x - 22 &&
+        player.x < w.x + 22 &&
+        player.y + player.height > groundY - 44 &&
+        player.y < groundY);
+    if (hitWalker) {
+        if (player.vy >= 0 && player.y + player.height <= groundY - 6) {
+            hitWalker.dead = true;
+            coinCount++;
+            document.getElementById('coin-count').innerText = coinCount;
+            playSound('coin');
+            spawnParticles(hitWalker.x, groundY - 24, '#FFD23F');
+        } else {
+            playCatSound();
+            respawnKitty();
+        }
     }
 
     // Camera follow
@@ -1501,6 +1593,74 @@ function drawDecor(t) {
     }
 }
 
+function drawPitHazards() {
+    const hazard = theme.pitHazard;
+    if (!hazard) return;
+    const t = Date.now() / 1000;
+    const gy = groundY;
+    const depth = canvas.height - gy;
+    const grounds = theme.grounds.slice().sort((a, b) => a.x - b.x);
+    for (let i = 0; i < grounds.length - 1; i++) {
+        const gx = grounds[i].x + grounds[i].w;
+        const gapEnd = grounds[i + 1].x;
+        if (gapEnd - gx < 8) continue;
+        if (hazard === 'lava') {
+            const grad = ctx.createLinearGradient(0, gy, 0, canvas.height);
+            grad.addColorStop(0, '#ff5f2e');
+            grad.addColorStop(0.5, '#ff7f1f');
+            grad.addColorStop(1, '#b33a00');
+            ctx.fillStyle = grad;
+            ctx.fillRect(gx, gy, gapEnd - gx, depth);
+            ctx.fillStyle = '#ffd166';
+            ctx.fillRect(gx, gy, gapEnd - gx, 5);
+            ctx.fillStyle = '#fff3c4';
+            for (let k = 0; k < 6; k++) {
+                const bx = gx + ((k * 41 + t * 26) % (gapEnd - gx));
+                const by = canvas.height - 12 - ((k * 29 + t * 70) % (depth * 0.7));
+                ctx.beginPath();
+                ctx.arc(bx, by, 3.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        } else if (hazard === 'water') {
+            const grad = ctx.createLinearGradient(0, gy, 0, canvas.height);
+            grad.addColorStop(0, 'rgba(90,190,255,0.9)');
+            grad.addColorStop(1, 'rgba(15,80,160,0.95)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(gx, gy, gapEnd - gx, depth);
+            ctx.fillStyle = 'rgba(255,255,255,0.5)';
+            for (let k = 0; k < 3; k++) {
+                const ry = gy + 8 + k * 14;
+                const off = Math.sin(t * 2 + k) * 4;
+                ctx.fillRect(gx + 4 + off, ry, gapEnd - gx - 8, 2);
+            }
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '22px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            for (let k = 0; k < 2; k++) {
+                const fx = gx + 18 + ((k * 37 + t * 22) % Math.max(1, gapEnd - gx - 36));
+                const fy = canvas.height - 26 - ((k * 19 + Math.sin(t * 1.6 + k * 2.4) * 6) % (depth * 0.55));
+                ctx.fillText('🐟', fx, fy);
+            }
+        } else if (hazard === 'spikes') {
+            ctx.fillStyle = 'rgba(18,20,30,0.92)';
+            ctx.fillRect(gx, gy, gapEnd - gx, depth);
+            ctx.fillStyle = '#c7d2e0';
+            for (let sx = gx + 12; sx < gapEnd - 6; sx += 24) {
+                const h = 30 + Math.sin(sx * 0.33 + gx) * 8;
+                ctx.beginPath();
+                ctx.moveTo(sx - 10, canvas.height);
+                ctx.lineTo(sx, canvas.height - h);
+                ctx.lineTo(sx + 10, canvas.height);
+                ctx.closePath();
+                ctx.fill();
+            }
+            ctx.fillStyle = '#5c6a7a';
+            ctx.fillRect(gx, canvas.height - 6, gapEnd - gx, 6);
+        }
+    }
+}
+
 function draw() {
     // Sky Background
     ctx.fillStyle = theme.bgSky;
@@ -1539,6 +1699,8 @@ function draw() {
             ctx.fill();
         }
     }
+
+    drawPitHazards();
 
     // Draw Static Platforms
     platforms.forEach(p => {
@@ -1589,6 +1751,16 @@ function draw() {
         ctx.restore();
     });
 
+    // Draw ground-walking enemies (patrol left/right, theme-matched, gentle bob).
+    walkers.forEach(w => {
+        if (w.dead) return;
+        ctx.save();
+        ctx.translate(w.x, w.y + Math.sin(w.phase) * 1.5);
+        ctx.scale(w.dir, 1);
+        drawWalker(theme.walker);
+        ctx.restore();
+    });
+
     // Draw Collectibles (per-world emoji, no backing circle, bobbing + sparkling)
     coins.forEach(c => {
         if (!c.collected) {
@@ -1608,9 +1780,10 @@ function draw() {
     // Draw Themed Goal Building
     drawGoal(theme.goal, goal);
 
-    // --- CUTE KITTY HERO (emoji + per-world costume) ---
+    // --- CUTE KITTY HERO (emoji + per-world costume, gentle bob when grounded) ---
     ctx.save();
-    ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
+    const bobY = player.grounded ? Math.sin(player.bobPhase) * 2.5 : 0;
+    ctx.translate(player.x + player.width / 2, player.y + player.height / 2 + bobY);
     ctx.scale(player.facingRight ? 1 : -1, player.squish);
     ctx.font = '48px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
     ctx.textAlign = 'center';
@@ -1870,6 +2043,267 @@ function drawEnemy(type) {
         ctx.arc(-4, 3, 1.8, 0, Math.PI * 2);
         ctx.arc(4, 3, 1.8, 0, Math.PI * 2);
         ctx.fill();
+    }
+}
+
+// --- Ground-walking enemies (task 68): patrol enemies drawn per world theme,
+// separate from the pipe pop-out art. All are smaller than the kitty (48px).
+// Drawn facing right; the caller flips with ctx.scale(dir, 1).
+function drawWalker(type) {
+    if (type === 'ladybug') {
+        ctx.fillStyle = '#e52521';
+        ctx.beginPath();
+        ctx.ellipse(0, -2, 13, 11, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#2b2d42';
+        ctx.beginPath();
+        ctx.arc(11, -2, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#2b2d42';
+        ctx.beginPath(); ctx.arc(-6, -5, 2.6, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(-1, -7, 2.6, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(-6, 2, 2.6, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(3, 3, 2.6, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.45)';
+        ctx.beginPath(); ctx.arc(-9, -6, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.arc(13, -4, 2.2, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#2b2d42';
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        for (let i = -1; i <= 1; i++) {
+            ctx.moveTo(i * 5 - 3, 6);
+            ctx.lineTo(i * 5 - 4, 10);
+            ctx.moveTo(i * 5 + 3, 6);
+            ctx.lineTo(i * 5 + 4, 10);
+        }
+        ctx.stroke();
+    } else if (type === 'bee') {
+        ctx.fillStyle = 'rgba(255,255,255,0.75)';
+        ctx.beginPath(); ctx.ellipse(-5, -9, 6, 10, -0.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(-13, -6, 5, 8, 0.4, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#2b2d42';
+        ctx.beginPath(); ctx.moveTo(-12, 0); ctx.lineTo(-16, 1); ctx.lineTo(-12, 3); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = '#FFD23F';
+        ctx.beginPath(); ctx.ellipse(0, 0, 12, 10, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#2b2d42';
+        ctx.fillRect(-8, -6, 3, 12);
+        ctx.fillRect(-2, -8, 3, 16);
+        ctx.fillRect(4, -6, 3, 12);
+        ctx.beginPath(); ctx.arc(11, 0, 7, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.arc(13, -2, 2.2, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#2b2d42';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(9, -5); ctx.quadraticCurveTo(10, -12, 14, -13);
+        ctx.moveTo(13, -5); ctx.quadraticCurveTo(15, -11, 19, -11);
+        ctx.stroke();
+        ctx.fillStyle = '#2b2d42';
+        ctx.beginPath(); ctx.arc(14, -13, 1.6, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(19, -11, 1.6, 0, Math.PI * 2); ctx.fill();
+    } else if (type === 'hedgehog') {
+        ctx.fillStyle = '#8a5a33';
+        for (let i = -2; i <= 2; i++) {
+            ctx.beginPath();
+            ctx.moveTo(i * 6 - 4, -8);
+            ctx.lineTo(i * 6, -15);
+            ctx.lineTo(i * 6 + 4, -8);
+            ctx.closePath();
+            ctx.fill();
+        }
+        ctx.fillStyle = '#b07850';
+        ctx.beginPath(); ctx.ellipse(0, 3, 15, 10, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#e8c0a0';
+        ctx.beginPath(); ctx.ellipse(11, 5, 6, 5, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#2b2d42';
+        ctx.beginPath(); ctx.arc(16, 4, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(5, -1, 2.2, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#8a5a33';
+        ctx.beginPath(); ctx.roundRect(-8, 12, 6, 4, 2); ctx.fill();
+        ctx.beginPath(); ctx.roundRect(2, 12, 6, 4, 2); ctx.fill();
+    } else if (type === 'snowman') {
+        ctx.strokeStyle = '#8a5a33';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-11, -4); ctx.lineTo(-17, -1);
+        ctx.moveTo(11, -4); ctx.lineTo(17, -1);
+        ctx.stroke();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.arc(0, 6, 12, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(0, -9, 9, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(43,45,66,0.25)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(0, 6, 12, 0, Math.PI * 2); ctx.stroke();
+        ctx.fillStyle = '#2b2d42';
+        ctx.beginPath(); ctx.arc(-3, -11, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(3, -11, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#ff8c42';
+        ctx.beginPath(); ctx.moveTo(3, -8); ctx.lineTo(13, -7); ctx.lineTo(3, -6); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = '#e52521';
+        ctx.fillRect(-9, -2, 18, 4);
+        ctx.fillRect(-1, 2, 5, 8);
+        ctx.fillStyle = '#2b2d42';
+        ctx.beginPath(); ctx.arc(0, 2, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(0, 7, 1.5, 0, Math.PI * 2); ctx.fill();
+    } else if (type === 'worm') {
+        ctx.fillStyle = '#8a5a33';
+        [[-14, 5, 4], [-7, 3, 5], [0, 0, 7], [7, 3, 5], [14, 5, 4]].forEach(s => {
+            ctx.beginPath(); ctx.arc(s[0], s[1], s[2], 0, Math.PI * 2); ctx.fill();
+        });
+        ctx.beginPath(); ctx.arc(18, 4, 5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.arc(19, 2, 1.6, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(22, 3, 1.4, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#8a5a33';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(16, -1); ctx.quadraticCurveTo(15, -7, 19, -8);
+        ctx.moveTo(20, -1); ctx.quadraticCurveTo(22, -7, 25, -6);
+        ctx.stroke();
+        ctx.strokeStyle = '#5a3a26';
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(-12, 7); ctx.lineTo(-12, 10);
+        ctx.moveTo(-5, 6); ctx.lineTo(-5, 9);
+        ctx.moveTo(2, 5); ctx.lineTo(2, 8);
+        ctx.moveTo(9, 6); ctx.lineTo(9, 9);
+        ctx.stroke();
+    } else if (type === 'spider') {
+        ctx.strokeStyle = '#2b2d42';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let i = -2; i <= 2; i++) {
+            const sx = i * 5 - 1;
+            ctx.moveTo(sx - 4, -4);
+            ctx.quadraticCurveTo(sx - 8, 1, sx - 10, 8);
+            ctx.moveTo(sx + 4, -4);
+            ctx.quadraticCurveTo(sx + 8, 1, sx + 10, 8);
+        }
+        ctx.stroke();
+        ctx.fillStyle = '#3a3340';
+        ctx.beginPath(); ctx.arc(-3, -3, 9, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(7, 0, 5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#ff4d6d';
+        ctx.beginPath(); ctx.arc(-3, -3, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.arc(8, -2, 1.6, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(10, -1, 1.4, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(8, 2, 1.4, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(10, 3, 1.2, 0, Math.PI * 2); ctx.fill();
+    } else if (type === 'crab') {
+        ctx.strokeStyle = '#d34a20';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-8, 2); ctx.lineTo(-13, 7);
+        ctx.moveTo(-3, 3); ctx.lineTo(-8, 9);
+        ctx.moveTo(3, 3); ctx.lineTo(8, 9);
+        ctx.moveTo(8, 2); ctx.lineTo(13, 7);
+        ctx.stroke();
+        ctx.fillStyle = '#ff6f3c';
+        ctx.beginPath(); ctx.ellipse(0, 2, 11, 8, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#e85a2c';
+        ctx.beginPath(); ctx.arc(10, -5, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(15, -8, 3.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(-10, -5, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(-15, -8, 3.5, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#e85a2c';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(-3, -6); ctx.lineTo(-4, -11);
+        ctx.moveTo(3, -6); ctx.lineTo(4, -11);
+        ctx.stroke();
+        ctx.fillStyle = '#2b2d42';
+        ctx.beginPath(); ctx.arc(-4, -12, 1.8, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(4, -12, 1.8, 0, Math.PI * 2); ctx.fill();
+    } else if (type === 'meerkat') {
+        ctx.fillStyle = '#d8a868';
+        ctx.beginPath(); ctx.ellipse(0, 3, 9, 11, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#e8c898';
+        ctx.beginPath(); ctx.ellipse(0, 5, 5, 7, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#8a5a33';
+        ctx.beginPath(); ctx.roundRect(-11, -1, 4, 8, 2); ctx.fill();
+        ctx.beginPath(); ctx.roundRect(7, -1, 4, 8, 2); ctx.fill();
+        ctx.fillStyle = '#d8a868';
+        ctx.beginPath(); ctx.arc(0, -9, 8, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#8a5a33';
+        ctx.beginPath(); ctx.ellipse(-3, -10, 3.5, 4, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(3, -10, 3.5, 4, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#2b2d42';
+        ctx.beginPath(); ctx.arc(-3, -10, 1.6, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(3, -10, 1.6, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(0, -6, 1.6, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#d8a868';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.moveTo(-7, 2); ctx.quadraticCurveTo(-14, -2, -12, -10); ctx.stroke();
+        ctx.fillStyle = '#8a5a33';
+        ctx.beginPath(); ctx.arc(-12, -11, 2, 0, Math.PI * 2); ctx.fill();
+    } else if (type === 'panda') {
+        ctx.fillStyle = '#2b2d42';
+        ctx.beginPath(); ctx.roundRect(-12, -2, 4, 9, 2); ctx.fill();
+        ctx.beginPath(); ctx.roundRect(8, -2, 4, 9, 2); ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.ellipse(0, 3, 11, 10, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#2b2d42';
+        ctx.beginPath(); ctx.roundRect(-8, 9, 5, 5, 2); ctx.fill();
+        ctx.beginPath(); ctx.roundRect(3, 9, 5, 5, 2); ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.arc(0, -9, 8, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#2b2d42';
+        ctx.beginPath(); ctx.arc(-6, -15, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(6, -15, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(-3, -10, 3, 3.5, -0.2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(3, -10, 3, 3.5, 0.2, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.arc(-3, -10, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(3, -10, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#2b2d42';
+        ctx.beginPath(); ctx.arc(0, -6, 1.5, 0, Math.PI * 2); ctx.fill();
+    } else if (type === 'seal') {
+        ctx.fillStyle = '#c8d8e0';
+        ctx.beginPath(); ctx.ellipse(0, 4, 14, 9, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#e8f0f4';
+        ctx.beginPath(); ctx.ellipse(0, 7, 9, 5, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#a8b8c8';
+        ctx.beginPath(); ctx.moveTo(-13, 1); ctx.lineTo(-19, 6); ctx.lineTo(-12, 8); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(-2, 9); ctx.lineTo(-6, 14); ctx.lineTo(2, 10); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = '#c8d8e0';
+        ctx.beginPath(); ctx.arc(11, -2, 7, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#2b2d42';
+        ctx.beginPath(); ctx.arc(13, -3, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(17, -1, 1.8, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#8a9aa8';
+        ctx.lineWidth = 1.3;
+        ctx.beginPath();
+        ctx.moveTo(15, 1); ctx.lineTo(21, 2);
+        ctx.moveTo(15, 2); ctx.lineTo(21, 5);
+        ctx.moveTo(15, 3); ctx.lineTo(20, 7);
+        ctx.stroke();
+    } else if (type === 'scarab') {
+        ctx.strokeStyle = '#2b2d42';
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.moveTo(-7, -2); ctx.lineTo(-12, 4);
+        ctx.moveTo(-2, 1); ctx.lineTo(-7, 7);
+        ctx.moveTo(3, 1); ctx.lineTo(8, 7);
+        ctx.moveTo(8, -2); ctx.lineTo(13, 4);
+        ctx.stroke();
+        ctx.fillStyle = '#3a8a9a';
+        ctx.beginPath(); ctx.ellipse(0, 0, 11, 8, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#fbd000';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(0, 8); ctx.stroke();
+        ctx.fillStyle = '#fbd000';
+        ctx.beginPath(); ctx.arc(-5, -3, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(5, -3, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#2b6a7a';
+        ctx.beginPath(); ctx.arc(11, 0, 5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(14, -3); ctx.lineTo(19, -7); ctx.lineTo(18, 0); ctx.closePath(); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(14, 3); ctx.lineTo(19, 7); ctx.lineTo(18, 0); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = '#fbd000';
+        ctx.beginPath(); ctx.arc(12, -2, 1.8, 0, Math.PI * 2); ctx.fill();
     }
 }
 
@@ -2242,6 +2676,61 @@ function drawGoal(type, c) {
         ctx.beginPath();
         ctx.arc(c.x + c.width / 2, c.y + c.height - 40, 6, 0, Math.PI * 2);
         ctx.fill();
+    } else if (type === 'submarine') {
+        const scx = c.x + c.width / 2;
+        const sBase = c.y + c.height;
+
+        ctx.fillStyle = '#2b6a9a';
+        ctx.fillRect(scx - 8, c.y + 8, 16, 70);
+        ctx.beginPath();
+        ctx.roundRect(scx - 14, c.y - 8, 28, 20, 8);
+        ctx.fill();
+
+        ctx.fillStyle = '#4fc3f7';
+        ctx.beginPath();
+        ctx.ellipse(scx, sBase - 44, 96, 44, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 5;
+        ctx.stroke();
+
+        ctx.fillStyle = '#2b6a9a';
+        ctx.beginPath();
+        ctx.ellipse(scx, sBase - 26, 96, 16, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#FFD23F';
+        [[-48, -52], [0, -44], [48, -52]].forEach(([ox, oy]) => {
+            ctx.beginPath();
+            ctx.arc(scx + ox, sBase + oy, 11, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        });
+
+        ctx.fillStyle = '#2b6a9a';
+        ctx.beginPath();
+        ctx.roundRect(scx - 24, sBase - 88, 48, 24, 8);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(scx + 88, sBase - 70);
+        ctx.lineTo(scx + 118, sBase - 58);
+        ctx.lineTo(scx + 84, sBase - 34);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#FFD23F';
+        ctx.beginPath();
+        ctx.arc(scx + 112, sBase - 52, 7, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        [[-20, -96], [6, -104], [28, -92]].forEach(([ox, oy]) => {
+            ctx.beginPath();
+            ctx.arc(scx + ox, sBase + oy, 5 + ((ox % 3) + 1), 0, Math.PI * 2);
+            ctx.fill();
+        });
     }
 }
 

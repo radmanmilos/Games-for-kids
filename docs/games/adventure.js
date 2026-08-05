@@ -435,12 +435,28 @@
         let worldOrder = shuffleArr(cfg.levels.map((_, i) => i));
         let worldPos = 0;
         let paused = false;
+        let flyDyScale = 1;
 
         const keys = { left: false, right: false, up: false, down: false, jump: false };
 
         function resizeCanvas() {
+            const oldH = canvas.height;
             canvas.width = canvas.clientWidth;
             canvas.height = canvas.clientHeight;
+            if (!theme || Math.abs(canvas.height - oldH) < 2) return;
+            const dy = canvas.height - oldH;
+            if (mode === 'ground') {
+                platforms.forEach(p => { p.y += dy; });
+                movingPlatforms.forEach(mp => { mp.y += dy; });
+                pipes.forEach(pp => { pp.y += dy; });
+                coins.forEach(c => { c.y += dy; });
+                if (goal) goal.y += dy;
+                mice.forEach(m => { m.pipeY += dy; m.hiddenY += dy; m.visibleY += dy; m.y += dy; });
+            } else {
+                obstacles.forEach(o => { o.y += dy; });
+                coins.forEach(c => { c.y += dy; });
+                if (goal) goal.y += dy;
+            }
         }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
@@ -503,11 +519,16 @@
             cameraX = 0;
             if (w.bgPage) document.body.style.background = w.bgPage;
 
-            const gy = canvas.height - 50;
+            const GROUND_H = 140;
+            const gy = canvas.height - GROUND_H;
 
             player = {
-                x: 60,
-                y: mode === 'ground' ? 100 : canvas.height - heroH - 24,
+                x: mode === 'ground'
+                    ? Math.max(280, Math.min(w.grounds[0].x + w.grounds[0].w - 70, canvas.width * 0.3))
+                    : Math.max(280, canvas.width * 0.3),
+                y: mode === 'ground'
+                    ? 100
+                    : (mode === 'fly' ? Math.round(canvas.height * 0.4) : canvas.height - heroH - 24),
                 width: heroW,
                 height: heroH,
                 vx: 0,
@@ -529,7 +550,7 @@
             stairSteps = [];
 
             if (mode === 'ground') {
-                platforms = w.grounds.map(g => ({ x: g.x, y: gy, width: g.w, height: 50, color: w.groundColor }))
+                platforms = w.grounds.map(g => ({ x: g.x, y: gy, width: g.w, height: GROUND_H, color: w.groundColor }))
                     .concat((w.floats || []).map(f => ({ x: f.x, y: gy - f.dy, width: f.w, height: 26, color: f.color })));
 
                 coins = w.coins.map(c => ({ x: c.x, y: gy - c.dy, collected: false }));
@@ -573,12 +594,16 @@
                     animationStart: 0
                 }));
             } else {
+                if (mode === 'fly') {
+                    const maxDy = Math.max(70, ...(w.obstacles || []).map(o => o.dy || 0), ...(w.coins || []).map(c => c.dy || 0), w.goalDy || 210);
+                    flyDyScale = (canvas.height * 0.88) / maxDy;
+                }
                 obstacles = (w.obstacles || []).map(o => {
                     const ow = (o.w || 46) * obstacleScale;
                     const oh = (o.h || 42) * obstacleScale;
                     const roadY = mode === 'drive'
                         ? roadTopY() + 16 + Math.random() * Math.max(0, canvas.height - roadTopY() - oh - 32)
-                        : canvas.height - o.dy * dyScale - oh;
+                        : canvas.height - o.dy * flyDyScale - oh;
                     return {
                         x: o.x,
                         y: roadY,
@@ -596,20 +621,22 @@
                     x: c.x,
                     y: mode === 'drive'
                         ? roadTopY() + 24 + Math.random() * Math.max(0, canvas.height - roadTopY() - 48)
-                        : canvas.height - c.dy * dyScale,
+                        : canvas.height - c.dy * flyDyScale,
                     collected: false
                 }));
                 if (mode === 'drive') {
                     goal = { x: w.goalX, y: roadTopY(), width: w.goalW || 240, height: canvas.height - roadTopY() };
                 } else {
-                    const goalH = w.goalH || 200;
+                    const yScale = mode === 'fly' ? flyDyScale : 1;
+                    const goalH = (w.goalH || 200) * yScale;
                     const goalW = w.goalW || 200;
-                    goal = { x: w.goalX, y: canvas.height - (w.goalDy || 210) - goalH, width: goalW, height: goalH };
+                    goal = { x: w.goalX, y: canvas.height - (w.goalDy || 210) * yScale - goalH, width: goalW, height: goalH };
                 }
             }
 
             particles = [];
             lastHitAt = 0;
+            maybePickHero();
         }
 
         function nextLevel() {
@@ -809,6 +836,7 @@
                 player.vx *= 0.8;
             }
 
+            const previousY = player.y;
             player.vy += 0.55; // Gravity
             player.x += player.vx;
             player.y += player.vy;
@@ -820,9 +848,9 @@
                 if (mp.x <= mp.minX || mp.x + mp.width >= mp.maxX) mp.vx *= -1;
                 if (player.x + player.width > mp.x &&
                     player.x < mp.x + mp.width &&
+                    player.vy >= 0 &&
                     player.y + player.height >= mp.y &&
-                    player.y + player.height <= mp.y + 20 &&
-                    player.vy >= 0) {
+                    previousY + player.height <= mp.y + 24) {
                     player.grounded = true;
                     player.vy = 0;
                     player.y = mp.y - player.height;
@@ -835,9 +863,9 @@
             allSolid.forEach(p => {
                 if (player.x + player.width > p.x &&
                     player.x < p.x + p.width &&
+                    player.vy >= 0 &&
                     player.y + player.height >= p.y &&
-                    player.y + player.height <= p.y + 22 &&
-                    player.vy >= 0) {
+                    previousY + player.height <= p.y + 24) {
                     player.grounded = true;
                     player.vy = 0;
                     player.y = p.y - player.height;
@@ -1625,6 +1653,73 @@
             ctx.fillText('ЦИЉ', gx + gw / 2, by + bh / 2 + 2);
         }
 
+        function drawPitHazards(t) {
+            const hazard = theme.pitHazard;
+            if (!hazard) return;
+            const gy = canvas.height - 140;
+            const depth = canvas.height - gy;
+            const grounds = theme.grounds.slice().sort((a, b) => a.x - b.x);
+            for (let i = 0; i < grounds.length - 1; i++) {
+                const gx = grounds[i].x + grounds[i].w;
+                const gapEnd = grounds[i + 1].x;
+                if (gapEnd - gx < 8) continue;
+                if (hazard === 'lava') {
+                    const grad = ctx.createLinearGradient(0, gy, 0, canvas.height);
+                    grad.addColorStop(0, '#ff5f2e');
+                    grad.addColorStop(0.5, '#ff7f1f');
+                    grad.addColorStop(1, '#b33a00');
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(gx, gy, gapEnd - gx, depth);
+                    ctx.fillStyle = '#ffd166';
+                    ctx.fillRect(gx, gy, gapEnd - gx, 5);
+                    ctx.fillStyle = '#fff3c4';
+                    for (let k = 0; k < 6; k++) {
+                        const bx = gx + ((k * 41 + t * 26) % (gapEnd - gx));
+                        const by = canvas.height - 12 - ((k * 29 + t * 70) % (depth * 0.7));
+                        ctx.beginPath();
+                        ctx.arc(bx, by, 3.5, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                } else if (hazard === 'water') {
+                    const grad = ctx.createLinearGradient(0, gy, 0, canvas.height);
+                    grad.addColorStop(0, 'rgba(90,190,255,0.9)');
+                    grad.addColorStop(1, 'rgba(15,80,160,0.95)');
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(gx, gy, gapEnd - gx, depth);
+                    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+                    for (let k = 0; k < 3; k++) {
+                        const ry = gy + 8 + k * 14;
+                        const off = Math.sin(t * 2 + k) * 4;
+                        ctx.fillRect(gx + 4 + off, ry, gapEnd - gx - 8, 2);
+                    }
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '22px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    for (let k = 0; k < 2; k++) {
+                        const fx = gx + 18 + ((k * 37 + t * 22) % Math.max(1, gapEnd - gx - 36));
+                        const fy = canvas.height - 26 - ((k * 19 + Math.sin(t * 1.6 + k * 2.4) * 6) % (depth * 0.55));
+                        ctx.fillText('🐟', fx, fy);
+                    }
+                } else if (hazard === 'spikes') {
+                    ctx.fillStyle = 'rgba(18,20,30,0.92)';
+                    ctx.fillRect(gx, gy, gapEnd - gx, depth);
+                    ctx.fillStyle = '#c7d2e0';
+                    for (let sx = gx + 12; sx < gapEnd - 6; sx += 24) {
+                        const h = 30 + Math.sin(sx * 0.33 + gx) * 8;
+                        ctx.beginPath();
+                        ctx.moveTo(sx - 10, canvas.height);
+                        ctx.lineTo(sx, canvas.height - h);
+                        ctx.lineTo(sx + 10, canvas.height);
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+                    ctx.fillStyle = '#5c6a7a';
+                    ctx.fillRect(gx, canvas.height - 6, gapEnd - gx, 6);
+                }
+            }
+        }
+
         function draw() {
             ctx.fillStyle = theme.bgSky;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1632,6 +1727,8 @@
             const t = Date.now() / 1000;
 
             if (mode === 'drive') drawRoad(t);
+
+            if (cfg.decorBehind) drawDecor(t);
 
             ctx.save();
             ctx.translate(-cameraX, 0);
@@ -1665,6 +1762,7 @@
             }
 
             if (mode === 'ground') {
+                drawPitHazards(t);
                 platforms.forEach(p => {
                     ctx.fillStyle = '#ffffff';
                     ctx.fillRect(p.x - 4, p.y - 4, p.width + 8, p.height + 8);
@@ -1746,10 +1844,15 @@
                 }
             } else {
                 ctx.scale((cfg.heroFlip ? !player.facingRight : player.facingRight) ? 1 : -1, player.squish);
-                ctx.font = (cfg.heroFontSize || 48) + 'px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(cfg.hero, 0, 0);
+                if (cfg.drawHero) {
+                    ctx.translate(0, -3);
+                    cfg.drawHero(ctx, heroType, player.facingRight, player.width, player.height);
+                } else {
+                    ctx.font = (cfg.heroFontSize || 48) + 'px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(cfg.hero, 0, 0);
+                }
             }
             ctx.restore();
 
@@ -1767,7 +1870,7 @@
 
             if (theme.ceiling) drawCeiling();
 
-            drawDecor(t);
+            if (!cfg.decorBehind) drawDecor(t);
         }
 
         function drawCeiling() {
@@ -1813,6 +1916,19 @@
             drawGoalFinish(goal);
         }
 
+        // --- Hero picker ---
+        let heroType = cfg.heroType || cfg.hero || null;
+        function setHeroType(type) {
+            heroType = type;
+            initAudio();
+            if (cfg.onHeroChosen) cfg.onHeroChosen(type);
+        }
+        function maybePickHero() {
+            if (!cfg.pickHero) return;
+            setPaused(true);
+            if (cfg.onHeroNeeded) cfg.onHeroNeeded(game);
+        }
+
         // --- Loop ---
         function setPaused(p) {
             if (p === paused) return;
@@ -1847,13 +1963,17 @@
             get levelCompleted() { return levelCompleted; },
             get player() { return player; },
             get obstacles() { return obstacles; },
+            get platforms() { return platforms; },
             get coins() { return coins; },
             get mice() { return mice; },
             get goal() { return goal; },
             get theme() { return theme; },
             get music() { return cfg.music; },
             get lastHitAt() { return lastHitAt; },
-            get bumpCount() { return bumpCount; }
+            get bumpCount() { return bumpCount; },
+            get heroType() { return heroType; },
+            get paused() { return paused; },
+            setHeroType,
         };
         window.__adv = game;
 

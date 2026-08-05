@@ -105,15 +105,16 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const coin = await h.evalv(`(() => {
     const a = window.__adv;
     a.loadWorld();
+    const before = a.coinCount;
     const c = a.coins[0];
     a.coins.slice(1).forEach(other => { other.collected = true; });
     a.player.x = c.x;
     a.player.y = c.y;
     a.update();
-    return JSON.stringify({ count: a.coinCount, collected: c.collected, hud: document.getElementById('adv-coin-count').textContent });
+    return JSON.stringify({ before: before, count: a.coinCount, collected: c.collected, hud: document.getElementById('adv-coin-count').textContent });
   })()`);
   const coj = JSON.parse(coin);
-  check('coin pickup: count 1, HUD updated', coj.count === 1 && coj.collected === true && coj.hud === '1', coin);
+  check('coin pickup: count +1, HUD updated', coj.count === coj.before + 1 && coj.collected === true && coj.hud === String(coj.before + 1), coin);
 
   await sleep(1100);
   await h.evalv(`(() => {
@@ -206,6 +207,18 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await h.evalv(`document.getElementById('adv-music-btn').click(); true`);
   const mus2 = await h.evalv(`document.getElementById('adv-music-btn').textContent`);
   check('music toggle: 🔊 -> 🔇 -> 🔊', mus0 === '🔊' && mus1 === '🔇' && mus2 === '🔊', mus0 + '/' + mus1 + '/' + mus2);
+
+  const draw = await h.evalv(`(() => {
+    try {
+      const a = window.__adv;
+      a.setPaused(true);
+      a.loadWorld();
+      a.update();
+      a.draw();
+      return 'ok';
+    } catch (e) { return 'ERR:' + e.message; }
+  })()`);
+  check('draw: space decor + vortex stargate goal render without error', draw === 'ok', draw);
 
   h.close();
 

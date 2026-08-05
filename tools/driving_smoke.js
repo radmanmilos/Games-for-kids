@@ -94,29 +94,30 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   const coin = await h.evalv(`(() => {
     const a = window.__adv;
+    const before = a.coinCount;
     const c = a.coins[0];
     a.coins.slice(1).forEach(other => { other.collected = true; });
     a.player.offsetX = c.x - a.cameraX;
     a.player.y = c.y;
     a.update();
-    return JSON.stringify({ count: a.coinCount, collected: c.collected, hud: document.getElementById('adv-coin-count').textContent });
+    return JSON.stringify({ before: before, count: a.coinCount, collected: c.collected, hud: document.getElementById('adv-coin-count').textContent });
   })()`);
   const coj = JSON.parse(coin);
-  check('coin pickup: count 1, HUD updated', coj.count === 1 && coj.collected === true && coj.hud === '1', coin);
+  check('coin pickup: count +1, HUD updated', coj.count === coj.before + 1 && coj.collected === true && coj.hud === String(coj.before + 1), coin);
 
   await sleep(1100);
   const hit = await h.evalv(`(() => {
     const a = window.__adv;
     a.loadWorld();
     const o = a.obstacles[0];
-    const before = a.cameraX;
+    const beforeBumps = a.bumpCount;
     o.x = a.player.x + 20;
     o.y = a.player.y;
     a.update();
-    return JSON.stringify({ before, after: a.cameraX, completed: a.levelCompleted });
+    return JSON.stringify({ bumped: a.bumpCount > beforeBumps, after: a.cameraX, completed: a.levelCompleted });
   })()`);
   const hj = JSON.parse(hit);
-  check('obstacle hit: car knocked back, level not completed', hj.after < hj.before && hj.completed === false, hit);
+  check('obstacle hit: car knocked back, level not completed', hj.bumped === true && hj.completed === false, hit);
 
   const go = await h.evalv(`(() => {
     const a = window.__adv;

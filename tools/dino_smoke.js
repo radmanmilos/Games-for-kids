@@ -46,6 +46,18 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('page chrome: title, back button, canvas, body bg applied', bj.bgApplied === true && bj.canvas === 1 && bj.heroW === 110, boot);
   check('ground controls: left/right in the D-pad cluster, jump on its own', bj.pad === 'left,right' && bj.controls.indexOf('jump') !== -1, boot);
 
+  const pick = await h.evalv(`JSON.stringify({
+    shown: document.getElementById('adv-dino-picker').classList.contains('show'),
+    btns: [...document.querySelectorAll('#adv-dino-grid .adv-dino-btn')].map(b => b.dataset.dino),
+    names: [...document.querySelectorAll('#adv-dino-grid .adv-dino-btn span')].map(s => s.textContent)
+  })`);
+  const pk = JSON.parse(pick);
+  check('dino picker: shown at level start with the 4 dinos', pk.shown === true && pk.btns.join(',') === 't_rex,triceratops,stego,diplodocus' && pk.names.join(';') === 'Тиранозаур;Трицератопс;Стегосаурус;Диплодок', pick);
+  await h.evalv(`document.querySelector('#adv-dino-grid .adv-dino-btn[data-dino="t_rex"]').click(); true`);
+  await sleep(80);
+  const pkj = JSON.parse(await h.evalv(`JSON.stringify({ hero: window.__adv.heroType, shown: document.getElementById('adv-dino-picker').classList.contains('show'), paused: window.__adv.paused })`));
+  check('dino picker: picking a dino sets the hero, closes the picker, resumes the game', pkj.hero === 't_rex' && pkj.shown === false && pkj.paused === false, JSON.stringify(pkj));
+
   const cfg = await h.evalv(`JSON.stringify(window.__adv.levels.map((l, i) => ({
     i,
     name: !!l.name,
@@ -77,6 +89,33 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   }, { floats: 0, moves: 0, stairs: 0, pipes: 0, ceiling: 0, isNight: 0 });
   check('ground features: floats, moving platforms, stairs, pipes, ceiling + night world all present', variety.floats >= 3 && variety.moves >= 3 && variety.stairs >= 3 && variety.pipes >= 5 && variety.ceiling === 1 && variety.isNight === 1, JSON.stringify(variety));
 
+  const gaps = await h.evalv(`JSON.stringify(window.__adv.levels.map((l, i) => {
+    const solids = (l.grounds || []).slice().sort((a, b) => a.x - b.x);
+    const floats = (l.floats || []).map(f => ({ x: f.x, right: f.x + f.w }));
+    const moves = (l.moves || []).map(m => ({ minX: m.minX, maxX: m.maxX }));
+    const openGaps = [];
+    for (let i = 1; i < solids.length; i++) {
+      const gapStart = solids[i - 1].x + solids[i - 1].w, gapEnd = solids[i].x;
+      if (gapEnd <= gapStart) continue;
+      const bridged = floats.some(f => f.right > gapStart && f.x < gapEnd) || moves.some(m => m.maxX > gapStart && m.minX < gapEnd);
+      openGaps.push({ start: gapStart, end: gapEnd, w: gapEnd - gapStart, open: !bridged });
+    }
+    const open = openGaps.filter(g => g.w >= 150 && g.open);
+    return { i, open: open.length, big: open.filter(g => g.w >= 180).length, tooWide: openGaps.some(g => g.w > 240) };
+  }))`);
+  const gapsJ = JSON.parse(gaps);
+  const badGaps = gapsJ.filter(g => g.open < 2 || g.big < 1 || g.tooWide);
+  check('pits: every world has >= 2 open fallable pits (>= 150px, one >= 180px), no unjumpable gap', badGaps.length === 0, gaps);
+
+  const goals = await h.evalv(`JSON.stringify(window.__adv.levels.map((l, i) => {
+    const grounds = (l.grounds || []).slice().sort((a, b) => a.x - b.x);
+    const last = grounds[grounds.length - 1];
+    return { i, lastRight: last ? last.x + last.w : 0, goalX: l.goalX || 0 };
+  }))`);
+  const goalsJ = JSON.parse(goals);
+  const badGoals = goalsJ.filter(g => g.lastRight < g.goalX + 220);
+  check('goal ground: the last ground always extends past the finish line', badGoals.length === 0, goals);
+
   const seqs = await h.evalv(`JSON.stringify(Object.keys(window.__adv.music).map(k => {
     const m = window.__adv.music[k];
     return { k, seq: (m.seq || []).length, bass: (m.bass || []).length, root: !!m.root, amb: !!m.ambient };
@@ -89,8 +128,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await h.evalv(`(() => { const a = window.__adv; a.setPaused(true); a.keys.left = a.keys.right = a.keys.jump = false; for (let i = 0; i < 200; i++) a.update(); return true; })()`);
   const land = await h.evalv(`(() => {
     const a = window.__adv;
-    const gy = document.getElementById('adv-canvas').clientHeight - 50;
-    return JSON.stringify({ y: a.player.y, grounded: a.player.grounded, onGround: a.player.y === gy - a.player.height, x: a.player.x });
+    const gy = a.platforms[0].y;
+    return JSON.stringify({ y: a.player.y, gy: gy, grounded: a.player.grounded, onGround: a.player.y === gy - a.player.height, x: a.player.x });
   })()`);
   const lj = JSON.parse(land);
   check('physics: dino falls and lands on the ground', lj.grounded === true && lj.onGround === true, land);
@@ -144,8 +183,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     a.loadWorld();
     a.keys.left = a.keys.jump = false;
     for (let i = 0; i < 200; i++) a.update();
-    const pipe = window.__adv.levels[window.__adv.worldPos].pipes[0];
-    const pw = pipe.x;
+    // worldPos indexes the shuffled worldOrder; read the pipe of the ACTUAL
+    // loaded world so the test is valid no matter which world booted first.
+    const pw = a.levels[a.worldOrder[a.worldPos]].pipes[0].x;
     a.player.x = pw - a.player.width - 60;
     a.keys.right = true;
     for (let i = 0; i < 40; i++) a.update();
@@ -185,6 +225,18 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const kj = JSON.parse(knock);
   check('raptor hit: dino knocked back, level not completed', kj.bumps >= 1 && kj.done === false, knock);
 
+  const heroDraw = await h.evalv(`(() => {
+    try {
+      const a = window.__adv;
+      a.setPaused(true);
+      a.loadWorld();
+      a.update();
+      a.draw();
+      return 'ok';
+    } catch (e) { return 'ERR:' + e.message; }
+  })()`);
+  check('draw: chosen dino hero + behind-the-world decor render without error', heroDraw === 'ok', heroDraw);
+
   const go = await h.evalv(`(() => {
     const a = window.__adv;
     a.setPaused(true);
@@ -212,6 +264,12 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   })`);
   const nj = JSON.parse(nxt);
   check('next level: advances to world 2, modal closes', nj.level === '2' && nj.hidden === true && nj.completed === false, nxt);
+  const npk = JSON.parse(await h.evalv(`JSON.stringify({ shown: document.getElementById('adv-dino-picker').classList.contains('show'), paused: window.__adv.paused })`));
+  check('dino picker: re-shown before world 2', npk.shown === true && npk.paused === true, JSON.stringify(npk));
+  await h.evalv(`document.querySelector('#adv-dino-grid .adv-dino-btn[data-dino="stego"]').click(); true`);
+  await sleep(80);
+  const nkj = JSON.parse(await h.evalv(`JSON.stringify({ hero: window.__adv.heroType, shown: document.getElementById('adv-dino-picker').classList.contains('show'), paused: window.__adv.paused })`));
+  check('dino picker: picking a new dino for world 2 resumes play', nkj.hero === 'stego' && nkj.shown === false && nkj.paused === false, JSON.stringify(nkj));
 
   await h.evalv(`document.getElementById('adv-worlds-btn').click(); true`);
   await sleep(80);
@@ -232,6 +290,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   })`);
   const wjj = JSON.parse(wj);
   check('worlds picker: jump to world 6, modal closes, HUD updated', wjj.level === '6' && wjj.modalHidden === true && wjj.name === wjj.themeName, wj);
+  const wpk = JSON.parse(await h.evalv(`JSON.stringify({ shown: document.getElementById('adv-dino-picker').classList.contains('show'), paused: window.__adv.paused })`));
+  check('dino picker: re-shown after jumping to a world', wpk.shown === true && wpk.paused === true, JSON.stringify(wpk));
+  await h.evalv(`document.querySelector('#adv-dino-grid .adv-dino-btn[data-dino="diplodocus"]').click(); true`);
+  await sleep(80);
 
   const mus0 = await h.evalv(`document.getElementById('adv-music-btn').textContent`);
   await h.evalv(`document.getElementById('adv-music-btn').click(); true`);
@@ -239,6 +301,21 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await h.evalv(`document.getElementById('adv-music-btn').click(); true`);
   const mus2 = await h.evalv(`document.getElementById('adv-music-btn').textContent`);
   check('music toggle: 🔊 -> 🔇 -> 🔊', mus0 === '🔊' && mus1 === '🔇' && mus2 === '🔊', mus0 + '/' + mus1 + '/' + mus2);
+
+  // Regression: a viewport resize after load (URL bar / orientation) must keep
+  // the ground anchored to the bottom so the player never "drops through the
+  // ground and respawns". Old code left platforms at the pre-resize gy.
+  await h.c.send('Emulation.setDeviceMetricsOverride', { width: 1100, height: 1200, deviceScaleFactor: 1, mobile: false });
+  await sleep(400);
+  const rsz = await h.evalv(`(() => {
+    const a = window.__adv;
+    a.setPaused(true);
+    a.keys.left = a.keys.right = a.keys.jump = false;
+    for (let i = 0; i < 300; i++) a.update();
+    return JSON.stringify({ y: a.player.y, gy: a.platforms[0].y, ch: document.getElementById('adv-canvas').height, gyExpected: document.getElementById('adv-canvas').height - 140, grounded: a.player.grounded, onGround: a.player.y === a.platforms[0].y - a.player.height });
+  })()`);
+  const rj = JSON.parse(rsz);
+  check('resize: ground re-anchored to the new canvas height, dino lands on it', rj.ch >= 1100 && rj.gy === rj.gyExpected && rj.onGround === true && rj.grounded === true, rsz);
 
   h.close();
 
@@ -250,9 +327,15 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
   check('standalone boot wired (dino -> dino-back/startDino)', main.includes("'dino': ['dino-back', 'startDino']"));
   const dino = fs.readFileSync(path.join(root, 'game', 'games', 'dino.js'), 'utf8');
-  check('dino config: heroFlip + jump power set', dino.includes('heroFlip: true') && dino.includes('jumpPower: -13.5'));
+  check('dino config: no heroFlip (dinosaurs face right natively) + jump power set', !dino.includes('heroFlip: true') && dino.includes('jumpPower: -13.5'));
+  check('dino config: pickHero/drawHero/decorBehind/heroBob wired', dino.includes('pickHero: true') && dino.includes('drawHero: drawDinoHero') && dino.includes('onHeroNeeded: showDinoPicker') && dino.includes('decorBehind: true') && dino.includes('heroBob: 2'));
+  const adv = fs.readFileSync(path.join(root, 'game', 'games', 'adventure.js'), 'utf8');
+  check('engine: hero-picker + decor-behind hooks present', adv.includes('cfg.pickHero') && adv.includes('cfg.drawHero') && adv.includes('cfg.decorBehind') && adv.includes('maybePickHero') && adv.includes('setHeroType'));
   const page = fs.readFileSync(path.join(root, 'game', 'pages', 'dino.html'), 'utf8');
   check('dino page: jump button present (data-adv="jump")', page.includes('data-adv="jump"'));
+  check('dino page: hero picker overlay present', page.includes('adv-dino-picker'));
+  const css = fs.readFileSync(path.join(root, 'game', 'shared', 'adventure.css'), 'utf8');
+  check('adventure css: overlay controls + dino picker styles', css.includes('adv-dino-btn') && css.includes('pointer-events: none') && css.includes('z-index: 12'));
 
   process.exit(getFails() ? 1 : 0);
 })();

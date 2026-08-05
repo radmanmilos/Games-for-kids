@@ -795,24 +795,62 @@
         ctx.restore();
     }
 
-    // Space station / portal finish arch: two pylons + glowing portal + ЦИЉ banner.
+    // Space vortex stargate finish: pylons framing a swirling portal + ЦИЉ banner.
     function drawSpaceGoal(ctx, themeGoal, goal) {
         const gx = goal.x, gy = goal.y, gw = goal.width, gh = goal.height;
+        const cx = gx + gw / 2, cy = gy + gh / 2;
+        const t = Date.now() / 1000;
         const pw = 26;
         ctx.fillStyle = '#2b3a52';
         ctx.fillRect(gx, gy, pw, gh);
         ctx.fillRect(gx + gw - pw, gy, pw, gh);
-        ctx.fillStyle = 'rgba(120,180,255,0.35)';
-        ctx.beginPath();
-        ctx.arc(gx + gw / 2, gy + 46, gw / 2 - 4, Math.PI, 0);
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(140,200,255,0.6)';
-        ctx.lineWidth = 5;
-        for (let i = 0; i < 3; i++) {
+        ctx.fillStyle = '#3d5270';
+        ctx.fillRect(gx + 8, gy + 10, pw - 16, gh - 20);
+        ctx.fillRect(gx + gw - pw + 8, gy + 10, pw - 16, gh - 20);
+        ctx.fillStyle = 'rgba(120,200,255,0.9)';
+        ctx.fillRect(gx + 4, gy + gh * 0.28, 4, gh * 0.44);
+        ctx.fillRect(gx + gw - pw + 18, gy + gh * 0.28, 4, gh * 0.44);
+        // swirling vortex arms
+        const r = Math.min(gw, gh) * 0.52;
+        const swirls = [
+            { col: 'rgba(140,120,255,0.55)', tilt: 0, rx: 0.6, ry: 1.05 },
+            { col: 'rgba(110,200,255,0.5)', tilt: 2.1, rx: 0.45, ry: 0.9 },
+            { col: 'rgba(255,140,220,0.45)', tilt: 4.2, rx: 0.3, ry: 0.72 }
+        ];
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(t * 0.5);
+        swirls.forEach((s, i) => {
+            ctx.strokeStyle = s.col;
+            ctx.lineWidth = 12 - i * 3.5;
             ctx.beginPath();
-            ctx.ellipse(gx + gw / 2, gy + 40 + i * 44, gw / 2 - 8 + i * 6, 90 + i * 26, 0, 0, Math.PI * 2);
+            ctx.ellipse(0, 0, r * s.rx, r * s.ry, s.tilt, 0, Math.PI * 2);
             ctx.stroke();
+            ctx.beginPath();
+            ctx.ellipse(0, 0, r * (s.rx - 0.09), r * (s.ry - 0.09), -s.tilt, Math.PI, Math.PI * 2);
+            ctx.stroke();
+        });
+        ctx.restore();
+        // event-horizon core
+        const coreR = r * 0.22 * (1 + Math.sin(t * 3) * 0.12);
+        ctx.fillStyle = 'rgba(10,8,28,0.95)';
+        ctx.beginPath(); ctx.arc(cx, cy, coreR, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+        ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.arc(cx, cy, coreR, 0, Math.PI * 2); ctx.stroke();
+        // sparkles spiraling inward
+        ctx.fillStyle = 'rgba(255,255,255,0.95)';
+        for (let i = 0; i < 14; i++) {
+            const a = t * 1.4 + i * 0.45;
+            const span = Math.max(1, r * 0.85 - coreR);
+            const d = coreR + ((i * 0.31 + t * 0.8) % 1) * span;
+            ctx.globalAlpha = 1 - (d - coreR) / span;
+            const px = cx + Math.cos(a) * d;
+            const py = cy + Math.sin(a) * d * 1.15;
+            ctx.fillRect(px, py, 3, 3);
         }
+        ctx.globalAlpha = 1;
+        // ЦИЉ banner
         const bw = Math.min(gw - 44, 190), bh = 46;
         const by = gy + Math.max(20, (gh - bh) / 2 - 6);
         ctx.fillStyle = '#4a3f6b';
