@@ -8,9 +8,14 @@
   const emojiMap = {Cat:'🐱',Dog:'🐶',Fox:'🦊',Cow:'🐮',Pig:'🐷',Duck:'🦆',Horse:'🐴',Chicken:'🐔'};
   const nameMap = {Cat:'Мачка',Dog:'Пас',Fox:'Лисица',Cow:'Крава',Pig:'Свиња',Duck:'Патка',Horse:'Коњ',Chicken:'Кока'};
   const boardEl = document.getElementById('board');
+  const statusEl = document.getElementById('memoryStatus');
   const restartBtn = document.getElementById('restart');
   const backBtn = document.querySelector('.back-btn');
-  let first = null, second = null, lock = false, matches = 0;
+  let first = null, second = null, lock = false, matches = 0, moves = 0;
+
+  function updateStatus(){
+    if(statusEl) statusEl.textContent = 'Парова: ' + matches + ' од ' + animals.length + ' · Потези: ' + moves;
+  }
 
   function shuffle(arr){
     for(let i=arr.length-1;i>0;i--){
@@ -39,7 +44,8 @@
         </div>`;
       boardEl.appendChild(card);
     });
-    first = second = null; lock = false; matches = 0;
+    first = second = null; lock = false; matches = 0; moves = 0;
+    updateStatus();
   }
 
   function onCardClick(e){
@@ -49,7 +55,29 @@
     if(!first){ flipCard(card); first = card; return; }
     second = card; lock = true;
     flipCard(card);
+    moves += 1;
+    updateStatus();
     checkMatch();
+  }
+
+  function popPair(a, b){
+    const pop = document.createElement('div');
+    pop.className = 'match-pop';
+    pop.textContent = 'Пар!';
+    const board = a.parentElement;
+    board.appendChild(pop);
+    const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect(), br = board.getBoundingClientRect();
+    pop.style.left = ((ra.left + ra.right + rb.left + rb.right) / 4 - br.left) + 'px';
+    pop.style.top = ((ra.top + ra.bottom + rb.top + rb.bottom) / 4 - br.top) + 'px';
+    try{
+      pop.animate([
+        { transform: 'translate(-50%,-50%) scale(.5)', opacity: 0 },
+        { transform: 'translate(-50%,-50%) scale(1.2)', opacity: 1, offset: .35 },
+        { transform: 'translate(-50%,-160%) scale(1)', opacity: 0 }
+      ], { duration: 900, easing: 'cubic-bezier(.34,1.56,.64,1)' }).onfinish = ()=> pop.remove();
+    }catch(_){
+      setTimeout(()=> pop.remove(), 900);
+    }
   }
 
   function flipCard(card){
@@ -63,6 +91,7 @@
 
   function markMatched(a,b){
     a.classList.add('matched'); b.classList.add('matched');
+    popPair(a, b);
     // speak the animal name first, then play its sound (no overlap)
     const playSound = ()=>{ try{ if(window.playAnimalSound) window.playAnimalSound(a.dataset.name); }catch(_){} };
     try{ if(window.speech && window.speech.speak) window.speech.speak(nameMap[a.dataset.name] || a.dataset.name, playSound); else playSound(); }catch(_){ playSound(); }
@@ -70,6 +99,7 @@
     const msg = document.createElement('div'); msg.style.position='absolute'; msg.style.left='-9999px'; msg.setAttribute('role','status');     msg.textContent = 'Пар!'; document.body.appendChild(msg);
     setTimeout(()=> document.body.removeChild(msg), 800);
     matches += 1;
+    updateStatus();
     resetTurn();
     if(matches === animals.length) onWin();
   }

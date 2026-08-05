@@ -1,25 +1,77 @@
 /* ---------------- CANDY POP GAME (swap-to-match, animal boxes) ---------------- */
-const candyTypes = [
-  {color:'#FF6F61', name:'Dog',      emoji:'🐶'},
-  {color:'#FFA84D', name:'Lion',     emoji:'🦁'},
-  {color:'#FFD23F', name:'Duck',     emoji:'🦆'},
-  {color:'#67C971', name:'Frog',     emoji:'🐸'},
-  {color:'#4FC3F7', name:'Elephant', emoji:'🐘'},
-  {color:'#9B6DFF', name:'Chicken', emoji:'🐔'},
+/* Task 66: level milestones — each level has a target score, a cute progress bar
+   fills toward it, the grid grows one row + one column per level (tiles shrink so
+   the grid always fits on screen), and the animal set rotates (farm → wild). */
+const CANDY_SETS = [
+  [ /* farm animals (level 1) */
+    {color:'#FF6F61', name:'Dog',      emoji:'🐶'},
+    {color:'#FFA84D', name:'Cow',      emoji:'🐮'},
+    {color:'#FFD23F', name:'Pig',      emoji:'🐷'},
+    {color:'#67C971', name:'Duck',     emoji:'🦆'},
+    {color:'#4FC3F7', name:'Horse',    emoji:'🐴'},
+    {color:'#9B6DFF', name:'Chicken',  emoji:'🐔'},
+  ],
+  [ /* wild animals (level 2+) */
+    {color:'#FF6F61', name:'Lion',     emoji:'🦁'},
+    {color:'#FFA84D', name:'Elephant', emoji:'🐘'},
+    {color:'#FFD23F', name:'Frog',     emoji:'🐸'},
+    {color:'#67C971', name:'Fox',      emoji:'🦊'},
+    {color:'#4FC3F7', name:'Cat',      emoji:'🐱'},
+    {color:'#9B6DFF', name:'Sheep',    emoji:'🐑'},
+  ],
 ];
-const COLS = 4, ROWS = 4;
-const CELL_VMIN = 17, GAP_VMIN = 2.2, PITCH_VMIN = CELL_VMIN + GAP_VMIN;
+const LEVELS = [ // grid grows one row+column per level; size then stays 8x8
+  { size:4, target:60 },
+  { size:5, target:80 },
+  { size:6, target:100 },
+  { size:7, target:120 },
+  { size:8, target:140 },
+];
+const TOP_BUDGET_VMIN = 14; // vertical room for the level bar row + gap above the grid
+const candyNamePlural = {
+  Dog:'Пси', Cow:'Краве', Pig:'Свиње', Duck:'Патке', Horse:'Коњи', Chicken:'Коке',
+  Lion:'Лавови', Elephant:'Слонови', Frog:'Жабе', Fox:'Лисице', Cat:'Мачке', Sheep:'Овце'
+};
+let ROWS = 4, COLS = 4;
+let CELL_VMIN = 17, GAP_VMIN = 2.2, PITCH_VMIN = 19.2;
+let candyTypes = CANDY_SETS[0];
 let board = [];      // type values; -1 = star, null = transiently empty
 let tileEls = [];    // DOM element currently occupying each board cell
 let candyBusy = false;
 let score = 0;
 let combo = 0; // cascade chain counter (1 = first match, 2+ = combo)
+let level = 1;
+let target = 60;
 const candyGrid = document.getElementById('candyGrid');
 const candyScore = document.getElementById('candyScore');
 
 function updateScore(add){
   if(add) score += add;
   candyScore.querySelector('.matching-score-value').textContent = score;
+  updateLevelBar();
+}
+
+function getLevelCfg(lv){
+  const idx = Math.min(LEVELS.length - 1, lv - 1);
+  const base = LEVELS[idx];
+  return {
+    size: base.size,
+    target: base.target + Math.max(0, lv - LEVELS.length) * 40,
+    types: CANDY_SETS[(lv - 1) % CANDY_SETS.length],
+  };
+}
+
+function setGridMetrics(n){
+  PITCH_VMIN = Math.floor((100 - TOP_BUDGET_VMIN) / n * 100) / 100;
+  GAP_VMIN = Math.max(1.2, Math.min(2.4, Math.round(PITCH_VMIN * 0.14 * 100) / 100));
+  CELL_VMIN = PITCH_VMIN - GAP_VMIN;
+}
+
+function updateLevelBar(){
+  const fill = document.getElementById('candyBarFill');
+  if(!fill) return;
+  const pct = Math.max(0, Math.min(100, Math.round(score / target * 100)));
+  fill.style.width = pct + '%';
 }
 
 function randType(){ return Math.floor(Math.random()*candyTypes.length); }
@@ -41,6 +93,10 @@ function setTilePos(el, r, c, instant){
 function createTile(type, r, c, dropFromAbove){
   const el = document.createElement('div');
   el.className = 'candy';
+  el.style.width = CELL_VMIN + 'vmin';
+  el.style.height = CELL_VMIN + 'vmin';
+  el.style.fontSize = (CELL_VMIN * 0.56) + 'vmin';
+  el.style.borderRadius = (CELL_VMIN * 0.3) + 'vmin';
   applyTileVisual(el, type);
   el.setAttribute('role', 'button');
   el.tabIndex = 0;
@@ -63,11 +119,26 @@ function createTile(type, r, c, dropFromAbove){
   return el;
 }
 
-function startCandy(){
-  candyBusy = false;
-  score = 0;
+function startLevel(lv){
+  level = lv;
   combo = 0;
+  const cfg = getLevelCfg(lv);
+  candyTypes = cfg.types;
+  ROWS = COLS = cfg.size;
+  target = cfg.target;
+  setGridMetrics(cfg.size);
+  candyGrid.style.width = (cfg.size * PITCH_VMIN - GAP_VMIN) + 'vmin';
+  candyGrid.style.height = (cfg.size * PITCH_VMIN - GAP_VMIN) + 'vmin';
+  score = 0;
   updateScore(0);
+  const label = document.getElementById('candyLevelLabel');
+  if(label) label.textContent = 'Ниво ' + lv + ' · до ' + target;
+  updateLevelBar();
+  buildBoard();
+}
+
+function buildBoard(){
+  candyBusy = false;
   candyGrid.innerHTML = '';
   board = []; tileEls = [];
   for(let r=0;r<ROWS;r++){
@@ -83,8 +154,15 @@ function startCandy(){
       tileEls[r].push(createTile(t, r, c, false));
     }
   }
-  setTimeout(()=>{ if(!hasPossibleMove()) spawnStar(); }, 400);
+  setTimeout(()=>{ if(!candyBusy && !hasPossibleMove()) spawnStar(); }, 400);
 }
+
+function hasStar(){
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(board[r][c]===-1) return true;
+  return false;
+}
+
+function startCandy(){ startLevel(1); }
 
 /* ---- swap dragging, with a real-time mirrored preview of the neighbor ---- */
 function attachCandyDrag(el){
@@ -198,7 +276,7 @@ function commitSwap(r1,c1,r2,c2, elA, elB){
       tileEls[r1][c1] = elA; tileEls[r2][c2] = elB;
       setTilePos(elA, r1, c1, false);
       setTilePos(elB, r2, c2, false);
-      setTimeout(()=>{ candyBusy = false; }, 340);
+      setTimeout(()=>{ candyBusy = false; if(!hasPossibleMove() && !hasStar()) spawnStar(); }, 340);
     }, 380);
   } else {
     resolveMatches();
@@ -342,7 +420,8 @@ function resolveMatches(){
   const matched = findMatches();
   if(matched.size === 0){
     combo = 0;
-    if(!hasPossibleMove()) spawnStar();
+    if(score >= target){ onLevelUp(); return; }
+    if(!hasPossibleMove() && !hasStar()) spawnStar();
     else candyBusy = false;
     return;
   }
@@ -368,4 +447,85 @@ function resolveMatches(){
     setTimeout(resolveMatches, 420);
   }, 240);
 }
+
+function onLevelUp(){
+  level += 1;
+  combo = 0;
+  startLevel(level);
+  showLevelUp(level);
+  try{ if(window.successChime) window.successChime(); }catch(_){}
+}
+
+function showLevelUp(n){
+  const msg = document.getElementById('levelUpMsg');
+  if(!msg) return;
+  const text = document.getElementById('levelUpText');
+  if(text) text.textContent = 'Ниво ' + n + '!';
+  msg.classList.add('show');
+  msg.animate([{opacity:1},{opacity:1},{opacity:0}], { duration:1600, fill:'forwards' }).onfinish = ()=>{
+    msg.classList.remove('show');
+    msg.getAnimations().forEach(a => a.cancel());
+  };
+}
+
+function firstMatchType(matched){
+  for(const k of matched){ const [r,c] = k.split(',').map(Number); return board[r][c]; }
+  return 0;
+}
+
+function findHint(){
+  for(let r=0;r<ROWS;r++){
+    for(let c=0;c<COLS;c++){
+      if(board[r][c] === -1) continue;
+      if(c+1<COLS && board[r][c+1] !== -1){
+        [board[r][c], board[r][c+1]] = [board[r][c+1], board[r][c]];
+        const matched = findMatches();
+        [board[r][c], board[r][c+1]] = [board[r][c+1], board[r][c]];
+        if(matched.size > 0) return { a:[r,c], b:[r,c+1], type: firstMatchType(matched) };
+      }
+      if(r+1<ROWS && board[r+1][c] !== -1){
+        [board[r][c], board[r+1][c]] = [board[r+1][c], board[r][c]];
+        const matched = findMatches();
+        [board[r][c], board[r+1][c]] = [board[r+1][c], board[r][c]];
+        if(matched.size > 0) return { a:[r,c], b:[r+1,c], type: firstMatchType(matched) };
+      }
+    }
+  }
+  return null;
+}
+
+let hintTimer = null;
+function showHint(){
+  if(candyBusy) return;
+  const hint = findHint();
+  if(!hint){ showHintMsg('Нема потеза — сачекај звезду ⭐'); return; }
+  const a = tileEls[hint.a[0]][hint.a[1]], b = tileEls[hint.b[0]][hint.b[1]];
+  [a,b].forEach(el=>{ if(!el) return; el.classList.remove('hint'); void el.offsetWidth; el.classList.add('hint'); });
+  clearTimeout(hintTimer);
+  hintTimer = setTimeout(()=> [a,b].forEach(el=>{ if(el) el.classList.remove('hint'); }), 1600);
+  const name = candyTypes[hint.type].name;
+  showHintMsg('Погледај ' + (candyNamePlural[name] || name) + ' ' + candyTypes[hint.type].emoji + ' 😉');
+}
+
+function showHintMsg(text){
+  let el = candyGrid.querySelector('.hint-float');
+  if(!el){
+    el = document.createElement('div');
+    el.className = 'hint-float';
+    el.style.cssText = 'position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);z-index:30;pointer-events:none;' +
+      'background:rgba(255,255,255,.92);color:var(--plum);font-weight:700;font-size:4.2vmin;padding:1.4vmin 3vmin;' +
+      'border-radius:999px;box-shadow:0 .8vmin 0 rgba(74,63,107,.15);text-align:center;white-space:nowrap;';
+    candyGrid.appendChild(el);
+  }
+  el.textContent = text;
+  el.animate([
+    { opacity:0, transform:'translate(-50%,-50%) scale(.7)' },
+    { opacity:1, transform:'translate(-50%,-50%) scale(1.05)', offset:.4 },
+    { opacity:1, transform:'translate(-50%,-50%) scale(1)', offset:.7 },
+    { opacity:0, transform:'translate(-50%,-50%) scale(.95)' }
+  ], { duration:2200, easing:'ease', fill:'forwards' });
+}
+
+const hintBtn = document.getElementById('candyHintBtn');
+if(hintBtn) hintBtn.addEventListener('click', ()=>{ if(window.popSound) window.popSound(); showHint(); });
 

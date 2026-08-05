@@ -1041,9 +1041,11 @@ Built so far from this list: **Писање (Tracing)** (task 53), **Возил�
 
 ---
 
-## Phase 5 — Polish (was Phase 4)
+## Phase 5 — Game polish (was Phase 4; refocused 2026-08-05)
 
-Polish.
+**Focus (user decision 2026-08-05): the 8 ИГРЕ games only** (Paper Kitty, Driving, Ocean, Dino, Space, Candy, Memory, Puzzle). The УЧЕЊЕ learning apps (Classroom, Tracing, Animals, Shapes, Counting, Coloring, Piano) are **out of scope** this phase. Workflow rule: the assistant proposes a task per game, then **asks the user what to add/change before executing** any of them.
+
+Registered tasks (one per game, see PROJECT_TASKS): Memory (65 — progress + "Пар!" popup + moves counter), Candy (66 — level milestones), Puzzle (67 — more scenes + finish sparkle), Kitty (68 — level-pacing re-tune), adventure games (69 — speed/density/length tuning).
 
 Improve:
 
