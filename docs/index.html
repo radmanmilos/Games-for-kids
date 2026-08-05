@@ -84,6 +84,37 @@
   }
   .hub-btn.ghost:active{ transform:none; }
 
+  /* ---------- HUB LANDING (two group tiles) ---------- */
+  .hub-tiles{
+    display:flex; gap: clamp(24px, 8vmin, 12vmin);
+    justify-content:center; align-items:center; flex-wrap:wrap;
+    width: min(92vmin, 92%); margin: 22vh auto 0; padding-bottom:4vmin;
+  }
+  .hub-tile{
+    width: clamp(150px, 34vmin, 320px); height: clamp(150px, 34vmin, 320px);
+    border-radius:12%; border:none; cursor:pointer; color:white;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5vmin;
+    box-shadow: 0 1.5vmin 0 rgba(0,0,0,.15), 0 2vmin 4vmin rgba(0,0,0,.12);
+    animation: bob 3.2s ease-in-out infinite;
+    transition: transform .12s ease;
+  }
+  .hub-tile .tile-emoji{ font-size: clamp(56px, 17vmin, 160px); line-height:1; }
+  .hub-tile .tile-emojis{
+    display:grid; grid-template-columns:1fr 1fr; gap:.4em;
+    font-size: clamp(30px, 9.5vmin, 88px); line-height:1; text-align:center;
+  }
+  .hub-tile .tile-label{ font-size: clamp(30px, 7.5vmin, 72px); font-weight:700; letter-spacing:.05em; text-shadow:0 3px 0 rgba(0,0,0,.18); }
+  .hub-tile.tile-games{ background: radial-gradient(circle at 35% 30%, #FF9FB6, var(--pink)); animation-delay:0s;}
+  .hub-tile.tile-learning{ background: radial-gradient(circle at 35% 30%, #A5E5A0, var(--green)); animation-delay:.9s;}
+  .hub-tile:active{ transform: scale(.94) translateY(4px); }
+  .hub-sub-title{
+    position:absolute; top:6%; font-size:7vmin; margin:0; color:var(--plum);
+    text-shadow: 0 3px 0 rgba(255,255,255,.6); pointer-events:none;
+  }
+  /* sub-hub screens: grid scrolls from the top, clears the title + back button */
+  #hub-games, #hub-learning{ justify-content:flex-start; }
+  #hub-games .hub-grid, #hub-learning .hub-grid{ margin: 24vh auto 0; }
+
   /* ---------- KITTY ADVENTURE ---------- */
   #game-kitty{background:#5c94fc;}
   #kitty-container{position:relative;width:100%;height:100%;display:flex;flex-direction:column;}
@@ -268,34 +299,52 @@
 <body>
 <div id="app">
 
-  <!-- HUB -->
+  <!-- HUB LANDING -->
   <div class="screen active" id="hub">
     <div class="blob" style="width:20vmin;height:20vmin;background:var(--yellow);top:10%;left:8%;"></div>
     <div class="blob" style="width:14vmin;height:14vmin;background:var(--green);bottom:14%;right:10%;animation-delay:1.5s;"></div>
     <div class="blob" style="width:10vmin;height:10vmin;background:var(--pink);bottom:8%;left:14%;animation-delay:2.5s;"></div>
     <h1 id="hub-title">🌈 Петрин свет</h1>
+    <div class="hub-tiles">
+      <button class="hub-tile tile-learning" data-go="hub-learning"><span class="tile-emojis"><span>🏫</span><span>📝</span><span>🎹</span><span>🎨</span></span><span class="tile-label">УЧЕЊЕ</span></button>
+      <button class="hub-tile tile-games" data-go="hub-games"><span class="tile-emoji">🎮</span><span class="tile-label">ИГРЕ</span></button>
+    </div>
+  </div>
+
+  <!-- HUB GAMES -->
+  <div class="screen" id="hub-games">
+    <button class="back-btn" data-go="hub"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <h2 class="hub-sub-title">🎮 ИГРЕ</h2>
     <div class="hub-grid">
-      <button class="hub-btn green" data-go="game-classroom">🏫</button>
-      <button class="hub-btn sky" data-go="game-tracing">✏️</button>
-      <button class="hub-btn" data-go="game-piano">🎹</button>
-      <button class="hub-btn sky" data-go="game-animals">🐾</button>
-      <button class="hub-btn pink" data-go="game-shapes">⭐</button>
-      <button class="hub-btn matching" data-go="game-candy"><span class="matching-icon">🐱🐶<br>🐶🐱</span></button>
       <button class="hub-btn kitty" data-go="game-kitty">🐱</button>
       <button class="hub-btn green" data-go="game-driving">🚗</button>
       <button class="hub-btn sky" data-go="game-ocean">🐟</button>
       <button class="hub-btn green" data-go="game-dino">🦕</button>
       <button class="hub-btn pink" data-go="game-space">🚀</button>
-      <button class="hub-btn" data-go="game-counting">🔢</button>
+      <button class="hub-btn matching" data-go="game-candy"><span class="matching-icon">🐱🐶<br>🐶🐱</span></button>
       <button class="hub-btn matching" data-go="game-memory">🃏</button>
-      <button class="hub-btn sky" data-go="game-coloring">🎨</button>
       <button class="hub-btn" data-go="game-puzzle">🧩</button>
+    </div>
+  </div>
+
+  <!-- HUB LEARNING -->
+  <div class="screen" id="hub-learning">
+    <button class="back-btn" data-go="hub"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <h2 class="hub-sub-title">🧠 УЧЕЊЕ</h2>
+    <div class="hub-grid">
+      <button class="hub-btn green" data-go="game-classroom">🏫</button>
+      <button class="hub-btn sky" data-go="game-tracing">✏️</button>
+      <button class="hub-btn sky" data-go="game-animals">🐾</button>
+      <button class="hub-btn pink" data-go="game-shapes">⭐</button>
+      <button class="hub-btn" data-go="game-counting">🔢</button>
+      <button class="hub-btn sky" data-go="game-coloring">🎨</button>
+      <button class="hub-btn" data-go="game-piano">🎹</button>
     </div>
   </div>
 
   <!-- PAPER KITTY ADVENTURE -->
   <div class="screen" id="game-kitty">
-    <button class="back-btn" data-go="hub"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <button class="back-btn" data-go="hub-games"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <div id="kitty-container">
       <iframe id="kitty-embedded" title="Папир Маца: Пустоловина" src="about:blank"></iframe>
       <div id="kitty-score">СВЕТ <span id="kitty-level">1</span> &nbsp; 🪙 <span id="kitty-coins">0</span></div>

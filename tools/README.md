@@ -12,6 +12,7 @@ binary.
 | File | What it is |
 | --- | --- |
 | `headless.js` | Shared harness: serves `game/` over HTTP, boots headless Chrome on a **unique temp profile**, returns `{ evalv, navigate, close, port }`. Also exports `check(name, ok, info)` (prints `PASS`/`FAIL`), `sleep`, `getFails()`. Kills only this run's Chrome on `close()` — stale-Chrome profile locks were the historical "Chrome did not start" cause. |
+| `hub_smoke.js` | Canonical validation for the two-level hub (`game/index.html`) — 7 checks: landing renders with the title + two labeled tiles (ИГРЕ/УЧЕЊЕ), games tile opens the games sub-hub (8 buttons), learning tile opens the learning sub-hub (7 buttons), both back buttons return to the landing, all 15 game `data-go` buttons still wired, kitty's back button targets `hub-games`. |
 | `tracing_smoke.js` | Canonical validation for the Писање (Tracing) free-draw game — 22 checks: hub, dashed guide present, layout (no ref/caption overlap), pointer drawing, clear, correct А/0/circle accepted, sloppy Б accepted (forgiving), line/scribble/blob rejected, success auto-advance, shape wrap, hub wiring. |
 | `tracing_probe.js` | Matching-metric table for threshold tuning. Prints `cov` (guide coverage), `ink`, `ratio`, `near` (fraction of ink within 2 cells of the guide) and the distance histogram `hist` for each good/bad drawing. |
 | `dilate_test.js` | Standalone check that the integral-image `dilate()` in `tracing.js` produces a correct symmetric dilation (center/corner/corners cases). |
@@ -28,6 +29,7 @@ binary.
 ```
 node tools/dilate_test.js       # visual: r=1 dilation is a 3x3 box
 node tools/tracing_probe.js     # metrics table (uses window.__traceDebug)
+node tools/hub_smoke.js         # hub landing + sub-hub navigation smoke test — expect ALL PASS
 node tools/tracing_smoke.js     # full game smoke test — expect ALL PASS
 node tools/kids_smoke.js        # classroom kids-tier smoke test — expect ALL PASS
 node tools/piano_smoke.js       # piano (Клавир) smoke test — expect ALL PASS

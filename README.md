@@ -457,6 +457,7 @@ Educational goals:
 
 Paper Kitty Adventure has been fully integrated into Petrin svet and the placeholder is gone. The project is now a modular application:
 
+- **Hub landing (task 64, 2026-08-05):** `index.html` opens on the "🌈 Петрин свет" title with two big group tiles — **УЧЕЊЕ first** (icon = 2×2 emoji combo 🏫📝/🎹🎨) then 🎮 **ИГРЕ** (Kitty, Driving, Ocean, Dino, Space, Candy, Memory, Puzzle). Each tile opens that group's sub-hub screen with the round game buttons; a back arrow returns to the landing. УЧЕЊЕ = Classroom, Tracing, Animals, Shapes, Counting, Coloring, Piano.
 - **Kitty Adventure** runs inside the main app screen (embedded `papper_kitty.html`).
 - All other games open as standalone pages launched from the hub.
 - Navigation, audio, speech, and utilities are shared modules.
@@ -482,11 +483,15 @@ The live site is served by GitHub Pages from the **`docs/` folder on the `main` 
 The app follows a hybrid model:
 
 ```
-Petrin svet (index.html hub)
+Petrin svet (index.html landing: 🌈 title + two group tiles — УЧЕЊЕ 🏫📝🎹🎨 first, then 🎮 ИГРЕ)
 
 ↓
 
-Game button
+Group tile
+
+↓
+
+Group sub-hub (round game buttons — ИГРЕ 8, УЧЕЊЕ 7)
 
 ↓
 
@@ -498,7 +503,7 @@ Back button
 
 ↓
 
-Main Menu
+Main Menu (landing)
 ```
 
 `shared/navigation.js` drives every `data-go` button. Most games load their own page; Kitty is the one in-app screen (embedded via iframe so it keeps its own canvas loop and HUD).
@@ -675,7 +680,7 @@ Development tooling kept here (not part of the runtime):
 - `visual_audit_capture.js` — headless-Chrome screenshot harness for the visual audit (no deps, run from repo root).
 - `visual_audit_instructions.md` — full read-only instructions for the visual audit model (task 47).
 
-Test tooling lives in `tools/` (see `tools/README.md`): `headless.js` shared harness, `tracing_smoke.js` (canonical tracing validation), `tracing_probe.js` (metric tuning), `dilate_test.js`. Run with `node tools/<file>.js` — no install needed.
+Test tooling lives in `tools/` (see `tools/README.md`): `headless.js` shared harness, `hub_smoke.js` (hub navigation), `tracing_smoke.js` (canonical tracing validation), `tracing_probe.js` (metric tuning), `dilate_test.js`. Run with `node tools/<file>.js` — no install needed.
 
 Nothing inside this folder is required for the final application to run.
 
