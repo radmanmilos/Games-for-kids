@@ -10,6 +10,18 @@
     let audioCtx = null;
     let noiseBuf = null;
 
+    function fitAdvToViewport() {
+        const advGame = document.getElementById('adv-game');
+        if (!advGame) return;
+        advGame.style.height = window.innerHeight + 'px';
+    }
+    window.addEventListener('resize', fitAdvToViewport);
+    window.addEventListener('orientationchange', fitAdvToViewport);
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) setTimeout(fitAdvToViewport, 100);
+    });
+    fitAdvToViewport();
+
     function noteFreq(root, semi) {
         return root * Math.pow(2, semi / 12);
     }
