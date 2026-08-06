@@ -52,11 +52,21 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     names: [...document.querySelectorAll('#adv-dino-grid .adv-dino-btn span')].map(s => s.textContent)
   })`);
   const pk = JSON.parse(pick);
-  check('dino picker: shown at level start with the 4 dinos', pk.shown === true && pk.btns.join(',') === 't_rex,triceratops,stego,diplodocus' && pk.names.join(';') === 'Тиранозаур;Трицератопс;Стегосаурус;Диплодок', pick);
+  check('dino picker: shown at level start with the 2 PNG dinos', pk.shown === true && pk.btns.join(',') === 'bronto,t_rex' && pk.names.join(';') === 'Бронтосаурус;Тиранозаур', pick);
   await h.evalv(`document.querySelector('#adv-dino-grid .adv-dino-btn[data-dino="t_rex"]').click(); true`);
   await sleep(80);
   const pkj = JSON.parse(await h.evalv(`JSON.stringify({ hero: window.__adv.heroType, shown: document.getElementById('adv-dino-picker').classList.contains('show'), paused: window.__adv.paused })`));
   check('dino picker: picking a dino sets the hero, closes the picker, resumes the game', pkj.hero === 't_rex' && pkj.shown === false && pkj.paused === false, JSON.stringify(pkj));
+
+  // The PNGs load async; wait for both cropped frames, then verify their sizing.
+  let framesReady = false;
+  for (let i = 0; i < 60 && !framesReady; i++) {
+    framesReady = (await h.evalv(`(() => { const f = window.__dinoFrames; return JSON.stringify({ b: !!f.bronto, t: !!f.t_rex }); })()`)) === '{"b":true,"t":true}';
+    if (!framesReady) await sleep(100);
+  }
+  const frames = await h.evalv(`JSON.stringify({ bronto: window.__dinoFrames.bronto && { w: window.__dinoFrames.bronto.width, h: window.__dinoFrames.bronto.height }, t_rex: window.__dinoFrames.t_rex && { w: window.__dinoFrames.t_rex.width, h: window.__dinoFrames.t_rex.height } })`);
+  const fj = JSON.parse(frames);
+  check('dino sprites: both PNGs cropped (transparent padding trimmed) + scaled to the 110x100 hitbox', framesReady === true && fj.bronto.w > 60 && fj.bronto.w <= 110 && fj.bronto.h === 100 && fj.t_rex.w > 60 && fj.t_rex.w <= 110 && fj.t_rex.h === 100, frames);
 
   const cfg = await h.evalv(`JSON.stringify(window.__adv.levels.map((l, i) => ({
     i,
@@ -266,10 +276,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('next level: advances to world 2, modal closes', nj.level === '2' && nj.hidden === true && nj.completed === false, nxt);
   const npk = JSON.parse(await h.evalv(`JSON.stringify({ shown: document.getElementById('adv-dino-picker').classList.contains('show'), paused: window.__adv.paused })`));
   check('dino picker: re-shown before world 2', npk.shown === true && npk.paused === true, JSON.stringify(npk));
-  await h.evalv(`document.querySelector('#adv-dino-grid .adv-dino-btn[data-dino="stego"]').click(); true`);
+  await h.evalv(`document.querySelector('#adv-dino-grid .adv-dino-btn[data-dino="bronto"]').click(); true`);
   await sleep(80);
   const nkj = JSON.parse(await h.evalv(`JSON.stringify({ hero: window.__adv.heroType, shown: document.getElementById('adv-dino-picker').classList.contains('show'), paused: window.__adv.paused })`));
-  check('dino picker: picking a new dino for world 2 resumes play', nkj.hero === 'stego' && nkj.shown === false && nkj.paused === false, JSON.stringify(nkj));
+  check('dino picker: picking a new dino for world 2 resumes play', nkj.hero === 'bronto' && nkj.shown === false && nkj.paused === false, JSON.stringify(nkj));
 
   await h.evalv(`document.getElementById('adv-worlds-btn').click(); true`);
   await sleep(80);
@@ -292,7 +302,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('worlds picker: jump to world 6, modal closes, HUD updated', wjj.level === '6' && wjj.modalHidden === true && wjj.name === wjj.themeName, wj);
   const wpk = JSON.parse(await h.evalv(`JSON.stringify({ shown: document.getElementById('adv-dino-picker').classList.contains('show'), paused: window.__adv.paused })`));
   check('dino picker: re-shown after jumping to a world', wpk.shown === true && wpk.paused === true, JSON.stringify(wpk));
-  await h.evalv(`document.querySelector('#adv-dino-grid .adv-dino-btn[data-dino="diplodocus"]').click(); true`);
+  await h.evalv(`document.querySelector('#adv-dino-grid .adv-dino-btn[data-dino="t_rex"]').click(); true`);
   await sleep(80);
 
   const mus0 = await h.evalv(`document.getElementById('adv-music-btn').textContent`);
@@ -327,7 +337,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
   check('standalone boot wired (dino -> dino-back/startDino)', main.includes("'dino': ['dino-back', 'startDino']"));
   const dino = fs.readFileSync(path.join(root, 'game', 'games', 'dino.js'), 'utf8');
-  check('dino config: no heroFlip (dinosaurs face right natively) + jump power set', !dino.includes('heroFlip: true') && dino.includes('jumpPower: -13.5'));
+  check('dino config: heroFlip set (PNG sprites face left natively) + jump power set', dino.includes('heroFlip: true') && dino.includes('jumpPower: -13.5'));
+  check('dino config: file:// crop fallback present (getImageData is tainted under file://)', dino.includes('DINO_CROP_FALLBACK') && dino.includes('bronto: { x: 264, y: 106, w: 1529, h: 1633 }') && dino.includes('t_rex: { x: 154, y: 112, w: 1691, h: 1775 }'));
   check('dino config: pickHero/drawHero/decorBehind/heroBob wired', dino.includes('pickHero: true') && dino.includes('drawHero: drawDinoHero') && dino.includes('onHeroNeeded: showDinoPicker') && dino.includes('decorBehind: true') && dino.includes('heroBob: 2'));
   const adv = fs.readFileSync(path.join(root, 'game', 'games', 'adventure.js'), 'utf8');
   check('engine: hero-picker + decor-behind hooks present', adv.includes('cfg.pickHero') && adv.includes('cfg.drawHero') && adv.includes('cfg.decorBehind') && adv.includes('maybePickHero') && adv.includes('setHeroType'));

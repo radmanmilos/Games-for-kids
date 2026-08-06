@@ -63,6 +63,9 @@ const HTML = path.join(__dirname, '..', 'game', 'pages', 'papper_kitty.html');
   const water = await h.evalv(`WORLDS[6].name === 'Подводни свет' && WORLDS[6].goal === 'submarine'`);
   check('water world: finish line is a submarine', water === true, 'Подводни свет -> submarine');
 
+  const waterPit = await h.evalv(`WORLDS[6].pitHazard`);
+  check('water world: pits are spikes (per user request)', waterPit === 'spikes', 'Подводни свет pitHazard=' + waterPit);
+
   const src = fs.readFileSync(HTML, 'utf8');
   check('static: drawGoal has a submarine branch', src.includes("type === 'submarine'"), 'drawGoal submarine');
   check('static: kitty bob applied on draw', src.includes('Math.sin(player.bobPhase) * 2.5'), 'bob offset');

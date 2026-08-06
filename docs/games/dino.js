@@ -706,230 +706,91 @@
         ctx.fillText('ЦИЉ', gx + gw / 2, by + bh / 2 + 2);
     }
 
-    // --- Playable dinosaur heroes (drawn facing right; the engine mirrors
-    // them when the dino moves left — no heroFlip, sprites already face right) ---
-    const DINO_PALETTE = {
-        t_rex: { body: '#3d9e3d', dark: '#2f7d2f', belly: '#8fce6b' },
-        triceratops: { body: '#3a8a8a', dark: '#2c6a6a', belly: '#7fbfbf' },
-        stego: { body: '#c8733a', dark: '#9c5a2c', belly: '#f0b060' },
-        diplodocus: { body: '#5a7ab0', dark: '#45628f', belly: '#9db8d8' }
+    // --- Playable dinosaur heroes (drawn from the PNG sprites; both source
+    // images face LEFT natively, so the engine mirrors them right via heroFlip) ---
+    const DINO_SPRITES = {
+        bronto: { src: '../assets/images/dino/brontosaurus.png' },
+        t_rex: { src: '../assets/images/dino/tiranosaurus-rex.png' }
+    };
+    const dinoFrames = {};
+    const dinoPreviewC2d = {};
+    // Opaque-content crop rects, measured from the resources/dino/ PNGs with the
+    // same alpha scan below. Fallback when getImageData is blocked (a canvas
+    // drawn from a file:// image is tainted -> SecurityError; drawing still works).
+    const DINO_CROP_FALLBACK = {
+        bronto: { x: 264, y: 106, w: 1529, h: 1633 },
+        t_rex: { x: 154, y: 112, w: 1691, h: 1775 }
     };
 
-    function dinoEye(ctx, x, y, r) {
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#1b2430';
-        ctx.beginPath();
-        ctx.arc(x + r * 0.3, y, r * 0.5, 0, Math.PI * 2);
-        ctx.fill();
+    function loadDinoFrame(type) {
+        const img = new Image();
+        img.onload = () => {
+            // Trim the transparent padding: find the opaque bounds of the source
+            // PNG (both are 2000x2000 canvases with a margin) and pre-scale the
+            // content to the 110x100 hitbox so feet land at the hitbox bottom.
+            const c = document.createElement('canvas');
+            c.width = img.naturalWidth;
+            c.height = img.naturalHeight;
+            const c2d = c.getContext('2d');
+            c2d.drawImage(img, 0, 0);
+            let crop = null;
+            try {
+                const d = c2d.getImageData(0, 0, c.width, c.height).data;
+                let minX = c.width, minY = c.height, maxX = 0, maxY = 0;
+                for (let y = 0; y < c.height; y += 2) {
+                    for (let x = 0; x < c.width; x += 2) {
+                        if (d[(y * c.width + x) * 4 + 3] > 32) {
+                            if (x < minX) minX = x;
+                            if (x > maxX) maxX = x;
+                            if (y < minY) minY = y;
+                            if (y > maxY) maxY = y;
+                        }
+                    }
+                }
+                crop = { x: minX, y: minY, w: maxX - minX + 1, h: maxY - minY + 1 };
+            } catch (e) {
+                crop = DINO_CROP_FALLBACK[type];
+            }
+            const frame = document.createElement('canvas');
+            frame.width = Math.max(1, Math.round(crop.w * 100 / crop.h));
+            frame.height = 100;
+            const f2d = frame.getContext('2d');
+            f2d.drawImage(img, crop.x, crop.y, crop.w, crop.h, 0, 0, frame.width, 100);
+            dinoFrames[type] = frame;
+            redrawPickerPreviews();
+        };
+        img.src = DINO_SPRITES[type].src;
     }
 
-    function dinoQuadLegs(ctx, y, dark) {
-        ctx.fillStyle = dark;
-        ctx.fillRect(-24, y, 17, 24);
-        ctx.fillRect(8, y, 17, 24);
-        ctx.beginPath();
-        ctx.arc(-16, y + 28, 9, 0, Math.PI * 2);
-        ctx.arc(16, y + 28, 9, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
-    function drawTRex(ctx, p) {
-        ctx.fillStyle = p.dark;
-        ctx.beginPath();
-        ctx.moveTo(-26, -14);
-        ctx.quadraticCurveTo(-48, -18, -60, 2);
-        ctx.quadraticCurveTo(-44, -2, -26, -4);
-        ctx.closePath();
-        ctx.fill();
-        ctx.fillStyle = p.body;
-        ctx.beginPath();
-        ctx.ellipse(-8, -6, 32, 26, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = p.belly;
-        ctx.beginPath();
-        ctx.ellipse(-4, 4, 20, 14, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = p.dark;
-        ctx.fillRect(-22, 18, 18, 24);
-        ctx.fillRect(4, 18, 18, 24);
-        ctx.beginPath();
-        ctx.arc(-13, 45, 10, 0, Math.PI * 2);
-        ctx.arc(13, 45, 10, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = p.body;
-        ctx.beginPath();
-        ctx.moveTo(-2, -28);
-        ctx.quadraticCurveTo(6, -44, 18, -46);
-        ctx.lineTo(22, -22);
-        ctx.lineTo(0, -14);
-        ctx.closePath();
-        ctx.fill();
-        ctx.beginPath();
-        ctx.roundRect(6, -50, 34, 26, 8);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.moveTo(8, -24);
-        ctx.lineTo(38, -24);
-        ctx.lineTo(36, -14);
-        ctx.lineTo(8, -14);
-        ctx.closePath();
-        ctx.fill();
-        ctx.strokeStyle = '#1b2430';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(8, -24);
-        ctx.lineTo(36, -24);
-        ctx.stroke();
-        ctx.fillStyle = '#ffffff';
-        for (let tx = 14; tx < 36; tx += 6) {
-            ctx.beginPath();
-            ctx.moveTo(tx, -24);
-            ctx.lineTo(tx + 3, -19);
-            ctx.lineTo(tx + 6, -24);
-            ctx.closePath();
-            ctx.fill();
-        }
-        dinoEye(ctx, 22, -38, 6);
-        ctx.strokeStyle = p.dark;
-        ctx.lineWidth = 5;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(2, -10);
-        ctx.lineTo(8, -4);
-        ctx.stroke();
-    }
-
-    function drawTriceratops(ctx, p) {
-        ctx.fillStyle = p.dark;
-        ctx.beginPath();
-        ctx.moveTo(-30, -16);
-        ctx.quadraticCurveTo(-52, -20, -64, -2);
-        ctx.quadraticCurveTo(-46, -6, -28, -6);
-        ctx.closePath();
-        ctx.fill();
-        ctx.fillStyle = p.body;
-        ctx.beginPath();
-        ctx.ellipse(-4, -4, 36, 22, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = p.belly;
-        ctx.beginPath();
-        ctx.ellipse(0, 0, 24, 14, 0, 0, Math.PI * 2);
-        ctx.fill();
-        dinoQuadLegs(ctx, 16, p.dark);
-        ctx.fillStyle = p.body;
-        ctx.beginPath();
-        ctx.arc(24, -38, 20, Math.PI * 0.5, Math.PI * 1.5);
-        ctx.closePath();
-        ctx.fill();
-        ctx.beginPath();
-        ctx.ellipse(34, -30, 16, 13, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = p.dark;
-        ctx.beginPath();
-        ctx.ellipse(36, -30, 8, 8, 0, 0, Math.PI * 2);
-        ctx.fill();
-        dinoEye(ctx, 34, -32, 5);
-        ctx.strokeStyle = '#fff8ed';
-        ctx.lineCap = 'round';
-        ctx.lineWidth = 6;
-        ctx.beginPath(); ctx.moveTo(44, -30); ctx.lineTo(54, -38); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(38, -40); ctx.lineTo(42, -50); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(30, -42); ctx.lineTo(30, -52); ctx.stroke();
-        ctx.fillStyle = '#8a5a2a';
-        ctx.beginPath();
-        ctx.moveTo(46, -26);
-        ctx.quadraticCurveTo(50, -24, 46, -22);
-        ctx.lineTo(44, -22);
-        ctx.closePath();
-        ctx.fill();
-    }
-
-    function drawStego(ctx, p) {
-        ctx.fillStyle = p.dark;
-        ctx.beginPath();
-        ctx.moveTo(-26, -12);
-        ctx.quadraticCurveTo(-50, -14, -62, 4);
-        ctx.lineTo(-46, 0);
-        ctx.lineTo(-54, -8);
-        ctx.lineTo(-38, -4);
-        ctx.closePath();
-        ctx.fill();
-        ctx.fillStyle = p.body;
-        ctx.beginPath();
-        ctx.ellipse(-2, -2, 40, 22, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = p.belly;
-        ctx.beginPath();
-        ctx.ellipse(2, 4, 26, 12, 0, 0, Math.PI * 2);
-        ctx.fill();
-        dinoQuadLegs(ctx, 16, p.dark);
-        ctx.fillStyle = '#ffd23f';
-        const plates = [[-28, -22, 16], [-12, -32, 18], [4, -36, 18], [20, -30, 15]];
-        for (const [px, py, pr] of plates) {
-            ctx.beginPath();
-            ctx.moveTo(px - pr / 2, py + pr / 2);
-            ctx.lineTo(px, py - pr / 2);
-            ctx.lineTo(px + pr / 2, py + pr / 2);
-            ctx.closePath();
-            ctx.fill();
-        }
-        ctx.fillStyle = p.body;
-        ctx.beginPath();
-        ctx.ellipse(38, -12, 13, 11, 0, 0, Math.PI * 2);
-        ctx.fill();
-        dinoEye(ctx, 40, -14, 4);
-    }
-
-    function drawDiplodocus(ctx, p) {
-        ctx.fillStyle = p.dark;
-        ctx.beginPath();
-        ctx.moveTo(-18, -8);
-        ctx.quadraticCurveTo(-46, 0, -64, 26);
-        ctx.quadraticCurveTo(-52, 18, -40, 14);
-        ctx.quadraticCurveTo(-30, 6, -18, 2);
-        ctx.closePath();
-        ctx.fill();
-        ctx.fillStyle = p.body;
-        ctx.beginPath();
-        ctx.ellipse(0, 0, 26, 20, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = p.belly;
-        ctx.beginPath();
-        ctx.ellipse(2, 6, 14, 8, 0, 0, Math.PI * 2);
-        ctx.fill();
-        dinoQuadLegs(ctx, 16, p.dark);
-        ctx.strokeStyle = p.body;
-        ctx.lineCap = 'round';
-        ctx.lineWidth = 13;
-        ctx.beginPath();
-        ctx.moveTo(12, -6);
-        ctx.quadraticCurveTo(26, -24, 30, -42);
-        ctx.stroke();
-        ctx.fillStyle = p.body;
-        ctx.beginPath();
-        ctx.ellipse(34, -44, 10, 7, 0.3, 0, Math.PI * 2);
-        ctx.fill();
-        dinoEye(ctx, 36, -46, 3.5);
-    }
-
+    // ctx origin = player centre (the engine shifts it up 3px before drawing),
+    // so drawing the bottom edge at +53 sits the feet exactly on the hitbox bottom.
     function drawDinoHero(ctx, type) {
-        const p = DINO_PALETTE[type] || DINO_PALETTE.t_rex;
-        if (type === 'triceratops') drawTriceratops(ctx, p);
-        else if (type === 'stego') drawStego(ctx, p);
-        else if (type === 'diplodocus') drawDiplodocus(ctx, p);
-        else drawTRex(ctx, p);
+        const frame = dinoFrames[type];
+        if (!frame) return;
+        ctx.drawImage(frame, -frame.width / 2, 53 - frame.height, frame.width, frame.height);
     }
 
     // --- Level-start dino picker ---
     const DINO_OPTIONS = [
-        { type: 't_rex', name: 'Тиранозаур' },
-        { type: 'triceratops', name: 'Трицератопс' },
-        { type: 'stego', name: 'Стегосаурус' },
-        { type: 'diplodocus', name: 'Диплодок' }
+        { type: 'bronto', name: 'Бронтосаурус' },
+        { type: 't_rex', name: 'Тиранозаур' }
     ];
+
+    function redrawPickerPreviews() {
+        const modal = document.getElementById('adv-dino-picker');
+        if (!modal || !modal.classList.contains('show')) return;
+        DINO_OPTIONS.forEach(opt => {
+            const c2d = dinoPreviewC2d[opt.type];
+            if (!c2d) return;
+            c2d.setTransform(1, 0, 0, 1, 0, 0);
+            c2d.clearRect(0, 0, 110, 100);
+            // Mirror so the thumbnail matches the in-game look: the PNGs face left
+            // natively and heroFlip mirrors them to face right at level start.
+            c2d.translate(55, 47);
+            c2d.scale(-1, 1);
+            drawDinoHero(c2d, opt.type);
+        });
+    }
 
     function showDinoPicker(game) {
         const modal = document.getElementById('adv-dino-picker');
@@ -944,8 +805,7 @@
             canvas.width = 110;
             canvas.height = 100;
             const c2d = canvas.getContext('2d');
-            c2d.translate(55, 50);
-            drawDinoHero(c2d, opt.type);
+            dinoPreviewC2d[opt.type] = c2d;
             btn.appendChild(canvas);
             const label = document.createElement('span');
             label.textContent = opt.name;
@@ -958,10 +818,14 @@
             grid.appendChild(btn);
         });
         modal.classList.add('show');
+        redrawPickerPreviews();
     }
 
     window.startDino = function () {
         if (window.__adv) return;
+        loadDinoFrame('bronto');
+        loadDinoFrame('t_rex');
+        window.__dinoFrames = dinoFrames;
         AdventureEngine.create({
             id: 'dino',
             mode: 'ground',
@@ -972,6 +836,7 @@
             heroBob: 2,
             pickHero: true,
             heroType: 't_rex',
+            heroFlip: true,
             drawHero: drawDinoHero,
             onHeroNeeded: showDinoPicker,
             decorBehind: true,
