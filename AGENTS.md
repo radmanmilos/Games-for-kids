@@ -32,6 +32,7 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 - Build-then-polish: games ship first, polish comes in iterative rounds driven by the user's play-test feedback. Expect multiple feedback rounds and record each round's decisions.
 - Keep `resources/` and `tools/` for dev assets and tooling; `game/` must stay deployable-only and never require `resources/` or `tools/` at runtime.
 - Update README / HANDOVER_PROMPT / PROJECT_TASKS alongside code. HANDOVER_PROMPT is refreshed at the end of every session.
+- Kilo config: `kilo.jsonc` at the project root sets the default model (Big Pickle), snapshot mode, compaction, and permissions. Commands live in `.kilo/command/` (invoked via `/name`). Agents live in `.kilo/agent/`.
 
 ## Footguns & no-go zones
 
@@ -65,6 +66,7 @@ When such a request arrives, recommend the model and ask the user to confirm bef
 
 - `ritwickdey.LiveServer` — serve `game/` over HTTP (kitty iframe, Web Audio, audio assets need it, not `file://`)
 - `dbaeumer.vscode-eslint` — JS lint as you type (complements `node --check`)
+- `esbenp.prettier-vscode` — JS/HTML/CSS formatter (keeps code consistent across the project)
 - `jock.svg` — live SVG preview (coloring scenes, classroom 3D shapes)
 - `naumovs.color-highlight` — inline hex color preview (palettes in coloring.js)
 - `streetsidesoftware.code-spell-checker` + `-serbian` — Serbian Cyrillic spell check (workspace setting `cSpell.language: "en,sr"` in `.vscode/settings.json`)

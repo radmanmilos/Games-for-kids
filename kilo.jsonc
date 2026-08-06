@@ -1,0 +1,22 @@
+{
+  "$schema": "https://app.kilo.ai/config.json",
+  "model": "kilo-auto/free",
+  "small_model": "kilo-auto/free",
+  "default_agent": "code",
+  "instructions": ["AGENTS.md"],
+  "snapshot": true,
+  "compaction": {
+    "auto": false,
+    "prune": false
+  },
+  "permission": {
+    "bash": "allow",
+    "edit": {
+      "game/**": "allow",
+      "tools/**": "allow",
+      ".vscode/**": "allow",
+      "*": "ask"
+    },
+    "read": "allow"
+  }
+}

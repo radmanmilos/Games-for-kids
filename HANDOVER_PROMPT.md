@@ -20,6 +20,12 @@ Activate skill
 
 - Ponytail Lazy Dev — enable this project persona and follow its rules (surgical, YAGNI, minimal changes).
 
+Kilo config
+
+- `kilo.jsonc` at the project root sets the default model (Big Pickle), snapshot mode, compaction, and permissions.
+- Commands live in `.kilo/command/` (invoked via `/name`): `/smoke`, `/check`, `/sync-docs`, `/review`.
+- Agents live in `.kilo/agent/` (e.g. `ponytail.md` for the YAGNI agent).
+
 Working rules (short)
 
 - Be surgical: prefer the smallest correct change. Follow the Ponytail Lazy Dev (YAGNI) rules.
