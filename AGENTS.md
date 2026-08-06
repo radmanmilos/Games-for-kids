@@ -16,7 +16,7 @@ Follow these rules in every coding session:
 - Validate with the smallest relevant command or check that proves the change works.
 - Keep comments and docs focused on intent and behavior; do not add churn.
 - If a simpler solution exists, choose it.
-- Work in small batches. For multi-step or large-scope work, prefer small verifiable steps and delegate to subagents when helpful; ask before each step.
+- Work in small batches. For multi-step or large-scope work, prefer small verifiable steps and delegate to subagents when helpful; ask before each step. This prevents output-limit failures — if the model is approaching its limit, finish the current micro-step, document state, and stop rather than expanding the response.
 
 Project rule — language (applies to ALL games, including any future ones):
 
@@ -32,7 +32,7 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 - Do not claim done without validating. Every JS change gets `node --check`; use the smallest targeted check that proves the change. Headless test harnesses live in `tools/` (see `tools/README.md`); e.g. the tracing game's canonical validation is `node tools/tracing_smoke.js`. Reuse `tools/headless.js` for new games instead of writing one-off probes.
 - Build-then-polish: games ship first, polish comes in iterative rounds driven by the user's play-test feedback. Expect multiple feedback rounds and record each round's decisions.
  - Keep `resources/` and `tools/` for dev assets and tooling; `game/` must stay deployable-only and never require `resources/` or `tools/` at runtime.
- - Update README / HANDOVER_PROMPT / PROJECT_TASKS alongside code. HANDOVER_PROMPT is refreshed at the end of every session.
+  - Update `PROJECT_TASKS.md`, `README.md`, `HANDOVER_PROMPT.md`, and `CONTRIBUTING.md` at the start of every task (mark IN PROGRESS) and on completion of every task (mark DONE with a dated note: who, what, why). This is not optional — missing docs updates are a regression. `HANDOVER_PROMPT.md` is refreshed at the end of every session.
  - **Docs sync:** on every change to `game/`, run `tools/sync-docs.sh` to replace the entire `docs/` content with the new `game/` content. **Never commit or push to `main` automatically** — the user must do that explicitly. GitHub Pages serves `main` → `/docs`, so pushing publishes the site. Never edit `docs/` directly.
 - Kilo config: `kilo.jsonc` at the project root sets the default model (Big Pickle), snapshot mode, compaction, and permissions. Commands live in `.kilo/command/` (invoked via `/name`). Agents live in `.kilo/agent/`.
 - **Context limit rule:** before the conversation approaches the model's context limit, finish the current task, update `PROJECT_TASKS.md`,`README.md`, 'HANDOVER_PROMPT.md', and give the user a concise status summary. Do not keep expanding the conversation past the limit. If needed, tell the user to continue in a new session or switch to a larger-context model.
@@ -57,8 +57,19 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 
 ## Orientation protocol
 
-When the user asks where we are / what next / how are we / any similar orientation question:
-1. Read `PROJECT_TASKS.md`, `HANDOVER_PROMPT.md`, and `README.md` to load project state.
+When the user asks any of these orientation phrases — "where are we", "what next", "how are we", "where we are", "what's the status", "current state", "orientation", "give me a recap", "status update", or any similar orientation question — run the full orientation automatically without asking:
+
+1. Read these files to load project state:
+   - `PROJECT_TASKS.md`
+   - `HANDOVER_PROMPT.md`
+   - `README.md`
+   - `AGENTS.md`
+   - `CONTRIBUTING.md`
+   - `CodeReview_Findings.md`
+   - `tools/README.md`
+   - `.kilo/command/*.md`
+   - `.kilo/agent/*.md`
+   - `kilo.jsonc`
 2. Produce a concise recap: current task status, what was just completed, and the recommended next task(s).
 3. Do not start work unless explicitly asked; just report state and recommendations.
 
