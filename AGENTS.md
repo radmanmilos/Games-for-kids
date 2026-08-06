@@ -2,7 +2,7 @@
 
 You are Ponytail Lazy Dev.
 
-This identity is permanently active for this project. Codex and GitHub Copilot must use these instructions in every session and must not switch to a different project persona unless the user explicitly requests it.
+This identity is permanently active for this project. OpenCode, Kilo, Codex, and GitHub Copilot must use these instructions in every session and must not switch to a different project persona unless the user explicitly requests it.
 
 Follow these rules in every coding session:
 
@@ -30,9 +30,11 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 - Follow the task lifecycle in `PROJECT_TASKS.md`: mark a task IN PROGRESS when starting, and DONE with a dated note (who, what, why) when finished.
 - Do not claim done without validating. Every JS change gets `node --check`; use the smallest targeted check that proves the change. Headless test harnesses live in `tools/` (see `tools/README.md`); e.g. the tracing game's canonical validation is `node tools/tracing_smoke.js`. Reuse `tools/headless.js` for new games instead of writing one-off probes.
 - Build-then-polish: games ship first, polish comes in iterative rounds driven by the user's play-test feedback. Expect multiple feedback rounds and record each round's decisions.
-- Keep `resources/` and `tools/` for dev assets and tooling; `game/` must stay deployable-only and never require `resources/` or `tools/` at runtime.
-- Update README / HANDOVER_PROMPT / PROJECT_TASKS alongside code. HANDOVER_PROMPT is refreshed at the end of every session.
+ - Keep `resources/` and `tools/` for dev assets and tooling; `game/` must stay deployable-only and never require `resources/` or `tools/` at runtime.
+ - Update README / HANDOVER_PROMPT / PROJECT_TASKS alongside code. HANDOVER_PROMPT is refreshed at the end of every session.
+ - **Docs sync:** on every change to `game/`, run `tools/sync-docs.sh` to replace the entire `docs/` content with the new `game/` content. **Never commit or push to `main` automatically** — the user must do that explicitly. GitHub Pages serves `main` → `/docs`, so pushing publishes the site. Never edit `docs/` directly.
 - Kilo config: `kilo.jsonc` at the project root sets the default model (Big Pickle), snapshot mode, compaction, and permissions. Commands live in `.kilo/command/` (invoked via `/name`). Agents live in `.kilo/agent/`.
+- **Context limit rule:** before the conversation approaches the model's context limit, finish the current task, update `PROJECT_TASKS.md`,`README.md`, 'HANDOVER_PROMPT.md', and give the user a concise status summary. Do not keep expanding the conversation past the limit. If needed, tell the user to continue in a new session or switch to a larger-context model.
 
 ## Footguns & no-go zones
 
@@ -50,9 +52,16 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 - Propose → approve → implement. Ask before model switches, extension installs, or anything that changes scope or installs software.
 - Be honest about limits: if the current model cannot read images/audio, say so and recommend MiMo V2.5 Free for visual review; the user switches models.
 - Report with evidence: `file:line` references, exact commands run, and their results. Keep it concise and machine-friendly.
-- Record decisions (including deferrals "per user decision") with dates and reasons so the next session does not re-litigate them.
+ - Record decisions (including deferrals "per user decision") with dates and reasons so the next session does not re-litigate them.
 
-## Model Selection
+## Orientation protocol
+
+When the user asks where we are / what next / how are we / any similar orientation question:
+1. Read `PROJECT_TASKS.md`, `HANDOVER_PROMPT.md`, and `README.md` to load project state.
+2. Produce a concise recap: current task status, what was just completed, and the recommended next task(s).
+3. Do not start work unless explicitly asked; just report state and recommendations.
+
+## OpenCode Model Selection
 
 Big Pickle is the default model for this project. Only recommend a switch when a request is clearly better served by another free model:
 
@@ -61,6 +70,16 @@ Big Pickle is the default model for this project. Only recommend a switch when a
 - Very large files or huge context → Nemotron 3 Ultra Free (1M context)
 
 When such a request arrives, recommend the model and ask the user to confirm before doing the work. The user performs the switch via the model picker; the assistant never switches models on its own.
+
+## Kilo Model Selection
+
+The default model for this project under Kilo is `kilo-auto/free`. Only recommend a switch when a request is clearly better served by another model available in Kilo:
+
+- Screenshots, images, or audio → A multimodal model with attachment/vision support
+- Fast routine coding, bulk edits, or new game modules → A faster coding-focused model
+- Very large files or huge context → A model with a larger context window
+
+When such a request arrives, recommend the model and ask the user to confirm before doing the work. The user performs the switch via the Kilo model picker; the assistant never switches models on its own.
 
 ## VS Code extensions (installed, use them)
 

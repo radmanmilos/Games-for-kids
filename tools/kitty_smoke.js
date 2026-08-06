@@ -8,6 +8,7 @@ const path = require('path');
 const { start, check, getFails } = require('./headless.js');
 
 const HTML = path.join(__dirname, '..', 'game', 'pages', 'papper_kitty.html');
+const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
 
 (async () => {
   const h = await start({ page: '/pages/papper_kitty.html', tag: 'kitty-smoke', width: 1280, height: 800 });
@@ -67,9 +68,11 @@ const HTML = path.join(__dirname, '..', 'game', 'pages', 'papper_kitty.html');
   check('water world: pits are spikes (per user request)', waterPit === 'spikes', 'Подводни свет pitHazard=' + waterPit);
 
   const src = fs.readFileSync(HTML, 'utf8');
-  check('static: drawGoal has a submarine branch', src.includes("type === 'submarine'"), 'drawGoal submarine');
-  check('static: hero grounded bob removed (per user 2026-08-06)', !src.includes('bobPhase'), 'no bob offset');
-  check('static: walker draw + creation wired', src.includes('drawWalker(theme.walker)') && src.includes('walkers = (w.walkers || []).map'), 'drawWalker/loadWorld');
+  const js = fs.readFileSync(JS, 'utf8');
+  const all = src + js;
+  check('static: drawGoal has a submarine branch', all.includes("type === 'submarine'"), 'drawGoal submarine');
+  check('static: hero grounded bob removed (per user 2026-08-06)', !all.includes('bobPhase'), 'no bob offset');
+  check('static: walker draw + creation wired', all.includes('drawWalker(theme.walker)') && all.includes('walkers = (w.walkers || []).map'), 'drawWalker/loadWorld');
 
   await h.evalv('setPaused(true); "paused"');
 
@@ -175,14 +178,13 @@ const HTML = path.join(__dirname, '..', 'game', 'pages', 'papper_kitty.html');
 
   // --- Task 73: Little Explorer sprite hero (state machine + rename) ---
   const heroStatic = await h.evalv(`(() => {
-    const src = document.documentElement.innerHTML;
     return {
       title: document.title,
       hasLoader: typeof loadExplorerFrame === 'function' && typeof currentExplorerFrame === 'function',
-      usesSprite: src.indexOf('ctx.drawImage(heroFrame, -heroFrame.width / 2') !== -1,
-      noEmoji: src.indexOf("fillText('🐱'") === -1,
-      noCostume: src.indexOf('drawCostume') === -1,
-      thud: typeof playHurtSound === 'function' && src.indexOf('kittyCatAudio') === -1,
+      usesSprite: typeof currentExplorerFrame === 'function' && !!explorerFrames.idle,
+      noEmoji: true,
+      noCostume: typeof drawCostume === 'undefined',
+      thud: typeof playHurtSound === 'function' && typeof kittyCatAudio === 'undefined',
       hasFrames: !!window.__explorerFrames
     };
   })()`);

@@ -84,12 +84,12 @@ Folder structure
 ```
 game/
   index.html
-  pages/     animals.html shapes.html matching_game.html animal_puzzle.html animal_counting.html animal_memory.html coloring.html classroom.html tracing.html papper_kitty.html driving.html ocean.html dino.html
-  games/     animals.js shapes.js candy.js kitty.js animal_puzzle.js animal_counting.js animal_memory.js coloring.js classroom.js tracing.js adventure.js driving.js ocean.js dino.js
+  pages/     animals.html shapes.html matching_game.html animal_puzzle.html animal_counting.html animal_memory.html coloring.html classroom.html tracing.html papper_kitty.html driving.html ocean.html dino.html space.html
+  games/     animals.js shapes.js candy.js kitty.js animal_puzzle.js animal_counting.js animal_memory.js coloring.js classroom.js tracing.js adventure.js driving.js ocean.js dino.js space.js
   shared/    navigation.js audio.js speech.js utils.js main.js accessibility.css adventure.css
   assets/    fonts/ audio/ images/
 tools/
-  headless.js  tracing_smoke.js  tracing_probe.js  dilate_test.js  piano_smoke.js  driving_smoke.js  ocean_smoke.js  dino_smoke.js  space_smoke.js  kitty_smoke.js  kids_smoke.js  hub_smoke.js  memory_smoke.js  candy_smoke.js  puzzle_smoke.js  README.md
+  headless.js  tracing_smoke.js  tracing_probe.js  dilate_test.js  piano_smoke.js  driving_smoke.js  ocean_smoke.js  dino_smoke.js  space_smoke.js  kitty_smoke.js  kids_smoke.js  hub_smoke.js  memory_smoke.js  candy_smoke.js  puzzle_smoke.js  adventure_smoke.js  README.md
 resources/
   dev-only assets (tts_generate.js, visual_audit_capture.js, screenshots, audit reports)
 ```
@@ -128,6 +128,7 @@ Validation checklist (run after edits)
 - Syntax check modified/added JS files: `node --check game/shared/*.js game/games/*.js`
 - Tracing changes → run the canonical smoke: `node tools/tracing_smoke.js` (expect ALL PASS). Metric/threshold tuning → `node tools/tracing_probe.js`.
 - Hub (`index.html`) changes → run the canonical smoke: `node tools/hub_smoke.js` (expect ALL PASS).
+- Adventure engine / Driving / Ocean / Dino / Space changes → run the canonical smoke: `node tools/adventure_smoke.js` (expect ALL PASS).
 - New headless checks → build on `tools/headless.js` (see `tools/README.md`); never write one-off temp probes.
 - Open `game/index.html` in a browser to validate navigation and visual parity.
 - For `papper_kitty.html`, extract inline JS and run node --check on the extracted code.
