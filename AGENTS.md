@@ -34,7 +34,7 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
  - Keep `resources/` and `tools/` for dev assets and tooling; `game/` must stay deployable-only and never require `resources/` or `tools/` at runtime.
   - Update `PROJECT_TASKS.md`, `README.md`, `HANDOVER_PROMPT.md`, and `CONTRIBUTING.md` at the start of every task (mark IN PROGRESS) and on completion of every task (mark DONE with a dated note: who, what, why). This is not optional — missing docs updates are a regression. `HANDOVER_PROMPT.md` is refreshed at the end of every session.
  - **Docs sync:** on every change to `game/`, run `tools/sync-docs.sh` to replace the entire `docs/` content with the new `game/` content. **Never commit or push to `main` automatically** — the user must do that explicitly. GitHub Pages serves `main` → `/docs`, so pushing publishes the site. Never edit `docs/` directly.
-- Kilo config: `kilo.jsonc` at the project root sets the default model (Big Pickle), snapshot mode, compaction, and permissions. Commands live in `.kilo/command/` (invoked via `/name`). Agents live in `.kilo/agent/`.
+- Kilo config (Kilo-only — OpenCode ignores this): `kilo.jsonc` at the project root sets the default model (Big Pickle), snapshot mode, compaction, and permissions. Commands live in `.kilo/command/` (invoked via `/name`). Agents live in `.kilo/agent/`.
 - **Context limit rule:** before the conversation approaches the model's context limit, finish the current task, update `PROJECT_TASKS.md`,`README.md`, 'HANDOVER_PROMPT.md', and give the user a concise status summary. Do not keep expanding the conversation past the limit. If needed, tell the user to continue in a new session or switch to a larger-context model.
 
 ## Footguns & no-go zones
@@ -65,11 +65,7 @@ When the user asks any of these orientation phrases — "where are we", "what ne
    - `README.md`
    - `AGENTS.md`
    - `CONTRIBUTING.md`
-   - `CodeReview_Findings.md`
    - `tools/README.md`
-   - `.kilo/command/*.md`
-   - `.kilo/agent/*.md`
-   - `kilo.jsonc`
 2. Produce a concise recap: current task status, what was just completed, and the recommended next task(s).
 3. Do not start work unless explicitly asked; just report state and recommendations.
 
@@ -84,6 +80,8 @@ Big Pickle is the default model for this project. Only recommend a switch when a
 When such a request arrives, recommend the model and ask the user to confirm before doing the work. The user performs the switch via the model picker; the assistant never switches models on its own.
 
 ## Kilo Model Selection
+
+Kilo-only — OpenCode sessions skip this section and use the OpenCode Model Selection above instead.
 
 The default model for this project under Kilo is `kilo-auto/free`. Only recommend a switch when a request is clearly better served by another model available in Kilo:
 
