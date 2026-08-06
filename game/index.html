@@ -73,6 +73,7 @@
   .hub-btn.matching{ background: radial-gradient(circle at 35% 30%, #C9A6FF, #9B6DFF); animation-delay:.8s;}
   .matching-icon{display:inline-flex;flex-direction:column;align-items:center;font-size:.58em;line-height:.72;}
   .hub-btn.kitty{ background: radial-gradient(circle at 35% 30%, #FFB6D0, #FF7FA8); animation-delay:1.2s;}
+  .hub-btn img{ width:78%; height:78%; object-fit:contain; pointer-events:none; }
   .hub-btn.green{ background: radial-gradient(circle at 35% 30%, #A5E5A0, var(--green)); animation-delay:1.6s;}
   @keyframes bob{
     0%,100%{ transform: translateY(0) rotate(-2deg); }
@@ -316,7 +317,7 @@
     <button class="back-btn" data-go="hub"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <h2 class="hub-sub-title">🎮 ИГРЕ</h2>
     <div class="hub-grid">
-      <button class="hub-btn kitty" data-go="game-kitty">🐱</button>
+      <button class="hub-btn kitty" data-go="game-kitty"><img src="assets/images/explorer/03_run_right.png" alt="Мала истраживачица"></button>
       <button class="hub-btn green" data-go="game-driving">🚗</button>
       <button class="hub-btn sky" data-go="game-ocean">🐟</button>
       <button class="hub-btn green" data-go="game-dino">🦕</button>
@@ -342,11 +343,11 @@
     </div>
   </div>
 
-  <!-- PAPER KITTY ADVENTURE -->
+  <!-- LITTLE EXPLORER ADVENTURE -->
   <div class="screen" id="game-kitty">
     <button class="back-btn" data-go="hub-games"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <div id="kitty-container">
-      <iframe id="kitty-embedded" title="Папир Маца: Пустоловина" src="about:blank"></iframe>
+      <iframe id="kitty-embedded" title="Мала истраживачица: Пустоловина" src="about:blank"></iframe>
       <div id="kitty-score">СВЕТ <span id="kitty-level">1</span> &nbsp; 🪙 <span id="kitty-coins">0</span></div>
       <canvas id="kitty-canvas"></canvas>
       <div id="kitty-win"><h2 id="kitty-win-title">СВЕТ ПРЕЂЕН!</h2><button id="kitty-next">СЛЕДЕЋИ СВЕТ! 🚀</button></div>

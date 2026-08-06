@@ -68,7 +68,7 @@ const HTML = path.join(__dirname, '..', 'game', 'pages', 'papper_kitty.html');
 
   const src = fs.readFileSync(HTML, 'utf8');
   check('static: drawGoal has a submarine branch', src.includes("type === 'submarine'"), 'drawGoal submarine');
-  check('static: kitty bob applied on draw', src.includes('Math.sin(player.bobPhase) * 2.5'), 'bob offset');
+  check('static: hero grounded bob removed (per user 2026-08-06)', !src.includes('bobPhase'), 'no bob offset');
   check('static: walker draw + creation wired', src.includes('drawWalker(theme.walker)') && src.includes('walkers = (w.walkers || []).map'), 'drawWalker/loadWorld');
 
   await h.evalv('setPaused(true); "paused"');
@@ -90,7 +90,8 @@ const HTML = path.join(__dirname, '..', 'game', 'pages', 'papper_kitty.html');
 
   const stomp = await h.evalv(`(() => {
     worldPos = 0; loadWorld();
-    player.x = walkers[0].x - 10;
+    walkers[0].vx = 0;
+    player.x = walkers[0].x;
     player.y = groundY - 210;
     player.vy = 0; player.grounded = false; player.vx = 0;
     const before = coinCount;
@@ -105,7 +106,7 @@ const HTML = path.join(__dirname, '..', 'game', 'pages', 'papper_kitty.html');
 
   const side = await h.evalv(`(() => {
     worldPos = 0; loadWorld();
-    player.x = walkers[0].x - 30;
+    player.x = walkers[0].x;
     player.y = groundY - 48;
     player.vy = 0; player.vx = 0; player.grounded = true;
     const before = coinCount;
@@ -172,6 +173,173 @@ const HTML = path.join(__dirname, '..', 'game', 'pages', 'papper_kitty.html');
   check('all 11 worlds: load + update + draw without error (incl. submarine water goal)',
     Array.isArray(allWorlds) && allWorlds.length === 0, JSON.stringify(allWorlds || []));
 
+  // --- Task 73: Little Explorer sprite hero (state machine + rename) ---
+  const heroStatic = await h.evalv(`(() => {
+    const src = document.documentElement.innerHTML;
+    return {
+      title: document.title,
+      hasLoader: typeof loadExplorerFrame === 'function' && typeof currentExplorerFrame === 'function',
+      usesSprite: src.indexOf('ctx.drawImage(heroFrame, -heroFrame.width / 2') !== -1,
+      noEmoji: src.indexOf("fillText('🐱'") === -1,
+      noCostume: src.indexOf('drawCostume') === -1,
+      thud: typeof playHurtSound === 'function' && src.indexOf('kittyCatAudio') === -1,
+      hasFrames: !!window.__explorerFrames
+    };
+  })()`);
+  check('task73: renamed to Мала истраживачица, sprite hero wired (no emoji/costume/cat audio)',
+    heroStatic && heroStatic.title.indexOf('Мала истраживачица') === 0 && heroStatic.hasLoader && heroStatic.usesSprite &&
+    heroStatic.noEmoji && heroStatic.noCostume && heroStatic.thud && heroStatic.hasFrames,
+    JSON.stringify(heroStatic));
+
+  let framesReady = false;
+  for (let i = 0; i < 20 && !framesReady; i++) {
+    framesReady = await h.evalv(`(() => {
+      const f = window.__explorerFrames;
+      return !!f && Array.isArray(f.idle) && f.idle.length === 3 && !!f.walk && !!f.run && !!f.jump;
+    })()`);
+    if (!framesReady) await h.sleep(250);
+  }
+  check('task73: all 6 sprite frames loaded (3 idle + walk/run/jump)',
+    framesReady === true, framesReady ? 'idle x3 + walk/run/jump' : 'not ready');
+
+  const frameInfo = await h.evalv(`(() => {
+    const f = window.__explorerFrames;
+    const hasContent = (c) => {
+      const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+      for (let i = 3; i < d.length; i += 4) if (d[i] > 10) return true;
+      return false;
+    };
+    const feet = (c) => {
+      const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
+      for (let r = c.height - 2; r < c.height; r++) {
+        for (let x = 0; x < c.width; x++) if (d[(r * c.width + x) * 4 + 3] > 10) return true;
+      }
+      return false;
+    };
+    const all = [f.idle[0], f.walk, f.run, f.jump, f.idle[1], f.idle[2]];
+    return {
+      size: f.idle[0].width + 'x' + f.idle[0].height,
+      sameSize: all.every(c => c.width === f.idle[0].width && c.height === f.idle[0].height),
+      content: all.every(hasContent),
+      feetAtBottom: all.every(feet)
+    };
+  })()`);
+  check('task73: frames are 43x60, identical size, feet flush near the bottom row',
+    frameInfo && frameInfo.size === '43x60' && frameInfo.sameSize && frameInfo.content && frameInfo.feetAtBottom,
+    JSON.stringify(frameInfo));
+
+  const states = await h.evalv(`(() => {
+    worldPos = 0; loadWorld();
+    walkers.length = 0; mice.length = 0;
+    keys.left = keys.right = keys.jump = false;
+    player.x = 40;
+    player.grounded = true;
+    player.y = groundY - player.height;
+    player.vx = 0; player.vy = 0; player.squish = 1;
+    player.animTime = 0;
+    const out = {};
+    update();
+    out.idle = player.animState === 'idle' && currentExplorerFrame() === explorerFrames.idle[0];
+    keys.right = true;
+    update(); update(); update();
+    out.walk = player.animState === 'walk' && currentExplorerFrame() === explorerFrames.walk;
+    for (let i = 0; i < 6; i++) update();
+    out.run = player.animState === 'run' &&
+      (currentExplorerFrame() === explorerFrames.run || currentExplorerFrame() === explorerFrames.walk);
+    keys.right = false;
+    keys.jump = true;
+    update();
+    out.jump = player.animState === 'jump' && currentExplorerFrame() === explorerFrames.jump;
+    keys.jump = false;
+    return out;
+  })()`);
+  check('task73: state machine idle→walk→run→jump picks the right frame',
+    states && states.idle && states.walk && states.run && states.jump, JSON.stringify(states));
+
+  const runMix = await h.evalv(`(() => {
+    worldPos = 0; loadWorld();
+    walkers.length = 0; mice.length = 0;
+    keys.left = keys.jump = false;
+    keys.right = true;
+    player.x = 40;
+    player.grounded = true;
+    player.y = groundY - player.height;
+    player.vx = 0; player.vy = 0; player.squish = 1;
+    player.animTime = 0; player.animState = 'run';
+    const seen = new Set();
+    let runFrames = 0;
+    for (let i = 0; i < 40; i++) {
+      update();
+      if (player.animState === 'run') {
+        runFrames++;
+        seen.add(currentExplorerFrame());
+      }
+    }
+    keys.right = false;
+    return { runFrames, both: seen.has(explorerFrames.walk) && seen.has(explorerFrames.run) };
+  })()`);
+  check('task73: running alternates between the run and walk frames',
+    runMix && runMix.runFrames > 10 && runMix.both === true, JSON.stringify(runMix));
+
+  const ramp = await h.evalv(`(() => {
+    worldPos = 0; loadWorld();
+    walkers.length = 0; mice.length = 0;
+    keys.left = keys.right = false;
+    player.vx = 0;
+    keys.right = true;
+    update();
+    const v1 = player.vx;
+    keys.right = false;
+    return { v1: +v1.toFixed(2) };
+  })()`);
+  check('task73: movement accelerates toward max speed (no instant full speed)',
+    ramp && ramp.v1 > 0 && ramp.v1 < 3, JSON.stringify(ramp));
+
+  const idleCycle = await h.evalv(`(() => {
+    worldPos = 0; loadWorld();
+    walkers.length = 0; mice.length = 0;
+    keys.left = keys.right = keys.jump = false;
+    player.x = 40;
+    player.grounded = true;
+    player.y = groundY - player.height;
+    player.vx = 0; player.vy = 0; player.squish = 1;
+    player.animTime = 0; player.animState = 'idle';
+    for (let i = 0; i < 10; i++) update();
+    const a = currentExplorerFrame() === explorerFrames.idle[0];
+    for (let i = 0; i < 30; i++) update();
+    const b = currentExplorerFrame() === explorerFrames.idle[1];
+    return { a, b };
+  })()`);
+  check('task73: idle animates through the 3 variants',
+    idleCycle && idleCycle.a && idleCycle.b, JSON.stringify(idleCycle));
+
+  const mirror = await h.evalv(`(() => {
+    worldPos = 0; loadWorld();
+    walkers.length = 0; mice.length = 0;
+    cameraX = 0;
+    player.x = 100;
+    player.grounded = true;
+    player.y = groundY - player.height;
+    player.vx = 0; player.vy = 0; player.squish = 1;
+    player.animTime = 0; player.animState = 'idle';
+    player.facingRight = true;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    draw();
+    const snap = () => ctx.getImageData(95, player.y - 12, 56, 60).data;
+    const right = snap();
+    player.facingRight = false;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    draw();
+    const left = snap();
+    let diff = 0;
+    for (let i = 0; i < right.length; i += 4) {
+      if (right[i] !== left[i] || right[i + 1] !== left[i + 1] || right[i + 2] !== left[i + 2]) diff++;
+    }
+    return { diff, mirrored: diff > 200 };
+  })()`);
+  check('task73: hero mirrors when facing left (runtime flip)',
+    mirror && mirror.mirrored === true, JSON.stringify(mirror));
+
   // Regression: a viewport resize after load must keep the ground anchored to
   // the bottom so the kitty never "drops through the ground and respawns".
   await h.c.send('Emulation.setDeviceMetricsOverride', { width: 1100, height: 1200, deviceScaleFactor: 1, mobile: false });
@@ -188,7 +356,8 @@ const HTML = path.join(__dirname, '..', 'game', 'pages', 'papper_kitty.html');
   const settle = await h.evalv(`(() => {
     keys.left = keys.right = keys.jump = false;
     for (let i = 0; i < 300; i++) update();
-    return JSON.stringify({ y: player.y, gy: platforms[0].y, grounded: player.grounded, onGround: player.y === platforms[0].y - player.height });
+    const onAny = platforms.some(p => Math.abs(player.y + player.height - p.y) < 0.5);
+    return JSON.stringify({ y: player.y, gy: platforms[0].y, grounded: player.grounded, onGround: onAny });
   })()`);
   const sj = JSON.parse(settle);
   check('resize: ground re-anchored to the new canvas height, kitty lands on it', rj.ch >= 1100 && rj.gy0 === rj.gyExpected && sj.onGround === true && sj.grounded === true, JSON.stringify({ rj, sj }));

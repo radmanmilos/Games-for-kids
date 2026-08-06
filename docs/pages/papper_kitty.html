@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Папир Маца: Пустоловина</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+    <title>Мала истраживачица: Пустоловина</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
     <!-- Fredoka bundled locally (2026-08-03, per user approval — no external deps). Variable font: latin + latin-ext subsets. -->
     <style>
         @font-face {
@@ -319,13 +319,21 @@
 // --- Web Audio Synthesizer ---
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
-const kittyCatAudio = new Audio('../assets/audio/cat.ogg');
-kittyCatAudio.preload = 'auto';
 
-function playCatSound() {
-    kittyCatAudio.currentTime = 0;
-    const playback = kittyCatAudio.play();
-    if (playback) playback.catch(() => {});
+function playHurtSound() {
+    if (!audioCtx) return;
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(180, now);
+    osc.frequency.exponentialRampToValueAtTime(70, now + 0.15);
+    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+    osc.start(now);
+    osc.stop(now + 0.22);
 }
 
 function initAudio() {
@@ -808,7 +816,7 @@ window.addEventListener('keyup', (e) => {
 // --- World data (11 worlds, data-driven) ---
 // Fields per world:
 //   name, collectible (emoji), enemy (pop-out type), walker (ground-walker type),
-//   costume (cat accessory), goal (goal building type), music,
+//   goal (goal building type), music,
 //   colors, isNight, decor, noClouds, ceiling(+ceilingColor),
 //   grounds [{x,width}], floats [{x,width,dy,color}], moves [{x,width,dy,minX,maxX,vx,color}],
 //   pipes [{x,height}], walkers [{x,range}] (patrol [x, x+range] on the ground),
@@ -820,7 +828,7 @@ window.addEventListener('keyup', (e) => {
 //   D "long run"    — long flat ground, very sparse floats (Savanna, North Pole, Egypt)
 const WORLDS = [
   {
-    name: 'Пролећни дан', collectible: '🍓', enemy: 'mouse', costume: 'flower', goal: 'house', music: 'spring', pitHazard: 'water',
+    name: 'Пролећни дан', collectible: '🍓', enemy: 'mouse', goal: 'house', music: 'spring', pitHazard: 'water',
     walker: 'ladybug',
     bgSky: '#5c94fc', groundColor: '#70c838', hillColor: '#00a800', pipeColor: '#00a800',
     stairColor: '#4f9a24',
@@ -842,7 +850,7 @@ const WORLDS = [
     goalX: 5350
   },
   {
-    name: 'Летњи залазак', collectible: '🍉', enemy: 'mouse', costume: 'sunglasses', goal: 'house', music: 'summer', pitHazard: 'water',
+    name: 'Летњи залазак', collectible: '🍉', enemy: 'mouse', goal: 'house', music: 'summer', pitHazard: 'water',
     walker: 'bee',
     bgSky: '#fc7438', groundColor: '#f8b800', hillColor: '#d88000', pipeColor: '#00a800',
     stairColor: '#c89100',
@@ -864,7 +872,7 @@ const WORLDS = [
     goalX: 5450
   },
   {
-    name: 'Јесења ноћ', collectible: '🍎', enemy: 'mouse', costume: 'leaf', goal: 'house', music: 'autumn', pitHazard: 'spikes',
+    name: 'Јесења ноћ', collectible: '🍎', enemy: 'mouse', goal: 'house', music: 'autumn', pitHazard: 'spikes',
     walker: 'hedgehog',
     bgSky: '#00003c', groundColor: '#cc5500', hillColor: '#882200', pipeColor: '#387800',
     stairColor: '#994000',
@@ -893,7 +901,7 @@ const WORLDS = [
     goalX: 6500
   },
   {
-    name: 'Зимски снег', collectible: '🥕', enemy: 'mouse', costume: 'scarf', goal: 'house', music: 'winter', pitHazard: 'spikes',
+    name: 'Зимски снег', collectible: '🥕', enemy: 'mouse', goal: 'house', music: 'winter', pitHazard: 'spikes',
     walker: 'snowman',
     bgSky: '#a0c0f8', groundColor: '#f8f8f8', hillColor: '#c0d8f8', pipeColor: '#3888c8',
     stairColor: '#d8e0f0',
@@ -921,7 +929,7 @@ const WORLDS = [
     goalX: 6450
   },
   {
-    name: 'Подземље', collectible: '🍄', enemy: 'mole', costume: 'miner', goal: 'mine', music: 'underground', pitHazard: 'lava',
+    name: 'Подземље', collectible: '🍄', enemy: 'mole', goal: 'mine', music: 'underground', pitHazard: 'lava',
     walker: 'worm',
     bgSky: '#3a2a1a', groundColor: '#8a5a33', hillColor: '#6b4526', pipeColor: '#7a4f2a',
     stairColor: '#6b4526',
@@ -944,7 +952,7 @@ const WORLDS = [
     goalX: 5250
   },
   {
-    name: 'Пећина', collectible: '🍇', enemy: 'bat', costume: 'explorer', goal: 'cave', music: 'cave', pitHazard: 'lava',
+    name: 'Пећина', collectible: '🍇', enemy: 'bat', goal: 'cave', music: 'cave', pitHazard: 'lava',
     walker: 'spider',
     bgSky: '#2a2a3a', groundColor: '#5a4a3a', hillColor: '#453a2e', pipeColor: '#5c5246',
     stairColor: '#453a2e',
@@ -967,7 +975,7 @@ const WORLDS = [
     goalX: 5150
   },
   {
-    name: 'Подводни свет', collectible: '🐚', enemy: 'piranha', costume: 'snorkel', goal: 'submarine', music: 'water', pitHazard: 'spikes',
+    name: 'Подводни свет', collectible: '🐚', enemy: 'piranha', goal: 'submarine', music: 'water', pitHazard: 'spikes',
     walker: 'crab',
     bgSky: '#1a6a9a', groundColor: '#d9b98a', hillColor: '#1a5a8a', pipeColor: '#3a8ac0',
     stairColor: '#b09868',
@@ -989,7 +997,7 @@ const WORLDS = [
     goalX: 5250
   },
   {
-    name: 'Савана', collectible: '🍌', enemy: 'snake', costume: 'safari', goal: 'hut', music: 'savanna', pitHazard: 'spikes',
+    name: 'Савана', collectible: '🍌', enemy: 'snake', goal: 'hut', music: 'savanna', pitHazard: 'spikes',
     walker: 'meerkat',
     bgSky: '#f8d870', groundColor: '#e0a860', hillColor: '#c89050', pipeColor: '#a87830',
     stairColor: '#bd8a44',
@@ -1010,7 +1018,7 @@ const WORLDS = [
     goalX: 6750
   },
   {
-    name: 'Јапан', collectible: '🍙', enemy: 'oni', costume: 'headband', goal: 'torii', music: 'japan', pitHazard: 'water',
+    name: 'Јапан', collectible: '🍙', enemy: 'oni', goal: 'torii', music: 'japan', pitHazard: 'water',
     walker: 'panda',
     bgSky: '#f8a0c0', groundColor: '#e0707f', hillColor: '#c85a6a', pipeColor: '#b05060',
     stairColor: '#b84f5e',
@@ -1038,7 +1046,7 @@ const WORLDS = [
     goalX: 6400
   },
   {
-    name: 'Северни пол', collectible: '🎁', enemy: 'penguin', costume: 'beanie', goal: 'igloo', music: 'northpole', pitHazard: 'spikes',
+    name: 'Северни пол', collectible: '🎁', enemy: 'penguin', goal: 'igloo', music: 'northpole', pitHazard: 'spikes',
     walker: 'seal',
     bgSky: '#b8d8f0', groundColor: '#f0f8fc', hillColor: '#c8e0f0', pipeColor: '#a0c0d8',
     stairColor: '#d0e4f0',
@@ -1059,7 +1067,7 @@ const WORLDS = [
     goalX: 6850
   },
   {
-    name: 'Египат', collectible: '🌴', enemy: 'scorpion', costume: 'headdress', goal: 'pyramid', music: 'egypt', pitHazard: 'spikes',
+    name: 'Египат', collectible: '🌴', enemy: 'scorpion', goal: 'pyramid', music: 'egypt', pitHazard: 'spikes',
     walker: 'scarab',
     bgSky: '#f8d878', groundColor: '#e8c878', hillColor: '#d0a860', pipeColor: '#b89038',
     stairColor: '#c8a758',
@@ -1103,6 +1111,61 @@ const WALKER_FOOT = {
 
 let player, platforms, movingPlatforms, pipes, coins, goal, particles, mice, walkers, theme, levelCompleted, stairSteps, groundY = 0;
 
+// --- Little Explorer hero sprites (task 73) ---
+// Six native right-facing frames deployed to game/assets/images/explorer/; the
+// left direction is a runtime mirror (ctx.scale(-1, squish) below). Every source
+// PNG is 237x352 with the feet on a shared baseline 23 rows above the canvas
+// bottom (measured), so all frames share one draw offset. We pre-scale the full
+// canvas minus the uniform bottom gap to a 60px tall frame (bigger than the
+// 48px hitbox, per user 2026-08-06) — anchored feet-flush on the hitbox bottom,
+// so only the head overhangs ~12px upward. No getImageData, so this works even
+// under file://.
+const EXPLORER_SPRITE_H = 60;
+const EXPLORER_SRC_H = 329; // 352 - 23 (uniform transparent bottom gap)
+const EXPLORER_SRC_W = 237;
+const EXPLORER_FRAMES = {
+    idle: ['01_idle_right.png', '04_idle_right_b.png', '06_idle_right_c.png'],
+    walk: ['02_walk_right.png'],
+    run: ['03_run_right.png'],
+    jump: ['05_jump_right.png']
+};
+const explorerFrames = {};
+window.__explorerFrames = explorerFrames;
+
+function loadExplorerFrame(key, file) {
+    const img = new Image();
+    img.onload = () => {
+        const w = Math.max(1, Math.round(EXPLORER_SRC_W * EXPLORER_SPRITE_H / EXPLORER_SRC_H));
+        const frame = document.createElement('canvas');
+        frame.width = w;
+        frame.height = EXPLORER_SPRITE_H;
+        const f2d = frame.getContext('2d');
+        f2d.drawImage(img, 0, 0, EXPLORER_SRC_W, EXPLORER_SRC_H, 0, 0, w, EXPLORER_SPRITE_H);
+        if (key === 'idle') {
+            explorerFrames.idle = explorerFrames.idle || [];
+            explorerFrames.idle.push(frame);
+        } else {
+            explorerFrames[key] = frame;
+        }
+    };
+    img.src = '../assets/images/explorer/' + file;
+}
+Object.entries(EXPLORER_FRAMES).forEach(([key, files]) => files.forEach(f => loadExplorerFrame(key, f)));
+
+function currentExplorerFrame() {
+    const s = player && player.animState;
+    if (s === 'jump') return explorerFrames.jump;
+    if (s === 'run') {
+        // Alternate run/walk strides (~167ms each) so running reads as a real
+        // gait instead of a frozen run pose (task 73b, per user).
+        return (Math.floor((player.animTime || 0) / 10) % 2 === 0) ? explorerFrames.run : explorerFrames.walk;
+    }
+    if (s === 'walk') return explorerFrames.walk;
+    const list = explorerFrames.idle || [];
+    if (!list.length) return undefined;
+    return list[Math.floor((player.animTime || 0) / 22) % list.length];
+}
+
 function loadWorld() {
     const w = WORLDS[worldOrder[worldPos]];
     theme = w;
@@ -1126,7 +1189,9 @@ function loadWorld() {
         facingRight: true,
         squish: 1,
         tailAngle: 0,
-        bobPhase: 0
+        animState: 'idle',
+        animTime: 0,
+        prevGrounded: false
     };
 
     const gY = canvas.height - 140;
@@ -1278,10 +1343,10 @@ function update() {
 
     if (!levelCompleted) {
         if (keys.left) {
-            player.vx = -player.speed;
+            player.vx = Math.max(-player.speed, player.vx - 0.55);
             player.facingRight = false;
         } else if (keys.right) {
-            player.vx = player.speed;
+            player.vx = Math.min(player.speed, player.vx + 0.55);
             player.facingRight = true;
         } else {
             player.vx *= 0.8;
@@ -1303,7 +1368,6 @@ function update() {
     player.y += player.vy;
     player.squish += (1 - player.squish) * 0.12;
     player.tailAngle = Math.sin(Date.now() * 0.01) * 0.3;
-    player.bobPhase += player.grounded ? (Math.abs(player.vx) > 0.5 ? 0.18 : 0.06) : 0;
 
     // Moving Platform Update & Riding logic
     movingPlatforms.forEach(mp => {
@@ -1427,7 +1491,7 @@ function update() {
         player.y + player.height > mouse.y - 22 &&
         player.y < mouse.y + 22);
     if (hitMouse) {
-        playCatSound();
+        playHurtSound();
         hitMouse.visible = false;
         hitMouse.nextPopAt = now + 3000;
         respawnKitty();
@@ -1457,7 +1521,7 @@ function update() {
             playSound('coin');
             spawnParticles(hitWalker.x, groundY - 24, '#FFD23F');
         } else {
-            playCatSound();
+            playHurtSound();
             respawnKitty();
         }
     }
@@ -1508,6 +1572,19 @@ function update() {
         p.y += p.vy;
         p.alpha -= 0.035;
         if (p.alpha <= 0) particles.splice(i, 1);
+    }
+
+    // --- Hero animation state (task 73) ---
+    player.animTime += 1;
+    if (!player.prevGrounded && player.grounded) player.squish = 0.8;
+    player.prevGrounded = player.grounded;
+    if (!player.grounded) {
+        player.animState = 'jump';
+    } else {
+        const a = Math.abs(player.vx);
+        if (a < 1.2) player.animState = 'idle';
+        else if (a < 2.6) player.animState = 'walk';
+        else player.animState = 'run';
     }
 }
 
@@ -1780,17 +1857,17 @@ function draw() {
     // Draw Themed Goal Building
     drawGoal(theme.goal, goal);
 
-    // --- CUTE KITTY HERO (emoji + per-world costume, gentle bob when grounded) ---
-    ctx.save();
-    const bobY = player.grounded ? Math.sin(player.bobPhase) * 2.5 : 0;
-    ctx.translate(player.x + player.width / 2, player.y + player.height / 2 + bobY);
-    ctx.scale(player.facingRight ? 1 : -1, player.squish);
-    ctx.font = '48px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('🐱', 0, 0);
-    drawCostume(theme.costume);
-    ctx.restore();
+    // --- LITTLE EXPLORER HERO (sprite state machine) ---
+    const heroFrame = currentExplorerFrame();
+    if (heroFrame) {
+        ctx.save();
+        ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
+        ctx.scale(player.facingRight ? 1 : -1, player.squish);
+        // Feet flush on the hitbox bottom; the sprite is taller than the hitbox,
+        // so its head overhangs upward (no grounded bob per user 2026-08-06).
+        ctx.drawImage(heroFrame, -heroFrame.width / 2, player.height / 2 - EXPLORER_SPRITE_H, heroFrame.width, heroFrame.height);
+        ctx.restore();
+    }
 
     // Particles
     particles.forEach(p => {
@@ -2307,112 +2384,6 @@ function drawWalker(type) {
     }
 }
 
-// --- Kitty costume accessories (simple canvas shapes over the 🐱 emoji) ---
-function drawCostume(type) {
-    if (type === 'flower') {
-        ctx.fillStyle = '#ff6f91';
-        for (let i = 0; i < 5; i++) {
-            const a = (i / 5) * Math.PI * 2;
-            ctx.beginPath();
-            ctx.arc(Math.cos(a) * 5, -20 + Math.sin(a) * 5, 3.5, 0, Math.PI * 2);
-            ctx.fill();
-        }
-        ctx.fillStyle = '#FFD23F';
-        ctx.beginPath();
-        ctx.arc(0, -20, 2.5, 0, Math.PI * 2);
-        ctx.fill();
-    } else if (type === 'sunglasses') {
-        ctx.strokeStyle = '#2b2d42';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(-13, -6);
-        ctx.lineTo(13, -6);
-        ctx.stroke();
-        ctx.fillStyle = '#2b2d42';
-        ctx.beginPath();
-        ctx.arc(-7, -5, 4, 0, Math.PI * 2);
-        ctx.arc(7, -5, 4, 0, Math.PI * 2);
-        ctx.fill();
-    } else if (type === 'leaf') {
-        ctx.fillStyle = '#cc5500';
-        ctx.beginPath();
-        ctx.ellipse(10, -16, 6, 3, -0.5, 0, Math.PI * 2);
-        ctx.fill();
-    } else if (type === 'scarf') {
-        ctx.fillStyle = '#e52521';
-        ctx.fillRect(-16, 2, 32, 6);
-        ctx.beginPath();
-        ctx.roundRect(-2, 8, 10, 16, 4);
-        ctx.fill();
-        ctx.fillStyle = '#FFD23F';
-        ctx.fillRect(-16, 2, 32, 2);
-    } else if (type === 'miner') {
-        ctx.fillStyle = '#FFD23F';
-        ctx.beginPath();
-        ctx.arc(0, -14, 12, Math.PI, 0);
-        ctx.fill();
-        ctx.fillRect(-13, -15, 26, 5);
-        ctx.fillStyle = '#f8b800';
-        ctx.beginPath();
-        ctx.arc(6, -18, 4, 0, Math.PI * 2);
-        ctx.fill();
-    } else if (type === 'explorer') {
-        ctx.fillStyle = '#a07030';
-        ctx.beginPath();
-        ctx.arc(0, -14, 11, Math.PI, 0);
-        ctx.fill();
-        ctx.fillRect(-13, -15, 26, 5);
-    } else if (type === 'snorkel') {
-        ctx.fillStyle = '#4fc3f7';
-        ctx.fillRect(-14, -8, 28, 5);
-        ctx.fillRect(6, -22, 6, 16);
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(10, -22, 2, 14);
-    } else if (type === 'safari') {
-        ctx.fillStyle = '#d8b878';
-        ctx.beginPath();
-        ctx.ellipse(0, -15, 14, 4, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(0, -16, 10, Math.PI, 0);
-        ctx.fill();
-    } else if (type === 'headband') {
-        ctx.fillStyle = '#e52521';
-        ctx.fillRect(-15, -9, 30, 6);
-        ctx.fillRect(-20, -9, 6, 6);
-        ctx.beginPath();
-        ctx.moveTo(-21, -9);
-        ctx.lineTo(-17, -2);
-        ctx.lineTo(-14, -9);
-        ctx.fill();
-    } else if (type === 'beanie') {
-        ctx.fillStyle = '#e52521';
-        ctx.beginPath();
-        ctx.arc(0, -14, 12, Math.PI, 0);
-        ctx.fill();
-        ctx.fillRect(-13, -15, 26, 4);
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(0, -25, 4, 0, Math.PI * 2);
-        ctx.fill();
-    } else if (type === 'headdress') {
-        ctx.fillStyle = '#fbd000';
-        ctx.fillRect(-15, -10, 30, 5);
-        ctx.fillStyle = '#4fc3f7';
-        ctx.beginPath();
-        ctx.moveTo(-15, -5);
-        ctx.lineTo(-10, 10);
-        ctx.lineTo(-7, -5);
-        ctx.moveTo(15, -5);
-        ctx.lineTo(10, 10);
-        ctx.lineTo(7, -5);
-        ctx.fill();
-        ctx.fillStyle = '#ff4d6d';
-        ctx.beginPath();
-        ctx.arc(0, -12, 3, 0, Math.PI * 2);
-        ctx.fill();
-    }
-}
 
 // --- Theme goal buildings (paper style) ---
 function drawGoal(type, c) {

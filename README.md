@@ -226,7 +226,7 @@ Educational goals:
 
 ---
 
-## 🐱 Paper Kitty Adventure
+## 🧭 Мала истраживачица (Little Explorer, formerly Paper Kitty Adventure)
 
 Current status:
 
