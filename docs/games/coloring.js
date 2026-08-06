@@ -257,6 +257,7 @@ function renderColoringPalette(){
     swatch.type = 'button';
     swatch.className = 'coloring-swatch' + (p.color === coloringColor ? ' selected' : '');
     swatch.style.background = p.color;
+    swatch.dataset.color = p.color;
     swatch.setAttribute('aria-label', p.name);
     swatch.addEventListener('click', ()=>{
       coloringColor = p.color;

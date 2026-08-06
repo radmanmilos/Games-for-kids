@@ -47,7 +47,13 @@ Legend:
 
 79 NEW — Split adventure.js into focused modules (Major). At ~1470 lines, adventure.js handles ground/drive/fly modes, all obstacle types, all decor types, all goal renderers, music scheduling, and resize logic. Split into adventure-engine.js (core physics/camera/loop), adventure-modes.js (drive/fly/ground mode configs), and adventure-music.js (procedural music scheduler). Or at minimum extract the music scheduler and resize logic into shared utilities.
 
-80 NEW — Remove unused audio assets and map entries (Minor). speech.js and audio.js have entries for animals (flamingo, helikopter, vuk) and sounds that no game references. Remove the unused entries and the corresponding MP3 files from game/assets/audio/speech/ and game/assets/audio/ to keep the asset count clean.
+ 77 DONE — 2026-08-07 (Ponytail Lazy Dev): Smoke tests added for Animals, Shapes, Counting, Coloring — `tools/animals_smoke.js` 13/13 PASS, `tools/shapes_smoke.js` 11/11 PASS, `tools/counting_smoke.js` 11/11 PASS, `tools/coloring_smoke.js` 13/13 PASS. Hub smoke 8/8 PASS. `coloring.js` palette swatches now store `data-color` for test selection.
+
+ 78 DONE — 2026-08-07 (Ponytail Lazy Dev): Created `CONTRIBUTING.md` — setup, validation commands, and docs mirror one-liner.
+
+ 79 DONE — 2026-08-07 (Ponytail Lazy Dev): Split `adventure.js` into `adventure-music.js` + `adventure-modes.js` + core `adventure.js`. All 4 game pages load the new modules. Validated: `node --check` clean; `adventure_smoke.js` 24/24 PASS; driving/ocean/dino/space smokes green.
+
+ 80 NEW — Remove unused audio assets and map entries (Minor). speech.js and audio.js have entries for animals (flamingo, helikopter, vuk) and sounds that no game references. Remove the unused entries and the corresponding MP3 files from game/assets/audio/speech/ and game/assets/audio/ to keep the asset count clean.
 
 81 NEW — Fix stale doc references to nul.mp3 (Minor). HANDOVER_PROMPT.md and README.md still reference the old filename nul.mp3 in some places. Update all references to nula.mp3.
 

@@ -1,14 +1,11 @@
 /* Shared adventure engine for the Petrin svet vehicle/adventure games.
    Ports the Paper Kitty runtime (canvas side-scroller, per-world themes,
-   forgiving collisions, worlds picker, procedural Web Audio music) into a
-   config-driven engine. Each game supplies its own levels + music in
-   games/<game>.js and a thin page that loads this file. */
+   forgiving collisions, worlds picker) into a config-driven engine.
+   Music/audio is in adventure-music.js; mode draw helpers are in adventure-modes.js.
+   Each game supplies its own levels + music in games/<game>.js and a thin page
+   that loads this file. */
 (function () {
     'use strict';
-
-    const AC = window.AudioContext || window.webkitAudioContext;
-    let audioCtx = null;
-    let noiseBuf = null;
 
     function fitAdvToViewport() {
         const advGame = document.getElementById('adv-game');
@@ -21,387 +18,6 @@
         if (!document.hidden) setTimeout(fitAdvToViewport, 100);
     });
     fitAdvToViewport();
-
-    function noteFreq(root, semi) {
-        return root * Math.pow(2, semi / 12);
-    }
-
-    function makeNoiseBuffer(dur) {
-        const b = audioCtx.createBuffer(1, Math.ceil(audioCtx.sampleRate * dur), audioCtx.sampleRate);
-        const d = b.getChannelData(0);
-        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-        return b;
-    }
-
-    function playSound(type) {
-        if (!audioCtx) return;
-        const now = audioCtx.currentTime;
-
-        if (type === 'jump') {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(200, now);
-            osc.frequency.exponentialRampToValueAtTime(500, now + 0.12);
-            gain.gain.setValueAtTime(0.25, now);
-            gain.gain.linearRampToValueAtTime(0.01, now + 0.12);
-            osc.start(now);
-            osc.stop(now + 0.12);
-        } else if (type === 'coin') {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(987.77, now); // B5
-            osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.linearRampToValueAtTime(0.01, now + 0.22);
-            osc.start(now);
-            osc.stop(now + 0.22);
-        } else if (type === 'win') {
-            const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
-            notes.forEach((freq, idx) => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                const start = now + (idx * 0.07);
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(freq, start);
-                gain.gain.setValueAtTime(0, start);
-                gain.gain.linearRampToValueAtTime(0.2, start + 0.02);
-                gain.gain.exponentialRampToValueAtTime(0.001, start + 0.12);
-                osc.start(start);
-                osc.stop(start + 0.12);
-            });
-        } else if (type === 'pop') {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(600, now);
-            osc.frequency.exponentialRampToValueAtTime(420, now + 0.05);
-            gain.gain.setValueAtTime(0.12, now);
-            gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
-            osc.start(now);
-            osc.stop(now + 0.07);
-        } else if (type === 'bump') {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(220, now);
-            osc.frequency.exponentialRampToValueAtTime(110, now + 0.18);
-            gain.gain.setValueAtTime(0.18, now);
-            gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
-            osc.start(now);
-            osc.stop(now + 0.2);
-        }
-    }
-
-    // --- Procedural background music (offline, per-world themes) ---
-    // Same lookahead scheduler as Paper Kitty: a 32-step melody + 16-beat bass
-    // plus a world-specific ambient layer, all synthesized with Web Audio.
-    let musicTimer = null;
-    let musicStep = 0;
-    let musicStepTime = 0;
-    let musicTheme = null;
-    let musicMap = {};
-    let musicOn = true;
-    let pausedFn = () => false;
-
-    function startMusic(themeKey, map, isPaused) {
-        if (!map || !map[themeKey]) return;
-        musicMap = map;
-        pausedFn = isPaused;
-        musicTheme = themeKey;
-        if (!musicOn || !audioCtx) return;
-        stopMusic();
-        musicStep = 0;
-        musicStepTime = audioCtx.currentTime + 0.08;
-        musicTimer = setInterval(musicTick, 120);
-    }
-
-    function stopMusic() {
-        if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
-    }
-
-    function setMusicOn(on) {
-        musicOn = on;
-        const btn = document.getElementById('adv-music-btn');
-        if (btn) {
-            btn.textContent = on ? '🔊' : '🔇';
-            btn.classList.toggle('off', !on);
-        }
-        if (on) startMusic(musicTheme, musicMap, pausedFn);
-        else stopMusic();
-    }
-
-    function musicTick() {
-        if (!audioCtx || !musicOn || pausedFn()) return;
-        const cfg = musicMap[musicTheme];
-        if (!cfg) return;
-        const eighth = 60 / cfg.bpm / 2;
-        const horizon = audioCtx.currentTime + 0.35;
-        while (musicStepTime < horizon) {
-            scheduleStep(cfg, musicStep, musicStepTime, eighth);
-            musicStep++;
-            musicStepTime += eighth;
-        }
-    }
-
-    function scheduleStep(cfg, step, t, eighth) {
-        const mel = cfg.seq[step % cfg.seq.length];
-        if (mel !== null && mel !== undefined) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.type = cfg.wave;
-            osc.frequency.value = noteFreq(cfg.root, mel);
-            gain.gain.setValueAtTime(0, t);
-            gain.gain.linearRampToValueAtTime(cfg.vol, t + 0.02);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + eighth * 0.9);
-            osc.start(t);
-            osc.stop(t + eighth * 0.95);
-        }
-        if (step % 2 === 0) {
-            const bassIdx = (step / 2) % cfg.bass.length;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.type = 'sine';
-            osc.frequency.value = noteFreq(cfg.root, cfg.bass[bassIdx]);
-            gain.gain.setValueAtTime(0, t);
-            gain.gain.linearRampToValueAtTime(cfg.vol * 0.7, t + 0.03);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + eighth * 1.8);
-            osc.start(t);
-            osc.stop(t + eighth * 1.85);
-        }
-        const amb = cfg.ambient;
-        if (amb && Math.random() < amb.rate) {
-            playAmbient(amb.sound, amb.vol, t);
-        }
-    }
-
-    function playAmbient(type, vol, t) {
-        switch (type) {
-            case 'bird': ambBird(vol, t); break;
-            case 'cricket': ambCricket(vol, t); break;
-            case 'wind': ambWind(vol, t, 1.6, 900); break;
-            case 'rustle': ambRustle(vol, t); break;
-            case 'rumble': ambWind(vol, t, 2.4, 200); break;
-            case 'drip': ambDrip(vol, t); break;
-            case 'bubble': ambBubble(vol, t); break;
-            case 'flute': ambFlute(vol, t); break;
-            case 'bell': ambBell(vol, t); break;
-            case 'coo': ambCoo(vol, t); break;
-            case 'desert': ambDesert(vol, t); break;
-            case 'horn': ambHorn(vol, t); break;
-            case 'waves': ambWaves(vol, t); break;
-        }
-    }
-
-    function ambBird(vol, t) {
-        for (let k = 0; k < 3; k++) {
-            const t0 = t + k * 0.16;
-            const base = 2200 + Math.random() * 1400;
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.connect(g); g.connect(audioCtx.destination);
-            o.type = 'sine';
-            o.frequency.setValueAtTime(base, t0);
-            o.frequency.exponentialRampToValueAtTime(base * 1.4, t0 + 0.05);
-            o.frequency.exponentialRampToValueAtTime(base * 0.9, t0 + 0.09);
-            g.gain.setValueAtTime(0, t0);
-            g.gain.linearRampToValueAtTime(vol, t0 + 0.01);
-            g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.1);
-            o.start(t0); o.stop(t0 + 0.11);
-        }
-    }
-
-    function ambCricket(vol, t) {
-        for (let k = 0; k < 4; k++) {
-            const t0 = t + k * 0.09;
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.connect(g); g.connect(audioCtx.destination);
-            o.type = 'sine';
-            o.frequency.value = 4300;
-            g.gain.setValueAtTime(0, t0);
-            g.gain.linearRampToValueAtTime(vol * 0.6, t0 + 0.005);
-            g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.05);
-            o.start(t0); o.stop(t0 + 0.06);
-        }
-    }
-
-    function ambWind(vol, t, dur, freq) {
-        if (!noiseBuf) noiseBuf = makeNoiseBuffer(2);
-        const src = audioCtx.createBufferSource();
-        src.buffer = noiseBuf;
-        src.loop = true;
-        const f = audioCtx.createBiquadFilter();
-        f.type = 'lowpass';
-        f.frequency.value = freq || 500;
-        const g = audioCtx.createGain();
-        src.connect(f); f.connect(g); g.connect(audioCtx.destination);
-        const d = dur || 1.5;
-        g.gain.setValueAtTime(0, t);
-        g.gain.linearRampToValueAtTime(vol, t + d * 0.35);
-        g.gain.linearRampToValueAtTime(0, t + d);
-        src.start(t); src.stop(t + d + 0.05);
-    }
-
-    function ambRustle(vol, t) {
-        if (!noiseBuf) noiseBuf = makeNoiseBuffer(2);
-        for (let k = 0; k < 3; k++) {
-            const src = audioCtx.createBufferSource();
-            src.buffer = noiseBuf;
-            src.loop = true;
-            const f = audioCtx.createBiquadFilter();
-            f.type = 'highpass';
-            f.frequency.value = 1800 + Math.random() * 1400;
-            const g = audioCtx.createGain();
-            src.connect(f); f.connect(g); g.connect(audioCtx.destination);
-            const t0 = t + k * (0.1 + Math.random() * 0.15);
-            const d = 0.12 + Math.random() * 0.1;
-            g.gain.setValueAtTime(0, t0);
-            g.gain.linearRampToValueAtTime(vol, t0 + 0.02);
-            g.gain.linearRampToValueAtTime(0, t0 + d);
-            src.start(t0); src.stop(t0 + d + 0.05);
-        }
-    }
-
-    function ambDrip(vol, t) {
-        const o = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        o.connect(g); g.connect(audioCtx.destination);
-        o.type = 'sine';
-        o.frequency.setValueAtTime(900 + Math.random() * 300, t);
-        o.frequency.exponentialRampToValueAtTime(180, t + 0.14);
-        g.gain.setValueAtTime(0, t);
-        g.gain.linearRampToValueAtTime(vol, t + 0.01);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
-        o.start(t); o.stop(t + 0.2);
-    }
-
-    function ambBubble(vol, t) {
-        const o = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        o.connect(g); g.connect(audioCtx.destination);
-        o.type = 'sine';
-        const f0 = 250 + Math.random() * 300;
-        o.frequency.setValueAtTime(f0, t);
-        o.frequency.exponentialRampToValueAtTime(f0 * 2.2, t + 0.12);
-        g.gain.setValueAtTime(0, t);
-        g.gain.linearRampToValueAtTime(vol, t + 0.02);
-        g.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
-        o.start(t); o.stop(t + 0.15);
-    }
-
-    function ambFlute(vol, t) {
-        const notes = [0, 7, 12, 7];
-        notes.forEach((semi, i) => {
-            const t0 = t + i * 0.32;
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.connect(g); g.connect(audioCtx.destination);
-            o.type = 'sine';
-            o.frequency.value = noteFreq(440, semi);
-            const lfo = audioCtx.createOscillator();
-            const lg = audioCtx.createGain();
-            lfo.connect(lg);
-            lg.connect(o.frequency);
-            lg.gain.value = 4;
-            lfo.frequency.value = 5.5;
-            lfo.start(t0); lfo.stop(t0 + 0.5);
-            g.gain.setValueAtTime(0, t0);
-            g.gain.linearRampToValueAtTime(vol, t0 + 0.05);
-            g.gain.linearRampToValueAtTime(vol * 0.7, t0 + 0.2);
-            g.gain.linearRampToValueAtTime(0, t0 + 0.55);
-            o.start(t0); o.stop(t0 + 0.6);
-        });
-    }
-
-    function ambBell(vol, t) {
-        [0, 7, 12].forEach((semi) => {
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.connect(g); g.connect(audioCtx.destination);
-            o.type = 'triangle';
-            o.frequency.value = noteFreq(659.25, semi);
-            g.gain.setValueAtTime(0, t);
-            g.gain.linearRampToValueAtTime(vol, t + 0.01);
-            g.gain.exponentialRampToValueAtTime(0.001, t + 1.2);
-            o.start(t); o.stop(t + 1.3);
-        });
-    }
-
-    function ambCoo(vol, t) {
-        [0, -2].forEach((semi, i) => {
-            const t0 = t + i * 0.14;
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.connect(g); g.connect(audioCtx.destination);
-            o.type = 'sine';
-            o.frequency.value = 440 * Math.pow(2, semi / 12) * 0.5;
-            g.gain.setValueAtTime(0, t0);
-            g.gain.linearRampToValueAtTime(vol, t0 + 0.03);
-            g.gain.linearRampToValueAtTime(0, t0 + 0.18);
-            o.start(t0); o.stop(t0 + 0.2);
-        });
-    }
-
-    function ambDesert(vol, t) {
-        ambWind(vol, t, 1.8, 420);
-        const o = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        o.connect(g); g.connect(audioCtx.destination);
-        o.type = 'sine';
-        o.frequency.value = 110;
-        g.gain.setValueAtTime(0, t);
-        g.gain.linearRampToValueAtTime(vol * 0.7, t + 0.5);
-        g.gain.linearRampToValueAtTime(0, t + 1.8);
-        o.start(t); o.stop(t + 1.9);
-    }
-
-    function ambHorn(vol, t) {
-        [0, 7].forEach((semi, i) => {
-            const t0 = t + i * 0.09;
-            const o = audioCtx.createOscillator();
-            const g = audioCtx.createGain();
-            o.connect(g); g.connect(audioCtx.destination);
-            o.type = 'square';
-            o.frequency.value = noteFreq(220, semi);
-            g.gain.setValueAtTime(0, t0);
-            g.gain.linearRampToValueAtTime(vol, t0 + 0.01);
-            g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.16);
-            o.start(t0); o.stop(t0 + 0.18);
-        });
-    }
-
-    function ambWaves(vol, t) {
-        if (!noiseBuf) noiseBuf = makeNoiseBuffer(2);
-        const src = audioCtx.createBufferSource();
-        src.buffer = noiseBuf;
-        src.loop = true;
-        const f = audioCtx.createBiquadFilter();
-        f.type = 'lowpass';
-        f.frequency.value = 700;
-        const g = audioCtx.createGain();
-        src.connect(f); f.connect(g); g.connect(audioCtx.destination);
-        const d = 1.4;
-        g.gain.setValueAtTime(0, t);
-        g.gain.linearRampToValueAtTime(vol, t + d * 0.5);
-        g.gain.linearRampToValueAtTime(0, t + d);
-        src.start(t); src.stop(t + d + 0.05);
-    }
 
     function shuffleArr(arr) {
         const a = arr.slice();
@@ -474,10 +90,9 @@
         resizeCanvas();
 
         function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new AC();
-                if (musicTheme) startMusic(musicTheme, musicMap, () => paused);
-            }
+            if (!window.AdventureMusic || window.AdventureMusic.audioCtx) return;
+            window.AdventureMusic.init();
+            if (musicTheme) window.AdventureMusic.startTheme(musicTheme, cfg.music, () => paused);
         }
 
         // --- Input controls ---
@@ -522,7 +137,7 @@
         function loadWorld() {
             const w = cfg.levels[worldOrder[worldPos]];
             theme = w;
-            startMusic(w.music, cfg.music, () => paused);
+            window.AdventureMusic.startTheme(w.music, cfg.music, () => paused);
             el('adv-level').textContent = worldPos + 1;
             el('adv-collect-emoji').textContent = w.collectible;
             el('adv-world-name').textContent = w.name;
@@ -652,7 +267,7 @@
         }
 
         function nextLevel() {
-            playSound('pop');
+            window.AdventureMusic.play('pop');
             if (worldPos < worldOrder.length - 1) {
                 worldPos++;
                 loadWorld();
@@ -676,7 +291,7 @@
                 btn.className = 'adv-world-btn';
                 btn.innerHTML = '<span class="adv-w-emoji">' + w.collectible + '</span>' + w.name;
                 btn.addEventListener('click', () => {
-                    playSound('pop');
+            window.AdventureMusic.play('pop');
                     worldPos = idx;
                     coinCount = 0;
                     el('adv-coin-count').textContent = coinCount;
@@ -705,9 +320,9 @@
         if (worldsClose) worldsClose.addEventListener('click', closeWorldsMenu);
         const musicBtn = el('adv-music-btn');
         if (musicBtn) {
-            musicBtn.addEventListener('click', () => setMusicOn(!musicOn));
-            musicBtn.textContent = musicOn ? '🔊' : '🔇';
-            musicBtn.classList.toggle('off', !musicOn);
+            musicBtn.addEventListener('click', () => window.AdventureMusic.setOn(!musicBtn.classList.contains('off')));
+            musicBtn.textContent = window.AdventureMusic.musicOn ? '🔊' : '🔇';
+            musicBtn.classList.toggle('off', !window.AdventureMusic.musicOn);
         }
         const modalBtn = el('adv-modal-btn');
         if (modalBtn) modalBtn.addEventListener('click', nextLevel);
@@ -768,7 +383,7 @@
                             c.collected = true;
                             coinCount++;
                             el('adv-coin-count').textContent = coinCount;
-                            playSound('coin');
+                            window.AdventureMusic.play('coin');
                             spawnParticles(c.x, c.y, '#FFD23F');
                         }
                     });
@@ -791,7 +406,7 @@
                             playerLeft < obstacleRight &&
                             playerBottom > obstacleTop &&
                             playerTop < obstacleBottom) {
-                            playSound('bump');
+                            window.AdventureMusic.play('bump');
                             spawnParticles(player.x + player.width / 2, player.y, '#ffffff');
                             respawnPlayer();
                         }
@@ -803,7 +418,7 @@
             if (!levelCompleted && player.x + player.width > goal.x + 30 && player.x < goal.x + goal.width) {
                 levelCompleted = true;
                 player.vx = 0;
-                playSound('win');
+                window.AdventureMusic.play('win');
                 const title = el('adv-win-title');
                 const btn = el('adv-modal-btn');
                 if (worldPos < worldOrder.length - 1) {
@@ -842,7 +457,7 @@
                     player.vy = player.jumpPower;
                     player.grounded = false;
                     player.squish = 1.35;
-                    playSound('jump');
+                    window.AdventureMusic.play('jump');
                 }
             } else {
                 player.vx *= 0.8;
@@ -961,7 +576,7 @@
                 player.y + player.height > mouse.y - 22 &&
                 player.y < mouse.y + 22);
             if (hitMouse) {
-                playSound('bump');
+                window.AdventureMusic.play('bump');
                 hitMouse.visible = false;
                 hitMouse.nextPopAt = now + 3000;
                 respawnPlayer();
@@ -981,7 +596,7 @@
                         c.collected = true;
                         coinCount++;
                         el('adv-coin-count').textContent = coinCount;
-                        playSound('coin');
+                        window.AdventureMusic.play('coin');
                         spawnParticles(c.x, c.y, '#FFD23F');
                     }
                 });
@@ -1420,325 +1035,13 @@
             }
         }
 
-        function drawRoad(t) {
-            const top = roadTopY();
-            ctx.fillStyle = theme.roadColor || '#7a7a7a';
-            ctx.fillRect(0, top, canvas.width, canvas.height - top);
-
-            // grass strip above the road
-            ctx.fillStyle = theme.grassColor || '#67c971';
-            ctx.fillRect(0, top - 14, canvas.width, 14);
-
-            // One dashed divider in the middle of the road.
-            ctx.save();
-            ctx.strokeStyle = 'rgba(255,255,255,0.85)';
-            ctx.lineWidth = 6;
-            ctx.setLineDash([26, 34]);
-            ctx.beginPath();
-            const middle = top + (canvas.height - top) / 2;
-            ctx.moveTo(-(cameraX % 60), middle);
-            ctx.lineTo(canvas.width - (cameraX % 60), middle);
-            ctx.stroke();
-            ctx.restore();
-
-            // road edge line
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.moveTo(0, top);
-            ctx.lineTo(canvas.width, top);
-            ctx.stroke();
-        }
-
-        function drawObstacle(type, o) {
-            if (cfg.drawObstacle) { cfg.drawObstacle(ctx, o, theme); return; }
-            const x = o.x, y = o.y, w = o.width, h = o.height;
-            // soft drop shadow so obstacles sit on the road
-            ctx.fillStyle = 'rgba(0,0,0,0.16)';
-            ctx.beginPath();
-            ctx.ellipse(x + w / 2, y + h + 3, w * 0.55, 6, 0, 0, Math.PI * 2);
-            ctx.fill();
-            if (type === 'car') {
-                const c = o.color || '#ff6f91';
-                ctx.fillStyle = '#2b2d42';
-                ctx.beginPath(); ctx.roundRect(x + 6, y + h - 13, 15, 11, 4); ctx.fill();
-                ctx.beginPath(); ctx.roundRect(x + w - 21, y + h - 13, 15, 11, 4); ctx.fill();
-                ctx.fillStyle = c;
-                ctx.beginPath(); ctx.roundRect(x, y + 8, w, h - 16, 12); ctx.fill();
-                ctx.fillStyle = 'rgba(255,255,255,0.28)';
-                ctx.beginPath(); ctx.roundRect(x + 4, y + 12, w * 0.62, h * 0.34, 8); ctx.fill();
-                ctx.fillStyle = 'rgba(43,45,66,0.6)';
-                ctx.beginPath(); ctx.roundRect(x + w * 0.38, y + 15, w * 0.28, h * 0.24, 5); ctx.fill();
-                ctx.fillStyle = '#FFD23F';
-                ctx.fillRect(x + w - 7, y + h - 20, 5, 8);
-                ctx.fillStyle = '#e52521';
-                ctx.fillRect(x + 2, y + h - 20, 5, 8);
-            } else if (type === 'truck') {
-                const c = o.color || '#4a3f6b';
-                ctx.fillStyle = '#2b2d42';
-                ctx.beginPath(); ctx.roundRect(x + 6, y + h - 13, 15, 11, 4); ctx.fill();
-                ctx.beginPath(); ctx.roundRect(x + w - 21, y + h - 13, 15, 11, 4); ctx.fill();
-                ctx.fillStyle = c;
-                ctx.beginPath(); ctx.roundRect(x, y + 10, w * 0.62, h - 20, 8); ctx.fill();
-                ctx.fillStyle = 'rgba(255,255,255,0.22)';
-                ctx.fillRect(x + 8, y + 16, 8, h - 36);
-                ctx.fillRect(x + w * 0.28, y + 16, 8, h - 36);
-                ctx.fillRect(x + w * 0.46, y + 16, 8, h - 36);
-                ctx.fillStyle = c;
-                ctx.beginPath(); ctx.roundRect(x + w * 0.62, y + 20, w * 0.38, h - 34, 8); ctx.fill();
-                ctx.fillStyle = 'rgba(43,45,66,0.55)';
-                ctx.beginPath(); ctx.roundRect(x + w * 0.66, y + 24, w * 0.24, 14, 5); ctx.fill();
-            } else if (type === 'bus') {
-                const c = o.color || '#fbd000';
-                ctx.fillStyle = '#2b2d42';
-                ctx.beginPath(); ctx.roundRect(x + 6, y + h - 13, 15, 11, 4); ctx.fill();
-                ctx.beginPath(); ctx.roundRect(x + w - 21, y + h - 13, 15, 11, 4); ctx.fill();
-                ctx.fillStyle = c;
-                ctx.beginPath(); ctx.roundRect(x, y, w, h - 8, 14); ctx.fill();
-                ctx.fillStyle = 'rgba(255,255,255,0.35)';
-                ctx.fillRect(x + 6, y + 8, w - 12, 12);
-                for (let i = 0; i < 3; i++) {
-                    ctx.fillStyle = 'rgba(43,45,66,0.6)';
-                    ctx.beginPath(); ctx.roundRect(x + 10 + i * (w - 24) / 3, y + 26, (w - 36) / 3, 16, 4); ctx.fill();
-                }
-                ctx.fillStyle = '#e52521';
-                ctx.fillRect(x + w - 9, y + h - 22, 5, 8);
-            } else if (type === 'cone') {
-                ctx.fillStyle = '#2b2d42';
-                ctx.beginPath(); ctx.ellipse(x + w / 2, y + h + 3, w * 0.55, 5, 0, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = '#ff6f3c';
-                ctx.beginPath();
-                ctx.moveTo(x, y + h);
-                ctx.lineTo(x + w, y + h);
-                ctx.lineTo(x + w / 2, y);
-                ctx.closePath();
-                ctx.fill();
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(x + w / 2 - w * 0.18, y + h * 0.42, w * 0.36, h * 0.18);
-            } else if (type === 'rock') {
-                const c = o.color || '#8a8a8a';
-                ctx.fillStyle = 'rgba(0,0,0,0.16)';
-                ctx.beginPath(); ctx.ellipse(x + w / 2, y + h + 3, w * 0.55, 6, 0, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = c;
-                ctx.beginPath();
-                ctx.moveTo(x + 4, y + h - 4);
-                ctx.quadraticCurveTo(x, y + h * 0.55, x + w * 0.35, y + 6);
-                ctx.quadraticCurveTo(x + w * 0.75, y - 2, x + w - 6, y + h * 0.4);
-                ctx.quadraticCurveTo(x + w, y + h, x + 4, y + h - 4);
-                ctx.closePath();
-                ctx.fill();
-                ctx.fillStyle = 'rgba(255,255,255,0.3)';
-                ctx.beginPath();
-                ctx.ellipse(x + w * 0.35, y + h * 0.3, w * 0.14, h * 0.1, -0.4, 0, Math.PI * 2);
-                ctx.fill();
-            } else if (type === 'barrier') {
-                ctx.fillStyle = '#2b2d42';
-                ctx.fillRect(x + 6, y + h - 6, 9, 6);
-                ctx.fillRect(x + w - 15, y + h - 6, 9, 6);
-                ctx.fillStyle = '#e52521';
-                ctx.fillRect(x, y + 6, w, h - 18);
-                ctx.save();
-                ctx.beginPath();
-                ctx.rect(x, y + 6, w, h - 18);
-                ctx.clip();
-                ctx.fillStyle = '#ffffff';
-                for (let i = -h; i < w; i += 20) {
-                    ctx.beginPath();
-                    ctx.moveTo(x + i, y + h - 6);
-                    ctx.lineTo(x + i + 14, y + h - 6);
-                    ctx.lineTo(x + i + 14 - 16, y + 6);
-                    ctx.lineTo(x + i - 16, y + 6);
-                    ctx.closePath();
-                    ctx.fill();
-                }
-                ctx.restore();
-            } else if (type === 'lamp') {
-                ctx.fillStyle = '#4a3f6b';
-                ctx.fillRect(x + w / 2 - 4, y, 8, h);
-                ctx.fillStyle = '#FFD23F';
-                ctx.beginPath();
-                ctx.arc(x + w / 2, y - 6, 8, Math.PI, 0);
-                ctx.fill();
-                ctx.fillRect(x + w / 2 - 8, y - 8, 16, 6);
-            }
-        }
-
-        function drawDriveCar(w, h, t) {
-            const x = -w / 2;
-            const y = -h / 2;
-            const wheelR = h * 0.18;
-
-            // Reference-style solid red body with a dark lower sill.
-            ctx.fillStyle = '#e52521';
-            ctx.beginPath();
-            ctx.roundRect(x, y + h * 0.24, w, h * 0.48, h * 0.12);
-            ctx.fill();
-            ctx.fillStyle = '#8f1720';
-            ctx.beginPath();
-            ctx.roundRect(x + w * 0.02, y + h * 0.62, w * 0.96, h * 0.16, h * 0.06);
-            ctx.fill();
-
-            // Sloped roof and two dark windows.
-            ctx.fillStyle = '#c5161d';
-            ctx.beginPath();
-            ctx.moveTo(x + w * 0.18, y + h * 0.28);
-            ctx.lineTo(x + w * 0.22, y + h * 0.04);
-            ctx.quadraticCurveTo(x + w * 0.25, y - h * 0.02, x + w * 0.34, y - h * 0.02);
-            ctx.lineTo(x + w * 0.7, y + h * 0.02);
-            ctx.lineTo(x + w * 0.88, y + h * 0.28);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.fillStyle = '#2f3338';
-            ctx.beginPath();
-            ctx.roundRect(x + w * 0.27, y + h * 0.06, w * 0.24, h * 0.2, h * 0.04);
-            ctx.roundRect(x + w * 0.55, y + h * 0.06, w * 0.24, h * 0.2, h * 0.04);
-            ctx.fill();
-
-            // Wheels: fast rotating five-spoke hubs make the motion obvious.
-            [x + w * 0.2, x + w * 0.8].forEach(wx => {
-                const wy = y + h * 0.76;
-                ctx.save();
-                ctx.translate(wx, wy);
-                ctx.rotate(t * 18);
-                ctx.scale(1, 0.82);
-                ctx.fillStyle = '#24282d';
-                ctx.beginPath();
-                ctx.arc(0, 0, wheelR, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = '#d9d9d9';
-                ctx.beginPath();
-                ctx.arc(0, 0, wheelR * 0.62, 0, Math.PI * 2);
-                ctx.fill();
-                for (let spoke = 0; spoke < 5; spoke++) {
-                    const angle = spoke * Math.PI * 2 / 5;
-                    ctx.strokeStyle = '#24282d';
-                    ctx.lineWidth = Math.max(3, h * 0.028);
-                    ctx.beginPath();
-                    ctx.moveTo(Math.cos(angle) * wheelR * 0.12, Math.sin(angle) * wheelR * 0.12);
-                    ctx.lineTo(Math.cos(angle) * wheelR * 0.52, Math.sin(angle) * wheelR * 0.52);
-                    ctx.stroke();
-                }
-                ctx.fillStyle = '#24282d';
-                ctx.beginPath();
-                ctx.arc(0, 0, wheelR * 0.18, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            });
-
-            ctx.fillStyle = '#ffd23f';
-            ctx.beginPath();
-            ctx.roundRect(x + w * 0.91, y + h * 0.39, w * 0.06, h * 0.12, h * 0.04);
-            ctx.fill();
-            ctx.fillStyle = '#f5f5f5';
-            ctx.beginPath();
-            ctx.roundRect(x + w * 0.01, y + h * 0.39, w * 0.06, h * 0.12, h * 0.04);
-            ctx.fill();
-            ctx.fillStyle = '#2f3338';
-            ctx.fillRect(x + w * 0.48, y + h * 0.42, w * 0.08, h * 0.035);
-        }
-
-        function drawGoalFinish(c) {
-            const gx = c.x, gy = c.y, gw = c.width, gh = c.height;
-            // checkered finish banner covering the road
-            const cell = 26;
-            for (let yy = gy; yy < gy + gh; yy += cell) {
-                for (let xx = gx; xx < gx + gw; xx += cell) {
-                    ctx.fillStyle = (((xx - gx) / cell | 0) + ((yy - gy) / cell | 0)) % 2 === 0 ? '#2b2d42' : '#ffffff';
-                    ctx.fillRect(xx, yy, cell, cell);
-                }
-            }
-            ctx.strokeStyle = '#FFD23F';
-            ctx.lineWidth = 7;
-            ctx.strokeRect(gx + 4, gy + 4, gw - 8, gh - 8);
-            // ЦИЉ banner in the middle
-            const bw = Math.min(gw - 44, 200), bh = 48;
-            const by = gy + Math.max(10, (gh - bh) / 2 - 6);
-            ctx.fillStyle = '#4a3f6b';
-            ctx.beginPath();
-            ctx.roundRect(gx + (gw - bw) / 2, by, bw, bh, 14);
-            ctx.fill();
-            ctx.fillStyle = '#FFD23F';
-            ctx.font = 'bold 32px "Fredoka", sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('ЦИЉ', gx + gw / 2, by + bh / 2 + 2);
-        }
-
-        function drawPitHazards(t) {
-            const hazard = theme.pitHazard;
-            if (!hazard) return;
-            const gy = canvas.height - 140;
-            const depth = canvas.height - gy;
-            const grounds = theme.grounds.slice().sort((a, b) => a.x - b.x);
-            for (let i = 0; i < grounds.length - 1; i++) {
-                const gx = grounds[i].x + grounds[i].w;
-                const gapEnd = grounds[i + 1].x;
-                if (gapEnd - gx < 8) continue;
-                if (hazard === 'lava') {
-                    const grad = ctx.createLinearGradient(0, gy, 0, canvas.height);
-                    grad.addColorStop(0, '#ff5f2e');
-                    grad.addColorStop(0.5, '#ff7f1f');
-                    grad.addColorStop(1, '#b33a00');
-                    ctx.fillStyle = grad;
-                    ctx.fillRect(gx, gy, gapEnd - gx, depth);
-                    ctx.fillStyle = '#ffd166';
-                    ctx.fillRect(gx, gy, gapEnd - gx, 5);
-                    ctx.fillStyle = '#fff3c4';
-                    for (let k = 0; k < 6; k++) {
-                        const bx = gx + ((k * 41 + t * 26) % (gapEnd - gx));
-                        const by = canvas.height - 12 - ((k * 29 + t * 70) % (depth * 0.7));
-                        ctx.beginPath();
-                        ctx.arc(bx, by, 3.5, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-                } else if (hazard === 'water') {
-                    const grad = ctx.createLinearGradient(0, gy, 0, canvas.height);
-                    grad.addColorStop(0, 'rgba(90,190,255,0.9)');
-                    grad.addColorStop(1, 'rgba(15,80,160,0.95)');
-                    ctx.fillStyle = grad;
-                    ctx.fillRect(gx, gy, gapEnd - gx, depth);
-                    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-                    for (let k = 0; k < 3; k++) {
-                        const ry = gy + 8 + k * 14;
-                        const off = Math.sin(t * 2 + k) * 4;
-                        ctx.fillRect(gx + 4 + off, ry, gapEnd - gx - 8, 2);
-                    }
-                    ctx.fillStyle = '#ffffff';
-                    ctx.font = '22px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    for (let k = 0; k < 2; k++) {
-                        const fx = gx + 18 + ((k * 37 + t * 22) % Math.max(1, gapEnd - gx - 36));
-                        const fy = canvas.height - 26 - ((k * 19 + Math.sin(t * 1.6 + k * 2.4) * 6) % (depth * 0.55));
-                        ctx.fillText('🐟', fx, fy);
-                    }
-                } else if (hazard === 'spikes') {
-                    ctx.fillStyle = 'rgba(18,20,30,0.92)';
-                    ctx.fillRect(gx, gy, gapEnd - gx, depth);
-                    ctx.fillStyle = '#c7d2e0';
-                    for (let sx = gx + 12; sx < gapEnd - 6; sx += 24) {
-                        const h = 30 + Math.sin(sx * 0.33 + gx) * 8;
-                        ctx.beginPath();
-                        ctx.moveTo(sx - 10, canvas.height);
-                        ctx.lineTo(sx, canvas.height - h);
-                        ctx.lineTo(sx + 10, canvas.height);
-                        ctx.closePath();
-                        ctx.fill();
-                    }
-                    ctx.fillStyle = '#5c6a7a';
-                    ctx.fillRect(gx, canvas.height - 6, gapEnd - gx, 6);
-                }
-            }
-        }
-
         function draw() {
             ctx.fillStyle = theme.bgSky;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             const t = Date.now() / 1000;
 
-            if (mode === 'drive') drawRoad(t);
+            if (mode === 'drive') window.AdventureModes.drawRoad(ctx, theme, roadTopY, t, cameraX, canvas);
 
             if (cfg.decorBehind) drawDecor(t);
 
@@ -1774,7 +1077,7 @@
             }
 
             if (mode === 'ground') {
-                drawPitHazards(t);
+                window.AdventureModes.drawPitHazards(ctx, theme, t, canvas);
                 platforms.forEach(p => {
                     ctx.fillStyle = '#ffffff';
                     ctx.fillRect(p.x - 4, p.y - 4, p.width + 8, p.height + 8);
@@ -1782,7 +1085,6 @@
                     ctx.fillRect(p.x, p.y, p.width, p.height);
                     drawPaperStitchLine(p.x + 10, p.y + p.height / 2, p.x + p.width - 10, p.y + p.height / 2);
                 });
-
                 movingPlatforms.forEach(mp => {
                     ctx.fillStyle = '#ffffff';
                     ctx.fillRect(mp.x - 4, mp.y - 4, mp.width + 8, mp.height + 8);
@@ -1809,11 +1111,11 @@
                     ctx.rect(mouse.x - 32, 0, 64, mouse.pipeY);
                     ctx.clip();
                     ctx.translate(mouse.x, mouse.y);
-                    drawEnemy(theme.enemy);
+                    window.AdventureModes.drawEnemy(ctx, theme.enemy);
                     ctx.restore();
                 });
             } else {
-                obstacles.forEach(o => drawObstacle(o.type, o));
+                obstacles.forEach(o => window.AdventureModes.drawObstacle(ctx, o.type, o));
             }
 
             coins.forEach(c => {
@@ -1831,7 +1133,7 @@
                 }
             });
 
-            drawGoal();
+            window.AdventureModes.drawGoalFinish(ctx, goal);
 
             if (mode === 'drive') {
                 ctx.fillStyle = 'rgba(0,0,0,0.18)';
@@ -1852,7 +1154,7 @@
                     ctx.drawImage(heroImage, -player.width / 2, player.height / 2 - imageHeight, player.width, imageHeight);
                     ctx.filter = 'none';
                 } else {
-                    drawDriveCar(player.width, player.height, 0);
+                    window.AdventureModes.drawDriveCar(ctx, player.width, player.height, 0);
                 }
             } else {
                 ctx.scale((cfg.heroFlip ? !player.facingRight : player.facingRight) ? 1 : -1, player.squish);
@@ -1880,52 +1182,7 @@
 
             ctx.restore();
 
-            if (theme.ceiling) drawCeiling();
-
             if (!cfg.decorBehind) drawDecor(t);
-        }
-
-        function drawCeiling() {
-            ctx.fillStyle = theme.ceilingColor;
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(canvas.width, 0);
-            for (let x = canvas.width; x >= 0; x -= 90) {
-                const y = 62 + Math.sin(x * 0.05) * 16 + ((x / 90) % 2) * 12;
-                ctx.lineTo(x, y);
-            }
-            ctx.closePath();
-            ctx.fill();
-            for (let sx = 40; sx < canvas.width; sx += 170) {
-                ctx.beginPath();
-                ctx.moveTo(sx - 16, 72);
-                ctx.lineTo(sx, 72 + 26 + (sx % 3) * 14);
-                ctx.lineTo(sx + 16, 72);
-                ctx.closePath();
-                ctx.fill();
-            }
-        }
-
-        function drawEnemy(type) {
-            if (cfg.drawEnemy) { cfg.drawEnemy(ctx, type); return; }
-            ctx.fillStyle = '#2b2d42';
-            ctx.beginPath();
-            ctx.arc(0, 5, 16, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#f4a6c1';
-            ctx.beginPath();
-            ctx.arc(0, 9, 6, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = '#ffffff';
-            ctx.beginPath();
-            ctx.arc(-6, 0, 2.5, 0, Math.PI * 2);
-            ctx.arc(6, 0, 2.5, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        function drawGoal() {
-            if (cfg.drawGoal) { cfg.drawGoal(ctx, theme.goal, goal); return; }
-            drawGoalFinish(goal);
         }
 
         // --- Hero picker ---

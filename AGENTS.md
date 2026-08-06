@@ -16,6 +16,7 @@ Follow these rules in every coding session:
 - Validate with the smallest relevant command or check that proves the change works.
 - Keep comments and docs focused on intent and behavior; do not add churn.
 - If a simpler solution exists, choose it.
+- Work in small batches. For multi-step or large-scope work, prefer small verifiable steps and delegate to subagents when helpful; ask before each step.
 
 Project rule — language (applies to ALL games, including any future ones):
 

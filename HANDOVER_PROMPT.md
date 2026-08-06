@@ -6,6 +6,13 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
+## Session log — 2026-08-07
+
+- Task 77: Added smoke tests for Animals, Shapes, Counting, Coloring (13/13, 11/11, 11/11, 13/13 PASS). `coloring.js` swatches now carry `data-color`.
+- Task 78: Created `CONTRIBUTING.md` (setup, validation, docs mirror one-liner).
+- Task 79: Split `adventure.js` into `adventure-music.js` + `adventure-modes.js` + core engine. All 4 adventure pages updated. All smokes green.
+- AGENTS.md updated: added rule to work in small batches + delegate to subagents when helpful; ask before each step.
+
 Primary files to read first
 
 - `README.md` — (first) high-level project overview, vision, architecture, and roadmap

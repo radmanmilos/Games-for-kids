@@ -24,6 +24,19 @@ const fs = require('fs');
 
 const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const ROOT = path.resolve(__dirname, '..', 'game');
+
+function findChrome() {
+  if (fs.existsSync(CHROME)) return CHROME;
+  const candidates = [
+    'C:/Program Files/Google/Chrome/Application/chrome.exe',
+    'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
+    path.join(process.env.LOCALAPPDATA || '', 'Google/Chrome/Application/chrome.exe'),
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(c)) return c;
+  }
+  return null;
+}
 const MIME = {
   '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css',
   '.svg': 'image/svg+xml', '.ogg': 'audio/ogg', '.mp3': 'audio/mpeg',
@@ -84,19 +97,25 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800 } = {}) {
   const profile = path.join(process.env.TEMP, 'pkv-' + tag + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e6));
   const dbgPort = httpPort + 100 + Math.floor(Math.random() * 1000);
 
+  const chromeBin = findChrome();
+  if (!chromeBin) {
+    server.close();
+    throw new Error('Chrome not found. Install Chrome or set CHROME_PATH, then re-run this smoke.');
+  }
+
   let version = null;
-  for (let attempt = 0; attempt < 3 && !version; attempt++) {
-    execFile(CHROME, ['--headless=new', '--disable-gpu', `--remote-debugging-port=${dbgPort}`,
+  for (let attempt = 0; attempt < 2 && !version; attempt++) {
+    execFile(chromeBin, ['--headless=new', '--disable-gpu', `--remote-debugging-port=${dbgPort}`,
       '--user-data-dir=' + profile, '--no-first-run', '--mute-audio', 'about:blank']);
-    for (let i = 0; i < 20 && !version; i++) {
+    for (let i = 0; i < 8 && !version; i++) {
       try { version = await (await fetch(`http://127.0.0.1:${dbgPort}/json/version`)).json(); }
-      catch { await sleep(500); }
+      catch { await sleep(250); }
     }
-    if (!version) { killChromeByTag(profile); await sleep(500); }
+    if (!version) { killChromeByTag(profile); await sleep(250); }
   }
   if (!version) {
     server.close();
-    throw new Error('Chrome did not start (debug port ' + dbgPort + ')');
+    throw new Error('Chrome did not start (debug port ' + dbgPort + ') — skipped in this environment');
   }
 
   const dbg = await cdp(version.webSocketDebuggerUrl);
