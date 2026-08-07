@@ -710,10 +710,12 @@ pages/
   coloring.html
   classroom.html
   tracing.html
+  piano.html
   papper_kitty.html
   driving.html
   ocean.html
   dino.html
+  space.html
 
 games/
 shared/
@@ -721,7 +723,7 @@ assets/
 ```
 
 - `index.html` is the hub. It loads every game module and embeds Kitty.
-- The standalone pages (`pages/animals.html`, `pages/shapes.html`, `pages/matching_game.html`, `pages/animal_puzzle.html`, `pages/animal_counting.html`, `pages/animal_memory.html`, `pages/coloring.html`, `pages/classroom.html`, `pages/tracing.html`, `pages/driving.html`, `pages/ocean.html`, `pages/dino.html`) each load only the modules they need.
+- The standalone pages (`pages/animals.html`, `pages/shapes.html`, `pages/matching_game.html`, `pages/animal_puzzle.html`, `pages/animal_counting.html`, `pages/animal_memory.html`, `pages/coloring.html`, `pages/classroom.html`, `pages/tracing.html`, `pages/piano.html`, `pages/driving.html`, `pages/ocean.html`, `pages/dino.html`, `pages/space.html`) each load only the modules they need.
 - `papper_kitty.html` is the self-contained Kitty runtime, embedded in the hub via iframe.
 
 ```
@@ -731,16 +733,22 @@ animals.js
 shapes.js
 candy.js
 kitty.js
+kitty-standalone.js
 animal_puzzle.js
 animal_counting.js
 animal_memory.js
 coloring.js
 classroom.js
+kids_games.js
 tracing.js
+piano.js
 adventure.js
+adventure-music.js
+adventure-modes.js
 driving.js
 ocean.js
 dino.js
+space.js
 ```
 
 ```
@@ -751,6 +759,7 @@ audio.js
 speech.js
 utils.js
 main.js
+celebration.js
 accessibility.css
 adventure.css
 ```
@@ -810,6 +819,7 @@ pages/
   coloring.html
   classroom.html
   tracing.html
+  piano.html
   papper_kitty.html
   driving.html
   ocean.html
@@ -822,13 +832,18 @@ animals.js
 shapes.js
 candy.js
 kitty.js
+kitty-standalone.js
 animal_puzzle.js
 animal_counting.js
 animal_memory.js
 coloring.js
 classroom.js
+kids_games.js
 tracing.js
+piano.js
 adventure.js
+adventure-music.js
+adventure-modes.js
 driving.js
 ocean.js
 dino.js
@@ -841,6 +856,7 @@ speech.js
 navigation.js
 utils.js
 main.js
+celebration.js
 accessibility.css
 adventure.css
 

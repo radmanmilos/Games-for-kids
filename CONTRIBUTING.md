@@ -26,6 +26,12 @@ Before opening a PR, run the smallest targeted check that covers your change:
 
 If a smoke does not exist for the game you changed, run the page manually in Live Server and verify the interaction visually.
 
+## Task lifecycle
+
+- Mark the task **IN PROGRESS** in `PROJECT_TASKS.md` when starting and **DONE** with a dated note (who, what, why) when finished.
+- Refresh `README.md` and `HANDOVER_PROMPT.md` alongside it. Missing docs updates are a regression (see `AGENTS.md` → Working rhythm).
+- Never commit or push to `main` automatically — the user does that explicitly.
+
 ## Docs mirror (publishing to GitHub Pages)
 
 `game/` is the single source of truth. `docs/` is the published copy served by GitHub Pages from the `main` branch.
