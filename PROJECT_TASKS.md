@@ -21,6 +21,8 @@ Important: The AI assistant and any contributor must read this file first when s
 
 Task 94 feedback (2026-08-07, Radman Milos): Android test exposed a deployment-path bug: `/game/...` absolute URLs do not work under the GitHub Pages repository subpath, causing “Сервис није још активан”. ZIP extraction also correctly opens only a normal `file://` page; it is not an Android app. Fixed the URLs and documented the ZIP limitation. Validation and rebuild are pending.
 
+Task 94 follow-up (2026-08-07, Radman Milos): per user request, kept the download-button artwork unchanged but regenerated the PWA manifest icons from the same `explorer_kitty/01_idle_right.png` sprite used by the Little Explorer game button. Manifest `name` and `short_name` remain `Петрин свет`.
+
 Task 94 — detailed plan & subtasks
 
 Goal: Add a simple, secure, child-friendly way for caregivers to download and install the full game (all pages + assets) to an Android tablet so the game runs offline and receives easy updates. Preferred UX: PWA (service worker) that caches assets on-demand + a prebuilt ZIP fallback for manual installs.

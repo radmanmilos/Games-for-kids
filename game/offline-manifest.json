@@ -256,7 +256,7 @@
                                         "size":  6144
                                     },
     "offline-manifest.json":  {
-                                  "sha256":  "1612D87A68DD9FB1A008DE629E02F2F674E7EB6D1D77CDF4A7C9CE8036056EEC",
+                                  "sha256":  "532BE7AD10817705C3D7B6E8C88874ADBEED3A740C4629AFB0A95C59F548D327",
                                   "size":  48725
                               },
     "pages/dino.html":  {
@@ -284,8 +284,8 @@
                                       "size":  4800
                                   },
     "assets/icons/icon-192.png":  {
-                                      "sha256":  "A6D0B5C3D7C5EB872A30926C646DB05733AFB19B7D484C11A3BD4F2521F88A0C",
-                                      "size":  44285
+                                      "sha256":  "879591D8407F2D94126B866618B624303DF61E6B88F7BC0B416BCBF6909D4438",
+                                      "size":  34988
                                   },
     "assets/images/explorer_kitty/05_jump_right.png":  {
                                                            "sha256":  "6E546AC09F12E900D9759160BFA09382FCFA1D73E57D9B7226F7CF02E5A3CD02",
@@ -704,8 +704,8 @@
                                       "size":  5760
                                   },
     "assets/icons/icon-512.png":  {
-                                      "sha256":  "FC3C32FD629306B11C0212ADEC95C9AC5C6ED80BD418DA4D9AF29003E23D43C6",
-                                      "size":  271626
+                                      "sha256":  "BA21F22D56DCEDDEE1BA38B7E8543071B1B726A5783ADECC1660A17341D3A23A",
+                                      "size":  216177
                                   },
     "assets/images/explorer_kitty/04_idle_right_b.png":  {
                                                              "sha256":  "E08086A20FF2C8A9186A6FBCDBC9537C1FDE0E98E30E6F8ED26EDC0D2A06127A",
