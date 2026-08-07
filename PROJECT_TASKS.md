@@ -17,9 +17,25 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 92. IN PROGRESS — Little Explorer: add Serbian "Јао!" speech asset and integrate (2026-08-07)
+
 ---
 
 ## History (closed tasks, ordered by number)
+
+### 92. DONE — Little Explorer: add Serbian "Јао!" speech asset and integrate (2026-08-07, Radman Milos)
+
+- Added `game/assets/audio/speech/jao.mp3` (generated via `resources/tts_generate.js`).
+- Mapped `'Јао'` and `'Јао!'` to `assets/audio/speech/jao.mp3` in `game/shared/speech.js` so the pre-generated MP3 plays when available.
+- Updated `game/games/kitty-standalone.js` `playGirlHurt()` to call the shared `window.speech.speak('Јао!')` API first, then fall back to native speechSynthesis or a WebAudio exclamation.
+- Ran `node resources/tts_generate.js` (generated: 1), `node tools/kitty_smoke.js` (all checks PASS), and synchronized docs via `tools/sync-docs.sh`.
+
+
+
+### 93. DONE — Replace jao.mp3 with user-provided voice (2026-08-07, Radman Milos)
+
+- Replaced `game/assets/audio/speech/jao.mp3` with user-provided recording from `resources/little explorer/jao.mp3` (more expressive "Јао!").
+- Ran `node tools/kitty_smoke.js` (all checks PASS) and synchronized docs via `tools/sync-docs.sh`.
 
 ### 1. DONE — Integrate Paper Kitty into Petrin svet (2026-07-31, Codex)
 
