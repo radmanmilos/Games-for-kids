@@ -1,13 +1,20 @@
-const CACHE_NAME = 'petrin-v1';
+const CACHE_NAME = 'petrin-v2';
+const APP_ROOT = new URL('./', self.registration.scope);
+const CACHE_LIST_URL = new URL('sw-cache-list.json', APP_ROOT);
+const OFFLINE_MANIFEST_URL = new URL('offline-manifest.json', APP_ROOT);
+
+function resolveAssets(list) {
+  return list.map(entry => new URL(entry, APP_ROOT).href);
+}
 
 self.addEventListener('install', event => {
   // try to pre-cache the list; fallback to skip on failure
   event.waitUntil((async () => {
     try {
-      const res = await fetch('/game/sw-cache-list.json');
+      const res = await fetch(CACHE_LIST_URL);
       const list = await res.json();
       const cache = await caches.open(CACHE_NAME);
-      await cache.addAll(list);
+      await cache.addAll(resolveAssets(list));
       console.log('SW: initial cache complete', list.length);
     } catch (e) {
       console.warn('SW: initial cache failed', e);
@@ -31,9 +38,9 @@ self.addEventListener('fetch', event => {
   const url = new URL(req.url);
   // Keep the worker limited to this app. In particular, never cache external
   // requests or development-only paths that happen to be loaded by a page.
-  if (url.origin !== self.location.origin || !url.pathname.startsWith('/game/')) return;
+  if (url.origin !== self.location.origin || !url.pathname.startsWith(APP_ROOT.pathname)) return;
   // Update checks must see the server's current manifest, not the cached copy.
-  if (url.pathname === '/game/offline-manifest.json' && req.cache === 'no-store') {
+  if (url.href === OFFLINE_MANIFEST_URL.href && req.cache === 'no-store') {
     event.respondWith(fetch(req));
     return;
   }
@@ -72,7 +79,7 @@ async function postToAllClients(msg) {
 
 async function cacheAllAssets(sourceClient) {
   try {
-    const res = await fetch('/game/sw-cache-list.json');
+    const res = await fetch(CACHE_LIST_URL);
     const list = await res.json();
     const cache = await caches.open(CACHE_NAME);
     let completed = 0;
@@ -94,7 +101,7 @@ async function cacheAllAssets(sourceClient) {
 async function checkForUpdates(sourceClient) {
   try {
     // Fetch the authoritative offline manifest from the server (no-cache)
-    const onlineRes = await fetch('/game/offline-manifest.json', { cache: 'no-store' });
+    const onlineRes = await fetch(OFFLINE_MANIFEST_URL, { cache: 'no-store' });
     if (!onlineRes.ok) {
       await postToAllClients({ type: 'check-error', message: 'offline-manifest not found on server' });
       return;

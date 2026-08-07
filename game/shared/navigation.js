@@ -1,14 +1,21 @@
 (function () {
     const screens = document.querySelectorAll('.screen');
     let swRegistration = null;
+    let swReady = Promise.resolve(null);
 
     // register service worker when available
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/game/sw.js').then(reg => {
+        const swUrl = new URL('../sw.js', document.currentScript && document.currentScript.src || location.href);
+        swReady = navigator.serviceWorker.register(swUrl.href).then(reg => {
             swRegistration = reg;
             console.log('SW registered', reg.scope);
+            return navigator.serviceWorker.ready;
+        }).then(reg => {
+            swRegistration = reg;
+            return reg;
         }).catch(e => {
             console.warn('SW register failed', e);
+            return null;
         });
     }
 
@@ -100,7 +107,7 @@
             });
         }
 
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
             // if the button is in update mode, re-run cacheAll to update changed files
             if (btn.dataset.updateAvailable) {
                 btn.disabled = true; btn.setAttribute('aria-busy', 'true'); setStatus('Ажурирање...');
@@ -110,6 +117,7 @@
 
             btn.disabled = true; btn.setAttribute('aria-busy', 'true'); setStatus('Покрећем...');
             try {
+                await swReady;
                 if (!sendToWorker({ cmd: 'cacheAll' })) throw new Error('worker-not-ready');
             } catch (e) {
                 setStatus('Сервис још није спреман');
@@ -118,9 +126,10 @@
         });
 
         if (checkBtn) {
-            checkBtn.addEventListener('click', () => {
+            checkBtn.addEventListener('click', async () => {
                 checkBtn.disabled = true;
                 setStatus('Проверавамо ажурирања...');
+                await swReady;
                 if (!sendToWorker({ cmd: 'checkForUpdates' })) {
                     setStatus('Сервис још није спреман');
                     checkBtn.disabled = false;

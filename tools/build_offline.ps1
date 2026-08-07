@@ -23,7 +23,7 @@ $swList = Get-Content $swListPath -Raw | ConvertFrom-Json
 $manifest = @{}
 foreach ($entry in $swList) {
     $rel = $entry -replace '^/', ''
-    $abs = Join-Path $repoRoot $rel
+    $abs = Join-Path $gameDir $rel
     if (Test-Path $abs) {
         $hash = Get-FileHash -Algorithm SHA256 -Path $abs
         $size = (Get-Item $abs).Length

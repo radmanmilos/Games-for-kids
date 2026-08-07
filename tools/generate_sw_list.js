@@ -19,8 +19,9 @@ function walk(dir, base) {
     } else if (e.isFile()) {
       // skip source maps and build artifacts if any
       if (e.name.endsWith('.map')) continue;
-      // normalize to URL path starting with /game/
-      files.push('/game/' + rel.replace(/\\\\/g, '/'));
+      // Keep entries relative to the deployed app root. GitHub Pages may serve
+      // the app below a repository subpath, so /game/... is not portable.
+      files.push(rel.replace(/\\\\/g, '/'));
     }
   }
   return files;

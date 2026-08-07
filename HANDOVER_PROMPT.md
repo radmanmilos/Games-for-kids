@@ -8,6 +8,7 @@ This file summarizes the current workspace, conventions, and project state so th
 
 ## Session log — 2026-08-07
 
+- 2026-08-07 — User-tested Task 94 on Android: the download button showed “Сервис није још активан”, and opening the extracted ZIP only opened `index.html` as a normal browser file. Root cause found: service-worker and cache-list URLs were hard-coded to `/game/...`, which fails under the GitHub Pages repository subpath. Fixed registration, manifest, service-worker scope/cache URLs, relative cache-list entries, cache version (`petrin-v2`), and caregiver ZIP instructions. Validation and a new offline package build are still required; do not commit/push without user approval.
 - 2026-08-07 20:12:00 — Ensured standalone boot exports: added window.start* assignments in animals.js, shapes.js, candy.js, coloring.js so shared/main.js reliably calls per-page start functions. node --check OK; targeted headless re-runs recommended on user approval.
 - 2026-08-07 — Confirmed Task 92 DONE: the user-provided `jao.mp3` is integrated through the shared Serbian speech map and Little Explorer hurt handling. Task 94 is IN PROGRESS; subtasks 1, 1.5, and 2 are complete. Subtask 2 now has required PNG manifest icons (`icon-192.png`, `icon-512.png`).
 - 2026-08-07 — Task 94 subtask 3 started: auditing `game/sw.js` install/activate/fetch, cache-all progress, and manifest-hash update checks before marking it DONE.
