@@ -283,7 +283,7 @@ const CHECK_RESULT = `JSON.stringify({
     await sleep(800);
     const idx = await h.evalv(`JSON.stringify({ btn: (document.querySelector('[data-go="game-tracing"]')||{}).textContent, count: document.querySelectorAll('[data-go]').length })`);
     let I = JSON.parse(idx || '{}');
-    check('index.html has game-tracing button', I.btn === '✏️' && I.count === 11, idx);
+    check('index.html has game-tracing button', I.btn === '✏️' && I.count === 20, idx);
   } finally {
     h.close();
   }

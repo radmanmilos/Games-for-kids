@@ -91,8 +91,12 @@
 
         function initAudio() {
             if (!window.AdventureMusic || window.AdventureMusic.audioCtx) return;
-            window.AdventureMusic.init();
-            if (musicTheme) window.AdventureMusic.startTheme(musicTheme, cfg.music, () => paused);
+            try {
+                window.AdventureMusic.init();
+                if (musicTheme) window.AdventureMusic.startTheme(musicTheme, cfg.music, () => paused);
+            } catch (error) {
+                // Audio is optional; keep gameplay controls usable when the browser blocks Web Audio.
+            }
         }
 
         // --- Input controls ---
@@ -320,7 +324,7 @@
         if (worldsClose) worldsClose.addEventListener('click', closeWorldsMenu);
         const musicBtn = el('adv-music-btn');
         if (musicBtn) {
-            musicBtn.addEventListener('click', () => window.AdventureMusic.setOn(!musicBtn.classList.contains('off')));
+            musicBtn.addEventListener('click', () => window.AdventureMusic.setOn(!window.AdventureMusic.musicOn));
             musicBtn.textContent = window.AdventureMusic.musicOn ? '🔊' : '🔇';
             musicBtn.classList.toggle('off', !window.AdventureMusic.musicOn);
         }

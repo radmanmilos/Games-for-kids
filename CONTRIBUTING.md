@@ -15,7 +15,7 @@ Before opening a PR, run the smallest targeted check that covers your change:
 - Syntax: `node --check game/shared/*.js game/games/*.js`
 - Hub changes → `node tools/hub_smoke.js`
 - Kitty changes → `node tools/kitty_smoke.js`
-- Adventure engine / Driving / Ocean / Dino / Space → `node tools/adventure_smoke.js`
+- Adventure engine / Driving / Ocean / Dino / Space → `node tools/adventure_smoke.js` (25 checks)
 - Tracing → `node tools/tracing_smoke.js`
 - Piano → `node tools/piano_smoke.js`
 - Memory → `node tools/memory_smoke.js`

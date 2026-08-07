@@ -52,18 +52,22 @@ async function waitReady(h) {
 
   await h.evalv(`window.__adv.loadWorld()`);
   await sleep(1100);
-  const driveBumpBefore = await h.evalv(`window.__adv.bumpCount`);
   const driveBumpResult = await h.evalv(`(() => {
     const a = window.__adv;
+    a.setPaused(true);
+    a.loadWorld();
     const o = a.obstacles[0];
-    a.obstacles.forEach(ob => { ob.x = -9999; });
-    o.x = a.player.x + 20;
+    const beforeBumps = a.bumpCount;
+    o.x = a.player.x;
     o.y = a.player.y;
+    o.width = 200;
+    o.height = 200;
+    a.setPaused(false);
     a.update();
-    return JSON.stringify({ bumpCount: a.bumpCount, completed: a.levelCompleted });
+    return JSON.stringify({ bumpCount: a.bumpCount, beforeBumps, completed: a.levelCompleted });
   })()`);
   const dbr = JSON.parse(driveBumpResult);
-  check('drive mode: obstacle knockback (bumpCount++, no win)', dbr.bumpCount > driveBumpBefore && dbr.completed === false, driveBumpResult);
+  check('drive mode: obstacle knockback (bumpCount++, no win)', dbr.bumpCount > dbr.beforeBumps && dbr.completed === false, driveBumpResult);
 
   const driveGoalResult = await h.evalv(`(() => {
     const a = window.__adv;

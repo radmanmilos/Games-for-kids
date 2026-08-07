@@ -465,7 +465,7 @@ Paper Kitty Adventure has been fully integrated into Petrin svet and the placeho
 - Navigation, audio, speech, and utilities are shared modules.
 - **Accessibility / reduced motion (task 83, 2026-08-07, REVERTED):** the shared `window.reducedMotion()` utility in `shared/utils.js` (JS gates) + `@media (prefers-reduced-motion: reduce)` collapse in `shared/accessibility.css` was implemented then **fully reverted per user decision** — the user's OS has `prefers-reduced-motion: reduce` active, so it stripped the memory card-flip, candy combo/hint/level-up, and obstacle-hit-particle animations that ARE the gameplay feedback for kids. All animations are restored. Two pre-existing task-79 split regressions were fixed along the way: driving's dashed road divider now renders (`roadTopY()` fix) and ocean/space obstacles draw again (restored `cfg.drawObstacle` dispatch).
 
-**Current focus: Phase 3 (Учионица kids tier) + Phase 4.** All **fifteen** games are playable. Phase 3 is reactivated (2026-08-04) as **full-fledged games delivered inside Учионица**: the classroom keeps its 4 baby-tier learn-and-repeat activities and gains a second menu set "За децу" with full games for the same content (Азбука/Бројеви/Боје/Облици) — e.g. "Бројеви" (for babies) next to "Бројеви" (for kids). **Phase 4 (2026-08-04)**: Клавир (Piano, task 58) — 8-key keyboard with free play and a "Свирај песму" follow-the-melody mode ("Трепери, трепери звездице"), synthesized Web Audio, no new audio assets; then **Возила (Driving, task 60)** — 10 themed road worlds (Градски трг → Космичка стаза) on a new shared adventure engine (`adventure.js`, drive mode), each world with its own synthesized music theme and ambient layer; then **Океан (Ocean, task 61)** — 10 underwater worlds (Корални гребен → Ноћни океан) on the same engine in fly mode, with patrolling sharks and per-world music + ambient; then **Дино (Dino, task 62)** — 10 prehistoric worlds (Прашума → Острво диносауруса) on the same engine in ground mode (jump/gravity/platforms), with pop-out raptor enemies and per-world music + ambient; then **Свемир (Space, task 63)** — 10 space worlds (Звездано небо → Дубоки свемир) on the same engine in fly mode, with patrolling UFOs and per-world music + ambient, **completing Phase 4**. Писање (Tracing) shipped as task 53 — it covers Letter Tracing + Number Tracing (and shape tracing) from the Future Mini Games list in one hub, as **free draw on a dashed guide** (draw over the dashed outline; validated by forgiving ink-proximity metrics). See the [Development Roadmap](#development-roadmap) for phase status.
+**Current focus: Phase 5 — GAME polish.** All **fifteen** games are playable. Phase 3's Учионица kids tier and Phase 4's new-game set are complete; Phase 5 focuses on the 8 ИГРЕ games. The 7 УЧЕЊЕ learning apps are out of scope for this phase. See the [Development Roadmap](#development-roadmap) for phase status.
 
 ---
 
@@ -1018,7 +1018,7 @@ Created:
 
 ---
 
-## Phase 3 — ACTIVE (reactivated 2026-08-04 as the Учионица kids tier)
+## Phase 3 — DONE (Учионица kids tier completed 2026-08-04)
 
 Full-fledged games for the classroom content, delivered **inside Учионица** as a second menu set ("За децу") beside the existing baby-tier learn-and-repeat activities ("За малишане"). Two buttons per content area — e.g. "Бројеви" for babies and "Бројеви" for kids:
 
@@ -1038,7 +1038,7 @@ Done in Phase 3 before the deferral (kept as-is, separate standalone games):
 
 ---
 
-## Phase 4 — New game set (NEXT, queued after Phase 3)
+## Phase 4 — DONE (new game set completed 2026-08-05)
 
 Build the next batch of mini-games, one per task, picked from the [Future Mini Games](#future-mini-games) list:
 

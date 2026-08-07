@@ -94,8 +94,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   const coin = await h.evalv(`(() => {
     const a = window.__adv;
+    a.loadWorld();
     const before = a.coinCount;
-    const c = a.coins[0];
+    const c = a.coins.find(coin => !coin.collected);
     a.coins.slice(1).forEach(other => { other.collected = true; });
     a.player.offsetX = c.x - a.cameraX;
     a.player.y = c.y;
