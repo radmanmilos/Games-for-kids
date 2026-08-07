@@ -18,6 +18,68 @@ Important: The AI assistant and any contributor must read this file first when s
 ## Active tasks (NEW / IN PROGRESS)
 
 - 92. IN PROGRESS — Little Explorer: add Serbian "Јао!" speech asset and integrate (2026-08-07)
+- 94. NEW — PWA offline installer: implement a child-friendly offline install & update flow (PWA + SW + ZIP fallback). (2026-08-07)
+
+Task 94 — detailed plan & subtasks
+
+Goal: Add a simple, secure, child-friendly way for caregivers to download and install the full game (all pages + assets) to an Android tablet so the game runs offline and receives easy updates. Preferred UX: PWA (service worker) that caches assets on-demand + a prebuilt ZIP fallback for manual installs.
+
+Subtasks (small, verifiable, surgical):
+1) Audit assets & generate file list — DONE (2026-08-07 18:25:59 +02:00)
+   - Script: tools/generate_sw_list.js (node) — enumerates all files under game/ and outputs game/sw-cache-list.json. (Created)
+   - Validate: game/sw-cache-list.json created with 183 entries (includes index.html, all pages/, games/, shared/, assets/). Path: game/sw-cache-list.json.
+
+2) Web App Manifest + icons
+   - Create game/manifest.json (sr-cyr) and add icons to game/assets/icons/ (192 + 512 PNG). Provide fallback PNGs if originals too large.
+   - Validate: manifest references icons and start_url '/index.html'.
+3) Service worker (game/sw.js)
+   - Implement install/activate/fetch handlers using CACHE_NAME with semantic versioning (petrin-v1).
+   - Implement message handler supporting {cmd: 'cacheAll'} and progress events via postMessage.
+   - Implement update check: compare content-hash list / cache manifest and expose {cmd:'checkForUpdates'} returning changed count.
+   - Safety: do not cache huge runtime-build-only files (tools/) or node_modules.
+4) Registration & UI
+   - Register SW in shared/navigation.js (graceful fallback when SW unsupported).
+   - Add a simple, prominent hub button: "Преузми ванмрежно" (id=download-offline) with states: Idle → Caching (progress %) → Ready (Installed) → Update available (Ажурирај).
+   - Add an unobtrusive link to game-offline.zip (prebuilt) as a fallback.
+5) Build & packaging scripts
+   - tools/build_offline.ps1 (Windows): generate sw-cache-list.json, create docs/game-offline.zip (Compress-Archive), and produce a small manifest file with asset hashes.
+   - Optional: tools/build_offline.sh for *nix.
+6) Update & versioning UX
+   - SW must use CACHE_NAME with version string; implement skipWaiting/clients.claim and prompt users with 'Ажурирај' when new version available.
+   - Provide a 'Проверити ажурирања' button that calls SW checkForUpdates and, on success, shows simple accept/decline prompt.
+7) Update mechanism for children
+   - Keep the install process one-tap: tap 'Преузми ванмрежно' while online; show progress and confirm when done. Teach the caregiver to 'Додај на почетни екран' via native PWA install banner / instructions.
+   - For updates: show a gentle 'Ажурирај' button that downloads new assets in background and shows 'Ажурирање готово — поново покрени' or apply automatically on next load.
+8) Testing & validation
+   - Automated: run node --check on all modified JS; run game smoke tests (kitty_smoke, puzzle_smoke, memory_smoke, ocean_smoke, space_smoke) after integration changes; ensure no regressions.
+   - Manual: test full offline install flow on Android (Chrome & WebView): initial online preload, PWA install, offline load, update flow, confirm audio and speech assets work offline.
+9) Documentation
+   - Update HANDOVER_PROMPT.md, README.md, and PROJECT_TASKS.md with installation and update instructions (Serbian Cyrillic), plus a one-page caregiver guide (game/docs/OFFLINE_INSTALL.md).
+10) Rollout & rollback
+   - Publish docs/game-offline.zip to docs/ so the ZIP is available on GitHub Pages.
+   - Add rollback steps: remove new sw.js and increment cache name to invalidate caches if necessary.
+11) Accessibility & safety
+   - Keep install UI screen-reader friendly and simple; text in Serbian Cyrillic; large tap targets; no unexpected autoplay while caching.
+12) Acceptance criteria
+   - A caregiver can tap the hub 'Преузми ванмрежно' button while online and the site caches all assets; the game loads offline and audio/speech play correctly.
+   - Updating the game on the server prompts a visible, simple update flow on-device.
+   - No existing game functionality regresses; all smoke tests pass.
+
+Rules (MANDATORY)
+- Manifest: game/manifest.json must exist with start_url '/game/index.html', scope '/game/', lang 'sr', and icons at game/assets/icons/icon-192.png and icon-512.png. Use Serbian Cyrillic fields (name/short_name/description).
+- Docs & approvals: after completing EACH subtask, update PROJECT_TASKS.md, HANDOVER_PROMPT.md, and README.md as appropriate, run tools/sync-docs.sh, and ask the user for explicit approval to continue. Do NOT commit or push without the user's explicit instruction.
+- Non-regression: changes must be purely additive and must not alter existing game runtime behavior. Any change that could affect gameplay requires targeted smoke tests and the user's approval before committing.
+- Child-friendly install: the PWA install flow must be a single-tap caregiver action with clear Serbian instructions; updates must be simple and transparent (background download + single-button apply).
+
+Notes & constraints
+- Do not change game runtime behavior. All changes must be additive and reversible.
+- Avoid adding large new dependencies; use built-in browser APIs + small node/ps scripts for build-time tooling.
+- Ensure service worker scope is correct (served from / or /game/ depending on hosting). If site hosted under docs/ on GitHub Pages with root at /, choose sw scope accordingly.
+
+Owner & timeline
+- Owner: Radman Milos (you). I can implement after you confirm and after these doc updates are accepted. Estimated work: 1 working day to implement + 0.5 day for testing/polish.
+
+---
 
 ---
 
