@@ -433,6 +433,15 @@ README.md folder-structure listings were stale vs disk. Verified with a scripted
 
 ### 90. DONE — Little Explorer character picker + new explorer kitty hero (2026-08-07, Ponytail Lazy Dev)
 
+### 91. DONE — Fix Ocean/Space worlds-picker & music toggle (2026-08-07, Radman Milos)
+
+Applied three small deterministic fixes in game/games/adventure.js:
+- Stabilized worlds-picker buttons by storing `data-world-pos` at creation and reading it on click to avoid racey index resolution.
+- Ensured the music button updates its icon and `.off` class immediately after toggling `AdventureMusic` on/off.
+- Removed a risky early reference in `initAudio()` to avoid undefined variable use when WebAudio is unavailable.
+
+Validated: `node tools/ocean_smoke.js` and `node tools/space_smoke.js` — both smoke suites PASS (all checks green). Docs updated (HANDOVER_PROMPT.md).
+
 Added a character picker to the Little Explorer game (`papper_kitty.html` + `kitty-standalone.js`): a modal shows at every game start (per user) offering two heroes — the new explorer kitty (default, per user) and the old explorer girl. New kitty sprites were copied from `resources/little explorer/little_explorer_kitty/explorer_kitty/` into `game/assets/images/explorer_kitty/` (same filenames as the old pack, so a distinct folder is required). Sprite loader reworked from single hard-coded dims (237×352, 23px bottom gap) to a per-character `CHARACTERS` config with measured source dims (kitty: 273×334, 22px bottom gap → srcH 312; explorer: 237×352, 23px → srcH 329). Death sounds are now character-aware (task 90 addition, per user): the kitty plays `assets/audio/cat.ogg`, the girl speaks "Јао!" in Serbian (`sr-RS`) via speechSynthesis; `playHurtSound()` branches on the selected character. The hub button in `game/index.html` now shows the new kitty's `01_idle_right.png` (was `03_run_right.png`). Validated: `node tools/kitty_smoke.js` (ALL PASS, incl. new task90 checks + 53x60 kitty frame size) and `node tools/hub_smoke.js` (ALL PASS).
 
 ---
