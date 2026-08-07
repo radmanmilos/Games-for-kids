@@ -836,6 +836,10 @@
             heroBob: 2,
             pickHero: true,
             heroType: 't_rex',
+            // heroFlip: true — the dino PNGs face LEFT natively (DINO_SPRITES below),
+            // so the engine inverts the facing-right scale to draw them facing right.
+            // Do NOT flip the PNGs to face right: heroFlip + engine mirroring is the
+            // convention; changing only one side breaks the facing direction.
             heroFlip: true,
             drawHero: drawDinoHero,
             onHeroNeeded: showDinoPicker,

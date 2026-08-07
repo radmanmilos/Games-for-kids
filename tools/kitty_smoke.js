@@ -21,8 +21,36 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   }
   check('boot: game globals ready', ready === true, ready ? 'WORLDS + loadWorld present' : 'not ready');
 
+  // Task 90: the character picker must show before the world loads.
+  const picker = await h.evalv(`(() => {
+    const m = document.getElementById('char-modal');
+    const btns = [...document.querySelectorAll('.char-btn')].map(b => b.dataset.character);
+    return { shown: !!m && m.classList.contains('show'), count: btns.length, ids: btns.join(',') };
+  })()`);
+  check('task90: character picker shown at boot with both heroes',
+    picker && picker.shown && picker.count === 2 && picker.ids === 'kitty,explorer',
+    JSON.stringify(picker));
+
+  await h.evalv(`document.querySelector('.char-btn[data-character="kitty"]').click()`);
+
   const bootName = await h.evalv('document.getElementById("world-name").textContent');
-  check('boot: world HUD renders', typeof bootName === 'string' && bootName.length > 0, bootName);
+  check('boot: world HUD renders after choosing the kitty', typeof bootName === 'string' && bootName.length > 0, bootName);
+
+  // Task 90: death sound is character-aware (cat.ogg for the kitty, "Јао!"
+  // speech for the explorer girl) and the kitty is the default character.
+  const deathSound = await h.evalv(`(() => {
+    return {
+      defaultChar: selectedCharacter,
+      catWired: typeof playCatSound === 'function',
+      girlWired: typeof playGirlHurt === 'function',
+      hurtUsesChar: playHurtSound.toString().indexOf("selectedCharacter === 'kitty'") >= 0
+    };
+  })()`);
+  check('task90: kitty is default, hurt sound branches per character',
+    deathSound && deathSound.defaultChar === 'kitty' && deathSound.catWired && deathSound.girlWired && deathSound.hurtUsesChar,
+    JSON.stringify(deathSound));
+  const catAsset = fs.existsSync(path.join(__dirname, '..', 'game', 'assets', 'audio', 'cat.ogg'));
+  check('task90: cat.ogg asset present for the kitty death sound', catAsset === true, 'game/assets/audio/cat.ogg');
 
   const data = await h.evalv(`(() => {
     const types = Object.keys(WALKER_FOOT);
@@ -226,8 +254,8 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
       feetAtBottom: all.every(feet)
     };
   })()`);
-  check('task73: frames are 43x60, identical size, feet flush near the bottom row',
-    frameInfo && frameInfo.size === '43x60' && frameInfo.sameSize && frameInfo.content && frameInfo.feetAtBottom,
+  check('task73: kitty frames are 53x60, identical size, feet flush near the bottom row',
+    frameInfo && frameInfo.size === '53x60' && frameInfo.sameSize && frameInfo.content && frameInfo.feetAtBottom,
     JSON.stringify(frameInfo));
 
   const states = await h.evalv(`(() => {

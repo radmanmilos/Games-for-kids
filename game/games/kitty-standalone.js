@@ -3,19 +3,34 @@ const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
 
 function playHurtSound() {
-    if (!audioCtx) return;
-    const now = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(180, now);
-    osc.frequency.exponentialRampToValueAtTime(70, now + 0.15);
-    gain.gain.setValueAtTime(0.25, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-    osc.start(now);
-    osc.stop(now + 0.22);
+    if (selectedCharacter === 'kitty') {
+        playCatSound();
+    } else {
+        playGirlHurt();
+    }
+}
+
+// Kitty death: the real cat sound file (game/assets/audio/cat.ogg).
+let catSound;
+function playCatSound() {
+    if (!catSound) {
+        catSound = new Audio('../assets/audio/cat.ogg');
+        catSound.volume = 0.85;
+    }
+    catSound.currentTime = 0;
+    const p = catSound.play();
+    if (p) p.catch(() => {});
+}
+
+// Explorer girl death: a girl voice says "Јао!" in Serbian (sr-RS).
+function playGirlHurt() {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance('Јао!');
+    u.lang = 'sr-RS';
+    u.rate = 0.9;
+    u.pitch = 1.1;
+    window.speechSynthesis.speak(u);
 }
 
 function initAudio() {
@@ -793,18 +808,31 @@ const WALKER_FOOT = {
 
 let player, platforms, movingPlatforms, pipes, coins, goal, particles, mice, walkers, theme, levelCompleted, stairSteps, groundY = 0;
 
-// --- Little Explorer hero sprites (task 73) ---
-// Six native right-facing frames deployed to game/assets/images/explorer/; the
-// left direction is a runtime mirror (ctx.scale(-1, squish) below). Every source
-// PNG is 237x352 with the feet on a shared baseline 23 rows above the canvas
-// bottom (measured), so all frames share one draw offset. We pre-scale the full
-// canvas minus the uniform bottom gap to a 60px tall frame (bigger than the
-// 48px hitbox, per user 2026-08-06) — anchored feet-flush on the hitbox bottom,
-// so only the head overhangs ~12px upward. No getImageData, so this works even
-// under file://.
+// --- Little Explorer hero sprites (task 73) + character picker (task 90) ---
+// Two selectable heroes, each with six native right-facing frames in its own
+// folder under game/assets/images/; the left direction is a runtime mirror
+// (ctx.scale(-1, squish) below). Every source PNG has the feet on a shared
+// baseline above the canvas bottom (measured per character), so all frames
+// share one draw offset. We pre-scale the full canvas minus the uniform bottom
+// gap to a 60px tall frame (bigger than the 48px hitbox, per user 2026-08-06)
+// — anchored feet-flush on the hitbox bottom, so only the head overhangs
+// ~12px upward. No getImageData, so this works even under file://.
 const EXPLORER_SPRITE_H = 60;
-const EXPLORER_SRC_H = 329; // 352 - 23 (uniform transparent bottom gap)
-const EXPLORER_SRC_W = 237;
+const CHARACTERS = {
+    kitty: { // default (per user 2026-08-07)
+        name: 'Маца Истраживачица',
+        folder: 'explorer_kitty/',
+        srcW: 273,
+        srcH: 312 // 334 - 22 (uniform transparent bottom gap, measured 2026-08-07)
+    },
+    explorer: {
+        name: 'Истраживачица',
+        folder: 'explorer/',
+        srcW: 237,
+        srcH: 329 // 352 - 23 (uniform transparent bottom gap)
+    }
+};
+let selectedCharacter = 'kitty';
 const EXPLORER_FRAMES = {
     idle: ['01_idle_right.png', '04_idle_right_b.png', '06_idle_right_c.png'],
     walk: ['02_walk_right.png'],
@@ -815,14 +843,15 @@ const explorerFrames = {};
 window.__explorerFrames = explorerFrames;
 
 function loadExplorerFrame(key, file) {
+    const c = CHARACTERS[selectedCharacter];
     const img = new Image();
     img.onload = () => {
-        const w = Math.max(1, Math.round(EXPLORER_SRC_W * EXPLORER_SPRITE_H / EXPLORER_SRC_H));
+        const w = Math.max(1, Math.round(c.srcW * EXPLORER_SPRITE_H / c.srcH));
         const frame = document.createElement('canvas');
         frame.width = w;
         frame.height = EXPLORER_SPRITE_H;
         const f2d = frame.getContext('2d');
-        f2d.drawImage(img, 0, 0, EXPLORER_SRC_W, EXPLORER_SRC_H, 0, 0, w, EXPLORER_SPRITE_H);
+        f2d.drawImage(img, 0, 0, c.srcW, c.srcH, 0, 0, w, EXPLORER_SPRITE_H);
         if (key === 'idle') {
             explorerFrames.idle = explorerFrames.idle || [];
             explorerFrames.idle.push(frame);
@@ -830,9 +859,12 @@ function loadExplorerFrame(key, file) {
             explorerFrames[key] = frame;
         }
     };
-    img.src = '../assets/images/explorer/' + file;
+    img.src = '../assets/images/' + c.folder + file;
 }
-Object.entries(EXPLORER_FRAMES).forEach(([key, files]) => files.forEach(f => loadExplorerFrame(key, f)));
+function loadExplorerFrames() {
+    ['idle', 'walk', 'run', 'jump'].forEach(k => delete explorerFrames[k]);
+    Object.entries(EXPLORER_FRAMES).forEach(([key, files]) => files.forEach(f => loadExplorerFrame(key, f)));
+}
 
 function currentExplorerFrame() {
     const s = player && player.animState;
@@ -2408,6 +2440,20 @@ window.addEventListener('focus', () => setPaused(false));
 
 document.getElementById('modal-btn').addEventListener('click', nextLevel);
 
-// Start Game
-loadWorld();
-loop();
+// --- Character picker (task 90): choose a hero before the world loads ---
+let gameStarted = false;
+function chooseCharacter(id) {
+    if (gameStarted) return;
+    gameStarted = true;
+    selectedCharacter = id;
+    document.getElementById('char-modal').classList.remove('show');
+    loadExplorerFrames();
+    loadWorld();
+    loop();
+}
+document.querySelectorAll('.char-btn').forEach(btn => {
+    btn.addEventListener('click', () => chooseCharacter(btn.dataset.character));
+});
+
+// Start Game — wait for the character picker
+document.getElementById('char-modal').classList.add('show');

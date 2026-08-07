@@ -74,6 +74,12 @@
         return [name, audio];
     }));
 
+    // Synthesized fallbacks for Fox/Chicken — used ONLY when their real audio
+    // file is missing, fails to load (onerror), or play() rejects (see the
+    // fallback() closure in playAnimalSound). The real files (fox.mp3 /
+    // chicken.ogg) load in practice, so these are near-unreachable but kept so
+    // a failed asset degrades to a sound instead of silence. Keep in sync if
+    // the real sounds change.
     function playFoxSynth() {
         // short synthesized 'yip' sequence for fox
         // two quick pitches sliding down

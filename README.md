@@ -243,6 +243,8 @@ Features:
 - Multiple levels
 - Win screen
 - Synthesized audio
+- Character picker at game start (kitty default / explorer girl, task 90)
+- Character-specific death sounds (cat for the kitty, "Јао!" for the girl, task 90)
 
 Educational goals:
 
