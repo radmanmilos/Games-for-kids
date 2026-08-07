@@ -1041,7 +1041,7 @@
 
             const t = Date.now() / 1000;
 
-            if (mode === 'drive') window.AdventureModes.drawRoad(ctx, theme, roadTopY, t, cameraX, canvas);
+            if (mode === 'drive') window.AdventureModes.drawRoad(ctx, theme, roadTopY(), t, cameraX, canvas);
 
             if (cfg.decorBehind) drawDecor(t);
 
@@ -1115,7 +1115,10 @@
                     ctx.restore();
                 });
             } else {
-                obstacles.forEach(o => window.AdventureModes.drawObstacle(ctx, o.type, o));
+                obstacles.forEach(o => {
+                    if (cfg.drawObstacle) { cfg.drawObstacle(ctx, o, theme); return; }
+                    window.AdventureModes.drawObstacle(ctx, o.type, o);
+                });
             }
 
             coins.forEach(c => {

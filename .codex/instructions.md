@@ -42,7 +42,7 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 - Do NOT rework settled layouts: coloring palette grid format, ref/coloring SVG sizes, grid stability (`scrollbar-gutter:stable`, no tile-pop reflow on tap).
 - Do NOT reintroduce rejected/deferred scope: jigsaw puzzle pieces, memory difficulty levels, unlockable stickers, screen transitions.
 - Memory games speak the animal name + play its sound ONLY on matched pairs — never on single or mismatched flips.
-- Task 43 (alphabet audit) is blocked on the user listing the exact wrong letters/words — do not regenerate all TTS; ask for the list first.
+- Task 43 (alphabet audit) is DONE (2026-08-07, per user) — 25 consonant sound MP3s + 3 word swaps were regenerated and the user's listening pass confirmed no further changes. Do not regenerate TTS unless the user lists specific wrong files.
 
 ## Communication & approval
 

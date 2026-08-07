@@ -39,6 +39,8 @@ async function waitReady(h) {
   const driveCoinResult = await h.evalv(`(() => {
     const a = window.__adv;
     const c = a.coins[0];
+    c.collected = false;
+    a.coinCount = 0;
     a.coins.slice(1).forEach(other => { other.collected = true; });
     a.player.offsetX = c.x - a.cameraX;
     a.player.y = c.y;
@@ -83,6 +85,7 @@ async function waitReady(h) {
     return JSON.stringify({ coinY: a.coins[0].y });
   })()`);
   await h.c.send('Emulation.setDeviceMetricsOverride', { width: 1100, height: 1200, deviceScaleFactor: 1, mobile: false });
+  await sleep(300);
   await h.evalv(`window.dispatchEvent(new Event('resize'))`);
   await sleep(200);
   const driveResizeAfter = await h.evalv(`(() => {

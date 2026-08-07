@@ -345,7 +345,9 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   // Regression: a viewport resize after load must keep the ground anchored to
   // the bottom so the kitty never "drops through the ground and respawns".
   await h.c.send('Emulation.setDeviceMetricsOverride', { width: 1100, height: 1200, deviceScaleFactor: 1, mobile: false });
-  await h.sleep(400);
+  await h.sleep(300);
+  await h.evalv(`window.dispatchEvent(new Event('resize'))`);
+  await h.sleep(200);
   const rsz = await h.evalv(`(() => {
     setPaused(true);
     worldPos = 0; loadWorld();
