@@ -193,9 +193,10 @@
       backBtn.addEventListener('click', (e) => {
         if(typeof popSound === 'function') popSound();
         setTimeout(()=>{
-          const page = location.pathname.split('/').pop().toLowerCase().replace(/\.html$/,'');
-          if (page === 'animal_counting') { location.href = '../index.html'; }
-          else if (typeof window.goTo === 'function') { window.goTo('hub'); }
+          try{
+            if (typeof window.goTo === 'function') { window.goTo('hub-games'); }
+            else location.href = '../index.html#hub-games';
+          }catch(_){ location.href = '../index.html#hub-games'; }
         },90);
       });
     }

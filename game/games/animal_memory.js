@@ -122,9 +122,10 @@
   backBtn.addEventListener('click', ()=>{
     if(window.popSound) window.popSound();
     setTimeout(()=>{
-      const page = location.pathname.split('/').pop().toLowerCase().replace(/\.html$/,'');
-      if(page === 'animal_memory') { location.href = '../index.html'; return; }
-      try{ if(window.goTo) window.goTo('hub'); else location.href = '../index.html'; }catch(_){ location.href = '../index.html'; }
+      try{
+        if(window.goTo) window.goTo('hub-games');
+        else location.href = '../index.html#hub-games';
+      }catch(_){ location.href = '../index.html#hub-games'; }
     },90);
   });
 
