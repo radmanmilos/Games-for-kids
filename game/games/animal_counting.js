@@ -194,9 +194,12 @@
         if(typeof popSound === 'function') popSound();
         setTimeout(()=>{
           try{
-            if (typeof window.goTo === 'function') { window.goTo('hub-games'); }
-            else location.href = '../index.html#hub-games';
-          }catch(_){ location.href = '../index.html#hub-games'; }
+              if (window.top !== window && window.top && typeof window.top.goTo === 'function') {
+                window.top.goTo('hub-games');
+              } else {
+                location.href = '../index.html#hub-games';
+              }
+            }catch(_){ location.href = '../index.html#hub-games'; }
         },90);
       });
     }

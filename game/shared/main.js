@@ -22,3 +22,20 @@ if (standaloneGame) {
     if (backBtn) backBtn.addEventListener('click', () => { if (window.popSound) window.popSound(); setTimeout(() => location.href = '../index.html#' + standaloneGame[2], 90); });
     if (typeof window[standaloneGame[1]] === 'function') window[standaloneGame[1]]();
 }
+
+// Helper for pages to return to their parent hub subsection in a consistent way.
+window.returnToParent = function(){
+    try{
+        const mapEntry = standaloneMap[standalonePage];
+        const target = (mapEntry && mapEntry[2]) ? mapEntry[2] : 'hub';
+        if (window.top !== window && window.top && typeof window.top.goTo === 'function') {
+            window.top.goTo(target);
+        } else if (typeof window.goTo === 'function') {
+            window.goTo(target);
+        } else {
+            location.href = '../index.html#' + target;
+        }
+    }catch(e){
+        try{ location.href = '../index.html#hub'; }catch(_){ /* ignore */ }
+    }
+};

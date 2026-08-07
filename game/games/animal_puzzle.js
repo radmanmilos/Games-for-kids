@@ -561,8 +561,6 @@
         try{
           if(window.top !== window && window.top && typeof window.top.goTo === 'function') {
             window.top.goTo('hub-games');
-          } else if (window.goTo) {
-            window.goTo('hub-games');
           } else {
             location.href = '../index.html#hub-games';
           }
