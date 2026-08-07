@@ -228,7 +228,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
   check('navigation route wired (game-space -> space.html)', nav.includes("'game-space'") && nav.includes("'pages/space.html'"));
   const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (space -> space-back/startSpace)', main.includes("'space': ['space-back', 'startSpace']"));
+  check('standalone boot wired (space -> space-back/startSpace)', main.includes("'space': ['space-back', 'startSpace', 'hub-games']"));
   const space = fs.readFileSync(path.join(root, 'game', 'games', 'space.js'), 'utf8');
   check('space config: no heroFlip (🚀 faces right natively) + heroBob set', !space.includes('heroFlip: true') && space.includes('heroBob: 4'));
 

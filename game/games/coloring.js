@@ -238,6 +238,10 @@ const coloringSceneLabels = {
 };
 let coloringSceneIdx = 0;
 let coloringSceneOrder = [];
+
+// Export startColoring for standalone use
+if (typeof window !== 'undefined') window.startColoring = startColoring;
+
 function shuffleColoringScenes(){
   coloringSceneOrder = (window.shuffle ? window.shuffle(coloringScenes.slice()) : coloringScenes.slice());
   coloringSceneIdx = 0;

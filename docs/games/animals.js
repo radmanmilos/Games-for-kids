@@ -49,3 +49,6 @@ document.getElementById('animalNext').addEventListener('click', ()=>{
   popSound();
 });
 
+// Export for standalone pages that call window.startAnimals
+if (typeof window !== 'undefined') window.startAnimals = startAnimals;
+

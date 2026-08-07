@@ -479,6 +479,14 @@ The live site is served by GitHub Pages from the **`docs/` folder on the `main` 
 - The earlier GitHub Actions workflow (`.github/workflows/deploy.yml`, deploy `game/` → `gh-pages`) was **abandoned** — GitHub Pages refused to deploy from `game/`, so it was removed per user decision. Keep it that way: no workflow, `docs/` mirror only.
 - Local preview: use Live Server on `game/` over HTTP — never `file://` (breaks audio, the kitty iframe, and throws Unsafe-attempt warnings).
 
+## Offline installation (Task 94, in progress)
+
+The hub is being prepared as an installable Serbian-Cyrillic PWA. The manifest is at `game/manifest.json`, with `/game/` scope and PNG icons. The service worker (`game/sw.js`) has install/activate/fetch handling, one-tap cache-all messaging with progress events, and content-hash update comparison. The hub exposes download, update-check, and ZIP fallback controls; caregiver documentation and final validation are tracked in Task 94.
+
+Caregiver instructions are in `game/docs/OFFLINE_INSTALL.md`. The guide covers one-tap caching, PWA installation, update checks, ZIP fallback, and rollback.
+
+The current fallback package is generated at `docs/game-offline.zip` by `tools/build_offline.ps1`. Do not edit `docs/` directly; regenerate it from `game/` after runtime changes.
+
 ---
 
 # Navigation Model

@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Петрин свет</title>
+<link rel="manifest" href="manifest.json">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌈</text></svg>">
 <style>
   :root{
@@ -309,6 +310,16 @@
     <div class="hub-tiles">
       <button class="hub-tile tile-learning" data-go="hub-learning" aria-label="Учење"><span class="tile-emojis"><span>🏫</span><span>📝</span><span>🎹</span><span>🎨</span></span><span class="tile-label">УЧЕЊЕ</span></button>
       <button class="hub-tile tile-games" data-go="hub-games" aria-label="Игре"><span class="tile-emoji">🎮</span><span class="tile-label">ИГРЕ</span></button>
+    </div>
+    <div style="width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:2vmin;gap:8px;">
+      <button id="download-offline" class="hub-btn" aria-label="Преузми ванмрежно" title="Преузми офлајн" style="width:140px;height:140px;">
+        <img src="assets/icons/download-128.png" alt="Преузми" style="width:80%;height:80%;object-fit:contain;">
+      </button>
+      <div id="download-status" aria-live="polite" style="font-size:1rem;color:#4A3F6B;">Спремно</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;">
+        <button id="check-updates" type="button" aria-label="Проверити ажурирања" style="border:0;border-radius:999px;padding:8px 14px;background:#E9E1FF;color:#4A3F6B;font:inherit;cursor:pointer;">Проверити ажурирања</button>
+        <a href="game-offline.zip" id="offline-zip" download style="color:#4A3F6B;font-size:.9rem;">ZIP за ручно преузимање</a>
+      </div>
     </div>
   </div>
 

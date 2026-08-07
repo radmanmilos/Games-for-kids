@@ -122,6 +122,13 @@
   "/game/assets/audio/speech/zvezda.mp3",
   "/game/assets/fonts/fredoka-latin-ext.woff2",
   "/game/assets/fonts/fredoka-latin.woff2",
+  "/game/assets/icons/download-128.png",
+  "/game/assets/icons/download-192.png",
+  "/game/assets/icons/download-512.png",
+  "/game/assets/icons/icon-192.png",
+  "/game/assets/icons/icon-192.svg",
+  "/game/assets/icons/icon-512.png",
+  "/game/assets/icons/icon-512.svg",
   "/game/assets/images/dino/brontosaurus.png",
   "/game/assets/images/dino/tiranosaurus-rex.png",
   "/game/assets/images/driving-car.png",
@@ -159,6 +166,7 @@
   "/game/games/tracing.js",
   "/game/index.html",
   "/game/manifest.json",
+  "/game/offline-manifest.json",
   "/game/pages/animal_counting.html",
   "/game/pages/animal_memory.html",
   "/game/pages/animal_puzzle.html",
@@ -181,5 +189,7 @@
   "/game/shared/main.js",
   "/game/shared/navigation.js",
   "/game/shared/speech.js",
-  "/game/shared/utils.js"
+  "/game/shared/utils.js",
+  "/game/sw-cache-list.json",
+  "/game/sw.js"
 ]

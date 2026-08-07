@@ -216,7 +216,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
   check('navigation route wired (game-ocean -> ocean.html)', nav.includes("'game-ocean'") && nav.includes("'pages/ocean.html'"));
   const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (ocean -> ocean-back/startOcean)', main.includes("'ocean': ['ocean-back', 'startOcean']"));
+  check('standalone boot wired (ocean -> ocean-back/startOcean)', main.includes("'ocean': ['ocean-back', 'startOcean', 'hub-games']"));
   const ocean = fs.readFileSync(path.join(root, 'game', 'games', 'ocean.js'), 'utf8');
   check('ocean config: heroFlip + heroBob set', ocean.includes('heroFlip: true') && ocean.includes('heroBob: 5'));
 

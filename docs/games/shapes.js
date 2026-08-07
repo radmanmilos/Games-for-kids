@@ -138,3 +138,6 @@ function attachDrag(piece){
   });
 }
 
+// Export start function for standalone boot
+if (typeof window !== 'undefined') window.startShapesRound = startShapesRound;
+

@@ -164,6 +164,9 @@ function hasStar(){
 
 function startCandy(){ startLevel(1); }
 
+// Export for standalone pages
+if (typeof window !== 'undefined') window.startCandy = startCandy;
+
 /* ---- swap dragging, with a real-time mirrored preview of the neighbor ---- */
 function attachCandyDrag(el){
   let startX, startY, dragging = false, locked = false, dir = null, neighborEl = null;

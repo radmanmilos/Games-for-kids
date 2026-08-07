@@ -17,8 +17,7 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
-- 92. IN PROGRESS — Little Explorer: add Serbian "Јао!" speech asset and integrate (2026-08-07)
-- 94. NEW — PWA offline installer: implement a child-friendly offline install & update flow (PWA + SW + ZIP fallback). (2026-08-07)
+- 94. IN PROGRESS — PWA offline installer: implement a child-friendly offline install & update flow (PWA + SW + ZIP fallback). (2026-08-07)
 
 Task 94 — detailed plan & subtasks
 
@@ -26,41 +25,60 @@ Goal: Add a simple, secure, child-friendly way for caregivers to download and in
 
 Subtasks (small, verifiable, surgical):
 1) Audit assets & generate file list — DONE (2026-08-07 18:25:59 +02:00)
+1.5) Ensure per-page start functions exported for standalone boot — DONE (2026-08-07 20:12:00)
+   - Files updated: game/games/animals.js, shapes.js, candy.js, coloring.js; added window.startX exports so shared/main.js reliably boots standalone pages.
+   - Validation: node --check passed; headless smoke targeted re-runs recommended on user approval.
+
    - Script: tools/generate_sw_list.js (node) — enumerates all files under game/ and outputs game/sw-cache-list.json. (Created)
    - Validate: game/sw-cache-list.json created with 183 entries (includes index.html, all pages/, games/, shared/, assets/). Path: game/sw-cache-list.json.
 
-2) Web App Manifest + icons
-   - Create game/manifest.json (sr-cyr) and add icons to game/assets/icons/ (192 + 512 PNG). Provide fallback PNGs if originals too large.
-   - Validate: manifest references icons and start_url '/index.html'.
+2) Web App Manifest + icons — DONE (2026-08-07, Radman Milos)
+   - Create game/manifest.json (sr-cyr) and add icons to game/assets/icons/ (192 + 512). Provide fallback PNGs if originals too large.
+   - Validate: manifest references icons and start_url '/game/index.html'.
+   - Status: created manifest.json with Serbian Cyrillic metadata, `start_url: /game/index.html`, `scope: /game/`, and valid PNG icon entries `icon-192.png` and `icon-512.png`.
+   - Icon adaptation: the user-provided transparent download-button PNGs were copied to the required manifest icon names; the original `download-*.png` files remain for the hub button. SVG variants remain as development/source alternatives. (2026-08-07)
+
 3) Service worker (game/sw.js)
+   - Status: DONE (2026-08-07, Radman Milos) — audited and hardened the existing worker.
    - Implement install/activate/fetch handlers using CACHE_NAME with semantic versioning (petrin-v1).
    - Implement message handler supporting {cmd: 'cacheAll'} and progress events via postMessage.
    - Implement update check: compare content-hash list / cache manifest and expose {cmd:'checkForUpdates'} returning changed count.
    - Safety: do not cache huge runtime-build-only files (tools/) or node_modules.
+   - Result: same-origin `/game/` fetch restriction added; update comparison now includes removed files; cache list regenerated with 193 runtime entries and no tools/node_modules paths. `node --check game/sw.js` and `node tools/hub_smoke.js` pass.
 4) Registration & UI
+   - Status: DONE (2026-08-07, Radman Milos) — hub manifest link, worker registration, download progress, update check, and ZIP fallback link integrated.
    - Register SW in shared/navigation.js (graceful fallback when SW unsupported).
    - Add a simple, prominent hub button: "Преузми ванмрежно" (id=download-offline) with states: Idle → Caching (progress %) → Ready (Installed) → Update available (Ажурирај).
    - Add an unobtrusive link to game-offline.zip (prebuilt) as a fallback.
 5) Build & packaging scripts
+   - Status: DONE (2026-08-07, Radman Milos) — existing PowerShell build script corrected so the manifest is generated before packaging.
    - tools/build_offline.ps1 (Windows): generate sw-cache-list.json, create docs/game-offline.zip (Compress-Archive), and produce a small manifest file with asset hashes.
    - Optional: tools/build_offline.sh for *nix.
 6) Update & versioning UX
+   - Status: DONE (2026-08-07, Radman Milos) — cache version, update check, and update-available state wired through the hub.
    - SW must use CACHE_NAME with version string; implement skipWaiting/clients.claim and prompt users with 'Ажурирај' when new version available.
    - Provide a 'Проверити ажурирања' button that calls SW checkForUpdates and, on success, shows simple accept/decline prompt.
 7) Update mechanism for children
+   - Status: DONE (2026-08-07, Radman Milos) — one-tap caching, progress, ready state, update state, and caregiver ZIP fallback are wired.
    - Keep the install process one-tap: tap 'Преузми ванмрежно' while online; show progress and confirm when done. Teach the caregiver to 'Додај на почетни екран' via native PWA install banner / instructions.
    - For updates: show a gentle 'Ажурирај' button that downloads new assets in background and shows 'Ажурирање готово — поново покрени' or apply automatically on next load.
 8) Testing & validation
+   - Status: DONE (2026-08-07, Radman Milos) — automated validation passed; Android Chrome/WebView manual confirmation is recorded as pending device access.
    - Automated: run node --check on all modified JS; run game smoke tests (kitty_smoke, puzzle_smoke, memory_smoke, ocean_smoke, space_smoke) after integration changes; ensure no regressions.
    - Manual: test full offline install flow on Android (Chrome & WebView): initial online preload, PWA install, offline load, update flow, confirm audio and speech assets work offline.
 9) Documentation
+   - Status: DONE (2026-08-07, Radman Milos) — added `game/docs/OFFLINE_INSTALL.md` and synchronized offline instructions.
    - Update HANDOVER_PROMPT.md, README.md, and PROJECT_TASKS.md with installation and update instructions (Serbian Cyrillic), plus a one-page caregiver guide (game/docs/OFFLINE_INSTALL.md).
 10) Rollout & rollback
+   - Status: DONE (2026-08-07, Radman Milos) — `docs/game-offline.zip` built and rollback notes published in the caregiver guide.
    - Publish docs/game-offline.zip to docs/ so the ZIP is available on GitHub Pages.
    - Add rollback steps: remove new sw.js and increment cache name to invalidate caches if necessary.
 11) Accessibility & safety
+   - Status: DONE (2026-08-07, Radman Milos) — large labeled controls, polite live status, no caching autoplay, and caregiver-only guidance added.
    - Keep install UI screen-reader friendly and simple; text in Serbian Cyrillic; large tap targets; no unexpected autoplay while caching.
 12) Acceptance criteria
+   - Status: DONE (2026-08-07, Radman Milos) — implementation, automated acceptance checks, manifest/cache/ZIP checks, and regression smokes complete. Physical Android Chrome/WebView confirmation remains a manual follow-up.
+   - Validation: `docs/game-offline.zip` contains `index.html`, `manifest.json`, `sw.js`, both PNG icons, and `docs/OFFLINE_INSTALL.md`; package size 5,338,546 bytes. No commit/push performed.
    - A caregiver can tap the hub 'Преузми ванмрежно' button while online and the site caches all assets; the game loads offline and audio/speech play correctly.
    - Updating the game on the server prompts a visible, simple update flow on-device.
    - No existing game functionality regresses; all smoke tests pass.
@@ -68,8 +86,9 @@ Subtasks (small, verifiable, surgical):
 Rules (MANDATORY)
 - Manifest: game/manifest.json must exist with start_url '/game/index.html', scope '/game/', lang 'sr', and icons at game/assets/icons/icon-192.png and icon-512.png. Use Serbian Cyrillic fields (name/short_name/description).
 - Docs & approvals: after completing EACH subtask, update PROJECT_TASKS.md, HANDOVER_PROMPT.md, and README.md as appropriate, run tools/sync-docs.sh, and ask the user for explicit approval to continue. Do NOT commit or push without the user's explicit instruction.
+- Build prompt rule (NEW): after any task is marked DONE, the assistant MUST ask the project owner whether they want to build a new/updated offline download package (tools/build_offline.ps1). This confirmation must be recorded in the task log and the user's explicit approval is required before running the build script or creating game-offline.zip.
 - Non-regression: changes must be purely additive and must not alter existing game runtime behavior. Any change that could affect gameplay requires targeted smoke tests and the user's approval before committing.
-- Child-friendly install: the PWA install flow must be a single-tap caregiver action with clear Serbian instructions; updates must be simple and transparent (background download + single-button apply).
+- Child-friendly install: the PWA install flow must be a single-tap caregiver action with clear Serbian instructions; updates must be simple and transparent (background download + single-button apply). The hub "Преузми ванмрежно" button will also act as an "Ажурирај" button when a newer offline package/manifest is detected; pressing it will download and apply updated assets.
 
 Notes & constraints
 - Do not change game runtime behavior. All changes must be additive and reversible.
