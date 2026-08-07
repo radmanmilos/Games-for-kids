@@ -24,13 +24,55 @@ function playCatSound() {
 
 // Explorer girl death: a girl voice says "Јао!" in Serbian (sr-RS).
 function playGirlHurt() {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance('Јао!');
-    u.lang = 'sr-RS';
-    u.rate = 0.9;
-    u.pitch = 1.1;
-    window.speechSynthesis.speak(u);
+    // Prefer the project's shared pre-generated speech MP3s (speech.speak).
+    try {
+        if (window.speech && typeof window.speech.speak === 'function') {
+            window.speech.speak('Јао!', function () {});
+            return;
+        }
+    } catch (e) { /* fall through */ }
+
+    // If shared speech is not available, try native speechSynthesis.
+    try {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance('Јао!');
+            u.lang = 'sr-RS';
+            u.rate = 0.9;
+            u.pitch = 1.1;
+            window.speechSynthesis.speak(u);
+            return;
+        }
+    } catch (e) {
+        // fall through to WebAudio fallback
+    }
+
+    // WebAudio fallback: short vowel/exclamation synth (best-effort)
+    try {
+        if (!audioCtx) audioCtx = new AudioContext();
+        const now = audioCtx.currentTime;
+        // two-oscillator short exclamation, descending pitch
+        const o1 = audioCtx.createOscillator();
+        const o2 = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        const filt = audioCtx.createBiquadFilter();
+        filt.type = 'bandpass';
+        filt.frequency.value = 800;
+        o1.type = 'sawtooth';
+        o2.type = 'sine';
+        o1.frequency.setValueAtTime(700, now);
+        o1.frequency.exponentialRampToValueAtTime(240, now + 0.35);
+        o2.frequency.setValueAtTime(1200, now);
+        o2.frequency.exponentialRampToValueAtTime(360, now + 0.35);
+        g.gain.setValueAtTime(0.0001, now);
+        g.gain.linearRampToValueAtTime(0.22, now + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+        o1.connect(filt); o2.connect(filt); filt.connect(g); g.connect(audioCtx.destination);
+        o1.start(now); o2.start(now);
+        o1.stop(now + 0.6); o2.stop(now + 0.6);
+    } catch (e) {
+        // Give up silently if audio can't be created.
+    }
 }
 
 function initAudio() {
@@ -39,6 +81,13 @@ function initAudio() {
         if (musicTheme) startMusic(musicTheme);
     }
 }
+
+// Best-effort: resume/init audio on first user pointerdown so music/TTS will work on
+// touch devices without further interaction. This respects browser autoplay rules and
+// provides a single, natural gesture children can perform.
+window.addEventListener('pointerdown', function _firstAudioGesture() {
+    try { initAudio(); if (musicTheme && musicOn) startMusic(musicTheme); } catch (e) { }
+}, { once: true, passive: true });
 
 function playSound(type) {
     if (!audioCtx) return;
@@ -883,6 +932,8 @@ function currentExplorerFrame() {
 function loadWorld() {
     const w = WORLDS[worldOrder[worldPos]];
     theme = w;
+    // Best-effort init so music will start when permitted by the browser.
+    try { initAudio(); } catch (e) { }
     startMusic(w.music);
     document.getElementById('level-num').innerText = worldPos + 1;
     document.getElementById('collect-emoji').innerText = w.collectible;

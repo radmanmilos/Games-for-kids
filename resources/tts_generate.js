@@ -29,6 +29,7 @@ const pairs = [
   ['lopta','Лопта'],['kocka','Коцка'],['kvadar','Квадар'],['valjak','Ваљак'],['kupa','Купа'],['piramida','Пирамида'],
   // numbers: zero + sentences
   ['nula','Нула'],['jedan_pas','Један пас'],['dva_psa','Два пса'],['tri_macke','Три мачке'],
+  ['jao','Јао'],
   ['cetiri_krave','Четири краве'],['pet_slonova','Пет слонова'],['sest_lavova','Шест лавова'],
   ['sedam_pataka','Седам патака'],['osam_konja','Осам коња'],['devet_zaba','Девет жаба'],
   ['deset_svinja','Десет свиња'],

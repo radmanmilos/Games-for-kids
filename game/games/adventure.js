@@ -88,12 +88,13 @@
         }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
+        // Attempt to initialize music early so themes can start on load (best-effort).
+        try { if (window.AdventureMusic) window.AdventureMusic.init(); } catch (e) { /* ignore */ }
 
         function initAudio() {
             if (!window.AdventureMusic || window.AdventureMusic.audioCtx) return;
             try {
                 window.AdventureMusic.init();
-                if (musicTheme) window.AdventureMusic.startTheme(musicTheme, cfg.music, () => paused);
             } catch (error) {
                 // Audio is optional; keep gameplay controls usable when the browser blocks Web Audio.
             }
@@ -293,10 +294,14 @@
                 const w = cfg.levels[wi];
                 const btn = document.createElement('button');
                 btn.className = 'adv-world-btn';
+                // store the world position at creation time so the button remains stable
+                btn.dataset.worldPos = idx;
                 btn.innerHTML = '<span class="adv-w-emoji">' + w.collectible + '</span>' + w.name;
                 btn.addEventListener('click', () => {
-            window.AdventureMusic.play('pop');
-                    worldPos = idx;
+                    try { window.AdventureMusic.play('pop'); } catch (e) {}
+                    const pos = parseInt(btn.dataset.worldPos, 10);
+                    if (!Number.isFinite(pos)) return;
+                    worldPos = pos;
                     coinCount = 0;
                     el('adv-coin-count').textContent = coinCount;
                     closeWorldsMenu();
@@ -324,7 +329,12 @@
         if (worldsClose) worldsClose.addEventListener('click', closeWorldsMenu);
         const musicBtn = el('adv-music-btn');
         if (musicBtn) {
-            musicBtn.addEventListener('click', () => window.AdventureMusic.setOn(!window.AdventureMusic.musicOn));
+            musicBtn.addEventListener('click', () => {
+                window.AdventureMusic.setOn(!window.AdventureMusic.musicOn);
+                // ensure the button UI reflects the current state immediately
+                musicBtn.textContent = window.AdventureMusic.musicOn ? '🔊' : '🔇';
+                musicBtn.classList.toggle('off', !window.AdventureMusic.musicOn);
+            });
             musicBtn.textContent = window.AdventureMusic.musicOn ? '🔊' : '🔇';
             musicBtn.classList.toggle('off', !window.AdventureMusic.musicOn);
         }

@@ -69,7 +69,9 @@
         'Три мачке': 'assets/audio/speech/tri_macke.mp3', 'Четири краве': 'assets/audio/speech/cetiri_krave.mp3',
         'Пет слонова': 'assets/audio/speech/pet_slonova.mp3', 'Шест лавова': 'assets/audio/speech/sest_lavova.mp3',
         'Седам патака': 'assets/audio/speech/sedam_pataka.mp3', 'Осам коња': 'assets/audio/speech/osam_konja.mp3',
-        'Девет жаба': 'assets/audio/speech/devet_zaba.mp3', 'Десет свиња': 'assets/audio/speech/deset_svinja.mp3'
+        'Девет жаба': 'assets/audio/speech/devet_zaba.mp3', 'Десет свиња': 'assets/audio/speech/deset_svinja.mp3',
+        'Јао': 'assets/audio/speech/jao.mp3',
+        'Јао!': 'assets/audio/speech/jao.mp3'
     };
     const speechAudio = new Audio();
     speechAudio.preload = 'none';
