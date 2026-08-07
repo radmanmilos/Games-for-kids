@@ -33,4 +33,13 @@
             setTimeout(() => window.goTo(element.dataset.go), 90);
         });
     });
+
+    // Respect index.html#screen requests so standalone redirect can open a subsection
+    if (location.hash) {
+        const target = location.hash.slice(1);
+        // small delay so DOM settles; navigation.goTo will make the requested screen active
+        setTimeout(() => {
+            try { if (typeof window.goTo === 'function') window.goTo(target); } catch(e) { /* ignore */ }
+        }, 40);
+    }
 }());

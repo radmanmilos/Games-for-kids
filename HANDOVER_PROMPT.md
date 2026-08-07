@@ -8,6 +8,8 @@ This file summarizes the current workspace, conventions, and project state so th
 
 ## Session log — 2026-08-07
 
+> Orientation rule (added 2026-08-07): Do not commit or push without explicit user approval. After any changes to game/, run `tools/sync-docs.sh` and remind the user to commit and push. This file is read at the start of every session.
+
 - Task 74: Completed the full read-only project review. Fixed adventure music toggling and optional Web Audio initialization, made adventure/tracing/driving smoke probes deterministic, and corrected the Phase 5 roadmap plus current validation counts. Full smoke suite and syntax checks pass; `docs/` is synchronized. No commit or push performed.
 
 - Task 91: Fixed Ocean/Space worlds-picker & music toggle (2026-08-07, Radman Milos)

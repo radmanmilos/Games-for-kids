@@ -558,8 +558,13 @@
     backButton.addEventListener('click',()=>{
       if(typeof popSound === 'function') popSound();
       setTimeout(()=>{
-        if(location.pathname.split('/').pop().toLowerCase().replace(/\.html$/,'') === 'animal_puzzle') location.href='../index.html';
-        else if(window.goTo) window.goTo('hub');
+        try{
+          if(window.top !== window && window.top && typeof window.top.goTo === 'function') {
+            window.top.goTo('hub-games');
+          } else {
+            location.href = '../index.html#hub-games';
+          }
+        }catch(_){ location.href = '../index.html#hub-games'; }
       },90);
     });
     drawScene(scenes[0]);
