@@ -18,7 +18,7 @@ Important: The AI assistant and any contributor must read this file first when s
 ## Active tasks (NEW / IN PROGRESS)
 
 - 94. DONE — PWA offline installer: implement a child-friendly offline install & update flow (PWA + SW + ZIP fallback). (2026-09-08, Radman Milos)
-- 95. NEW — Racing Game Stage 1: Foundation & Core Loop — playable vertical slice (road, car, pickups, finish, character/world picker, hub integration).
+- 95. DONE — Racing Game Stage 1: Foundation & Core Loop — playable vertical slice (road, car, pickups, finish, character/world picker, hub integration). (2026-09-08, Radman Milos)
 - 96. NEW — Racing Game Stage 2: Multi-World & Visual Polish — 6-8 themed worlds, distinct pickups, procedural tracks, music.
 - 97. NEW — Racing Game Stage 3: Obstacles & Difficulty — puddles, rocks, barricades that slow the car (no fail state).
 - 98. NEW — Racing Game Stage 4: Full Driver/Car Roster & Progression — Kitty + Girl drivers, 3-4 cars each, persistence.
@@ -112,6 +112,25 @@ Owner & timeline
 ---
 
 ## History (closed tasks, ordered by number)
+
+### 95. DONE — Racing Game Stage 1: Foundation & Core Loop (2026-09-08, Radman Milos)
+
+Playabe vertical slice of Мала тркачица (Little Racer) — an OutRun-style pseudo-3D racing game.
+
+- New files: `game/pages/racing.html`, `game/games/racing.js`, `game/games/racing-config.js`, `tools/racing_smoke.js`.
+- Pseudo-3D road renderer: segment-based trapezoid road (horizon → bottom), sky gradient, grass shoulders, center dashed line — all drawn with canvas.
+- Car (canvas-drawn) fixed at bottom-center; left/right input moves it within road bounds; auto-forward motion with a speed curve (35 → max 65).
+- Pickup system: 🌸 flowers spawn along the road, collide with car → score + pop sound.
+- Finish line: approaches from horizon; crossing it ends the race, shows win modal + 🏁 celebrate + "Браво!".
+- Character picker modal at start (Маца Истраживачица / Истраживачица — reuses existing explorer kitty sprites); single world (Ливада / Meadow) with its own music theme.
+- Hub integration: button added to ИГРЕ sub-hub (`data-go="game-racing"`, 🏎️), navigation route in `shared/navigation.js`, standalone boot in `shared/main.js`.
+- `sw-cache-list.json` regenerated (196 entries, includes racing files).
+- Validation: `node --check` on all new JS; `tools/racing_smoke.js` 13/13 PASS; `tools/hub_smoke.js` ALL PASS. Pre-existing kitty walker test flake and driving boot-string test issue are unrelated to this change (additive only, zero edits to existing game files).
+- New smoke test: `tools/racing_smoke.js` (13 checks — boot, config, picker modal, character select, auto-forward progress, left/right input, clamp, reset, finish, canvas render, hub wiring).
+- Stage 2 (multi-world, procedural tracks, per-world music) is the next task pending user approval.
+- Wrap-up (2026-09-08, Ponytail Lazy Dev, per user "finish wrap-up only"): `tools/sync-docs.sh` run (docs/ mirrors game/ — 197 files); README.md updated (racing files in both structure blocks, ИГРЕ 8→9, new 🏎️ Мала тркачица section); offline package rebuilt with `tools/build_offline.ps1` (`docs/game-offline.zip` = 5,283,255 bytes, contains racing files + fresh `offline-manifest.json`; game/ ↔ docs/ manifests byte-identical). Awaiting user commit/push; Stage 2 not started.
+
+---
 
 ### 92. DONE — Little Explorer: add Serbian "Јао!" speech asset and integrate (2026-08-07, Radman Milos)
 

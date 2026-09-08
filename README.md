@@ -345,6 +345,27 @@ Educational goals:
 
 ---
 
+## 🏎️ Мала тркачица (Little Racer)
+
+Purpose:
+
+An OutRun-style pseudo-3D racing game where the little racer speeds toward the horizon, steers left/right to dodge ahead, and collects the world's pickups.
+
+Gameplay:
+
+- Simulated 3D perspective — the road rushes toward the horizon, the car is fixed at bottom-center, auto-forward motion, left/right steering only.
+- Character picker at start (Маца Истраживачица / Истраживачица, reusing the explorer sprites, task 90).
+- Collect the world's emoji (🌸 flowers in the Ливада world) as the finish line approaches; crossing it celebrates with "Браво!" and a 🏁 win modal.
+- Stage 1 ships one world (Ливада) with its own synthesized music theme; more themed worlds arrive in Stage 2.
+
+Educational goals:
+
+- Timing
+- Motor skills
+- Cause and effect
+
+---
+
 ## 🧩 Animal Scene Puzzle
 
 Purpose:
@@ -459,13 +480,13 @@ Educational goals:
 
 Paper Kitty Adventure has been fully integrated into Petrin svet and the placeholder is gone. The project is now a modular application:
 
-- **Hub landing (task 64, 2026-08-05):** `index.html` opens on the "🌈 Петрин свет" title with two big group tiles — **УЧЕЊЕ first** (icon = 2×2 emoji combo 🏫📝/🎹🎨) then 🎮 **ИГРЕ** (Kitty, Driving, Ocean, Dino, Space, Candy, Memory, Puzzle). Each tile opens that group's sub-hub screen with the round game buttons; a back arrow returns to the landing. УЧЕЊЕ = Classroom, Tracing, Animals, Shapes, Counting, Coloring, Piano.
+- **Hub landing (task 64, 2026-08-05):** `index.html` opens on the "🌈 Петрин свет" title with two big group tiles — **УЧЕЊЕ first** (icon = 2×2 emoji combo 🏫📝/🎹🎨) then 🎮 **ИГРЕ** (Kitty, Driving, Ocean, Dino, Space, Candy, Memory, Puzzle, Racing). Each tile opens that group's sub-hub screen with the round game buttons; a back arrow returns to the landing. УЧЕЊЕ = Classroom, Tracing, Animals, Shapes, Counting, Coloring, Piano.
 - **Kitty Adventure** runs inside the main app screen (embedded `papper_kitty.html`).
 - All other games open as standalone pages launched from the hub.
 - Navigation, audio, speech, and utilities are shared modules.
 - **Accessibility / reduced motion (task 83, 2026-08-07, REVERTED):** the shared `window.reducedMotion()` utility in `shared/utils.js` (JS gates) + `@media (prefers-reduced-motion: reduce)` collapse in `shared/accessibility.css` was implemented then **fully reverted per user decision** — the user's OS has `prefers-reduced-motion: reduce` active, so it stripped the memory card-flip, candy combo/hint/level-up, and obstacle-hit-particle animations that ARE the gameplay feedback for kids. All animations are restored. Two pre-existing task-79 split regressions were fixed along the way: driving's dashed road divider now renders (`roadTopY()` fix) and ocean/space obstacles draw again (restored `cfg.drawObstacle` dispatch).
 
-**Current focus: Phase 5 — GAME polish.** All **fifteen** games are playable. Phase 3's Учионица kids tier and Phase 4's new-game set are complete; Phase 5 focuses on the 8 ИГРЕ games. The 7 УЧЕЊЕ learning apps are out of scope for this phase. See the [Development Roadmap](#development-roadmap) for phase status.
+**Current focus: Phase 5 — New Game: Мала тркачица (Little Racer).** All **sixteen** games are playable. Phase 3's Учионица kids tier and Phase 4's new-game set are complete; the 7 УЧЕЊЕ learning apps are out of scope for this phase. Racing game stages (tasks 95–99) are each approved and built in turn. See the [Development Roadmap](#development-roadmap) for phase status.
 
 ---
 
@@ -502,7 +523,7 @@ Group tile
 
 ↓
 
-Group sub-hub (round game buttons — ИГРЕ 8, УЧЕЊЕ 7)
+Group sub-hub (round game buttons — ИГРЕ 9, УЧЕЊЕ 7)
 
 ↓
 
@@ -726,6 +747,7 @@ pages/
   ocean.html
   dino.html
   space.html
+  racing.html
 
 games/
 shared/
@@ -733,7 +755,7 @@ assets/
 ```
 
 - `index.html` is the hub. It loads every game module and embeds Kitty.
-- The standalone pages (`pages/animals.html`, `pages/shapes.html`, `pages/matching_game.html`, `pages/animal_puzzle.html`, `pages/animal_counting.html`, `pages/animal_memory.html`, `pages/coloring.html`, `pages/classroom.html`, `pages/tracing.html`, `pages/piano.html`, `pages/driving.html`, `pages/ocean.html`, `pages/dino.html`, `pages/space.html`) each load only the modules they need.
+- The standalone pages (`pages/animals.html`, `pages/shapes.html`, `pages/matching_game.html`, `pages/animal_puzzle.html`, `pages/animal_counting.html`, `pages/animal_memory.html`, `pages/coloring.html`, `pages/classroom.html`, `pages/tracing.html`, `pages/piano.html`, `pages/driving.html`, `pages/ocean.html`, `pages/dino.html`, `pages/space.html`, `pages/racing.html`) each load only the modules they need.
 - `papper_kitty.html` is the self-contained Kitty runtime, embedded in the hub via iframe.
 
 ```
@@ -759,6 +781,8 @@ driving.js
 ocean.js
 dino.js
 space.js
+racing.js
+racing-config.js
 ```
 
 ```
@@ -835,6 +859,7 @@ pages/
   ocean.html
   dino.html
   space.html
+  racing.html
 
 games/
 
@@ -858,6 +883,8 @@ driving.js
 ocean.js
 dino.js
 space.js
+racing.js
+racing-config.js
 
 shared/
 

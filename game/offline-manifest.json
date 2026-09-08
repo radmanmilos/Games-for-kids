@@ -104,8 +104,8 @@
                                               "size":  9984
                                           },
     "sw-cache-list.json":  {
-                               "sha256":  "D15AA3E851F4A155B0D97255C4B5CDB8B8D10D65CA99010FFAD85A122957BFA7",
-                               "size":  6278
+                               "sha256":  "AD1FA3AB256400FDE02ABE65CF72A802EA5227E5915F2BE4ADBDC70D84ECBD23",
+                               "size":  6350
                            },
     "assets/audio/speech/zaba.mp3":  {
                                          "sha256":  "F647FCB24F9880C813A1AF6A9FD7DC2682D7E3EC4976C33EBE270C87AE315129",
@@ -219,6 +219,10 @@
                                           "sha256":  "46F85E8377550A6B4C3BB709970CF775D2D9BB5F7F93144F115FFB9F4AF4F5E6",
                                           "size":  7296
                                       },
+    "games/racing-config.js":  {
+                                   "sha256":  "67435E3966472ECABAAEA6D7D2367654A8CE523DA35BB3C2419C2ECDAF827B4F",
+                                   "size":  1793
+                               },
     "assets/icons/icon-192.svg":  {
                                       "sha256":  "F72E3E331AB5C1D51CF322E728ECCD71E7A7F74604EA0493130B9B452B946001",
                                       "size":  637
@@ -256,8 +260,8 @@
                                         "size":  6144
                                     },
     "offline-manifest.json":  {
-                                  "sha256":  "532BE7AD10817705C3D7B6E8C88874ADBEED3A740C4629AFB0A95C59F548D327",
-                                  "size":  48725
+                                  "sha256":  "C817D7FAD644323B5B3B355F21667B4CDC518B15DF86541042841D927927F69B",
+                                  "size":  49381
                               },
     "pages/dino.html":  {
                             "sha256":  "BB214A5C33DFCBEB3707283F986C2D7D40C3C9C4E23692150B516F7D97E98329",
@@ -295,6 +299,10 @@
                                       "sha256":  "529FF5CA8BF8CECA138645E3DCBB90E72F4A22B6F2D21100B89039EB205DF511",
                                       "size":  4800
                                   },
+    "games/racing.js":  {
+                            "sha256":  "32CA942CC96E73A078438B39A86A14CC7EBB857C045B05E7133891BB5BB7476B",
+                            "size":  23814
+                        },
     "assets/audio/speech/dzemper.mp3":  {
                                             "sha256":  "FF284C42A99B0AA5DC3FEF22BE0FCD5AE51A39F2C47B6ABDC8F427782E9BDBD9",
                                             "size":  8256
@@ -459,6 +467,10 @@
                                         "sha256":  "0B2A95D413E385931F174F73C414B24C789CEB7176036C631AD01622127A92E8",
                                         "size":  5952
                                     },
+    "pages/racing.html":  {
+                              "sha256":  "A36CBE886B88CF6AA5DA039552D5978944351E31D430E8ED3A489917CA4E7B4F",
+                              "size":  11153
+                          },
     "assets/audio/speech/valjak.mp3":  {
                                            "sha256":  "448CAD84CD8E47EB63251F7AC5B66ED75EF19C9F51A8FC194B58DDADD92BAF04",
                                            "size":  7296
@@ -472,8 +484,8 @@
                                      "size":  13545
                                  },
     "shared/navigation.js":  {
-                                 "sha256":  "9A66EA07D18B17CA59374AE9DE0B50E62F9841D5FD18DB160F46D14D21D92009",
-                                 "size":  8500
+                                 "sha256":  "02C2DC43BDD2F0AB104A0A28B04A44C2E6C99BBC89A733AEE41EB59FA436212F",
+                                 "size":  8583
                              },
     "assets/audio/speech/s.mp3":  {
                                       "sha256":  "F6E9364CA12D3F216C274BCB2C26C79159D8FCAD2EE05FB30482F4B34A2A7A79",
@@ -612,8 +624,8 @@
                                                 "size":  10368
                                             },
     "index.html":  {
-                       "sha256":  "6A1C827B6C580C2C15B63BB506F69EC91A7FC6394C5C6877915FF602A5FCE127",
-                       "size":  20018
+                       "sha256":  "18F88BFA83258F9E2E73106007208CEB7D2C9B3BBEC40A54A2A512099D1411EE",
+                       "size":  20131
                    },
     "assets/images/explorer/06_idle_right_c.png":  {
                                                        "sha256":  "8000439CFDAA764F0FB75522AEAA79B4EB45962C6AD09D8E4A6C687E984166C1",
@@ -640,8 +652,8 @@
                                                            "size":  81214
                                                        },
     "shared/main.js":  {
-                           "sha256":  "140DF72294FBA191F81F87A6AF089523926A1370BBCEF15D7F8F9F9E9EACE62F",
-                           "size":  3169
+                           "sha256":  "68F9280ABFC2A40E67B61BF2A3E678633979716953F6C44EC1F1346DD950B749",
+                           "size":  3228
                        },
     "assets/audio/speech/cj.mp3":  {
                                        "sha256":  "01FA5375218621D8DBA2A210134BD0363AB0AD0826E1BA6C3CACD8A2C528113B",
