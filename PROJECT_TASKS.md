@@ -17,7 +17,7 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
-- 94. IN PROGRESS — PWA offline installer: implement a child-friendly offline install & update flow (PWA + SW + ZIP fallback). (2026-08-07)
+- 94. DONE — PWA offline installer: implement a child-friendly offline install & update flow (PWA + SW + ZIP fallback). (2026-09-08, Radman Milos)
 
 Task 94 feedback (2026-08-07, Radman Milos): Android test exposed a deployment-path bug: `/game/...` absolute URLs do not work under the GitHub Pages repository subpath, causing “Сервис није још активан”. ZIP extraction also correctly opens only a normal `file://` page; it is not an Android app. Fixed the URLs and documented the ZIP limitation. Validation and rebuild are pending.
 

@@ -6,6 +6,10 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
+## Session log — 2026-09-08
+
+- 2026-09-08 — Task 94 (PWA offline installer) marked DONE per user confirmation that the offline installer is working correctly on Android. The PWA manifest, service worker, hub UI (download/update/ZIP fallback), build script, and caregiver docs are complete. Package `docs/game-offline.zip` (5,338,546 bytes) built and validated locally. Awaiting user commit/push.
+
 ## Session log — 2026-08-07
 
 - 2026-08-07 — Per user request, replaced the installed PWA icon artwork with the same Little Explorer kitty sprite used by the hub game button (`explorer_kitty/01_idle_right.png`), while keeping the download-button thumbnail unchanged. Regenerated valid 192×192 and 512×512 PNG icons. Manifest name/short name remain Serbian Cyrillic `Петрин свет`. Package rebuild and Android icon verification follow.
