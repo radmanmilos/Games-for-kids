@@ -356,7 +356,7 @@ Gameplay:
 - Simulated 3D perspective — the road rushes toward the horizon, the car is fixed at bottom-center, auto-forward motion, left/right steering only.
 - Character picker at start (Маца Истраживачица / Истраживачица, reusing the explorer sprites, task 90).
 - Collect the world's emoji (🌸 flowers in the Ливада world) as the finish line approaches; crossing it celebrates with "Браво!" and a 🏁 win modal.
-- Stage 1 ships one world (Ливада) with its own synthesized music theme; more themed worlds arrive in Stage 2.
+- Stage 1 ships one world (Ливада) with its own synthesized music theme; more themed worlds arrive in Stage 2. (Stage 1 committed as `4e028b4`; Stage 2 IN PROGRESS — task 96.)
 
 Educational goals:
 
@@ -1104,7 +1104,7 @@ Built so far from this list: **Писање (Tracing)** (task 53), **Возил�
 **Stages (each a separate task, user approval per stage):**
 
 - **Task 95 — Stage 1: Foundation & Core Loop** — Playable vertical slice: straight road, car movement, one world (Meadow), pickups, finish line, celebration, character/world picker modals, hub integration.
-- **Task 96 — Stage 2: Multi-World & Visual Polish** — 6-8 themed worlds (Meadow, Beach, Snow, Candy, Jungle, Space, Night, Farm), distinct pickups/side decorations, procedural curved/hilly tracks, per-world music (reusing adventure engine music system).
+- **Task 96 — Stage 2: Multi-World & Visual Polish** — 6-8 themed worlds (Meadow, Beach, Snow, Candy, Jungle, Space, Night, Farm), distinct pickups/side decorations, procedural curved/hilly tracks, per-world music (reusing adventure engine music system). **IN PROGRESS (2026-09-08).** User play-test feedback folded into Stage 2 scope: wider/more interesting road, cool curves, more interesting world, pickups growing as they approach the car.
 - **Task 97 — Stage 3: Obstacles & Difficulty** — Slippery puddles, breaking rocks, barricades that briefly slow the car. Forgiving, no fail state. Visual/audio feedback.
 - **Task 98 — Stage 4: Full Driver/Car Roster & Progression** — Kitty + Girl drivers (reuse explorer sprites), 3-4 cars each with subtle cosmetic stats, localStorage persistence, restart/change flow.
 - **Task 99 — Stage 5: Polish & Accessibility** — Countdown sequence, engine hum, road line animation, pickup particles, ARIA labels, reduced-motion safe, large touch zones, landscape hint.

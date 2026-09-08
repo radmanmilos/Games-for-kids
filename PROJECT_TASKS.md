@@ -19,7 +19,8 @@ Important: The AI assistant and any contributor must read this file first when s
 
 - 94. DONE — PWA offline installer: implement a child-friendly offline install & update flow (PWA + SW + ZIP fallback). (2026-09-08, Radman Milos)
 - 95. DONE — Racing Game Stage 1: Foundation & Core Loop — playable vertical slice (road, car, pickups, finish, character/world picker, hub integration). (2026-09-08, Radman Milos)
-- 96. NEW — Racing Game Stage 2: Multi-World & Visual Polish — 6-8 themed worlds, distinct pickups, procedural tracks, music.
+- 96. IN PROGRESS — Racing Game Stage 2: Multi-World & Visual Polish — 6-8 themed worlds, distinct pickups, procedural tracks, music. (Started 2026-09-08 per user "commit and sync this so far and start phase 2 execution with this comments added to it as part of refactoring within phase 2".)
+   - Stage 1 committed as `4e028b4` (24 files: game/pages/racing.html + game/games/racing.js + racing-config.js, docs/ sync, offline pack; includes the drawRoad camera-fixed-segments + scrolling-dash fix). User play-test feedback folded into Stage 2 scope: **road too narrow and not interesting; no cool curves; world boring; pickups must start small and grow larger as they approach the car**.
 - 97. NEW — Racing Game Stage 3: Obstacles & Difficulty — puddles, rocks, barricades that slow the car (no fail state).
 - 98. NEW — Racing Game Stage 4: Full Driver/Car Roster & Progression — Kitty + Girl drivers, 3-4 cars each, persistence.
 - 99. NEW — Racing Game Stage 5: Polish & Accessibility — countdown, engine sound, particles, ARIA, reduced-motion safe, tablet-first.
