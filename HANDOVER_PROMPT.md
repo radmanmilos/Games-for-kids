@@ -88,7 +88,30 @@ Working rules (short)
 - Update `PROJECT_TASKS.md` when starting/completing tasks and leave a short note.
 - Never add ads, analytics, tracking, or monetization. Offline-first, tablet-first, toddler-friendly.
 
-Current state (as of 2026-08-07)
+Current state (as of 2026-09-08)
+
+- **Task 94 (PWA offline installer, DONE 2026-09-08):** User confirmed the offline installer works correctly on Android. PWA manifest, service worker, hub UI (download/update/ZIP fallback), build script, and caregiver docs complete. Package `docs/game-offline.zip` (5,338,546 bytes) built and validated locally. `docs/` mirrored from `game/`. Awaiting user commit/push.
+
+- **Phase 5 REDEFINED (2026-09-08, user decision):** New Phase 5 = build a pseudo-3D racing game **"Мала тркачица" (Little Racer)** in 5 stages. Previous Phase 5 polish backlog moved to Phase 6. УЧЕЊЕ learning apps remain out of scope.
+
+  **Racing Game Plan:** `RACING_GAME_PLAN.md` (full detail). Summary:
+  - OutRun-style simulated 3D: road scales to horizon, car fixed bottom-center, left/right input only, auto-forward
+  - Cute aesthetic matching Kitty Explorer (Fredoka, cream/plum/pastel)
+  - Character picker: Kitty (explorer kitty) + Girl (explorer girl) — reuse existing sprites
+  - Car selection: 3-4 cute vehicles per driver
+  - Worlds: 6-8 themed (Meadow, Beach, Snow, Candy, Jungle, Space, Night, Farm) with unique pickups
+  - Pickups: theme-specific collectibles along road (flowers, shells, snowflakes, candy, gems, stars, moons, carrots)
+  - Obstacles (Stage 3): puddles, rocks, barricades — slowdown only, no fail state
+  - Music: reuse adventure engine music system (32-step melody + 16-beat bass + ambient per world)
+  - Max reuse: shared/navigation.js, audio.js, speech.js, utils.js, celebration.js, accessibility.css, Fredoka fonts, Kitty driver sprites, adventure music system, headless.js harness
+  - Zero edits to existing game files; additive only
+
+  **Stages (each a task, user approval per stage):**
+  - Task 95 — Stage 1: Foundation & Core Loop (vertical slice: road, car, 1 world, pickups, finish, pickers, hub)
+  - Task 96 — Stage 2: Multi-World & Visual Polish (6-8 worlds, procedural tracks, per-world music/pickups/decor)
+  - Task 97 — Stage 3: Obstacles & Difficulty (puddles, rocks, barricades with forgiving slowdown)
+  - Task 98 — Stage 4: Full Driver/Car Roster & Progression (all combos, localStorage persistence)
+  - Task 99 — Stage 5: Polish & Accessibility (countdown, engine sound, particles, ARIA, reduced-motion, tablet-first)
 
 - **Task 90 (Little Explorer character picker, DONE 2026-08-07):** `papper_kitty.html` + `kitty-standalone.js` now show a character picker modal at every launch (per user): **Маца Истраживачица** (new explorer kitty, default) or **Истраживачица** (old explorer girl). New kitty sprites shipped in `game/assets/images/explorer_kitty/` (6 frames, source 273×334, 22px bottom gap → srcH 312; old girl 237×352 → srcH 329); loader switched from hard-coded dims to a per-character `CHARACTERS` map; boot is gated on `chooseCharacter(id)`. **Death sounds are now character-aware** (user addition): kitty → `assets/audio/cat.ogg` (lazy `Audio`), girl → speechSynthesis "Јао!" (`sr-RS`, no shared/speech.js in this page); both go through `playHurtSound()`. Hub button in `index.html` now shows the kitty's `01_idle_right.png`. Validated: `node tools/kitty_smoke.js` (30/30 PASS incl. new task90 checks + 53×60 kitty frames) + `node tools/hub_smoke.js` ALL PASS. Docs mirror verified synchronized. Committed & pushed by Radman Milos on 2026-08-07; on-device checks completed.
 

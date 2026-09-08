@@ -1068,51 +1068,27 @@ Built so far from this list: **Писање (Tracing)** (task 53), **Возил�
 
 ---
 
-## Phase 5 — Game polish (was Phase 4; refocused 2026-08-05)
+## Phase 5 — New Game: Мала тркачица (Little Racer) (2026-09-08)
 
-**Focus (user decision 2026-08-05): the 8 ИГРЕ games only** (Paper Kitty, Driving, Ocean, Dino, Space, Candy, Memory, Puzzle). The УЧЕЊЕ learning apps (Classroom, Tracing, Animals, Shapes, Counting, Coloring, Piano) are **out of scope** this phase. Workflow rule: the assistant proposes a task per game, then **asks the user what to add/change before executing** any of them.
+**Focus (user decision 2026-09-08):** Build a pseudo-3D racing game (OutRun-style) in 5 stages. The previous Phase 5 polish backlog for the 8 ИГРЕ games is moved to Phase 6. УЧЕЊЕ learning apps remain out of scope.
 
-Registered tasks (one per game, see PROJECT_TASKS): Memory (65 — progress + "Пар!" popup + moves counter), Candy (66 — level milestones), Puzzle (67 — more scenes + finish sparkle), Kitty (68 — level-pacing re-tune), adventure games (69 — speed/density/length tuning).
+**Game Concept:** Cute, child-friendly racing game with simulated 3D perspective (road moves toward horizon, car fixed at bottom-center). Left/Right controls only. Auto-forward motion. Theme-based worlds with unique pickups. Character picker (Kitty/Girl drivers + multiple cars). Obstacles added in later stages (puddles, rocks, barricades — slowdown only, no fail state).
 
-Improve:
+**Stages (each a separate task, user approval per stage):**
 
-- Animations
-- Sound effects
-- Screen transitions
-- Reward system
-- Unlockable stickers
-- Additional mini-games
+- **Task 95 — Stage 1: Foundation & Core Loop** — Playable vertical slice: straight road, car movement, one world (Meadow), pickups, finish line, celebration, character/world picker modals, hub integration.
+- **Task 96 — Stage 2: Multi-World & Visual Polish** — 6-8 themed worlds (Meadow, Beach, Snow, Candy, Jungle, Space, Night, Farm), distinct pickups/side decorations, procedural curved/hilly tracks, per-world music (reusing adventure engine music system).
+- **Task 97 — Stage 3: Obstacles & Difficulty** — Slippery puddles, breaking rocks, barricades that briefly slow the car. Forgiving, no fail state. Visual/audio feedback.
+- **Task 98 — Stage 4: Full Driver/Car Roster & Progression** — Kitty + Girl drivers (reuse explorer sprites), 3-4 cars each with subtle cosmetic stats, localStorage persistence, restart/change flow.
+- **Task 99 — Stage 5: Polish & Accessibility** — Countdown sequence, engine hum, road line animation, pickup particles, ARIA labels, reduced-motion safe, large touch zones, landscape hint.
 
-### Polish backlog (candidate items)
+**Reuse Strategy:** Maximum reuse of existing systems — `shared/navigation.js`, `shared/audio.js`, `shared/speech.js`, `shared/utils.js`, `shared/celebration.js`, `shared/accessibility.css`, Fredoka fonts, Kitty Explorer driver sprites, adventure engine music system, `tools/headless.js` harness pattern. Zero edits to existing game files.
 
-Shared (all done 2026-08-02):
-
-- Play a soft click sound on every navigation (hub buttons, back, next) — **DONE** (task 23).
-- Use the shared speech helper for vocabulary where missing: Animals should speak the animal name, Shapes the shape name, Counting the number, Memory the animal on flip — **DONE** (task 24/27/28).
-- Consistent celebration feedback (celebrate overlay + pop/chime) across all games — **DONE** (task 25).
-- Remove unused legacy audio files in `game/assets/audio/` — **DONE** (task 26).
-
-Per game:
-
-- Animals: speak the animal name on tap; roster expanded with Fox, Sheep, Horse, Chicken — **DONE** (task 27).
-- Shape Match: speak the shape name on correct placement — **DONE** (task 28).
-- Match Game (candy): streak/combo flourish on cascading matches — **DONE** (task 29).
-- Paper Kitty: pause the animation loop when the screen or tab is hidden — **DONE** (task 30); tuning level pacing still open.
-- Animal Scene Puzzle: more scenes + 2×2/3×3 grid — **DONE** (task 31; jigsaw-shaped pieces rejected by user, deferred).
-- Animal Counting: speak the number aloud; more levels; bigger celebration — **DONE** (task 32).
-- Animal Memory: flip sound and spoken animal name; optional difficulty (fewer pairs); prettier card back — **DONE** (task 33: flip sound + paw-print card back; difficulty deferred by user). Animal sound + name speech now fire **only on matched pairs**, not on every flip (task 46, 2026-08-03).
-- Coloring: show scene progress (e.g. "Животиња 3 од 12") and a sticker/reward when all 12 are done; human visual pass on the 12 scenes — **DONE** (task 34: randomized order, "Животиња N од 12" progress, all-12 🏅 reward with restart; ref + coloring images enlarged via side-by-side layout; smallest paint regions enlarged; human visual pass still recommended).
-
-Big-ticket (deferred to a later phase 2026-08-03):
-
-- Reward system with unlockable stickers — deferred (task 35).
-- Screen transitions between hub and games — deferred (task 36).
-
-Open items in Phase 5:
-
-- Visual pass on the 12 coloring scenes (task 51 redraw) — screenshots in `resources/coloring-redraw/*.png`; review with MiMo V2.5 Free.
+**Validation:** New `tools/racing_smoke.js` per stage; full regression suite after each stage.
 
 ---
+
+## Phase 6 — Game Polish (moved from Phase 5)
 
 # Long-Term Vision
 

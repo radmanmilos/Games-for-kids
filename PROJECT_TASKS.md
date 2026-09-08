@@ -11,13 +11,18 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Phase note
 
-**Phase 5 = GAME polish** (2026-08-05, user decision): focus is the 8 ИГРЕ games only — УЧЕЊЕ learning apps (Classroom, Tracing, Animals, Shapes, Counting, Coloring, Piano) are OUT of scope this phase. User rule: before executing ANY task in this phase, ask the user what they would add or change first, then implement after approval.
+**Phase 5 = New Game: Мала тркачица (Little Racer)** (2026-09-08, user decision): focus is building a pseudo-3D racing game (OutRun-style) in stages. The previous Phase 5 polish backlog for the 8 ИГРЕ games is moved to Phase 6. УЧЕЊЕ learning apps remain out of scope. Workflow rule: each stage is a separate task; user approves plan, then each stage is proposed and approved before execution.
 
 ---
 
 ## Active tasks (NEW / IN PROGRESS)
 
 - 94. DONE — PWA offline installer: implement a child-friendly offline install & update flow (PWA + SW + ZIP fallback). (2026-09-08, Radman Milos)
+- 95. NEW — Racing Game Stage 1: Foundation & Core Loop — playable vertical slice (road, car, pickups, finish, character/world picker, hub integration).
+- 96. NEW — Racing Game Stage 2: Multi-World & Visual Polish — 6-8 themed worlds, distinct pickups, procedural tracks, music.
+- 97. NEW — Racing Game Stage 3: Obstacles & Difficulty — puddles, rocks, barricades that slow the car (no fail state).
+- 98. NEW — Racing Game Stage 4: Full Driver/Car Roster & Progression — Kitty + Girl drivers, 3-4 cars each, persistence.
+- 99. NEW — Racing Game Stage 5: Polish & Accessibility — countdown, engine sound, particles, ARIA, reduced-motion safe, tablet-first.
 
 Task 94 feedback (2026-08-07, Radman Milos): Android test exposed a deployment-path bug: `/game/...` absolute URLs do not work under the GitHub Pages repository subpath, causing “Сервис није још активан”. ZIP extraction also correctly opens only a normal `file://` page; it is not an Android app. Fixed the URLs and documented the ZIP limitation. Validation and rebuild are pending.
 
