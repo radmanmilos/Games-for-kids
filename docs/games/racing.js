@@ -30,9 +30,70 @@
     let gameReady = false;
     let keys = { left: false, right: false };
     let pickupCount = 0;
+    let obstacles = [];
+    let slowdown = null;
+    let puffs = [];
+    let shake = 0;
     let roadOffset = 0;
     let running = false;
     let lastTimestamp = 0;
+    let finishRecorded = false;
+
+    const SAVE_KEY = 'racingSave';
+    const UNLOCK_WINS = cfg.unlockWins || [0, 2, 4, 7];
+
+    function defaultSave() {
+        return {
+            char: cfg.characters[0].id,
+            car: cfg.characters[0].cars[0].id,
+            world: cfg.worlds[0].key,
+            wins: 0
+        };
+    }
+
+    function loadSave() {
+        try {
+            const raw = localStorage.getItem(SAVE_KEY);
+            if (!raw) return defaultSave();
+            const s = JSON.parse(raw);
+            if (!s || typeof s.char !== 'string') return defaultSave();
+            const ch = cfg.characters.find(c => c.id === s.char) || cfg.characters[0];
+            const car = (ch.cars || []).find(c => c.id === s.car) || ch.cars[0];
+            const world = cfg.worlds.find(w => w.key === s.world) || cfg.worlds[0];
+            return { char: ch.id, car: car.id, world: world.key, wins: Math.max(0, s.wins | 0) };
+        } catch (e) {
+            return defaultSave();
+        }
+    }
+
+    let save = loadSave();
+
+    function persistSave() {
+        try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* private mode: ignore */ }
+    }
+
+    function applySave() {
+        const ch = cfg.characters.find(c => c.id === save.char) || cfg.characters[0];
+        selectedCharacter = ch;
+        selectedCar = (ch.cars || []).find(c => c.id === save.car) || ch.cars[0] || null;
+        currentWorld = cfg.worlds.find(w => w.key === save.world) || cfg.worlds[0];
+    }
+
+    function carIndex(ch, carId) {
+        const cars = (ch && ch.cars) || [];
+        for (let i = 0; i < cars.length; i++) if (cars[i].id === carId) return i;
+        return -1;
+    }
+
+    function isUnlocked(ch, carId) {
+        const i = carIndex(ch, carId);
+        return i >= 0 && save.wins >= (UNLOCK_WINS[i] || 0);
+    }
+
+    function unlockedCars(ch) {
+        const cars = (ch && ch.cars) || [];
+        return cars.filter(c => isUnlocked(ch, c.id));
+    }
 
     const SEG_LEN = 30;
     const STEER_SPEED = 300;
@@ -509,6 +570,135 @@
         }
     }
 
+    function initObstacles() {
+        obstacles.length = 0;
+        const rng = mulberry32((currentWorld.curveSeed || 2026) * 104729 + 7);
+        const types = currentWorld.obstacleTypes || ['puddle'];
+        const density = currentWorld.obstacleDensity || 0.006;
+        const step = 1 / density;
+        let d = 600 + rng() * 300;
+        let last = 0;
+        while (d < finishLineDist - 400) {
+            if (d - last >= 140) {
+                let lane = rng() < 0.5 ? -1 : 1;
+                for (let i = 0; i < pickups.length; i++) {
+                    if (Math.abs(pickups[i].dist - d) < 60) { lane = -pickups[i].lane; break; }
+                }
+                const type = types[Math.floor(rng() * types.length)];
+                obstacles.push({ dist: d, lane: lane, type: type, hitCd: 0 });
+                last = d;
+            }
+            d += step * (0.7 + rng() * 0.6);
+        }
+    }
+
+    function drawObstacles() {
+        obstacles.forEach(o => {
+            const screenDist = o.dist - progress;
+            if (screenDist < 0 || screenDist > VISIBLE_DIST || screenDist < SEG_DIST * 0.6) return;
+            const scale = screenDist / VISIBLE_DIST;
+            const y = ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * scale);
+            if (y > ROAD_BOTTOM_Y || y < HORIZON_Y) return;
+            const w = projectW(screenDist);
+            const x = roadCenterX(screenDist) + o.lane * w * 0.32;
+            const t = cfg.obstacleTypes[o.type];
+            const size = pickupScreenSize(screenDist) * 1.25;
+            if (size < 8) return;
+            ctx.font = size + 'px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(t.emoji, x, y);
+            ctx.font = '';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'alphabetic';
+        });
+    }
+
+    function addPuff(x, y) {
+        for (let i = 0; i < 6; i++) {
+            puffs.push({
+                x: x, y: y,
+                vx: (Math.random() * 2 - 1) * 40,
+                vy: -40 - Math.random() * 60,
+                life: 380,
+                r: 3 + Math.random() * 4
+            });
+        }
+    }
+
+    function updatePuffs(dt) {
+        for (let i = puffs.length - 1; i >= 0; i--) {
+            const p = puffs[i];
+            p.life -= dt;
+            if (p.life <= 0) { puffs.splice(i, 1); continue; }
+            p.x += p.vx * (dt / 1000);
+            p.y += p.vy * (dt / 1000);
+            p.vy -= 140 * (dt / 1000);
+        }
+    }
+
+    function playThud() {
+        if (!audioCtx) return;
+        const t = audioCtx.currentTime;
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.connect(g); g.connect(audioCtx.destination);
+        o.type = 'sine';
+        o.frequency.setValueAtTime(150, t);
+        o.frequency.exponentialRampToValueAtTime(55, t + 0.22);
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.16, t + 0.015);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+        o.start(t); o.stop(t + 0.26);
+    }
+
+    function triggerObstacle(type, obs) {
+        const o = cfg.obstacleTypes[type];
+        if (!o) return;
+        const t = performance.now();
+        if (slowdown && slowdown.type === type && slowdown.remaining > 0 && t - slowdown.hitAt < 800) return;
+        slowdown = { type: type, remaining: o.duration, hitAt: t };
+        speed = speed * o.speedMult;
+        shake = 1;
+        playThud();
+        if (type === 'barricade') {
+            progress = Math.max(0, progress - 50);
+        }
+        if (type === 'rock' && obs) {
+            const screenDist = obs.dist - progress;
+            const w = projectW(screenDist);
+            addPuff(roadCenterX(screenDist) + obs.lane * w * 0.32, ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * screenDist / VISIBLE_DIST));
+            const idx = obstacles.indexOf(obs);
+            if (idx >= 0) obstacles.splice(idx, 1);
+        }
+    }
+
+    function updateObstacles(dt) {
+        if (slowdown) {
+            slowdown.remaining -= dt;
+            if (slowdown.remaining <= 0) {
+                slowdown = null;
+                speed = Math.max(speed, cfg.startSpeed);
+            }
+        }
+        if (shake > 0) shake = Math.max(0, shake - dt / 250);
+        const carDepthY = ROAD_BOTTOM_Y - cfg.carHeight * 0.82;
+        obstacles.forEach(o => {
+            if (o.hitCd > 0) { o.hitCd = Math.max(0, o.hitCd - dt); return; }
+            const screenDist = o.dist - progress;
+            if (screenDist < 0 || screenDist > VISIBLE_DIST) return;
+            const scale = screenDist / VISIBLE_DIST;
+            const y = ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * scale);
+            const w = projectW(screenDist);
+            const x = roadCenterX(screenDist) + o.lane * w * 0.32;
+            const size = pickupScreenSize(screenDist) * 1.25;
+            if (Math.abs(x - carX) < (cfg.carWidth / 2 + size / 2) &&
+                y > carDepthY - size && y < carDepthY + size) {
+                o.hitCd = 600;
+                triggerObstacle(o.type, o);
+            }
+        });
+    }
+
     function initDecor() {
         decors.length = 0;
         const rng = mulberry32((currentWorld.curveSeed || 2026) * 7919 + 13);
@@ -640,13 +830,30 @@
     }
 
     function finishRace() {
+        if (finishRecorded) return;
+        finishRecorded = true;
         stopMusic();
         const modal = document.getElementById('racing-win-modal');
         const title = document.getElementById('racing-win-title');
         const scoreEl = document.getElementById('racing-win-score');
+        const unlockEl = document.getElementById('racing-win-unlock');
+        save.wins++;
+        persistSave();
         if (modal) modal.classList.add('show');
         if (title) title.textContent = 'Игра завршена!';
-        if (scoreEl) scoreEl.textContent = 'Поени: ' + score + '  ·  ' + cap(currentWorld.collectibleName) + ': ' + pickupCount;
+        if (scoreEl) scoreEl.textContent = 'ПОЕНИ: ' + score + '  ·  ' + cap(currentWorld.collectibleName) + ': ' + pickupCount + '  ·  🏆 Трке: ' + save.wins;
+        if (unlockEl) {
+            const ch = selectedCharacter;
+            const idx = carIndex(ch, selectedCar.id);
+            const newly = (ch.cars || []).filter((c, i) => i > idx && UNLOCK_WINS[i] === save.wins);
+            if (newly.length) {
+                const c = newly[0];
+                unlockEl.textContent = '🎉 НОВО: ' + c.name + ' ' + c.emoji + '!';
+                if (window.speech && window.speech.speak) window.speech.cancel();
+            } else {
+                unlockEl.textContent = '';
+            }
+        }
         if (window.celebrate) window.celebrate('🏁');
         if (window.speech && window.speech.speak) {
             window.speech.cancel();
@@ -660,12 +867,17 @@
         score = 0;
         pickupCount = 0;
         raceFinished = false;
+        finishRecorded = false;
         carX = ROAD_CENTER;
         keys.left = false;
         keys.right = false;
+        slowdown = null;
+        puffs.length = 0;
+        shake = 0;
         finishLineDist = currentWorld.goal;
         initCurve();
         initPickups();
+        initObstacles();
         initDecor();
         const modal = document.getElementById('racing-win-modal');
         if (modal) modal.classList.remove('show');
@@ -677,27 +889,46 @@
 
         const sec = dt / 1000;
         const steer = (selectedCar && selectedCar.steer) || STEER_SPEED;
+        const mult = slowdown ? (cfg.obstacleTypes[slowdown.type].speedMult || 0) : 1;
 
         if (keys.left) carX -= steer * sec;
         if (keys.right) carX += steer * sec;
 
         carX = Math.max(ROAD_CENTER - MAX_LATERAL, Math.min(ROAD_CENTER + MAX_LATERAL, carX));
 
-        progress += speed * sec;
-        speed = Math.min((selectedCar && selectedCar.maxSpeed) || maxSpeed, speed + cfg.speedGrowth * sec);
+        progress += speed * mult * sec;
+        const accel = ((selectedCar && selectedCar.accel) || 1) * mult;
+        speed = Math.min((selectedCar && selectedCar.maxSpeed) || maxSpeed, speed + cfg.speedGrowth * sec * accel);
 
+        updateObstacles(dt);
+        updatePuffs(dt);
         updatePickups();
         checkFinish();
     }
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        if (shake > 0) {
+            ctx.translate((Math.random() * 2 - 1) * 6 * shake, (Math.random() * 2 - 1) * 4 * shake);
+        }
         drawRoad();
         drawDecor();
         drawPickups();
+        drawObstacles();
         drawFinishLine();
 
         drawCar(carX, ROAD_BOTTOM_Y - cfg.carHeight, selectedCharacter);
+
+        puffs.forEach(p => {
+            ctx.globalAlpha = Math.max(0, Math.min(1, p.life / 380));
+            ctx.fillStyle = '#E8DCC8';
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+        ctx.restore();
 
         const scoreEl = document.getElementById('racing-score');
         if (scoreEl && scoreEl.textContent !== 'Поени: ' + score) {
@@ -740,9 +971,12 @@
 
     window.startRacing = function () {
         if (window.__racing) return;
+        applySave();
+        finishLineDist = currentWorld.goal;
         initCurve();
         loadFrames();
         initPickups();
+        initObstacles();
         window.__racing = {
             config: cfg,
             progress: () => progress,
@@ -761,6 +995,17 @@
             roadCenterX: roadCenterX,
             offs: () => offs,
             pickupSizeAt: pickupScreenSize,
+            obstacles: () => obstacles,
+            obstacleTypes: () => cfg.obstacleTypes,
+            slowdownState: () => slowdown,
+            triggerObstacle: triggerObstacle,
+            shake: () => shake,
+            selection: () => ({ char: selectedCharacter.id, car: (selectedCar && selectedCar.id) || null, world: currentWorld.key }),
+            wins: () => save.wins,
+            isUnlocked: (chId, carId) => isUnlocked(cfg.characters.find(c => c.id === chId), carId),
+            unlockWins: () => UNLOCK_WINS,
+            saveState: () => JSON.parse(JSON.stringify(loadSave())),
+            finishRace: finishRace,
             startGame: startGame,
             restart: restart,
             keys: keys,
@@ -788,22 +1033,45 @@
         if (!modal) return;
         const grid = document.getElementById('racing-char-grid');
         if (!grid) return;
+        const stats = document.getElementById('racing-char-stats');
+        if (stats) stats.textContent = '🏆 Завршене трке: ' + save.wins;
         grid.innerHTML = '';
+        const selectedKey = selectedCharacter.id + '/' + ((selectedCar && selectedCar.id) || '');
         cfg.characters.forEach(ch => {
-            const btn = document.createElement('button');
-            btn.className = 'racing-char-btn';
-            btn.dataset.character = ch.id;
-            btn.innerHTML = '<img src="../assets/images/' + ch.folder + '01_idle_right.png" alt="' + ch.name + '"><span>' + ch.name + '</span>';
-            btn.addEventListener('click', () => {
-                window.popSound && window.popSound();
-                selectedCharacter = ch;
-                selectedCar = (ch.cars && ch.cars[0]) || null;
-                currentWorld = cfg.worlds[0];
-                carX = ROAD_CENTER;
-                modal.classList.remove('show');
-                restart();
+            (ch.cars || []).forEach(car => {
+                const key = ch.id + '/' + car.id;
+                const locked = !isUnlocked(ch, car.id);
+                const need = UNLOCK_WINS[carIndex(ch, car.id)] || 0;
+                const btn = document.createElement('button');
+                btn.className = 'racing-char-btn' + (key === selectedKey ? ' selected' : '') + (locked ? ' locked' : '');
+                btn.dataset.combo = key;
+                btn.setAttribute('role', 'option');
+                btn.setAttribute('aria-selected', key === selectedKey ? 'true' : 'false');
+                if (locked) btn.setAttribute('aria-disabled', 'true');
+                btn.innerHTML =
+                    '<span class="racing-combo-face"><img src="../assets/images/' + ch.folder + '01_idle_right.png" alt=""><em>' +
+                    car.emoji + '</em></span>' +
+                    '<span class="racing-combo-name">' + car.name + '</span>' +
+                    '<span class="racing-combo-driver">' + (ch.short || ch.name) + '</span>' +
+                    (locked ? '<span class="racing-combo-lock">🔒 ' + need + ' победе</span>' : '');
+                btn.addEventListener('click', () => {
+                    if (locked) {
+                        window.popSound && window.popSound();
+                        return;
+                    }
+                    window.popSound && window.popSound();
+                    save.char = ch.id;
+                    save.car = car.id;
+                    save.world = currentWorld.key;
+                    persistSave();
+                    selectedCharacter = ch;
+                    selectedCar = car;
+                    carX = ROAD_CENTER;
+                    modal.classList.remove('show');
+                    restart();
+                });
+                grid.appendChild(btn);
             });
-            grid.appendChild(btn);
         });
         modal.classList.add('show');
     }
@@ -823,6 +1091,8 @@
             btn.addEventListener('click', () => {
                 window.popSound && window.popSound();
                 currentWorld = w;
+                save.world = w.key;
+                persistSave();
                 document.getElementById('racing-world-name').textContent = currentWorld.name;
                 modal.classList.remove('show');
                 restart();

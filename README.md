@@ -359,7 +359,8 @@ Gameplay:
 - Collect the world's emoji (🌸 flowers in the Ливада world) as the finish line approaches; pickups start small in the distance and grow as you reach them. Crossing the finish celebrates with "Браво!" and a 🏁 win modal.
 - 8 themed worlds (Ливада, Плажа, Снег, Слаткиш, Џунгла, Свемир, Ноћ, Фарма) selectable mid-game via the 🌍 button — each with its own pickups (🌸🐚❄️🍭💎⭐🌙🥕), palette, track curves, roadside decorations, goal, and synthesized music theme (+ per-world ambience).
 - HUD: score and world-name pills, a pickup counter using the world's collectible name, and a progress bar toward the finish line.
-- Stage 2 (tasks 96, stages 2.1–2.4) done: wide curved road, 8 worlds with decor + per-world music, HUD; Stages 3–5 pending — obstacles/difficulty, full car-roster picker + persistence, polish/accessibility. (Stage 1 committed as `4e028b4`; Stage 2 uncommitted.)
+- Obstacles (Stage 3, task 97): puddles 💧, rocks 🪨 and barricades 🚧 spawned along the track slow the car briefly — no fail state, always a free lane to dodge into. Puddles halve speed for 1.5s, rocks stop the car for 0.5s then crumble away in a puff, barricades knock the car back ~50 units and slow it; each hit shakes the screen gently and plays a soft thud. Per-world density (meadow/candy lightest, jungle/night/farm densest) and obstacle types.
+- Stages done: 1 (foundation) + 2 (wide curved road, 8 worlds with decor + per-world music, HUD) + 3 (obstacles/difficulty) + 4 (full car roster, unlocking progression, localStorage persistence); Stage 5 polish/accessibility pending. (Stage 1 committed as `4e028b4`.)
 
 Educational goals:
 
@@ -1108,9 +1109,9 @@ Built so far from this list: **Писање (Tracing)** (task 53), **Возил�
 
 - **Task 95 — Stage 1: Foundation & Core Loop** — Playable vertical slice: straight road, car movement, one world (Meadow), pickups, finish line, celebration, character/world picker modals, hub integration.
 - **Task 96 — Stage 2: Multi-World & Visual Polish** — 6-8 themed worlds (Meadow, Beach, Snow, Candy, Jungle, Space, Night, Farm), distinct pickups/side decorations, procedural curved/hilly tracks, per-world music (reusing adventure engine music system). **IN PROGRESS (2026-09-08).** User play-test feedback folded into Stage 2 scope: wider/more interesting road, cool curves, more interesting world, pickups growing as they approach the car.
-- **Task 97 — Stage 3: Obstacles & Difficulty** — Slippery puddles, breaking rocks, barricades that briefly slow the car. Forgiving, no fail state. Visual/audio feedback.
-- **Task 98 — Stage 4: Full Driver/Car Roster & Progression** — Kitty + Girl drivers (reuse explorer sprites), 3-4 cars each with subtle cosmetic stats, localStorage persistence, restart/change flow.
-- **Task 99 — Stage 5: Polish & Accessibility** — Countdown sequence, engine hum, road line animation, pickup particles, ARIA labels, reduced-motion safe, large touch zones, landscape hint.
+- **Task 97 — Stage 3: Obstacles & Difficulty** — Slippery puddles, breaking rocks, barricades that briefly slow the car. Forgiving, no fail state. Visual/audio feedback. **DONE (2026-09-09**, `racing_smoke.js` 23/23 PASS).
+- **Task 98 — Stage 4: Full Driver/Car Roster & Progression** — Kitty + Girl drivers (reuse explorer sprites), 3-4 cars each with subtle cosmetic stats, localStorage persistence, restart/change flow. **DONE (2026-09-09**, `racing_smoke.js` 31/31 PASS; progression = unlock thresholds `[0,2,4,7]` finished races).
+- **Task 99 — Stage 5: Polish & Accessibility** — Countdown sequence, engine hum, road line animation, pickup particles, ARIA labels, reduced-motion safe, large touch zones, landscape hint. (next)
 
 **Reuse Strategy:** Maximum reuse of existing systems — `shared/navigation.js`, `shared/audio.js`, `shared/speech.js`, `shared/utils.js`, `shared/celebration.js`, `shared/accessibility.css`, Fredoka fonts, Kitty Explorer driver sprites, adventure engine music system, `tools/headless.js` harness pattern. Zero edits to existing game files.
 

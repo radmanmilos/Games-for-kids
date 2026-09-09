@@ -1,6 +1,12 @@
 (function () {
     'use strict';
 
+    const OBSTACLE_TYPES = {
+        puddle: { emoji: '💧', label: 'Бара', speedMult: 0.5, duration: 1500, knockback: 0, slowOnly: true },
+        rock: { emoji: '🪨', label: 'Камен', speedMult: 0, duration: 500, knockback: 0, slowOnly: false },
+        barricade: { emoji: '🚧', label: 'Баријера', speedMult: 0.3, duration: 1000, knockback: 80, slowOnly: true }
+    };
+
     const RACING_WORLDS = [{
         key: 'meadow',
         name: 'Ливада',
@@ -19,7 +25,9 @@
         decor: ['🌳', '🌳', '🌸', '🌸', '🦋', '⛰️', '🌳', '🌼'],
         decorScale: 1.0,
         goal: 7200,
-        music: 'meadow'
+        music: 'meadow',
+        obstacleDensity: 0.004,
+        obstacleTypes: ['puddle', 'barricade']
     }, {
         key: 'beach',
         name: 'Плажа',
@@ -38,7 +46,9 @@
         decor: ['🌴', '🌴', '⛱️', '🐚', '🐚', '🏄', '🌴', '🌊'],
         decorScale: 1.0,
         goal: 7200,
-        music: 'beach'
+        music: 'beach',
+        obstacleDensity: 0.005,
+        obstacleTypes: ['puddle', 'rock']
     }, {
         key: 'snow',
         name: 'Снег',
@@ -57,7 +67,9 @@
         decor: ['⛄', '🎿', '🌲', '🌲', '☃️', '⛷️', '🌲', '🦌'],
         decorScale: 1.0,
         goal: 7200,
-        music: 'snow'
+        music: 'snow',
+        obstacleDensity: 0.006,
+        obstacleTypes: ['puddle', 'rock', 'barricade']
     }, {
         key: 'candy',
         name: 'Слаткиш',
@@ -76,7 +88,9 @@
         decor: ['🍬', '🧁', '🍭', '🍡', '🍬', '🧁', '🍩', '🍡'],
         decorScale: 1.0,
         goal: 7200,
-        music: 'candy'
+        music: 'candy',
+        obstacleDensity: 0.004,
+        obstacleTypes: ['puddle', 'barricade']
     }, {
         key: 'jungle',
         name: 'Џунгла',
@@ -95,7 +109,9 @@
         decor: ['🌴', '🦜', '🌺', '🌴', '🐒', '🌿', '🦋', '🌴'],
         decorScale: 1.0,
         goal: 7200,
-        music: 'jungle'
+        music: 'jungle',
+        obstacleDensity: 0.008,
+        obstacleTypes: ['puddle', 'rock', 'barricade']
     }, {
         key: 'space',
         name: 'Свемир',
@@ -114,7 +130,9 @@
         decor: ['🪐', '🌌', '🛸', '⭐', '🌠', '🪐', '🌌', '⭐'],
         decorScale: 1.0,
         goal: 7200,
-        music: 'space'
+        music: 'space',
+        obstacleDensity: 0.005,
+        obstacleTypes: ['rock', 'barricade']
     }, {
         key: 'night',
         name: 'Ноћ',
@@ -133,7 +151,9 @@
         decor: ['🌲', '🌙', '🦉', '⭐', '🌲', '🏮', '🌌', '🦇'],
         decorScale: 1.0,
         goal: 7200,
-        music: 'night'
+        music: 'night',
+        obstacleDensity: 0.007,
+        obstacleTypes: ['puddle', 'rock', 'barricade']
     }, {
         key: 'farm',
         name: 'Фарма',
@@ -152,7 +172,9 @@
         decor: ['🚜', '🌻', '🐄', '🌾', '🚜', '🐑', '🌻', '🐓'],
         decorScale: 1.0,
         goal: 7200,
-        music: 'farm'
+        music: 'farm',
+        obstacleDensity: 0.006,
+        obstacleTypes: ['puddle', 'rock', 'barricade']
     }];
 
     const RACING_MUSIC = {
@@ -233,6 +255,7 @@
     const RACING_CHARACTERS = [{
         id: 'kitty',
         name: 'Маца Истраживачица',
+        short: 'Маца',
         folder: 'explorer_kitty/',
         srcW: 273,
         srcH: 312,
@@ -242,6 +265,7 @@
             emoji: '📦',
             maxSpeed: 290,
             steer: 310,
+            accel: 0.95,
             body: '#e52521'
         }, {
             id: 'yarn',
@@ -249,6 +273,7 @@
             emoji: '🧶',
             maxSpeed: 300,
             steer: 330,
+            accel: 1.0,
             body: '#e52521'
         }, {
             id: 'fish',
@@ -256,6 +281,7 @@
             emoji: '🐟',
             maxSpeed: 270,
             steer: 360,
+            accel: 1.05,
             body: '#e52521'
         }, {
             id: 'rocket',
@@ -263,11 +289,13 @@
             emoji: '🚀',
             maxSpeed: 320,
             steer: 300,
+            accel: 1.15,
             body: '#e52521'
         }]
     }, {
         id: 'explorer',
         name: 'Истраживачица',
+        short: 'Девојчица',
         folder: 'explorer/',
         srcW: 237,
         srcH: 329,
@@ -277,6 +305,7 @@
             emoji: '🚲',
             maxSpeed: 290,
             steer: 320,
+            accel: 1.0,
             body: '#4fc3f7'
         }, {
             id: 'scooter',
@@ -284,6 +313,7 @@
             emoji: '🛴',
             maxSpeed: 300,
             steer: 340,
+            accel: 1.05,
             body: '#4fc3f7'
         }, {
             id: 'skates',
@@ -291,6 +321,7 @@
             emoji: '🛼',
             maxSpeed: 275,
             steer: 370,
+            accel: 0.95,
             body: '#4fc3f7'
         }, {
             id: 'hoverboard',
@@ -298,14 +329,19 @@
             emoji: '🛹',
             maxSpeed: 315,
             steer: 310,
+            accel: 1.15,
             body: '#4fc3f7'
         }]
     }];
+
+    const RACING_UNLOCK_WINS = [0, 2, 4, 7];
 
     window.RACING_CONFIG = {
         worlds: RACING_WORLDS,
         music: RACING_MUSIC,
         characters: RACING_CHARACTERS,
+        obstacleTypes: OBSTACLE_TYPES,
+        unlockWins: RACING_UNLOCK_WINS,
         roadLength: 7200,
         segmentLength: 20,
         startSpeed: 130,
