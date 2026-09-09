@@ -1,4 +1,4 @@
-/* Мала тркачица (Little Racer) smoke test — Stages 1-2.4.
+/* Мала тркачица (Little Racer) smoke test — Stages 1-5.
    Drives the REAL page headlessly: game boots, config is valid,
    character picker appears and starts the game, left/right input
    changes carX, pickups collect, finish triggers celebration,
@@ -46,7 +46,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const sj = JSON.parse(started);
     check('character chosen: game started, picker hidden, world name shown', sj.running === true && sj.modalHidden === true && sj.worldName === 'Ливада', started);
 
-    await h.evalv(`window.__racing.startGame(); true`);
+    await h.evalv(`window.__racing.startGame(); window.__racing.skipCountdown(); true`);
     await sleep(400);
 
     const progress1 = await h.evalv(`JSON.stringify({ p: window.__racing.progress(), s: window.__racing.speed() })`);
@@ -55,16 +55,22 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const pj1 = JSON.parse(progress1), pj2 = JSON.parse(progress2);
     check('auto-forward: progress increases over time', pj2.p > pj1.p && pj2.s > 0, progress1 + ' -> ' + progress2);
 
-    const carX1 = await h.evalv(`JSON.stringify({ x: window.__racing.carX(), cx: window.__racing.ROAD_CENTER() })`);
-    await h.evalv(`window.__racing.keys.left = true; window.__racing.update(20); true`);
-    const carX2 = await h.evalv(`window.__racing.carX()`);
-    await h.evalv(`window.__racing.keys.left = false; window.__racing.update(20); true`);
-    const cxj = JSON.parse(carX1);
-    check('left input: carX decreases', carX2 < cxj.x, carX1 + ' -> ' + carX2);
-
-    await h.evalv(`window.__racing.keys.right = true; window.__racing.update(20); true`);
-    const carX3 = await h.evalv(`window.__racing.carX()`);
-    check('right input: carX increases', carX3 > carX2, String(carX2) + ' -> ' + String(carX3));
+    const steerCheck = await h.evalv(`(() => {
+        const a = window.__racing;
+        const x0 = a.carX();
+        a.keys.left = true;
+        for (let i = 0; i < 10; i++) a.update(20);
+        a.keys.left = false;
+        const afterL = a.carX();
+        a.keys.right = true;
+        for (let i = 0; i < 10; i++) a.update(20);
+        a.keys.right = false;
+        const afterR = a.carX();
+        return JSON.stringify({ x0, afterL, afterR, leftOK: afterL < x0, rightOK: afterR > afterL });
+    })()`);
+    const stj = JSON.parse(steerCheck);
+    check('left/right input: steering moves the car left then right',
+        stj.leftOK === true && stj.rightOK === true, steerCheck);
 
     await h.evalv(`window.__racing.keys.right = false; true`);
     const clamped = await h.evalv(`(() => {
@@ -348,6 +354,73 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     check('persistence: after reload the driver/car/world + wins are restored',
         freshBoot === true && reloaded === true && rs.sel.char === 'kitty' && rs.sel.car === 'yarn' && rs.sel.world === 'beach' &&
         rs.wins === 3 && rs.stats.includes('3'), reloadState);
+
+    // ---- Stage 5: countdown, engine hum, sparkles, accessibility, responsive ----
+    const countdown = await h.evalv(`(() => {
+        const a = window.__racing;
+        a.skipCountdown();
+        const ar = document.getElementById('racing-announcer');
+        a.beginCountdown();
+        const announced = ar.textContent;
+        a.stepCountdown(1000);
+        const s1 = a.countdown();
+        a.stepCountdown(900);
+        const s2 = a.countdown();
+        a.stepCountdown(900);
+        const s3 = a.countdown();
+        a.stepCountdown(799);
+        const s4 = a.countdown();
+        a.stepCountdown(2);
+        const s5 = a.countdown();
+        return JSON.stringify({ announced, labels: [s1.label, s2.label, s3.label, s4.label], done: s5, left2: s4.left });
+    })()`);
+    const cd = JSON.parse(countdown);
+    const cdLabels = JSON.stringify(cd.labels);
+    check('countdown: deterministic 3-2-1-Крени! sequence with ms-exact steps + live ARIA text',
+        cd.announced === 'три' && cdLabels === JSON.stringify([2, 1, 'go', 'go']) &&
+        cd.left2 === 1 && cd.done.active === false && cd.done.label === null, countdown);
+
+    const engine = await h.evalv(`JSON.stringify({
+        active: window.__racing.engine().active,
+        freq: window.__racing.engine().freq,
+        rm: window.__racing.reducedMotion()
+    })`);
+    const ej = JSON.parse(engine);
+    check('engine: exposes active/freq state, reduced-motion flag is a boolean',
+        typeof ej.active === 'boolean' && (ej.freq === null || (ej.freq >= 70 && ej.freq <= 265)) &&
+        typeof ej.rm === 'boolean', engine);
+
+    const sparkles = await h.evalv(`(() => {
+        const a = window.__racing;
+        a.restart(); a.startGame(); a.skipCountdown();
+        a.offs().fill(0);          // flatten the curve: lane x == road center
+        a.obstacles().length = 0;  // no slowdown puffs during approach
+        a.pickups().push({ dist: Math.round(a.progress()) + 120, lane: 0, collected: false });
+        for (let i = 0; i < 120 && a.score() === 0; i++) {
+            a.keys.left = false; a.keys.right = false;
+            a.update(16);
+        }
+        return JSON.stringify({ score: a.score(), puffs: a.particles().length });
+    })()`);
+    const sj5 = JSON.parse(sparkles);
+    check('pickup collect: scores and spawns sparkle particles',
+        sj5.score > 0 && sj5.puffs >= 5, sparkles);
+
+    const a11y = await h.evalv(`(() => {
+        const a = window.__racing;
+        a.announce('Тест објаве');
+        const ar = document.getElementById('racing-announcer');
+        const zones = document.querySelectorAll('.racing-zone').length;
+        const inZone = document.querySelector('#racing-zone-left #racing-left') &&
+            document.querySelector('#racing-zone-right #racing-right');
+        const hint = document.getElementById('racing-landscape-hint');
+        const hintDisplay = hint ? getComputedStyle(hint).display : 'missing';
+        return JSON.stringify({ announced: ar.textContent === 'Тест објаве', live: ar.getAttribute('aria-live'), role: ar.getAttribute('role'), zones, inZone: !!inZone, hintDisplay });
+    })()`);
+    const aj = JSON.parse(a11y);
+    check('a11y/responsive: sr-only live announcer, 2 thumb zones wrapping the buttons, portrait-only hint',
+        aj.announced === true && aj.live === 'polite' && aj.role === 'status' &&
+        aj.zones === 2 && aj.inZone === true && aj.hintDisplay === 'none', a11y);
 
     h.close();
 

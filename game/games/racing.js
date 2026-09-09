@@ -39,6 +39,14 @@
     let lastTimestamp = 0;
     let finishRecorded = false;
 
+    let countdownActive = false;
+    let countdownLeft = 0;
+    let countdownDoneAt = 0;
+    let engineOsc = null;
+    let engineOsc2 = null;
+    let engineGain = null;
+    const REDUCED_MOTION = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
     const SAVE_KEY = 'racingSave';
     const UNLOCK_WINS = cfg.unlockWins || [0, 2, 4, 7];
 
@@ -182,6 +190,7 @@
     function initAudio() {
         if (!audioCtx) {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            startEngine();
             startMusic(currentWorld.music);
         }
     }
@@ -327,6 +336,104 @@
 
     function stopMusic() {
         if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
+    }
+
+    function announce(text) {
+        const el = document.getElementById('racing-announcer');
+        if (el && el.textContent !== text) el.textContent = text;
+    }
+
+    function countTone(freq, dur, type) {
+        if (!audioCtx) return;
+        const t = audioCtx.currentTime;
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.connect(g); g.connect(audioCtx.destination);
+        o.type = type || 'triangle';
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.14, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        o.start(t); o.stop(t + dur + 0.02);
+    }
+
+    function countdownDisplay(left) {
+        if (left > 2700) return 3;
+        if (left > 1800) return 2;
+        if (left > 900) return 1;
+        return 'go';
+    }
+
+    function announceCountdown(label) {
+        if (label === 'go') {
+            countTone(880, 0.3, 'square');
+            if (window.speech && window.speech.speak) window.speech.speak('Крени!');
+            announce('Крени!');
+        } else {
+            countTone(660, 0.12, 'triangle');
+            const word = label === 3 ? 'три' : label === 2 ? 'два' : 'један';
+            if (window.speech && window.speech.speak) window.speech.speak(word);
+            announce(word);
+        }
+    }
+
+    function beginCountdown() {
+        countdownActive = true;
+        countdownLeft = 3600;
+        countdownDoneAt = 0;
+        announceCountdown(3);
+    }
+
+    function stepCountdown(dt) {
+        if (!countdownActive) return;
+        const before = countdownDisplay(countdownLeft);
+        countdownLeft -= dt;
+        const after = countdownDisplay(countdownLeft);
+        if (after !== before) announceCountdown(after);
+        if (countdownLeft <= 0) {
+            countdownActive = false;
+            countdownDoneAt = performance.now();
+        }
+    }
+
+    function skipCountdown() {
+        countdownActive = false;
+        countdownLeft = 0;
+        countdownDoneAt = performance.now();
+    }
+
+    function startEngine() {
+        if (!audioCtx || engineOsc) return;
+        engineGain = audioCtx.createGain();
+        engineGain.gain.value = 0;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.value = 900;
+        engineGain.connect(filter);
+        filter.connect(audioCtx.destination);
+        engineOsc = audioCtx.createOscillator();
+        engineOsc.type = 'sawtooth';
+        engineOsc.frequency.value = 70;
+        engineOsc.connect(engineGain);
+        engineOsc2 = audioCtx.createOscillator();
+        engineOsc2.type = 'sawtooth';
+        engineOsc2.frequency.value = 70.6;
+        engineOsc2.connect(engineGain);
+        engineOsc.start();
+        engineOsc2.start();
+    }
+
+    function updateEngine() {
+        if (!audioCtx || !engineGain) return;
+        const ratio = Math.max(0, Math.min(1, speed / cfg.maxSpeed));
+        const base = 70 + ratio * 190;
+        if (engineOsc) engineOsc.frequency.setTargetAtTime(base, audioCtx.currentTime, 0.08);
+        if (engineOsc2) engineOsc2.frequency.setTargetAtTime(base * 1.01, audioCtx.currentTime, 0.08);
+        const target = (raceFinished || countdownActive) ? 0 : 0.012 + ratio * 0.006;
+        engineGain.gain.setTargetAtTime(target, audioCtx.currentTime, 0.08);
+    }
+
+    function stopEngine() {
+        if (audioCtx && engineGain) engineGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
     }
 
     function toggleMusic() {
@@ -621,7 +728,21 @@
                 vx: (Math.random() * 2 - 1) * 40,
                 vy: -40 - Math.random() * 60,
                 life: 380,
-                r: 3 + Math.random() * 4
+                r: 3 + Math.random() * 4,
+                col: '#E8DCC8'
+            });
+        }
+    }
+
+    function addSparkle(x, y, color) {
+        for (let i = 0; i < 5; i++) {
+            puffs.push({
+                x: x, y: y,
+                vx: (Math.random() * 2 - 1) * 70,
+                vy: -60 - Math.random() * 80,
+                life: 320,
+                r: 2.5 + Math.random() * 3.5,
+                col: color
             });
         }
     }
@@ -811,6 +932,7 @@
                 p.collected = true;
                 score++;
                 pickupCount++;
+                addSparkle(x, y, currentWorld.finishColor);
                 window.popSound && window.popSound();
             }
         });
@@ -833,6 +955,7 @@
         if (finishRecorded) return;
         finishRecorded = true;
         stopMusic();
+        stopEngine();
         const modal = document.getElementById('racing-win-modal');
         const title = document.getElementById('racing-win-title');
         const scoreEl = document.getElementById('racing-win-score');
@@ -842,6 +965,7 @@
         if (modal) modal.classList.add('show');
         if (title) title.textContent = 'Игра завршена!';
         if (scoreEl) scoreEl.textContent = 'ПОЕНИ: ' + score + '  ·  ' + cap(currentWorld.collectibleName) + ': ' + pickupCount + '  ·  🏆 Трке: ' + save.wins;
+        announce('Игра завршена! Поени: ' + score);
         if (unlockEl) {
             const ch = selectedCharacter;
             const idx = carIndex(ch, selectedCar.id);
@@ -849,6 +973,7 @@
             if (newly.length) {
                 const c = newly[0];
                 unlockEl.textContent = '🎉 НОВО: ' + c.name + ' ' + c.emoji + '!';
+                announce('Ново кола: ' + c.name);
                 if (window.speech && window.speech.speak) window.speech.cancel();
             } else {
                 unlockEl.textContent = '';
@@ -881,6 +1006,13 @@
         initDecor();
         const modal = document.getElementById('racing-win-modal');
         if (modal) modal.classList.remove('show');
+        beginCountdown();
+        if (musicOn) {
+            try {
+                if (!audioCtx) initAudio();
+                else startMusic(currentWorld.music);
+            } catch (e) { /* audio not ready yet */ }
+        }
         startGame();
     }
 
@@ -904,12 +1036,13 @@
         updatePuffs(dt);
         updatePickups();
         checkFinish();
+        updateEngine();
     }
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.save();
-        if (shake > 0) {
+        if (shake > 0 && !REDUCED_MOTION) {
             ctx.translate((Math.random() * 2 - 1) * 6 * shake, (Math.random() * 2 - 1) * 4 * shake);
         }
         drawRoad();
@@ -922,12 +1055,16 @@
 
         puffs.forEach(p => {
             ctx.globalAlpha = Math.max(0, Math.min(1, p.life / 380));
-            ctx.fillStyle = '#E8DCC8';
+            ctx.fillStyle = p.col || '#E8DCC8';
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
             ctx.fill();
         });
         ctx.globalAlpha = 1;
+
+        if (countdownActive || (countdownDoneAt > 0 && performance.now() - countdownDoneAt < 600)) {
+            drawCountdown(countdownActive ? countdownDisplay(countdownLeft) : 'go');
+        }
         ctx.restore();
 
         const scoreEl = document.getElementById('racing-score');
@@ -948,13 +1085,36 @@
         }
     }
 
+    function drawCountdown(label) {
+        const cx = W / 2;
+        const cy = H * 0.4;
+        const size = Math.round(Math.min(W, H) * 0.22);
+        const text = label === 'go' ? 'Крени!' : String(label);
+        ctx.font = 'bold ' + size + 'px "Fredoka", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = 'rgba(74,63,107,0.85)';
+        ctx.strokeText(text, cx, cy);
+        ctx.fillStyle = label === 'go' ? '#8CE99A' : '#FFD23F';
+        ctx.fillText(text, cx, cy);
+        ctx.font = '';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'alphabetic';
+    }
+
     function loop(timestamp) {
         if (!running) return;
         const dt = timestamp - lastTimestamp;
         lastTimestamp = timestamp;
         if (dt < 50) {
-            update(dt);
-            draw();
+            if (countdownActive) {
+                stepCountdown(dt);
+                draw();
+            } else {
+                update(dt);
+                draw();
+            }
         }
         requestAnimationFrame(loop);
     }
@@ -1000,6 +1160,15 @@
             slowdownState: () => slowdown,
             triggerObstacle: triggerObstacle,
             shake: () => shake,
+            particles: () => puffs,
+            countdown: () => ({ active: countdownActive, left: countdownLeft, label: countdownActive ? countdownDisplay(countdownLeft) : null }),
+            beginCountdown: beginCountdown,
+            stepCountdown: stepCountdown,
+            skipCountdown: skipCountdown,
+            engine: () => ({ active: !!engineOsc, freq: engineOsc ? Math.round(engineOsc.frequency.value) : null }),
+            reducedMotion: () => REDUCED_MOTION,
+            announce: announce,
+            pickups: () => pickups,
             selection: () => ({ char: selectedCharacter.id, car: (selectedCar && selectedCar.id) || null, world: currentWorld.key }),
             wins: () => save.wins,
             isUnlocked: (chId, carId) => isUnlocked(cfg.characters.find(c => c.id === chId), carId),
@@ -1067,6 +1236,7 @@
                     selectedCharacter = ch;
                     selectedCar = car;
                     carX = ROAD_CENTER;
+                    announce(car.name + ', ' + (ch.short || ch.name));
                     modal.classList.remove('show');
                     restart();
                 });
@@ -1094,6 +1264,7 @@
                 save.world = w.key;
                 persistSave();
                 document.getElementById('racing-world-name').textContent = currentWorld.name;
+                announce('Свет: ' + w.name);
                 modal.classList.remove('show');
                 restart();
             });
@@ -1105,6 +1276,7 @@
     document.getElementById('racing-back').addEventListener('click', () => {
         running = false;
         stopMusic();
+        stopEngine();
         if (window.popSound) window.popSound();
         setTimeout(() => location.href = '../index.html#hub-games', 90);
     });

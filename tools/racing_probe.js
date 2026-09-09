@@ -45,7 +45,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
             ROAD_BOTTOM_Y: window.__racing ? window.__racing.ROAD_BOTTOM_Y : null,
             W: window.__racing ? window.__racing.W() : null,
             H: window.__racing ? window.__racing.H() : null,
-            controlsTop: (() => { const c = document.getElementById('racing-controls'); const r = c.getBoundingClientRect(); return r.top; })()
+            controlsTop: (() => { const c = document.querySelector('.racing-zone'); const r = c.getBoundingClientRect(); return r.top; })()
         });
     })()`);
     console.log('LAYOUT FACTS: ' + facts);
