@@ -354,9 +354,12 @@ An OutRun-style pseudo-3D racing game where the little racer speeds toward the h
 Gameplay:
 
 - Simulated 3D perspective — the road rushes toward the horizon, the car is fixed at bottom-center, auto-forward motion, left/right steering only.
-- Character picker at start (Маца Истраживачица / Истраживачица, reusing the explorer sprites, task 90).
-- Collect the world's emoji (🌸 flowers in the Ливада world) as the finish line approaches; crossing it celebrates with "Браво!" and a 🏁 win modal.
-- Stage 1 ships one world (Ливада) with its own synthesized music theme; more themed worlds arrive in Stage 2. (Stage 1 committed as `4e028b4`; Stage 2 IN PROGRESS — task 96.)
+- Procedural curves — the road bends along a seeded track (world's `curveSeed`/`curveMax`); road, dashes, pickups and finish line all follow the bend.
+- Character picker at start (Маца Истраживачица / Истраживачица, reusing the explorer sprites, task 90); car rosters (4 per driver) are already defined in the config for the Stage 4 picker.
+- Collect the world's emoji (🌸 flowers in the Ливада world) as the finish line approaches; pickups start small in the distance and grow as you reach them. Crossing the finish celebrates with "Браво!" and a 🏁 win modal.
+- 8 themed worlds (Ливада, Плажа, Снег, Слаткиш, Џунгла, Свемир, Ноћ, Фарма) selectable mid-game via the 🌍 button — each with its own pickups (🌸🐚❄️🍭💎⭐🌙🥕), palette, track curves, roadside decorations, goal, and synthesized music theme (+ per-world ambience).
+- HUD: score and world-name pills, a pickup counter using the world's collectible name, and a progress bar toward the finish line.
+- Stage 2 (tasks 96, stages 2.1–2.4) done: wide curved road, 8 worlds with decor + per-world music, HUD; Stages 3–5 pending — obstacles/difficulty, full car-roster picker + persistence, polish/accessibility. (Stage 1 committed as `4e028b4`; Stage 2 uncommitted.)
 
 Educational goals:
 

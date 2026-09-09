@@ -22,6 +22,7 @@ Before opening a PR, run the smallest targeted check that covers your change:
 - Candy → `node tools/candy_smoke.js`
 - Puzzle → `node tools/puzzle_smoke.js`
 - Classroom kids tier → `node tools/kids_smoke.js`
+- Racing (Мала тркачица) → `node tools/racing_smoke.js`
 - Animals / Shapes / Counting / Coloring → `node tools/animals_smoke.js`, `node tools/shapes_smoke.js`, `node tools/counting_smoke.js`, `node tools/coloring_smoke.js`
 
 If a smoke does not exist for the game you changed, run the page manually in Live Server and verify the interaction visually.

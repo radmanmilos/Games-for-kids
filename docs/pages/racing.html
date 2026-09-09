@@ -40,6 +40,23 @@
             padding: 6px 16px; border-radius: 14px; border: 4px solid #FFD23F;
             box-shadow: 0 5px 0 rgba(0,0,0,0.25); pointer-events: none;
         }
+        #racing-pickup-count {
+            position: absolute; top: 76px; left: 16px; z-index: 10;
+            background: #FFF8ED; color: #4A3F6B; font-weight: 700; font-size: 15px;
+            padding: 6px 14px; border-radius: 14px; border: 4px solid #FFD23F;
+            box-shadow: 0 5px 0 rgba(0,0,0,0.25); pointer-events: none; min-width: 92px; text-align: center;
+        }
+        #racing-progress {
+            position: absolute; top: 84px; left: 50%; transform: translateX(-50%);
+            width: min(420px, 64vw); height: 18px; border-radius: 50vmin; z-index: 10;
+            background: rgba(255,255,255,0.35); border: 4px solid rgba(255,255,255,0.85);
+            box-shadow: 0 5px 0 rgba(0,0,0,0.25); pointer-events: none; overflow: hidden;
+        }
+        #racing-progress-fill {
+            height: 100%; width: 0%; border-radius: 50vmin;
+            background: linear-gradient(90deg, #FFD23F, #FF8C42);
+            transition: width .15s linear;
+        }
         #racing-music-btn {
             position: absolute; top: 12px; right: 84px; z-index: 10;
             width: 58px; height: 58px; border-radius: 50%; border: 4px solid #fff;
@@ -167,6 +184,8 @@
     <h1 id="racing-title">🏎️ Мала тркачица</h1>
 
     <div id="racing-score">Поени: 0</div>
+    <div id="racing-pickup-count"></div>
+    <div id="racing-progress"><div id="racing-progress-fill"></div></div>
     <div id="racing-world-name">Ливада</div>
     <button id="racing-worlds-btn" aria-label="Светови">🌍</button>
     <button id="racing-music-btn" aria-label="Музика">🔊</button>

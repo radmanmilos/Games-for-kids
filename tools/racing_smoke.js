@@ -1,8 +1,9 @@
-/* Мала тркачица (Little Racer) smoke test — Stage 1.
+/* Мала тркачица (Little Racer) smoke test — Stages 1-2.4.
    Drives the REAL page headlessly: game boots, config is valid,
    character picker appears and starts the game, left/right input
    changes carX, pickups collect, finish triggers celebration,
-   road renders on canvas, HUD shows world name, and the hub wiring
+   road renders on canvas (curved, widened), pickups grow as they
+   approach, HUD shows world name, and the hub wiring
    (button / navigation / standalone boot) is in place.
    Run:  node tools/racing_smoke.js
    Requires Node >= 22. CHROME_PATH env optional. */
@@ -29,7 +30,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         roadCenter: window.__racing.ROAD_CENTER()
     })`);
     const cj = JSON.parse(cfg);
-    check('config: 1 world, 2 characters, music defined, goal > 0', cj.worlds === 1 && cj.chars === 2 && cj.hasMusic === true && cj.goal > 1000, cfg);
+    check('config: 8 worlds, 2 characters, music defined, goal > 0', cj.worlds === 8 && cj.chars === 2 && cj.hasMusic === true && cj.goal > 1000, cfg);
 
     const modal = await h.evalv(`document.getElementById('racing-char-modal').classList.contains('show')`);
     check('character picker modal shown at start', modal === true);
@@ -122,6 +123,47 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const gj = JSON.parse(geo);
     check('geometry: road uses live canvas size (1100x700 -> center 550, bottom 630)',
         gj.W === 1100 && gj.H === 700 && gj.cx === 550 && gj.bot === 630, geo);
+
+    const curves = await h.evalv(`(() => {
+        const a = window.__racing;
+        a.restart(); a.startGame();
+        const offs = a.offs();
+        a.update(32);
+        let maxOff = 0;
+        for (let i = 0; i < offs.length; i++) maxOff = Math.max(maxOff, Math.abs(offs[i]));
+        const bend = Math.abs(a.roadCenterX(320) - a.ROAD_CENTER());
+        return JSON.stringify({ maxOff, bend });
+    })()`);
+    const cuj = JSON.parse(curves);
+    check('curves: road bends ahead (lateral offset present)', cuj.maxOff > 0.05 && cuj.bend > 5, curves);
+
+    const psz = await h.evalv(`(() => {
+        const a = window.__racing;
+        const far = a.pickupSizeAt(380);
+        const mid = a.pickupSizeAt(190);
+        const near = a.pickupSizeAt(20);
+        return JSON.stringify({ far, mid, near });
+    })()`);
+    const psj = JSON.parse(psz);
+    check('pickups grow as they approach (small far, big near)', psj.far < psj.mid && psj.mid < psj.near, psz);
+
+    const worldSwitch = await h.evalv(`(() => {
+        const a = window.__racing;
+        a.restart();
+        // Open the worlds picker first, then choose 'space' (index 5)
+        document.getElementById('racing-worlds-btn').click();
+        document.querySelectorAll('.racing-world-btn')[5].click();
+        a.restart();
+        return JSON.stringify({
+            goal: a.finishLineDist,
+            name: document.getElementById('racing-world-name').textContent,
+            expectGoal: a.config.worlds[5].goal,
+            expectName: a.config.worlds[5].name,
+            goalMatches: a.finishLineDist === a.config.worlds[5].goal
+        });
+    })()`);
+    const wsj = JSON.parse(worldSwitch);
+    check('world switch: finish line and label follow the chosen world', wsj.goalMatches === true && wsj.name === wsj.expectName, worldSwitch);
 
     h.close();
 
