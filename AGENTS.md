@@ -39,6 +39,7 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 
 ## Footguns & no-go zones
 
+- **Racing game decisions (autonomous build, task 99):** the 10-item gameplay/design decisions list lives at the top of `HANDOVER_PROMPT.md` ("First thing next session — Racing game decisions to cover") and in `PROJECT_TASKS.md` task 99. These are confirmed with the user BEFORE any racing polish/refactor — do not re-implement, re-litigate, or "improve" them first. Notable: unlock thresholds `[0,2,4,7]` wins (no currency); single 8-card combo picker; wins count only on real finish (`finishRecorded` guard); the user's OS reports `prefers-reduced-motion: reduce` = ON, so the obstacle screen-shake is suppressed on their machine (`racing.js:1036` `&& !REDUCED_MOTION`) — the ONLY user-facing behavior the a11y gate still changes after the task-83 revert, flagged for review.
 - Cloudflare Workers serves extensionless URLs: standalone detection must strip `.html` before comparing page names. Never match `'name.html'`.
 - Coloring regions: `createColoringRegion` accepts both `r.attrs` and flat fields — never assume `attrs` is always present.
 - Kitty HUD button offsets are sacred: music 🔊 at `right:268px`, worlds 🌍 at `right:200px` — do not move them closer or they overlap.
