@@ -38,7 +38,7 @@ function findChrome() {
   return null;
 }
 const MIME = {
-  '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css',
+  '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css',
   '.svg': 'image/svg+xml', '.ogg': 'audio/ogg', '.mp3': 'audio/mpeg',
   '.woff2': 'font/woff2', '.png': 'image/png',
 };

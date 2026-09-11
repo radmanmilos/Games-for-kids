@@ -35,6 +35,7 @@
         if (id === 'game-dino') { location.href = 'pages/dino.html'; return; }
         if (id === 'game-space') { location.href = 'pages/space.html'; return; }
         if (id === 'game-racing') { location.href = 'pages/racing.html'; return; }
+        if (id === 'game-racing3d') { location.href = 'pages/racing3d.html'; return; }
         if (id !== 'game-kitty' && typeof window.stopKitty === 'function') window.stopKitty();
         screens.forEach(screen => screen.classList.toggle('active', screen.id === id));
         if (id === 'game-animals' && typeof window.startAnimals === 'function') window.startAnimals();

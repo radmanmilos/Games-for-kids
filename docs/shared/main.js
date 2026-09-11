@@ -14,7 +14,8 @@ const standaloneMap = {
     'ocean': ['ocean-back', 'startOcean', 'hub-games'],
     'dino': ['dino-back', 'startDino', 'hub-games'],
     'space': ['space-back', 'startSpace', 'hub-games'],
-    'racing': ['racing-back', 'startRacing', 'hub-games']
+    'racing': ['racing-back', 'startRacing', 'hub-games'],
+    'racing3d': ['r3d-back', 'startRacing3D', 'hub-games']
 };
 const standaloneGame = standaloneMap[standalonePage];
 

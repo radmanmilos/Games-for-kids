@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>3D Прототип — Мала тркачица</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #87CEeb; font-family: "Segoe UI", Arial, sans-serif; touch-action: none; -webkit-user-select: none; user-select: none; }
+    #view { position: fixed; inset: 0; }
+    #view canvas { display: block; width: 100%; height: 100%; }
+    #hud {
+      position: fixed; top: 8px; left: 8px; z-index: 20;
+      background: rgba(0,0,0,0.45); color: #fff; border-radius: 10px;
+      padding: 8px 12px; font-size: 16px; line-height: 1.5; font-weight: 600;
+    }
+    #msg {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      background: rgba(0,0,0,0.7); color: #ffd700; border-radius: 16px;
+      padding: 18px 30px; font-size: 30px; font-weight: 800; z-index: 25;
+      display: none; text-align: center;
+    }
+    .zone { position: fixed; top: 25%; bottom: 0; width: 50%; z-index: 15; display: flex; align-items: center; justify-content: center; }
+    #left-zone { left: 0; }
+    #right-zone { right: 0; }
+    .zone .btn {
+      width: 110px; height: 110px; border-radius: 50%;
+      border: 5px solid #fff; background: #e52521; color: #fff;
+      font-size: 46px; font-weight: 900; opacity: 0.85;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    }
+    .zone .btn:active { background: #b01a16; transform: scale(0.96); }
+    @media (max-width: 700px) {
+      #hud { font-size: 13px; padding: 6px 9px; }
+      .zone .btn { width: 84px; height: 84px; font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="view"></div>
+  <div id="msg">Готово! 🏁<br><span id="msg-sub">Погледај апликацијски прозор</span></div>
+  <div id="hud">
+    <div>Брзина: <span id="speed">0</span></div>
+    <div>Поени: <span id="score">0</span>/10</div>
+    <div>Круг: <span id="lap">1</span>/3</div>
+    <div>FPS: <span id="fps">0</span></div>
+  </div>
+  <div id="left-zone" class="zone"><div class="btn">◀</div></div>
+  <div id="right-zone" class="zone"><div class="btn">▶</div></div>
+
+  <script type="importmap">{ "imports": { "three": "./three.module.min.js" } }</script>
+  <script type="module" src="racing3d.mjs"></script>
+</body>
+</html>

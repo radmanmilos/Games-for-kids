@@ -49,7 +49,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     };
   })())`);
   const G = JSON.parse(games);
-  check('games tile opens games sub-hub (9 buttons, kitty back target intact)', G.active === 'hub-games' && G.title === '🎮 ИГРЕ' && G.go.split(',').length === 9 && G.go === 'game-kitty,game-driving,game-ocean,game-dino,game-space,game-candy,game-memory,game-puzzle,game-racing', games);
+  check('games tile opens games sub-hub (10 buttons, kitty back target intact)', G.active === 'hub-games' && G.title === '🎮 ИГРЕ' && G.go.split(',').length === 10 && G.go === 'game-kitty,game-driving,game-ocean,game-dino,game-space,game-candy,game-memory,game-puzzle,game-racing,game-racing3d', games);
 
   await h.evalv(`document.querySelector('#hub-games .back-btn').click()`);
   await sleep(300);
