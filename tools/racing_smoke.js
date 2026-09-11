@@ -84,6 +84,25 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const cj2 = JSON.parse(clamped);
     check('clamp: carX does not exceed road boundary', cj2.bounded === true, clamped);
 
+    const lean = await h.evalv(`(() => {
+        const a = window.__racing;
+        a.restart(); a.startGame();
+        a.keys.right = true;
+        for (let i = 0; i < 6; i++) a.update(33);
+        a.keys.right = false;
+        const right = a.lean();
+        a.keys.left = true;
+        for (let i = 0; i < 12; i++) a.update(33);
+        a.keys.left = false;
+        const left = a.lean();
+        for (let i = 0; i < 12; i++) a.update(33);
+        const back = a.lean();
+        return JSON.stringify({ right, left, back });
+    })()`);
+    const lj = JSON.parse(lean);
+    check('camera juice: steering banks the view (positive/negative lean, settles back to center)',
+        lj.right > 0.2 && lj.left < -0.2 && Math.abs(lj.back) < 0.05, lean);
+
     const beforeScore = await h.evalv(`(() => {
         window.__racing.restart();
         window.__racing.startGame();
@@ -144,6 +163,24 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const cuj = JSON.parse(curves);
     check('curves: road bends ahead (lateral offset present)', cuj.maxOff > 0.05 && cuj.bend > 5, curves);
 
+    const hills = await h.evalv(`(() => {
+        const a = window.__racing;
+        a.restart(); a.startGame(); a.skipCountdown();
+        const hor = a.HORIZON_Y(), bot = a.ROAD_BOTTOM_Y();
+        const flatY = (d) => bot - ((bot - hor) * d / 400);
+        let maxDev = 0;
+        for (let t = 0; t < 12; t++) {
+            for (let i = 0; i < 15; i++) a.update(16);
+            for (let d = 40; d <= 380; d += 20) {
+                maxDev = Math.max(maxDev, Math.abs(a.roadY(d) - flatY(d)));
+            }
+        }
+        return JSON.stringify({ maxDev, cam: (a.hillStrength() > 0) });
+    })()`);
+    const hlj = JSON.parse(hills);
+    check('hills: road rises/falls above the flat baseline (vertical profile varies)',
+        hlj.maxDev > 8 && hlj.cam === true, hills);
+
     const psz = await h.evalv(`(() => {
         const a = window.__racing;
         const far = a.pickupSizeAt(380);
@@ -175,12 +212,14 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const obstacleCfg = await h.evalv(`JSON.stringify({
         types: Object.keys(window.__racing.config.obstacleTypes).length,
         keys: Object.keys(window.__racing.config.obstacleTypes),
-        worlds: window.__racing.config.worlds.map(w => ({ k: w.key, d: w.obstacleDensity, t: (w.obstacleTypes || []).join(',') }))
+        worlds: window.__racing.config.worlds.map(w => ({ k: w.key, d: w.obstacleDensity, h: w.hillStrength, t: (w.obstacleTypes || []).join(',') }))
     })`);
     const ocfg = JSON.parse(obstacleCfg);
     check('obstacle config: 3 types, every world has density + types',
         ocfg.types === 3 && ocfg.keys.includes('puddle') && ocfg.keys.includes('rock') && ocfg.keys.includes('barricade') &&
         ocfg.worlds.every(w => typeof w.d === 'number' && w.d > 0 && w.t.length > 0), obstacleCfg);
+    check('hills: every world has a numeric hillStrength (non-negative, bounded)',
+        ocfg.worlds.every(w => typeof w.h === 'number' && w.h >= 0 && w.h <= 2), obstacleCfg);
 
     const obstacleSpawn = await h.evalv(`(() => {
         // Switch to jungle (has all 3 obstacle types) via the picker for determinism
@@ -249,6 +288,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         // Deterministic harness: flatten the curve so lane offsets are static,
         // then steer the car onto the obstacle and let it approach.
         a.offs().fill(0);
+        a.config.worlds.forEach(w => w.hillStrength = 0);
         a.obstacles().length = 0;
         const sd0 = 200;
         const obs = { dist: Math.round(a.progress()) + sd0, lane: -1, type: 'puddle', hitCd: 0 };
@@ -271,6 +311,68 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const cjCol = JSON.parse(collide);
     check('collision: steering into an obstacle triggers the slowdown via update()',
         cjCol.hitType === 'puddle' && cjCol.aimed < 60 && cjCol.cd === 600, collide);
+
+    const boostCfg = await h.evalv(`(() => {
+        const a = window.__racing;
+        a.restart(); a.startGame(); a.skipCountdown();
+        const bs = a.boosts();
+        let ok = bs.length > 0;
+        for (const b of bs) {
+            if (b.lane !== -1 && b.lane !== 1) ok = false;
+            if (b.dist < 500 || b.dist >= a.finishLineDist - 500) ok = false;
+        }
+        return JSON.stringify({ count: bs.length, ok });
+    })()`);
+    const bcj = JSON.parse(boostCfg);
+    check('boosts: pads spawn on track (valid lanes, clear of start/finish)', bcj.ok === true && bcj.count > 0, boostCfg);
+
+    const boostHit = await h.evalv(`(() => {
+        const a = window.__racing;
+        a.restart(); a.startGame(); a.skipCountdown();
+        a.offs().fill(0);
+        a.config.worlds.forEach(w => w.hillStrength = 0);
+        a.obstacles().length = 0;
+        const bs = a.boosts();
+        bs.length = 0;
+        const before = a.speed();
+        bs.push({ dist: Math.round(a.progress()) + 120, lane: 0, hitCd: 0, used: false });
+        const p0 = a.particles().length;
+        for (let i = 0; i < 160 && !bs[0].used; i++) {
+            a.keys.left = false; a.keys.right = false;
+            a.update(16);
+        }
+        const after = a.speed();
+        return JSON.stringify({ before, after, used: bs[0].used, puffsGrown: a.particles().length > p0 + 3 });
+    })()`);
+    const bhj = JSON.parse(boostHit);
+    check('boost: pad boosts the car (speed jumps) and emits flame particles',
+        bhj.used === true && bhj.after > bhj.before * 1.3 && bhj.puffsGrown === true, boostHit);
+
+    const dust = await h.evalv(`(() => {
+        const a = window.__racing;
+        a.restart(); a.startGame(); a.skipCountdown();
+        a.config.worlds.forEach(w => w.hillStrength = 0);
+        const p0 = a.particles().length;
+        a.keys.right = true;
+        for (let i = 0; i < 40; i++) a.update(16);
+        a.keys.right = false;
+        return JSON.stringify({ skid: a.skid(), dust: a.particles().length - p0 });
+    })()`);
+    const dj = JSON.parse(dust);
+    check('particles: steering churns wheel dust and leaves skid marks',
+        dj.skid > 0 && dj.dust > 0, dust);
+
+    const carJuice = await h.evalv(`(() => {
+        const a = window.__racing;
+        a.restart(); a.startGame(); a.skipCountdown();
+        const b0 = a.bobPhase();
+        const p0 = a.progress();
+        for (let i = 0; i < 20; i++) a.update(16);
+        return JSON.stringify({ bobDelta: a.bobPhase() - b0, spin: (a.progress() - p0) * 0.05 });
+    })()`);
+    const cjJ = JSON.parse(carJuice);
+    check('car juice: suspension bobs and wheels roll while driving',
+        cjJ.bobDelta > 0 && cjJ.spin > 0, carJuice);
 
     // ---- Stage 4: combos, progression, persistence ----
     // Reset progression to a clean state: earlier finish checks bumped the win counter.
@@ -394,6 +496,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         const a = window.__racing;
         a.restart(); a.startGame(); a.skipCountdown();
         a.offs().fill(0);          // flatten the curve: lane x == road center
+        a.config.worlds.forEach(w => w.hillStrength = 0);  // flatten the hills: vertical y == flat baseline
         a.obstacles().length = 0;  // no slowdown puffs during approach
         a.pickups().push({ dist: Math.round(a.progress()) + 120, lane: 0, collected: false });
         for (let i = 0; i < 120 && a.score() === 0; i++) {

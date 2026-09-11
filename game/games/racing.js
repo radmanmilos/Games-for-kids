@@ -112,6 +112,19 @@
     let offs = null;
     let offRaw = null;
 
+    const HILL_CHUNK = 210;
+    const HILL_PX = 170;
+    const HILL_LOOK = 110;
+    let hillKnots = [];
+    let camHill = 0;
+    let pitch = 0;
+    let leanNow = 0;
+
+    let skidTimer = 0;
+    const boosts = [];
+    let dustAcc = 0;
+    let bobPhase = 0;
+
     function mulberry32(a) {
         return function () {
             a |= 0; a = (a + 0x6D2B79F5) | 0;
@@ -161,9 +174,49 @@
         for (let d = 0; d <= VISIBLE_DIST; d++) offs[d] = raw[d] * scale;
     }
 
+    function initHills() {
+        hillKnots.length = 0;
+        const seed = (typeof currentWorld.hillSeed === 'number')
+            ? currentWorld.hillSeed
+            : (((currentWorld.curveSeed || 2026) * 31337) | 0);
+        const rng = mulberry32(seed);
+        const n = Math.ceil((finishLineDist + VISIBLE_DIST) / HILL_CHUNK) + 3;
+        for (let i = 0; i < n; i++) hillKnots.push(rng() * 2 - 1);
+        recomputeCamera();
+    }
+
+    function hillAt(w) {
+        if (!hillKnots.length) return 0;
+        const idx = w / HILL_CHUNK;
+        const i = Math.floor(idx);
+        const f = idx - i;
+        const a = hillKnots[i] !== undefined ? hillKnots[i] : 0;
+        const b = hillKnots[i + 1] !== undefined ? hillKnots[i + 1] : a;
+        const s = f * f * (3 - 2 * f);
+        return a + (b - a) * s;
+    }
+
+    function recomputeCamera() {
+        camHill = hillAt(progress);
+        pitch = Math.max(-1, Math.min(1, (hillAt(progress + HILL_LOOK) - camHill) / 2));
+    }
+
     function roadCenterX(d) {
         const i = Math.min(VISIBLE_DIST, Math.max(0, Math.round(d)));
         return ROAD_CENTER + offs[i] * projectW(d);
+    }
+
+    function speedNorm() {
+        const top = (selectedCar && selectedCar.maxSpeed) || maxSpeed;
+        return Math.max(0, Math.min(1, (speed - cfg.startSpeed) / Math.max(1, top - cfg.startSpeed)));
+    }
+
+    function roadY(d) {
+        const s = projectW(d) / ROAD_MAX_W;
+        const hill = currentWorld.hillStrength || 0;
+        const rel = (hillAt(progress + d) - camHill) * HILL_PX * hill;
+        const flat = ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * d / VISIBLE_DIST);
+        return Math.min(ROAD_BOTTOM_Y, Math.max(HORIZON_Y - 90, flat - rel * s - pitch * d * 0.16));
     }
 
     function resizeCanvas() {
@@ -498,13 +551,28 @@
         const accent = '#fff8ed';
         const wheel = '#0d0d0d';
         const wheelR = 14;
+        const bob = Math.sin(bobPhase) * 2.2;
+
+        ctx.save();
+        ctx.translate(carX, carY + bob);
+        ctx.rotate(leanNow * 0.09);
+        ctx.translate(-carX, -carY);
+
+        ctx.fillStyle = 'rgba(30,25,55,0.18)';
+        ctx.beginPath();
+        ctx.ellipse(carX, carY + ch * 0.8, cw * 0.48, ch * 0.09, 0, 0, Math.PI * 2);
+        ctx.fill();
 
         ctx.fillStyle = accent;
         ctx.beginPath();
-        ctx.ellipse(carX, carY + ch * 0.45, cw * 0.42, ch * 0.18, 0, 0, Math.PI * 2);
+        ctx.ellipse(carX + bob * 0.2, carY + ch * 0.45, cw * 0.42, ch * 0.18, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = body;
+        const bodyGrad = ctx.createLinearGradient(0, carY, 0, carY + ch * 0.8);
+        bodyGrad.addColorStop(0, shadeColor(body, 0.30));
+        bodyGrad.addColorStop(0.55, body);
+        bodyGrad.addColorStop(1, shadeColor(body, -0.25));
+        ctx.fillStyle = bodyGrad;
         ctx.beginPath();
         ctx.roundRect(carX - cw * 0.42, carY, cw * 0.84, ch * 0.55, 22);
         ctx.fill();
@@ -512,6 +580,11 @@
         ctx.fillStyle = body;
         ctx.beginPath();
         ctx.ellipse(carX, carY + ch * 0.22, cw * 0.28, ch * 0.18, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = 'rgba(0,0,0,0.16)';
+        ctx.beginPath();
+        ctx.roundRect(carX - cw * 0.42, carY + ch * 0.47, cw * 0.84, ch * 0.09, 22);
         ctx.fill();
 
         ctx.fillStyle = '#fff';
@@ -546,30 +619,62 @@
 
         ctx.fillStyle = wheel;
         const wh = wheelR * 1.6;
+        const wy = carY + ch * 0.62;
         ctx.beginPath();
-        ctx.ellipse(carX - cw * 0.24, carY + ch * 0.62, wheelR, wh, 0, 0, Math.PI * 2);
+        ctx.ellipse(carX - cw * 0.24, wy, wheelR, wh, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.beginPath();
-        ctx.ellipse(carX + cw * 0.24, carY + ch * 0.62, wheelR, wh, 0, 0, Math.PI * 2);
+        ctx.ellipse(carX + cw * 0.24, wy, wheelR, wh, 0, 0, Math.PI * 2);
         ctx.fill();
+
+        const spin = progress * 0.05;
+        ctx.strokeStyle = '#fff8ed';
+        ctx.lineWidth = 2.5;
+        for (const wx of [carX - cw * 0.24, carX + cw * 0.24]) {
+            ctx.beginPath();
+            ctx.moveTo(wx + Math.cos(spin) * wheelR, wy + Math.sin(spin) * wh);
+            ctx.lineTo(wx - Math.cos(spin) * wheelR, wy - Math.sin(spin) * wh);
+            ctx.moveTo(wx + Math.cos(spin + Math.PI / 2) * wheelR, wy + Math.sin(spin + Math.PI / 2) * wh);
+            ctx.lineTo(wx - Math.cos(spin + Math.PI / 2) * wheelR, wy - Math.sin(spin + Math.PI / 2) * wh);
+            ctx.stroke();
+        }
         ctx.strokeStyle = '#0d0d0d';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(carX - cw * 0.24 - wheelR, carY + ch * 0.62);
-        ctx.lineTo(carX - cw * 0.24 + wheelR, carY + ch * 0.62);
-        ctx.moveTo(carX - cw * 0.24, carY + ch * 0.62 - wh);
-        ctx.lineTo(carX - cw * 0.24, carY + ch * 0.62 + wh);
-        ctx.beginPath();
-        ctx.moveTo(carX + cw * 0.24 - wheelR, carY + ch * 0.62);
-        ctx.lineTo(carX + cw * 0.24 + wheelR, carY + ch * 0.62);
-        ctx.moveTo(carX + cw * 0.24, carY + ch * 0.62 - wh);
-        ctx.lineTo(carX + cw * 0.24, carY + ch * 0.62 + wh);
-        ctx.stroke();
+        for (const wx of [carX - cw * 0.24, carX + cw * 0.24]) {
+            ctx.beginPath();
+            ctx.arc(wx, wy, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        ctx.restore();
     }
 
     function projectW(d) {
         if (d <= 0) return ROAD_MAX_W;
         return Math.max(ROAD_MIN_W, ROAD_MAX_W * 300 / (300 + d));
+    }
+
+    function shadeColor(hex, amt) {
+        const n = parseInt(hex.slice(1), 16);
+        const r = Math.max(0, Math.min(255, (n >> 16) + Math.round(255 * amt)));
+        const g = Math.max(0, Math.min(255, ((n >> 8) & 0xff) + Math.round(255 * amt)));
+        const b = Math.max(0, Math.min(255, (n & 0xff) + Math.round(255 * amt)));
+        return 'rgb(' + r + ',' + g + ',' + b + ')';
+    }
+
+    function fadeHex(hex, a) {
+        const n = parseInt(hex.slice(1), 16);
+        return 'rgba(' + (n >> 16) + ',' + ((n >> 8) & 0xff) + ',' + (n & 0xff) + ',' + a.toFixed(3) + ')';
+    }
+
+    function farFog(screenDist) {
+        return Math.max(0.35, Math.min(1, (VISIBLE_DIST - screenDist) / (VISIBLE_DIST - 180)));
+    }
+
+    function drawDepth(x, y, size, alpha) {
+        ctx.fillStyle = 'rgba(30,25,55,' + alpha.toFixed(3) + ')';
+        ctx.beginPath();
+        ctx.ellipse(x, y + size * 0.42, Math.max(6, size * 0.34), Math.max(2, size * 0.10), 0, 0, Math.PI * 2);
+        ctx.fill();
     }
 
     // Visible range of the road ahead
@@ -589,23 +694,29 @@
         ctx.fillRect(0, HORIZON_Y, w, H - HORIZON_Y);
 
         clampOffsets();
+        if (!hillKnots.length) initHills();
+        recomputeCamera();
 
         for (let i = NUM_SEGMENTS - 1; i >= 0; i--) {
             const dFar = (i + 1) * SEG_DIST;
             const dNear = i * SEG_DIST;
-            const yFar = ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * dFar / VISIBLE_DIST);
-            const yNear = ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * dNear / VISIBLE_DIST);
+            const yFar = roadY(dFar);
+            const yNear = roadY(dNear);
 
             const wFar = projectW(dFar);
             const wNear = projectW(dNear);
 
-            const yClampedF = Math.max(HORIZON_Y, Math.min(ROAD_BOTTOM_Y, yFar));
-            const yClampedN = Math.max(HORIZON_Y, Math.min(ROAD_BOTTOM_Y, yNear));
+            const yClampedF = yFar;
+            const yClampedN = yNear;
 
             const xCenterFar = roadCenterX(dFar);
             const xCenterNear = roadCenterX(dNear);
 
-            ctx.fillStyle = currentWorld.roadColor;
+            const roadBand = (i % 2 === 0)
+                ? currentWorld.roadColor
+                : shadeColor(currentWorld.roadColor, -0.09);
+
+            ctx.fillStyle = roadBand;
             ctx.beginPath();
             ctx.moveTo(xCenterFar - wFar / 2, yClampedF);
             ctx.lineTo(xCenterFar + wFar / 2, yClampedF);
@@ -638,9 +749,24 @@
             ctx.moveTo(xCenterFar + wFar / 2, yClampedF);
             ctx.lineTo(xCenterNear + wNear / 2, yClampedN);
             ctx.stroke();
+
+            ctx.strokeStyle = currentWorld.stripeColor;
+            ctx.lineWidth = Math.max(2, wNear * 0.05);
+            ctx.beginPath();
+            ctx.moveTo(xCenterFar - wFar / 2, yClampedF);
+            ctx.lineTo(xCenterNear - wNear / 2, yClampedN);
+            ctx.moveTo(xCenterFar + wFar / 2, yClampedF);
+            ctx.lineTo(xCenterNear + wNear / 2, yClampedN);
+            ctx.stroke();
         }
 
         drawCenterDashes();
+
+        const topFog = ctx.createLinearGradient(0, HORIZON_Y, 0, HORIZON_Y + H * 0.28);
+        topFog.addColorStop(0, fadeHex(currentWorld.horizonColor, 0.90));
+        topFog.addColorStop(1, fadeHex(currentWorld.horizonColor, 0));
+        ctx.fillStyle = topFog;
+        ctx.fillRect(0, HORIZON_Y, w, H * 0.28);
     }
 
     function drawCenterDashes() {
@@ -652,14 +778,14 @@
         const first = (Math.ceil(progress / pitch) * pitch) - progress;
         for (let dNear = first; dNear < VISIBLE_DIST; dNear += pitch) {
             const dFar = dNear + dashLen;
-            const yNear = ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * dNear / VISIBLE_DIST);
-            const yFar = ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * dFar / VISIBLE_DIST);
-            if (yFar < HORIZON_Y - 4) continue;
+            const yNear = roadY(dNear);
+            const yFar = roadY(dFar);
+            if (Math.min(yNear, yFar) < HORIZON_Y - 92) continue;
             const xNear = roadCenterX(dNear);
             const xFar = roadCenterX(dFar);
             ctx.beginPath();
-            ctx.moveTo(xNear, Math.min(ROAD_BOTTOM_Y, Math.max(HORIZON_Y, yNear)));
-            ctx.lineTo(xFar, Math.max(HORIZON_Y, Math.min(ROAD_BOTTOM_Y, yFar)));
+            ctx.moveTo(xNear, yNear);
+            ctx.lineTo(xFar, yFar);
             ctx.stroke();
         }
     }
@@ -703,14 +829,16 @@
         obstacles.forEach(o => {
             const screenDist = o.dist - progress;
             if (screenDist < 0 || screenDist > VISIBLE_DIST || screenDist < SEG_DIST * 0.6) return;
-            const scale = screenDist / VISIBLE_DIST;
-            const y = ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * scale);
-            if (y > ROAD_BOTTOM_Y || y < HORIZON_Y) return;
+            const y = roadY(screenDist);
+            if (y > ROAD_BOTTOM_Y || y < HORIZON_Y - 90) return;
             const w = projectW(screenDist);
             const x = roadCenterX(screenDist) + o.lane * w * 0.32;
             const t = cfg.obstacleTypes[o.type];
             const size = pickupScreenSize(screenDist) * 1.25;
             if (size < 8) return;
+            const fog = farFog(screenDist);
+            ctx.globalAlpha = fog;
+            drawDepth(x, y, size, 0.30 * fog + 0.05);
             ctx.font = size + 'px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -718,6 +846,7 @@
             ctx.font = '';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'alphabetic';
+            ctx.globalAlpha = 1;
         });
     }
 
@@ -787,10 +916,138 @@
         if (type === 'rock' && obs) {
             const screenDist = obs.dist - progress;
             const w = projectW(screenDist);
-            addPuff(roadCenterX(screenDist) + obs.lane * w * 0.32, ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * screenDist / VISIBLE_DIST));
+            addPuff(roadCenterX(screenDist) + obs.lane * w * 0.32, roadY(screenDist));
             const idx = obstacles.indexOf(obs);
             if (idx >= 0) obstacles.splice(idx, 1);
         }
+    }
+
+    function initBoosts() {
+        boosts.length = 0;
+        const rng = mulberry32((currentWorld.curveSeed || 2026) * 31657 + 19);
+        let d = 900 + rng() * 300;
+        while (d < finishLineDist - 500) {
+            boosts.push({ dist: d, lane: rng() < 0.5 ? -1 : 1, hitCd: 0, used: false });
+            d += 620 + rng() * 220;
+        }
+    }
+
+    function playBoost() {
+        if (!audioCtx) return;
+        const t = audioCtx.currentTime;
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.connect(g); g.connect(audioCtx.destination);
+        o.type = 'sawtooth';
+        o.frequency.setValueAtTime(240, t);
+        o.frequency.exponentialRampToValueAtTime(920, t + 0.16);
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.10, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+        o.start(t); o.stop(t + 0.22);
+    }
+
+    function updateBoosts(dt) {
+        const carDepthY = ROAD_BOTTOM_Y - cfg.carHeight * 0.82;
+        boosts.forEach(b => {
+            if (b.hitCd > 0) b.hitCd = Math.max(0, b.hitCd - dt);
+            const screenDist = b.dist - progress;
+            if (screenDist < 0 || screenDist > VISIBLE_DIST || b.hitCd > 0) return;
+            const w = projectW(screenDist);
+            const x = roadCenterX(screenDist) + b.lane * w * 0.32;
+            const y = roadY(screenDist);
+            const size = pickupScreenSize(screenDist) * 1.2;
+            if (Math.abs(x - carX) < (cfg.carWidth / 2 + size / 2) &&
+                y > carDepthY - size && y < carDepthY + size) {
+                b.hitCd = 900;
+                b.used = true;
+                const top = ((selectedCar && selectedCar.maxSpeed) || maxSpeed) * 1.12;
+                if (speed < top) speed = Math.min(speed * 1.35, top);
+                addSparkle(carX, ROAD_BOTTOM_Y - cfg.carHeight * 0.3, '#FF9E40');
+                addSparkle(carX + carHalfW * 0.5, ROAD_BOTTOM_Y - cfg.carHeight * 0.2, '#FFC15E');
+                playBoost();
+            }
+        });
+    }
+
+    function updateSkidAndDust(dt) {
+        if ((keys.left || keys.right) && speed > 30) skidTimer += dt;
+        else skidTimer = Math.max(0, skidTimer - dt * 3);
+        if ((keys.left || keys.right) && speed > 40) {
+            dustAcc += dt;
+            const rearY = ROAD_BOTTOM_Y - cfg.carHeight * 0.5;
+            while (dustAcc > 90) {
+                dustAcc -= 90;
+                puffs.push({
+                    x: carX - carHalfW + (Math.random() * 2 - 1) * 6,
+                    y: rearY + (Math.random() * 2 - 1) * 4,
+                    vx: (Math.random() * 2 - 1) * 30,
+                    vy: -20 - Math.random() * 30,
+                    life: 420,
+                    r: 3 + Math.random() * 3,
+                    col: '#D8C9A8'
+                });
+                puffs.push({
+                    x: carX + carHalfW + (Math.random() * 2 - 1) * 6,
+                    y: rearY + (Math.random() * 2 - 1) * 4,
+                    vx: (Math.random() * 2 - 1) * 30,
+                    vy: -20 - Math.random() * 30,
+                    life: 420,
+                    r: 3 + Math.random() * 3,
+                    col: '#D8C9A8'
+                });
+            }
+        }
+    }
+
+    function drawSkid() {
+        if (skidTimer <= 0) return;
+        const len = Math.min(skidTimer * 0.05, 26);
+        const wL = carHalfW * 0.75;
+        const ybase = ROAD_BOTTOM_Y - cfg.carHeight * 0.38;
+        ctx.strokeStyle = 'rgba(30,25,55,' + (0.32 * Math.min(1, skidTimer / 200)).toFixed(3) + ')';
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(carX - wL - len, ybase + 6);
+        ctx.lineTo(carX - wL, ybase + 6);
+        ctx.moveTo(carX + wL - len, ybase + 6);
+        ctx.lineTo(carX + wL, ybase + 6);
+        ctx.stroke();
+        ctx.lineCap = 'butt';
+    }
+
+    function drawBoosts() {
+        if (!boosts.length && finishLineDist > 0) initBoosts();
+        boosts.forEach(b => {
+            const screenDist = b.dist - progress;
+            if (screenDist < 0 || screenDist > VISIBLE_DIST || screenDist < SEG_DIST * 0.6) return;
+            const y = roadY(screenDist);
+            if (y > ROAD_BOTTOM_Y || y < HORIZON_Y - 90) return;
+            const w = projectW(screenDist);
+            const x = roadCenterX(screenDist) + b.lane * w * 0.32;
+            const size = pickupScreenSize(screenDist) * 1.2;
+            const fog = farFog(screenDist);
+            const hot = (b.hitCd > 0 || b.used) ? 0.25 : 0.7;
+            ctx.globalAlpha = fog * hot;
+            ctx.fillStyle = currentWorld.finishColor;
+            ctx.beginPath();
+            ctx.roundRect(x - size * 0.55, y - size * 0.28, size * 1.1, size * 0.56, size * 0.2);
+            ctx.fill();
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.moveTo(x - size * 0.34, y + size * 0.10);
+            ctx.lineTo(x - size * 0.18, y - size * 0.16);
+            ctx.lineTo(x - size * 0.05, y + size * 0.10);
+            ctx.closePath();
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(x + size * 0.06, y + size * 0.10);
+            ctx.lineTo(x + size * 0.22, y - size * 0.16);
+            ctx.lineTo(x + size * 0.35, y + size * 0.10);
+            ctx.closePath();
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        });
     }
 
     function updateObstacles(dt) {
@@ -807,8 +1064,7 @@
             if (o.hitCd > 0) { o.hitCd = Math.max(0, o.hitCd - dt); return; }
             const screenDist = o.dist - progress;
             if (screenDist < 0 || screenDist > VISIBLE_DIST) return;
-            const scale = screenDist / VISIBLE_DIST;
-            const y = ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * scale);
+            const y = roadY(screenDist);
             const w = projectW(screenDist);
             const x = roadCenterX(screenDist) + o.lane * w * 0.32;
             const size = pickupScreenSize(screenDist) * 1.25;
@@ -843,20 +1099,23 @@
         decors.forEach(dc => {
             const screenDist = dc.dist - progress;
             if (screenDist < 0 || screenDist > VISIBLE_DIST) return;
-            const scale = screenDist / VISIBLE_DIST;
-            const y = ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * scale);
-            if (y < HORIZON_Y - 4 || y > ROAD_BOTTOM_Y) return;
+            const y = roadY(screenDist);
+            if (y < HORIZON_Y - 96 || y > ROAD_BOTTOM_Y) return;
             const w = projectW(screenDist);
             const x = roadCenterX(screenDist) + dc.side * (w / 2 + w * dc.offset);
             if (x < -60 || x > canvas.width + 60) return;
             const size = cfg.pickupSize * (w / ROAD_MAX_W) * 1.5 * dc.scale;
             if (size < 8) return;
+            const fog = farFog(screenDist);
+            ctx.globalAlpha = fog;
+            drawDepth(x, y, size, 0.38 * fog + 0.06);
             ctx.font = size + 'px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(dc.char, x, y);
             ctx.textAlign = 'left';
             ctx.textBaseline = 'alphabetic';
+            ctx.globalAlpha = 1;
         });
     }
 
@@ -870,12 +1129,14 @@
             if (p.collected) return;
             const screenDist = p.dist - progress;
             if (screenDist < 0 || screenDist > VISIBLE_DIST || screenDist < SEG_DIST) return;
-            const scale = screenDist / VISIBLE_DIST;
-            const y = ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * scale);
-            if (y > ROAD_BOTTOM_Y || y < HORIZON_Y) return;
+            const y = roadY(screenDist);
+            if (y > ROAD_BOTTOM_Y || y < HORIZON_Y - 90) return;
             const w = projectW(screenDist);
             const x = roadCenterX(screenDist) + p.lane * w * 0.32;
             const size = pickupScreenSize(screenDist);
+            const fog = farFog(screenDist);
+            ctx.globalAlpha = fog;
+            drawDepth(x, y, size, 0.30 * fog + 0.05);
             ctx.font = size + 'px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -883,17 +1144,19 @@
             ctx.font = '';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'alphabetic';
+            ctx.globalAlpha = 1;
         });
     }
 
     function drawFinishLine() {
         const screenDist = finishLineDist - progress;
         if (screenDist <= 0 || screenDist > VISIBLE_DIST) return;
-        const scale = screenDist / VISIBLE_DIST;
-        const y = ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * scale);
-        if (y > ROAD_BOTTOM_Y + 40 || y < HORIZON_Y - 40) return;
+        const y = roadY(screenDist);
+        if (y > ROAD_BOTTOM_Y + 40 || y < HORIZON_Y - 140) return;
         const w = projectW(screenDist);
         const x = roadCenterX(screenDist);
+        const fog = farFog(screenDist);
+        ctx.globalAlpha = fog;
 
         ctx.fillStyle = currentWorld.finishColor;
         ctx.fillRect(x - cfg.finishWidth / 2, y - cfg.finishWidth / 2, cfg.finishWidth, cfg.finishWidth);
@@ -914,6 +1177,7 @@
         ctx.fillText('ЦИЉ', x, y + cfg.finishWidth + 24);
         ctx.textAlign = 'left';
         ctx.textBaseline = 'alphabetic';
+        ctx.globalAlpha = 1;
     }
 
     function updatePickups() {
@@ -922,8 +1186,7 @@
             if (p.collected) return;
             const screenDist = p.dist - progress;
             if (screenDist < 0 || screenDist > VISIBLE_DIST) return;
-            const scale = screenDist / VISIBLE_DIST;
-            const y = ROAD_BOTTOM_Y - ((ROAD_BOTTOM_Y - HORIZON_Y) * scale);
+            const y = roadY(screenDist);
             const w = projectW(screenDist);
             const x = roadCenterX(screenDist) + p.lane * w * 0.32;
             const size = pickupScreenSize(screenDist);
@@ -1001,9 +1264,15 @@
         shake = 0;
         finishLineDist = currentWorld.goal;
         initCurve();
+        initHills();
         initPickups();
         initObstacles();
+        initBoosts();
         initDecor();
+        leanNow = 0;
+        skidTimer = 0;
+        dustAcc = 0;
+        bobPhase = 0;
         const modal = document.getElementById('racing-win-modal');
         if (modal) modal.classList.remove('show');
         beginCountdown();
@@ -1032,8 +1301,16 @@
         const accel = ((selectedCar && selectedCar.accel) || 1) * mult;
         speed = Math.min((selectedCar && selectedCar.maxSpeed) || maxSpeed, speed + cfg.speedGrowth * sec * accel);
 
+        const targetLean = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
+        leanNow += (targetLean - leanNow) * Math.min(1, 8 * sec);
+
+        if (speed > 10) bobPhase += sec * (7 + speedNorm() * 8);
+
+        recomputeCamera();
         updateObstacles(dt);
         updatePuffs(dt);
+        updateBoosts(dt);
+        updateSkidAndDust(dt);
         updatePickups();
         checkFinish();
         updateEngine();
@@ -1042,6 +1319,14 @@
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.save();
+        ctx.translate(-leanNow * 8, 0);
+        if (!REDUCED_MOTION) {
+            const sNorm = speedNorm();
+            const anchorX = carX, anchorY = ROAD_BOTTOM_Y - cfg.carHeight;
+            ctx.translate(anchorX, anchorY);
+            ctx.scale(1 + sNorm * 0.025, 1 + sNorm * 0.025);
+            ctx.translate(-anchorX, -anchorY);
+        }
         if (shake > 0 && !REDUCED_MOTION) {
             ctx.translate((Math.random() * 2 - 1) * 6 * shake, (Math.random() * 2 - 1) * 4 * shake);
         }
@@ -1049,8 +1334,10 @@
         drawDecor();
         drawPickups();
         drawObstacles();
+        drawBoosts();
         drawFinishLine();
 
+        drawSkid();
         drawCar(carX, ROAD_BOTTOM_Y - cfg.carHeight, selectedCharacter);
 
         puffs.forEach(p => {
@@ -1066,6 +1353,30 @@
             drawCountdown(countdownActive ? countdownDisplay(countdownLeft) : 'go');
         }
         ctx.restore();
+
+        const sNorm = speedNorm();
+        const vg = ctx.createRadialGradient(W / 2, H * 0.55, Math.min(W, H) * 0.33, W / 2, H * 0.55, Math.max(W, H) * 0.72);
+        vg.addColorStop(0, 'rgba(0,0,0,0)');
+        vg.addColorStop(1, 'rgba(0,0,0,' + (0.10 + sNorm * 0.10).toFixed(3) + ')');
+        ctx.fillStyle = vg;
+        ctx.fillRect(0, 0, W, H);
+
+        if (!REDUCED_MOTION && sNorm > 0.45) {
+            const alpha = Math.min(0.16, (sNorm - 0.45) * 0.3);
+            ctx.strokeStyle = 'rgba(255,255,255,' + alpha.toFixed(3) + ')';
+            ctx.lineWidth = 2;
+            const cx = W / 2, cy = H * 0.55;
+            const drift = 0.15 + 0.1 * Math.sin(progress * 0.02);
+            for (let i = 0; i < 12; i++) {
+                const ang = (i / 12) * Math.PI * 2 + drift * 0.3;
+                const r0 = Math.max(W, H) * 0.52;
+                const r1 = r0 + 40 + (i % 3) * 18;
+                ctx.beginPath();
+                ctx.moveTo(cx + Math.cos(ang) * r0, cy + Math.sin(ang) * r0);
+                ctx.lineTo(cx + Math.cos(ang) * r1, cy + Math.sin(ang) * r1);
+                ctx.stroke();
+            }
+        }
 
         const scoreEl = document.getElementById('racing-score');
         if (scoreEl && scoreEl.textContent !== 'Поени: ' + score) {
@@ -1143,6 +1454,12 @@
             speed: () => speed,
             score: () => score,
             carX: () => carX,
+            lean: () => leanNow,
+            roadY: roadY,
+            hillStrength: () => (typeof currentWorld.hillStrength === 'number' ? currentWorld.hillStrength : 1),
+            boosts: () => boosts,
+            skid: () => skidTimer,
+            bobPhase: () => bobPhase,
             raceFinished: () => raceFinished,
             ROAD_CENTER: () => ROAD_CENTER,
             ROAD_BOTTOM_Y: () => ROAD_BOTTOM_Y,

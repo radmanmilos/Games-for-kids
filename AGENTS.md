@@ -43,7 +43,7 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 - Cloudflare Workers serves extensionless URLs: standalone detection must strip `.html` before comparing page names. Never match `'name.html'`.
 - Coloring regions: `createColoringRegion` accepts both `r.attrs` and flat fields — never assume `attrs` is always present.
 - Kitty HUD button offsets are sacred: music 🔊 at `right:268px`, worlds 🌍 at `right:200px` — do not move them closer or they overlap.
-- Test over HTTP (Live Server), not `file://` — file:// breaks audio, the kitty iframe, and throws Unsafe-attempt warnings.
+- Test over HTTP (Live Server), not `file://` — file:// breaks audio, the kitty iframe, and throws Unsafe-attempt warnings. **racing3d is the ONLY ES-module game**: under `file://` Chrome CORS-blocks `racing3d.mjs`, so the page shows its HUD but never boots (`window.__r3d`/`startRacing3D` absent). Symptom "opens from hub in Chrome but not starting" = the hub was opened via `file://`; direct Live-Server open works because it's HTTP. Always open `game/index.html` via Live Server too.
 - Do NOT rework settled layouts: coloring palette grid format, ref/coloring SVG sizes, grid stability (`scrollbar-gutter:stable`, no tile-pop reflow on tap).
 - Do NOT reintroduce rejected/deferred scope: jigsaw puzzle pieces, memory difficulty levels, unlockable stickers, screen transitions.
 - Memory games speak the animal name + play its sound ONLY on matched pairs — never on single or mismatched flips.
