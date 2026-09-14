@@ -46,19 +46,93 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     check('countdown finished -> driving mode', driveWait === true);
 
     await h.evalv(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' })); true`);
-    await sleep(350);
+    await sleep(400);
+    const stA = JSON.parse(await h.evalv(`JSON.stringify({ yaw: window.__r3d.steerState().steerYaw, lat: window.__r3d.lateral(), sp: window.__r3d.speed() })`));
     await h.evalv(`window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' })); true`);
-    const holdA = await h.evalv(`JSON.stringify({ lat: window.__r3d.lateral(), sp: window.__r3d.speed() })`);
-    await sleep(350);
-    const holdB = await h.evalv(`JSON.stringify({ lat: window.__r3d.lateral(), sp: window.__r3d.speed() })`);
+    await sleep(150);
+    const stE1 = JSON.parse(await h.evalv(`JSON.stringify({ yaw: window.__r3d.steerState().steerYaw, lat: window.__r3d.lateral() })`));
+    await sleep(250);
+    const stE2 = JSON.parse(await h.evalv(`JSON.stringify({ yaw: window.__r3d.steerState().steerYaw, lat: window.__r3d.lateral() })`));
+    await sleep(900);
+    const stB = JSON.parse(await h.evalv(`JSON.stringify({ yaw: window.__r3d.steerState().steerYaw, lat: window.__r3d.lateral() })`));
+    await sleep(300);
+    const stC = JSON.parse(await h.evalv(`JSON.stringify({ lat: window.__r3d.lateral() })`));
     await h.evalv(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' })); true`);
-    await sleep(350);
+    await sleep(400);
     await h.evalv(`window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' })); true`);
-    const steerLeft = await h.evalv(`JSON.stringify({ lat: window.__r3d.lateral(), sp: window.__r3d.speed() })`);
-    const hj = JSON.parse(holdA), hj2 = JSON.parse(holdB), lj = JSON.parse(steerLeft);
-    check('steering moves kart laterally, holds its line when released, reverses on other key',
-        hj.sp > 10 && hj.lat > 0.5 && hj2.lat === hj.lat && lj.lat < hj.lat,
-        holdA + ' -> ' + holdB + ' -> ' + steerLeft);
+    const stLeft = JSON.parse(await h.evalv(`JSON.stringify({ lat: window.__r3d.lateral() })`));
+    check('steering: wheels turn in + car drifts, car stops while wheels still return slowly, no side-drift, reverses',
+        stA.sp > 10 && stA.yaw > 0.1 && stA.lat > 0.3 &&
+        stE1.yaw > 0.1 && stE2.yaw > 0.07 && Math.abs(stE2.lat - stE1.lat) < 0.4 &&
+        Math.abs(stB.yaw) < 0.05 && Math.abs(stC.lat - stB.lat) < 0.15 &&
+        stLeft.lat < stC.lat - 0.5,
+        JSON.stringify({ stA, stE1, stE2, stB, stC, stLeft }));
+
+    const pads = await h.evalv(`JSON.stringify(window.__r3d.boostPads())`);
+    const pj = JSON.parse(pads);
+    check('boost pads spawned on road lanes (6 pads, within road width)',
+        Array.isArray(pj) && pj.length === 6 && pj.every(p => Math.abs(p.x) <= 9.6), pads);
+
+    const boostA = await h.evalv(`JSON.stringify({ ok: window.__r3d.triggerBoost(), active: window.__r3d.boosting() })`);
+    const boostOn = JSON.parse(boostA);
+    await sleep(250);
+    const boostPart = await h.evalv(`window.__r3d.particles()`);
+    check('boost raises speed target + spawns flame particles',
+        boostOn.active === true && boostPart > 0, boostA + ' particles=' + boostPart);
+
+    const wheelA = JSON.parse(await h.evalv(`JSON.stringify(window.__r3d.wheelPose())`));
+    await sleep(250);
+    const wheelB = JSON.parse(await h.evalv(`JSON.stringify(window.__r3d.wheelPose())`));
+    check('wheels roll forward around their axle (rotation.x, no vertical wobble)',
+        wheelA.length === 4 && wheelB.length === 4 &&
+        wheelA.some((v, i) => wheelB[i][0] !== v[0]) &&
+        wheelA.every((v) => Math.abs(v[1]) < 1e-6),
+        JSON.stringify({ wheelA, wheelB }));
+
+    await h.evalv(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' })); true`);
+    await sleep(400);
+    const driftA = await h.evalv(`window.__r3d.drifting()`);
+    const driftPart = await h.evalv(`window.__r3d.particles()`);
+    await h.evalv(`window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' })); true`);
+    await sleep(150);
+    const driftB = await h.evalv(`window.__r3d.drifting()`);
+    check('drift engages while steering at speed (skid smoke) and disengages on release',
+        driftA === true && driftB === false && driftPart > 0, 'drift=' + driftA + '->' + driftB + ' particles=' + driftPart);
+
+    await h.evalv(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' })); true`);
+    await sleep(400);
+    const bankA = JSON.parse(await h.evalv(`JSON.stringify(window.__r3d.steerState())`));
+    await h.evalv(`window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' })); true`);
+    await sleep(1300);
+    const bankB = JSON.parse(await h.evalv(`JSON.stringify(window.__r3d.steerState())`));
+    check('kart banks into the turn + wheels carry a spin pattern, then point forward on release',
+        bankA.spokes === 16 && bankA.roll > 0.15 && bankA.steerYaw > 0.1 &&
+        Math.abs(bankB.roll) < 0.05 && Math.abs(bankB.steerYaw) < 0.05 && Math.abs(bankB.yaw) < 0.05,
+        JSON.stringify({ bankA, bankB }));
+
+    const rumA = await h.evalv(`window.__r3d.seekLateral(9.4); true`);
+    await sleep(150);
+    const rumB = await h.evalv(`JSON.stringify({ lat: window.__r3d.lateral(), ron: window.__r3d.rumbleOn(), off: window.__r3d.offroadState() })`);
+    const ruj = JSON.parse(rumB);
+    await sleep(220);
+    const rumPart = await h.evalv(`window.__r3d.particles()`);
+    const rumC = await h.evalv(`JSON.stringify({ lat: window.__r3d.seekLateral(0), ron: window.__r3d.rumbleOn() })`);
+    const ruby = JSON.parse(rumC);
+    check('edge rumble + offroad dust: past the rumble strip the kart rumbles, clears on return',
+        ruj.ron === true && ruj.off === true && ruby.ron === false && rumPart > 0,
+        rumA + ' -> ' + rumB + ' particles=' + rumPart + ' -> ' + rumC);
+
+    const m0 = JSON.parse(await h.evalv(`JSON.stringify(window.__r3d.mapMarker())`));
+    await sleep(300);
+    const m1 = JSON.parse(await h.evalv(`JSON.stringify(window.__r3d.mapMarker())`));
+    const mapCanvas = await h.evalv(`(document.querySelector('#r3d-map canvas') || {}).width || 0`);
+    check('race-track mini-map renders the loop with a live moving kart marker',
+        mapCanvas > 0 && m0.n > 0 && m1.n === m0.n && m1.t !== m0.t,
+        JSON.stringify({ m0, m1, mapCanvas }));
+
+    const terrain = JSON.parse(await h.evalv(`JSON.stringify({ hills: window.__r3d.hillRange(), clear: window.__r3d.floorClear() })`));
+    check('hills clearly visible (≥6 height range) and the road always clears the terrain (never under it)',
+        terrain.hills >= 6 && terrain.clear >= 0, JSON.stringify(terrain));
 
     const tris = await h.evalv(`window.__r3d.tris()`);
     check('scene renders real geometry (road/kart/flowers drawn, not a culled empty scene)',

@@ -220,8 +220,8 @@
                                        "size":  6144
                                    },
     "pages/racing3d.html":  {
-                                "sha256":  "6357A8DA0A759F6CF8C4FDC1368EC1F09C406FE7F837A8741D13B2961059DC24",
-                                "size":  8138
+                                "sha256":  "7E6DBD32B4599365EBF63888FF0CABE87A9DF2181DF32BD9A2CAE906438D31CD",
+                                "size":  8724
                             },
     "assets/audio/speech/l.mp3":  {
                                       "sha256":  "1D7ECB59AC3298E53FAF13F289DBA3BABD43F8C09B347C7344DCE3AB4FA50A5C",
@@ -272,8 +272,8 @@
                                         "size":  6144
                                     },
     "offline-manifest.json":  {
-                                  "sha256":  "4449D43C6A995F371D9FC542743452365C72C53C9F00615A17CCE0E3C16A502D",
-                                  "size":  28540
+                                  "sha256":  "C88B4BD92470EBDF0C061D32647519DA0A496320EE5C6C00B7CE392BBCA58CA6",
+                                  "size":  50332
                               },
     "pages/dino.html":  {
                             "sha256":  "BB214A5C33DFCBEB3707283F986C2D7D40C3C9C4E23692150B516F7D97E98329",
@@ -404,8 +404,8 @@
                                 "size":  7359
                             },
     "games/racing3d.mjs":  {
-                               "sha256":  "4626A0350C67BEBA7AAB24A0943921FF01003C1AF46F787E16EB0D52A5142008",
-                               "size":  26287
+                               "sha256":  "D3C2818DA7A20900EF92417012C486393B3473B459D47AC6C758A8F91DE75E44",
+                               "size":  52056
                            },
     "assets/audio/speech/a.mp3":  {
                                       "sha256":  "F3367D34A65237AFAFB62C407D481B149410E5722188D6949BB787CC530C6FFA",
@@ -500,8 +500,8 @@
                                      "size":  13545
                                  },
     "games/racing3d-config.js":  {
-                                     "sha256":  "C358B7A5E92FF6D111103B4E4AA9C754DA372E5FB25CAB012DD679A480257277",
-                                     "size":  949
+                                     "sha256":  "7FD714A141B264E546617F94461E2D76D3ED53DDC08712436246C51B25A63353",
+                                     "size":  979
                                  },
     "assets/audio/speech/s.mp3":  {
                                       "sha256":  "F6E9364CA12D3F216C274BCB2C26C79159D8FCAD2EE05FB30482F4B34A2A7A79",

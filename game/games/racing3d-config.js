@@ -20,6 +20,7 @@
         kartAccent: 0xffd23f,
         wheelColor: 0x1c1c1c,
         hubColor: 0xbdbdbd,
+        boostColor: 0xffd23f,
         treeTrunk: 0x8b5a2b,
         treeCrown: 0x2e7d32,
         curveSeed: 2026,
