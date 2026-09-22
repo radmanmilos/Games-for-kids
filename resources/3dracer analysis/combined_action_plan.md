@@ -32,13 +32,13 @@ Note: an FOV kick on boost already exists; nothing to add, only normalize its ea
 
 Each batch = one micro-step: code → `node --check` → `racing3d_smoke.js` 17/17 → `hub_smoke.js` ALL PASS → `tools/sync-docs.sh` → `build_offline.ps1` → dated notes in `PROJECT_TASKS.md` / `HANDOVER_PROMPT.md` / `tools/README.md`. Headless world-switch tests must use the **picker-click → reload** path (direct `Page.reload` is unreliable in the harness).
 
-### Batch 1 — Frame-timing normalization + test hook (P0, all 4 AIs)
+### Batch 1 — Frame-timing normalization + test hook (P0, all 4 AIs) — **DONE 2026-09-22, smoke 18/18**
 - Convert `Math.min(1, k*dt)` → `1 - Math.exp(-k*dt)` at lines 1416, 1419, 1425, 1563.
 - Audit ambient sound accumulators, obstacle-warning beep cooldown (~720 ms), and the music scheduler for seconds-based timing; schedule from `ctx.currentTime` where frame-counted.
 - Add test-only `__r3d.lastDt` + `__r3d.step(dt)` hook at the `__r3d` block (`:1615`); smoke asserts lateral displacement converges within tolerance stepping the sim at `dt=1/60` vs `dt=1/120`.
 - Test: smoke steering checks still pass; new 60/120 Hz convergence case.
 
-### Batch 2 — Touch/palm-press hardening (P0, all 4 AIs)
+### Batch 2 — Touch/palm-press hardening (P0, all 4 AIs) — **DONE 2026-09-22, smoke 19/19**
 - Per-zone `pointerId` ownership + `setPointerCapture`, handle `pointercancel`/`touchend` and ignore `touchcancel` without releasing the wrong zone.
 - `touch-action: none` on the canvas/HUD area (CSS in `racing3d.html`).
 - Ignore touches that start outside the left/right steer zones (background = safe no-op).
@@ -46,15 +46,15 @@ Each batch = one micro-step: code → `node --check` → `racing3d_smoke.js` 17/
 - Soft palm filter via `touch.radiusX` when reported (never solely relied on).
 - Test: smoke CDP-synthesized touch press/cancel/release — assert `__r3d.steer` returns neutral and never sticks.
 
-### Batch 3 — Visibility pause + audio suspend (P0, all 4 AIs)
+### Batch 3 — Visibility pause + audio suspend (P0, all 4 AIs) — **DONE 2026-09-22, smoke 20/20**
 - On `visibilitychange`/`blur`: suspend `window.ctx` (and `ctx.resume()` on return if state `suspended`/`interrupted`), pause music scheduler + ambient accumulators, zero out racing time.
 - On resume: reset `THREE.Clock` (discard one stale delta), clean auto-resume (no overlay — locked).
 - Test: smoke boots + drives after a synthetic visibility toggle; no progress jump on resume.
 
-### Batch 4 — Reactive decor billboards (P1, all 4 AIs' top "wow")
-- When kart `progress` passes within ~8–14 u of a decor billboard's track position, pulse `scale` (1.0→1.15→1.0 over ~300 ms), tilt `rotation.z`, bob `position.y`; also wave start-gate banner/pennants.
-- No new draw calls — per-frame transforms on the existing 16 sprites; amplitude gated by `REDUCED_MOTION`.
-- Test: smoke asserts via `__r3d` that a decor mesh scale changes when progress crosses its position, returns to baseline.
+### Batch 4 — Reactive decor billboards (P1, all 4 AIs' top "wow") — **DONE 2026-09-22, smoke 21/21**
+- When kart `progress` passes within ~8–14 u of a decor billboard's track position, pulse `scale` (1.0→1.15→1.0 over ~300 ms), tilt `rotation.z`, bob `position.y`; also wave start-gate banner/pennants. (Implemented: pulse trigger = `10/trackLen` t-units, 0.3 s dt-accumulated sine envelope — deterministic under `__r3d.step`; gate/pennant wave 0.8 s after countdown + each lap. Zero new draw calls.)
+- No new draw calls — per-frame transforms on the existing 16 sprites; amplitude gated by `REDUCED_MOTION` (implemented as `decorAmp` master + test-only `setDecorAmp` override).
+- Test: smoke asserts via `__r3d` that a decor mesh scale changes when progress crosses its position, returns to baseline. (Done: scale 1 → 1.13 mid-pulse → 1.0.)
 
 ### Batch 5 — Contact/blob shadows (P1, DeepSeek; **user-requested**)
 - One shared radial-gradient canvas texture as a transparent `THREE.Sprite` (or plane) under kart, pickups (~12), obstacles (~6–16), boost pads (~6) ≈ ~30 sprites.
@@ -106,7 +106,7 @@ Each batch = one micro-step: code → `node --check` → `racing3d_smoke.js` 17/
 
 1. Edit only `game/…` files.
 2. `node --check` the changed JS.
-3. `node tools/racing3d_smoke.js` (expect 17/17) and `node tools/hub_smoke.js` (ALL PASS).
+3. `node tools/racing3d_smoke.js` (21/21 — batches 1–4 each added a check) and `node tools/hub_smoke.js` (ALL PASS).
 4. `bash tools/sync-docs.sh`, then `pwsh -NoProfile -File tools/build_offline.ps1`.
 5. Dated notes in `PROJECT_TASKS.md` / `HANDOVER_PROMPT.md` / `tools/README.md`.
 6. User commits + pushes manually (never auto-commit).

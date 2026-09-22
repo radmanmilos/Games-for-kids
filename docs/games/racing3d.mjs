@@ -443,6 +443,13 @@ function main() {
             scene.add(trunk, crown);
         }
     }
+    // --- celebration state (batch 4): pennant flags + start-gate banner wave,
+    // plus the decor-billboard pulse amplitude; declared here at main scope so
+    // update()/showCountdown()/__r3d can drive them for every world build ---
+    let gateWave = -1;
+    const gateBanner = [];
+    const gateFlags = [];
+    let decorAmp = REDUCED_MOTION ? 0 : 1;
     // --- scenery: distance-readable landmarks (rocks, bushes, flower patches, flags, start-gate arch) ---
     {
         const rockMat = new THREE.MeshPhongMaterial({ color: 0x9aa0a6, shininess: 15 });
@@ -522,6 +529,7 @@ function main() {
             flag.position.copy(base); flag.position.y = 3.0;
             flag.lookAt(p.clone().add(tan));
             scene.add(flag);
+            gateFlags.push(flag);
         }
         // start-gate arch (tall landmark over the finish line — readable from far)
         {
@@ -540,6 +548,7 @@ function main() {
             banner.position.copy(p0); banner.position.y = 7.2;
             banner.lookAt(p0.clone().add(tan0));
             scene.add(banner);
+            gateBanner.push({ m: banner, y: 7.2 });
             // checkered strip on banner
             {
                 const cv = document.createElement('canvas');
@@ -551,11 +560,13 @@ function main() {
                 tx.position.copy(p0); tx.position.y = 7.85;
                 tx.lookAt(p0.clone().add(tan0));
                 scene.add(tx);
+                gateBanner.push({ m: tx, y: 7.85 });
             }
         }
     }
 
     // per-world emoji decor billboards (camera-facing sprites from the shared decor list)
+    const decorBils = [];
     if (world.decor && world.decor.length) {
         const texCache = {};
         const decorTex = (emoji) => {
@@ -589,6 +600,7 @@ function main() {
             spr.position.copy(baseP);
             spr.position.y = groundYAt(baseP, dist) + s * 0.55;
             scene.add(spr);
+            decorBils.push({ spr, t, baseScale: s, baseY: spr.position.y, pulseAge: -1 });
         }
     }
 
@@ -761,6 +773,30 @@ function main() {
     });
     scene.add(kart);
 
+    // --- contact/blob shadows (batch 5, user-requested): one shared radial
+    // gradient sprite under the kart, pickups, obstacles and boost pads ---
+    const blobShadowTex = (() => {
+        const cv = document.createElement('canvas'); cv.width = cv.height = 128;
+        const g = cv.getContext('2d');
+        const grd = g.createRadialGradient(64, 64, 6, 64, 64, 62);
+        grd.addColorStop(0, 'rgba(0,0,0,0.34)');
+        grd.addColorStop(0.65, 'rgba(0,0,0,0.18)');
+        grd.addColorStop(1, 'rgba(0,0,0,0)');
+        g.fillStyle = grd; g.fillRect(0, 0, 128, 128);
+        return new THREE.CanvasTexture(cv);
+    })();
+    const blobShadowMat = new THREE.SpriteMaterial({ map: blobShadowTex, transparent: true, depthWrite: false, fog: false });
+    const blobShadows = [];
+    const addBlobShadow = (scale, pos) => {
+        const spr = new THREE.Sprite(blobShadowMat);
+        spr.scale.set(scale, scale, 1);
+        spr.position.copy(pos);
+        scene.add(spr);
+        blobShadows.push(spr);
+        return spr;
+    };
+    const kartShadow = addBlobShadow(2.7, kart.position);
+
     // --- pickups (per-world collectible mesh) ---
     function buildPickupMesh(kind, pColor, finColor) {
         const mat = (color, emissive, shin) => new THREE.MeshPhongMaterial({ color, emissive: emissive || 0, shininess: shin || 40 });
@@ -832,6 +868,7 @@ function main() {
         g.position.y += 0.3;
         scene.add(g);
         pickups.push({ mesh: g, done: false, baseY: g.position.y, phase: i * 0.9 });
+        addBlobShadow(1.7, g.position.clone().add(new THREE.Vector3(0, -0.3, 0)));
     }
 
     // --- boost pads (⚡ speed burst + flames + whoosh) ---
@@ -860,6 +897,7 @@ function main() {
         mesh.lookAt(p.clone().add(tan));
         scene.add(mesh);
         boostPads.push({ mesh, t: t % 1, x: lat, done: false, radius: 1.8 });
+        addBlobShadow(1.9, pos.clone().add(new THREE.Vector3(0, 0.03, 0)));
     }
 
     // --- obstacles ---
@@ -914,6 +952,7 @@ function main() {
         })();
         scene.add(mesh);
         obstacles.push({ mesh, def, radius: def.size + 1.2, cooldownUntil: 0, t, hitText: def.hitText || (def.label + '! Брзина смањена.') });
+        addBlobShadow(def.size * (type === 'puddle' ? 1.1 : 1.4), base.clone().add(new THREE.Vector3(0, 0.05, 0)));
     }
 
     // --- state ---
@@ -942,6 +981,7 @@ function main() {
     let warnUntil = 0;
     let weatherAcc = 0;
     let driftNow = false;
+    let lastDt = 0.016;
     let skidAcc = 0;
     let dustAcc = 0;
     let flameAcc = 0;
@@ -1247,6 +1287,7 @@ function main() {
         if (cur >= COUNT_SEQ.length - 1) { speed = Math.max(speed, 30); }
         if (curTime() - countdownStart > 3400) {
             mode = 'drive';
+            if (gateWave < 0) gateWave = 0;
             countdownEl.classList.remove('show');
             countdownEl.textContent = '';
         }
@@ -1358,11 +1399,17 @@ function main() {
     const _tmpQ = new THREE.Quaternion();
 
     function update(dt, now) {
+        lastDt = dt;
         if (mode === 'countdown') { showCountdown(); }
 
         const canSteer = mode === 'drive';
         if (canSteer) {
-            steer = (keys.left ? -1 : 0) + (keys.right ? 1 : 0);
+            if (keys.left && keys.right) {
+                // toddler palm spanning both zones: the most recent press wins
+                steer = recentPress.left > recentPress.right ? -1 : 1;
+            } else {
+                steer = (keys.left ? -1 : 0) + (keys.right ? 1 : 0);
+            }
         } else {
             steer = 0;
         }
@@ -1380,12 +1427,14 @@ function main() {
             offroad = Math.abs(lateral) > OFFROAD_LAT;
             if (offroad) target *= 0.62;
             if (now >= slowUntil) slowMult = 1;
-            speed = clamp(speed + (target - speed) * Math.min(1, 2.2 * dt), 0, MAX_SPEED * BOOST_MULT);
+            speed = clamp(speed + (target - speed) * (1 - Math.exp(-2.2 * dt)), 0, MAX_SPEED * BOOST_MULT);
 
             let np = progress + (speed / trackLen) * dt;
             if (np >= 1) {
                 np -= 1;
                 lap++;
+                gateWave = -1;
+                if (gateFlags.length) gateWave = 0;
                 if (lap > TOTAL_LAPS) { finish(); }
                 else {
                     roundEl.textContent = 'Круг ' + lap + '/' + TOTAL_LAPS;
@@ -1401,28 +1450,57 @@ function main() {
         const tan = curve.getTangentAt(progress);
         const right = new THREE.Vector3().crossVectors(tan, UP).normalize();
 
+        // reactive decor billboards (batch 4): sprites pop/bob/tilt as the kart
+        // passes within ~10 track-units; amplitude zero under reduced motion
+        if (decorAmp > 0 && decorBils.length) {
+            const trigU = 10 / trackLen;
+            for (const d of decorBils) {
+                const delta = Math.min((progress - d.t + 1) % 1, (d.t - progress + 1) % 1);
+                if (delta < trigU && d.pulseAge < 0) d.pulseAge = 0;
+                if (d.pulseAge >= 0) {
+                    d.pulseAge += dt;
+                    const ph = d.pulseAge <= 0.3 ? Math.sin((d.pulseAge / 0.3) * Math.PI) : 0;
+                    d.spr.scale.set(d.baseScale * (1 + 0.15 * ph), d.baseScale * (1 + 0.15 * ph), 1);
+                    d.spr.rotation.z = 0.28 * ph;
+                    d.spr.position.y = d.baseY + 0.35 * ph;
+                    if (d.pulseAge > 0.3) d.pulseAge = -1;
+                }
+            }
+        }
+        // start-gate banner + pennants wave after the countdown and each lap pass
+        if (decorAmp > 0 && gateWave >= 0) {
+            gateWave += dt;
+            const ph = gateWave <= 0.8 ? Math.sin((gateWave / 0.8) * Math.PI) : 0;
+            for (const f of gateFlags) f.rotation.z = ph * 0.22;
+            for (const b of gateBanner) b.m.position.y = b.y + ph * 0.12;
+            if (gateWave > 0.8) gateWave = -1;
+        }
+
         const lateralVel = mode === 'drive' ? (lateral - prevLateral) / Math.max(dt, 0.001) : 0;
 
         kart.position.copy(p).addScaledVector(right, lateral);
         kart.lookAt(p.clone().add(tan));
+        kartShadow.position.copy(kart.position);
+        kartShadow.position.y = kart.position.y + 0.06;
+        kartShadow.scale.set(2.7, 2.7, 1);
 
         const slip = Math.atan2(lateralVel, Math.max(speed, 25));
         const slipYaw = clamp(slip, -0.3, 0.3);
-        slipYawValue += (slipYaw - slipYawValue) * Math.min(1, 11 * dt);
+        slipYawValue += (slipYaw - slipYawValue) * (1 - Math.exp(-11 * dt));
         kartLean.rotation.y = slipYawValue;
         // front wheels turn in quickly; on release they slowly return to the middle
         if (steer !== 0) {
-            steerYawValue += (steer * STEER_YAW_MAX - steerYawValue) * Math.min(1, 8 * dt);
-            steerDrive += (steer * STEER_YAW_MAX - steerDrive) * Math.min(1, 8 * dt);
+            steerYawValue += (steer * STEER_YAW_MAX - steerYawValue) * (1 - Math.exp(-8 * dt));
+            steerDrive += (steer * STEER_YAW_MAX - steerDrive) * (1 - Math.exp(-8 * dt));
         } else {
-            steerYawValue += (0 - steerYawValue) * Math.min(1, 2.8 * dt);
-            steerDrive += (0 - steerDrive) * Math.min(1, 10 * dt);
+            steerYawValue += (0 - steerYawValue) * (1 - Math.exp(-2.8 * dt));
+            steerDrive += (0 - steerDrive) * (1 - Math.exp(-10 * dt));
         }
         steerWheels.forEach((g) => { g.rotation.y = steerYawValue; });
         // bank the body with the drive (straightens up fast with the car; the
         // kart stays where it is — no auto-center)
         const targetLean = (steerDrive / STEER_YAW_MAX) * 0.34;
-        leanValue += (targetLean - leanValue) * Math.min(1, 10 * dt);
+        leanValue += (targetLean - leanValue) * (1 - Math.exp(-10 * dt));
         kartLean.rotation.z = leanValue;
 
         const bounce = (mode !== 'countdown') ? Math.abs(Math.sin(now * 0.03 * (speed / MAX_SPEED + 0.4))) * 0.06 + (now < boostUntil ? 0.05 : 0) : 0;
@@ -1560,7 +1638,7 @@ function main() {
         rumbleShake = Math.max(0, rumbleShake - 3.2 * dt);
 
         const targetFov = 60 + (speed / MAX_SPEED) * 14 + (now < boostUntil ? 6 : 0);
-        camera.fov += (targetFov - camera.fov) * Math.min(1, 4 * dt);
+        camera.fov += (targetFov - camera.fov) * (1 - Math.exp(-4 * dt));
         camera.updateProjectionMatrix();
 
         updateParticles(dt);
@@ -1576,16 +1654,48 @@ function main() {
     }
 
     const clock = new THREE.Clock();
+    let testHalt = false;
     function loop() {
         requestAnimationFrame(loop);
+        if (testHalt) return;
         const dt = Math.min(clock.getDelta(), 0.05);
         update(dt, curTime());
     }
 
+    // --- visibility / backgrounding (batch 3): suspend audio + stop music while
+    // the page is hidden, then cleanly auto-resume on return (no overlay). The
+    // first clock delta after resume is discarded so the kart never jumps forward;
+    // AudioContext.suspend() silences engine hum / ambient / music while away. ---
+    let audioCtxRef = null;
+    function onHide() {
+        stopMusic();
+        try {
+            const a = window.ctx();
+            audioCtxRef = a;
+            if (a.state === 'running') a.suspend();
+        } catch (_) {}
+    }
+    function onShow() {
+        try {
+            const a = window.ctx();
+            audioCtxRef = a;
+            if (a.state === 'suspended' || a.state === 'interrupted') a.resume();
+        } catch (_) {}
+        if (musicOn && mode !== 'menu') startMusic();
+        try { clock.getDelta(); } catch (_) {}
+    }
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) onHide(); else onShow();
+    });
+    window.addEventListener('blur', () => { if (document.hidden) onHide(); });
+    window.addEventListener('focus', () => onShow());
+
     // --- input ---
+    const recentPress = { left: -1, right: -1 };
+    const zonePointer = { left: null, right: null };
     window.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') { keys.left = true; }
-        if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') { keys.right = true; }
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') { keys.left = true; recentPress.left = performance.now(); }
+        if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') { keys.right = true; recentPress.right = performance.now(); }
         startEngine();
     });
     window.addEventListener('keyup', (e) => {
@@ -1595,10 +1705,27 @@ function main() {
     function bindZone(id, dir) {
         const el = document.getElementById(id);
         const set = (v) => { keys[dir] = v; if (v) startEngine(); };
-        el.addEventListener('pointerdown', (e) => { e.preventDefault(); set(true); });
-        ['pointerup', 'pointercancel', 'pointerleave'].forEach((ev) =>
-            el.addEventListener(ev, () => set(false))
-        );
+        // pointerId ownership + capture: a drag/release over the other half, the
+        // background or a pointer leave can never stick a zone on. Palm contacts
+        // (huge radiusX touches) are ignored — they are not intentional presses.
+        // Simultaneous both-zone hold = most-recent-wins (locked decision).
+        el.addEventListener('pointerdown', (e) => {
+            if (e.pointerType === 'touch' && e.radiusX && e.radiusX > 48) return;
+            e.preventDefault();
+            zonePointer[dir] = e.pointerId;
+            try { el.setPointerCapture(e.pointerId); } catch (_) {}
+            recentPress[dir] = performance.now();
+            set(true);
+        });
+        const release = (e) => {
+            if (zonePointer[dir] !== null && e.pointerId === zonePointer[dir]) {
+                zonePointer[dir] = null;
+                set(false);
+            }
+        };
+        el.addEventListener('pointerup', release);
+        el.addEventListener('pointercancel', release);
+        el.addEventListener('lostpointercapture', release);
     }
     bindZone('r3d-zone-left', 'left');
     bindZone('r3d-zone-right', 'right');
@@ -1641,6 +1768,37 @@ function main() {
         steerState: () => ({ roll: leanValue, yaw: kartLean.rotation.y, steerYaw: steerYawValue, spokes: studCount }),
         hillRange: () => hillRange,
         floorClear: () => minRoadClear,
-        mapMarker: () => lastMapMarker ? { t: lastMapMarker.t, x: lastMapMarker.x, y: lastMapMarker.y, n: mapPts.length } : { t: progress % 1, x: 0, y: 0, n: 0 }
+        mapMarker: () => lastMapMarker ? { t: lastMapMarker.t, x: lastMapMarker.x, y: lastMapMarker.y, n: mapPts.length } : { t: progress % 1, x: 0, y: 0, n: 0 },
+        // --- frame-timing test hooks (batch 1, dt-normalization audit) ---
+        lastDt: () => lastDt,
+        step: (dt) => { update(dt > 0 ? dt : 1 / 60, curTime()); return lastDt; },
+        haltLoop: (on) => { testHalt = !!on; return testHalt; },
+        resetSteerState: (yaw, drive, lean) => {
+            steerYawValue = +yaw || 0; steerDrive = +drive || 0; leanValue = +lean || 0;
+            return true;
+        },
+        // --- visibility hooks (batch 3) ---
+        musicPlaying: () => !!musicTimer,
+        audioState: () => { try { return audioCtxRef ? audioCtxRef.state : 'noctx'; } catch (_) { return 'none'; } },
+        testVisibility: (hidden) => { if (hidden) onHide(); else onShow(); return true; },
+        // --- reactive decor hooks (batch 4) ---
+        seekToProgress: (t) => { progress = ((+t % 1) + 1) % 1; return progress; },
+        decorNear: (t) => {
+            let best = -1, bd = Infinity;
+            decorBils.forEach((d, i) => {
+                const a = Math.min((d.t - +t + 1) % 1, (+t - d.t + 1) % 1);
+                if (a < bd) { bd = a; best = i; }
+            });
+            return best >= 0 ? { idx: best, t: decorBils[best].t } : { idx: -1, t: -1 };
+        },
+        decorAt: (i) => { const d = decorBils[i]; return d ? { t: d.t, baseScale: d.baseScale } : null; },
+        decorAmp: () => decorAmp,
+        setDecorAmp: (v) => { decorAmp = v ? 1 : 0; return decorAmp; },
+        decorScale: (i) => { const d = decorBils[i]; return d ? d.spr.scale.x / d.baseScale : 0; },
+        // --- contact/blob shadows (batch 5) ---
+        blobShadows: () => blobShadows.length,
+        shadowOn: () => blobShadowMat.visible,
+        setShadows: (v) => { blobShadowMat.visible = !!v; return blobShadowMat.visible; },
+        kartShadowY: () => ({ sy: kartShadow.position.y, ky: kart.position.y })
     };
 }

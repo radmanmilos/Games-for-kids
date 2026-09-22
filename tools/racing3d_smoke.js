@@ -178,6 +178,129 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const mj = JSON.parse(modals);
     check('page chrome present (back, restart, touch zones)', mj.back === true && mj.restart === true && mj.zones === true);
 
+    // batch 1 — frame-timing audit: steering must converge identically at 60 vs 120 Hz wall time
+    const dtCheck = await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.haltLoop(true);
+        for (let i = 0; i < 40; i++) r3d.step(1 / 60);
+        const b = r3d.steerState();
+        const run = (dt, n) => {
+            window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+            for (let i = 0; i < n; i++) r3d.step(dt);
+            window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+            for (let i = 0; i < n * 2; i++) r3d.step(dt);
+            return r3d.steerState();
+        };
+        const A = run(1 / 120, 24);
+        r3d.resetSteerState(b.steerYaw, 0, b.roll);
+        const B = run(1 / 60, 12);
+        r3d.haltLoop(false);
+        return JSON.stringify({ A: A.steerYaw, B: B.steerYaw, rollA: A.roll, rollB: B.roll,
+            dyaw: Math.abs(A.steerYaw - B.steerYaw), droll: Math.abs(A.roll - B.roll) });
+    })()`);
+    const dtj = JSON.parse(dtCheck);
+    check('frame-timing: steering converged identically at simulated 60 Hz vs 120 Hz (dt-normalized easing)',
+        dtj.dyaw < 0.02 && dtj.droll < 0.02, dtCheck);
+
+    // batch 2 — touch/palm hardening: most-recent-wins + palm touches ignored
+    const tpCheck = await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        const zl = document.getElementById('r3d-zone-left');
+        const zr = document.getElementById('r3d-zone-right');
+        r3d.haltLoop(true);
+        r3d.seekLateral(0);
+        for (let i = 0; i < 20; i++) r3d.step(1 / 60);
+        zr.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1, bubbles: true, pointerType: 'touch', radiusX: 20 }));
+        r3d.step(1 / 60); r3d.step(1 / 60);
+        const latR = r3d.lateral();
+        zl.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 2, bubbles: true, pointerType: 'touch', radiusX: 20 }));
+        for (let i = 0; i < 6; i++) r3d.step(1 / 60);
+        const latBoth = r3d.lateral();
+        zr.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1, bubbles: true, pointerType: 'touch' }));
+        r3d.step(1 / 60);
+        const latL = r3d.lateral();
+        zl.dispatchEvent(new PointerEvent('pointerup', { pointerId: 2, bubbles: true, pointerType: 'touch' }));
+        for (let i = 0; i < 20; i++) r3d.step(1 / 60);
+        const latBeforePalm = r3d.lateral();
+        zr.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 9, bubbles: true, pointerType: 'touch', radiusX: 120 }));
+        r3d.step(1 / 60); r3d.step(1 / 60);
+        const latAfterPalm = r3d.lateral();
+        zr.dispatchEvent(new PointerEvent('pointerup', { pointerId: 9, bubbles: true, pointerType: 'touch' }));
+        r3d.haltLoop(false);
+        return JSON.stringify({ latR, latBoth, latL, latBeforePalm, latAfterPalm });
+    })()`);
+    const tpj = JSON.parse(tpCheck);
+    check('touch/palm hardening: most-recent press wins with both zones held, palm touches do not steer',
+        tpj.latR > 0 && tpj.latBoth < tpj.latR - 0.1 && tpj.latL < tpj.latBoth &&
+        Math.abs(tpj.latAfterPalm - tpj.latBeforePalm) < 0.1, tpCheck);
+
+    // batch 3 — visibility pause + audio suspend (clean auto-resume)
+    const visCheck = await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        const before = r3d.musicPlaying();
+        r3d.testVisibility(true);
+        const afterHide = r3d.musicPlaying();
+        r3d.testVisibility(false);
+        const afterShow = r3d.musicPlaying();
+        for (let i = 0; i < 10; i++) r3d.step(1 / 60);
+        return JSON.stringify({ before, afterHide, afterShow, state: r3d.audioState(), drives: r3d.speed() > 0 });
+    })()`);
+    const visj = JSON.parse(visCheck);
+    check('visibility: hiding stops music, returning restarts it, sim still drives (clean auto-resume)',
+        visj.before === true && visj.afterHide === false && visj.afterShow === true && visj.drives === true, visCheck);
+
+    // batch 4 — reactive decor billboards: reduced-motion gate off by default,
+    // pulse scale up as the kart passes within ~10 u when amplitude is enabled
+    const decorCheck = await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.haltLoop(true);
+        const ampInit = r3d.decorAmp();
+        const d = r3d.decorNear(r3d.progress() + 0.05);
+        if (d.idx < 0) { r3d.haltLoop(false); return JSON.stringify({ none: true }); }
+        r3d.resetSteerState(0, 0, 0);
+        r3d.setDecorAmp(0);
+        r3d.seekToProgress(d.t - 0.0005);
+        const baseOff = r3d.decorScale(d.idx);
+        for (let i = 0; i < 8; i++) r3d.step(1 / 60);
+        const midOff = r3d.decorScale(d.idx);
+        r3d.setDecorAmp(1);
+        r3d.seekToProgress(d.t - 0.0005);
+        const baseOn = r3d.decorScale(d.idx);
+        for (let i = 0; i < 6; i++) r3d.step(1 / 60);
+        const midOn = r3d.decorScale(d.idx);
+        for (let i = 0; i < 20; i++) r3d.step(1 / 60);
+        const endOn = r3d.decorScale(d.idx);
+        r3d.setDecorAmp(ampInit);
+        r3d.haltLoop(false);
+        return JSON.stringify({ idx: d.idx, t: d.t, baseOff, midOff, baseOn, midOn, endOn, ampInit });
+    })()`);
+    const dcj = JSON.parse(decorCheck);
+    check('reactive decor: pulse gated off under reduced motion, scale pops when the kart passes and returns to baseline',
+        dcj.none !== true && dcj.baseOff === 1 && dcj.midOff === 1 &&
+        dcj.baseOn === 1 && dcj.midOn > 1.05 && dcj.endOn === 1 && dcj.ampInit === 0, decorCheck);
+
+    // batch 5 — contact/blob shadows under kart/pickups/boost pads/obstacles.
+    // Shared radial gradient sprite texture; depthWrite off + fog off stays the
+    // cheap "decor" class of draw. Static blobs (no motion) => a11y-reduced-motion
+    // does NOT gate them off. Kart blob lifts/re-seats flat on the kart y each step.
+    const shadowCheck = await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        const n = r3d.blobShadows();
+        const onInit = r3d.shadowOn();
+        const off = r3d.setShadows(false);
+        const onAfter = r3d.setShadows(true);
+        r3d.haltLoop(true);
+        r3d.seekToProgress(0.32);
+        for (let i = 0; i < 12; i++) r3d.step(1 / 60);
+        const y = r3d.kartShadowY();
+        r3d.haltLoop(false);
+        return JSON.stringify({ n, onInit, off, onAfter, dy: +(y.sy - y.ky).toFixed(3) });
+    })()`);
+    const scj = JSON.parse(shadowCheck);
+    check('contact shadows: blob sprites under all tracked objects (n>=14), gated on by default and re-enableable, kart shadow re-seats flat on the kart y each step',
+        scj.n >= 14 && scj.onInit === true && scj.off === false && scj.onAfter === true &&
+        scj.dy > -0.3 && scj.dy < 0.3 && scj.dy !== 0, shadowCheck);
+
     h.close();
     process.exit(getFails() ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });
