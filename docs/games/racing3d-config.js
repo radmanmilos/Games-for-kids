@@ -12,10 +12,11 @@
                      hitText: 'Баријера! Брзина смањена.' }
     };
 
-    // Per-world 3D extras. Palette/collectible/seed/music/obstacleTypes are
-    // read from the shared RACING_CONFIG.worlds entries (single source of
+    // Per-world 3D extras. Palette/collectible/seed/music/obstacleTypes/decor
+    // are read from the shared RACING_CONFIG.worlds entries (single source of
     // truth); this map adds the 3D-only knobs (laps, kart/boost/tree/light
-    // colors, track hill factor + pickup style) keyed by the world `key`.
+    // colors, track hill factor, pickup style, sky/weather) keyed by the world
+    // `key`.
     const R3D_EXTRAS = {
         meadow: {
             laps: 3, flowersPerLap: 12, hill: 1.0,
@@ -24,7 +25,8 @@
             wheelColor: 0x1c1c1c, hubColor: 0xbdbdbd,
             boostColor: 0xffd23f,
             sunColor: 0xfff3d6, ambColor: 0xffffff,
-            treeTrunk: 0x8b5a2b, treeCrown: 0x2e7d32
+            treeTrunk: 0x8b5a2b, treeCrown: 0x2e7d32,
+            sky: 'clouds'
         },
         beach: {
             laps: 3, flowersPerLap: 12, hill: 0.55,
@@ -32,7 +34,8 @@
             kartColor: 0xff8c42, kartAccent: 0xffd23f,
             wheelColor: 0x6a5a44, hubColor: 0xe8d8b8,
             boostColor: 0xff9d50, sunColor: 0xfff0c0, ambColor: 0xffffff,
-            treeTrunk: 0xc9a96a, treeCrown: 0x3f8f4f
+            treeTrunk: 0xc9a96a, treeCrown: 0x3f8f4f,
+            sky: 'clouds'
         },
         snow: {
             laps: 3, flowersPerLap: 12, hill: 0.8,
@@ -40,7 +43,8 @@
             kartColor: 0x3f9be0, kartAccent: 0xcfeeff,
             wheelColor: 0x2a2a30, hubColor: 0xcfeeff,
             boostColor: 0x9fd0ff, sunColor: 0xdfefff, ambColor: 0xffffff,
-            treeTrunk: 0x6a4a2f, treeCrown: 0xdceef7
+            treeTrunk: 0x6a4a2f, treeCrown: 0xdceef7,
+            sky: 'clouds', weather: 'snow'
         },
         candy: {
             laps: 3, flowersPerLap: 12, hill: 1.25,
@@ -48,7 +52,8 @@
             kartColor: 0xff6f91, kartAccent: 0xffe066,
             wheelColor: 0x6a3a6a, hubColor: 0xffd9ec,
             boostColor: 0xff7ba9, sunColor: 0xffe8f0, ambColor: 0xffffff,
-            treeTrunk: 0x7a4a7a, treeCrown: 0xffb6d0
+            treeTrunk: 0x7a4a7a, treeCrown: 0xffb6d0,
+            sky: 'clouds'
         },
         jungle: {
             laps: 3, flowersPerLap: 12, hill: 1.15,
@@ -56,7 +61,8 @@
             kartColor: 0x43c65f, kartAccent: 0xffe066,
             wheelColor: 0x2a2a30, hubColor: 0xbfe8c8,
             boostColor: 0x7ce07a, sunColor: 0xffe8c0, ambColor: 0xd8ffe8,
-            treeTrunk: 0x5a3a1e, treeCrown: 0x2e7d32
+            treeTrunk: 0x5a3a1e, treeCrown: 0x2e7d32,
+            sky: 'clouds'
         },
         space: {
             laps: 3, flowersPerLap: 12, hill: 0.55,
@@ -64,7 +70,8 @@
             kartColor: 0x7a6fb0, kartAccent: 0xffd23f,
             wheelColor: 0x1c1c1c, hubColor: 0xa49ce0,
             boostColor: 0xffd23f, sunColor: 0xe8e4ff, ambColor: 0x8090ff,
-            treeTrunk: 0x3a2e6b, treeCrown: 0x4a3f8c
+            treeTrunk: 0x3a2e6b, treeCrown: 0x4a3f8c,
+            sky: 'stars', weather: 'stars'
         },
         night: {
             laps: 3, flowersPerLap: 12, hill: 0.75,
@@ -72,7 +79,8 @@
             kartColor: 0x5a6be0, kartAccent: 0xffd23f,
             wheelColor: 0x1c1c1c, hubColor: 0xd8d0ff,
             boostColor: 0xffd23f, sunColor: 0xd0d8ff, ambColor: 0x6068a8,
-            treeTrunk: 0x2a2a2a, treeCrown: 0x1f5e3a
+            treeTrunk: 0x2a2a2a, treeCrown: 0x1f5e3a,
+            sky: 'stars', moon: true
         },
         farm: {
             laps: 3, flowersPerLap: 12, hill: 0.95,
@@ -80,7 +88,8 @@
             kartColor: 0x9b6df0, kartAccent: 0xffb84d,
             wheelColor: 0x2a2a30, hubColor: 0xe8d8b8,
             boostColor: 0xffb84d, sunColor: 0xfff0c0, ambColor: 0xffffff,
-            treeTrunk: 0x8b5a2b, treeCrown: 0x4e9448
+            treeTrunk: 0x8b5a2b, treeCrown: 0x4e9448,
+            sky: 'clouds'
         }
     };
 

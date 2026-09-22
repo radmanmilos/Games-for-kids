@@ -88,6 +88,10 @@ function main() {
         pickup: ex.pickup || 'flower',
         pickupColor: ex.pickupColor || 0xff8fcc,
         music: base.music || base.key || 'meadow',
+        decor: base.decor || [],
+        sky: ex.sky || 'sun',
+        moon: !!ex.moon,
+        weather: ex.weather || '',
         curveSeed: base.curveSeed || 2026,
         obstacleTypes: base.obstacleTypes || ['puddle'],
         bgTop: col(ex.bgTop, col(base.bgTop, 0x7ec8e3)),
@@ -171,6 +175,77 @@ function main() {
             new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), side: THREE.BackSide, fog: false })
         );
         scene.add(sky);
+    }
+
+    // --- sky props: stars / sun / moon / drifting clouds ---
+    if (world.sky === 'stars') {
+        const starN = 260;
+        const sp = new Float32Array(starN * 3);
+        for (let i = 0; i < starN; i++) {
+            const th = Math.random() * Math.PI * 2;
+            const ph = Math.acos(Math.random());
+            const r = 470 + Math.random() * 60;
+            sp[i * 3] = Math.cos(th) * Math.sin(ph) * r;
+            sp[i * 3 + 1] = Math.cos(ph) * r;
+            sp[i * 3 + 2] = Math.sin(th) * Math.sin(ph) * r;
+        }
+        const starGeo = new THREE.BufferGeometry();
+        starGeo.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3));
+        const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({
+            color: world.moon ? 0xdfe6ff : 0xffffff,
+            size: 1.8, transparent: true, sizeAttenuation: false, fog: false
+        }));
+        scene.add(stars);
+    } else if (world.moon) {
+        const moonFace = () => {
+            const m = new THREE.Mesh(
+                new THREE.CircleGeometry(24, 28),
+                new THREE.MeshBasicMaterial({ color: 0xfff2d0, fog: false })
+            );
+            m.position.set(280, 300, -380);
+            m.lookAt(0, 0, 0);
+            scene.add(m);
+            return m;
+        };
+        moonFace();
+        const crater = new THREE.Mesh(
+            new THREE.CircleGeometry(7, 14),
+            new THREE.MeshBasicMaterial({ color: 0xddc8a0, fog: false })
+        );
+        crater.position.set(294, 288, -380);
+        crater.lookAt(0, 0, 0);
+        scene.add(crater);
+    } else {
+        const sunC = new THREE.Mesh(
+            new THREE.CircleGeometry(30, 28),
+            new THREE.MeshBasicMaterial({ color: world.sunColor || 0xfff3d6, fog: false })
+        );
+        sunC.position.set(300, 330, -420);
+        sunC.lookAt(0, 0, 0);
+        scene.add(sunC);
+    }
+    const driftClouds = [];
+    if (world.sky === 'clouds' && !world.moon) {
+        const cloudCv = document.createElement('canvas');
+        cloudCv.width = 200; cloudCv.height = 128;
+        const cg2 = cloudCv.getContext('2d');
+        cg2.fillStyle = 'rgba(255,255,255,0.92)';
+        for (let k = 0; k < 6; k++) {
+            cg2.beginPath();
+            cg2.arc(55 + k * 18, 66 + (k % 3) * 10 - 6, 20 + (k % 4) * 4, 0, Math.PI * 2);
+            cg2.fill();
+        }
+        const cloudTex = new THREE.CanvasTexture(cloudCv);
+        for (let i = 0; i < 7; i++) {
+            const cl = new THREE.Sprite(new THREE.SpriteMaterial({ map: cloudTex, transparent: true, opacity: 0.9, fog: false }));
+            const a = (i / 7) * Math.PI * 2;
+            const rad = 300 - (i % 3) * 45;
+            const s = 55 + (i % 3) * 30;
+            cl.position.set(Math.cos(a) * rad, 190 + (i % 4) * 26, Math.sin(a) * rad);
+            cl.scale.set(s, s * 0.62, 1);
+            scene.add(cl);
+            driftClouds.push({ cl, a: (i / 7) * Math.PI * 2, v: 0.5 + (i % 3) * 0.35, rad });
+        }
     }
 
     // --- ground: hilly terrain ribbon + far low plane are built after the road (see below) ---
@@ -480,6 +555,43 @@ function main() {
         }
     }
 
+    // per-world emoji decor billboards (camera-facing sprites from the shared decor list)
+    if (world.decor && world.decor.length) {
+        const texCache = {};
+        const decorTex = (emoji) => {
+            if (!texCache[emoji]) {
+                const cv = document.createElement('canvas');
+                cv.width = cv.height = 128;
+                const cg = cv.getContext('2d');
+                cg.font = '104px serif';
+                cg.textAlign = 'center';
+                cg.textBaseline = 'middle';
+                cg.fillText(emoji, 64, 66);
+                texCache[emoji] = new THREE.CanvasTexture(cv);
+            }
+            return texCache[emoji];
+        };
+        const scaleN = base.decorScale || 1;
+        for (let i = 0; i < 16; i++) {
+            const t = (i + 0.5) / 16 + (rand() - 0.5) * 0.02;
+            const p = curve.getPointAt(t);
+            const tan = curve.getTangentAt(t);
+            const right = new THREE.Vector3().crossVectors(tan, UP).normalize();
+            const side = i % 2 === 0 ? 1 : -1;
+            const dist = ROAD_HALF + 10 + rand() * 22;
+            const baseP = p.clone().addScaledVector(right, side * dist);
+            const spr = new THREE.Sprite(new THREE.SpriteMaterial({
+                map: decorTex(world.decor[i % world.decor.length]),
+                transparent: true, depthTest: true
+            }));
+            const s = (2.6 + rand() * 1.6) * scaleN;
+            spr.scale.set(s, s, 1);
+            spr.position.copy(baseP);
+            spr.position.y = groundYAt(baseP, dist) + s * 0.55;
+            scene.add(spr);
+        }
+    }
+
     // --- race-track mini-map (top-down loop + live running position) ---
     const mapEl = document.getElementById('r3d-map');
     let mapCanvas = null, mapCtx = null, mapPts = [], mapScale = 1, lastMapMarker = { t: 0, x: 0, y: 0 };
@@ -719,7 +831,7 @@ function main() {
         g.position.copy(pos);
         g.position.y += 0.3;
         scene.add(g);
-        pickups.push({ mesh: g, done: false });
+        pickups.push({ mesh: g, done: false, baseY: g.position.y, phase: i * 0.9 });
     }
 
     // --- boost pads (⚡ speed burst + flames + whoosh) ---
@@ -752,7 +864,7 @@ function main() {
 
     // --- obstacles ---
     const obstacles = [];
-    const OBS_COUNT = 8;
+    const OBS_COUNT = Math.max(6, Math.min(16, Math.round((base.obstacleDensity || 0.005) * 1700)));
     for (let i = 0; i < OBS_COUNT; i++) {
         const type = world.obstacleTypes[(i * 3) % world.obstacleTypes.length];
         const def = obstacleCfg[type];
@@ -801,7 +913,7 @@ function main() {
             return m;
         })();
         scene.add(mesh);
-        obstacles.push({ mesh, def, radius: def.size + 1.2, cooldownUntil: 0, hitText: def.hitText || (def.label + '! Брзина смањена.') });
+        obstacles.push({ mesh, def, radius: def.size + 1.2, cooldownUntil: 0, t, hitText: def.hitText || (def.label + '! Брзина смањена.') });
     }
 
     // --- state ---
@@ -827,6 +939,8 @@ function main() {
     let steerDrive = 0;
     let slipYawValue = 0;
     let boostUntil = 0;
+    let warnUntil = 0;
+    let weatherAcc = 0;
     let driftNow = false;
     let skidAcc = 0;
     let dustAcc = 0;
@@ -841,9 +955,11 @@ function main() {
     const _pCube = new THREE.BoxGeometry(0.14, 0.14, 0.14);
     const _pSmall = new THREE.BoxGeometry(0.08, 0.08, 0.08);
     const _pConfetti = new THREE.BoxGeometry(0.24, 0.24, 0.04);
+    const _pSnow = new THREE.BoxGeometry(0.22, 0.22, 0.03);
+    const _pStar = new THREE.BoxGeometry(0.16, 0.16, 0.16);
     function spawnP(o) {
         if (particles.length > MAX_PARTICLES) return;
-        const geo = o.geo === 'confetti' ? _pConfetti : (o.geo === 'small' ? _pSmall : _pCube);
+        const geo = o.geo === 'confetti' ? _pConfetti : (o.geo === 'small' ? _pSmall : (o.geo === 'snow' ? _pSnow : (o.geo === 'star' ? _pStar : _pCube)));
         const mat = new THREE.MeshBasicMaterial({ color: o.col || 0xaaaaaa, transparent: true, opacity: 1, side: THREE.DoubleSide });
         const m = new THREE.Mesh(geo, mat);
         m.position.copy(o.pos);
@@ -961,6 +1077,100 @@ function main() {
     let musicStep = 0;
     let musicStepTime = 0;
     function noteFreq(root, semi) { return root * Math.pow(2, semi / 12); }
+    let noiseBuf = null;
+    function makeNoiseBuffer(audio, dur) {
+        const b = audio.createBuffer(1, Math.ceil(audio.sampleRate * dur), audio.sampleRate);
+        const d = b.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+        return b;
+    }
+    function playAmbient(type, volParam) {
+        const audio = window.ctx();
+        if (!audio) return;
+        try {
+            const vk = (volParam || 0.035) / 0.035;
+            const t = audio.currentTime;
+            if (type === 'bird') {
+                for (let k = 0; k < 3; k++) {
+                    const t0 = t + k * 0.14;
+                    const base = 2200 + Math.random() * 800;
+                    const o = audio.createOscillator(), g = audio.createGain();
+                    o.connect(g); g.connect(audio.destination);
+                    o.type = 'sine';
+                    o.frequency.setValueAtTime(base, t0);
+                    o.frequency.exponentialRampToValueAtTime(base * 1.4, t0 + 0.05);
+                    o.frequency.exponentialRampToValueAtTime(base * 0.9, t0 + 0.09);
+                    g.gain.setValueAtTime(0, t0);
+                    g.gain.linearRampToValueAtTime(0.035 * vk, t0 + 0.01);
+                    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.1);
+                    o.start(t0); o.stop(t0 + 0.11);
+                }
+            } else if (type === 'waves') {
+                if (!noiseBuf) noiseBuf = makeNoiseBuffer(audio, 2);
+                const src = audio.createBufferSource(), f = audio.createBiquadFilter(), g = audio.createGain();
+                src.buffer = noiseBuf; f.type = 'lowpass';
+                f.frequency.setValueAtTime(420, t);
+                f.frequency.linearRampToValueAtTime(760, t + 1.6);
+                f.frequency.linearRampToValueAtTime(420, t + 3.2);
+                g.gain.setValueAtTime(0.0001, t);
+                g.gain.linearRampToValueAtTime(0.05 * vk, t + 1.0);
+                g.gain.linearRampToValueAtTime(0.0001, t + 3.2);
+                src.connect(f); f.connect(g); g.connect(audio.destination);
+                src.start(t); src.stop(t + 3.3);
+            } else if (type === 'wind') {
+                if (!noiseBuf) noiseBuf = makeNoiseBuffer(audio, 2);
+                const src = audio.createBufferSource(), f = audio.createBiquadFilter(), g = audio.createGain();
+                src.buffer = noiseBuf; src.loop = true; f.type = 'bandpass';
+                const f0 = 420 + Math.random() * 220;
+                f.frequency.setValueAtTime(f0, t);
+                f.frequency.linearRampToValueAtTime(f0 + 90, t + 1.4);
+                f.frequency.linearRampToValueAtTime(f0, t + 2.8);
+                g.gain.setValueAtTime(0.0001, t);
+                g.gain.linearRampToValueAtTime(0.035 * vk, t + 0.9);
+                g.gain.linearRampToValueAtTime(0.0001, t + 2.8);
+                src.connect(f); f.connect(g); g.connect(audio.destination);
+                src.start(t); src.stop(t + 2.9);
+            } else if (type === 'chime') {
+                for (let k = 0; k < 2; k++) {
+                    const t0 = t + k * 0.3;
+                    const base = 1240 + Math.random() * 360;
+                    const o = audio.createOscillator(), g = audio.createGain();
+                    o.connect(g); g.connect(audio.destination);
+                    o.type = 'sine';
+                    o.frequency.value = base;
+                    g.gain.setValueAtTime(0, t0);
+                    g.gain.linearRampToValueAtTime(0.035 * vk * 0.8, t0 + 0.02);
+                    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.7);
+                    o.start(t0); o.stop(t0 + 0.75);
+                }
+            } else if (type === 'stars') {
+                const t0 = t + Math.random() * 0.4;
+                const base = 3200 + Math.random() * 700;
+                const o = audio.createOscillator(), g = audio.createGain();
+                o.connect(g); g.connect(audio.destination);
+                o.type = 'sine';
+                o.frequency.value = base;
+                g.gain.setValueAtTime(0, t0);
+                g.gain.linearRampToValueAtTime(0.035 * vk * 0.5, t0 + 0.01);
+                g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.35);
+                o.start(t0); o.stop(t0 + 0.4);
+            } else if (type === 'owl') {
+                const f0 = 320 + Math.random() * 60;
+                for (let k = 0; k < 2; k++) {
+                    const t0 = t + k * (0.55 + Math.random() * 0.1);
+                    const o = audio.createOscillator(), g = audio.createGain();
+                    o.connect(g); g.connect(audio.destination);
+                    o.type = 'sine';
+                    o.frequency.setValueAtTime(f0, t0);
+                    o.frequency.linearRampToValueAtTime(f0 * 0.96, t0 + 0.35);
+                    g.gain.setValueAtTime(0, t0);
+                    g.gain.linearRampToValueAtTime(0.035 * vk * 1.1, t0 + 0.08);
+                    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.4);
+                    o.start(t0); o.stop(t0 + 0.45);
+                }
+            }
+        } catch (e) { /* audio not ready */ }
+    }
     function startMusic() {
         const m = sharedCfg.music && sharedCfg.music[world.music];
         if (!m || !window.ctx) return;
@@ -994,6 +1204,7 @@ function main() {
                     bg.gain.exponentialRampToValueAtTime(0.001, musicStepTime + eighth * 1.8);
                     b.start(musicStepTime); b.stop(musicStepTime + eighth * 1.85);
                 }
+                if (m.ambient && Math.random() < m.ambient.rate) playAmbient(m.ambient.sound, m.ambient.vol);
                 musicStep++;
                 musicStepTime += eighth;
             }
@@ -1220,6 +1431,36 @@ function main() {
         const wheelRoll = (speed / 0.5) * dt;
         wheelParts.forEach((p) => { p.rotation.x -= wheelRoll; });
 
+        // pickup idle animation: slow spin + gentle bob (runs even in menu picker)
+        const bobNow = now / 1000;
+        for (const f of pickups) {
+            f.mesh.rotation.y += dt * 1.2;
+            f.mesh.position.y = f.baseY + Math.sin(bobNow * 2 + f.phase) * 0.12;
+        }
+
+        // per-world weather (snowfall / falling stars) drifting around the kart
+        if (world.weather && particles.length < MAX_PARTICLES - 40) {
+            weatherAcc += dt;
+            if (weatherAcc > 0.15) {
+                weatherAcc = 0;
+                for (let w = 0; w < 2 && particles.length < MAX_PARTICLES - 30; w++) {
+                    const p2 = kart.position.clone();
+                    p2.y += 10 + Math.random() * 10;
+                    p2.x += (Math.random() - 0.5) * 26;
+                    p2.z += (Math.random() - 0.5) * 26;
+                    if (world.weather === 'snow') {
+                        spawnP({ pos: p2, col: 0xffffff,
+                            vel: new THREE.Vector3((Math.random() - 0.5) * 1.2, -2.2 - Math.random() * 1.2, (Math.random() - 0.5) * 1.2),
+                            max: 6, geo: 'snow', scale: 0.9 + Math.random() * 0.8, spin: 1 + Math.random() });
+                    } else {
+                        spawnP({ pos: p2, col: [0xffd23f, 0xd8e0ff, 0xffffff][Math.floor(Math.random() * 3)],
+                            vel: new THREE.Vector3((Math.random() - 0.5) * 2, -6 - Math.random() * 4, (Math.random() - 0.5) * 2),
+                            max: 3.2, geo: 'star', scale: 0.6 + Math.random() * 0.5, spin: 6 + Math.random() * 6 });
+                    }
+                }
+            }
+        }
+
         if (mode === 'drive') {
             // pickups
             for (const f of pickups) {
@@ -1242,6 +1483,16 @@ function main() {
                     announce('Буст!');
                     playWhoosh();
                     if (!REDUCED_MOTION) finishShake = 0.5;
+                }
+            }
+            // soft warning beep when an obstacle is coming up ahead
+            if (now >= warnUntil) {
+                let aheadT = 1;
+                for (const o of obstacles) aheadT = Math.min(aheadT, (o.t - progress + 1) % 1);
+                const aheadUnits = aheadT * trackLen;
+                if (aheadT < 0.4 && aheadUnits > 12 && aheadUnits < 90) {
+                    if (window.tone) window.tone(330, 0.06);
+                    warnUntil = now + 720;
                 }
             }
             // obstacles
@@ -1313,6 +1564,11 @@ function main() {
         camera.updateProjectionMatrix();
 
         updateParticles(dt);
+        for (const c of driftClouds) {
+            c.a += c.v * dt * 0.001;
+            c.cl.position.x = Math.cos(c.a) * c.rad;
+            c.cl.position.z = Math.sin(c.a) * c.rad;
+        }
         updateEngine();
         drawMap();
 
