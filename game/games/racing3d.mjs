@@ -36,11 +36,77 @@ window.startRacing3D = function () {
 };
 
 function main() {
-    const cfg = window.RACING3D_CONFIG || { obstacles: {}, worlds: [{ name: 'Ливада', laps: 3, flowersPerLap: 12 }] };
-    const world = cfg.worlds[0];
-    const obstacleCfg = cfg.obstacles || {};
-    const TOTAL_LAPS = world.laps || 3;
-    const FLOWER_TOTAL = (world.flowersPerLap || 12);
+    // --- shared (2D) world/music config + 3D-only extras --------------------
+    const sharedCfg = window.RACING_CONFIG || { worlds: [], music: {} };
+    const r3dCfg = window.RACING3D_CONFIG || { obstacles: {}, worlds: {}, kartColors: [] };
+    const WORLD_LIST = (Array.isArray(sharedCfg.worlds) && sharedCfg.worlds.length)
+        ? sharedCfg.worlds :
+        [{ key: 'meadow', name: 'Ливада', collectible: '🌸', collectibleName: 'цвеће',
+            bgTop: 0x7ec8e3, bgBottom: 0xb8e986, horizonColor: 0xa8d8f0, grassColor: 0x67c971,
+            finishColor: 0xffd23f, curveSeed: 2026, music: 'meadow', obstacleTypes: ['puddle', 'barricade'] }];
+    const KART_COLORS = (Array.isArray(r3dCfg.kartColors) && r3dCfg.kartColors.length)
+        ? r3dCfg.kartColors : [{ name: 'Црвена', color: 0xe52521 }, { name: 'Плава', color: 0x3f9be0 }];
+    const obstacleCfg = Object.assign({}, {
+        puddle: { label: 'Бара', base: 0x4aa5e0, size: 1.5, slowMult: 0.5, slowTime: 1.5, hitText: 'Бара! Брзина смањена.' },
+        rock: { label: 'Камен', base: 0x9aa0a6, size: 1.0, slowMult: 0, slowTime: 0.5, hitText: 'Камен! Кратка пауза.' },
+        barricade: { label: 'Баријера', base: 0xe52521, size: 1.4, slowMult: 0.3, slowTime: 1.0, hitText: 'Баријера! Брзина смањена.' }
+    }, r3dCfg.obstacles || {});
+
+    // color helper: shared config passes '#RRGGBB' strings, 3D extras use raw hex numbers
+    const col = (v, fb) => (typeof v === 'number' ? v
+        : (typeof v === 'string' && /^#[0-9a-fA-F]{6}$/.test(v) ? parseInt(v.slice(1), 16) : fb));
+
+    function loadSave() {
+        try {
+            const s = JSON.parse(localStorage.getItem(SAVE_KEY));
+            if (!s || typeof s.wins !== 'number') return { wins: 0, world: 0, kart: 0 };
+            return { wins: s.wins, world: s.world || 0, kart: s.kart || 0 };
+        } catch (e) { return { wins: 0, world: 0, kart: 0 }; }
+    }
+    function persistSave(s) {
+        const w = clamp(Math.round(s.world || 0), 0, WORLD_LIST.length - 1);
+        const k = clamp(Math.round(s.kart || 0), 0, KART_COLORS.length - 1);
+        try {
+            localStorage.setItem(SAVE_KEY, JSON.stringify({ wins: s.wins, world: w, kart: k }));
+        } catch (e) { /* private mode */ }
+    }
+    let save = loadSave();
+    const worldIdx = clamp(save.world, 0, WORLD_LIST.length - 1);
+    const kartIdx = clamp(save.kart, 0, KART_COLORS.length - 1);
+
+    // merge shared 2D world palette + R3D extras into the 3D world object
+    const base = WORLD_LIST[worldIdx];
+    const ex = (r3dCfg.worlds && r3dCfg.worlds[base.key]) || {};
+    const world = {
+        key: base.key,
+        name: base.name,
+        collectible: base.collectible || '🌸',
+        collectibleName: base.collectibleName || 'цвеће',
+        laps: ex.laps || 3,
+        flowersPerLap: ex.flowersPerLap || 12,
+        hill: ex.hill || 1,
+        pickup: ex.pickup || 'flower',
+        pickupColor: ex.pickupColor || 0xff8fcc,
+        music: base.music || base.key || 'meadow',
+        curveSeed: base.curveSeed || 2026,
+        obstacleTypes: base.obstacleTypes || ['puddle'],
+        bgTop: col(ex.bgTop, col(base.bgTop, 0x7ec8e3)),
+        bgBottom: col(ex.bgBottom, col(base.bgBottom, 0xb8e986)),
+        fogColor: col(ex.fogColor, col(base.horizonColor, 0xa8d8f0)),
+        grassColor: col(ex.grassColor, col(base.grassColor, 0x67c971)),
+        finishColor: col(ex.finishColor, col(base.finishColor, 0xffd23f)),
+        boostColor: col(ex.boostColor, 0xffd23f),
+        sunColor: col(ex.sunColor, 0xfff3d6),
+        ambColor: col(ex.ambColor, 0xffffff),
+        treeTrunk: col(ex.treeTrunk, 0x8b5a2b),
+        treeCrown: col(ex.treeCrown, 0x2e7d32),
+        kartAccent: col(ex.kartAccent, 0xffd23f),
+        wheelColor: col(ex.wheelColor, 0x1c1c1c),
+        hubColor: col(ex.hubColor, 0xbdbdbd),
+        kartColor: col(KART_COLORS[kartIdx].color, col(ex.kartColor, 0xe52521))
+    };
+    const TOTAL_LAPS = world.laps;
+    const FLOWER_TOTAL = world.flowersPerLap;
     const ROAD_HALF = ROAD_WIDTH / 2;
 
     const scoreEl = document.getElementById('r3d-score');
@@ -54,19 +120,8 @@ function main() {
     const restartBtn = document.getElementById('r3d-restart');
 
     worldEl.textContent = world.name;
-    flowersEl.textContent = '🌸 0/' + FLOWER_TOTAL;
+    flowersEl.textContent = world.collectible + ' 0/' + FLOWER_TOTAL;
     roundEl.textContent = 'Круг 1/' + TOTAL_LAPS;
-
-    function loadSave() {
-        try {
-            const s = JSON.parse(localStorage.getItem(SAVE_KEY));
-            return s && typeof s.wins === 'number' ? s : { wins: 0 };
-        } catch (e) { return { wins: 0 }; }
-    }
-    function persistSave(s) {
-        try { localStorage.setItem(SAVE_KEY, JSON.stringify(s)); } catch (e) { /* private mode */ }
-    }
-    let save = loadSave();
 
     const announce = (text) => { if (announcerEl) announcerEl.textContent = text; };
 
@@ -127,7 +182,7 @@ function main() {
     for (let i = 0; i < N; i++) {
         const ang = (i / N) * Math.PI * 2;
         const r = 150 + (rand() - 0.5) * 95;
-        const hillY = Math.sin(ang * 2) * 4.6 + Math.sin(ang * 4) * 2.1 + (rand() - 0.5) * 2.6;
+        const hillY = (Math.sin(ang * 2) * 4.6 + Math.sin(ang * 4) * 2.1) * (world.hill || 1) + (rand() - 0.5) * 2.6;
         pts.push(new THREE.Vector3(Math.cos(ang) * r, hillY, Math.sin(ang) * r));
     }
     const curve = new THREE.CatmullRomCurve3(pts, true);
@@ -594,11 +649,64 @@ function main() {
     });
     scene.add(kart);
 
-    // --- flowers (pickups) ---
-    const flowers = [];
-    const petalMat = new THREE.MeshPhongMaterial({ color: 0xff8fcc, shininess: 30 });
-    const coreMat = new THREE.MeshPhongMaterial({ color: world.finishColor, emissive: 0x9a6b00, shininess: 40 });
-    const stemMat = new THREE.MeshPhongMaterial({ color: 0x2e8b2e });
+    // --- pickups (per-world collectible mesh) ---
+    function buildPickupMesh(kind, pColor, finColor) {
+        const mat = (color, emissive, shin) => new THREE.MeshPhongMaterial({ color, emissive: emissive || 0, shininess: shin || 40 });
+        const g = new THREE.Group();
+        if (kind === 'shell') {
+            const shell = new THREE.Mesh(new THREE.SphereGeometry(0.34, 12, 8), mat(pColor, 0x221a00, 70));
+            shell.position.y = 0.5; shell.scale.set(1, 0.72, 0.8); g.add(shell);
+            const fan = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.34, 10), mat(pColor, 0x221a00, 70));
+            fan.position.set(0, 0.62, -0.24); fan.rotation.x = Math.PI / 2 - 0.5; g.add(fan);
+        } else if (kind === 'snowflake') {
+            for (let k = 0; k < 3; k++) {
+                const arm = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.08, 0.14), mat(pColor, 0x00a0e0, 60));
+                arm.position.y = 0.5; arm.rotation.y = (k / 3) * Math.PI; g.add(arm);
+            }
+        } else if (kind === 'candy') {
+            const stick = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.62, 8), mat(0xffffff));
+            stick.position.y = 0.35; g.add(stick);
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.34, 14, 10), mat(pColor, 0x552200, 90));
+            head.position.y = 0.72; g.add(head);
+            const swirl = new THREE.Mesh(new THREE.TorusGeometry(0.34, 0.07, 8, 16), mat(0xffffff, 0, 30));
+            swirl.position.y = 0.72; swirl.scale.set(1, 1.35, 1); g.add(swirl);
+        } else if (kind === 'gem') {
+            const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.42, 0), mat(pColor, 0x0a220a, 120));
+            gem.position.y = 0.62; g.add(gem);
+        } else if (kind === 'star') {
+            const star = new THREE.Mesh(new THREE.OctahedronGeometry(0.46, 0), mat(pColor, 0x664400, 90));
+            star.position.y = 0.62; star.scale.set(1, 1.15, 0.45); g.add(star);
+        } else if (kind === 'moon') {
+            const moon = new THREE.Mesh(new THREE.SphereGeometry(0.4, 14, 10), mat(pColor, 0x553300, 70));
+            moon.position.y = 0.62; g.add(moon);
+            const cut = new THREE.Mesh(new THREE.SphereGeometry(0.36, 14, 10), mat(pColor, 0x553300, 70));
+            cut.position.set(0.28, 0.85, 0); g.add(cut);
+        } else if (kind === 'carrot') {
+            const bodyC = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.8, 10), mat(pColor, 0x442200, 60));
+            bodyC.position.y = 0.62; g.add(bodyC);
+            for (let l = 0; l < 3; l++) {
+                const leaf = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.4, 6), mat(0x2e8b2e));
+                leaf.position.set(-0.1 + l * 0.1, 0.98, 0);
+                leaf.rotation.z = (l - 1) * 0.4; g.add(leaf);
+            }
+        } else { // flower
+            const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.5, 6), mat(0x2e8b2e));
+            g.add(stem);
+            for (let k = 0; k < 5; k++) {
+                const a = (k / 5) * Math.PI * 2;
+                const pet = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 6), mat(pColor, 0, 30));
+                pet.position.set(Math.cos(a) * 0.34, 0.5, Math.sin(a) * 0.34);
+                pet.scale.set(1, 0.55, 0.62);
+                g.add(pet);
+            }
+            const core = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 6), mat(finColor, 0x9a6b00, 40));
+            core.position.y = 0.5;
+            g.add(core);
+        }
+        return g;
+    }
+    const pickupBase = buildPickupMesh(world.pickup, world.pickupColor, world.finishColor);
+    const pickups = [];
     for (let i = 0; i < FLOWER_TOTAL; i++) {
         const t = (i + 0.5) / FLOWER_TOTAL;
         const p = curve.getPointAt(t);
@@ -607,23 +715,11 @@ function main() {
         const off = (t % 1 < 0.5 ? 2.4 : -2.4);
         const pos = p.clone().addScaledVector(right, off);
         if (pos.y > 3.5) pos.y -= 0.5;
-        const g = new THREE.Group();
-        const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.5, 6), stemMat);
-        g.add(stem);
-        for (let k = 0; k < 5; k++) {
-            const a = (k / 5) * Math.PI * 2;
-            const pet = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 6), petalMat);
-            pet.position.set(Math.cos(a) * 0.34, 0.5, Math.sin(a) * 0.34);
-            pet.scale.set(1, 0.55, 0.62);
-            g.add(pet);
-        }
-        const core = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 6), coreMat);
-        core.position.y = 0.5;
-        g.add(core);
+        const g = pickupBase.clone();
         g.position.copy(pos);
         g.position.y += 0.3;
         scene.add(g);
-        flowers.push({ mesh: g, done: false });
+        pickups.push({ mesh: g, done: false });
     }
 
     // --- boost pads (⚡ speed burst + flames + whoosh) ---
@@ -677,6 +773,17 @@ function main() {
                 m.position.copy(base);
                 return m;
             }
+            if (type === 'rock') {
+                const m = new THREE.Mesh(
+                    new THREE.DodecahedronGeometry(def.size * 0.72, 0),
+                    new THREE.MeshPhongMaterial({ color: def.base, flatShading: true, shininess: 25 })
+                );
+                m.position.copy(base);
+                m.position.y += def.size * 0.3;
+                m.rotation.y = rand() * Math.PI;
+                m.scale.y = 0.72;
+                return m;
+            }
             const cv = document.createElement('canvas');
             cv.width = 128; cv.height = 32;
             const g = cv.getContext('2d');
@@ -694,7 +801,7 @@ function main() {
             return m;
         })();
         scene.add(mesh);
-        obstacles.push({ mesh, def, radius: def.size + 1.2, cooldownUntil: 0, hitText: def.label + '! Брзина смањена.' });
+        obstacles.push({ mesh, def, radius: def.size + 1.2, cooldownUntil: 0, hitText: def.hitText || (def.label + '! Брзина смањена.') });
     }
 
     // --- state ---
@@ -705,7 +812,7 @@ function main() {
     let steer = 0;
     let lap = 1;
     let score = 0;
-    let mode = 'countdown';           // countdown | drive | finished
+    let mode = 'menu';            // menu | countdown | drive | finished
     let countdownStart = 0;
     let slowUntil = 0;
     let slowMult = 1;
@@ -837,6 +944,7 @@ function main() {
             engineOsc.connect(engineGain);
             engineGain.connect(audio.destination);
             engineOsc.start();
+            if (musicOn) startMusic();
         } catch (e) { engineStarted = false; }
     }
     function updateEngine() {
@@ -845,6 +953,65 @@ function main() {
                 engineOsc.frequency.setTargetAtTime(55 + speed * 1.1, window.ctx().currentTime, 0.08);
             } catch (e) { /* ignore */ }
         }
+    }
+
+    // --- per-world music (mirrors the 2D racer's step scheduler) ---
+    let musicOn = localStorage.getItem('racing3dMusic') !== 'off';
+    let musicTimer = null;
+    let musicStep = 0;
+    let musicStepTime = 0;
+    function noteFreq(root, semi) { return root * Math.pow(2, semi / 12); }
+    function startMusic() {
+        const m = sharedCfg.music && sharedCfg.music[world.music];
+        if (!m || !window.ctx) return;
+        if (musicTimer) clearInterval(musicTimer);
+        musicStep = 0;
+        try { musicStepTime = window.ctx().currentTime + 0.05; } catch (e) { return; }
+        const eighth = 60 / m.bpm / 2;
+        musicTimer = setInterval(() => {
+            const audio = window.ctx();
+            const horizon = audio.currentTime + 0.35;
+            while (musicStepTime < horizon) {
+                const mel = m.seq[musicStep % m.seq.length];
+                if (mel !== null && mel !== undefined) {
+                    const o = audio.createOscillator(), g = audio.createGain();
+                    o.connect(g); g.connect(audio.destination);
+                    o.type = m.wave;
+                    o.frequency.value = noteFreq(m.root, mel);
+                    g.gain.setValueAtTime(0, musicStepTime);
+                    g.gain.linearRampToValueAtTime(m.vol, musicStepTime + 0.02);
+                    g.gain.exponentialRampToValueAtTime(0.001, musicStepTime + eighth * 0.9);
+                    o.start(musicStepTime); o.stop(musicStepTime + eighth * 0.95);
+                }
+                if (musicStep % 2 === 0) {
+                    const bassIdx = (musicStep / 2) % m.bass.length;
+                    const b = audio.createOscillator(), bg = audio.createGain();
+                    b.connect(bg); bg.connect(audio.destination);
+                    b.type = 'sine';
+                    b.frequency.value = noteFreq(m.root, m.bass[bassIdx]);
+                    bg.gain.setValueAtTime(0, musicStepTime);
+                    bg.gain.linearRampToValueAtTime(m.vol * 0.7, musicStepTime + 0.03);
+                    bg.gain.exponentialRampToValueAtTime(0.001, musicStepTime + eighth * 1.8);
+                    b.start(musicStepTime); b.stop(musicStepTime + eighth * 1.85);
+                }
+                musicStep++;
+                musicStepTime += eighth;
+            }
+        }, 120);
+    }
+    function stopMusic() {
+        if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
+    }
+
+    const musicBtnEl = document.getElementById('r3d-music-btn');
+    if (musicBtnEl) {
+        musicBtnEl.textContent = musicOn ? '🔊' : '🔇';
+        musicBtnEl.addEventListener('click', () => {
+            musicOn = !musicOn;
+            localStorage.setItem('racing3dMusic', musicOn ? 'on' : 'off');
+            musicBtnEl.textContent = musicOn ? '🔊' : '🔇';
+            if (musicOn) startMusic(); else stopMusic();
+        });
     }
 
     function speak(word) {
@@ -876,25 +1043,104 @@ function main() {
     let lastCountdownIndex = -1;
 
     function launch() {
-        if (mode !== 'countdown') return;
+        if (mode !== 'menu') return;
+        mode = 'countdown';
         countdownStart = curTime();
         lastCountdownIndex = -1;
         countdownEl.classList.add('show');
         announce('Припрема, крени!');
+        startMusic();
     }
 
     function finish() {
         mode = 'finished';
         winModalEl.classList.add('show');
-        winScoreEl.textContent = 'Поени: ' + score + '  ·  Цвеће: ' + score + '/' + FLOWER_TOTAL;
+        winScoreEl.textContent = 'Поени: ' + score + '  ·  ' + world.collectible + ' ' + score + '/' + FLOWER_TOTAL;
         confettiBurst(kart.position);
-        save = { wins: save.wins + 1 };
+        save = { wins: save.wins + 1, world: worldIdx, kart: kartIdx };
         persistSave(save);
         if (window.successChime) window.successChime();
         if (!REDUCED_MOTION) finishShake = 1;
     }
 
     restartBtn.addEventListener('click', () => location.reload());
+
+    const nextWorldBtn = document.getElementById('r3d-next-world');
+    if (nextWorldBtn) {
+        nextWorldBtn.addEventListener('click', () => {
+            save = { wins: save.wins, world: (worldIdx + 1) % WORLD_LIST.length, kart: kartIdx };
+            persistSave(save);
+            location.reload();
+        });
+    }
+
+    // --- start world/kart picker ---
+    const startModal = document.getElementById('r3d-start-modal');
+    const worldGrid = document.getElementById('r3d-world-grid');
+    const kartRow = document.getElementById('r3d-kart-row');
+    const kartNameEl = document.getElementById('r3d-kart-name');
+    const startBtn = document.getElementById('r3d-start-btn');
+    const worldBtn = document.getElementById('r3d-world-btn');
+    let pendingWorld = worldIdx;
+    let pendingKart = kartIdx;
+    function renderPicker() {
+        if (worldGrid && worldGrid.children.length) {
+            Array.from(worldGrid.children).forEach((b, i) => {
+                b.classList.toggle('sel', i === pendingWorld);
+                b.setAttribute('aria-pressed', i === pendingWorld ? 'true' : 'false');
+            });
+            Array.from(kartRow.children).forEach((b, i) => b.classList.toggle('sel', i === pendingKart));
+            if (kartNameEl) kartNameEl.textContent = KART_COLORS[pendingKart].name;
+            return;
+        }
+        WORLD_LIST.forEach((wb, i) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'r3d-world-card' + (i === pendingWorld ? ' sel' : '');
+            b.setAttribute('aria-pressed', i === pendingWorld ? 'true' : 'false');
+            b.innerHTML = '<span class="wc-emoji">' + (wb.collectible || '🏁') + '</span><span class="wc-name">' + wb.name + '</span>';
+            b.addEventListener('click', () => { pendingWorld = i; renderPicker(); });
+            if (worldGrid) worldGrid.appendChild(b);
+        });
+        KART_COLORS.forEach((kb, i) => {
+            const b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'r3d-kart-swatch' + (i === pendingKart ? ' sel' : '');
+            b.style.background = '#' + kb.color.toString(16).padStart(6, '0');
+            b.setAttribute('aria-label', kb.name);
+            b.title = kb.name;
+            b.addEventListener('click', () => { pendingKart = i; renderPicker(); });
+            if (kartRow) kartRow.appendChild(b);
+        });
+        if (kartNameEl) kartNameEl.textContent = KART_COLORS[pendingKart].name;
+    }
+    function showStartPicker() {
+        pickerMidGame = mode !== 'menu';
+        pendingWorld = worldIdx;
+        pendingKart = kartIdx;
+        mode = 'menu';
+        renderPicker();
+        if (startModal) startModal.classList.add('show');
+        speed = 0;
+        countdownEl.classList.remove('show');
+    }
+    let pickerMidGame = false;
+    if (startBtn) {
+        startBtn.addEventListener('click', () => {
+            const needsReload = pickerMidGame || pendingWorld !== worldIdx || pendingKart !== kartIdx;
+            if (needsReload) {
+                save = { wins: save.wins || 0, world: pendingWorld, kart: pendingKart };
+                persistSave(save);
+                location.reload();
+                return;
+            }
+            if (startModal) startModal.classList.remove('show');
+            launch();
+        });
+    }
+    if (worldBtn) worldBtn.addEventListener('click', showStartPicker);
+    const pickWorldBtn = document.getElementById('r3d-pick-world');
+    if (pickWorldBtn) pickWorldBtn.addEventListener('click', showStartPicker);
 
     // --- per frame ---
     const _tmpM = new THREE.Matrix4();
@@ -976,15 +1222,15 @@ function main() {
 
         if (mode === 'drive') {
             // pickups
-            for (const f of flowers) {
+            for (const f of pickups) {
                 if (f.done) continue;
                 if (kart.position.distanceTo(f.mesh.position) < 2.3) {
                     f.done = true;
                     f.mesh.visible = false;
                     score++;
                     scoreEl.textContent = 'Поени: ' + score;
-                    flowersEl.textContent = '🌸 ' + score + '/' + FLOWER_TOTAL;
-                    petalBurst(f.mesh.position, [0xff8fcc, 0xffffff, 0xffe066, 0xd8a0ff]);
+                    flowersEl.textContent = world.collectible + ' ' + score + '/' + FLOWER_TOTAL;
+                    petalBurst(f.mesh.position, [world.pickupColor, 0xffffff, world.finishColor, 0x80d0ff]);
                     if (window.tone) { window.tone(1046, 0.07); window.tone(1568, 0.09, 0.05); }
                 }
             }
@@ -1107,7 +1353,7 @@ function main() {
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    launch();
+    showStartPicker();
     requestAnimationFrame(loop);
 
     window.__r3d = {
@@ -1119,6 +1365,12 @@ function main() {
         score: () => score,
         flowerTotal: FLOWER_TOTAL,
         webglOK: true,
+        worldIdx: () => worldIdx,
+        worldCount: () => WORLD_LIST.length,
+        kartIdx: () => kartIdx,
+        pickupKind: () => world.pickup,
+        musicOn: () => musicOn,
+        confirmStart: () => { if (startModal) startModal.classList.remove('show'); launch(); return true; },
         tris: () => renderer.info.render.triangles,
         particles: () => particles.length,
         drifting: () => driftNow,

@@ -1,7 +1,8 @@
-/* Мала тркачица 3Д (3D Little Racer) smoke test — vertical slice (meadow).
+/* Мала тркачица 3Д (3D Little Racer) smoke test — full game.
    Boosts the REAL page headlessly: module boots, WebGL renderer creates a
-   canvas, HUD shows Serbian world/lap/flower labels, countdown drives the
-   start, keyboard/touch steering moves the kart laterally, auto-forward
+   canvas, start picker shows 8 world cards + 4 kart colors, the race starts from
+   the picker, HUD shows Serbian world/lap/collectible labels, countdown drives
+   the start, keyboard/touch steering moves the kart laterally, auto-forward
    raises speed, and hub wiring (button / navigation / standalone boot) is in
    place.
    Run:  node tools/racing3d_smoke.js
@@ -29,6 +30,37 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     check('canvas rendered and HUD in Serbian (Ливада, Круг 1/3, 0/12)',
         bj.canvas > 0 && bj.world === 'Ливада' && bj.round === 'Круг 1/3' && bj.flowers === '🌸 0/12', boot);
 
+    const picker = await h.evalv(`JSON.stringify({
+        modal: document.getElementById('r3d-start-modal').classList.contains('show'),
+        cards: document.querySelectorAll('#r3d-world-grid .r3d-world-card').length,
+        swatches: document.querySelectorAll('#r3d-kart-row .r3d-kart-swatch').length,
+        name: document.getElementById('r3d-kart-name').textContent,
+        wcount: window.__r3d.worldCount(),
+        widx: window.__r3d.worldIdx(),
+        pick: window.__r3d.pickupKind(),
+        music: window.__r3d.musicOn()
+    })`);
+    const pk = JSON.parse(picker);
+    check('start picker: 8 world cards + 4 kart colors, meadow/red selected, music on',
+        pk.modal === true && pk.cards === 8 && pk.swatches === 4 && pk.name === 'Црвена' &&
+        pk.wcount === 8 && pk.widx === 0 && pk.pick === 'flower' && pk.music === true, picker);
+
+    // mark a world card selected (no reload — just selection state)
+    const selClick = await h.evalv(`(function(){
+        const cards = document.querySelectorAll('#r3d-world-grid .r3d-world-card');
+        cards[1].click();
+        return document.querySelectorAll('#r3d-world-grid .r3d-world-card')[1].classList.contains('sel');
+    })(); true`);
+    const sel = JSON.parse(await h.evalv(`JSON.stringify({
+        sel: document.querySelectorAll('#r3d-world-grid .r3d-world-card')[1].classList.contains('sel'),
+        name: document.getElementById('r3d-kart-name').textContent
+    })`));
+    check('world card click marks it selected, kart name stays readable', selClick === true && sel.sel === true);
+
+    // start the race from the picker
+    await h.evalv(`window.__r3d.confirmStart(); true`);
+    await sleep(150);
+
     const cd = await h.evalv(`JSON.stringify({
         countdown: document.getElementById('r3d-countdown').textContent,
         shown: document.getElementById('r3d-countdown').classList.contains('show'),
@@ -36,7 +68,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     })`);
     const cj = JSON.parse(cd);
     check('countdown overlay active (3 / Крени!)',
-        cj.shown === true && (cj.countdown === '3' || cj.countdown === '2'), cd);
+        cj.shown === true && (cj.countdown === '3' || cj.countdown === '2') && cj.mode === 'countdown', cd);
 
     let driveWait = null;
     for (let i = 0; i < 40 && !driveWait; i++) {

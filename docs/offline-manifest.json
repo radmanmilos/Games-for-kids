@@ -108,8 +108,8 @@
                                               "size":  9984
                                           },
     "shared/navigation.js":  {
-                                 "sha256":  "D63E96BD2602AE0F4E35227C0C0EA9A357221CB8D1AB9E1FF15A8CC05FE55DDB",
-                                 "size":  8670
+                                 "sha256":  "FF13C5057611605D60F3D1CE9900E2BA895A3F15B9AE112F4E5957EEABEDDDA8",
+                                 "size":  8941
                              },
     "assets/audio/speech/zaba.mp3":  {
                                          "sha256":  "F647FCB24F9880C813A1AF6A9FD7DC2682D7E3EC4976C33EBE270C87AE315129",
@@ -272,7 +272,7 @@
                                         "size":  6144
                                     },
     "offline-manifest.json":  {
-                                  "sha256":  "93665058C2E93763DD16524DED6CE63F800DCED8E1BDD966661F8DEC74276A66",
+                                  "sha256":  "D423CD7C2A98330D636A3D28A75D03ABB2A453070C360B47305B5E6079DEB6E9",
                                   "size":  50332
                               },
     "pages/dino.html":  {
@@ -428,8 +428,8 @@
                                                      "size":  72515
                                                  },
     "sw.js":  {
-                  "sha256":  "67E52AD224EA2F223B460B685B36FC5BCC80AFF63F870DE7B7845FE4D49A8D69",
-                  "size":  4705
+                  "sha256":  "F0448FA3775034B8BF26B8E0363B662203EC81A70C21FB41FEB6149C26A8EE55",
+                  "size":  5553
               },
     "assets/audio/speech/djak.mp3":  {
                                          "sha256":  "128F1989378B89B335315BB70308DA4C92CDCB04FEB5AF81D8FD26E730613730",

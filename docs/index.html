@@ -69,6 +69,7 @@
     transition: transform .12s ease;
   }
   .hub-btn:active{ transform: scale(.92) translateY(4px); }
+  .hub-btn[hidden]{ display:none; }
   .hub-btn.sky{ background: radial-gradient(circle at 35% 30%, #7FDBFF, var(--sky)); animation-delay:0s;}
   .hub-btn.pink{ background: radial-gradient(circle at 35% 30%, #FF9FB6, var(--pink)); animation-delay:.4s;}
   .hub-btn.matching{ background: radial-gradient(circle at 35% 30%, #C9A6FF, #9B6DFF); animation-delay:.8s;}
@@ -336,7 +337,7 @@
       <button class="hub-btn matching" data-go="game-candy" aria-label="Слагалица бомбона"><span class="matching-icon">🐱🐶<br>🐶🐱</span></button>
       <button class="hub-btn matching" data-go="game-memory" aria-label="Памтилица">🃏</button>
       <button class="hub-btn" data-go="game-puzzle" aria-label="Слагалице">🧩</button>
-      <button class="hub-btn sky" data-go="game-racing" aria-label="Мала тркачица">🏎️</button>
+      <button class="hub-btn sky" data-go="game-racing" aria-label="Мала тркачица" hidden>🏎️</button>
       <button class="hub-btn sky" data-go="game-racing3d" aria-label="Мала тркачица 3Д">🏎️💨</button>
     </div>
   </div>
