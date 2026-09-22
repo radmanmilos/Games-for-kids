@@ -529,6 +529,8 @@ Caregiver instructions are in `game/docs/OFFLINE_INSTALL.md`. The guide covers o
 
 The current fallback package is generated at `docs/game-offline.zip` by `tools/build_offline.ps1`. ZIP is not a standalone Android app: opening `index.html` directly uses `file://` and cannot activate a service worker. Use the PWA button online, or serve the unpacked ZIP through HTTP/HTTPS/WebView. Do not edit `docs/` directly; regenerate it from `game/` after runtime changes.
 
+The one-tap download is self-healing (task 101, 2026-09-22): each file is fetched with a 20 s timeout and 2 retries — if one file keeps failing it is skipped and the run continues, so progress no longer gets stuck on a single file. The completion message reports how many files were skipped ("N прескочено — покушајте поново") and pressing the button again re-fetches the missing ones.
+
 ---
 
 # Navigation Model

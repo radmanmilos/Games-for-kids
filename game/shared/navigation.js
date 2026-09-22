@@ -79,7 +79,10 @@
                     setStatus('Преузимање ' + pct + '%');
                 }
                 if (data.type === 'cache-complete') {
-                    setStatus('Сачувано за ванмрежни рад');
+                    const skippedCount = (data.skipped || []).length;
+                    setStatus(skippedCount > 0
+                        ? ('Сачувано за ванмрежни рад (' + skippedCount + ' прескочено — покушајте поново)')
+                        : 'Сачувано за ванмрежни рад');
                     btn.disabled = false; btn.removeAttribute('aria-busy');
                     btn.dataset.installed = '1';
                 }

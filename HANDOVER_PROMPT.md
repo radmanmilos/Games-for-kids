@@ -6,9 +6,9 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## First thing next session — Racing game decisions to cover
+## First thing next session — Racing game decisions (ALL 10 CONFIRMED 2026-09-22)
 
-The Мала тркачица (Little Racer) game is fully built (Stages 1–5, tasks 95–99), committed locally, **not yet pushed** (Git Credential Manager hangs; user pushes). **User's explicit next goal (2026-09-11): the FULL visual-style adjustment of the 2D racer per `RACING_VISUAL_STYLE_ANALYSIS.md`** — so open this session by confirming these 10 gameplay/design decisions with the user (they were made autonomously per the user's "finish the whole game, solve issues alone, make a decisions list at the end" directive and have NOT been user-confirmed yet). Everything on the list is a candidate to be revisited as part of that adjustment:
+The Мала тркачица (Little Racer) game is fully built (Stages 1–5, tasks 95–99) and committed. The 10 gameplay/design decisions below were made autonomously during the build and have now been **explicitly confirmed by the user as-is (2026-09-22)**. Do NOT re-open or re-litigate them. Only #8 is called out because it visibly changes the game on the user's own machine:
 
 1. **Unlock progression = wins-based thresholds `[0, 2, 4, 7]`** — 3rd car of each driver unlocks after 4 finished races, 4th after 7. No coins/currency; kids earn cars by completing races. (Also drives the ARIA/🎉 "НОВО" unlock toast.)
 2. **One picker** — a single 8-card combo grid (2 drivers × 4 cars): driver sprite + car emoji, selected = gold ring, locked = greyed 🔒 + "N победе" hint, no pick-through on locked.
@@ -31,7 +31,12 @@ Verified state to give the user: `racing_smoke.js` **39/39 PASS**, `hub_smoke.js
 
 Validation: `racing3d_smoke.js` **15/15 PASS** (incl. steering: **wheels turn in + car drifts, car stops while wheels still return slowly, no side-drift, reverses**, `tris()>1000` real-geometry check, look-and-feel checks, round-2: wheel roll / mini-map marker / hills + floor-clear, round-3: bank into turn + front-wheel steer + 16 spin studs), `hub_smoke.js` ALL PASS, docs re-synced (202 + zip); offline manifest rebuilt after the round-5 changes.
 
-**Next:** **(A) user play-tests round 5 (no side-drift; car stops on release while wheels unwind) — then commits + pushes everything tonight** (the 10 parked task-99 decisions from the 2D racer still await confirmation against the new look). **(B) next session — tuning round (any gating tweaks) + port more worlds incrementally via `racing3d-config.js`.**
+**Next:** **(A) user play-tests round 5 (no side-drift; car stops on release while wheels unwind)** — the 10 task-99 decisions are CONFIRMED as-is (2026-09-22); the 3D work and 2D visual upgrade are committed and pushed. **(B) next session — tuning round (any gating tweaks) + port more worlds incrementally via `racing3d-config.js`.** Task **101** (offline download self-healing) is DONE (2026-09-22) — commit/push pending.
+
+## Session log — 2026-09-22
+
+- 2026-09-22 — **All 10 task-99 racing decisions CONFIRMED as-is by the user** (unlock `[0,2,4,7]`, single 8-card picker, subtle accel stats, MP3 countdown + TTS Крени!, synth engine hum, pickup sparkles, tablet thumb zones, reduced-motion screen-shake gate KEPT — user's OS has reduce on, wins-on-real-finish, ARIA+🎉 unlock toast). No code changes — recorded in PROJECT_TASKS task 99 + this file top section.
+- 2026-09-22 — **Task 101 DONE — offline download self-healing.** `game/sw.js`: new `addWithTimeout()` (20 s AbortController timeout + 2 retries) replaces the bare `await cache.add(url)` in `cacheAllAssets`; a file that keeps failing is **skipped and the loop continues**, collected in `skipped[]` sent on `cache-complete`. `game/shared/navigation.js`: completion status shows "Сачувано за ванмрежни рад (N прескочено — покушајте поново)" when files were skipped. Fixes the stuck-percentage symptom (root cause: no per-file timeout in sw.js). Validation: `node --check` clean, `hub_smoke.js` ALL PASS, docs synced (201), offline package rebuilt. NOT committed (user pushes).
 
 ## Session log — 2026-09-14
 

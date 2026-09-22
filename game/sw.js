@@ -77,22 +77,43 @@ async function postToAllClients(msg) {
   }
 }
 
+// Per-file capped download: timeout + limited retries so a single stuck
+// request can never freeze the whole cache-all run (progress keeps moving).
+const FETCH_TIMEOUT_MS = 20000;
+const FETCH_RETRIES = 2;
+
+async function addWithTimeout(cache, url, timeoutMs = FETCH_TIMEOUT_MS, retries = FETCH_RETRIES) {
+  const target = new URL(url, APP_ROOT).href;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const res = await fetch(target, { signal: controller.signal });
+      clearTimeout(timer);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      await cache.put(target, res);
+      return true;
+    } catch (e) {
+      clearTimeout(timer);
+    }
+  }
+  return false;
+}
+
 async function cacheAllAssets(sourceClient) {
   try {
     const res = await fetch(CACHE_LIST_URL);
     const list = await res.json();
     const cache = await caches.open(CACHE_NAME);
+    const skipped = [];
     let completed = 0;
     for (const url of list) {
-      try {
-        await cache.add(url);
-      } catch (e) {
-        // ignore individual failures
-      }
+      const ok = await addWithTimeout(cache, url);
+      if (!ok) skipped.push(url);
       completed++;
       await postToAllClients({ type: 'cache-progress', completed, total: list.length });
     }
-    await postToAllClients({ type: 'cache-complete', total: list.length });
+    await postToAllClients({ type: 'cache-complete', total: list.length, skipped });
   } catch (e) {
     await postToAllClients({ type: 'cache-error', message: String(e) });
   }
