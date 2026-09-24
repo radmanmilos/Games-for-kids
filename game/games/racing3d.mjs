@@ -1455,6 +1455,9 @@ function main() {
   let flameAcc = 0;
   let boostDustAcc = 0;
   let trailAcc = 0;
+  let pickupCombo = 0;
+  let lastPickupFreq = 0;
+  let kartFlash = 0;
   const lookTarget = new THREE.Vector3();
   const curTime = () => performance.now();
 
@@ -1647,6 +1650,44 @@ function main() {
         tag: "boostTrail",
       });
     }
+  }
+
+  // --- pickup feedback (batch 7): hull emissive flash + rising chime per
+  // consecutive collect; combo resets on an obstacle hit ---
+  const KART_FLASH_BASE = new THREE.Color(0x120000);
+  const KART_FLASH_COL = new THREE.Color(world.pickupColor || 0xff88cc);
+  const PENTA = [0, 2, 4, 7, 9, 12, 14, 16, 19, 21];
+  const pentaFreq = (n) => 523.25 * Math.pow(2, PENTA[n % PENTA.length] / 12);
+  function collectPickup(f) {
+    f.done = true;
+    f.mesh.visible = false;
+    score++;
+    scoreEl.textContent = "Поени: " + score;
+    flowersEl.textContent =
+      world.collectible + " " + score + "/" + FLOWER_TOTAL;
+    petalBurst(f.mesh.position, [
+      world.pickupColor,
+      0xffffff,
+      world.finishColor,
+      0x80d0ff,
+    ]);
+    pickupCombo++;
+    lastPickupFreq = pentaFreq(pickupCombo);
+    if (window.tone) {
+      window.tone(lastPickupFreq, 0.07);
+      window.tone(lastPickupFreq * 1.5, 0.09, 0.06);
+    }
+    kartFlash = 1;
+  }
+  function hitObstacle(o, now) {
+    slowUntil = now + o.def.slowTime * 1000;
+    slowMult = o.def.slowMult;
+    o.cooldownUntil = now + 600;
+    announce(o.hitText);
+    obstaclePuff(kart.position);
+    if (window.gentleMiss) window.gentleMiss();
+    if (!REDUCED_MOTION) kartBounce.position.y = 0.12;
+    pickupCombo = 0;
   }
 
   // --- audio helpers ---
@@ -2214,6 +2255,13 @@ function main() {
       p.rotation.x -= wheelRoll;
     });
 
+    // pickup emissive flash (batch 7): pops the hull glow, eases back to base
+    if (kartFlash > 0) {
+      kartFlash = Math.max(0, kartFlash - dt * 3);
+      if (kartFlash <= 0) kartMat.emissive.copy(KART_FLASH_BASE);
+      else kartMat.emissive.copy(KART_FLASH_BASE).lerp(KART_FLASH_COL, kartFlash);
+    }
+
     // pickup idle animation: slow spin + gentle bob (runs even in menu picker)
     const bobNow = now / 1000;
     for (const f of pickups) {
@@ -2271,22 +2319,7 @@ function main() {
       for (const f of pickups) {
         if (f.done) continue;
         if (kart.position.distanceTo(f.mesh.position) < 2.3) {
-          f.done = true;
-          f.mesh.visible = false;
-          score++;
-          scoreEl.textContent = "Поени: " + score;
-          flowersEl.textContent =
-            world.collectible + " " + score + "/" + FLOWER_TOTAL;
-          petalBurst(f.mesh.position, [
-            world.pickupColor,
-            0xffffff,
-            world.finishColor,
-            0x80d0ff,
-          ]);
-          if (window.tone) {
-            window.tone(1046, 0.07);
-            window.tone(1568, 0.09, 0.05);
-          }
+          collectPickup(f);
         }
       }
       // boost pads
@@ -2317,13 +2350,7 @@ function main() {
       for (const o of obstacles) {
         if (now < o.cooldownUntil) continue;
         if (kart.position.distanceTo(o.mesh.position) < o.radius) {
-          slowUntil = now + o.def.slowTime * 1000;
-          slowMult = o.def.slowMult;
-          o.cooldownUntil = now + 600;
-          announce(o.hitText);
-          obstaclePuff(kart.position);
-          if (window.gentleMiss) window.gentleMiss();
-          if (!REDUCED_MOTION) kartBounce.position.y = 0.12;
+          hitObstacle(o, now);
         }
       }
       // edge rumble + offroad dust
@@ -2582,6 +2609,26 @@ function main() {
       return true;
     },
     tagged: (tag) => particles.filter((p) => p.tag === tag).length,
+    // --- pickup feedback hooks (batch 7) ---
+    combo: () => pickupCombo,
+    resetCombo: () => {
+      pickupCombo = 0;
+      return pickupCombo;
+    },
+    kartFlash: () => kartFlash,
+    lastPickupFreq: () => lastPickupFreq,
+    forceCollect: (i) => {
+      const f = pickups[i];
+      if (!f) return false;
+      f.done = false;
+      f.mesh.visible = true;
+      collectPickup(f);
+      return true;
+    },
+    testObstacleHit: () => {
+      if (obstacles[0]) hitObstacle(obstacles[0], curTime());
+      return true;
+    },
     seekLateral: (v) => {
       lateral = clamp(v, -MAX_LATERAL, MAX_LATERAL);
       return lateral;

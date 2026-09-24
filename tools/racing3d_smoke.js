@@ -350,6 +350,39 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         bgj.boosting === false && bgj.flame === 0 && bgj.dust === 0 && bgj.trail === 0,
         boostVis + ' -> after-expiry ' + boostGone);
 
+    // batch 7 — pickup feedback: kart hull emissive flash pops on collect then
+    // eases back to the base glow; the chime pitch rises per consecutive
+    // collect; the combo resets to 0 on an obstacle hit
+    const fbCheck = await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.haltLoop(true);
+        r3d.seekLateral(0);
+        r3d.resetSteerState(0, 0, 0);
+        r3d.resetCombo();
+        for (let i = 0; i < 20; i++) r3d.step(1 / 60);  // drain a stale flash
+        const combo0 = r3d.combo();
+        r3d.forceCollect(0);
+        const c1 = r3d.combo();
+        const f1 = r3d.lastPickupFreq();
+        const flash1 = r3d.kartFlash();
+        r3d.forceCollect(1);
+        const c2 = r3d.combo();
+        const f2 = r3d.lastPickupFreq();
+        for (let i = 0; i < 15; i++) r3d.step(1 / 60);
+        const flashMid = r3d.kartFlash();
+        for (let i = 0; i < 50; i++) r3d.step(1 / 60);
+        const flashEnd = r3d.kartFlash();
+        r3d.testObstacleHit();
+        const comboAfter = r3d.combo();
+        r3d.haltLoop(false);
+        return JSON.stringify({ combo0, c1, f1, flash1, c2, f2, flashMid, flashEnd, comboAfter });
+    })()`);
+    const fbj = JSON.parse(fbCheck);
+    check('pickup feedback: hull emissive flash on collect (decays back), rising chime pitch per consecutive collect, combo resets on obstacle hit',
+        fbj.combo0 === 0 && fbj.c1 === 1 && fbj.c2 === 2 && fbj.f1 > 0 && fbj.f2 > fbj.f1 &&
+        fbj.flash1 === 1 && fbj.flashMid > 0 && fbj.flashMid < 1 && fbj.flashEnd === 0 &&
+        fbj.comboAfter === 0, fbCheck);
+
     h.close();
     process.exit(getFails() ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });

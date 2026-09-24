@@ -272,8 +272,8 @@
                                         "size":  6144
                                     },
     "offline-manifest.json":  {
-                                  "sha256":  "25B6D103AF99B1EC5D4F011E7B8DA2774C5F29DCA1F006655A3164FA3BF77F29",
-                                  "size":  28542
+                                  "sha256":  "F04B26D7CC29426D5A4379A0E44B2FD932C33F138DB8EAEB3859F92787FF57B4",
+                                  "size":  50334
                               },
     "pages/dino.html":  {
                             "sha256":  "BB214A5C33DFCBEB3707283F986C2D7D40C3C9C4E23692150B516F7D97E98329",
@@ -404,8 +404,8 @@
                                 "size":  7359
                             },
     "games/racing3d.mjs":  {
-                               "sha256":  "BFFDA77794210F5013EF5AC53E8918187791167E49CB6A74E6D8805F0E213662",
-                               "size":  85993
+                               "sha256":  "DA9D8CF250F53A67222151F113EBD8B0841606473AFF88F96A0A11BD997E72C3",
+                               "size":  87424
                            },
     "assets/audio/speech/a.mp3":  {
                                       "sha256":  "F3367D34A65237AFAFB62C407D481B149410E5722188D6949BB787CC530C6FFA",
