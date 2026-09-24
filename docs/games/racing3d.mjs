@@ -1720,6 +1720,7 @@ function main() {
   let audioDrainCount = 0;
   let lastAudioAt = 0;
   let announceDuckUntil = 0; // while now < this, ducked SFX play at 40%
+  let lastSpokenWord = ""; // last word handed to the speech synth (test hook)
   function queueAudio(item) {
     if (audioQueue.length < 16) audioQueue.push(item);
   }
@@ -1729,7 +1730,10 @@ function main() {
     try {
       if (item.k === "tone") window.tone(item.f, item.d, item.delay || 0, item.type || "sine", v);
       else if (item.k === "sweep") window.sweep(item.f, item.t, item.dur, item.delay || 0, item.type || "sine", v);
-      else if (item.k === "speak") speak(item.w);
+      else if (item.k === "speak") {
+        speak(item.w);
+        lastSpokenWord = item.w;
+      }
       else if (item.k === "chime") window.successChime();
     } catch (_) {}
     audioDrainCount++;
@@ -1758,9 +1762,11 @@ function main() {
       qSweep(75, 38, 0.38, 0, "square", 0.14);
     }
   }
-  // obstacle announcement: spoken hitText + falling minor-third "uh-oh" motif
-  // (G4 -> E4) with an exponential backoff so repeat hits re-announce at a
-  // growing cadence instead of blaring every cooldown window
+  // obstacle announcement: minimal spoken Serbian hint ("Пази!") + falling
+  // minor-third "uh-oh" motif (G4 -> E4) with an exponential backoff so
+  // repeat hits re-announce at a growing cadence instead of blaring every
+  // cooldown window. The full hitText stays on the visual banner; the
+  // tone/motif beeps remain the authoritative cue (speech may lag/silence).
   function announceObstacle(o, now) {
     if (now < (o.msgUntil || 0)) return;
     const gap = o.lastMsgAt && now - o.lastMsgAt < 3000
@@ -1770,7 +1776,7 @@ function main() {
     o.lastMsgAt = now;
     o.msgUntil = now + gap;
     announce(o.hitText);
-    qSpeak(o.hitText);
+    qSpeak("Пази!");
     qTone(392, 0.16, 0, "sine", 1, false);
     qTone(329.63, 0.22, 0.1, "sine", 1, false);
     announceDuckUntil = Math.max(announceDuckUntil, now + Math.min(gap, 1200));
@@ -2680,6 +2686,7 @@ function main() {
     triggerBoost: (dur) => {
       boostUntil = curTime() + (dur || BOOST_TIME);
       playWhoosh();
+      qSpeak("Буст!");
       return true;
     },
     tagged: (tag) => particles.filter((p) => p.tag === tag).length,
@@ -2705,18 +2712,29 @@ function main() {
     },
     // --- audio bus hooks (batch 9) ---
     audioQueueLen: () => audioQueue.length,
+    audioKinds: () => audioQueue.map((i) => i.k).join(","),
     audioDrained: () => audioDrainCount,
     ducking: () => announceDuckUntil > curTime(),
+    lastSpoken: () => lastSpokenWord,
     resetAudio: () => {
       audioQueue.length = 0;
       audioDrainCount = 0;
       lastAudioAt = 0;
       announceDuckUntil = 0;
+      lastSpokenWord = "";
       return true;
     },
     setWarnUntil: (t) => {
       warnUntil = t == null ? Infinity : t;
       return warnUntil;
+    },
+    resetObstacleMsgs: () => {
+      for (const o of obstacles) {
+        o.msgUntil = 0;
+        o.msgGap = 0;
+        o.lastMsgAt = 0;
+      }
+      return true;
     },
     seekLateral: (v) => {
       lateral = clamp(v, -MAX_LATERAL, MAX_LATERAL);

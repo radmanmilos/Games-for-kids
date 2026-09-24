@@ -476,6 +476,50 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         ab2.qRepeat === 1 && ab2.duckRepeat === true && Math.abs(min3 - 3) < 0.1,
         JSON.stringify({ ab0, ab1, ab2, abD, min3 }));
 
-    h.close();
-    process.exit(getFails() ? 1 : 0);
+// batch 10 — spoken Serbian hint: the obstacle announce speaks the MINIMAL
+    // word "Пази!" (full hitText stays on the visual banner) and the boost
+    // hint "Буст!"; beeps stay the authoritative cue — the queue carries 3
+    // tones against 1 speech item, so a lagging/silent TTS never mutes the call
+    await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.haltLoop(true);
+        r3d.seekLateral(0);
+        r3d.resetAudio();
+        r3d.resetObstacleMsgs();
+        r3d.setWarnUntil(null);
+        return true;
+    })()`);
+    const sh0 = JSON.parse(await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.testObstacleHit();
+        return JSON.stringify({ kinds: r3d.audioKinds(), q: r3d.audioQueueLen(), spoken: r3d.lastSpoken() });
+    })()`));
+    for (let i = 0; i < 4; i++) {
+        await sleep(55);
+        await h.evalv(`window.__r3d.step(1 / 60); true`);
+    }
+    const shDrain = JSON.parse(await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        return JSON.stringify({ q: r3d.audioQueueLen(), spoken: r3d.lastSpoken() });
+    })()`));
+    const shBoost = JSON.parse(await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.resetAudio();
+        r3d.triggerBoost(80);
+        return JSON.stringify({ kinds: r3d.audioKinds(), q: r3d.audioQueueLen() });
+    })()`));
+    for (let i = 0; i < 2; i++) {
+        await sleep(55);
+        await h.evalv(`window.__r3d.step(1 / 60); true`);
+    }
+    const shDrain2 = JSON.parse(await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        return JSON.stringify({ q: r3d.audioQueueLen(), spoken: r3d.lastSpoken() });
+    })()`));
+    check('spoken Serbian hint: obstacle announce speaks minimal "Пази!" (beeps authoritative: 3 tones vs 1 speech), boost hint "Буст!"',
+        sh0.kinds === 'tone,speak,tone,tone' && sh0.q === 4 && sh0.spoken === '' &&
+        shDrain.q === 0 && shDrain.spoken === 'Пази!' &&
+        shBoost.kinds === 'sweep,speak' && shBoost.q === 2 &&
+        shDrain2.q === 0 && shDrain2.spoken === 'Буст!',
+        JSON.stringify({ sh0, shDrain, shBoost, shDrain2 }));
 })().catch(e => { console.error(e); process.exit(1); });

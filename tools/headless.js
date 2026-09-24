@@ -55,7 +55,8 @@ function check(name, ok, info) {
 function killChromeByTag(tag) {
   try {
     execFileSync('pwsh', ['-NoProfile', '-Command',
-      `Get-Process chrome -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match [regex]::Escape('${tag}') } | Stop-Process -Force -ErrorAction SilentlyContinue`]);
+      `Get-Process chrome -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match [regex]::Escape('${tag}') } | Stop-Process -Force -ErrorAction SilentlyContinue`],
+      { timeout: 8000, stdio: 'ignore' });
   } catch (e) { /* pwsh not available or nothing to kill — fine */ }
 }
 

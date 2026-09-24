@@ -272,7 +272,7 @@
                                         "size":  6144
                                     },
     "offline-manifest.json":  {
-                                  "sha256":  "E7642D7A0183C4FE55A290CF20E7E7715A9327F3CECAF16A4D765C4FD065A7BA",
+                                  "sha256":  "45834987249F4937D5B14D424408FD89DDBBD0E975002C26F4D03FC68DC244BF",
                                   "size":  50334
                               },
     "pages/dino.html":  {
@@ -404,8 +404,8 @@
                                 "size":  7359
                             },
     "games/racing3d.mjs":  {
-                               "sha256":  "889E48F22733312BDB6C75553671E4C818622CF2D3F6FC1D2CF67B9B75B16968",
-                               "size":  88473
+                               "sha256":  "47FFF32D136ED01704F70305D372C12D6070113702839A7ACA07BFCB11DCA66B",
+                               "size":  90889
                            },
     "assets/audio/speech/a.mp3":  {
                                       "sha256":  "F3367D34A65237AFAFB62C407D481B149410E5722188D6949BB787CC530C6FFA",
@@ -760,8 +760,8 @@
                                              "size":  9024
                                          },
     "shared/audio.js":  {
-                            "sha256":  "78CC5A41890C8E218CDC35863AF032B58CB9BF0D2F59393BFD332DFEF2F7CDD6",
-                            "size":  5195
+                            "sha256":  "26CAD5DAC07A0E6017C639689AAF3653EBE79B0C01BEC50606B36D835C7BE097",
+                            "size":  5206
                         },
     "assets/fonts/fredoka-latin-ext.woff2":  {
                                                  "sha256":  "18A1723C878C0D8ACC2E45A108FD62FBB976E408337804AFA2908982FAC13E2A",
