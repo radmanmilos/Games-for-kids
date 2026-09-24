@@ -1698,37 +1698,82 @@ function main() {
     ]);
     pickupCombo++;
     lastPickupFreq = pentaFreq(pickupCombo);
-    if (window.tone) {
-      window.tone(lastPickupFreq, 0.07);
-      window.tone(lastPickupFreq * 1.5, 0.09, 0.06);
-    }
+    qTone(lastPickupFreq, 0.07);
+    qTone(lastPickupFreq * 1.5, 0.09);
     kartFlash = 1;
   }
   function hitObstacle(o, now) {
     slowUntil = now + o.def.slowTime * 1000;
     slowMult = o.def.slowMult;
     o.cooldownUntil = now + 600;
-    announce(o.hitText);
     obstaclePuff(kart.position);
-    if (window.gentleMiss) window.gentleMiss();
+    qTone(220, 0.25, 0, "sine", 0.9);
+    announceObstacle(o, now);
     if (!REDUCED_MOTION) kartBounce.position.y = 0.12;
     pickupCombo = 0;
   }
 
-  // --- audio helpers ---
+  // --- audio bus (batch 9): every SFX/announcement goes through a single
+  // queue; drainAudio plays ONE item per frame, so events that land in the
+  // same frame are sequenced instead of stacking a wall of oscillators ---
+  let audioQueue = [];
+  let audioDrainCount = 0;
+  let lastAudioAt = 0;
+  let announceDuckUntil = 0; // while now < this, ducked SFX play at 40%
+  function queueAudio(item) {
+    if (audioQueue.length < 16) audioQueue.push(item);
+  }
+  function playItem(item, now) {
+    const ducked = item.duck !== false && now < announceDuckUntil;
+    const v = (item.vol ?? 1) * (ducked ? 0.4 : 1);
+    try {
+      if (item.k === "tone") window.tone(item.f, item.d, item.delay || 0, item.type || "sine", v);
+      else if (item.k === "sweep") window.sweep(item.f, item.t, item.dur, item.delay || 0, item.type || "sine", v);
+      else if (item.k === "speak") speak(item.w);
+      else if (item.k === "chime") window.successChime();
+    } catch (_) {}
+    audioDrainCount++;
+  }
+  function drainAudio(now) {
+    if (!audioQueue.length || now < lastAudioAt) return;
+    playItem(audioQueue.shift(), now);
+    lastAudioAt = now + 40;
+  }
+  function qTone(f, d, delay, type, vol, duck) {
+    queueAudio({ k: "tone", f, d, delay, type, vol, duck });
+  }
+  function qSweep(f, t, dur, delay, type, vol, duck) {
+    queueAudio({ k: "sweep", f, t, dur, delay, type, vol, duck });
+  }
+  function qSpeak(w) {
+    queueAudio({ k: "speak", w });
+  }
   let lastRumbleSnd = 0;
   function playWhoosh() {
-    try {
-      window.sweep(350, 80, 0.35, 0, "sine", 0.22);
-    } catch (_) {}
+    qSweep(350, 80, 0.35, 0, "sine", 0.22);
   }
   function playRumble(now) {
     if (now - lastRumbleSnd > 350) {
       lastRumbleSnd = now;
-      try {
-        window.sweep(75, 38, 0.38, 0, "square", 0.14);
-      } catch (_) {}
+      qSweep(75, 38, 0.38, 0, "square", 0.14);
     }
+  }
+  // obstacle announcement: spoken hitText + falling minor-third "uh-oh" motif
+  // (G4 -> E4) with an exponential backoff so repeat hits re-announce at a
+  // growing cadence instead of blaring every cooldown window
+  function announceObstacle(o, now) {
+    if (now < (o.msgUntil || 0)) return;
+    const gap = o.lastMsgAt && now - o.lastMsgAt < 3000
+      ? Math.min((o.msgGap || 600) * 2, 2400)
+      : 600;
+    o.msgGap = gap;
+    o.lastMsgAt = now;
+    o.msgUntil = now + gap;
+    announce(o.hitText);
+    qSpeak(o.hitText);
+    qTone(392, 0.16, 0, "sine", 1, false);
+    qTone(329.63, 0.22, 0.1, "sine", 1, false);
+    announceDuckUntil = Math.max(announceDuckUntil, now + Math.min(gap, 1200));
   }
 
   const COUNT_SEQ = [
@@ -1998,7 +2043,7 @@ function main() {
         countdownEl.textContent = COUNT_SEQ[cur].txt;
         countdownEl.classList.add("show");
         speak(COUNT_SEQ[cur].word);
-        if (window.tone) window.tone(440 + cur * 60, 0.12);
+        qTone(440 + cur * 60, 0.12, 0, "sine", 1, false);
       }
     }
     if (cur >= COUNT_SEQ.length - 1) {
@@ -2039,7 +2084,7 @@ function main() {
     celebrateBurst(kart.position);
     save = { wins: save.wins + 1, world: worldIdx, kart: kartIdx };
     persistSave(save);
-    if (window.successChime) window.successChime();
+    queueAudio({ k: "chime" });
     if (!REDUCED_MOTION) finishShake = 1;
   }
 
@@ -2146,6 +2191,7 @@ function main() {
 
   function update(dt, now) {
     lastDt = dt;
+    drainAudio(now);
     if (mode === "countdown") {
       showCountdown();
     }
@@ -2191,7 +2237,7 @@ function main() {
           finish();
         } else {
           roundEl.textContent = "Круг " + lap + "/" + TOTAL_LAPS;
-          if (window.tone) window.tone(660, 0.15);
+          qTone(660, 0.15);
           celebrateBurst(kart.position);
         }
       }
@@ -2359,6 +2405,7 @@ function main() {
           boostUntil = now + BOOST_TIME;
           announce("Буст!");
           playWhoosh();
+          qSpeak("Буст!");
           if (!REDUCED_MOTION) finishShake = 0.5;
         }
       }
@@ -2369,7 +2416,7 @@ function main() {
           aheadT = Math.min(aheadT, (o.t - progress + 1) % 1);
         const aheadUnits = aheadT * trackLen;
         if (aheadT < 0.4 && aheadUnits > 12 && aheadUnits < 90) {
-          if (window.tone) window.tone(330, 0.06);
+          qTone(330, 0.06);
           warnUntil = now + 720;
         }
       }
@@ -2655,6 +2702,21 @@ function main() {
     testObstacleHit: () => {
       if (obstacles[0]) hitObstacle(obstacles[0], curTime());
       return true;
+    },
+    // --- audio bus hooks (batch 9) ---
+    audioQueueLen: () => audioQueue.length,
+    audioDrained: () => audioDrainCount,
+    ducking: () => announceDuckUntil > curTime(),
+    resetAudio: () => {
+      audioQueue.length = 0;
+      audioDrainCount = 0;
+      lastAudioAt = 0;
+      announceDuckUntil = 0;
+      return true;
+    },
+    setWarnUntil: (t) => {
+      warnUntil = t == null ? Infinity : t;
+      return warnUntil;
     },
     seekLateral: (v) => {
       lateral = clamp(v, -MAX_LATERAL, MAX_LATERAL);

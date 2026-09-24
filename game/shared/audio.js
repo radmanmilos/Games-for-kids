@@ -7,7 +7,7 @@
         return audioContext;
     };
 
-    window.tone = function (freq, dur, delay = 0, type = 'sine') {
+    window.tone = function (freq, dur, delay = 0, type = 'sine', vol = 0.25) {
         const audio = window.ctx();
         const oscillator = audio.createOscillator();
         const gain = audio.createGain();
@@ -17,7 +17,7 @@
         gain.connect(audio.destination);
         const start = audio.currentTime + delay;
         gain.gain.setValueAtTime(0.0001, start);
-        gain.gain.exponentialRampToValueAtTime(0.25, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(vol, start + 0.02);
         gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
         oscillator.start(start);
         oscillator.stop(start + dur + 0.05);

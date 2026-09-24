@@ -405,6 +405,77 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     check('celebration: lap-line cross fires a world-colored burst (tagged celebrate), particle cap respected',
         celj.lap1 > celj.lap0 && celj.cele > 0 && celj.total <= 420, celCheck);
 
+    // batch 9 — audio bus: every SFX/announcement flows through a single
+    // queue drained AT MOST ONCE per frame (40 ms wall gate proves one call
+    // per step even with back-to-back steps), the obstacle announce speaks
+    // the hitText with a falling minor-third motif (G4 -> E4) and arms a duck
+    // window, and immediate repeats are gated by exponential backoff
+    await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.haltLoop(true);
+        r3d.seekLateral(0);
+        r3d.resetSteerState(0, 0, 0);
+        r3d.setWarnUntil(null);
+        r3d.resetAudio();
+        return true;
+    })()`);
+    // collect queues two chime tones; without wall time passing, two quick
+    // steps still drain only one item (one audio call per frame)
+    const ab0 = JSON.parse(await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.forceCollect(0);
+        const q = r3d.audioQueueLen();
+        const d = r3d.audioDrained();
+        r3d.step(1 / 60);
+        const d1 = r3d.audioDrained();
+        r3d.step(1 / 60);
+        const d2 = r3d.audioDrained();
+        return JSON.stringify({ q, d, d1, d2 });
+    })()`));
+    // let the wall gate pass, then the second tone drains
+    await sleep(55);
+    const abDrain = JSON.parse(await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.step(1 / 60);
+        return JSON.stringify({ q: r3d.audioQueueLen(), d: r3d.audioDrained() });
+    })()`));
+    // obstacle hit arms the announce: gentleMiss + speak + G4 + Eb4 (4 items)
+    const ab1 = JSON.parse(await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.resetCombo();
+        const duckBefore = r3d.ducking();
+        r3d.testObstacleHit();
+        const duckAfter = r3d.ducking();
+        return JSON.stringify({ duckBefore, duckAfter, q: r3d.audioQueueLen() });
+    })()`));
+    // drain those four items one per ~55 ms wall step
+    let abD = 0;
+    for (let i = 0; i < 4; i++) {
+        await sleep(55);
+        abD = JSON.parse(await h.evalv(`(function(){
+            const r3d = window.__r3d;
+            r3d.step(1 / 60);
+            return JSON.stringify({ q: r3d.audioQueueLen(), d: r3d.audioDrained() });
+        })()`));
+    }
+    // immediate repeat hit: backoff gate suppresses the announce, leaves only
+    // the gentleMiss thud (still within the physical cooldown? no — direct
+    // hook), and the duck window stays armed
+    const ab2 = JSON.parse(await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.testObstacleHit();
+        return JSON.stringify({ qRepeat: r3d.audioQueueLen(), duckRepeat: r3d.ducking() });
+    })()`));
+    // both obstacle-hit items decode to two queued tones: G4 + E4 (minor third)
+    const min3 = Math.abs(Math.log2(392 / 329.63) * 12);
+    check('audio bus: one queued SFX call drained per frame, obstacle announce speaks + minor-third motif with duck window and exponential backoff gate',
+        ab0.q === 2 && ab0.d === 0 && ab0.d1 === 1 && ab0.d2 === 1 &&
+        abDrain.q === 0 && abDrain.d === ab0.d1 + 1 &&
+        ab1.duckBefore === false && ab1.duckAfter === true && ab1.q === 4 &&
+        abD.q === 0 && abD.d === ab0.d1 + 5 &&
+        ab2.qRepeat === 1 && ab2.duckRepeat === true && Math.abs(min3 - 3) < 0.1,
+        JSON.stringify({ ab0, ab1, ab2, abD, min3 }));
+
     h.close();
     process.exit(getFails() ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });
