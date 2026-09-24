@@ -301,6 +301,55 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         scj.n >= 14 && scj.onInit === true && scj.off === false && scj.onAfter === true &&
         scj.dy > -0.3 && scj.dy < 0.3 && scj.dy !== 0, shadowCheck);
 
+    // batch 6 — boost visual identity: longer/hotter flames + warm amber road
+    // dust + soft rear-wheel trail while now < boostUntil; all three particle
+    // tags die and stop spawning once the boost expires
+    const boostVis = await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.haltLoop(true);
+        r3d.seekLateral(0);
+        r3d.resetSteerState(0, 0, 0);
+        for (let i = 0; i < 10; i++) r3d.step(1 / 60);
+        const pre = {
+            boosting: r3d.boosting(),
+            flame: r3d.tagged('boostFlame'),
+            dust: r3d.tagged('boostDust'),
+            trail: r3d.tagged('boostTrail')
+        };
+        r3d.triggerBoost(250);
+        const on = r3d.boosting();
+        for (let i = 0; i < 30; i++) r3d.step(1 / 60);
+        const during = {
+            flame: r3d.tagged('boostFlame'),
+            dust: r3d.tagged('boostDust'),
+            trail: r3d.tagged('boostTrail')
+        };
+        r3d.haltLoop(false);
+        return JSON.stringify({ mode: r3d.mode(), pre, on, during });
+    })()`);
+    const bvj = JSON.parse(boostVis);
+    await sleep(320);
+    const boostGone = await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.haltLoop(true);
+        for (let i = 0; i < 75; i++) r3d.step(1 / 60);
+        const out = {
+            boosting: r3d.boosting(),
+            flame: r3d.tagged('boostFlame'),
+            dust: r3d.tagged('boostDust'),
+            trail: r3d.tagged('boostTrail')
+        };
+        r3d.haltLoop(false);
+        return JSON.stringify(out);
+    })()`);
+    const bgj = JSON.parse(boostGone);
+    check('boost visual identity: flames + warm dust + rear-wheel trail spawn while boosting, all stop + clear after expiry',
+        bvj.mode === 'drive' && bvj.pre.boosting === false && bvj.pre.flame === 0 &&
+        bvj.pre.dust === 0 && bvj.pre.trail === 0 && bvj.on === true &&
+        bvj.during.flame > 0 && bvj.during.dust > 0 && bvj.during.trail > 0 &&
+        bgj.boosting === false && bgj.flame === 0 && bgj.dust === 0 && bgj.trail === 0,
+        boostVis + ' -> after-expiry ' + boostGone);
+
     h.close();
     process.exit(getFails() ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });

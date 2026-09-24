@@ -1453,6 +1453,8 @@ function main() {
   let skidAcc = 0;
   let dustAcc = 0;
   let flameAcc = 0;
+  let boostDustAcc = 0;
+  let trailAcc = 0;
   const lookTarget = new THREE.Vector3();
   const curTime = () => performance.now();
 
@@ -1480,7 +1482,7 @@ function main() {
     const mat = new THREE.MeshBasicMaterial({
       color: o.col || 0xaaaaaa,
       transparent: true,
-      opacity: 1,
+      opacity: o.op != null ? o.op : 1,
       side: THREE.DoubleSide,
     });
     const m = new THREE.Mesh(geo, mat);
@@ -1595,6 +1597,7 @@ function main() {
         max: 0.42,
         grow: 2.2,
         scale: 1.1 + Math.random() * 0.9,
+        tag: "boostFlame",
       });
     }
   }
@@ -1613,10 +1616,10 @@ function main() {
       scale: 0.6 + Math.random() * 0.5,
     });
   }
-  function dustPuff(pos) {
+  function dustPuff(pos, col, tag) {
     spawnP({
       pos: pos.clone(),
-      col: 0xb0a080,
+      col: col || 0xb0a080,
       vel: new THREE.Vector3(
         (Math.random() - 0.5) * 2,
         1.2 + Math.random() * 1.2,
@@ -1626,7 +1629,24 @@ function main() {
       grow: 1.8,
       geo: "small",
       scale: 0.6 + Math.random() * 0.4,
+      tag: tag || "",
     });
+  }
+  function rearTrail(posL, posR) {
+    for (const wp of [posL, posR]) {
+      spawnP({
+        pos: wp.clone(),
+        col: Math.random() > 0.5 ? 0xffaa33 : 0xffdd55,
+        vel: new THREE.Vector3(0, -0.5, 0),
+        max: 0.8,
+        grow: 1.4,
+        geo: "confetti",
+        scale: 0.45 + Math.random() * 0.25,
+        rot: [Math.PI / 2, 0, 0],
+        op: 0.45,
+        tag: "boostTrail",
+      });
+    }
   }
 
   // --- audio helpers ---
@@ -2336,12 +2356,40 @@ function main() {
           );
         }
       }
-      // boost flames
+      // boost visual identity (batch 6): hot flames + warm amber road dust +
+      // soft rear-wheel warm trail while now < boostUntil; all three particle
+      // types die when the boost expires
       if (now < boostUntil) {
         flameAcc += dt;
         if (flameAcc > 0.04) {
           flameAcc = 0;
           flamePuff(exhaust);
+        }
+        boostDustAcc += dt;
+        if (boostDustAcc > 0.09) {
+          boostDustAcc = 0;
+          dustPuff(
+            kart.position
+              .clone()
+              .addScaledVector(tan, 0.4)
+              .add(new THREE.Vector3(0, 0.4, 0)),
+            Math.random() > 0.5 ? 0xffaa33 : 0xffdd55,
+            "boostDust",
+          );
+        }
+        trailAcc += dt;
+        if (trailAcc > 0.05) {
+          trailAcc = 0;
+          rearTrail(
+            kart.position
+              .clone()
+              .addScaledVector(tan, -1.45)
+              .addScaledVector(right, -1.1),
+            kart.position
+              .clone()
+              .addScaledVector(tan, -1.45)
+              .addScaledVector(right, 1.1),
+          );
         }
       }
     }
@@ -2528,11 +2576,12 @@ function main() {
     rumbleOn: () => Math.abs(lateral) > RUMBLE_ON,
     offroadState: () => offroad,
     boostPads: () => boostPads.map((b) => ({ x: b.x, t: b.t })),
-    triggerBoost: () => {
-      boostUntil = curTime() + BOOST_TIME;
+    triggerBoost: (dur) => {
+      boostUntil = curTime() + (dur || BOOST_TIME);
       playWhoosh();
       return true;
     },
+    tagged: (tag) => particles.filter((p) => p.tag === tag).length,
     seekLateral: (v) => {
       lateral = clamp(v, -MAX_LATERAL, MAX_LATERAL);
       return lateral;
