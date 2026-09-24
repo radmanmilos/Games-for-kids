@@ -1542,6 +1542,31 @@ function main() {
       });
     }
   }
+  function celebrateBurst(pos) {
+    // batch 8: world-colored petal burst reusing the shared emitter; used on
+    // lap-complete and as the world layer over the finish confetti. Capped to
+    // the remaining particle headroom so MAX_PARTICLES is never exceeded.
+    const cols = [world.finishColor, world.pickupColor, 0xffffff];
+    const n = Math.min(24, Math.max(0, MAX_PARTICLES - particles.length));
+    for (let i = 0; i < n; i++) {
+      const ang = (i / n) * Math.PI * 2 + Math.random() * 0.6;
+      spawnP({
+        pos: pos.clone(),
+        col: cols[i % cols.length],
+        vel: new THREE.Vector3(
+          Math.cos(ang) * (2.5 + Math.random() * 2.5),
+          3 + Math.random() * 3,
+          Math.sin(ang) * (2.5 + Math.random() * 2.5),
+        ),
+        max: 0.9 + Math.random() * 0.5,
+        grow: 1.2,
+        geo: "small",
+        scale: 0.7 + Math.random() * 0.5,
+        spin: 4 + Math.random() * 6,
+        tag: "celebrate",
+      });
+    }
+  }
   function confettiBurst(pos) {
     for (let i = 0; i < 110; i++) {
       const ang = Math.random() * Math.PI * 2;
@@ -2011,6 +2036,7 @@ function main() {
       "/" +
       FLOWER_TOTAL;
     confettiBurst(kart.position);
+    celebrateBurst(kart.position);
     save = { wins: save.wins + 1, world: worldIdx, kart: kartIdx };
     persistSave(save);
     if (window.successChime) window.successChime();
@@ -2166,6 +2192,7 @@ function main() {
         } else {
           roundEl.textContent = "Круг " + lap + "/" + TOTAL_LAPS;
           if (window.tone) window.tone(660, 0.15);
+          celebrateBurst(kart.position);
         }
       }
       progress = np;

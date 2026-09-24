@@ -383,6 +383,28 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         fbj.flash1 === 1 && fbj.flashMid > 0 && fbj.flashMid < 1 && fbj.flashEnd === 0 &&
         fbj.comboAfter === 0, fbCheck);
 
+    // batch 8 — celebration choreography: crossing a lap line fires a
+    // world-colored petal burst ('celebrate' tag) from the kart, the finish
+    // layers a world burst over the confetti, and the shared emitter stays
+    // within the MAX_PARTICLES cap
+    const celCheck = await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.haltLoop(true);
+        r3d.seekLateral(0);
+        r3d.resetSteerState(0, 0, 0);
+        const lap0 = r3d.lap();
+        r3d.seekToProgress(0.985);  // just before the next lap line
+        for (let i = 0; i < 120; i++) r3d.step(1 / 60);
+        const lap1 = r3d.lap();
+        const cele = r3d.tagged("celebrate");
+        const total = r3d.particles();
+        r3d.haltLoop(false);
+        return JSON.stringify({ lap0, lap1, cele, total });
+    })()`);
+    const celj = JSON.parse(celCheck);
+    check('celebration: lap-line cross fires a world-colored burst (tagged celebrate), particle cap respected',
+        celj.lap1 > celj.lap0 && celj.cele > 0 && celj.total <= 420, celCheck);
+
     h.close();
     process.exit(getFails() ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });
