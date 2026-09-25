@@ -11,7 +11,11 @@ binary.
 
 | File | What it is |
 | --- | --- |
-| `headless.js` | Shared harness: serves `game/` over HTTP, boots headless Chrome on a **unique temp profile**, returns `{ evalv, navigate, close, port }`. Also exports `check(name, ok, info)` (prints `PASS`/`FAIL`), `sleep`, `getFails()`. Kills only this run's Chrome on `close()` — stale-Chrome profile locks were the historical "Chrome did not start" cause. |
+| `headless.js` | Shared harness: serves `game/` over HTTP, boots headless Chrome on a **unique temp profile**, returns `{ evalv, evalp, navigate, close, port }`. Also exports `serve()` (the static server alone, for tools that drive their own browser), `check(name, ok, info)` (prints `PASS`/`FAIL`), `sleep`, `getFails()`. Kills only this run's Chrome on `close()` — stale-Chrome profile locks were the historical "Chrome did not start" cause. Use `evalv` for sync expressions, `evalp` when the expression returns a Promise. |
+| `run_all.js` | **Start here.** Parallel smoke-suite runner (default 4 workers) with a per-tool `PASS`/`FAIL` table and a non-zero exit code. Safe to parallelize because every smoke already uses its own Chrome profile + debug port. `--game <substr>`, `--since <sha>` (git-diff → static file→smoke map; `game/shared/*` and unmatched files expand to the whole battery), `--watch` (mtime-poll of `game/**`, re-runs only affected smokes), `--concurrency N`, `--list`, or positional smoke names. A smoke that exits non-zero with **0 checks** never got its assertions run (Chrome failed to boot under parallel load) — those are retried twice automatically. |
+| `check_all.js` | The one-command validation ritual: `node --check` over every `.js`/`.mjs` in `game/` + `tools/` → the full smoke battery → optional `--docs` (`tools/sync-docs.sh`, required whenever `game/` changed) / `--offline` (`tools/build_offline.ps1`, only when assets changed). Passes `--game`/`--concurrency` through to the runner. Non-zero exit if any stage fails. |
+| `play_matrix.mjs` | Playwright device matrix: 5 viewports (phone portrait/landscape, tablet portrait/landscape, desktop) × engines (chromium via system Chrome, webkit) × pages. Per cell asserts no uncaught/console errors, no horizontal overflow, and touch points (chromium only — Playwright's WebKit desktop always reports `maxTouchPoints === 0`). Optional, needs `npx playwright install webkit` once. Resolves Playwright from the npx cache the Playwright MCP populated, so the repo keeps its no-`package.json` rule. |
+| `axe_check.js` | Accessibility scan (axe-core, WCAG 2.0/2.1 A+AA) in the normal headless harness. axe-core is fetched **once** from jsDelivr and cached in the git-ignored `tools/.cache/` (delete it to refresh). Informational by default; `--report` exits 1 on serious/critical. `--all` scans every page, `--page /x.html` a specific one. |
 | `hub_smoke.js` | Canonical validation for the two-level hub (`game/index.html`) — 7 checks: landing renders with the title + two labeled tiles (ИГРЕ/УЧЕЊЕ), games tile opens the games sub-hub (8 buttons), learning tile opens the learning sub-hub (7 buttons), both back buttons return to the landing, all 15 game `data-go` buttons still wired, kitty's back button targets `hub-games`. |
 | `memory_smoke.js` | Canonical validation for Памтилица (Memory, task 65) — 8 checks: board boots 16 cards, status line starts 0/8 pairs · 0 moves, card back uses the game icon (🃏), matching a pair → status 1/8 + 1 move + "Пар!" popup + 2 matched cards, popup removes itself, mismatch advances moves only (no match, cards held flipped), mismatched cards flip back, all 8 pairs complete (8/8, moves 9). |
 | `candy_smoke.js` | Canonical validation for Слагалица бомбона (Candy, task 66) — 12 checks: boots at level 1 (4×4, 16 tiles, farm set), label + empty progress bar, grid fits the screen in real px, bar fills to 50% at half target, crossing target levels up (fresh 5×5 board, score reset, bar empty, "Ниво 2!" overlay, wild set, shrunken tiles), hint button shows a "Погледај … 😉" message + highlights the 2 swap tiles, star spawns on a dead board at 4×4 AND 5×5 (star logic applies at all grid sizes). |
@@ -35,8 +39,17 @@ binary.
 ## Commands
 
 ```
+node tools/check_all.js                # THE ritual: node --check over game/ + tools/, then the whole battery
+node tools/check_all.js --docs         # + tools/sync-docs.sh (run this whenever game/ changed)
+node tools/check_all.js --docs --offline  # + tools/build_offline.ps1 (only for new/changed assets)
+node tools/run_all.js --since HEAD     # just the smokes covering uncommitted game/ changes
+node tools/run_all.js --game tracing   # one game
+node tools/run_all.js --watch          # re-run affected smokes on every game/ save (dev loop)
+node tools/run_all.js --list           # what the battery contains
 node tools/dilate_test.js       # visual: r=1 dilation is a 3x3 box
 node tools/tracing_probe.js     # metrics table (uses window.__traceDebug)
+node tools/play_matrix.mjs      # chromium + webkit across 5 viewports (optional gate)
+node tools/axe_check.js         # axe-core a11y scan (optional, first run fetches axe once)
 node tools/hub_smoke.js         # hub landing + sub-hub navigation smoke test — expect ALL PASS
 node tools/memory_smoke.js      # memory (Памтилица) smoke test — expect ALL PASS
 node tools/candy_smoke.js       # candy (Слагалица бомбона) smoke test — expect ALL PASS
@@ -56,6 +69,16 @@ bash tools/sync-docs.sh         # mirror game/ -> docs/ for GitHub Pages
 ```
 
 ## Rules / gotchas
+
+- **Stale assertions:** when a check fails, first read the live page state printed
+  in the FAIL info and decide whether the *game* or the *assertion* is wrong.
+  Fix assertions to the observed truth — never change `game/` to satisfy a test.
+  A count taken from a source file (e.g. a hub tile count) should be **derived**
+  in the test, not hard-coded, or the next added game re-breaks it.
+- **`game/shared/main.js` boots each standalone page exactly once** via a
+  `started` guard. Do not remove it and do not add a second call site: start
+  functions bind click/pointer listeners, so booting twice doubles every
+  interaction (that bug made one ➡️ tap advance 3 scenes).
 
 - **Deployment:** `game/` is the single source of truth; `docs/` is only the
   published copy. On every change to `game/`, run `tools/sync-docs.sh` (it

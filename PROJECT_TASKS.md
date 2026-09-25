@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 104. NEW — Accessibility: allow pinch-zoom site-wide + fix the coloring progress contrast. (2026-09-25, found by `tools/axe_check.js` during task 103; **needs user approval before any edit**.) Every page except `animal_memory.html` sets `user-scalable=no, maximum-scale=1` in the viewport meta, which axe-core flags as a *critical* WCAG 1.4.4 violation (pinch-zoom disabled — 1 node on each of `index.html` + `tracing/coloring/animals/piano/racing.html`). `coloring.html` also has a *serious* `color-contrast` failure on `#coloringProgress`. Proposed fix: drop `maximum-scale=1, user-scalable=no` from the meta on all affected pages (keep `width=device-width, initial-scale=1, viewport-fit=cover`) and darken/lighten the progress text to reach 4.5:1 — then re-run `node tools/axe_check.js --report`. Not started; no game/ file touched yet.
+
+- 103. DONE — see History below (moved 2026-09-25; testing tooling upgrade + the `main.js` triple-boot fix).
+
 - 100. IN PROGRESS — Racing visual style: investigate Mario Kart / Crash Nitro Kart feel; 3D prototype → full three.js 3D racer decision. (Started 2026-09-11, per user "definitely Option A, but see the tiny 3D prototype first" → after testing: "lets go towards this full 3D racer with three.js, keep the current 2D racer, we may return to it")
    - Decisions locked (2026-09-11, user): full three.js 3D racer, **no AI rival karts** (single kart, obstacles + coins), **meadow world first** (vertical slice, then port more worlds incrementally), **exaggerated cartoon box kart** (chunky plastic, big rounded wheels, bright primaries, rim-light sheen). Old 2D racer untouched (`racing.html`/`racing.js` still part of the hub).
    - Full analysis stored in `RACING_VISUAL_STYLE_ANALYSIS.md` (why the game reads as flat; MK World / CNK trait research; asset audit = zero 3D assets, no three.js; Option A = 2D faux-3D juice with a ~50–60% feel ceiling; Option B = full WebGL; references included).
@@ -181,6 +185,29 @@ Owner & timeline
 ---
 
 ## History (closed tasks, ordered by number)
+
+### 103. DONE — Testing tooling upgrade (2026-09-25, Ponytail Lazy Dev)
+
+Dev-only testing tooling, plus **one real user-facing bug found and fixed** in the process. (Started 2026-09-24, user approved all 4 workstreams + the WebKit download + the axe-core CDN fetch via the question tool; finished 2026-09-25 after an interrupted session.)
+
+**Delivered:**
+- `tools/run_all.js` — parallel smoke runner. Every `tools/*_smoke.js` already booted its own unique-profile Chrome on its own debug port, so the battery is concurrency-safe. Capped worker pool (default 4), per-tool `PASS/FAIL` table, non-zero exit on failure. Flags: `--game <substr>`, `--since <sha>` (git-diff → static game-file→smoke map; `game/shared/*` and anything unmatched expand to the whole battery), `--watch` (mtime-poll `game/**`, re-runs only affected smokes), `--concurrency N`, `--list`, plus positional smoke names.
+- `tools/check_all.js` — the one-command ritual: `node --check` over `game/**` + `tools/**` `.js`/`.mjs` → `run_all.js` → optional `--docs` (`tools/sync-docs.sh`) / `--offline` (`tools/build_offline.ps1`). Passes `--game`/`--concurrency` through.
+- `tools/play_matrix.mjs` — Playwright device matrix: 5 viewports (phone portrait/landscape, tablet portrait/landscape, desktop) × engines (chromium via system Chrome + webkit) × pages, asserting no uncaught/console errors, no horizontal overflow, and touch points (chromium only — Playwright's WebKit desktop build always reports `maxTouchPoints === 0`). Resolves Playwright from the npx cache the MCP already populated, so the repo still has no `package.json` and no deps. WebKit installed (`npx playwright install webkit`).
+- `tools/axe_check.js` — axe-core (WCAG 2.0/2.1 A+AA) scan over the existing headless harness. axe-core is fetched **once** from jsDelivr and cached in the git-ignored `tools/.cache/`. Informational by default, `--report` to gate.
+- `.opencode/skills/validate-game-change/SKILL.md` — the validation ladder (smallest relevant subset → `--watch` → full `check_all.js`), how to read FAIL vs boot-crash, and the rule that stale assertions get fixed to observed truth, never the game bent to fit a test.
+- `tools/headless.js` — boot hardening (`--no-default-browser-check`, `--disable-background-networking`, `--disable-component-update`, `--disable-default-apps`, `--disable-sync`, `--disable-features=Translate,MediaRouter,OptimizationGuideModelDownloading`), debug-port poll 8×250 ms → 20×100 ms, plus two additive exports: `serve()` (the static server, so Playwright/a11y tools reuse it) and `evalp()` (promise-awaiting eval, needed because `axe.run()` is async).
+- `.gitignore` — `tools/.cache/`.
+
+**Bugs found and fixed (not tooling — real defects surfaced by the new runner):**
+1. **`game/shared/main.js` booted every standalone page up to 3×** (immediate `tryStart` + `DOMContentLoaded` + `load`, each calling `window.startX()` with no guard). `startColoring` and `startTracing` re-add their click/pointer listeners on each call, so **one real tap on ➡️ advanced 3 animals/shapes** (verified live: 1→4→7→10→12 per click). Fixed at the root with a `started` flag in `tryStart`, so all 14 standalone pages boot exactly once.
+2. **`tools/racing3d_smoke.js` never exited** — it was the only smoke with no `h.close()` / `process.exit()`, so the process hung until the runner's 300 s cap killed it *after* printing 27/27 PASS. Added the teardown.
+3. **7 stale static assertions** against `game/shared/main.js`'s 3-field `standaloneMap` (it gained a 3rd field on 2026-09-11): `animals_smoke.js:72`, `coloring_smoke.js:80`, `adventure_smoke.js:244`, `dino_smoke.js:338`, `driving_smoke.js:191`, `piano_smoke.js:134`, `shapes_smoke.js:87`. Also `tracing_smoke.js` hard-coded the hub's `data-go` count at 20 (now 22) — the assert now derives the count from `index.html` so it cannot go stale again.
+4. **Boot-crash retry in `run_all.js`** — a smoke exiting non-zero with **0 checks** never got its assertions run; its Chrome failed to launch under parallel load. Those are now retried twice and only reported if they fail a third time (verified: a real boot crash recovered to 22/22 PASS).
+
+**Validation:** `node --check` clean on every touched file; `node tools/run_all.js` = **19/19 tools PASS, 361 checks, 0 fail** (also closes the batch-10 pending reruns from task 102); `node tools/play_matrix.mjs` = **50/50 cells OK** (chromium + webkit, zero horizontal overflow, zero console errors); `node tools/axe_check.js` ran over 7 pages. NOT committed (user commits/pushes).
+
+**Follow-up found by `axe_check.js`, NOT fixed (needs user decision — it touches every page):** every page except `animal_memory.html` has `<meta name="viewport" content="… maximum-scale=1, user-scalable=no …">`, i.e. **pinch-zoom is disabled site-wide** — a real WCAG 1.4.4 (Resize Text) *critical* violation, 1 node × 6 pages. `coloring.html` additionally has a *serious* `color-contrast` violation on `#coloringProgress`. Recorded as task 104 below.
 
 ### 95. DONE — Racing Game Stage 1: Foundation & Core Loop (2026-09-08, Radman Milos)
 

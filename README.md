@@ -741,7 +741,13 @@ Development tooling kept here (not part of the runtime):
 - `visual_audit_capture.js` — headless-Chrome screenshot harness for the visual audit (no deps, run from repo root).
 - `visual_audit_instructions.md` — full read-only instructions for the visual audit model (task 47).
 
-Test tooling lives in `tools/` (see `tools/README.md`): `headless.js` shared harness, `hub_smoke.js` (hub navigation), `tracing_smoke.js` (canonical tracing validation), `tracing_probe.js` (metric tuning), `dilate_test.js`. Run with `node tools/<file>.js` — no install needed.
+Test tooling lives in `tools/` (see `tools/README.md`). Run with `node tools/<file>.js` — no install needed, no `package.json`.
+
+- **`node tools/check_all.js`** — the one-command validation ritual: `node --check` over `game/` + `tools/`, then the whole 19-tool smoke battery in parallel. Add `--docs` to also run `tools/sync-docs.sh` (required whenever `game/` changed) and `--offline` to rebuild the offline package.
+- **`node tools/run_all.js`** — the parallel smoke runner on its own. `--game <name>`, `--since <sha>` (only the smokes covering your changes), `--watch` (re-run affected smokes as you save), `--concurrency N`, `--list`.
+- **`node tools/<game>_smoke.js`** — one game directly; fastest edit loop.
+- Optional deeper gates: **`node tools/play_matrix.mjs`** (chromium + webkit across 5 phone/tablet/desktop viewports) and **`node tools/axe_check.js`** (axe-core a11y scan; fetches axe once into the git-ignored `tools/.cache/`).
+- The `.opencode/skills/validate-game-change/SKILL.md` skill spells out which smokes to run for which change.
 
 Nothing inside this folder is required for the final application to run.
 

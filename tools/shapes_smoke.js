@@ -84,7 +84,7 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
   const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
   check('navigation route wired (game-shapes -> shapes.html)', nav.includes("'game-shapes'") && nav.includes("'pages/shapes.html'"));
   const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (shapes -> shapes-back/startShapesRound)', main.includes("'shapes': ['shapes-back', 'startShapesRound']"));
+  check('standalone boot wired (shapes -> shapes-back/startShapesRound)', main.includes("'shapes': ['shapes-back', 'startShapesRound', 'hub-learning']"));
 
   h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);

@@ -81,7 +81,10 @@ function cdp(wsUrl) {
   });
 }
 
-async function start({ page, tag = 'pkv', width = 1280, height = 800 } = {}) {
+/* Serve game/ over HTTP on an ephemeral port. file:// breaks audio, the kitty
+   iframe and throws Unsafe-attempt warnings, so EVERY harness (including the
+   Playwright/a11y tools) must go through this. Returns { port, close }. */
+async function serve() {
   const server = http.createServer((req, res) => {
     let p = decodeURIComponent(req.url.split('?')[0]);
     if (p === '/') p = '/index.html';
@@ -93,29 +96,40 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800 } = {}) {
     });
   });
   await new Promise(r => server.listen(0, r));
-  const httpPort = server.address().port;
+  return { port: server.address().port, close: () => server.close() };
+}
+
+async function start({ page, tag = 'pkv', width = 1280, height = 800 } = {}) {
+  const srv = await serve();
+  const httpPort = srv.port;
 
   const profile = path.join(process.env.TEMP, 'pkv-' + tag + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e6));
   const dbgPort = httpPort + 100 + Math.floor(Math.random() * 1000);
 
   const chromeBin = findChrome();
   if (!chromeBin) {
-    server.close();
+    srv.close();
     throw new Error('Chrome not found. Install Chrome or set CHROME_PATH, then re-run this smoke.');
   }
 
+  const CHROME_FLAGS = [
+    '--headless=new', '--disable-gpu', `--remote-debugging-port=${dbgPort}`,
+    '--user-data-dir=' + profile, '--no-first-run', '--no-default-browser-check',
+    '--disable-background-networking', '--disable-component-update', '--disable-default-apps',
+    '--disable-sync', '--disable-features=Translate,MediaRouter,OptimizationGuideModelDownloading',
+    '--mute-audio', 'about:blank',
+  ];
   let version = null;
   for (let attempt = 0; attempt < 2 && !version; attempt++) {
-    execFile(chromeBin, ['--headless=new', '--disable-gpu', `--remote-debugging-port=${dbgPort}`,
-      '--user-data-dir=' + profile, '--no-first-run', '--mute-audio', 'about:blank']);
-    for (let i = 0; i < 8 && !version; i++) {
+    execFile(chromeBin, CHROME_FLAGS);
+    for (let i = 0; i < 20 && !version; i++) {
       try { version = await (await fetch(`http://127.0.0.1:${dbgPort}/json/version`)).json(); }
-      catch { await sleep(250); }
+      catch { await sleep(100); }
     }
     if (!version) { killChromeByTag(profile); await sleep(250); }
   }
   if (!version) {
-    server.close();
+    srv.close();
     throw new Error('Chrome did not start (debug port ' + dbgPort + ') — skipped in this environment');
   }
 
@@ -134,12 +148,18 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800 } = {}) {
     if (r.exceptionDetails) return { __err: r.exceptionDetails.exception?.description || r.exceptionDetails.text };
     return r.result ? r.result.value : undefined;
   };
+  // Same, but for expressions that return a Promise (awaitPromise).
+  const evalp = async (expression) => {
+    const r = await c.send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true });
+    if (r.exceptionDetails) return { __err: r.exceptionDetails.exception?.description || r.exceptionDetails.text };
+    return r.result ? r.result.value : undefined;
+  };
   const navigate = url => c.send('Page.navigate', { url });
-  const close = () => { server.close(); killChromeByTag(profile); };
+  const close = () => { srv.close(); killChromeByTag(profile); };
 
   if (page) await navigate(`http://127.0.0.1:${httpPort}${page}`);
 
-  return { c, evalv, navigate, close, port: httpPort, sleep };
+  return { c, evalv, evalp, navigate, close, port: httpPort, sleep };
 }
 
-module.exports = { start, check, sleep, getFails: () => fails };
+module.exports = { start, serve, check, sleep, getFails: () => fails };

@@ -335,7 +335,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
   check('navigation route wired (game-dino -> dino.html)', nav.includes("'game-dino'") && nav.includes("'pages/dino.html'"));
   const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (dino -> dino-back/startDino)', main.includes("'dino': ['dino-back', 'startDino']"));
+  check('standalone boot wired (dino -> dino-back/startDino)', main.includes("'dino': ['dino-back', 'startDino', 'hub-games']"));
   const dino = fs.readFileSync(path.join(root, 'game', 'games', 'dino.js'), 'utf8');
   check('dino config: heroFlip set (PNG sprites face left natively) + jump power set', dino.includes('heroFlip: true') && dino.includes('jumpPower: -13.5'));
   check('dino config: file:// crop fallback present (getImageData is tainted under file://)', dino.includes('DINO_CROP_FALLBACK') && dino.includes('bronto: { x: 264, y: 106, w: 1529, h: 1633 }') && dino.includes('t_rex: { x: 154, y: 112, w: 1691, h: 1775 }'));

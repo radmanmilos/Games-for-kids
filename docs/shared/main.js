@@ -26,19 +26,25 @@ if (standaloneGame) {
     // Try to call the page's startup function. If it's not yet defined (script load order
     // differences), retry a few times before giving up. This is safe and avoids race
     // conditions between shared/main.js and per-game scripts.
-    (function tryStart(retries){
+    // `started` makes the whole boot idempotent: start functions bind click/pointer
+    // listeners, so booting twice would double every interaction in the game.
+    let started = false;
+    const tryStart = (retries) => {
+        if (started) return;
         const fnName = standaloneGame[1];
         if (typeof window[fnName] === 'function') {
+            started = true;
             try { window[fnName](); } catch(e){ console.warn('Error running', fnName, e); }
             return;
         }
         if (retries <= 0) return;
         setTimeout(() => tryStart(retries - 1), 120);
-    })(10);
+    };
+    tryStart(10);
 
     // additionally attempt again after DOMContentLoaded and load events in case
     // the per-page script defines the start function later in the page lifecycle.
-    const bootListener = () => { (function(retries){ const fnName = standaloneGame[1]; if (typeof window[fnName] === 'function') { try { window[fnName](); } catch(e){ console.warn('Error running', fnName, e); } } })(10); };
+    const bootListener = () => tryStart(10);
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', bootListener, {once:true});
         window.addEventListener('load', bootListener, {once:true});

@@ -29,9 +29,10 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 ## Working rhythm
 
 - Follow the task lifecycle in `PROJECT_TASKS.md`: mark a task IN PROGRESS when starting, and DONE with a dated note (who, what, why) when finished.
-- Do not claim done without validating. Every JS change gets `node --check`; use the smallest targeted check that proves the change. Headless test harnesses live in `tools/` (see `tools/README.md`); e.g. the tracing game's canonical validation is `node tools/tracing_smoke.js`. Reuse `tools/headless.js` for new games instead of writing one-off probes.
+- Do not claim done without validating. **The ritual is one command: `node tools/check_all.js`** (`node --check` over `game/`+`tools/`, then the full smoke battery in parallel; `--docs` also runs `tools/sync-docs.sh`, `--offline` rebuilds the offline pack). While iterating, run only what the change needs: `node tools/run_all.js --game <name>`, `--since HEAD`, or `--watch`. The `validate-game-change` skill (`.opencode/skills/`) spells out the ladder. Harness internals live in `tools/README.md`; reuse `tools/headless.js` for new games instead of writing one-off probes.
 - Build-then-polish: games ship first, polish comes in iterative rounds driven by the user's play-test feedback. Expect multiple feedback rounds and record each round's decisions.
-- Testing: `tools/headless.js` smokes are the fast deterministic gate for functional changes. **Playwright MCP** (`npx @playwright/mcp`, wired in `opencode.json`) is a SESSION-ONLY play-test tool for manual/visual QA (and WebKit/tablet checks) — it needs an opencode restart after config changes; never add MCP or other dev dependencies to `game/` at runtime.
+- Testing: `tools/headless.js` smokes are the fast deterministic gate for functional changes. Optional deeper gates: `node tools/play_matrix.mjs` (chromium + webkit across phone/tablet/desktop viewports; needs `npx playwright install webkit` once) and `node tools/axe_check.js` (axe-core; first run fetches axe into the git-ignored `tools/.cache/`). **Playwright MCP** (`npx @playwright/mcp`, wired in `opencode.json`) is a SESSION-ONLY play-test tool for manual/visual QA — it needs an opencode restart after config changes; never add MCP or other dev dependencies to `game/` at runtime.
+ - A smoke that exits non-zero with **0 checks** never got its assertions run (Chrome failed to boot under parallel load) — that is not a real failure; `run_all.js` retries it twice. A stale assertion is fixed to the observed truth; never bend `game/` to satisfy a test.
  - Keep `resources/` and `tools/` for dev assets and tooling; `game/` must stay deployable-only and never require `resources/` or `tools/` at runtime.
   - Update `PROJECT_TASKS.md`, `README.md`, `HANDOVER_PROMPT.md`, and `CONTRIBUTING.md` at the start of every task (mark IN PROGRESS) and on completion of every task (mark DONE with a dated note: who, what, why). This is not optional — missing docs updates are a regression. `HANDOVER_PROMPT.md` is refreshed at the end of every session.
  - **Docs sync:** on every change to `game/`, run `tools/sync-docs.sh` to replace the entire `docs/` content with the new `game/` content. **Never commit or push to `main` automatically** — the user must do that explicitly. GitHub Pages serves `main` → `/docs`, so pushing publishes the site. Never edit `docs/` directly.
@@ -41,6 +42,7 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 ## Footguns & no-go zones
 
 - **Racing game decisions (autonomous build, task 99):** the 10-item gameplay/design decisions list lives at the top of `HANDOVER_PROMPT.md` ("First thing next session — Racing game decisions to cover") and in `PROJECT_TASKS.md` task 99. These are confirmed with the user BEFORE any racing polish/refactor — do not re-implement, re-litigate, or "improve" them first. Notable: unlock thresholds `[0,2,4,7]` wins (no currency); single 8-card combo picker; wins count only on real finish (`finishRecorded` guard); the user's OS reports `prefers-reduced-motion: reduce` = ON, so the obstacle screen-shake is suppressed on their machine (`racing.js:1036` `&& !REDUCED_MOTION`) — the ONLY user-facing behavior the a11y gate still changes after the task-83 revert, flagged for review.
+- Standalone boot is single-shot: `game/shared/main.js` calls each page's `startX()` exactly once, guarded by a `started` flag, because the retry path + `DOMContentLoaded` + `load` can all fire. Start functions bind click/pointer listeners, so a second boot doubles every interaction (that bug made one ➡️ tap advance 3 scenes). Never add a second call site or remove the guard.
 - Cloudflare Workers serves extensionless URLs: standalone detection must strip `.html` before comparing page names. Never match `'name.html'`.
 - Coloring regions: `createColoringRegion` accepts both `r.attrs` and flat fields — never assume `attrs` is always present.
 - Kitty HUD button offsets are sacred: music 🔊 at `right:268px`, worlds 🌍 at `right:200px` — do not move them closer or they overlap.
@@ -56,6 +58,19 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 - Be honest about limits: if the current model cannot read images/audio, say so and recommend MiMo V2.5 Free for visual review; the user switches models.
 - Report with evidence: `file:line` references, exact commands run, and their results. Keep it concise and machine-friendly.
  - Record decisions (including deferrals "per user decision") with dates and reasons so the next session does not re-litigate them.
+
+## Mode & model check before every request
+
+At the start of every request, before executing anything, quickly decide whether the **current agent mode** (Plan vs Build) and the **current model** fit the request:
+
+- **Research-only / design / weighing-tradeoffs request** → current mode should be **Plan**. If the current mode is Build but the request is purely research ("investigate…", "which approach…", "should we…"), tell the user "switch to Plan to review first" and do not write code — unless the user already asked to execute.
+- **Implementation request** → current mode should be **Build**. If the current mode is Plan but the user clearly wants execution, note the switch needed and wait for confirmation before writing code.
+- **Model fit** → see "OpenCode Model Selection" below (screenshots/images/audio → MiMo; fast bulk coding → DeepSeek; huge context → Nemotron). If the current model cannot serve the request well, recommend the model and ask the user to switch via the model picker.
+
+Rules:
+- **Notify only when a switch is actually recommended.** If mode and model are fine, just continue — do not prompt with a recommendation every request.
+- When a switch IS recommended, state it in one line at the start of the reply (e.g. "Mode check: switch to Plan to review before I execute", "Model check: switch to MiMo to review this screenshot") and **wait for the user's action** before proceeding.
+- The assistant never switches mode or model on its own.
 
 ## Orientation protocol
 

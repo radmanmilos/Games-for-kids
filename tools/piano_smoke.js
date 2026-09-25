@@ -131,7 +131,7 @@ const LIT_IDX = `Array.from(document.querySelectorAll('.piano-key')).indexOf(doc
   const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
   check('navigation route wired (game-piano -> piano.html)', nav.includes("'game-piano'") && nav.includes("'pages/piano.html'"));
   const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (piano -> piano-back/startPiano)', main.includes("'piano': ['piano-back', 'startPiano']"));
+  check('standalone boot wired (piano -> piano-back/startPiano)', main.includes("'piano': ['piano-back', 'startPiano', 'hub-learning']"));
 
   process.exit(getFails() ? 1 : 0);
 })();

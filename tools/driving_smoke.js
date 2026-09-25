@@ -188,7 +188,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
   check('navigation route wired (game-driving -> driving.html)', nav.includes("'game-driving'") && nav.includes("'pages/driving.html'"));
   const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (driving -> driving-back/startDriving)', main.includes("'driving': ['driving-back', 'startDriving']"));
+  check('standalone boot wired (driving -> driving-back/startDriving)', main.includes("'driving': ['driving-back', 'startDriving', 'hub-games']"));
 
   process.exit(getFails() ? 1 : 0);
 })();

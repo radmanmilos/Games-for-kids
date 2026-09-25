@@ -5,8 +5,11 @@
    Requires Node >= 22. CHROME_PATH env optional.
    Expected: 22 checks, ALL PASS. */
 const { start, check, getFails } = require('./headless.js');
+const fs = require('fs');
+const path = require('path');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const root = path.resolve(__dirname, '..');
 
 /* ---- page-side helpers (expressions) ---- */
 const PIXELS = id => `(function(){const cv=document.getElementById('${id}');const d=cv.getContext('2d').getImageData(0,0,cv.width,cv.height).data;let n=0;for(let i=3;i<d.length;i+=4)if(d[i]>0)n++;return n;})()`;
@@ -283,7 +286,10 @@ const CHECK_RESULT = `JSON.stringify({
     await sleep(800);
     const idx = await h.evalv(`JSON.stringify({ btn: (document.querySelector('[data-go="game-tracing"]')||{}).textContent, count: document.querySelectorAll('[data-go]').length })`);
     let I = JSON.parse(idx || '{}');
-    check('index.html has game-tracing button', I.btn === '✏️' && I.count === 20, idx);
+    // Count is derived from the source so adding a new game tile does not stale this assert.
+    const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
+    const srcCount = (indexHtml.match(/data-go="/g) || []).length;
+    check('index.html has game-tracing button', I.btn === '✏️' && I.count === srcCount, idx);
   } finally {
     h.close();
   }

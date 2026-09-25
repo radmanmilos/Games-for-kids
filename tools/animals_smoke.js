@@ -69,7 +69,7 @@ const ANIMALS = ['🐶','🐱','🐮','🦁','🐘','🐸','🐷','🦆','🦊',
   const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
   check('navigation route wired (game-animals -> animals.html)', nav.includes("'game-animals'") && nav.includes("'pages/animals.html'"));
   const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (animals -> animals-back/startAnimals)', main.includes("'animals': ['animals-back', 'startAnimals']"));
+  check('standalone boot wired (animals -> animals-back/startAnimals)', main.includes("'animals': ['animals-back', 'startAnimals', 'hub-learning']"));
 
   h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);

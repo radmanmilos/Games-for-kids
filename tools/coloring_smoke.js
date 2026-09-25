@@ -17,7 +17,10 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
 
   let ready = false;
   for (let i = 0; i < 20 && !ready; i++) {
-    ready = await h.evalv(`typeof window.startColoring === 'function' && !!document.getElementById('coloringSvg')`);
+    // Wait for the scene to be BUILT, not just for startColoring to exist: the
+    // regions are created synchronously inside it, so polling the function alone
+    // can pass one tick before buildColoringScene() has run under parallel load.
+    ready = await h.evalv(`typeof window.startColoring === 'function' && !!document.getElementById('coloringSvg') && document.querySelectorAll('#coloringSvg .coloring-region').length > 0`);
     if (!ready) await sleep(200);
   }
   check('coloring game booted (startColoring ready + SVG present)', ready);
@@ -77,7 +80,7 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
   const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
   check('navigation route wired (game-coloring -> coloring.html)', nav.includes("'game-coloring'") && nav.includes("'pages/coloring.html'"));
   const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (coloring -> coloring-back/startColoring)', main.includes("'coloring': ['coloring-back', 'startColoring']"));
+  check('standalone boot wired (coloring -> coloring-back/startColoring)', main.includes("'coloring': ['coloring-back', 'startColoring', 'hub-learning']"));
 
   h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);

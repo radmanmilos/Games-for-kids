@@ -522,4 +522,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         shBoost.kinds === 'sweep,speak' && shBoost.q === 2 &&
         shDrain2.q === 0 && shDrain2.spoken === 'Буст!',
         JSON.stringify({ sh0, shDrain, shBoost, shDrain2 }));
+
+    h.close();
+    process.exit(getFails() ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });
