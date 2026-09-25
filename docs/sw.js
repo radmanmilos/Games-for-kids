@@ -28,6 +28,14 @@ self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     // claim clients so pages register quickly
     await self.clients.claim();
+    // Bumping CACHE_NAME must not orphan the previous copy: on a tablet the
+    // old cache is a full offline copy, so it has to actually be deleted.
+    const names = await caches.keys();
+    await Promise.all(
+      names
+        .filter(name => name.startsWith('petrin-') && name !== CACHE_NAME)
+        .map(name => caches.delete(name))
+    );
   })());
 });
 

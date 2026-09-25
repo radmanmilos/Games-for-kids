@@ -80,7 +80,14 @@ const IMPACT_ORDER = { critical: 0, serious: 1, moderate: 2, minor: 3 };
   const report = [];
 
   for (const p of pages) {
-    const h = await start({ page: p, tag: 'axe-' + path.basename(p, '.html'), width: 1280, height: 800 });
+    // Chrome occasionally fails to boot (port/profile contention) and would abort
+    // the whole scan; retry once per page before giving up on it.
+    let h = null;
+    for (let attempt = 0; attempt < 2 && !h; attempt++) {
+      try { h = await start({ page: p, tag: 'axe-' + path.basename(p, '.html'), width: 1280, height: 800 }); }
+      catch (e) { if (attempt === 1) { console.log('\n=== ' + p + ' — BOOT FAILED: ' + e.message); report.push({ page: p, error: 'boot failed' }); } else await sleep(800); }
+    }
+    if (!h) continue;
     try {
       await sleep(700);
       const err = await h.evalv(axeSrc + '\n; true');

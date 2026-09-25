@@ -1,9 +1,28 @@
 (function () {
     let audioContext;
+    let unlocked = false;
+
+    // iOS Safari only opens the output path once a real buffer is played inside
+    // the gesture: resume() on its own settles asynchronously (~200-400ms), so the
+    // first tone() would be scheduled against a frozen currentTime. No-op elsewhere.
+    function unlockOnce(a) {
+        if (unlocked) return;
+        unlocked = true;
+        try {
+            const src = a.createBufferSource();
+            src.buffer = a.createBuffer(1, 1, 22050);
+            src.connect(a.destination);
+            src.start(0);
+        } catch (_) {}
+    }
 
     window.ctx = function () {
         if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioContext.state === 'suspended') audioContext.resume();
+        if (audioContext.state === 'suspended') {
+            const p = audioContext.resume();
+            if (p && p.catch) p.catch(() => {});
+        }
+        unlockOnce(audioContext);
         return audioContext;
     };
 

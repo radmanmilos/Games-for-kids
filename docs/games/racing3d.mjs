@@ -201,6 +201,7 @@ function main() {
   // --- renderer / scene / camera ---
   const view = document.getElementById("r3d-view");
   let renderer;
+  let contextLost = false;
   try {
     renderer = new THREE.WebGLRenderer({ antialias: true });
   } catch (e) {
@@ -2038,6 +2039,9 @@ function main() {
   }
 
   function showCountdown() {
+    // The context-lost overlay owns the countdown element while a GPU reset is
+    // in flight, so it must not be overwritten or cleared here.
+    if (contextLost) return;
     let shown = "";
     let cur = -1;
     for (let i = 0; i < COUNT_SEQ.length; i++) {
@@ -2558,6 +2562,12 @@ function main() {
   function loop() {
     requestAnimationFrame(loop);
     if (testHalt) return;
+    // Freeze the sim while the WebGL context is gone: nothing can be drawn, and
+    // letting the kart keep driving means it teleports on restore.
+    if (contextLost) {
+      clock.getDelta();
+      return;
+    }
     const dt = Math.min(clock.getDelta(), 0.05);
     update(dt, curTime());
   }
@@ -2594,6 +2604,26 @@ function main() {
     if (document.hidden) onHide();
   });
   window.addEventListener("focus", () => onShow());
+
+  // --- WebGL context loss (GPU reset / memory pressure on a real device) ---
+  // three.js already skips rendering while the context is lost and re-initialises
+  // it on restore, so the game recovers on its own. Without this the child just
+  // sees a frozen black screen, so say what is happening in Serbian.
+  renderer.domElement.addEventListener("webglcontextlost", (e) => {
+    e.preventDefault();
+    contextLost = true;
+    countdownEl.textContent = "Графика се привремено…";
+    countdownEl.classList.add("show");
+  });
+  renderer.domElement.addEventListener("webglcontextrestored", () => {
+    contextLost = false;
+    countdownEl.classList.remove("show");
+    countdownEl.textContent = "";
+    try {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    } catch (_) {}
+    onShow();
+  });
 
   // --- input ---
   const recentPress = { left: -1, right: -1 };
