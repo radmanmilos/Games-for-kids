@@ -220,8 +220,8 @@
                                        "size":  6144
                                    },
     "pages/racing3d.html":  {
-                                "sha256":  "E06756C97BC6DCB5F9908D2A71DA4D11345D29FC98CEA633023C0455A2F532FF",
-                                "size":  12529
+                                "sha256":  "B0FBD2C45C612C980ECC7BDF14970F2B72B6ECFCF6A3DAE8B231E103E81BE1EF",
+                                "size":  13449
                             },
     "assets/audio/speech/l.mp3":  {
                                       "sha256":  "1D7ECB59AC3298E53FAF13F289DBA3BABD43F8C09B347C7344DCE3AB4FA50A5C",
@@ -272,7 +272,7 @@
                                         "size":  6144
                                     },
     "offline-manifest.json":  {
-                                  "sha256":  "82D4DED08295DA08AF7640629570D606F8CE27F360CF3101861FA0ED1727CEAF",
+                                  "sha256":  "3F44C0D8DC95560C106FF4AEFF66CB3F32562187AE1DDED96FBDBDEFD72DD2FB",
                                   "size":  50334
                               },
     "pages/dino.html":  {
@@ -404,8 +404,8 @@
                                 "size":  7324
                             },
     "games/racing3d.mjs":  {
-                               "sha256":  "75297483CDB380542B346D7B04CE19EFF43AD017BFDF9D2B05324C9A8422E9E3",
-                               "size":  92756
+                               "sha256":  "84FB484FF8D733219D0BC8C9A9B0EDF1B04306C520139AEA1D890DB41F9A0D4C",
+                               "size":  97387
                            },
     "assets/audio/speech/a.mp3":  {
                                       "sha256":  "F3367D34A65237AFAFB62C407D481B149410E5722188D6949BB787CC530C6FFA",
@@ -640,8 +640,8 @@
                                                 "size":  10368
                                             },
     "index.html":  {
-                       "sha256":  "0E31ADB8D8EC2CC11A5E3D6750AC611BBB0CC19246037B7879AE57DF2A078D91",
-                       "size":  20275
+                       "sha256":  "8754E222995E88E9C78F4FFC6F10F47C941737CAD510305ADEB3EACCE6E3D6E0",
+                       "size":  20877
                    },
     "assets/images/explorer/06_idle_right_c.png":  {
                                                        "sha256":  "8000439CFDAA764F0FB75522AEAA79B4EB45962C6AD09D8E4A6C687E984166C1",

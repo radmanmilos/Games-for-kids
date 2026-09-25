@@ -30,6 +30,19 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     check('canvas rendered and HUD in Serbian (Ливада, Круг 1/3, 0/12)',
         bj.canvas > 0 && bj.world === 'Ливада' && bj.round === 'Круг 1/3' && bj.flowers === '🌸 0/12', boot);
 
+    // Regression guard (task 105): the back button shipped empty and the
+    // steering arrows were two different emoji glyphs.
+    const icons = await h.evalv(`JSON.stringify({
+        backSvg: !!document.querySelector('#r3d-back svg'),
+        leftSvg: !!document.querySelector('#r3d-left svg'),
+        rightSvg: !!document.querySelector('#r3d-right svg'),
+        leftText: (document.getElementById('r3d-left').textContent || '').trim(),
+        rightText: (document.getElementById('r3d-right').textContent || '').trim()
+    })`);
+    const I = JSON.parse(icons);
+    check('back button has an arrow and both steering buttons use SVG (no emoji glyphs)',
+        I.backSvg && I.leftSvg && I.rightSvg && I.leftText === '' && I.rightText === '', icons);
+
     const picker = await h.evalv(`JSON.stringify({
         modal: document.getElementById('r3d-start-modal').classList.contains('show'),
         cards: document.querySelectorAll('#r3d-world-grid .r3d-world-card').length,
@@ -60,6 +73,23 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     // start the race from the picker
     await h.evalv(`window.__r3d.confirmStart(); true`);
     await sleep(150);
+
+    // The steering zones are z-index 11 and start at 26vmin, which on a short
+    // landscape screen is above .r3d-corner and swallowed the world/music taps.
+    // Measured mid-race, which is where the player hit it.
+    await h.c.send('Emulation.setDeviceMetricsOverride', { width: 844, height: 390, deviceScaleFactor: 1, mobile: false });
+    await sleep(400);
+    const reach = await h.evalv(`JSON.stringify((() => {
+        const topAt = id => { const b = document.getElementById(id).getBoundingClientRect();
+            const el = document.elementFromPoint((b.left + b.right) / 2, (b.top + b.bottom) / 2);
+            return el ? (el.id || (el.closest && el.closest('button') ? el.closest('button').id : '')) : 'none'; };
+        return { world: topAt('r3d-world-btn'), music: topAt('r3d-music-btn') };
+    })())`);
+    const R = JSON.parse(reach);
+    check('short landscape (844x390): world + music buttons are the topmost element (not covered by a steering zone)',
+        R.world === 'r3d-world-btn' && R.music === 'r3d-music-btn', reach);
+    await h.c.send('Emulation.setDeviceMetricsOverride', { width: 1100, height: 700, deviceScaleFactor: 1, mobile: false });
+    await sleep(300);
 
     const cd = await h.evalv(`JSON.stringify({
         countdown: document.getElementById('r3d-countdown').textContent,
@@ -398,12 +428,15 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         const lap1 = r3d.lap();
         const cele = r3d.tagged("celebrate");
         const total = r3d.particles();
+        const spinning = r3d.particlesSpinning();
         r3d.haltLoop(false);
-        return JSON.stringify({ lap0, lap1, cele, total });
+        return JSON.stringify({ lap0, lap1, cele, total, spinning });
     })()`);
     const celj = JSON.parse(celCheck);
     check('celebration: lap-line cross fires a world-colored burst (tagged celebrate), particle cap respected',
         celj.lap1 > celj.lap0 && celj.cele > 0 && celj.total <= 420, celCheck);
+    check('particles carry a non-zero spin (spawnP stores the spin callers pass)',
+        celj.spinning > 0, celCheck);
 
     // batch 9 — audio bus: every SFX/announcement flows through a single
     // queue drained AT MOST ONCE per frame (40 ms wall gate proves one call
@@ -516,12 +549,50 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         const r3d = window.__r3d;
         return JSON.stringify({ q: r3d.audioQueueLen(), spoken: r3d.lastSpoken() });
     })()`));
-    check('spoken Serbian hint: obstacle announce speaks minimal "Пази!" (beeps authoritative: 3 tones vs 1 speech), boost hint "Буст!"',
-        sh0.kinds === 'tone,speak,tone,tone' && sh0.q === 4 && sh0.spoken === '' &&
+    check('spoken Serbian hint: obstacle announce speaks minimal "Пази!" (beeps authoritative: 3 tone-producing items vs 1 speech), boost hint "Буст!"',
+        // the two minor-third notes are 'motif' items now: they are still tones,
+        // just anchored to the first note's play time so the 40ms drain cannot
+        // stretch the gap
+        sh0.kinds === 'tone,speak,motif,motif' && sh0.q === 4 && sh0.spoken === '' &&
         shDrain.q === 0 && shDrain.spoken === 'Пази!' &&
         shBoost.kinds === 'sweep,speak' && shBoost.q === 2 &&
         shDrain2.q === 0 && shDrain2.spoken === 'Буст!',
         JSON.stringify({ sh0, shDrain, shBoost, shDrain2 }));
+
+    // task 105 — resetInput: a key released while the page was unfocused (or a
+    // pointer still held from before a race) used to leave the kart steering
+    // forever. Proves the state is cleared and that blur is wired to it.
+    const inputCheck = await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.haltLoop(true);
+        const idle = r3d.inputState();
+        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+        const held = r3d.inputState();
+        r3d.resetInput();
+        const cleared = r3d.inputState();
+        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+        window.dispatchEvent(new Event('blur'));
+        const afterBlur = r3d.inputState();
+        r3d.haltLoop(false);
+        return JSON.stringify({ idle, held, cleared, afterBlur });
+    })()`);
+    const I2 = JSON.parse(inputCheck);
+    check('resetInput: held steering is cleared on demand and on window blur (no stuck steering)',
+        I2.idle.left === false && I2.idle.right === false &&
+        I2.held.left === true && I2.cleared.left === false && I2.cleared.right === false &&
+        I2.cleared.zoneL === null && I2.cleared.zoneR === null &&
+        I2.afterBlur.right === false, inputCheck);
+
+    // task 105 — perf instrumentation. Only assert the hooks are wired and
+    // self-consistent: frame times are machine/GL dependent (this harness runs
+    // software GL), so pinning an FPS here would be a flaky test.
+    await h.evalv(`window.__r3d.resetPerf(); true`);
+    await sleep(1200);
+    const perfCheck = await h.evalv(`JSON.stringify(window.__r3d.perf())`);
+    const pf = JSON.parse(perfCheck);
+    check('perf hooks: draw calls, triangles, particles, frame time and DPR all report sane values',
+        pf.calls > 0 && pf.triangles > 0 && pf.dpr === 1 &&
+        pf.avgFrameMs > 0 && pf.worstFrameMs >= pf.avgFrameMs && pf.drawBufferPx > 0, perfCheck);
 
     h.close();
     process.exit(getFails() ? 1 : 0);

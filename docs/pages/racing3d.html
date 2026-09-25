@@ -84,8 +84,11 @@
             border: 6px solid #fff; display: flex; align-items: center; justify-content: center;
             font-size: 50px; color: #fff; font-family: inherit;
             box-shadow: 0 8px 0 rgba(0,0,0,0.3), inset 0 -4px 0 rgba(0,0,0,0.2);
-            cursor: pointer; text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+            cursor: pointer;
         }
+        /* SVG arrows, not emoji glyphs: two emoji arrows render with different
+           weight/geometry per platform. Matched mirrored paths stay identical. */
+        .r3d-zone .r3d-btn svg { width: 58%; height: 58%; display: block; }
         .r3d-zone .r3d-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
         #r3d-left { background: #e52521; }
         #r3d-right { background: #fbd000; color: #4A3F6B; }
@@ -129,7 +132,10 @@
         .r3d-restart-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
         /* --- Top-right corner controls (world picker + music) --- */
         .r3d-corner {
-            position: absolute; top: 118px; right: 16px; z-index: 10;
+            /* must sit above .r3d-zone (z-index 11): on short landscape screens
+               26vmin is smaller than 118px, so the zones start above these
+               buttons and swallowed the world/music taps. */
+            position: absolute; top: 118px; right: 16px; z-index: 20;
             display: flex; gap: 8px;
         }
         .r3d-corner button {
@@ -172,7 +178,7 @@
 </head>
 <body>
 <div id="r3d-game">
-    <button class="adv-back" id="r3d-back" aria-label="Назад"></button>
+    <button class="adv-back" id="r3d-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <h1 id="r3d-title">🏎️ Мала тркачица 3Д</h1>
 
     <div id="r3d-score" class="r3d-pill">Поени: 0</div>
@@ -191,10 +197,10 @@
     <div id="r3d-view"></div>
 
     <div id="r3d-zone-left" class="r3d-zone">
-        <button class="r3d-btn" id="r3d-left" aria-label="Лево">⬅</button>
+        <button class="r3d-btn" id="r3d-left" aria-label="Лево"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     </div>
     <div id="r3d-zone-right" class="r3d-zone">
-        <button class="r3d-btn" id="r3d-right" aria-label="Десно">➡</button>
+        <button class="r3d-btn" id="r3d-right" aria-label="Десно"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M4 11h12.17l-5.59-5.59L12 4l8 8-8 8-1.41-1.41 5.59-5.59H4v-2z"/></svg></button>
     </div>
 
     <div id="r3d-win-modal">

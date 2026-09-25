@@ -99,7 +99,7 @@ async function serve() {
   return { port: server.address().port, close: () => server.close() };
 }
 
-async function start({ page, tag = 'pkv', width = 1280, height = 800 } = {}) {
+async function start({ page, tag = 'pkv', width = 1280, height = 800, dpr = 1 } = {}) {
   const srv = await serve();
   const httpPort = srv.port;
 
@@ -140,7 +140,8 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800 } = {}) {
   await c.send('Page.enable');
   await c.send('Runtime.enable');
   if (width && height) {
-    await c.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
+    // dpr=2 lets a test compare pixel cost (see racing3d perf hooks)
+    await c.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: dpr, mobile: false });
   }
 
   const evalv = async (expression) => {

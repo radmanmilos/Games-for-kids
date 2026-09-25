@@ -117,6 +117,18 @@
   /* sub-hub screens: grid scrolls from the top, clears the title + back button */
   #hub-games, #hub-learning{ justify-content:flex-start; }
   #hub-games .hub-grid, #hub-learning .hub-grid{ margin: 24vh auto 0; }
+  /* Short viewports (landscape phones): a 24vh top margin plus only 2 columns
+     pushed the last row below the fold, which hid the racing3d button entirely
+     (measured: bottom=639 in a 390px viewport). Three narrower columns fit. */
+  @media (max-height: 560px){
+    #hub-games .hub-grid, #hub-learning .hub-grid{
+      margin: 14vh auto 0;
+      grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+      padding-bottom: 3vmin;
+    }
+    .hub-btn{ width: clamp(64px, 20vmin, 140px); height: clamp(64px, 20vmin, 140px);
+              font-size: clamp(26px, 8vmin, 70px); }
+  }
 
   /* ---------- KITTY ADVENTURE ---------- */
   #game-kitty{background:#5c94fc;}

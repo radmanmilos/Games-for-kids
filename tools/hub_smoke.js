@@ -79,6 +79,27 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('all 15 game buttons still wired (data-go present)', allGo.every(id => html.includes(`data-go="${id}"`)), allGo.join(','));
   check('kitty back button targets the games sub-hub', html.includes('id="game-kitty"') && /id="game-kitty"[\s\S]*?data-go="hub-games"/.test(html), 'data-go="hub-games"');
 
+  // Regression guard (task 105): on a short landscape viewport the 24vh grid
+  // margin + 2 columns put the last row below the fold, so the racing3d button
+  // was only reachable after navigating into and back out of a game.
+  await h.c.send('Emulation.setDeviceMetricsOverride', { width: 844, height: 390, deviceScaleFactor: 1, mobile: false });
+  await sleep(300);
+  await h.evalv(`window.goTo('hub-games')`);
+  await sleep(400);
+  const shortVp = await h.evalv(`JSON.stringify((() => {
+    const vh = window.innerHeight;
+    const bad = [];
+    document.querySelectorAll('#hub-games .hub-btn:not([hidden])').forEach(b => {
+      const r = b.getBoundingClientRect();
+      if (r.top < -1 || r.bottom > vh + 1) bad.push(b.dataset.go + ':' + Math.round(r.bottom) + '/' + vh);
+    });
+    const last = document.querySelector('[data-go="game-racing3d"]').getBoundingClientRect();
+    return { vh, bad, racing3dBottom: Math.round(last.bottom),
+             cols: getComputedStyle(document.querySelector('#hub-games .hub-grid')).gridTemplateColumns.split(' ').length };
+  })())`);
+  const S = JSON.parse(shortVp);
+  check('short landscape (844x390): every visible games button is inside the viewport, racing3d included', S.bad.length === 0 && S.racing3dBottom <= S.vh + 1, shortVp);
+
   h.close();
   const fails = getFails();
   console.log(`\n${fails === 0 ? 'ALL' : 'SOME'} CHECKS ${fails === 0 ? 'PASSED' : 'FAILED'} (${fails} fail)`);

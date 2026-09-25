@@ -42,7 +42,7 @@ const DEVICES = [
   { name: 'tablet-landscape', width: 1180, height: 820, touch: true },
   { name: 'desktop', width: 1280, height: 800, touch: false },
 ];
-const DEFAULT_PAGES = ['/index.html', '/pages/tracing.html', '/pages/coloring.html', '/pages/piano.html', '/pages/racing.html'];
+const DEFAULT_PAGES = ['/index.html', '/pages/tracing.html', '/pages/coloring.html', '/pages/piano.html', '/pages/racing.html', '/pages/racing3d.html'];
 
 /* ---- arg parsing ---- */
 const argv = process.argv.slice(2);

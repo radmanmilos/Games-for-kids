@@ -13,7 +13,9 @@ const MAX_LATERAL = 9.6;
 const STEER_YAW_MAX = 0.45; // front-wheel steering angle at full lock
 const LATERAL_GAIN = 26; // lateral speed per radian of front-wheel yaw
 const MAX_SPEED = 35;
-const ACCEL = 16;
+// Speed eases toward its target exponentially at this rate (per second). There
+// is no linear ACCEL term — the old `ACCEL = 16` constant was never read.
+const ACCEL_RATE = 2.2;
 const BOOST_MULT = 1.2;
 const BOOST_TIME = 1200;
 const BOOST_LAT = 3.0;
@@ -1445,7 +1447,6 @@ function main() {
   let leanValue = 0;
   let steerYawValue = 0;
   let steerDrive = 0;
-  let slipYawValue = 0;
   let boostUntil = 0;
   let warnUntil = 0;
   let weatherAcc = 0;
@@ -1472,7 +1473,9 @@ function main() {
   const _pSnow = new THREE.BoxGeometry(0.22, 0.22, 0.03);
   const _pStar = new THREE.BoxGeometry(0.16, 0.16, 0.16);
   function spawnP(o) {
-    if (particles.length > MAX_PARTICLES) return;
+    // `>=` so the array never exceeds MAX_PARTICLES (a `>` guard let one more
+    // through every time the pool was exactly full)
+    if (particles.length >= MAX_PARTICLES) return;
     const geo =
       o.geo === "confetti"
         ? _pConfetti
@@ -1501,6 +1504,9 @@ function main() {
       max: o.max || 1,
       grow: o.grow || 0,
       gravity: o.gravity || 0,
+      // callers pass `spin` (confetti, snow, stars, pickups) but it was never
+      // copied onto the record, so updateParticles' spin branch never ran
+      spin: o.spin || 0,
       tag: o.tag || "",
     });
   }
@@ -1699,8 +1705,7 @@ function main() {
     ]);
     pickupCombo++;
     lastPickupFreq = pentaFreq(pickupCombo);
-    qTone(lastPickupFreq, 0.07);
-    qTone(lastPickupFreq * 1.5, 0.09);
+    qMotif([{ f: lastPickupFreq, d: 0.07 }, { f: lastPickupFreq * 1.5, d: 0.09 }]);
     kartFlash = 1;
   }
   function hitObstacle(o, now) {
@@ -1730,6 +1735,10 @@ function main() {
     const v = (item.vol ?? 1) * (ducked ? 0.4 : 1);
     try {
       if (item.k === "tone") window.tone(item.f, item.d, item.delay || 0, item.type || "sine", v);
+      else if (item.k === "motif") {
+        if (!item.anchor.primed) { item.anchor.at = now; item.anchor.primed = true; }
+        window.tone(item.f, item.d, Math.max(0, item.anchor.at + item.off - now), item.type, v);
+      }
       else if (item.k === "sweep") window.sweep(item.f, item.t, item.dur, item.delay || 0, item.type || "sine", v);
       else if (item.k === "speak") {
         speak(item.w);
@@ -1746,6 +1755,17 @@ function main() {
   }
   function qTone(f, d, delay, type, vol, duck) {
     queueAudio({ k: "tone", f, d, delay, type, vol, duck });
+  }
+  // Compound motif (two notes played as one musical gesture). Both stay separate
+  // queue items — the one-per-40ms drain is deliberate — but they are anchored to
+  // the moment the FIRST note actually played. Previously the second note's own
+  // `delay` was applied on top of the drain's lateness, so the pickup fifth
+  // sounded like a flam and the 100 ms minor third stretched to 140 ms+.
+  function qMotif(notes, vol, duck) {
+    const anchor = { at: 0, primed: false };
+    for (const n of notes) {
+      queueAudio({ k: "motif", anchor, f: n.f, d: n.d, off: n.off || 0, type: n.type || "sine", vol, duck });
+    }
   }
   function qSweep(f, t, dur, delay, type, vol, duck) {
     queueAudio({ k: "sweep", f, t, dur, delay, type, vol, duck });
@@ -1778,8 +1798,11 @@ function main() {
     o.msgUntil = now + gap;
     announce(o.hitText);
     qSpeak("Пази!");
-    qTone(392, 0.16, 0, "sine", 1, false);
-    qTone(329.63, 0.22, 0.1, "sine", 1, false);
+    qMotif(
+      [{ f: 392, d: 0.16 }, { f: 329.63, d: 0.22, off: 0.1 }],
+      1,
+      false
+    );
     announceDuckUntil = Math.max(announceDuckUntil, now + Math.min(gap, 1200));
   }
 
@@ -2070,6 +2093,7 @@ function main() {
 
   function launch() {
     if (mode !== "menu") return;
+    resetInput();
     mode = "countdown";
     countdownStart = curTime();
     lastCountdownIndex = -1;
@@ -2217,7 +2241,6 @@ function main() {
     } else {
       steer = 0;
     }
-    const prevLateral = lateral;
     if (mode === "drive") {
       // the car follows the drive value, which follows the front-wheel
       // angle while a button is held and dies fast on release — so the car
@@ -2232,7 +2255,7 @@ function main() {
       if (offroad) target *= 0.62;
       if (now >= slowUntil) slowMult = 1;
       speed = clamp(
-        speed + (target - speed) * (1 - Math.exp(-2.2 * dt)),
+        speed + (target - speed) * (1 - Math.exp(-ACCEL_RATE * dt)),
         0,
         MAX_SPEED * BOOST_MULT,
       );
@@ -2294,19 +2317,17 @@ function main() {
       if (gateWave > 0.8) gateWave = -1;
     }
 
-    const lateralVel =
-      mode === "drive" ? (lateral - prevLateral) / Math.max(dt, 0.001) : 0;
-
     kart.position.copy(p).addScaledVector(right, lateral);
     kart.lookAt(p.clone().add(tan));
     kartShadow.position.copy(kart.position);
     kartShadow.position.y = kart.position.y + 0.06;
     kartShadow.scale.set(2.7, 2.7, 1);
 
-    const slip = Math.atan2(lateralVel, Math.max(speed, 25));
-    const slipYaw = clamp(slip, -0.3, 0.3);
-    slipYawValue += (slipYaw - slipYawValue) * (1 - Math.exp(-11 * dt));
-    kartLean.rotation.y = slipYawValue;
+    // The body does NOT yaw into the turn. A yaw on the whole kart (rotation.y)
+    // read as "the car spins sideways" in play-testing, so the only body rotation
+    // left is the bank below; the front wheels still turn visibly and the kart
+    // travels where they point.
+    kartLean.rotation.y = 0;
     // front wheels turn in quickly; on release they slowly return to the middle
     if (steer !== 0) {
       steerYawValue +=
@@ -2322,7 +2343,7 @@ function main() {
     });
     // bank the body with the drive (straightens up fast with the car; the
     // kart stays where it is — no auto-center)
-    const targetLean = (steerDrive / STEER_YAW_MAX) * 0.34;
+    const targetLean = (steerDrive / STEER_YAW_MAX) * 0.22;
     leanValue += (targetLean - leanValue) * (1 - Math.exp(-10 * dt));
     kartLean.rotation.z = leanValue;
 
@@ -2331,7 +2352,7 @@ function main() {
         ? Math.abs(Math.sin(now * 0.03 * (speed / MAX_SPEED + 0.4))) * 0.06 +
           (now < boostUntil ? 0.05 : 0)
         : 0;
-    kartBounce.position.y = bounce;
+    kartBounce.position.y = REDUCED_MOTION ? 0 : bounce;
     // wheels roll forward around their axle (radius 0.5): rotation.x, not y
     const wheelRoll = (speed / 0.5) * dt;
     wheelParts.forEach((p) => {
@@ -2440,7 +2461,8 @@ function main() {
       // edge rumble + offroad dust
       const absLat = Math.abs(lateral);
       if (absLat > RUMBLE_ON) {
-        rumbleShake = 1;
+        // the rumble sound is essential feedback; the camera shake is not
+        if (!REDUCED_MOTION) rumbleShake = 1;
         playRumble(now);
       }
       if (offroad) {
@@ -2511,7 +2533,7 @@ function main() {
       .addScaledVector(tan, -12)
       .add(
         new THREE.Vector3(
-          -steer * 0.9 * (speed / MAX_SPEED),
+          REDUCED_MOTION ? 0 : -steer * 0.9 * (speed / MAX_SPEED),
           6.0 + bounce * 2.0,
           0,
         ),
@@ -2536,12 +2558,16 @@ function main() {
     _tmpM.lookAt(camera.position, lookPt, UP);
     _tmpQ.setFromRotationMatrix(_tmpM);
     camera.quaternion.slerp(_tmpQ, 1 - Math.exp(-9 * dt));
-    camera.rotateZ(steer * 0.02);
+    // roll is a steering cue, but it is camera motion -> suppressed on request
+    if (!REDUCED_MOTION) camera.rotateZ(steer * 0.02);
     finishShake = Math.max(0, finishShake - 1.8 * dt);
     rumbleShake = Math.max(0, rumbleShake - 3.2 * dt);
 
+    // The speed-linked FOV widening is a speed cue (keeping it: a constant FOV
+    // feels slower and is not the vestibular trigger). Only the boost punch is
+    // decorative, so that is what reduced motion drops.
     const targetFov =
-      60 + (speed / MAX_SPEED) * 14 + (now < boostUntil ? 6 : 0);
+      60 + (speed / MAX_SPEED) * 14 + (!REDUCED_MOTION && now < boostUntil ? 6 : 0);
     camera.fov += (targetFov - camera.fov) * (1 - Math.exp(-4 * dt));
     camera.updateProjectionMatrix();
 
@@ -2558,7 +2584,28 @@ function main() {
   }
 
   const clock = new THREE.Clock();
+  // Dev/test-only frame-time window (task 105). Every particle is its own Mesh
+  // with its own material, so bursts raise draw calls long before triangles. The
+  // review asked to measure before optimizing, so these hooks expose the numbers;
+  // nothing in the game reads them.
+  const PERF_WINDOW = 120; // frames (~2s at 60Hz)
+  let perfFrames = 0;
+  let perfSumMs = 0;
+  let perfAvgMs = 0;
+  let perfWorstMs = 0;
+  function perfSample(frameMs) {
+    perfFrames++;
+    perfSumMs += frameMs;
+    if (frameMs > perfWorstMs) perfWorstMs = frameMs;
+    if (perfFrames >= PERF_WINDOW) {
+      perfAvgMs = perfSumMs / perfFrames;
+      perfFrames = 0;
+      perfSumMs = 0;
+      perfWorstMs = 0;
+    }
+  }
   let testHalt = false;
+  let perfLast = 0;
   function loop() {
     requestAnimationFrame(loop);
     if (testHalt) return;
@@ -2566,9 +2613,15 @@ function main() {
     // letting the kart keep driving means it teleports on restore.
     if (contextLost) {
       clock.getDelta();
+      perfLast = 0;
       return;
     }
     const dt = Math.min(clock.getDelta(), 0.05);
+    // wall-clock spacing, not dt: dt is clamped to 50ms so a stall would be
+    // invisible, which is exactly the spike we want to catch
+    const t = performance.now();
+    if (perfLast) perfSample(t - perfLast);
+    perfLast = t;
     update(dt, curTime());
   }
 
@@ -2612,7 +2665,7 @@ function main() {
   renderer.domElement.addEventListener("webglcontextlost", (e) => {
     e.preventDefault();
     contextLost = true;
-    countdownEl.textContent = "Графика се привремено…";
+    countdownEl.textContent = "Графика се привремено искључила. Сачекај…";
     countdownEl.classList.add("show");
   });
   renderer.domElement.addEventListener("webglcontextrestored", () => {
@@ -2678,6 +2731,25 @@ function main() {
   bindZone("r3d-zone-left", "left");
   bindZone("r3d-zone-right", "right");
 
+  // One place to drop every steering input. A key released while the page was
+  // unfocused, or a pointer still held from before a race, otherwise leaves the
+  // kart steering forever. Called on every launch (new race = centred, straight)
+  // and whenever the window loses focus.
+  function resetInput() {
+    keys.left = false;
+    keys.right = false;
+    zonePointer.left = null;
+    zonePointer.right = null;
+    steer = 0;
+    steerYawValue = 0;
+    steerDrive = 0;
+    leanValue = 0;
+  }
+  window.addEventListener("blur", resetInput);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) resetInput();
+  });
+
   window.addEventListener("resize", () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -2707,7 +2779,30 @@ function main() {
       return true;
     },
     tris: () => renderer.info.render.triangles,
+    // --- perf hooks (task 105: measure before optimizing) ---
+    perf: () => ({
+      calls: renderer.info.render.calls,
+      triangles: renderer.info.render.triangles,
+      particles: particles.length,
+      // live average over the current (possibly partial) window; falls back to
+      // the last completed window when no sample has landed yet
+      avgFrameMs: +(perfFrames ? perfSumMs / perfFrames : perfAvgMs).toFixed(2),
+      worstFrameMs: +perfWorstMs.toFixed(2),
+      dpr: renderer.getPixelRatio(),
+      drawBufferPx:
+        renderer.getContext().drawingBufferWidth *
+        renderer.getContext().drawingBufferHeight,
+    }),
+    resetPerf: () => {
+      perfFrames = 0;
+      perfSumMs = 0;
+      perfAvgMs = 0;
+      perfWorstMs = 0;
+      perfLast = 0;
+      return true;
+    },
     particles: () => particles.length,
+    particlesSpinning: () => particles.filter((p) => p.spin).length,
     drifting: () => driftNow,
     boosting: () => curTime() < boostUntil,
     rumbleOn: () => Math.abs(lateral) > RUMBLE_ON,
@@ -2805,6 +2900,18 @@ function main() {
       leanValue = +lean || 0;
       return true;
     },
+    // --- input hooks (task 105: resetInput) ---
+    inputState: () => ({
+      left: !!keys.left,
+      right: !!keys.right,
+      zoneL: zonePointer.left,
+      zoneR: zonePointer.right,
+    }),
+    resetInput: () => {
+      resetInput();
+      return true;
+    },
+    reducedMotion: () => REDUCED_MOTION,
     // --- visibility hooks (batch 3) ---
     musicPlaying: () => !!musicTimer,
     audioState: () => {
