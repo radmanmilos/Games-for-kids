@@ -31,10 +31,10 @@ Important: The AI assistant and any contributor must read this file first when s
 - 109. DONE — Roadmap Task MOTION-001: Global reduced motion. (2026-09-26, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED + VALIDATED 2026-09-26.** New `game/shared/motion.js` + global CSS reduced-motion rules. Committed `40d417e`, pushed.
 
-- 110. IN PROGRESS — Roadmap Task FB-001: Shared feedback vocabulary. (Started 2026-09-26, user approved.)
-    - **IMPLEMENTED 2026-09-26.** New `game/shared/feedback.js` — unified feedback API: `softPop(el)`, `successChime()`, `gentleMiss()`, `celebrateFeedback()`, `speakSr(type)`, `showHint(el)`. Consumes `window.tone`/`window.sweep` (audio.js) and `window.SERBIAN` (data/serbian.js). Added `.ps-pop` and `.ps-hint` CSS keyframe animations to `accessibility.css`. Wired `feedback.js` into 13 game pages. Zero behavior changes — API only.
-    - **Validation:** `node --check` 66 files OK. Smoke battery: **14/19 tools PASS (327 checks)**. 5 failures are pre-existing flakes unrelated to feedback module.
-    - NOT committed — user approves commit + sync.
+- 110. DONE — Roadmap Task FB-001: Shared feedback vocabulary. (2026-09-26, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED + VALIDATED 2026-09-26.** New `game/shared/feedback.js` with unified feedback API. Committed `a3ff9ec`, pushed.
+
+- 111. IN PROGRESS — Roadmap Task TOUCH-001: Standardize pointer behavior. Create `game/shared/input.js` with shared pointer capture, second-finger filter, and cleanup helpers. (Started 2026-09-26, user approved.)
 
 - 105. DONE — Play-test round 6 + chatGPT_review2 mechanical fixes (racing3d + hub). (2026-09-25, Ponytail Lazy Dev; user play-test on a real device + supplied `resources/3dracer analysis/chatGPT_review2.md`. **user approved "proceed with all batches" 2026-09-25**.) All four reported defects were reproduced with a headless probe before being fixed; the steering choice was delegated to me and resolved as *remove the nose-point, keep the bank*.
    - **(1) racing3d hub button was off-screen → fixed.** Root cause: `#hub-games .hub-grid` had `margin: 24vh auto 0` and `minmax(9rem,1fr)` only fits 2 columns on a 390px-tall screen, so the 5-row grid could not fit at any button size (measured `bottom` 639 in a 390px viewport; only 4-5px of clearance on tablet). Added a `@media (max-height: 560px)` block: `margin: 14vh auto 0`, `grid-template-columns: repeat(auto-fit, minmax(6rem,1fr))`, smaller `padding-bottom` and `.hub-btn` clamp. Verified 3 columns and **all 10 buttons inside the viewport** on 844×390 (`racing3dBottom` 379/390); tablet sizes unaffected.
