@@ -46,10 +46,10 @@ Important: The AI assistant and any contributor must read this file first when s
 - 114. DONE — Phase 2, Game 1: GAME-COUNT-001 — One-to-one counting. (2026-09-26, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED + COMMITTED 2026-09-26.** Modified `animal_counting.js` with tap-to-count flow. Committed `70c6299`, pushed.
 
-- 115. IN PROGRESS — Phase 2, Game 2: GAME-TRACING-001 — Developmental tracing. (Started 2026-09-26, user approved.)
-    - **IMPLEMENTED 2026-09-26.** Added prewriting activity (8 items: hline, vline, circle, arc, zigzag, wave, square, triangle), stroke-order hint (numbered dot on letter guides), classifyAttempt (complete/nearly/early instead of pass/fail), weak attempts preserve drawing + highlight guide + "Хајде још једном." (no clear), no forced auto-advance (explicit Next/Repeat buttons). Updated `tracing_smoke.js` to match new behavior.
-    - **Validation:** `tracing_smoke.js` **24/24 PASS**. `node --check` 71 files OK.
-    - NOT committed — user approves commit + sync.
+- 115. DONE — Phase 2, Game 2: GAME-TRACING-001 — Developmental tracing. (2026-09-26, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED + VALIDATED 2026-09-26.** Added prewriting activity, stroke-order hint, classifyAttempt, preserved weak attempts, no forced auto-advance. Committed `c94e4c3`, pushed.
+
+- 116. IN PROGRESS — Phase 2, Game 3: GAME-MEMORY-001 — Age-aware memory boards. Add adaptive board sizes (Easy 2×2, Medium 3×2, Standard 4×4). (Started 2026-09-26, user approved.)
 
 - 105. DONE — Play-test round 6 + chatGPT_review2 mechanical fixes (racing3d + hub). (2026-09-25, Ponytail Lazy Dev; user play-test on a real device + supplied `resources/3dracer analysis/chatGPT_review2.md`. **user approved "proceed with all batches" 2026-09-25**.) All four reported defects were reproduced with a headless probe before being fixed; the steering choice was delegated to me and resolved as *remove the nose-point, keep the bank*.
    - **(1) racing3d hub button was off-screen → fixed.** Root cause: `#hub-games .hub-grid` had `margin: 24vh auto 0` and `minmax(9rem,1fr)` only fits 2 columns on a 390px-tall screen, so the 5-row grid could not fit at any button size (measured `bottom` 639 in a 390px viewport; only 4-5px of clearance on tablet). Added a `@media (max-height: 560px)` block: `margin: 14vh auto 0`, `grid-template-columns: repeat(auto-fit, minmax(6rem,1fr))`, smaller `padding-bottom` and `.hub-btn` clamp. Verified 3 columns and **all 10 buttons inside the viewport** on 844×390 (`racing3dBottom` 379/390); tablet sizes unaffected.
