@@ -1,9 +1,9 @@
-/* Tracing (Писање) free-draw smoke test — the canonical validation for the game.
+/* Tracing (Писање) free-draw smoke test — Phase 2 task 115 (GAME-TRACING-001).
    Drives the REAL pipeline headlessly: pointer events on the canvas + direct
-   canvas drawing feeding matchResult(), success auto-advance, layout checks.
+   canvas drawing feeding matchResult(), developmental classification,
+   preserved weak attempts, explicit next/repeat buttons.
    Run:  node tools/tracing_smoke.js     (from the repo root or anywhere)
-   Requires Node >= 22. CHROME_PATH env optional.
-   Expected: 22 checks, ALL PASS. */
+   Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
 const fs = require('fs');
 const path = require('path');
@@ -44,7 +44,8 @@ const CHECK_ACT = `JSON.stringify({
   guidePx: ${PIXELS('tracingGuide')},
   canvasPx: ${PIXELS('tracingCanvas')},
   done: !!document.getElementById('tracingDone'),
-  clear: !!document.getElementById('tracingClear')
+  clear: !!document.getElementById('tracingClear'),
+  repeat: !!document.getElementById('tracingRepeat')
 })`;
 
 const CHECK_LAYOUT = `JSON.stringify({
@@ -128,7 +129,9 @@ const SLOPPY_B = `(function(){
 const CHECK_RESULT = `JSON.stringify({
   cap: document.getElementById('tracingCaption').textContent,
   celebrate: !!document.querySelector('.celebration-overlay.show'),
-  pixels: ${PIXELS('tracingCanvas')}
+  pixels: ${PIXELS('tracingCanvas')},
+  nextVisible: document.getElementById('tracingNext').style.display !== 'none',
+  repeatVisible: document.getElementById('tracingRepeat').style.display !== 'none'
 })`;
 
 (async () => {
@@ -137,17 +140,17 @@ const CHECK_RESULT = `JSON.stringify({
     await sleep(900);
     await h.evalv(STUB);
 
-    // 1. Hub renders
+    // 1. Hub renders 4 buttons (prewriting + letters + numbers + shapes)
     const hub = await h.evalv(CHECK_HUB);
     let H = JSON.parse(hub || '{}');
-    check('hub renders 3 buttons + guiding intro', H.btns === 3 && H.intro && H.refText === 'А' && H.guideDash === '4 5' && H.inkDash === '105 2000' && H.pencil && H.title === 'Писање' && H.cap === 'Нацртај сам, прстом!', hub);
+    check('hub renders 4 buttons + guiding intro', H.btns === 4 && H.intro && H.refText === 'А' && H.guideDash === '4 5' && H.inkDash === '105 2000' && H.pencil && H.title === 'Писање' && H.cap === 'Нацртај сам, прстом!', hub);
 
     // 2. Enter letters
     await h.evalv(ENTER('letters'));
     await sleep(200);
     const ltr = await h.evalv(CHECK_ACT);
     let L = JSON.parse(ltr || '{}');
-    check('letters loads А + dashed guide on canvas', L.title2 === 'Слова' && L.cap === 'Нацртај А' && L.counter === '1 од 30' && L.refSvg && L.refText === 'А' && L.canvas && L.guide && L.guidePx > 0 && L.canvasPx === 0 && L.done && L.clear, ltr);
+    check('letters loads А + dashed guide on canvas', L.title2 === 'Слова' && L.cap === 'Нацртај А' && L.counter === '1 од 30' && L.refSvg && L.refText === 'А' && L.canvas && L.guide && L.guidePx > 0 && L.canvasPx === 0 && L.done && L.clear && L.repeat, ltr);
 
     // 3. Layout: ref card above canvas, caption below canvas (no overlap)
     const lay = await h.evalv(CHECK_LAYOUT);
@@ -174,52 +177,71 @@ const CHECK_RESULT = `JSON.stringify({
     const gx2 = await h.evalv(PIXELS('tracingGuide'));
     check('Обриши clears the canvas, guide stays', px2 === 0 && gx2 > 0, 'px=' + px2 + ' guide=' + gx2);
 
-    // 7. Correct А -> PASS (celebrate + word caption), ink kept
+    // 7. Correct А -> complete (celebrate + word caption), no auto-advance
     await h.evalv(CLEAR_OVERLAYS);
     await h.evalv(DRAW_REF('А', null));
     await h.evalv(CLICK('tracingDone'));
     await sleep(150);
     const okA = await h.evalv(CHECK_RESULT);
     let A = JSON.parse(okA || '{}');
-    check('correct А is accepted', A.cap === 'Аутомобил 🚗' && A.celebrate && A.pixels > 0, okA);
+    check('correct А is accepted (complete)', A.cap === 'Аутомобил 🚗' && A.celebrate && A.pixels > 0, okA);
 
-    // 8. Success auto-advances to Б (canvas cleared, finished reset)
-    await sleep(2900);
+    // 8. No auto-advance — still on А after success
+    await sleep(500);
+    const noAdv = await h.evalv(`JSON.stringify({
+      cap: document.getElementById('tracingCaption').textContent,
+      counter: document.getElementById('tracingCounter').textContent
+    })`);
+    let NA = JSON.parse(noAdv || '{}');
+    check('no auto-advance: still on А', NA.cap === 'Аутомобил 🚗' && NA.counter === '1 од 30', noAdv);
+
+    // 9. Tap Next -> advances to Б (canvas cleared, finished reset)
+    await h.evalv(CLICK('tracingNext'));
+    await sleep(200);
     const adv = await h.evalv(CHECK_ACT);
     let AD = JSON.parse(adv || '{}');
-    check('success auto-advances to Б', AD.cap === 'Нацртај Б' && AD.counter === '2 од 30' && AD.refText === 'Б' && AD.canvasPx === 0 && AD.guidePx > 0, adv);
+    check('next advances to Б', AD.cap === 'Нацртај Б' && AD.counter === '2 од 30' && AD.refText === 'Б' && AD.canvasPx === 0 && AD.guidePx > 0, adv);
 
-    // 9. Sloppy Б -> PASS (forgiving), then auto-advance to В
+    // 10. Sloppy Б -> complete (forgiving), then Next to В
     await h.evalv(SLOPPY_B);
     await h.evalv(CLICK('tracingDone'));
     await sleep(150);
     const okB = await h.evalv(CHECK_RESULT);
     let B2 = JSON.parse(okB || '{}');
     check('sloppy Б is accepted (forgiving)', B2.cap === 'Банана 🍌' && B2.celebrate, okB);
-    await sleep(2900);
+    await h.evalv(CLICK('tracingNext'));
+    await sleep(200);
     const adv2 = await h.evalv(CHECK_ACT);
     let AD2 = JSON.parse(adv2 || '{}');
-    check('success auto-advances to В', AD2.cap === 'Нацртај В' && AD2.counter === '3 од 30', adv2);
+    check('next advances to В', AD2.cap === 'Нацртај В' && AD2.counter === '3 од 30', adv2);
 
-    // 10. Line on В -> REJECT, canvas cleared, no celebrate
+    // 11. Line on В -> early attempt (preserved, no clear)
+    await h.evalv(CLEAR_OVERLAYS);
     await h.evalv(POINTER_LINE);
     await h.evalv(CLICK('tracingDone'));
     await sleep(150);
-    const badLine = await h.evalv(CHECK_RESULT);
+    const badLine = await h.evalv(`JSON.stringify({
+      cap: document.getElementById('tracingCaption').textContent,
+      pixels: ${PIXELS('tracingCanvas')}
+    })`);
     let BL = JSON.parse(badLine || '{}');
-    check('single line is rejected', BL.cap === 'Покушај још једном!' && !BL.celebrate && BL.pixels === 0, badLine);
+    check('single line: early attempt preserved (no clear)', BL.cap === 'Хајде још једном.' && BL.pixels > 0, badLine);
 
-    // 11. Г: dense scribble -> REJECT
+    // 12. Г: dense scribble -> early attempt (preserved)
     await h.evalv(CLICK('tracingNext'));
     await sleep(200);
+    await h.evalv(CLEAR_OVERLAYS);
     await h.evalv(SCRIBBLE);
     await h.evalv(CLICK('tracingDone'));
     await sleep(150);
-    const badScr = await h.evalv(CHECK_RESULT);
+    const badScr = await h.evalv(`JSON.stringify({
+      cap: document.getElementById('tracingCaption').textContent,
+      pixels: ${PIXELS('tracingCanvas')}
+    })`);
     let BS = JSON.parse(badScr || '{}');
-    check('dense scribble is rejected', BS.cap === 'Покушај још једном!' && !BS.celebrate && BS.pixels === 0, badScr);
+    check('dense scribble: early attempt preserved', BS.cap === 'Хајде још једном.' && BS.pixels > 0, badScr);
 
-    // 12. Numbers: loads 0, correct 0 -> PASS, auto-advance to 1
+    // 13. Numbers: loads 0, correct 0 -> complete, no auto-advance
     await h.evalv(CLICK('tracingBack'));
     await sleep(150);
     await h.evalv(ENTER('numbers'));
@@ -234,20 +256,25 @@ const CHECK_RESULT = `JSON.stringify({
     const ok0 = await h.evalv(CHECK_RESULT);
     let Z = JSON.parse(ok0 || '{}');
     check('correct 0 is accepted', Z.cap === '0 · нула' && Z.celebrate, ok0);
-    await sleep(2900);
+    await h.evalv(CLICK('tracingNext'));
+    await sleep(200);
     const adv3 = await h.evalv(CHECK_ACT);
     let AD3 = JSON.parse(adv3 || '{}');
-    check('success auto-advances to 1', AD3.cap === 'Нацртај 1' && AD3.counter === '2 од 11', adv3);
+    check('next advances to 1', AD3.cap === 'Нацртај 1' && AD3.counter === '2 од 11', adv3);
 
-    // 13. Blob on 1 -> REJECT (filled shape containing the glyph)
+    // 14. Blob on 1 -> early attempt (preserved)
+    await h.evalv(CLEAR_OVERLAYS);
     await h.evalv(BLOB);
     await h.evalv(CLICK('tracingDone'));
     await sleep(150);
-    const blob = await h.evalv(CHECK_RESULT);
+    const blob = await h.evalv(`JSON.stringify({
+      cap: document.getElementById('tracingCaption').textContent,
+      pixels: ${PIXELS('tracingCanvas')}
+    })`);
     let BO = JSON.parse(blob || '{}');
-    check('filled blob is rejected', BO.cap === 'Покушај још једном!' && !BO.celebrate && BO.pixels === 0, blob);
+    check('filled blob: early attempt preserved', BO.cap === 'Хајде још једном.' && BO.pixels > 0, blob);
 
-    // 14. Shapes: loads Круг, correct circle -> PASS, auto-advance
+    // 15. Shapes: loads Круг, correct circle -> complete, no auto-advance
     await h.evalv(CLICK('tracingBack'));
     await sleep(150);
     await h.evalv(ENTER('shapes'));
@@ -262,12 +289,13 @@ const CHECK_RESULT = `JSON.stringify({
     const okC = await h.evalv(CHECK_RESULT);
     let C = JSON.parse(okC || '{}');
     check('correct circle is accepted', C.cap === 'Круг' && C.celebrate, okC);
-    await sleep(2900);
+    await h.evalv(CLICK('tracingNext'));
+    await sleep(200);
     const adv4 = await h.evalv(CHECK_ACT);
     let AD4 = JSON.parse(adv4 || '{}');
-    check('success auto-advances to Квадрат', AD4.cap === 'Нацртај Квадрат' && AD4.counter === '2 од 4', adv4);
+    check('next advances to Квадрат', AD4.cap === 'Нацртај Квадрат' && AD4.counter === '2 од 4', adv4);
 
-    // 15. Next through shapes, wraps around
+    // 16. Next through shapes, wraps around
     await h.evalv(CLICK('tracingNext'));
     await sleep(120);
     await h.evalv(CLICK('tracingNext'));
@@ -281,12 +309,20 @@ const CHECK_RESULT = `JSON.stringify({
     let W2 = JSON.parse(wrap2 || '{}');
     check('shapes wraps to start', W2.cap === 'Нацртај Круг' && W2.counter === '1 од 4', wrap2);
 
-    // 16. index.html hub wiring
+    // 17. Prewriting activity loads
+    await h.evalv(CLICK('tracingBack'));
+    await sleep(150);
+    await h.evalv(ENTER('prewriting'));
+    await sleep(200);
+    const pre = await h.evalv(CHECK_ACT);
+    let P = JSON.parse(pre || '{}');
+    check('prewriting loads Водоравна линија (1 of 8)', P.title2 === 'Прво цртање' && P.cap === 'Нацртај Водоравна линија' && P.counter === '1 од 8', pre);
+
+    // 18. index.html hub wiring
     await h.navigate(`http://127.0.0.1:${h.port}/index.html`);
     await sleep(800);
     const idx = await h.evalv(`JSON.stringify({ btn: (document.querySelector('[data-go="game-tracing"]')||{}).textContent, count: document.querySelectorAll('[data-go]').length })`);
     let I = JSON.parse(idx || '{}');
-    // Count is derived from the source so adding a new game tile does not stale this assert.
     const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
     const srcCount = (indexHtml.match(/data-go="/g) || []).length;
     check('index.html has game-tracing button', I.btn === '✏️' && I.count === srcCount, idx);

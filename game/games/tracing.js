@@ -69,14 +69,31 @@
     { label: 'Звезда', name: 'Звезда', shape: 'star' },
   ];
 
+  const PREWRITING = [
+    { label: 'Водоравна линија', name: 'водоравна линија', shape: 'hline' },
+    { label: 'Усправна линија', name: 'усправна линија', shape: 'vline' },
+    { label: 'Круг', name: 'круг', shape: 'circle' },
+    { label: 'Лук', name: 'лук', shape: 'arc' },
+    { label: 'Зизак', name: 'зизак', shape: 'zigzag' },
+    { label: 'Талас', name: 'талас', shape: 'wave' },
+    { label: 'Квадрат', name: 'квадрат', shape: 'square' },
+    { label: 'Троугао', name: 'троугао', shape: 'triangle' },
+  ];
+
   const ACTIVITIES = {
+    prewriting: { title: 'Прво цртање', items: PREWRITING },
     letters: { title: 'Слова', items: LETTERS },
     numbers: { title: 'Бројеви', items: NUMBERS },
     shapes: { title: 'Облици', items: SHAPES },
   };
 
   const SHAPE_SVGS = {
+    hline: '<line x1="10" y1="50" x2="90" y2="50" fill="none" stroke="#9B6DFF" stroke-width="6"/>',
+    vline: '<line x1="50" y1="10" x2="50" y2="90" fill="none" stroke="#9B6DFF" stroke-width="6"/>',
     circle: '<circle cx="50" cy="50" r="42" fill="none" stroke="#9B6DFF" stroke-width="6"/>',
+    arc: '<path d="M 15 70 Q 50 20 85 70" fill="none" stroke="#9B6DFF" stroke-width="6"/>',
+    zigzag: '<polyline points="10,70 30,30 50,70 70,30 90,70" fill="none" stroke="#9B6DFF" stroke-width="6" stroke-linejoin="round"/>',
+    wave: '<path d="M 10 50 Q 30 20 50 50 Q 70 80 90 50" fill="none" stroke="#9B6DFF" stroke-width="6"/>',
     square: '<rect x="13" y="13" width="74" height="74" rx="3" fill="none" stroke="#9B6DFF" stroke-width="6"/>',
     triangle: '<polygon points="50,10 88,90 12,90" fill="none" stroke="#9B6DFF" stroke-width="6" stroke-linejoin="round"/>',
     star: '<polygon points="50,10 61,35 98,35 68,57 79,91 50,70 21,91 32,57 2,35 39,35" fill="none" stroke="#9B6DFF" stroke-width="6" stroke-linejoin="round"/>',
@@ -193,8 +210,18 @@
   }
 
   function drawShapeOutline(g, shape, S) {
-    if (shape === 'circle') {
+    if (shape === 'hline') {
+      g.beginPath(); g.moveTo(S * 0.10, S * 0.50); g.lineTo(S * 0.90, S * 0.50); g.stroke();
+    } else if (shape === 'vline') {
+      g.beginPath(); g.moveTo(S * 0.50, S * 0.10); g.lineTo(S * 0.50, S * 0.90); g.stroke();
+    } else if (shape === 'circle') {
       g.beginPath(); g.arc(S / 2, S / 2, S * 0.42, 0, Math.PI * 2); g.stroke();
+    } else if (shape === 'arc') {
+      g.beginPath(); g.moveTo(S * 0.15, S * 0.70); g.quadraticCurveTo(S * 0.50, S * 0.20, S * 0.85, S * 0.70); g.stroke();
+    } else if (shape === 'zigzag') {
+      g.beginPath(); g.moveTo(S * 0.10, S * 0.70); g.lineTo(S * 0.30, S * 0.30); g.lineTo(S * 0.50, S * 0.70); g.lineTo(S * 0.70, S * 0.30); g.lineTo(S * 0.90, S * 0.70); g.stroke();
+    } else if (shape === 'wave') {
+      g.beginPath(); g.moveTo(S * 0.10, S * 0.50); g.quadraticCurveTo(S * 0.30, S * 0.20, S * 0.50, S * 0.50); g.quadraticCurveTo(S * 0.70, S * 0.80, S * 0.90, S * 0.50); g.stroke();
     } else if (shape === 'square') {
       const m = S * 0.13;
       g.beginPath(); g.rect(m, m, S - 2 * m, S - 2 * m); g.stroke();
@@ -312,6 +339,18 @@
       g.strokeText(item.label, CW / 2, CW / 2 + CW * 0.02);
     }
     g.setLineDash([]);
+    // Stroke-order hint: numbered dot at the top-center of the guide
+    if (!item.shape && activity === 'letters') {
+      g.fillStyle = 'rgba(155, 109, 255, 0.6)';
+      g.beginPath();
+      g.arc(CW / 2, CW * 0.08, 10, 0, Math.PI * 2);
+      g.fill();
+      g.fillStyle = '#fff';
+      g.font = 'bold 14px Fredoka, sans-serif';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      g.fillText('1', CW / 2, CW * 0.08);
+    }
   }
 
   function seg(from, to) {
@@ -385,12 +424,11 @@
     if (window.popSound) window.popSound();
     if (window.celebrate) window.celebrate('✏️');
     clearTimeout(finishTimer);
-    finishTimer = setTimeout(() => {
-      if (finished) {
-        document.querySelectorAll('.celebration-overlay.show').forEach(e => e.classList.remove('show'));
-        loadItem(index + 1);
-      }
-    }, 2600);
+    // No forced auto-advance — child chooses next or repeat via buttons.
+    const nextBtn = $('tracingNext');
+    const repeatBtn = $('tracingRepeat');
+    if (nextBtn) nextBtn.style.display = 'inline-block';
+    if (repeatBtn) repeatBtn.style.display = 'inline-block';
   }
 
   function loadItem(i) {
@@ -405,19 +443,33 @@
     speakPhrase([current().name]);
   }
 
+  function classifyAttempt(res) {
+    if (!res.drew) return 'empty';
+    if (res.pass) return 'complete';
+    if (res.coverage >= 0.3 || res.near >= 0.5) return 'nearly';
+    return 'early';
+  }
+
   function onDone() {
     if (finished || !activity) return;
     const res = matchResult();
-    if (!res.drew) {
+    const cls = classifyAttempt(res);
+    if (cls === 'empty') {
       renderCaption('Нацртај ' + current().label + ' прво!');
       if (window.gentleMiss) window.gentleMiss();
       return;
     }
-    if (res.pass) {
+    if (cls === 'complete') {
       glyphDone();
+    } else if (cls === 'nearly') {
+      // Preserve drawing, highlight guide, encourage
+      drawGuide();
+      renderCaption('Хајде још једном.');
+      if (window.gentleMiss) window.gentleMiss();
     } else {
-      clearCanvas();
-      renderCaption('Покушај још једном!');
+      // Early attempt — preserve drawing, highlight guide
+      drawGuide();
+      renderCaption('Хајде још једном.');
       if (window.gentleMiss) window.gentleMiss();
     }
   }
@@ -459,6 +511,10 @@
     $('tracingNext').addEventListener('click', () => {
       if (window.popSound) window.popSound();
       loadItem(index + 1);
+    });
+    $('tracingRepeat').addEventListener('click', () => {
+      if (window.popSound) window.popSound();
+      loadItem(index);
     });
     $('tracingDone').addEventListener('click', onDone);
     $('tracingClear').addEventListener('click', () => {

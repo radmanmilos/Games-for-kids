@@ -43,9 +43,12 @@ Important: The AI assistant and any contributor must read this file first when s
 - 113. DONE — Roadmap Task AUDIO-001: Shared audio buses and priorities. (2026-09-26, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED + COMMITTED 2026-09-26.** New `game/shared/audio-buses.js`. Committed `a5e4ace`, pushed.
 
-- 114. IN PROGRESS — Phase 2, Game 1: GAME-COUNT-001 — One-to-one counting. (Started 2026-09-26, user approved.)
-    - **IMPLEMENTED 2026-09-26.** Modified `animal_counting.js`: phase 1 shows animal tiles (buttons hidden, prompt "Изброј животиње!"), child taps each tile (highlighted `.counted` with green ring, plays counting word via speech), after all counted buttons appear with prompt "Колико их има?", child picks number as before. Added `.counted` CSS to `animal_counting.html`. Updated `counting_smoke.js` to drive the new flow.
-    - **Validation:** `counting_smoke.js` **10/10 PASS**. `node --check` 70 files OK.
+- 114. DONE — Phase 2, Game 1: GAME-COUNT-001 — One-to-one counting. (2026-09-26, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED + COMMITTED 2026-09-26.** Modified `animal_counting.js` with tap-to-count flow. Committed `70c6299`, pushed.
+
+- 115. IN PROGRESS — Phase 2, Game 2: GAME-TRACING-001 — Developmental tracing. (Started 2026-09-26, user approved.)
+    - **IMPLEMENTED 2026-09-26.** Added prewriting activity (8 items: hline, vline, circle, arc, zigzag, wave, square, triangle), stroke-order hint (numbered dot on letter guides), classifyAttempt (complete/nearly/early instead of pass/fail), weak attempts preserve drawing + highlight guide + "Хајде још једном." (no clear), no forced auto-advance (explicit Next/Repeat buttons). Updated `tracing_smoke.js` to match new behavior.
+    - **Validation:** `tracing_smoke.js` **24/24 PASS**. `node --check` 71 files OK.
     - NOT committed — user approves commit + sync.
 
 - 105. DONE — Play-test round 6 + chatGPT_review2 mechanical fixes (racing3d + hub). (2026-09-25, Ponytail Lazy Dev; user play-test on a real device + supplied `resources/3dracer analysis/chatGPT_review2.md`. **user approved "proceed with all batches" 2026-09-25**.) All four reported defects were reproduced with a headless probe before being fixed; the steering choice was delegated to me and resolved as *remove the nose-point, keep the bank*.
