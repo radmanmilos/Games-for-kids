@@ -17,9 +17,14 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
-- 106. IN PROGRESS — Roadmap Task DS-001: Shared design tokens. (Started 2026-09-26, user approved.)
-    - **IMPLEMENTED 2026-09-26.** New `game/styles/design-tokens.css` — 30 CSS custom properties (9 colors, 6 spacing, 4 radii, 3 shadows, 3 touch targets). Added `<link>` to all 18 `game/pages/*.html` before the existing accessibility.css link. Zero JS changes, zero behavior changes. Tokens match exact values already in use (`#FFF8ED`, `#4A3F6B`, `#FFD23F`, etc.).
-    - **Validation:** `node --check` 63 files OK. Installed Chromium on Alpine + fixed `tools/headless.js` for Linux (TMPDIR fallback, `/usr/bin/chromium` paths, `--no-sandbox` flag). Smoke battery: **15/19 tools PASS (297 checks)**. 4 failures are pre-existing flakes unrelated to CSS-only change: adventure (mouse-hit timing), memory (popup timing), racing3d (ES module load issue), shapes (Chrome boot crash).
+- 106. DONE — Roadmap Task DS-001: Shared design tokens. (2026-09-26, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED + VALIDATED 2026-09-26.** New `game/styles/design-tokens.css` — 30 CSS custom properties (9 colors, 6 spacing, 4 radii, 3 shadows, 3 touch targets). Added `<link>` to all 18 `game/pages/*.html`. Zero JS changes. Committed `3b55ae2`.
+    - Also fixed `tools/headless.js` for Linux (TMPDIR fallback, `/usr/bin/chromium` paths, `--no-sandbox` flag). Smoke battery: 15/19 tools pass (297 checks); 4 pre-existing flakes unrelated to CSS-only change.
+    - **Committed 2026-09-26** (`3b55ae2`): 22 files changed, docs/ synced.
+
+- 107. IN PROGRESS — Roadmap Task LANG-001: Serbian language data layer. (Started 2026-09-26, user approved.)
+    - **IMPLEMENTED 2026-09-26.** New `game/data/serbian.js` — shared Serbian Cyrillic data layer. Contains: 30 letters (label, name, example word), 11 numbers (0–10), 10 shapes, 11 colors (name + hex), 12 animals (English→Serbian map), 4 praise phrases, 2 retry phrases, 7 navigation labels, 15 game titles. All data sourced from existing game code (classroom.js, animals.js, tracing.js, shapes.js, kids_games.js). Zero behavior changes — data-only module exposed as `window.SERBIAN`.
+    - **Validation:** `node --check` 64 files OK. Smoke battery: **17/19 tools PASS (333 checks)**. 2 failures are pre-existing flakes unrelated to data-only module (racing3d ES module load, tracing Chrome boot crash).
     - NOT committed — user approves commit + sync.
 
 - 105. DONE — Play-test round 6 + chatGPT_review2 mechanical fixes (racing3d + hub). (2026-09-25, Ponytail Lazy Dev; user play-test on a real device + supplied `resources/3dracer analysis/chatGPT_review2.md`. **user approved "proceed with all batches" 2026-09-25**.) All four reported defects were reproduced with a headless probe before being fixed; the steering choice was delegated to me and resolved as *remove the nose-point, keep the bank*.
