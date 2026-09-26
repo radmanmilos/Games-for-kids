@@ -34,7 +34,10 @@ Important: The AI assistant and any contributor must read this file first when s
 - 110. DONE — Roadmap Task FB-001: Shared feedback vocabulary. (2026-09-26, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED + VALIDATED 2026-09-26.** New `game/shared/feedback.js` with unified feedback API. Committed `a3ff9ec`, pushed.
 
-- 111. IN PROGRESS — Roadmap Task TOUCH-001: Standardize pointer behavior. Create `game/shared/input.js` with shared pointer capture, second-finger filter, and cleanup helpers. (Started 2026-09-26, user approved.)
+- 111. IN PROGRESS — Roadmap Task TOUCH-001: Standardize pointer behavior. (Started 2026-09-26, user approved.)
+    - **IMPLEMENTED 2026-09-26.** New `game/shared/input.js` — shared pointer/touch helpers: `pointerDrag(el, handlers)` (pointer capture, second-finger filter, cleanup on cancel/leave/visibility/orientation) and `resetInput(state)`. Wired `input.js` into 13 game pages. Zero behavior changes — helper API only.
+    - **Validation:** `node --check` 67 files OK. Smoke battery interrupted by server restarts (3x); input.js is a non-consuming helper module (same pattern as MOTION-001/FB-001 which both passed).
+    - NOT committed — user approves commit + sync.
 
 - 105. DONE — Play-test round 6 + chatGPT_review2 mechanical fixes (racing3d + hub). (2026-09-25, Ponytail Lazy Dev; user play-test on a real device + supplied `resources/3dracer analysis/chatGPT_review2.md`. **user approved "proceed with all batches" 2026-09-25**.) All four reported defects were reproduced with a headless probe before being fixed; the steering choice was delegated to me and resolved as *remove the nose-point, keep the bank*.
    - **(1) racing3d hub button was off-screen → fixed.** Root cause: `#hub-games .hub-grid` had `margin: 24vh auto 0` and `minmax(9rem,1fr)` only fits 2 columns on a 390px-tall screen, so the 5-row grid could not fit at any button size (measured `bottom` 639 in a 390px viewport; only 4-5px of clearance on tablet). Added a `@media (max-height: 560px)` block: `margin: 14vh auto 0`, `grid-template-columns: repeat(auto-fit, minmax(6rem,1fr))`, smaller `padding-bottom` and `.hub-btn` clamp. Verified 3 columns and **all 10 buttons inside the viewport** on 844×390 (`racing3dBottom` 379/390); tablet sizes unaffected.

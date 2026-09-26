@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Мала тркачица: Пустоловина</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏎️</text></svg>">
+    <link rel="stylesheet" href="../styles/design-tokens.css">
     <link rel="stylesheet" href="../shared/accessibility.css">
     <style>
         @font-face {
@@ -224,7 +225,7 @@
 </head>
 <body>
 <div id="racing-game">
-    <button class="adv-back" id="racing-back" aria-label="Назад"></button>
+    <button class="adv-back" id="racing-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <h1 id="racing-title">🏎️ Мала тркачица</h1>
 
     <div id="racing-score">Поени: 0</div>
@@ -270,6 +271,8 @@
 
 <script src="../games/racing-config.js"></script>
 <script src="../games/racing.js"></script>
-<script src="../shared/main.js"></script>
+<script src="../shared/feedback.js"></script>
+    <script src="../shared/motion.js"></script>
+    <script src="../shared/main.js"></script>
 </body>
 </html>
