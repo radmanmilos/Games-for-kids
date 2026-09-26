@@ -1,0 +1,45 @@
+/* Петрин свет — shared viewport rules
+   Safe-area-aware layout, no horizontal scroll, consistent padding. */
+
+/* Prevent horizontal scrolling globally */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Safe-area-aware page wrapper */
+.ps-page {
+  padding:
+    max(var(--ps-space-4), env(safe-area-inset-top))
+    max(var(--ps-space-4), env(safe-area-inset-right))
+    max(var(--ps-space-4), env(safe-area-inset-bottom))
+    max(var(--ps-space-4), env(safe-area-inset-left));
+}
+
+/* Canvas games should fill viewport safely */
+.ps-canvas-fill {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+/* Rotate hint for landscape-only games */
+.ps-rotate-hint {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--cream);
+  color: var(--plum);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 5vmin;
+  padding: 8vmin;
+}
+
+@media (orientation: portrait) and (max-width: 520px) {
+  .ps-rotate-hint { display: flex; }
+}

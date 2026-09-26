@@ -34,9 +34,12 @@ Important: The AI assistant and any contributor must read this file first when s
 - 110. DONE — Roadmap Task FB-001: Shared feedback vocabulary. (2026-09-26, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED + VALIDATED 2026-09-26.** New `game/shared/feedback.js` with unified feedback API. Committed `a3ff9ec`, pushed.
 
-- 111. IN PROGRESS — Roadmap Task TOUCH-001: Standardize pointer behavior. (Started 2026-09-26, user approved.)
-    - **IMPLEMENTED 2026-09-26.** New `game/shared/input.js` — shared pointer/touch helpers: `pointerDrag(el, handlers)` (pointer capture, second-finger filter, cleanup on cancel/leave/visibility/orientation) and `resetInput(state)`. Wired `input.js` into 13 game pages. Zero behavior changes — helper API only.
-    - **Validation:** `node --check` 67 files OK. Smoke battery interrupted by server restarts (3x); input.js is a non-consuming helper module (same pattern as MOTION-001/FB-001 which both passed).
+- 111. DONE — Roadmap Task TOUCH-001: Standardize pointer behavior. (2026-09-26, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED + COMMITTED 2026-09-26.** New `game/shared/input.js` with pointerDrag + resetInput. Committed `bda3589`, pushed.
+
+- 112. IN PROGRESS — Roadmap Task DEVICE-001: Shared viewport rules. (Started 2026-09-26, user approved.)
+    - **IMPLEMENTED 2026-09-26.** New `game/styles/viewport.css` — global `overflow-x:hidden`, `.ps-page` safe-area-aware wrapper with `env(safe-area-inset-*)`, `.ps-canvas-fill` for canvas games, `.ps-rotate-hint` for landscape-only games. New `game/shared/viewport.js` — shared helpers: `safeArea()`, `resizeCanvas(canvas)`, `onResize(fn)` (debounced resize+orientation), `rotateHint(el)`. Wired into all 13 game pages. Zero behavior changes — shared layer only.
+    - **Validation:** `node --check` 68 files OK.
     - NOT committed — user approves commit + sync.
 
 - 105. DONE — Play-test round 6 + chatGPT_review2 mechanical fixes (racing3d + hub). (2026-09-25, Ponytail Lazy Dev; user play-test on a real device + supplied `resources/3dracer analysis/chatGPT_review2.md`. **user approved "proceed with all batches" 2026-09-25**.) All four reported defects were reproduced with a headless probe before being fixed; the steering choice was delegated to me and resolved as *remove the nose-point, keep the bank*.
