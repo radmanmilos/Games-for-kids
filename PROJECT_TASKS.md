@@ -22,10 +22,10 @@ Important: The AI assistant and any contributor must read this file first when s
     - Also fixed `tools/headless.js` for Linux (TMPDIR fallback, `/usr/bin/chromium` paths, `--no-sandbox` flag). Smoke battery: 15/19 tools pass (297 checks); 4 pre-existing flakes unrelated to CSS-only change.
     - **Committed 2026-09-26** (`3b55ae2`): 22 files changed, docs/ synced.
 
-- 107. IN PROGRESS — Roadmap Task LANG-001: Serbian language data layer. (Started 2026-09-26, user approved.)
-    - **IMPLEMENTED 2026-09-26.** New `game/data/serbian.js` — shared Serbian Cyrillic data layer. Contains: 30 letters (label, name, example word), 11 numbers (0–10), 10 shapes, 11 colors (name + hex), 12 animals (English→Serbian map), 4 praise phrases, 2 retry phrases, 7 navigation labels, 15 game titles. All data sourced from existing game code (classroom.js, animals.js, tracing.js, shapes.js, kids_games.js). Zero behavior changes — data-only module exposed as `window.SERBIAN`.
-    - **Validation:** `node --check` 64 files OK. Smoke battery: **17/19 tools PASS (333 checks)**. 2 failures are pre-existing flakes unrelated to data-only module (racing3d ES module load, tracing Chrome boot crash).
-    - NOT committed — user approves commit + sync.
+- 107. DONE — Roadmap Task LANG-001: Serbian language data layer. (2026-09-26, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED + VALIDATED 2026-09-26.** New `game/data/serbian.js` — shared Serbian Cyrillic data layer. Committed `2367fce`.
+
+- 108. IN PROGRESS — Roadmap Task NAV-001: Standardize all back/home controls. Ensure every child-facing page has one obvious back control with consistent location, ≥48px touch target, and no hover dependence. (Started 2026-09-26, user approved.)
 
 - 105. DONE — Play-test round 6 + chatGPT_review2 mechanical fixes (racing3d + hub). (2026-09-25, Ponytail Lazy Dev; user play-test on a real device + supplied `resources/3dracer analysis/chatGPT_review2.md`. **user approved "proceed with all batches" 2026-09-25**.) All four reported defects were reproduced with a headless probe before being fixed; the steering choice was delegated to me and resolved as *remove the nose-point, keep the bank*.
    - **(1) racing3d hub button was off-screen → fixed.** Root cause: `#hub-games .hub-grid` had `margin: 24vh auto 0` and `minmax(9rem,1fr)` only fits 2 columns on a 390px-tall screen, so the 5-row grid could not fit at any button size (measured `bottom` 639 in a 390px viewport; only 4-5px of clearance on tablet). Added a `@media (max-height: 560px)` block: `margin: 14vh auto 0`, `grid-template-columns: repeat(auto-fit, minmax(6rem,1fr))`, smaller `padding-bottom` and `.hub-btn` clamp. Verified 3 columns and **all 10 buttons inside the viewport** on 844×390 (`racing3dBottom` 379/390); tablet sizes unaffected.
