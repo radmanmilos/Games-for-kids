@@ -11,11 +11,13 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Phase note
 
-**Phase 5 = New Game: Мала тркачица (Little Racer)** (2026-09-08, user decision): focus is building a pseudo-3D racing game (OutRun-style) in stages. The previous Phase 5 polish backlog for the 8 ИГРЕ games is moved to Phase 6. УЧЕЊЕ learning apps remain out of scope. Workflow rule: each stage is a separate task; user approves plan, then each stage is proposed and approved before execution.
+**Phase 6 = Roadmap Cohesion** (2026-09-26, user decision): the `PETRIN_SVET_MASTER_EXECUTION_ROADMAP.md` is now the active product roadmap. The audit (`ROADMAP_AUDIT.md`) maps all 42 tasks to current code state. We work through Phase 1 (Product Cohesion) first, one task at a time: user approves → implement → user approves commit+sync → next task. Racing3D (Phase 5) is stable and awaiting user play-test feedback.
 
 ---
 
 ## Active tasks (NEW / IN PROGRESS)
+
+- 106. NEW — Roadmap Task DS-001: Shared design tokens. Create `game/styles/design-tokens.css` with CSS custom properties for colors, spacing, radii, shadows, and touch targets. Reference from all public pages. Preserves each game's recognizable theme while unifying the visual vocabulary. (Proposed 2026-09-26; awaiting user approval to start.)
 
 - 105. DONE — Play-test round 6 + chatGPT_review2 mechanical fixes (racing3d + hub). (2026-09-25, Ponytail Lazy Dev; user play-test on a real device + supplied `resources/3dracer analysis/chatGPT_review2.md`. **user approved "proceed with all batches" 2026-09-25**.) All four reported defects were reproduced with a headless probe before being fixed; the steering choice was delegated to me and resolved as *remove the nose-point, keep the bank*.
    - **(1) racing3d hub button was off-screen → fixed.** Root cause: `#hub-games .hub-grid` had `margin: 24vh auto 0` and `minmax(9rem,1fr)` only fits 2 columns on a 390px-tall screen, so the 5-row grid could not fit at any button size (measured `bottom` 639 in a 390px viewport; only 4-5px of clearance on tablet). Added a `@media (max-height: 560px)` block: `margin: 14vh auto 0`, `grid-template-columns: repeat(auto-fit, minmax(6rem,1fr))`, smaller `padding-bottom` and `.hub-btn` clamp. Verified 3 columns and **all 10 buttons inside the viewport** on 844×390 (`racing3dBottom` 379/390); tablet sizes unaffected.
