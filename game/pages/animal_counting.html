@@ -30,7 +30,8 @@ body{font-family:Fredoka, sans-serif;background:var(--cream);margin:0;height:100
   /* Keep the scene tall enough to show up to 3 tiles even when fewer are rendered */
   #countScene{background:rgba(255,255,255,0.95);padding:2.4vmin;border-radius:12px;box-shadow:0 2vmin 4vmin rgba(0,0,0,.08); position:relative; min-height:calc(20vmin + 4.8vmin);}
   /* animal tile visuals follow matching_game color patterns */
-  #countScene .count-tile{display:flex;align-items:center;justify-content:center;width:20vmin;height:20vmin;border-radius:12px;background:linear-gradient(#fff,#fff);box-shadow:0 1.2vmin 0 rgba(0,0,0,.06);font-size:9vmin}
+  #countScene .count-tile{display:flex;align-items:center;justify-content:center;width:20vmin;height:20vmin;border-radius:12px;background:linear-gradient(#fff,#fff);box-shadow:0 1.2vmin 0 rgba(0,0,0,.06);font-size:9vmin;cursor:pointer;transition:transform .15s ease}
+  #countScene .count-tile.counted{transform:scale(0.85);opacity:0.6;box-shadow:0 0 0 3px var(--green)}
   #countScene .count-tile[data-animal="Dog"]{background:radial-gradient(circle at 35% 30%, #FFF3B0, #FFD23F 55%, #FFB800);}
   #countScene .count-tile[data-animal="Cat"]{background:radial-gradient(circle at 35% 30%, #FFB6D0,#FF7FA8);}
   #countScene .count-tile[data-animal="Cow"]{background:radial-gradient(circle at 35% 30%, #C9A6FF, #9B6DFF);}
