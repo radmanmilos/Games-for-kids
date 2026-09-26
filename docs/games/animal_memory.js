@@ -4,17 +4,25 @@
    - Rely on shared/audio.js playAnimalSound(name) if available; otherwise degrade silently
 */
 (function(){
-  const animals = ['Cat','Dog','Fox','Cow','Pig','Duck','Horse','Chicken']; // 8 pairs => 16 cards (4x4 grid)
+  const animals = ['Cat','Dog','Fox','Cow','Pig','Duck','Horse','Chicken'];
   const emojiMap = {Cat:'🐱',Dog:'🐶',Fox:'🦊',Cow:'🐮',Pig:'🐷',Duck:'🦆',Horse:'🐴',Chicken:'🐔'};
   const nameMap = {Cat:'Мачка',Dog:'Пас',Fox:'Лисица',Cow:'Крава',Pig:'Свиња',Duck:'Патка',Horse:'Коњ',Chicken:'Кока'};
   const boardEl = document.getElementById('board');
   const statusEl = document.getElementById('memoryStatus');
   const restartBtn = document.getElementById('restart');
   const backBtn = document.querySelector('.back-btn');
+  const diffBtns = document.querySelectorAll('.diff-btn');
   let first = null, second = null, lock = false, matches = 0, moves = 0;
+  let difficulty = 'easy'; // easy | medium | standard
+
+  const DIFFS = {
+    easy:   { pairs: 2, cols: 2, label: 'Лако' },
+    medium: { pairs: 3, cols: 3, label: 'Средње' },
+    standard: { pairs: 8, cols: 4, label: 'Тешко' },
+  };
 
   function updateStatus(){
-    if(statusEl) statusEl.textContent = 'Парова: ' + matches + ' од ' + animals.length + ' · Потези: ' + moves;
+    if(statusEl) statusEl.textContent = 'Парова: ' + matches + ' од ' + DIFFS[difficulty].pairs + ' · Потези: ' + moves;
   }
 
   function shuffle(arr){
@@ -26,7 +34,9 @@
 
   function buildBoard(){
     boardEl.innerHTML = '';
-    const pairList = shuffle(animals.concat(animals).slice());
+    const diff = DIFFS[difficulty];
+    const pairList = shuffle(animals.slice(0, diff.pairs).concat(animals.slice(0, diff.pairs)));
+    boardEl.style.gridTemplateColumns = `repeat(${diff.cols}, minmax(0, 1fr))`;
     pairList.forEach((name, idx) => {
       const card = document.createElement('button');
       card.className = 'card';
@@ -35,7 +45,6 @@
       card.dataset.index = idx;
       card.setAttribute('aria-label', 'Скривена картица');
       card.addEventListener('click', onCardClick);
-      // structured faces so cards can flip like matching tiles
       const face = emojiMap[name] || name;
       card.innerHTML = `
         <div class="card-inner">
@@ -101,7 +110,7 @@
     matches += 1;
     updateStatus();
     resetTurn();
-    if(matches === animals.length) onWin();
+    if(matches === DIFFS[difficulty].pairs) onWin();
   }
 
   function checkMatch(){
@@ -119,6 +128,15 @@
   }
 
   restartBtn.addEventListener('click', ()=>{ if(window.popSound) window.popSound(); buildBoard(); });
+  diffBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(window.popSound) window.popSound();
+      difficulty = btn.dataset.diff;
+      diffBtns.forEach(b => b.style.outline = '');
+      btn.style.outline = '3px solid #4A3F6B';
+      buildBoard();
+    });
+  });
   backBtn.addEventListener('click', ()=>{
     if(window.popSound) window.popSound();
     setTimeout(()=>{
