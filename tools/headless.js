@@ -24,6 +24,7 @@ const fs = require('fs');
 
 const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const ROOT = path.resolve(__dirname, '..', 'game');
+const TMP = process.env.TMPDIR || process.env.TEMP || '/tmp';
 
 function findChrome() {
   if (fs.existsSync(CHROME)) return CHROME;
@@ -31,7 +32,11 @@ function findChrome() {
     'C:/Program Files/Google/Chrome/Application/chrome.exe',
     'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
     path.join(process.env.LOCALAPPDATA || '', 'Google/Chrome/Application/chrome.exe'),
-  ];
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/google-chrome',
+    '/usr/bin/google-chrome-stable',
+  ]
   for (const c of candidates) {
     if (fs.existsSync(c)) return c;
   }
@@ -103,7 +108,7 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800, dpr = 1 } 
   const srv = await serve();
   const httpPort = srv.port;
 
-  const profile = path.join(process.env.TEMP, 'pkv-' + tag + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e6));
+  const profile = path.join(TMP, 'pkv-' + tag + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e6));
   const dbgPort = httpPort + 100 + Math.floor(Math.random() * 1000);
 
   const chromeBin = findChrome();
@@ -117,7 +122,7 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800, dpr = 1 } 
     '--user-data-dir=' + profile, '--no-first-run', '--no-default-browser-check',
     '--disable-background-networking', '--disable-component-update', '--disable-default-apps',
     '--disable-sync', '--disable-features=Translate,MediaRouter,OptimizationGuideModelDownloading',
-    '--mute-audio', 'about:blank',
+    '--no-sandbox', '--mute-audio', 'about:blank',
   ];
   let version = null;
   for (let attempt = 0; attempt < 2 && !version; attempt++) {

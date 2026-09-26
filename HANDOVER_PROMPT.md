@@ -8,9 +8,10 @@ This file summarizes the current workspace, conventions, and project state so th
 
 ## First thing next session — pick one (user decides)
 
-1. **Racing3d play-test round 7.** Build-then-polish: the user play-tests and feeds back; each round is a task. Task 105 (round 6 + the `chatGPT_review2.md` mechanical queue) is DONE and awaiting the user's device re-test.
-2. **Both open questions from task 105 are CLOSED (2026-09-25, user delegated the calls). Do not re-open either:** (a) **no particle-material pooling** — the per-particle opacity fade at `racing3d.mjs:1520` makes per-mesh materials load-bearing, and the measurement showed no burst problem; (b) **keep the reduced-motion gates** — the user has only ever complained about excess motion, the gates cost non-reduced-motion users nothing, and the fully-gated build is what the user has been testing all along. Both are recorded with reasons in `PROJECT_TASKS.md` task 105.
-3. **Nothing is committed.** Task 104 + task 102 batch 11 were committed by the user as `f34602a`; task 105 (all four batches) is uncommitted, and `resources/3dracer analysis/chatGPT_review2.md` is still untracked. The user commits and pushes — never do it automatically.
+1. **Roadmap Cohesion Phase 1 — task-by-task execution.** The `PETRIN_SVET_MASTER_EXECUTION_ROADMAP.md` is now the active product roadmap. The audit is in `ROADMAP_AUDIT.md`. Task 106 (DS-001 shared design tokens) is implemented and ready for user approval. Next tasks after that: LANG-001, NAV-001, MOTION-001, FB-001, TOUCH-001, DEVICE-001, AUDIO-001 (in that order, each user-approved before starting).
+2. **Racing3d play-test round 7** — still pending user device re-test (task 105 is DONE).
+3. **Both open questions from task 105 are CLOSED (2026-09-25, user delegated the calls). Do not re-open either:** (a) **no particle-material pooling** — the per-particle opacity fade at `racing3d.mjs:1520` makes per-mesh materials load-bearing, and the measurement showed no burst problem; (b) **keep the reduced-motion gates** — the user has only ever complained about excess motion, the gates cost non-reduced-motion users nothing, and the fully-gated build is what the user has been testing all along. Both are recorded with reasons in `PROJECT_TASKS.md` task 105.
+4. **Latest commit:** `eecdd26` — roadmap incorporated (ROADMAP_AUDIT.md + PROJECT_TASKS.md + HANDOVER_PROMPT.md). Task 106 (DS-001) is implemented but NOT yet committed — user approves commit + sync.
 
 ## Validation is now one command
 
