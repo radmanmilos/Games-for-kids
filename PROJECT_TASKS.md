@@ -37,9 +37,12 @@ Important: The AI assistant and any contributor must read this file first when s
 - 111. DONE — Roadmap Task TOUCH-001: Standardize pointer behavior. (2026-09-26, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED + COMMITTED 2026-09-26.** New `game/shared/input.js` with pointerDrag + resetInput. Committed `bda3589`, pushed.
 
-- 112. IN PROGRESS — Roadmap Task DEVICE-001: Shared viewport rules. (Started 2026-09-26, user approved.)
-    - **IMPLEMENTED 2026-09-26.** New `game/styles/viewport.css` — global `overflow-x:hidden`, `.ps-page` safe-area-aware wrapper with `env(safe-area-inset-*)`, `.ps-canvas-fill` for canvas games, `.ps-rotate-hint` for landscape-only games. New `game/shared/viewport.js` — shared helpers: `safeArea()`, `resizeCanvas(canvas)`, `onResize(fn)` (debounced resize+orientation), `rotateHint(el)`. Wired into all 13 game pages. Zero behavior changes — shared layer only.
-    - **Validation:** `node --check` 68 files OK.
+- 112. DONE — Roadmap Task DEVICE-001: Shared viewport rules. (2026-09-26, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED + COMMITTED 2026-09-26.** New `viewport.css` + `viewport.js`. Committed `76ff9ac`, pushed.
+
+- 113. IN PROGRESS — Roadmap Task AUDIO-001: Shared audio buses and priorities. (Started 2026-09-26, user approved.)
+    - **IMPLEMENTED 2026-09-26.** New `game/shared/audio-buses.js` — 4 audio buses (master/speech/music/sfx), priority order (speech > success > sfx > music), ducking while speech is active, standardized event vocabulary (tap, placeCorrect, placeWrong, success, celebrate, goal, hint, animalName, animalSound, number, shape, letter). Exposes `window.audioBuses` with `setBus()`, `duck()`, `busTone()`, `play()`, `speakWithDuck()`. Wired into all 13 game pages. Zero behavior changes — shared API only.
+    - **Validation:** `node --check` 69 files OK.
     - NOT committed — user approves commit + sync.
 
 - 105. DONE — Play-test round 6 + chatGPT_review2 mechanical fixes (racing3d + hub). (2026-09-25, Ponytail Lazy Dev; user play-test on a real device + supplied `resources/3dracer analysis/chatGPT_review2.md`. **user approved "proceed with all batches" 2026-09-25**.) All four reported defects were reproduced with a headless probe before being fixed; the steering choice was delegated to me and resolved as *remove the nose-point, keep the bank*.
