@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Бројање животиња — Петрин свет</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔢</text></svg>">
-<link rel="stylesheet" href="../styles/design-tokens.css">
+<link rel="stylesheet" href="../styles/viewport.css">
+    <link rel="stylesheet" href="../styles/design-tokens.css">
     <link rel="stylesheet" href="../shared/accessibility.css">
 <style>
 :root{ --cream:#FFF8ED; --sky:#4FC3F7; --sky-deep:#2FA6DA; --yellow:#FFD23F; --green:#67C971; --pink:#FF6F91; --plum:#4A3F6B; --plum-soft:#655A8C; }
@@ -29,7 +30,8 @@ body{font-family:Fredoka, sans-serif;background:var(--cream);margin:0;height:100
   /* Keep the scene tall enough to show up to 3 tiles even when fewer are rendered */
   #countScene{background:rgba(255,255,255,0.95);padding:2.4vmin;border-radius:12px;box-shadow:0 2vmin 4vmin rgba(0,0,0,.08); position:relative; min-height:calc(20vmin + 4.8vmin);}
   /* animal tile visuals follow matching_game color patterns */
-  #countScene .count-tile{display:flex;align-items:center;justify-content:center;width:20vmin;height:20vmin;border-radius:12px;background:linear-gradient(#fff,#fff);box-shadow:0 1.2vmin 0 rgba(0,0,0,.06);font-size:9vmin}
+  #countScene .count-tile{display:flex;align-items:center;justify-content:center;width:20vmin;height:20vmin;border-radius:12px;background:linear-gradient(#fff,#fff);box-shadow:0 1.2vmin 0 rgba(0,0,0,.06);font-size:9vmin;cursor:pointer;transition:transform .15s ease}
+  #countScene .count-tile.counted{transform:scale(0.85);opacity:0.6;box-shadow:0 0 0 3px var(--green)}
   #countScene .count-tile[data-animal="Dog"]{background:radial-gradient(circle at 35% 30%, #FFF3B0, #FFD23F 55%, #FFB800);}
   #countScene .count-tile[data-animal="Cat"]{background:radial-gradient(circle at 35% 30%, #FFB6D0,#FF7FA8);}
   #countScene .count-tile[data-animal="Cow"]{background:radial-gradient(circle at 35% 30%, #C9A6FF, #9B6DFF);}

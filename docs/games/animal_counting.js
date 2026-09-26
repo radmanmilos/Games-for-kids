@@ -52,21 +52,45 @@
       // pick a random animal for variety per level
       const animal = animals[Math.floor(Math.random()*animals.length)];
       screen.dataset.animal = animal.name;
-      scene.innerHTML = Array.from({length:n}).map(()=>`<div class="count-tile" data-animal="${animal.name}">${animal.emoji}</div>`).join('');
+      scene.innerHTML = Array.from({length:n}).map(()=>`<div class="count-tile" data-animal="${animal.name}" role="button" tabindex="0" aria-label="Животиња за бројање">${animal.emoji}</div>`).join('');
+      let counted = 0;
+      let countingDone = false;
 
       // update score icon to game icon (same as hub)
       const scoreIcon = screen.querySelector('.matching-icon');
       if (scoreIcon) scoreIcon.innerText = GAME_ICON;
 
-      // create choice buttons up to max (8)
-      const choices = Array.from({length:10}).map((_,i)=>i+1).slice(0, Math.max(4, Math.min(10,max)));
-      buttons.innerHTML = choices.map(c=>`<button class="count-choice" data-val="${c}">${c}</button>`).join('');
+      // phase 1: tap animals to count; hide choices until all counted
+      buttons.innerHTML = '';
+      result.innerText = 'Изброј животиње!';
 
-      buttons.querySelectorAll('button').forEach(b=>{
-        b.disabled = false;
-        b.style.visibility = 'visible';
-        b.addEventListener('click', onChoose);
+      scene.querySelectorAll('.count-tile').forEach(t=>{
+        t.classList.remove('counted');
+        function countOne() {
+          if (countingDone || t.classList.contains('counted')) return;
+          counted++;
+          t.classList.add('counted');
+          if(typeof popSound === 'function') popSound();
+          if(window.speech && window.speech.speak && numberNames[counted]) window.speech.speak(numberNames[counted]);
+          if (counted >= n) {
+            countingDone = true;
+            result.innerText = 'Колико их има?';
+            showChoices();
+          }
+        }
+        t.addEventListener('click', countOne);
+        t.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); countOne(); } });
       });
+
+      function showChoices() {
+        const choices = Array.from({length:10}).map((_,i)=>i+1).slice(0, Math.max(4, Math.min(10,max)));
+        buttons.innerHTML = choices.map(c=>`<button class="count-choice" data-val="${c}">${c}</button>`).join('');
+        buttons.querySelectorAll('button').forEach(b=>{
+          b.disabled = false;
+          b.style.visibility = 'visible';
+          b.addEventListener('click', onChoose);
+        });
+      }
     }
 
     function showCelebrate() {
