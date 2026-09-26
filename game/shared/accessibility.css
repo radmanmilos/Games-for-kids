@@ -16,3 +16,13 @@ button:focus, .hub-btn:focus, .back-btn:focus, .kitty-control:focus { outline: 4
 }
 /* Increase hit area without changing visual size */
 .hit-area { padding: 12px; margin: -6px; }
+
+/* Global reduced motion — respect OS preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

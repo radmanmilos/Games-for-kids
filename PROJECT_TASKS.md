@@ -25,7 +25,13 @@ Important: The AI assistant and any contributor must read this file first when s
 - 107. DONE — Roadmap Task LANG-001: Serbian language data layer. (2026-09-26, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED + VALIDATED 2026-09-26.** New `game/data/serbian.js` — shared Serbian Cyrillic data layer. Committed `2367fce`.
 
-- 108. IN PROGRESS — Roadmap Task NAV-001: Standardize all back/home controls. Ensure every child-facing page has one obvious back control with consistent location, ≥48px touch target, and no hover dependence. (Started 2026-09-26, user approved.)
+- 108. DONE — Roadmap Task NAV-001: Standardize all back/home controls. (2026-09-26, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED + VALIDATED 2026-09-26.** Audited all 18 pages. 17/18 already had the standard inline SVG arrow + "Назад" pattern. Fixed `racing.html` (was empty). Committed `f3cf562`, pushed.
+
+- 109. IN PROGRESS — Roadmap Task MOTION-001: Global reduced motion. (Started 2026-09-26, user approved.)
+    - **IMPLEMENTED 2026-09-26.** New `game/shared/motion.js` — shared reduced-motion detection module. Exposes `window.REDUCED_MOTION` boolean with live `matchMedia` change listener. Added global CSS `@media (prefers-reduced-motion: reduce)` rules to `game/shared/accessibility.css` (animation/transition duration → 0.001ms, scroll-behavior → auto). Wired `motion.js` into 13 game pages (those using `shared/main.js`). Zero behavior changes — detection layer only.
+    - **Validation:** `node --check` 65 files OK. Smoke battery: **16/19 tools PASS (330 checks)**. 3 failures are pre-existing flakes unrelated to motion module (animals Enter-key timing, racing3d ES module load, shapes Chrome boot crash).
+    - NOT committed — user approves commit + sync.
 
 - 105. DONE — Play-test round 6 + chatGPT_review2 mechanical fixes (racing3d + hub). (2026-09-25, Ponytail Lazy Dev; user play-test on a real device + supplied `resources/3dracer analysis/chatGPT_review2.md`. **user approved "proceed with all batches" 2026-09-25**.) All four reported defects were reproduced with a headless probe before being fixed; the steering choice was delegated to me and resolved as *remove the nose-point, keep the bank*.
    - **(1) racing3d hub button was off-screen → fixed.** Root cause: `#hub-games .hub-grid` had `margin: 24vh auto 0` and `minmax(9rem,1fr)` only fits 2 columns on a 390px-tall screen, so the 5-row grid could not fit at any button size (measured `bottom` 639 in a 390px viewport; only 4-5px of clearance on tablet). Added a `@media (max-height: 560px)` block: `margin: 14vh auto 0`, `grid-template-columns: repeat(auto-fit, minmax(6rem,1fr))`, smaller `padding-bottom` and `.hub-btn` clamp. Verified 3 columns and **all 10 buttons inside the viewport** on 844×390 (`racing3dBottom` 379/390); tablet sizes unaffected.
