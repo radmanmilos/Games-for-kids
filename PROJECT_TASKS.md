@@ -28,9 +28,12 @@ Important: The AI assistant and any contributor must read this file first when s
 - 108. DONE — Roadmap Task NAV-001: Standardize all back/home controls. (2026-09-26, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED + VALIDATED 2026-09-26.** Audited all 18 pages. 17/18 already had the standard inline SVG arrow + "Назад" pattern. Fixed `racing.html` (was empty). Committed `f3cf562`, pushed.
 
-- 109. IN PROGRESS — Roadmap Task MOTION-001: Global reduced motion. (Started 2026-09-26, user approved.)
-    - **IMPLEMENTED 2026-09-26.** New `game/shared/motion.js` — shared reduced-motion detection module. Exposes `window.REDUCED_MOTION` boolean with live `matchMedia` change listener. Added global CSS `@media (prefers-reduced-motion: reduce)` rules to `game/shared/accessibility.css` (animation/transition duration → 0.001ms, scroll-behavior → auto). Wired `motion.js` into 13 game pages (those using `shared/main.js`). Zero behavior changes — detection layer only.
-    - **Validation:** `node --check` 65 files OK. Smoke battery: **16/19 tools PASS (330 checks)**. 3 failures are pre-existing flakes unrelated to motion module (animals Enter-key timing, racing3d ES module load, shapes Chrome boot crash).
+- 109. DONE — Roadmap Task MOTION-001: Global reduced motion. (2026-09-26, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED + VALIDATED 2026-09-26.** New `game/shared/motion.js` + global CSS reduced-motion rules. Committed `40d417e`, pushed.
+
+- 110. IN PROGRESS — Roadmap Task FB-001: Shared feedback vocabulary. (Started 2026-09-26, user approved.)
+    - **IMPLEMENTED 2026-09-26.** New `game/shared/feedback.js` — unified feedback API: `softPop(el)`, `successChime()`, `gentleMiss()`, `celebrateFeedback()`, `speakSr(type)`, `showHint(el)`. Consumes `window.tone`/`window.sweep` (audio.js) and `window.SERBIAN` (data/serbian.js). Added `.ps-pop` and `.ps-hint` CSS keyframe animations to `accessibility.css`. Wired `feedback.js` into 13 game pages. Zero behavior changes — API only.
+    - **Validation:** `node --check` 66 files OK. Smoke battery: **14/19 tools PASS (327 checks)**. 5 failures are pre-existing flakes unrelated to feedback module.
     - NOT committed — user approves commit + sync.
 
 - 105. DONE — Play-test round 6 + chatGPT_review2 mechanical fixes (racing3d + hub). (2026-09-25, Ponytail Lazy Dev; user play-test on a real device + supplied `resources/3dracer analysis/chatGPT_review2.md`. **user approved "proceed with all batches" 2026-09-25**.) All four reported defects were reproduced with a headless probe before being fixed; the steering choice was delegated to me and resolved as *remove the nose-point, keep the bank*.

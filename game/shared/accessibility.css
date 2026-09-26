@@ -26,3 +26,17 @@ button:focus, .hub-btn:focus, .back-btn:focus, .kitty-control:focus { outline: 4
     scroll-behavior: auto !important;
   }
 }
+
+/* Shared feedback animations */
+@keyframes ps-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.ps-pop { animation: ps-pop 0.3s ease; }
+
+@keyframes ps-hint {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 210, 63, 0); }
+  50% { box-shadow: 0 0 0 8px rgba(255, 210, 63, 0.6); }
+}
+.ps-hint { animation: ps-hint 0.8s ease-in-out 2; }
