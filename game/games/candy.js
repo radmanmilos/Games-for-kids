@@ -498,7 +498,7 @@ function findHint(){
 }
 
 let hintTimer = null;
-function showHint(){
+function showCandyHint(){
   if(candyBusy) return;
   const hint = findHint();
   if(!hint){ showHintMsg('Нема потеза — сачекај звезду ⭐'); return; }
@@ -530,5 +530,5 @@ function showHintMsg(text){
 }
 
 const hintBtn = document.getElementById('candyHintBtn');
-if(hintBtn) hintBtn.addEventListener('click', ()=>{ if(window.popSound) window.popSound(); showHint(); });
+if(hintBtn) hintBtn.addEventListener('click', ()=>{ if(window.popSound) window.popSound(); showCandyHint(); });
 

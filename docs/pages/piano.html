@@ -52,14 +52,18 @@
     display:flex; flex-direction:column; align-items:center; gap:2.4vmin;
     margin-top:16vmin;
   }
-  #pianoModes{ display:flex; gap:2.5vmin; }
+  #pianoModes{ display:flex; align-items:center; gap:2.5vmin; }
   .mode-btn{
-    padding:2.4vmin 5vmin; border-radius:50vmin; border:none; cursor:pointer;
-    font-family:inherit; font-weight:700; font-size:4vmin;
-    color:var(--plum-soft); background:#fff; box-shadow:0 1vmin 0 rgba(0,0,0,.12);
+    padding:2.2vmin 4.2vmin; border-radius:50vmin; border:.4vmin solid var(--plum-soft); cursor:pointer;
+    font-family:inherit; font-weight:700; font-size:3.6vmin;
+    color:var(--plum-soft); background:#fff; box-shadow:0 .8vmin 0 rgba(0,0,0,.12);
   }
-  .mode-btn.on{ background:var(--plum); color:#fff; box-shadow:0 1vmin 0 rgba(0,0,0,.25); }
+  .mode-btn.on{ background:var(--plum); border-color:var(--plum); color:#fff; box-shadow:0 .8vmin 0 rgba(0,0,0,.25); }
   .mode-btn:active{ transform:scale(.92) translateY(3px); }
+  /* Free play is the loud, obvious choice; "Прати светло" stays the quiet one
+     (roadmap acceptance criterion: free play more prominent than challenge mode). */
+  #modeFree{ padding:3.4vmin 7vmin; font-size:5.4vmin; box-shadow:0 1.4vmin 0 rgba(0,0,0,.25); }
+  #modeSong{ padding:1.8vmin 3.4vmin; font-size:3.2vmin; }
 
   #songInfo{ display:none; flex-direction:column; align-items:center; gap:1.8vmin; }
   #songInfo.show{ display:flex; }
@@ -86,6 +90,10 @@
     padding:0 3vmin;
   }
   #pianoKeys{ display:flex; gap:1.2vmin; width:100%; max-width:110vmin; }
+  /* accessibility.css puts a 64px min-width tap floor on every button; 8 keys cannot
+     fit a 390px phone that way and #app clips the overflow, so the top keys would be
+     unreachable. The keys are 130px+ tall, so the tap target stays generous. */
+  #pianoKeys .piano-key{ min-width:0; }
   .piano-key{
     flex:1; height:min(34vmin, 40vh); border:none; border-radius:2.4vmin;
     background:#fff; box-shadow:0 1vmin 0 rgba(0,0,0,.14);
@@ -99,20 +107,42 @@
   }
   .piano-key .k-note{ font-size:3vmin; font-weight:700; color:#B9B2CC; margin-bottom:2.4vmin; }
   .piano-key:active{ transform:translateY(2px) scale(.97); }
-  .piano-key.lit{ background:var(--kcolor); transform:translateY(-2vmin); }
-  .piano-key.lit .k-note{ color:#fff; }
-  .piano-key.lit::before{ background:rgba(255,255,255,.35); }
+  /* "Прати светло": the expected key softly lights - a resting glow in the key's own
+     colour plus a slow pulse, instead of a hard colour swap, so the keyboard stays calm.
+     The resting glow is declared HERE (not only inside the keyframes) so it survives both
+     reduced motion and the one-shot .hit pop that would otherwise shadow the animation. */
+  .piano-key.lit{
+    box-shadow:0 1vmin 0 rgba(0,0,0,.14), 0 0 0 .4vmin var(--kcolor), 0 0 2vmin .6vmin var(--kcolor);
+    animation:softLight 1.2s ease-in-out infinite;
+  }
+  .piano-key.lit .k-note{ color:var(--kcolor); }
+  @keyframes softLight{
+    0%,100%{ box-shadow:0 1vmin 0 rgba(0,0,0,.14), 0 0 0 .4vmin var(--kcolor), 0 0 2vmin .6vmin var(--kcolor); }
+    50%{ box-shadow:0 1vmin 0 rgba(0,0,0,.14), 0 0 0 1vmin var(--kcolor), 0 0 6vmin 1.6vmin var(--kcolor); }
+  }
+  /* Wrong press: no shake, no buzz - the light just pulses again where we are waiting. */
+  .piano-key.hint{
+    box-shadow:0 1vmin 0 rgba(0,0,0,.14), 0 0 0 .6vmin var(--kcolor), 0 0 3vmin .8vmin var(--kcolor);
+    animation:hintLight .5s ease-in-out 2;
+  }
+  @keyframes hintLight{
+    0%,100%{ box-shadow:0 1vmin 0 rgba(0,0,0,.14), 0 0 0 .6vmin var(--kcolor), 0 0 3vmin .8vmin var(--kcolor); }
+    50%{ box-shadow:0 1vmin 0 rgba(0,0,0,.14), 0 0 0 1.5vmin var(--kcolor), 0 0 9vmin 2.4vmin var(--kcolor); }
+  }
+  /* Brief positive highlight on a correct press. Uses outline, not box-shadow, so it can
+     play on top of the pulsing .lit glow on the same key. */
+  .piano-key.good{ outline:.7vmin solid var(--green); outline-offset:-.7vmin; }
   .piano-key.hit{ animation:keyPop .3s ease; }
-  .piano-key.shake{ animation:keyShake .35s ease; }
   @keyframes keyPop{ 0%,100%{transform:scale(1)} 40%{transform:scale(.93)} }
-  @keyframes keyShake{ 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
   @media (prefers-reduced-motion: reduce){
-    .piano-key.hit, .piano-key.shake{ animation:none; }
-    .piano-key.lit{ transform:none; }
+    .piano-key.hit{ animation:none; }
+    /* The soft light IS the gameplay cue, so only the pulsing stops - the glow stays. */
+    .piano-key.lit, .piano-key.hint{ animation:none; }
   }
 
   /* ---------- FEEDBACK ---------- */
-  #pianoFeedback{ height:6vmin; margin:1vmin 0 3vmin; font-size:4vmin; font-weight:700; color:var(--pink); text-align:center; }
+  /* Neutral, encouraging colour - this line is a hint, never a scolding. */
+  #pianoFeedback{ height:6vmin; margin:1vmin 0 3vmin; font-size:3.8vmin; font-weight:600; color:var(--plum-soft); text-align:center; }
 
   /* ---------- FINISH PANEL ---------- */
   #pianoFinish{
@@ -149,14 +179,14 @@
 
     <div id="pianoControls">
       <div id="pianoModes">
-        <button id="modeFree" class="mode-btn on">Свирај</button>
-        <button id="modeSong" class="mode-btn">Свирај песму</button>
+        <button id="modeFree" class="mode-btn on" aria-label="Свирај слободно — слободна свирка">Свирај слободно</button>
+        <button id="modeSong" class="mode-btn" aria-label="Прати светло — свирај песму тако што пратиш светло">Прати светло</button>
       </div>
       <div id="songInfo">
         <div id="songChips"></div>
         <div id="songRow">
           <button id="pianoPreview">🔊 Чуј песму</button>
-          <p id="pianoCounter">1 од 42</p>
+          <p id="pianoCounter" aria-live="polite">1 од 42</p>
         </div>
       </div>
     </div>

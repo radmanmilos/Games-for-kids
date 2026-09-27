@@ -3,13 +3,16 @@
    4 quiz games, wrong-answer nudge, correct-answer advance, session end + replay.
    Also tests category tabs: 4 tabs visible in activity mode, active state,
    tab switching between categories.
-   Run:  node tools/kids_smoke.js     (from the repo root or anywhere)
+   Only the speech + WebAudio primitives are stubbed, so the real shared feedback
+   wrappers (popSound / gentleMiss / successChime / celebrate) execute — that is
+   what pins the window.tone(freq, dur, delay, type, vol) signature (task 120).
+   Run:  node tools/classroom_smoke.js  (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function(){}};window.popSound=window.gentleMiss=function(){}; true`;
+const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function(){}};window.tone=window.sweep=function(){}; true`;
 
 const CLICK = sel => `document.querySelector('${sel}').click(); true`;
 

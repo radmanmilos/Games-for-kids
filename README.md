@@ -502,6 +502,8 @@ The hub carries **two button sets** — "За малишане" (the 4 learn-and
 
 Every activity has an autoplay button (▶) that walks through the tiles one by one, advancing only after the spoken word finishes plus a short pause, so the child has time to repeat. No celebration icon — the goal is to learn and repeat the words. All text is Serbian Cyrillic, and all speech is Serbian (pre-generated MP3 assets).
 
+**Category tabs (Phase 2, GAME-CLASS-001, task 120):** the learn-and-repeat activities now carry a visual category tab bar — Азбука / Бројеви / Облици / Боје — so the child can jump between content areas without going back to the hub; the active tab always matches the open activity.
+
 Educational goals:
 
 - Alphabet
@@ -523,7 +525,7 @@ Paper Kitty Adventure has been fully integrated into Petrin svet and the placeho
 - Navigation, audio, speech, and utilities are shared modules.
 - **Accessibility / reduced motion (task 83, 2026-08-07, REVERTED):** the shared `window.reducedMotion()` utility in `shared/utils.js` (JS gates) + `@media (prefers-reduced-motion: reduce)` collapse in `shared/accessibility.css` was implemented then **fully reverted per user decision** — the user's OS has `prefers-reduced-motion: reduce` active, so it stripped the memory card-flip, candy combo/hint/level-up, and obstacle-hit-particle animations that ARE the gameplay feedback for kids. All animations are restored. Two pre-existing task-79 split regressions were fixed along the way: driving's dashed road divider now renders (`roadTopY()` fix) and ocean/space obstacles draw again (restored `cfg.drawObstacle` dispatch).
 
-**Current focus: Phase 5 — New Game: Мала тркачица (Little Racer).** All **sixteen** games are playable. Phase 3's Учионица kids tier and Phase 4's new-game set are complete; the 7 УЧЕЊЕ learning apps are out of scope for this phase. Racing game stages (tasks 95–99) are each approved and built in turn. See the [Development Roadmap](#development-roadmap) for phase status.
+**Current focus: Phase 6 — Roadmap Cohesion** (per `PETRIN_SVET_MASTER_EXECUTION_ROADMAP.md`, user decision 2026-09-26). All **sixteen** games are playable. Phase 2 (Toddler Adaptation) is being worked one game at a time — 8 of 10 done through task 121 (GAME-PIANO-001); next is GAME-MATCH-001, then GAME-SHAPES-001. Racing3D (Phase 5) is stable and awaiting user play-test. See `PROJECT_TASKS.md` for live task status and the [Development Roadmap](#development-roadmap) for phase history.
 
 ---
 
@@ -958,7 +960,7 @@ Each mini-game is self-contained and uses shared systems where possible.
 
 Planned additions include (note: Alphabet, Numbers, and Colors are now covered as Учионица activities; Phase 4 builds from this list; ✅ = already shipped):
 
-- 🎵 Piano — ✅ (Клавир, task 58; 3 songs: Трепери, Срећан ти рођендан, Џингл белс — task 59)
+- 🎵 Piano — ✅ (Клавир, task 58; 3 songs: Трепери, Срећан ти рођендан, Џингл белс — task 59; task 121: "Прати светло" soft-light song mode, no-punish wrong key, free play made visually primary)
 - 🥁 Musical Instruments
 - 🎈 Balloon Pop
 - 🚜 Farm
@@ -1123,7 +1125,7 @@ Done in Phase 3 before the deferral (kept as-is, separate standalone games):
 
 Build the next batch of mini-games, one per task, picked from the [Future Mini Games](#future-mini-games) list:
 
-- 🎵 Piano — ✅ built (2026-08-04, as **Клавир**, task 58: 8-key one-octave keyboard, free play + "Свирај песму" follow-the-melody mode; **3 songs** since task 59: Трепери, Срећан ти рођендан, Џингл белс — chip picker in song mode)
+- 🎵 Piano — ✅ built (2026-08-04, as **Клавир**, task 58: 8-key one-octave keyboard, free play + "Свирај песму" follow-the-melody mode; **3 songs** since task 59: Трепери, Срећан ти рођендан, Џингл белс — chip picker in song mode) **Task 121 (GAME-PIANO-001, 2026-09-27):** song mode is now "Прати светло" — the expected key softly lights (resting glow + slow pulse in the key colour), a correct press gets a brief green highlight and advances the counter, and a wrong press no longer punishes at all (no buzz, no shake, no red text): the light just pulses again where the child should press, with the neutral hint "Светли ти овде 🎵". Free play ("Свирај слободно") is now visibly the primary choice. Song data moved to the roadmap shape `{ id, title, notes:['C4',...], tempo, speech }` so Serbian children's songs can be added as one array. `piano_smoke.js` 15 → 22 checks.
 - 🥁 Musical Instruments
 - 🎈 Balloon Pop
 - 🚜 Farm

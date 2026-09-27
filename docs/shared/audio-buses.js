@@ -69,7 +69,7 @@
     const audioCtx = ctx();
     if (!audioCtx || !window.tone) return;
     const effectiveVol = (vol || 0.15) * buses[bus].gain;
-    window.tone(freq, duration, type || 'sine', effectiveVol);
+    window.tone(freq, duration, 0, type || 'sine', effectiveVol);
   }
 
   // Standardized audio events.
