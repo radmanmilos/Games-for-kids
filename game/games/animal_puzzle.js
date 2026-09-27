@@ -9,7 +9,7 @@
     {title:'Другари у свемиру', theme:'space', skyTop:'#0B1E4B', skyBottom:'#2B4B9E', hill:'#0B0F2B', ground:'#B9C6D9', groundDark:'#8FA0B8', animals:['🚀','🪐','👨‍🚀','⭐']},
     {title:'Другари на снегу', theme:'winter', skyTop:'#B8D8F0', skyBottom:'#EAF6FF', hill:'#E3F1FA', ground:'#F0F8FF', groundDark:'#D4E8F4', animals:['⛄','🛷','🐧','❄️']}
   ];
-  const GRIDS = [2,3];
+  const GRIDS = [{rows:1,cols:2},{rows:2,cols:2},{rows:3,cols:3}];
 
   function rr(ctx,x,y,w,h,r){
     ctx.beginPath();
@@ -314,10 +314,12 @@
     screen.className = 'screen';
     screen.innerHTML = '<button class="back-btn" aria-label="Назад на игре"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>' +
       '<div class="score">Слагалице <span id="puzzleScore">0</span></div>' +
-      '<div class="puzzle-area"><h1 id="puzzleTitle"></h1><div class="puzzle-info" id="puzzleLevel"></div>' +
+      '<div class="puzzle-area"><div class="puzzle-header"><h1 id="puzzleTitle"></h1><div class="puzzle-info" id="puzzleLevel"></div>' +
+      '<button class="peek-btn" id="puzzlePeek" aria-label="Погледај слику" hidden>👁</button></div>' +
       '<button class="scene-button" id="sceneButton" aria-label="Почни слагалицу"><canvas id="scenePreview" width="640" height="420"></canvas></button>' +
       '<div class="scene-hint" id="sceneHint">Додирни слику да направиш слагалицу</div>' +
       '<div id="puzzleStage" hidden><div id="puzzleBoard" aria-label="Место за слагалицу"></div>' +
+      '<div id="puzzlePreviewOverlay" hidden><img id="puzzlePreviewImg" alt="Цела слика"></div>' +
       '<button id="puzzleNext" aria-label="Следећа слагалица">➜</button></div></div>';
     app.appendChild(screen);
 
@@ -330,13 +332,16 @@
     const board = screen.querySelector('#puzzleBoard');
     const next = screen.querySelector('#puzzleNext');
     const scoreEl = screen.querySelector('#puzzleScore');
+    const peekBtn = screen.querySelector('#puzzlePeek');
+    const overlay = screen.querySelector('#puzzlePreviewOverlay');
+    const previewImg = screen.querySelector('#puzzlePreviewImg');
     let level = 0;
     let score = 0;
     let rows = GRIDS[0], columns = GRIDS[0];
     let sceneImage = '';
     let placedCount = 0;
 
-    function setGrid(){ const s = GRIDS[level % GRIDS.length]; rows = s; columns = s; }
+    function setGrid(){ const g = GRIDS[Math.min(level, GRIDS.length-1)]; rows = g.rows; columns = g.cols; }
 
     function drawScene(scene){
       paint(preview.getContext('2d'), scene);
@@ -345,12 +350,18 @@
 
     function updateLabels(scene){
       title.textContent = scene.title;
-      levelLabel.textContent = 'Слагалица ' + (level + 1) + '  ·  ' + columns + '×' + columns;
+      levelLabel.textContent = 'Слагалица ' + (level + 1) + '  ·  ' + rows + '×' + columns;
     }
 
     function setPiecePosition(piece,left,top){
       piece.style.left = left + 'px';
       piece.style.top = top + 'px';
+    }
+
+    function snapPiece(piece,left,top){
+      piece.classList.add('snapping');
+      setPiecePosition(piece,left,top);
+      setTimeout(()=>piece.classList.remove('snapping'),200);
     }
 
     function scatterPieces(pieces){
@@ -412,6 +423,7 @@
       sceneButton.hidden = true;
       hint.hidden = true;
       stage.hidden = false;
+      peekBtn.hidden = false;
       board.innerHTML = '';
       board.style.backgroundImage = 'none';
       board.style.gridTemplateColumns = 'repeat(' + columns + ',1fr)';
@@ -437,7 +449,7 @@
           piece.style.height = cellH + 'px';
           piece.style.backgroundImage = 'url("' + sceneImage + '")';
           piece.style.backgroundSize = (columns * 100) + '% ' + (rows * 100) + '%';
-          piece.style.backgroundPosition = (col * 100 / (columns - 1)) + '% ' + (row * 100 / (rows - 1)) + '%';
+          piece.style.backgroundPosition = (col * 100 / (columns - 1)) + '% ' + (rows > 1 ? row * 100 / (rows - 1) : 0) + '%';
           pieces.push(piece);
           stage.appendChild(piece);
           enableDragging(piece);
@@ -452,6 +464,7 @@
       let dragging = false;
       piece.addEventListener('pointerdown',(event)=>{
         if(piece.classList.contains('placed')) return;
+        piece.classList.remove('snapping');
         const rect = piece.getBoundingClientRect();
         offsetX = event.clientX - rect.left;
         offsetY = event.clientY - rect.top;
@@ -502,9 +515,9 @@
       const closeEnough = Math.abs(pieceCenterX-targetCenterX) < cellW*.42 &&
         Math.abs(pieceCenterY-targetCenterY) < cellH*.42;
       if(!closeEnough) return;
-      setPiecePosition(piece,targetLeft,targetTop);
       piece.style.width = cellW + 'px';
       piece.style.height = cellH + 'px';
+      snapPiece(piece,targetLeft,targetTop);
       piece.classList.add('placed');
       placedCount += 1;
       if(typeof popSound === 'function') popSound();
@@ -520,9 +533,9 @@
       const cellH = boardRect.height / rows;
       const targetLeft = boardRect.left - stageRect.left + col * cellW;
       const targetTop = boardRect.top - stageRect.top + row * cellH;
-      setPiecePosition(piece, targetLeft, targetTop);
       piece.style.width = cellW + 'px';
       piece.style.height = cellH + 'px';
+      snapPiece(piece, targetLeft, targetTop);
       piece.classList.add('placed');
       placedCount += 1;
       if(typeof popSound === 'function') popSound();
@@ -550,7 +563,20 @@
       sceneButton.hidden = false;
       hint.hidden = false;
       stage.hidden = true;
+      peekBtn.hidden = true;
+      overlay.hidden = true;
     }
+
+    function showPreview(){
+      previewImg.src = sceneImage;
+      previewImg.alt = title.textContent;
+      overlay.hidden = false;
+    }
+    peekBtn.addEventListener('click',()=>{
+      if(typeof popSound === 'function') popSound();
+      if(overlay.hidden) showPreview(); else overlay.hidden = true;
+    });
+    overlay.addEventListener('click',()=>{ overlay.hidden = true; });
 
     sceneButton.addEventListener('click',startPuzzle);
     next.addEventListener('click',nextPuzzle);

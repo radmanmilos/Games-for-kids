@@ -1,9 +1,11 @@
-/* Petrin svet Puzzle (Слагалице) smoke test — task 67 polish.
+/* Petrin svet Puzzle (Слагалице) smoke test — task 67 polish + GAME-PUZZLE-001.
    Drives pages/animal_puzzle.html headlessly: 8 painted scenes cycle (5 original
    + farm/space/winter), images carry NO painted title, every picture gets a thin
    white frame with a plum inner line (corner/edge reference), and pieces are
    scattered AROUND the placement board (never covering it, no piece overlap).
-   Pieces are solved via keyboard (Enter) which snaps them into their slots.
+   GAME-PUZZLE-001: developmental levels advance 1×2 → 2×2 → 3×3 (capped),
+   placed pieces animate into the slot (left/top transition), and a peek button
+   overlays the finished scene on demand. Pieces are solved via keyboard (Enter).
    Run:  node tools/puzzle_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -21,6 +23,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     if (!ready) await sleep(200);
   }
   check('puzzle page boots with scene preview + start button', ready);
+
+  const introPeek = await h.evalv(`document.getElementById('puzzlePeek').hidden && document.getElementById('puzzlePreviewOverlay').hidden`);
+  check('peek button + overlay hidden on the intro screen', introPeek === true);
 
   const px = await h.evalv(`JSON.stringify((() => {
     const g = document.getElementById('scenePreview').getContext('2d');
@@ -51,8 +56,23 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     label: document.getElementById('puzzleLevel').textContent
   }))())`);
   const B = JSON.parse(boot);
-  check('first puzzle starts 2×2: 4 pieces, 4 slots, label "Слагалица 1 · 2×2"',
-    B.pieces === 4 && B.slots === 4 && B.label === 'Слагалица 1  ·  2×2', JSON.stringify(B));
+  check('first puzzle starts 1×2 (2 pieces): label "Слагалица 1 · 1×2"',
+    B.pieces === 2 && B.slots === 2 && B.label === 'Слагалица 1  ·  1×2', JSON.stringify(B));
+
+  const peek = await h.evalv(`(() => {
+    const btn = document.getElementById('puzzlePeek');
+    const overlay = document.getElementById('puzzlePreviewOverlay');
+    const before = { btnHidden: btn.hidden, overlayHidden: overlay.hidden };
+    btn.click();
+    const shown = { overlayHidden: overlay.hidden, src: document.getElementById('puzzlePreviewImg').src.startsWith('data:image/png') };
+    overlay.click();
+    return JSON.stringify({ before, shown, afterHidden: overlay.hidden });
+  })()`);
+  const PK = JSON.parse(peek);
+  check('peek: visible during play; tap shows finished scene, tap again hides it',
+    PK.before.btnHidden === false && PK.before.overlayHidden === true &&
+    PK.shown.overlayHidden === false && PK.shown.src === true && PK.afterHidden === true,
+    JSON.stringify(PK));
 
   const ring2 = await h.evalv(`JSON.stringify((() => {
     const b = document.getElementById('puzzleBoard').getBoundingClientRect();
@@ -69,7 +89,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     return { onBoard, overlaps };
   })())`);
   const R2 = JSON.parse(ring2);
-  check('2×2 pieces ring the board: none on the board, none overlapping',
+  check('1×2 pieces ring the board: none on the board, none overlapping',
     R2.onBoard === 0 && R2.overlaps === 0, JSON.stringify(R2));
 
   const finish = await h.evalv(`(() => {
@@ -87,8 +107,16 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     });
   })()`);
   const F = JSON.parse(finish);
-  check('completing the 2×2 puzzle: score 1, next button shows, board shows picture',
+  check('completing the 1×2 puzzle: score 1, next button shows, board shows picture',
     F.score === '1' && F.nextShown && F.bg.startsWith('url("data:image/png;'), JSON.stringify(F));
+
+  const snap = await h.evalv(`(() => {
+    const p = document.querySelector('#puzzleStage .piece.placed');
+    return JSON.stringify({ snapping: p.classList.contains('snapping'), transition: getComputedStyle(p).transitionProperty });
+  })()`);
+  const S = JSON.parse(snap);
+  check('snap animation wired: placed piece transitions left/top into the slot',
+    S.snapping && S.transition.includes('left') && S.transition.includes('top'), JSON.stringify(S));
 
   await h.evalv(`document.getElementById('puzzleNext').click(); document.getElementById('sceneButton').click();`);
   await sleep(250);
@@ -98,8 +126,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     label: document.getElementById('puzzleLevel').textContent
   }))())`);
   const L2 = JSON.parse(lvl2);
-  check('second puzzle is 3×3, next scene title "Немир у кући"',
-    L2.pieces === 9 && L2.title === 'Немир у кући' && L2.label === 'Слагалица 2  ·  3×3', JSON.stringify(L2));
+  check('second puzzle is 2×2 (4 pieces), next scene title "Немир у кући"',
+    L2.pieces === 4 && L2.title === 'Немир у кући' && L2.label === 'Слагалица 2  ·  2×2', JSON.stringify(L2));
 
   const ring3 = await h.evalv(`JSON.stringify((() => {
     const b = document.getElementById('puzzleBoard').getBoundingClientRect();
@@ -116,7 +144,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     return { onBoard, overlaps };
   })())`);
   const R3 = JSON.parse(ring3);
-  check('3×3 pieces ring the board: none on the board, none overlapping',
+  check('2×2 pieces ring the board: none on the board, none overlapping',
     R3.onBoard === 0 && R3.overlaps === 0, JSON.stringify(R3));
 
   const cycle = await h.evalv(`(() => {
@@ -140,8 +168,17 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const sizes = C.out.map(o => o.n);
   check('all 8 scenes cycle in order (house, savanna, sea, forest, farm, space, winter)',
     JSON.stringify(titles) === JSON.stringify(expected), JSON.stringify(titles));
-  check('grids alternate 3×3 / 2×2 across scenes', JSON.stringify(sizes) === JSON.stringify([9,4,9,4,9,4,9]), JSON.stringify(sizes));
+  check('developmental progression: 1×2, then 2×2, then 3×3 for the rest',
+    JSON.stringify(sizes) === JSON.stringify([4,9,9,9,9,9,9]), JSON.stringify(sizes));
   check('final score after all 8 puzzles is 8', C.score === '8', 'score=' + C.score);
+
+  const last = await h.evalv(`JSON.stringify((() => ({
+    pieces: document.querySelectorAll('#puzzleStage .piece').length,
+    label: document.getElementById('puzzleLevel').textContent
+  }))())`);
+  const L8 = JSON.parse(last);
+  check('eighth puzzle is 3×3 (9 pieces), label "Слагалица 8 · 3×3"',
+    L8.pieces === 9 && L8.label === 'Слагалица 8  ·  3×3', JSON.stringify(L8));
 
   h.close();
   const fails = getFails();
