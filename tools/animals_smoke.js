@@ -53,10 +53,13 @@ const ANIMALS = ['🐶','🐱','🐮','🦁','🐘','🐸','🐷','🦆','🦊',
   const bounced = await h.evalv(`document.getElementById('animalCard').classList.contains('bounce')`);
   check('card can receive bounce class', bounced === true);
 
-  await h.evalv(`(function(){ const card = document.getElementById('animalCard'); const ev = new KeyboardEvent('keydown', {key:'Enter', bubbles:true}); card.dispatchEvent(ev); return true; })()`);
-  const afterKey = await h.evalv(`JSON.stringify({
-    bounce: document.getElementById('animalCard').classList.contains('bounce')
-  })`);
+  const afterKey = await h.evalv(`(function(){
+    const card = document.getElementById('animalCard');
+    card.classList.remove('bounce');
+    const ev = new KeyboardEvent('keydown', {key:'Enter', bubbles:true});
+    card.dispatchEvent(ev);
+    return JSON.stringify({ bounce: card.classList.contains('bounce') });
+  })()`);
   const AK = JSON.parse(afterKey);
   check('Enter key on card triggers play (bounce class toggled)', AK.bounce === true);
 

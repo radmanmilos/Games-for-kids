@@ -105,6 +105,32 @@
   }
   .coloring-swatch:active{ transform: scale(.9) translateY(3px); }
 
+  /* ---------- COLORING MODE TOGGLE ---------- */
+  .coloring-mode-toggle{
+    position:absolute; top:4vmin; right:4vmin; z-index:20;
+    border:none; border-radius:999px; cursor:pointer;
+    background:var(--plum); color:#fff;
+    font:600 clamp(11px,2vmin,18px)/1 'Fredoka',sans-serif;
+    padding:1.4vmin 2.8vmin;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.2);
+    display:flex; align-items:center; gap:.8vmin;
+    transition:transform .12s ease,background .2s;
+  }
+  .coloring-mode-toggle:active{ transform:scale(.94) translateY(2px); }
+  .coloring-mode-toggle.free{ background:var(--pink); }
+  .coloring-clear-btn{
+    position:absolute; bottom:12vmin; right:4vmin; z-index:20;
+    border:none; border-radius:999px; cursor:pointer;
+    background:var(--sky); color:#fff;
+    font:600 clamp(11px,2vmin,18px)/1 'Fredoka',sans-serif;
+    padding:1.4vmin 2.8vmin;
+    box-shadow:0 1vmin 0 rgba(0,0,0,.2);
+    display:none; align-items:center; gap:.8vmin;
+    transition:transform .12s ease;
+  }
+  .coloring-clear-btn:active{ transform:scale(.94) translateY(2px); }
+  .coloring-clear-btn.visible{ display:flex; }
+
   /* ---------- ALL-11 REWARD ---------- */
   .coloring-reward{
     position:fixed; inset:0; z-index:15;

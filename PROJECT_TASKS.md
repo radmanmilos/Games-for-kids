@@ -17,7 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
-- 118. IN PROGRESS — Phase 2, Game 5: GAME-ANIMALS-001 — Animal recognition mode. (2026-09-27, Ponytail Lazy Dev; user approved.)
+- 118. DONE — Phase 2, Game 5: GAME-ANIMALS-001 — Animal recognition mode. (2026-09-27, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED + COMMITTED 2026-09-27.** Added "Пронађи животињу" recognition mode. Adaptive difficulty: rounds 1-3 = 2 choices, round 4+ = 3. Correct: green glow + celebrate + speak name + play sound + auto-advance. Wrong: gentleMiss + shake, after 2 misses correct answer glows yellow as hint. `animals_smoke.js` 13 → **24 checks, ALL PASS**. Committed `8e4ac79`.
+
+- 119. IN PROGRESS — Phase 2, Game 6: GAME-COLOR-001 — Animal recognition mode. (2026-09-27, Ponytail Lazy Dev; user approved.)
     - Roadmap §16 spec: add "Пронађи животињу" mode — prompt "Где је пас?", 2 choices (easiest) → 3 choices (older), adaptive difficulty, visually distinct animals first. Correct: highlight + success + speak name + play sound + tiny celebration. Wrong: gentle cue, keep choices visible, optionally glow correct after repeated misses. Both free exploration AND recognition without complex mode menu.
 
 - 106. DONE — Roadmap Task DS-001: Shared design tokens. (2026-09-26, Ponytail Lazy Dev; user approved.)
