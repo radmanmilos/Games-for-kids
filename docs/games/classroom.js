@@ -190,6 +190,7 @@
     $('activityShowcase').innerHTML = '';
     $('activityCaption').textContent = 'Додирни сличицу!';
     buildGrid();
+    updateTabs();
   }
 
   function enterKidsGame(kind) {
@@ -254,6 +255,12 @@
     });
   }
 
+  function updateTabs() {
+    document.querySelectorAll('.class-tab').forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.tab === currentActivity);
+    });
+  }
+
   function startClassroom() {
     document.querySelectorAll('#classroomHub .activity-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -279,6 +286,12 @@
       if (window.popSound) window.popSound();
       if (autoplayActive) stopAutoplay();
       else startAutoplay();
+    });
+    document.querySelectorAll('.class-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        if (window.popSound) window.popSound();
+        enterActivity(tab.dataset.tab);
+      });
     });
   }
 

@@ -133,5 +133,6 @@
   window.kidsGame = {
     start,
     exit: () => { const b = Q('kidsBack'); if (b) b.click(); },
+    isBusy: () => busy,
   };
 }());

@@ -103,6 +103,27 @@
     margin:0; font-size:5.5vmin; color:var(--plum-soft);
   }
 
+  /* ---------- CATEGORY TABS ---------- */
+  .class-tabs{
+    position:absolute; top:14vmin; left:50%; transform:translateX(-50%);
+    display:flex; gap:1.5vmin; z-index:15;
+  }
+  .class-tab{
+    border:none; border-radius:999px; cursor:pointer;
+    font:600 clamp(11px,2vmin,18px)/1 'Fredoka',sans-serif;
+    padding:1.2vmin 2.4vmin;
+    background:#fff; color:var(--plum-soft);
+    box-shadow:0 .6vmin 0 rgba(0,0,0,.1);
+    transition:transform .12s ease,background .2s,color .2s;
+    display:flex; align-items:center; gap:.6vmin;
+  }
+  .class-tab:active{ transform:scale(.94) translateY(2px); }
+  .class-tab.active{
+    background:var(--plum); color:#fff;
+    box-shadow:0 .6vmin 0 rgba(0,0,0,.2);
+  }
+  .class-tab .tab-emoji{ font-size:1.1em; }
+
   .activity-grid{
     display:grid;
     grid-template-columns:repeat(auto-fill, minmax(11vmin, 1fr));
@@ -257,6 +278,12 @@
     <div id="classroomActivity" hidden>
       <button id="classroomBack" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
       <h2 id="activityTitle"></h2>
+      <div class="class-tabs" id="classTabs">
+        <button class="class-tab" data-tab="alphabet"><span class="tab-emoji">🔤</span>Азбука</button>
+        <button class="class-tab" data-tab="numbers"><span class="tab-emoji">🔢</span>Бројеви</button>
+        <button class="class-tab" data-tab="shapes"><span class="tab-emoji">🔷</span>Облици</button>
+        <button class="class-tab" data-tab="colors"><span class="tab-emoji">🎨</span>Боје</button>
+      </div>
       <div id="activityGrid" class="activity-grid"></div>
       <div id="activityDisplay" class="activity-display">
         <div id="activityShowcase"></div>

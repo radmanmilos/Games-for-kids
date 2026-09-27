@@ -49,15 +49,15 @@ if (!(opts.concurrency >= 1)) opts.concurrency = CONCURRENCY_DEFAULT;
 const PAGE_SMOKE = {
   animals: 'animals_smoke', shapes: 'shapes_smoke', matching_game: 'candy_smoke',
   animal_memory: 'memory_smoke', animal_puzzle: 'puzzle_smoke', animal_counting: 'counting_smoke',
-  coloring: 'coloring_smoke', classroom: 'kids_smoke', tracing: 'tracing_smoke', piano: 'piano_smoke',
+  coloring: 'coloring_smoke', classroom: 'classroom_smoke', tracing: 'tracing_smoke', piano: 'piano_smoke',
   driving: 'driving_smoke', ocean: 'ocean_smoke', dino: 'dino_smoke', space: 'space_smoke',
   racing: 'racing_smoke', racing3d: 'racing3d_smoke', papper_kitty: 'kitty_smoke',
 };
 const GAME_SMOKE = {
   animals: 'animals_smoke', shapes: 'shapes_smoke', candy: 'candy_smoke', kitty: 'kitty_smoke',
   'kitty-standalone': 'kitty_smoke', animal_puzzle: 'puzzle_smoke', animal_counting: 'counting_smoke',
-  animal_memory: 'memory_smoke', coloring: 'coloring_smoke', classroom: 'kids_smoke',
-  kids_games: 'kids_smoke', tracing: 'tracing_smoke', piano: 'piano_smoke',
+  animal_memory: 'memory_smoke', coloring: 'coloring_smoke', classroom: 'classroom_smoke',
+  kids_games: 'classroom_smoke', tracing: 'tracing_smoke', piano: 'piano_smoke',
   adventure: ['adventure_smoke', 'driving_smoke', 'ocean_smoke', 'dino_smoke', 'space_smoke'],
   'adventure-music': ['adventure_smoke', 'driving_smoke', 'ocean_smoke', 'dino_smoke', 'space_smoke'],
   'adventure-modes': ['adventure_smoke', 'driving_smoke', 'ocean_smoke', 'dino_smoke', 'space_smoke'],

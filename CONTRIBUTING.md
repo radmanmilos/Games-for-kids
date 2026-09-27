@@ -21,7 +21,7 @@ Before opening a PR, run the smallest targeted check that covers your change:
 - Memory → `node tools/memory_smoke.js`
 - Candy → `node tools/candy_smoke.js`
 - Puzzle → `node tools/puzzle_smoke.js`
-- Classroom kids tier → `node tools/kids_smoke.js`
+- Classroom kids tier → `node tools/classroom_smoke.js`
 - Racing (Мала тркачица) → `node tools/racing_smoke.js`
 - Racing 3D (Мала тркачица 3Д) → `node tools/racing3d_smoke.js`
 - Animals / Shapes / Counting / Coloring → `node tools/animals_smoke.js`, `node tools/shapes_smoke.js`, `node tools/counting_smoke.js`, `node tools/coloring_smoke.js`
