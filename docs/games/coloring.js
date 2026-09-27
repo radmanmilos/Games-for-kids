@@ -238,6 +238,7 @@ const coloringSceneLabels = {
 };
 let coloringSceneIdx = 0;
 let coloringSceneOrder = [];
+let coloringMode = 'ref'; // 'ref' = Обоји по слици, 'free' = Слободно бојење
 
 // Export startColoring for standalone use
 if (typeof window !== 'undefined') window.startColoring = startColoring;
@@ -317,6 +318,10 @@ function buildColoringScene(){
 function tapColoringRegion(el){
   if(coloringBusy || el.classList.contains('ok')) return;
   el.style.fill = coloringColor;
+  if(coloringMode === 'free'){
+    if(window.popSound) window.popSound();
+    return;
+  }
   if(coloringColor === el.dataset.target){
     el.classList.add('ok');
     popSound();
@@ -369,5 +374,23 @@ function startColoring(){
       coloringSceneIdx++;
       buildColoringScene();
     }
+  });
+  const modeToggle = document.getElementById('coloringModeToggle');
+  if(modeToggle) modeToggle.addEventListener('click', ()=>{
+    coloringMode = coloringMode === 'ref' ? 'free' : 'ref';
+    modeToggle.classList.toggle('free', coloringMode === 'free');
+    modeToggle.textContent = coloringMode === 'free' ? '🖼️ По слици' : '🎨 Слободно';
+    const clearBtn = document.getElementById('coloringClear');
+    if(clearBtn) clearBtn.classList.toggle('visible', coloringMode === 'free');
+    if(window.popSound) window.popSound();
+  });
+  const clearBtn = document.getElementById('coloringClear');
+  if(clearBtn) clearBtn.addEventListener('click', ()=>{
+    if(coloringMode !== 'free') return;
+    if(window.popSound) window.popSound();
+    coloringSvg.querySelectorAll('.coloring-region').forEach(el=>{
+      el.style.fill = coloringHint;
+      el.classList.remove('ok');
+    });
   });
 }

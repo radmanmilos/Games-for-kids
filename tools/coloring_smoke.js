@@ -1,7 +1,8 @@
-/* Coloring smoke test — Phase 5 task 77.
+/* Coloring smoke test — Phase 2 task 119 (GAME-COLOR-001).
    Drives pages/coloring.html headlessly: palette renders 11 swatches, SVG regions
    + ref render, scene name + progress shown, tapping regions fills them, completing
    a scene auto-advances, next button works, all 12 scenes cycle.
+   Also tests FREE coloring mode: toggle, no correctness, clear button.
    Run:  node tools/coloring_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -10,16 +11,13 @@ const path = require('path');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function(){}};window.popSound=window.gentleMiss=window.successChime=window.celebrate=function(){};window.playAnimalSound=function(){}; true`;
+const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function(){}};window.popSound=window.gentleMiss=window.successChime=function(){};window.celebrate=function(){};window.playAnimalSound=function(){}; true`;
 
 (async () => {
   const h = await start({ page: '/pages/coloring.html', tag: 'coloring-smoke', width: 1024, height: 800 });
 
   let ready = false;
   for (let i = 0; i < 20 && !ready; i++) {
-    // Wait for the scene to be BUILT, not just for startColoring to exist: the
-    // regions are created synchronously inside it, so polling the function alone
-    // can pass one tick before buildColoringScene() has run under parallel load.
     ready = await h.evalv(`typeof window.startColoring === 'function' && !!document.getElementById('coloringSvg') && document.querySelectorAll('#coloringSvg .coloring-region').length > 0`);
     if (!ready) await sleep(200);
   }
@@ -74,6 +72,53 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
   const progressAfterNext = await h.evalv(`document.getElementById('coloringProgress').textContent`);
   check('next button advances to the next scene', progressAfterNext.startsWith('Животиња 2'), progressAfterNext);
 
+  // --- Free coloring mode ---
+  const modeToggleExists = await h.evalv(`!!document.getElementById('coloringModeToggle')`);
+  check('mode toggle button exists', modeToggleExists === true);
+
+  await h.evalv(`document.getElementById('coloringModeToggle').click()`);
+  await sleep(100);
+
+  const freeModeActive = await h.evalv(`document.getElementById('coloringModeToggle').classList.contains('free')`);
+  check('free mode activates on toggle', freeModeActive === true);
+
+  const clearBtnVisible = await h.evalv(`document.getElementById('coloringClear').classList.contains('visible')`);
+  check('clear button appears in free mode', clearBtnVisible === true);
+
+  const toggleLabel = await h.evalv(`document.getElementById('coloringModeToggle').textContent`);
+  check('toggle label switches to "По слици"', /по слици/i.test(toggleLabel), toggleLabel);
+
+  // In free mode, tapping with WRONG color should NOT mark ok
+  await h.evalv(`(function(){
+    const swatches = document.querySelectorAll('#coloringPalette .coloring-swatch');
+    for (const s of swatches) {
+      if (s.dataset.color !== '${targetColor}') { s.click(); break; }
+    }
+    return true;
+  })()`);
+  await h.evalv(`(function(){
+    const r = document.querySelector('#coloringSvg .coloring-region:not(.ok)');
+    if (r) { r.dispatchEvent(new PointerEvent('pointerdown', {bubbles:true})); }
+    return true;
+  })()`);
+  await sleep(50);
+  const okInFreeMode = await h.evalv(`document.querySelectorAll('#coloringSvg .coloring-region.ok').length`);
+  check('free mode: wrong color does NOT mark ok', okInFreeMode === 0, String(okInFreeMode));
+
+  // Clear button resets all regions
+  await h.evalv(`document.getElementById('coloringClear').click()`);
+  await sleep(50);
+  const okAfterClear = await h.evalv(`document.querySelectorAll('#coloringSvg .coloring-region.ok').length`);
+  const filledAfterClear = await h.evalv(`document.querySelectorAll('#coloringSvg .coloring-region[style*="fill"]').length`);
+  check('clear button resets all regions', okAfterClear === 0, String(okAfterClear));
+
+  // Toggle back to reference mode
+  await h.evalv(`document.getElementById('coloringModeToggle').click()`);
+  await sleep(100);
+  const refModeBack = await h.evalv(`!document.getElementById('coloringModeToggle').classList.contains('free')`);
+  check('toggle back to reference mode works', refModeBack === true);
+
+  // Static checks
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
   check('hub button wired (data-go="game-coloring")', indexHtml.includes('data-go="game-coloring"'));
