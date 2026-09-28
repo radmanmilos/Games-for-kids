@@ -78,11 +78,7 @@ function randType(){ return Math.floor(Math.random()*candyTypes.length); }
 function applyTileVisual(el, type){
   el.classList.toggle('star', type === -1);
   if(type === -1){ el.textContent = '⭐'; el.style.background = ''; }
-  else {
-    const svg = window.ILLUSTRATIONS && window.ILLUSTRATIONS.svg(candyTypes[type].name.toLowerCase());
-    if(svg){ el.innerHTML = svg; el.style.background = candyTypes[type].color; }
-    else { el.textContent = candyTypes[type].emoji; el.style.background = candyTypes[type].color; }
-  }
+  else { el.textContent = candyTypes[type].emoji; el.style.background = candyTypes[type].color; }
 }
 
 function setTilePos(el, r, c, instant){

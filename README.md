@@ -282,6 +282,7 @@ Gameplay:
 - **Play-aware tests (task 132):** memory smoke now covers audio-disabled, resize, and back-button scenarios (12 → 15 checks).
 - **Touch interruption tests (task 133):** shapes smoke now covers pointercancel, multi-touch, and page-hidden scenarios (13 → 16 checks).
 - **Visual regression (task 134):** `tools/screenshot.js` captures 36 screenshots (12 pages × 3 sizes) for visual regression testing.
+- **Animal art recovery (task 135):** reverted custom SVG illustrations — restored native Unicode emoji for all animal artwork (per Master Implementation Plan: custom SVGs were "visually too crude")
 - **Navigation arrow (task 126):** a large pulsing yellow arrow appears near the goal when the child is far away, pointing toward the finish — no text instructions.
 
 Educational goals:

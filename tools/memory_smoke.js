@@ -139,8 +139,12 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   // Back button returns to hub (last — navigates away)
   await h.evalv(`document.querySelector('.back-btn').click()`);
   await sleep(300);
-  const backToHub = await h.evalv(`document.getElementById('hub').style.display !== 'none' || document.getElementById('hub-games').style.display !== 'none'`);
-  check('back button returns to hub', backToHub === true, String(backToHub));
+  const backToHub = await h.evalv(`(() => {
+    const hub = document.getElementById('hub');
+    const hubGames = document.getElementById('hub-games');
+    return (hub && hub.style.display !== 'none') || (hubGames && hubGames.style.display !== 'none');
+  })()`);
+  check('back button returns to hub', backToHub === true, JSON.stringify(backToHub));
 
   h.close();
   const fails = getFails();

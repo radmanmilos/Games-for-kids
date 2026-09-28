@@ -49,7 +49,7 @@
       card.dataset.index = idx;
       card.setAttribute('aria-label', 'Скривена картица');
       card.addEventListener('click', onCardClick);
-      const face = (window.ILLUSTRATIONS && window.ILLUSTRATIONS.svg(svgMap[name])) || emojiMap[name] || name;
+      const face = emojiMap[name] || name;
       card.innerHTML = `
         <div class="card-inner">
           <div class="card-face card-back"></div>

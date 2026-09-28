@@ -52,7 +52,7 @@
       // pick a random animal for variety per level
       const animal = animals[Math.floor(Math.random()*animals.length)];
       screen.dataset.animal = animal.name;
-      scene.innerHTML = Array.from({length:n}).map(()=>`<div class="count-tile" data-animal="${animal.name}" role="button" tabindex="0" aria-label="Животиња за бројање">${window.ILLUSTRATIONS.svg(animal.name.toLowerCase())}</div>`).join('');
+      scene.innerHTML = Array.from({length:n}).map(()=>`<div class="count-tile" data-animal="${animal.name}" role="button" tabindex="0" aria-label="Животиња за бројање">${animal.emoji}</div>`).join('');
       let counted = 0;
       let countingDone = false;
 

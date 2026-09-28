@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 135. DONE — Master Plan, Task 1: Animal Art Recovery. (2026-09-28, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED 2026-09-28 — reverted ART-001.** The custom SVG animal illustrations were "visually too crude" per the Master Implementation Plan. Restored native Unicode emoji for all animal artwork: removed `game/shared/illustrations.js`, removed `<script>` from 4 game pages, reverted `animals.js`/`animal_counting.js`/`animal_memory.js`/`candy.js` to use emoji. Also fixed the memory smoke back-button check (was returning `[object Object]`).
+    - **Validation:** `animals_smoke.js` 25/25 PASS, `memory_smoke.js` 15/15 PASS, `counting_smoke.js` 12/12 PASS, `candy_smoke.js` 12/12 PASS. `node --check` clean. NOT committed (user commits/pushes).
+
 - 134. DONE — Phase 5, Task: TEST-003 — Visual regression testing. (2026-09-28, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED 2026-09-28 — `tools/screenshot.js`, `.gitignore`.** New screenshot tool for visual regression testing: captures screenshots of 12 representative pages (hub, animals, classroom, coloring, memory, piano, shapes, driving, ocean, dino, space, racing3d) at 3 sizes (phone 390×844, tablet 820×1180, desktop 1280×800) = 36 screenshots total. Screenshots saved to `tools/screenshots/` (gitignored). Usage: `node tools/screenshot.js [--pages hub,animals] [--sizes phone,desktop]`. Acceptance criterion met: visual regression testing is now automated.
     - **Validation:** `node tools/screenshot.js --pages hub,animals --sizes phone,desktop` → 6 screenshots captured (full run: 36 screenshots). `node --check` clean. NOT committed (user commits/pushes).
