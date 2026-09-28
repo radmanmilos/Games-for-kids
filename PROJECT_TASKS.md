@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 131. DONE — Phase 5, Task: CLEAN-001 — Legacy route cleanup. (2026-09-28, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED 2026-09-28 — `game/shared/navigation.js`, deleted `game/pages/papper_kitty.html`, `game/pages/racing.html`, `game/games/kitty.js`.** Removed legacy routes: (1) `game-racing` route removed from navigation.js (hub button was already hidden). (2) Deleted `papper_kitty.html` (old Paper Kitty page, replaced by `kitty-standalone.js`). (3) Deleted `racing.html` (old 2D racer, retired in task 96). (4) Deleted `kitty.js` (old canvas kitty, replaced by `kitty-standalone.js`). All 15 game buttons still wired, hub smoke 10/10 PASS.
+    - **Validation:** `node tools/hub_smoke.js` → **10/10 PASS**. `node --check` clean. NOT committed (user commits/pushes).
+
 - 130. DONE — Phase 3, Task: ADV-001 — Shared adventure engine boundary. (2026-09-28, Ponytail Lazy Dev; user approved.)
     - **VERIFIED 2026-09-28 — no code changes needed.** All 4 adventure games (Driving, Ocean, Dino, Space) already use `AdventureEngine.create()` from `game/games/adventure.js`. The shared engine provides: player movement (updateDrive/updateFly/updateGround), collision infrastructure, camera (cameraX + follow), world loading (loadWorld), checkpoint/recovery (respawnPlayer), input handling (keys + touch), common feedback (bumpCount/lastHitAt), and common audio API (AdventureMusic). Game-specific layers provide: movement model, obstacles, goals, collectibles, environment, visual language, learning hook. Acceptance criterion met: a bug fix in shared movement (e.g. the jump buffer, forgiving collision, soft respawn added in tasks 125/128) is applied once and affects all four games. No duplication exists.
     - **Phase 3 complete: all 7 tasks DONE.**
