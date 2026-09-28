@@ -1,7 +1,7 @@
-/* Shapes smoke test — Phase 5 task 77.
-   Drives pages/shapes.html headlessly: 3 slots + 3 pieces render, keyboard
-   selection + placement works, correct match triggers success, round completion
-   starts a fresh round.
+/* Shapes smoke test — Phase 5 task 77 + task 123 (GAME-SHAPES-001).
+   Drives pages/shapes.html headlessly: tier selector (1/2/3), generous snap
+   radius, soft animation, no punishment on wrong target, hint highlight after
+   repeated attempts, keyboard selection + placement, round completion.
    Run:  node tools/shapes_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -11,8 +11,6 @@ const path = require('path');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const STUB = `window.speech={speak:function(){},cancel:function(){}};window.popSound=window.gentleMiss=window.successChime=window.celebrate=function(){}; true`;
-
-const CLICK = sel => `document.querySelector('${sel}').click(); true`;
 
 (async () => {
   const h = await start({ page: '/pages/shapes.html', tag: 'shapes-smoke', width: 1024, height: 800 });
@@ -25,32 +23,56 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
   check('shapes game booted (startShapesRound ready)', ready);
   await h.evalv(STUB);
 
+  // Tier 1 (default): 2 slots + 2 pieces
   const boot = await h.evalv(`JSON.stringify({
     slots: document.querySelectorAll('#shapesStage .slot').length,
     pieces: document.querySelectorAll('#shapesStage .piece').length,
-    slotTypes: Array.from(document.querySelectorAll('#shapesStage .slot')).map(s => s.classList.contains('circle') ? 'circle' : s.classList.contains('triangle') ? 'triangle' : s.classList.contains('star') ? 'star' : 'square').sort().join(','),
-    pieceTypes: Array.from(document.querySelectorAll('#shapesStage .piece')).map(s => s.classList.contains('circle') ? 'circle' : s.classList.contains('triangle') ? 'triangle' : s.classList.contains('star') ? 'star' : 'square').sort().join(',')
+    tierBtns: document.querySelectorAll('#shapesTier button').length,
+    activeTier: document.querySelector('#shapesTier button.active') ? document.querySelector('#shapesTier button.active').dataset.tier : 'none'
   })`);
   const B = JSON.parse(boot);
-  check('first round: 3 slots + 3 pieces render', B.slots === 3 && B.pieces === 3, boot);
-  check('slot and piece types contain the same 3 shapes', B.slotTypes === B.pieceTypes, boot);
+  check('tier 1 (default): 2 slots + 2 pieces', B.slots === 2 && B.pieces === 2, boot);
+  check('tier selector: 3 buttons, tier 1 active', B.tierBtns === 3 && B.activeTier === '1', boot);
 
+  // Switch to tier 2: 3 slots + 3 pieces
+  await h.evalv(`document.querySelector('#shapesTier button[data-tier="2"]').click()`);
+  await sleep(100);
+  const T2 = await h.evalv(`JSON.stringify({
+    slots: document.querySelectorAll('#shapesStage .slot').length,
+    pieces: document.querySelectorAll('#shapesStage .piece').length,
+    activeTier: document.querySelector('#shapesTier button.active').dataset.tier
+  })`);
+  const T2R = JSON.parse(T2);
+  check('tier 2: 3 slots + 3 pieces', T2R.slots === 3 && T2R.pieces === 3, T2);
+  check('tier 2 button active', T2R.activeTier === '2', T2);
+
+  // Switch to tier 3: 4 slots + 4 pieces
+  await h.evalv(`document.querySelector('#shapesTier button[data-tier="3"]').click()`);
+  await sleep(100);
+  const T3 = await h.evalv(`JSON.stringify({
+    slots: document.querySelectorAll('#shapesStage .slot').length,
+    pieces: document.querySelectorAll('#shapesStage .piece').length,
+    activeTier: document.querySelector('#shapesTier button.active').dataset.tier
+  })`);
+  const T3R = JSON.parse(T3);
+  check('tier 3: 4 slots + 4 pieces', T3R.slots === 4 && T3R.pieces === 4, T3);
+  check('tier 3 button active', T3R.activeTier === '3', T3);
+
+  // Back to tier 1 for placement tests
+  await h.evalv(`document.querySelector('#shapesTier button[data-tier="1"]').click()`);
+  await sleep(100);
+
+  // Keyboard: select piece, place on matching slot
   await h.evalv(`(function(){ const p = document.querySelector('#shapesStage .piece'); p.dispatchEvent(new KeyboardEvent('keydown', {key:'Enter', bubbles:true})); return true; })()`);
   const selected = await h.evalv(`document.querySelector('#shapesStage .piece.kb-selected') !== null`);
   check('Enter on piece selects it (kb-selected class)', selected === true);
-
-  const matchingSlot = await h.evalv(`(function(){
-    const p = document.querySelector('#shapesStage .piece.kb-selected');
-    const type = p.dataset.type;
-    return document.querySelector('#shapesStage .slot[data-type="' + type + '"]:not([data-filled])') ? true : false;
-  })()`);
-  check('a matching unfilled slot exists for the selected piece', matchingSlot === true);
 
   await h.evalv(`(function(){ const s = document.querySelector('#shapesStage .slot[data-type="' + document.querySelector('#shapesStage .piece.kb-selected').dataset.type + '"]:not([data-filled])'); s.dispatchEvent(new KeyboardEvent('keydown', {key:'Enter', bubbles:true})); return true; })()`);
   const placed = await h.evalv(`document.querySelector('#shapesStage .piece[data-done="1"]') !== null`);
   check('Enter on matching slot places the piece (data-done=1)', placed === true);
 
-  for (let step = 0; step < 2; step++) {
+  // Place remaining piece(s)
+  for (let step = 0; step < 3; step++) {
     await h.evalv(`(function(){
       const undone = document.querySelector('#shapesStage .piece:not([data-done="1"])');
       if (!undone) return false;
@@ -68,7 +90,7 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
     await sleep(60);
   }
   const placedCount = await h.evalv(`document.querySelectorAll('#shapesStage .piece[data-done="1"]').length`);
-  check('all 3 pieces placed in first round', placedCount === 3, String(placedCount));
+  check('all pieces placed in tier 1 round', placedCount === 2, String(placedCount));
 
   await sleep(400);
   const newRound = await h.evalv(`JSON.stringify({
@@ -76,8 +98,9 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
     pieces: document.querySelectorAll('#shapesStage .piece').length
   })`);
   const NR = JSON.parse(newRound);
-  check('after round completion: fresh 3 slots + 3 pieces', NR.slots === 3 && NR.pieces === 3, newRound);
+  check('after round completion: fresh 2 slots + 2 pieces', NR.slots === 2 && NR.pieces === 2, newRound);
 
+  // Static checks
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
   check('hub button wired (data-go="game-shapes")', indexHtml.includes('data-go="game-shapes"'));

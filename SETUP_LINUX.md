@@ -1,69 +1,101 @@
-# Linux Server Setup (Alpine / non-Windows)
+# Per-Server Setup Guide
 
-This project was originally built on Windows. When working from a Linux server
-(e.g. Alpine Linux), a few things need attention. This file captures the
-non-obvious setup so you don't have to rediscover it.
+This project was originally built on Windows. This file lists prerequisites
+needed for smooth project running per server, and gets updated when something
+changes.
 
-## What works out of the box
+---
 
-- **Node.js** (>= 22) — all smoke tests, `check_all.js`, `run_all.js`, and the
-  new `build_offline.js` run fine.
-- **`tools/sync-docs.sh`** — bash script, works as-is.
-- **All headless Chrome smoke tests** — `tools/headless.js` was already fixed
-  for Linux (TMPDIR fallback, `/usr/bin/chromium` paths, `--no-sandbox`).
+## Alpine Linux (current server)
 
-## What was changed / installed
+### Prerequisites
 
-### 1. Offline zip build — `build_offline.ps1` → `build_offline.js`
+| Package | Purpose | Install |
+|---------|---------|---------|
+| Node.js >= 22 | All smoke tests, `check_all.js`, `build_offline.js` | Pre-installed |
+| `zip` | Offline zip creation (`build_offline.js`) | `apk add --no-cache zip` |
+| `curl` | Downloading assets | `apk add --no-cache curl` |
+| `tar` | Extracting archives | `apk add --no-cache tar` |
+| `bash` | `sync-docs.sh` | Pre-installed |
+| `git` | Version control | Pre-installed |
+| Chrome/Chromium | Headless smoke tests | Pre-installed |
 
-**Problem:** `tools/build_offline.ps1` requires PowerShell. PowerShell does NOT
-work on Alpine Linux (musl libc — the `gcompat` compatibility layer is not
-enough; `pwsh` crashes with a `NullReferenceException` in the AST parser).
+### What was changed
 
-**Fix:** Replaced with `tools/build_offline.js` (Node.js). `check_all.js` now
-calls `node tools/build_offline.js` instead of `powershell -File ...`.
-Functionally identical: regenerates `sw-cache-list.json`, writes
-`offline-manifest.json` (SHA256 + size per file), and creates
-`docs/game-offline.zip`.
+- **`build_offline.ps1` → `build_offline.js`** — PowerShell doesn't work on
+  Alpine (musl libc). Replaced with Node.js. `check_all.js` calls
+  `node tools/build_offline.js`.
 
-### 2. `zip` package
-
-The Node.js build script uses the `zip` command. On Alpine:
+### Quick start
 
 ```sh
-apk add --no-cache zip
-```
-
-### 3. `curl` and `tar` (for downloading PowerShell — no longer needed)
-
-These were installed during the PowerShell attempt. They're commonly available
-on most systems; if missing:
-
-```sh
-apk add --no-cache curl tar
-```
-
-## Quick start on a fresh Alpine server
-
-```sh
-# 1. Install dependencies
 apk add --no-cache zip curl tar
-
-# 2. Verify everything works
 node tools/check_all.js --docs --offline
 ```
 
-That's it. No PowerShell, no Windows-specific tooling.
+---
 
-## If you're on a different Linux distro
+## Debian / Ubuntu
 
-- **Debian/Ubuntu:** `apt-get install -y zip curl tar`
-- **Fedora/RHEL:** `dnf install -y zip curl tar`
-- **Arch:** `pacman -S zip curl tar`
+### Prerequisites
 
-Everything else (Node.js, bash, git) is standard.
+| Package | Purpose | Install |
+|---------|---------|---------|
+| Node.js >= 22 | All smoke tests, `build_offline.js` | Pre-installed or `apt-get install -y nodejs` |
+| `zip` | Offline zip creation | `apt-get install -y zip` |
+| `curl` | Downloading assets | `apt-get install -y curl` |
+| `tar` | Extracting archives | Pre-installed |
+| `bash` | `sync-docs.sh` | Pre-installed |
+| `git` | Version control | Pre-installed |
+| Chrome/Chromium | Headless smoke tests | Pre-installed |
+
+### Quick start
+
+```sh
+apt-get install -y zip curl
+node tools/check_all.js --docs --offline
+```
+
+---
 
 ## Windows (original environment)
 
+### Prerequisites
+
+| Package | Purpose | Install |
+|---------|---------|---------|
+| Node.js >= 22 | All smoke tests, `build_offline.js` | Pre-installed |
+| PowerShell 5.1+ | `build_offline.ps1` (original) | Pre-installed |
+| `zip` | Offline zip creation | Pre-installed (or use `build_offline.js`) |
+| Chrome/Chromium | Headless smoke tests | Pre-installed |
+
+### Quick start
+
+```sh
+node tools/check_all.js --docs --offline
+```
+
 No setup needed — everything works as-is. `build_offline.js` also works on
-Windows (Node.js is cross-platform), so you can use either script.
+Windows (Node.js is cross-platform).
+
+---
+
+## What works on all platforms
+
+- **Node.js** (>= 22) — all smoke tests, `check_all.js`, `run_all.js`,
+  `build_offline.js`
+- **`tools/sync-docs.sh`** — bash script
+- **All headless Chrome smoke tests** — `tools/headless.js` was fixed for
+  Linux (TMPDIR fallback, `/usr/bin/chromium` paths, `--no-sandbox`)
+
+## What was changed (cross-platform)
+
+- **`build_offline.ps1` → `build_offline.js`** — Node.js replacement. Works on
+  all platforms. `check_all.js` calls `node tools/build_offline.js`.
+
+---
+
+## Update log
+
+- **2026-09-28** — Initial version. Alpine Linux prerequisites, `build_offline.js`
+  replacement.

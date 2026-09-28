@@ -1,834 +1,834 @@
-﻿{
-    "sw-cache-list.json":  {
-                               "sha256":  "1375D203135E1D5BE98BB8B4CE4DEC852DE908AA72FE6E7271077B103469EA5D",
-                               "size":  6659
-                           },
-    "assets/audio/dog.ogg":  {
-                                 "sha256":  "E4438897B68360E54C9E9319A8AEA14A78527F022C2B78086F4B2348C03B2FA1",
-                                 "size":  82638
-                             },
-    "assets/audio/speech/deset.mp3":  {
-                                          "sha256":  "B9C0F740DEE532183C63A53C40DE4DC0CBC6A9962E1C498FE5C23D5515DCCE9E",
-                                          "size":  8064
-                                      },
-    "assets/audio/speech/krug.mp3":  {
-                                         "sha256":  "5F5A05FD5B4F6352B4627BA81BA081C63887239AD3ADDA1284906AE812FF4C04",
-                                         "size":  6720
-                                     },
-    "assets/audio/speech/ch.mp3":  {
-                                       "sha256":  "4FEB0B289A85BC7F2BCCA56EE0A0874388B24684A5604D2D9DBC1A59142FC2B9",
-                                       "size":  4992
-                                   },
-    "assets/audio/speech/pet.mp3":  {
-                                        "sha256":  "F636B46DAA1956BFCD07A9135BE28DBACFCB9122D01BA02795D1B3C227D82F05",
-                                        "size":  5568
-                                    },
-    "assets/audio/speech/trougao.mp3":  {
-                                            "sha256":  "84622FA35D2F3FF72AC7446DCA91528CBE3135FFAC4784FE8A83EF37B4A387F7",
-                                            "size":  8448
-                                        },
-    "pages/piano.html":  {
-                             "sha256":  "FA5B9C7BA56A8E91D4438ABB75918AD2AAACB87E4ADA469AECC75ECAB0C2380C",
-                             "size":  10607
-                         },
-    "games/adventure.js":  {
-                               "sha256":  "5AEBE3E574D0B6724CA7BCB27EBE38498C5E16447E8BC6BDB980230A040136D6",
-                               "size":  54896
-                           },
-    "assets/audio/speech/sedam.mp3":  {
-                                          "sha256":  "2E9EA1B4D1DA8CB224734C4814805EA1D9A4A33025308AB8C6E3B9F864E78598",
-                                          "size":  8256
-                                      },
-    "assets/audio/horse.ogg":  {
-                                   "sha256":  "EA5171E324C69469E4D6DD99782D88C020091E5FC8808BB63AE24923DCDF65A4",
-                                   "size":  45897
-                               },
-    "assets/audio/speech/sedam_pataka.mp3":  {
-                                                 "sha256":  "F0CA0B7608D69E8535FCE47DB483A29B869CFDD30AADBE0A4B931793FFBC69CA",
-                                                 "size":  12480
-                                             },
-    "assets/audio/speech/automobil.mp3":  {
-                                              "sha256":  "925910014F402CBA89885112FF217D4BEAF57B215EE596E9DEE7859AF5E446D2",
-                                              "size":  9408
-                                          },
-    "assets/audio/speech/torta.mp3":  {
-                                          "sha256":  "570DF53ECC7B6D3103FBB0F3634033253573943EBBFBD5921BA2E5A87857B096",
-                                          "size":  7104
-                                      },
-    "assets/icons/download-128.png":  {
-                                          "sha256":  "29FAFD32992C543E1D238D3DDF7398C4E9B8A7357CD70E2A1C4B76C574DC7893",
-                                          "size":  23828
-                                      },
-    "games/kitty-standalone.js":  {
-                                      "sha256":  "5184C9B901A7960D9D70D5520865D0C3CA835B71B2B2DFB9DB0F4902D6D94459",
-                                      "size":  101635
-                                  },
-    "assets/icons/icon-512.svg":  {
-                                      "sha256":  "8DFEB3A1002F222E2296DFEE4FF05B8266E489A3C3BD106F4D7E5CC5A7346234",
-                                      "size":  565
-                                  },
-    "pages/tracing.html":  {
-                               "sha256":  "0F87FAA87AF66AB243A2833141D4E8B9331446291F9800D7589EA644050DEED4",
-                               "size":  11297
-                           },
-    "shared/input.js":  {
-                            "sha256":  "13D005421D7FBC97CC596EB7FFBA3F93F2EB82FE7FB5424E91B810D0059931BC",
-                            "size":  2729
-                        },
-    "assets/audio/sheep.ogg":  {
-                                   "sha256":  "88442FAF01E307727A6B39AD274FED07BE56D1CE52DEA299B9D56CF56EC8C405",
-                                   "size":  11902
-                               },
-    "games/animal_memory.js":  {
-                                   "sha256":  "89C7AD836C29042C544399131328EBBBED4BB3DAB9E2341019F223124B6F9149",
-                                   "size":  6249
-                               },
-    "assets/audio/speech/ovca.mp3":  {
-                                         "sha256":  "06648B5512EACBD5E8190607348EB3E3CBF2ADDBB63E5955437787417288B2D9",
-                                         "size":  7488
-                                     },
-    "assets/audio/speech/e.mp3":  {
-                                      "sha256":  "6A7764E7B52DFA572B9F324F661E545507888E1FFE48D91F313574A30860A722",
-                                      "size":  4800
-                                  },
-    "pages/animal_counting.html":  {
-                                       "sha256":  "4F47E6B5758455EAF9322909C3129DB94657537ED846E50CBD373EAAD64093A5",
-                                       "size":  5489
-                                   },
-    "assets/audio/speech/chamac.mp3":  {
-                                           "sha256":  "671837CE2C8BA4069501384668B3D5C386BB88BB4DAA7D8C59FB6C55DF0DE88A",
-                                           "size":  7296
-                                       },
-    "assets/audio/speech/zuta.mp3":  {
-                                         "sha256":  "3A93997F181B8B8E5E8B12A2DB89569F2A3E4216653A8119016A65D8E77409EA",
-                                         "size":  7872
-                                     },
-    "assets/images/dino/tiranosaurus-rex.png":  {
-                                                    "sha256":  "878E0B341772B0001918C70EB6A317E99D5E939622A16A120D7338367F888E98",
-                                                    "size":  619312
-                                                },
-    "assets/audio/speech/jedan_pas.mp3":  {
-                                              "sha256":  "BA6EF1DDA5DD8DCCC76D5755D479FCE27C7FE0297D5F8742653F30CD1DD49B6A",
-                                              "size":  9984
-                                          },
-    "shared/navigation.js":  {
-                                 "sha256":  "FF13C5057611605D60F3D1CE9900E2BA895A3F15B9AE112F4E5957EEABEDDDA8",
-                                 "size":  8941
-                             },
-    "assets/audio/speech/zaba.mp3":  {
-                                         "sha256":  "F647FCB24F9880C813A1AF6A9FD7DC2682D7E3EC4976C33EBE270C87AE315129",
-                                         "size":  7488
-                                     },
-    "shared/viewport.js":  {
-                               "sha256":  "ED6202A70969F5F934A672616B1765D9B5E5387733C902FF3D6991BAAB809A01",
-                               "size":  2333
-                           },
-    "games/dino.js":  {
-                          "sha256":  "151011049B9438011A21EBD02A64716F8FA05B5E1076D8B1C22FB01B098EFC59",
-                          "size":  38971
-                      },
-    "games/shapes.js":  {
-                            "sha256":  "C0DA2FA03EEB02CB33B6A00AF27574F22BB8D6CDE8ECBDE86818EB044980BEF3",
-                            "size":  4737
-                        },
-    "assets/audio/speech/banana.mp3":  {
-                                           "sha256":  "0747BAD8B48A165AA76179621C55E1C5DF96D0BD0F89AEE7845C779647B45398",
-                                           "size":  7872
-                                       },
-    "assets/audio/speech/lopta.mp3":  {
-                                          "sha256":  "8D3B911AA1AC056CC8093E14795D19787C69F9CDAEADFCD0DF41F2ACEB756F65",
-                                          "size":  6720
-                                      },
-    "assets/images/explorer/03_run_right.png":  {
-                                                    "sha256":  "E343D102CFE7B469411469EA141CB8094590546C9F379BDF405010A8947D90EF",
-                                                    "size":  94405
-                                                },
-    "assets/audio/speech/u.mp3":  {
-                                      "sha256":  "9AA82C04FB0957BA91583DEB2CD3519B0217F5CAF62701915E9B6E2931BE2968",
-                                      "size":  6528
-                                  },
-    "assets/audio/fox.mp3":  {
-                                 "sha256":  "CD899DA0D8B797B330E7FE6E665BB2D5A670B12215148A789A01FAAE1BDAFAE0",
-                                 "size":  534528
-                             },
-    "assets/audio/speech/vuk.mp3":  {
-                                        "sha256":  "1B0BBA13F56B8F82670E0B1253E84F05FC0864F5C86281AF6D5467E915AC3E4C",
-                                        "size":  6336
-                                    },
-    "assets/audio/speech/ljubav.mp3":  {
-                                           "sha256":  "E6797B93C96AF7FBD695BA2BA8281F1E1BA7513781DC1C86FBA6ED630389C66C",
-                                           "size":  7488
-                                       },
-    "assets/audio/speech/j.mp3":  {
-                                      "sha256":  "240AE2990D52FBC0CB3923466D609ABEEDB4F67D4286D91ADD2BF59A4B4A5C5E",
-                                      "size":  5760
-                                  },
-    "assets/audio/speech/dj.mp3":  {
-                                       "sha256":  "321B3265457920482424F0C31806A7F49CDC967B2418EE1404B647CB075F77FD",
-                                       "size":  5184
-                                   },
-    "assets/audio/speech/braon.mp3":  {
-                                          "sha256":  "E88E7D6C19444334A30D484261EC66E77CFE61D364537E52D0CB603F7BE4535A",
-                                          "size":  7296
-                                      },
-    "assets/audio/speech/drvo.mp3":  {
-                                         "sha256":  "4AD43F561E7D1F608C8CA4C1F6C40248401E9FAB1E1EF8CA877FFCFDA60936F8",
-                                         "size":  7488
-                                     },
-    "assets/audio/speech/lav.mp3":  {
-                                        "sha256":  "E91713D728ED0E780BB011045ED8F335566F7E9B4C23247B9A6E9C305A5A1CA4",
-                                        "size":  5760
-                                    },
-    "assets/images/driving-car.png":  {
-                                          "sha256":  "E01106F9D7D7E730E6DF2937E9072A838B8DE961CFCF64A800D8076DB26EEAF9",
-                                          "size":  729411
-                                      },
-    "assets/audio/speech/cjuran.mp3":  {
-                                           "sha256":  "0708C72ECB8DF5D14BCCEC2DBE7F1A4DB7FBACCDB77CD2EAA105BA9B8E5E07A2",
-                                           "size":  7488
-                                       },
-    "assets/images/explorer_kitty/03_run_right.png":  {
-                                                          "sha256":  "49A484931293D1F46411B101C2AA9A988D8AE44F5E2437E3E9090AE0298265B8",
-                                                          "size":  77769
-                                                      },
-    "assets/lib/three.module.min.js":  {
-                                           "sha256":  "F7CEE3C7533449A1505CC12CB5128B89E3D4FD3D7EA62B05F9F5464A217472EE",
-                                           "size":  687458
-                                       },
-    "assets/audio/speech/zvezda.mp3":  {
-                                           "sha256":  "40248BB676EAFDF9570E798C7C37A71519C7B745EAC0A39AD28A2F5E0286C43B",
-                                           "size":  8640
-                                       },
-    "assets/audio/speech/lj.mp3":  {
-                                       "sha256":  "32BBE712B1EDC455FC55644D6481DB9C259ACD4E8E97D836FA609D4B835231CE",
-                                       "size":  4992
-                                   },
-    "games/space.js":  {
-                           "sha256":  "3903542C53372EB4E90AD56E910D2D204E6707E1CFEECF638E192A3D6EFDDDD2",
-                           "size":  43992
-                       },
-    "assets/audio/speech/oko.mp3":  {
-                                        "sha256":  "66B120E4997FC1BCB7526493C3FCFA7A84C468A26D433FFCDAB647363564A180",
-                                        "size":  5760
-                                    },
-    "styles/viewport.css":  {
-                                "sha256":  "F1965806C8CE30F5A20F29BCE59F0695E6E6FA5FA6D3F5741F772BCD223969F2",
-                                "size":  1103
-                            },
-    "pages/animals.html":  {
-                               "sha256":  "90623115BA0EF39008BA45AF72B15E0FA1C97519946349B1F533AA2A6A52C385",
-                               "size":  13401
-                           },
-    "assets/audio/frog.oga":  {
-                                  "sha256":  "CB7AD91B3943678C50E16F914CF5652E9DA0BD782B5EFB065D95D89549FF7B89",
-                                  "size":  83798
-                              },
-    "assets/audio/speech/jao.mp3":  {
-                                        "sha256":  "D9CD56BC055ED4DCF81860236342A92F71C3948B70ABE25429CA9798BAA849ED",
-                                        "size":  15597
-                                    },
-    "assets/audio/speech/sh.mp3":  {
-                                       "sha256":  "A9AA097A1A330AB077D6709904A270EF924C2C5BF16FC8D4563E5D3F646900F2",
-                                       "size":  6144
-                                   },
-    "pages/racing3d.html":  {
-                                "sha256":  "5F12F1DEF150E0FC756F8297E8F42D0431943B8D170F317CF3666FD170BACF62",
-                                "size":  13825
-                            },
-    "assets/audio/speech/l.mp3":  {
-                                      "sha256":  "1D7ECB59AC3298E53FAF13F289DBA3BABD43F8C09B347C7344DCE3AB4FA50A5C",
-                                      "size":  4992
-                                  },
-    "assets/audio/speech/macka.mp3":  {
-                                          "sha256":  "46F85E8377550A6B4C3BB709970CF775D2D9BB5F7F93144F115FFB9F4AF4F5E6",
-                                          "size":  7296
-                                      },
-    "games/racing-config.js":  {
-                                   "sha256":  "9C4FF8294BB7ADCF8A7102AE5F64D4B918A3DCCC198E7FC6993E7177154AD0E6",
-                                   "size":  11877
-                               },
-    "assets/icons/icon-192.svg":  {
-                                      "sha256":  "F72E3E331AB5C1D51CF322E728ECCD71E7A7F74604EA0493130B9B452B946001",
-                                      "size":  637
-                                  },
-    "games/driving.js":  {
-                             "sha256":  "64871DFD360BB88F83400E29682B66E338C5AB384DB7C3F7414588EC52CAD824",
-                             "size":  17984
-                         },
-    "games/piano.js":  {
-                           "sha256":  "6D55C88412FDC0180B5CC1B097D4B5B11252AF5E47C71964B0E0DB4839974039",
-                           "size":  8990
-                       },
-    "assets/audio/speech/r.mp3":  {
-                                      "sha256":  "59AD80116BAE179FFDB10C83A03915D87991792D6F481EA881C4E10084A0861C",
-                                      "size":  5760
-                                  },
-    "assets/audio/speech/sest_lavova.mp3":  {
-                                                "sha256":  "D1C09853DD313A6EF0101834A0593C7D7BD01CBAF8B44FB972EEC9E82ADFC938",
-                                                "size":  10944
-                                            },
-    "assets/audio/speech/uvo.mp3":  {
-                                        "sha256":  "3C41CF33EDFE14CB5724FD43868E015EFCF9C22C321E5DEDC3691832BFF84757",
-                                        "size":  6528
-                                    },
-    "assets/audio/speech/roze.mp3":  {
-                                         "sha256":  "CD613A8433BD1897653FB2F3689845ED6CD4C2EA90A5DD90A997A6A6E7A7722F",
-                                         "size":  7296
-                                     },
-    "shared/feedback.js":  {
-                               "sha256":  "8BF6ADE2E2E60889C2D813612DA794073C634664E47364D887426F3B3D3E1A80",
-                               "size":  2051
-                           },
-    "shared/accessibility.css":  {
-                                     "sha256":  "67B66CD03899F7808A451B067FCD424D06F0774A6961B459A3C32481CB2D9D04",
-                                     "size":  1628
-                                 },
-    "assets/audio/speech/tri.mp3":  {
-                                        "sha256":  "88A52FBF5DCB2B9718B584B6DD3CAEFF23C32F031519624480703DDE54CE8164",
-                                        "size":  6144
-                                    },
-    "offline-manifest.json":  {
-                                  "sha256":  "F6738CE2A7F35C155CA065141A29721C7946A29E78721A7B594190B71257D121",
-                                  "size":  52086
-                              },
-    "pages/dino.html":  {
-                            "sha256":  "7ED8E744F47FE2A37EB2AA3FAC127F43C62288F7372867B52F9FFAA22D90CD28",
-                            "size":  2766
-                        },
-    "assets/icons/download-512.png":  {
-                                          "sha256":  "FC3C32FD629306B11C0212ADEC95C9AC5C6ED80BD418DA4D9AF29003E23D43C6",
-                                          "size":  271626
-                                      },
-    "manifest.json":  {
-                          "sha256":  "6585E2C23B465D50F178FB8EB3DB6E409444559893BDDC8B41ACF2FEE8105979",
-                          "size":  563
-                      },
-    "assets/fonts/fredoka-latin.woff2":  {
-                                             "sha256":  "99D6C78E043710D4F83ED90716779798B7B04EB690F73E0AD0E8F32D1F0E98C2",
-                                             "size":  29732
-                                         },
-    "styles/design-tokens.css":  {
-                                     "sha256":  "D655EF69417F2A154D89590C0061AFF91E72679523661B11A591459145777A4A",
-                                     "size":  972
-                                 },
-    "games/animal_counting.js":  {
-                                     "sha256":  "4CC40B999144A20A0E9E60C9A3752AF399303B864E92F4A57F098B8AF938C886",
-                                     "size":  10559
-                                 },
-    "assets/audio/speech/i.mp3":  {
-                                      "sha256":  "3257AEA5F258B27CD98D77FD11AE5680C247DFE0C7A4C79DD46F6263CE94E507",
-                                      "size":  4800
-                                  },
-    "assets/icons/icon-192.png":  {
-                                      "sha256":  "879591D8407F2D94126B866618B624303DF61E6B88F7BC0B416BCBF6909D4438",
-                                      "size":  34988
-                                  },
-    "assets/images/explorer_kitty/05_jump_right.png":  {
-                                                           "sha256":  "6E546AC09F12E900D9759160BFA09382FCFA1D73E57D9B7226F7CF02E5A3CD02",
-                                                           "size":  74695
-                                                       },
-    "assets/audio/speech/h.mp3":  {
-                                      "sha256":  "529FF5CA8BF8CECA138645E3DCBB90E72F4A22B6F2D21100B89039EB205DF511",
-                                      "size":  4800
-                                  },
-    "games/racing.js":  {
-                            "sha256":  "FB194CCE08255061E9D542B01D4630159FA1DE7D62D7DC161AA1D94C4FA1EA9F",
-                            "size":  62407
-                        },
-    "assets/audio/speech/dzemper.mp3":  {
-                                            "sha256":  "FF284C42A99B0AA5DC3FEF22BE0FCD5AE51A39F2C47B6ABDC8F427782E9BDBD9",
-                                            "size":  8256
-                                        },
-    "assets/audio/speech/tri_macke.mp3":  {
-                                              "sha256":  "950DAD6719542B845807346ACB065898198DDFD529CAB3F713FF0952745EC0F1",
-                                              "size":  9600
-                                          },
-    "assets/audio/speech/konj.mp3":  {
-                                         "sha256":  "44C352E161211CAE80C626FC2CFCC05867FA0FB417B4979DF88D50440ED7198B",
-                                         "size":  5760
-                                     },
-    "assets/audio/speech/n.mp3":  {
-                                      "sha256":  "77D4BAF318A2ADA726FF6BD95828B4E6A6D2089B08C1405EC7682502C7FF2264",
-                                      "size":  5568
-                                  },
-    "assets/audio/lion.ogg":  {
-                                  "sha256":  "AB237D0F960E83412251D0C11F69959F3C2E8D3B14595F7181C3056F7FA18BF7",
-                                  "size":  77611
-                              },
-    "assets/audio/speech/deset_svinja.mp3":  {
-                                                 "sha256":  "E3868EFB2888C9D08489CBA748A86B15CCFAC80D34A27FC73323FFBD3513B6F3",
-                                                 "size":  11136
-                                             },
-    "assets/audio/speech/osam_konja.mp3":  {
-                                               "sha256":  "347B91D41AAA9F30110DB063EA7EEC1E576C7845A2A88D5C22ACA8346DAFD6EE",
-                                               "size":  10560
-                                           },
-    "assets/audio/speech/cvet.mp3":  {
-                                         "sha256":  "99496432CEDDC220E6E6FFFC0EBEC273CB54BBAD198065AB2115B9A19660FD40",
-                                         "size":  6912
-                                     },
-    "games/classroom.js":  {
-                               "sha256":  "47EFE541E3859310F2D18CCFE6DD0D2666A072DBDC0C273B4BEC7F29497E3EBB",
-                               "size":  13485
-                           },
-    "assets/audio/speech/lisica.mp3":  {
-                                           "sha256":  "5C12C277AA4DA7EC960EE3A2DFFD5FAF1D5A06FA111022FD0914A1E32139CD78",
-                                           "size":  8448
-                                       },
-    "shared/audio-buses.js":  {
-                                  "sha256":  "1B4EEC3C4F2A0EF7C5377C3D030F508A131F4B03E87313EBABD67F201860A7FD",
-                                  "size":  3603
-                              },
-    "assets/images/explorer_kitty/01_idle_right.png":  {
-                                                           "sha256":  "223E3E0236F521EB962FD066CF085A67C6AD07C9C3A07D705B2E10C57733A83F",
-                                                           "size":  95629
-                                                       },
-    "pages/animal_puzzle.html":  {
-                                     "sha256":  "E7F78F549033BB3289520E176D77CEC6CBCEDFB66A8D1E05DCEF321115384174",
-                                     "size":  4426
-                                 },
-    "assets/images/explorer_kitty/06_idle_right_c.png":  {
-                                                             "sha256":  "6FC288B1B13420EF37DD40FBF879400305C37C19C6AD62EA356345FA424C0249",
-                                                             "size":  90262
-                                                         },
-    "assets/audio/speech/koka.mp3":  {
-                                         "sha256":  "7ADD4746243E7C10F423021E5F2F83B3CF4D1F76D88B4CFF9280F153E9176F97",
-                                         "size":  6528
-                                     },
-    "assets/audio/speech/sesir.mp3":  {
-                                          "sha256":  "578ECB16E7D81915AE133B24CBD3756DA4BCEA15379E0168555503BA13436EFD",
-                                          "size":  8064
-                                      },
-    "assets/audio/speech/bravo.mp3":  {
-                                          "sha256":  "7DF62A91CEE69C6D2F3658CA850891C223142C154D7D6B406CEABACBAF2BC328",
-                                          "size":  7680
-                                      },
-    "assets/audio/speech/ljubicasta.mp3":  {
-                                               "sha256":  "2F7CD3083860A830FD7F9DCCF7215E2C468B52334AD861E6A076CFA2C4E44CBD",
-                                               "size":  9024
-                                           },
-    "assets/images/explorer/01_idle_right.png":  {
-                                                     "sha256":  "2B57AF337EA4CFD0BC1F762062A35F91FC42E7E9C6B7E77774670ACDD1350C4D",
-                                                     "size":  78697
-                                                 },
-    "assets/audio/speech/o.mp3":  {
-                                      "sha256":  "934999D2C8C90C4A0A596B221F73698C8320501328DA7BD9E5441D1CD414F255",
-                                      "size":  6144
-                                  },
-    "shared/celebration.js":  {
-                                  "sha256":  "3E3CB1091A3B17FCDE2E1595D030D47F81CD71579B1090D19E4E20DC45A7AF9F",
-                                  "size":  1173
-                              },
-    "assets/audio/speech/njuska.mp3":  {
-                                           "sha256":  "8C3A4CE2D6E1386E70D8ADEB839007EADAF978FBD9908DF0DDF68C52E5056C70",
-                                           "size":  8064
-                                       },
-    "pages/coloring.html":  {
-                                "sha256":  "D6DA9F5D286832FF54A782DB06AC09B163D457A34B9F999B2701B2CC1993A4F3",
-                                "size":  9090
-                            },
-    "games/racing3d.mjs":  {
-                               "sha256":  "84FB484FF8D733219D0BC8C9A9B0EDF1B04306C520139AEA1D890DB41F9A0D4C",
-                               "size":  97387
-                           },
-    "assets/audio/speech/a.mp3":  {
-                                      "sha256":  "F3367D34A65237AFAFB62C407D481B149410E5722188D6949BB787CC530C6FFA",
-                                      "size":  6528
-                                  },
-    "shared/adventure.css":  {
-                                 "sha256":  "8667700144601F12E713F2BD1308B53679DB06DA7E50BAF7A21CE8F803D0DF2F",
-                                 "size":  11392
-                             },
-    "assets/audio/speech/jedan.mp3":  {
-                                          "sha256":  "8BD0150223539C893DBBF8F5BCD2A4CFD57A446352C15CCC76B51180135494B0",
-                                          "size":  7296
-                                      },
-    "assets/audio/speech/c.mp3":  {
-                                      "sha256":  "086625D6BFCDB28BB32D193E307AF8FE483BDA143C9776B47486BDACA0564A4B",
-                                      "size":  5952
-                                  },
-    "assets/images/explorer/05_jump_right.png":  {
-                                                     "sha256":  "ABA2B3A04A0A5F555A92B47D32C2530AF2C72EBBEE63AA11B9C05896E028C7DF",
-                                                     "size":  72515
-                                                 },
-    "sw.js":  {
-                  "sha256":  "A9342B766ED326839C7E06208BC9A10CCBE9B84A643FB0E11D6430642CAF7C46",
-                  "size":  5911
-              },
-    "assets/audio/speech/djak.mp3":  {
-                                         "sha256":  "128F1989378B89B335315BB70308DA4C92CDCB04FEB5AF81D8FD26E730613730",
-                                         "size":  5760
-                                     },
-    "assets/audio/speech/kvadrat.mp3":  {
-                                            "sha256":  "7F6119C90F9E177ED948A88C2B5BD3F97D77C3D23A7D00682C23A8D863C10207",
-                                            "size":  7872
-                                        },
-    "assets/audio/duck.ogg":  {
-                                  "sha256":  "8A42AC12FC1DAD2096366722B52F4BD17BF8175C90F791E04B01B93F99D4FAA3",
-                                  "size":  53498
-                              },
-    "games/tracing.js":  {
-                             "sha256":  "CBA4F9A27100B4A005030856D6928A552617ABCB7E8687070E4E91583DA742C0",
-                             "size":  20359
-                         },
-    "assets/audio/speech/p.mp3":  {
-                                      "sha256":  "CB7DFEC12D971BD37C81B40E2E2162C31D993AF64AD6C3990CAB155D176124D4",
-                                      "size":  5184
-                                  },
-    "assets/audio/speech/igla.mp3":  {
-                                         "sha256":  "E0FA60E135C910A1B793A39E719B535A801141069B8E7150FEE0BF6E6790003D",
-                                         "size":  6720
-                                     },
-    "assets/audio/speech/sest.mp3":  {
-                                         "sha256":  "CBCF49FB2B07AC5D9ADCCC9B2510BA37C406B67E58D5E4849AAFA1E4AD6FFC65",
-                                         "size":  7680
-                                     },
-    "shared/speech.js":  {
-                             "sha256":  "AE318FFD18EB44624F8DC18294C90E940824386534F9DAEF1D9A1AB4FE66EBCA",
-                             "size":  8607
-                         },
-    "assets/audio/speech/crvena.mp3":  {
-                                           "sha256":  "6FC71D25CFCDDA67713F02D6538C936D901DE086FE4BFFDA4DAED2F8D43BEA5B",
-                                           "size":  7872
-                                       },
-    "assets/audio/speech/ekran.mp3":  {
-                                          "sha256":  "44B7E704E17C1FC217E11FCF2145E57702588F81A3A46237FDD9717C1417FC43",
-                                          "size":  7104
-                                      },
-    "assets/audio/speech/kupa.mp3":  {
-                                         "sha256":  "AC613110934E83E3454CE5B04F6AEF8DD2202618BEB8A865CAB468E5D6405BD0",
-                                         "size":  6528
-                                     },
-    "games/coloring.js":  {
-                              "sha256":  "DA434876906F44CC0A6AFC06D788C283FC58090ADEE26C11EB5D84107A2C4D60",
-                              "size":  18473
-                          },
-    "assets/audio/speech/dva.mp3":  {
-                                        "sha256":  "0B2A95D413E385931F174F73C414B24C789CEB7176036C631AD01622127A92E8",
-                                        "size":  5952
-                                    },
-    "pages/racing.html":  {
-                              "sha256":  "666C029915E78B7E39ACBE7B35070C7CB7321EC0CA513A40068C34F1A7EFF2AF",
-                              "size":  16153
-                          },
-    "assets/audio/speech/valjak.mp3":  {
-                                           "sha256":  "448CAD84CD8E47EB63251F7AC5B66ED75EF19C9F51A8FC194B58DDADD92BAF04",
-                                           "size":  7296
-                                       },
-    "assets/audio/speech/nj.mp3":  {
-                                       "sha256":  "7589A8EBCAD141B368C275F59BA1C4B076376CDA222D7BDA811D084D0BDC7E8D",
-                                       "size":  5568
-                                   },
-    "pages/matching_game.html":  {
-                                     "sha256":  "D7925B89324766C6026971D8343972875149DB6018A00CA9099E46AC47C7A059",
-                                     "size":  13922
-                                 },
-    "games/racing3d-config.js":  {
-                                     "sha256":  "8DDB67C70DD37F1866E48C103F77B5DCEBBECFC59061E9FB4B2B82546A913E01",
-                                     "size":  4779
-                                 },
-    "assets/audio/speech/s.mp3":  {
-                                      "sha256":  "F6E9364CA12D3F216C274BCB2C26C79159D8FCAD2EE05FB30482F4B34A2A7A79",
-                                      "size":  6720
-                                  },
-    "games/adventure-music.js":  {
-                                     "sha256":  "50BFDD873CDB3C2D97E8CA539AAB1BD94337C0309D6C9F6EDFA2A56FB173017C",
-                                     "size":  15662
-                                 },
-    "games/animals.js":  {
-                             "sha256":  "ADE696875E494C150BB7230170E62394FBC1C86E1FDF216A43FC3ABDBE7EA464",
-                             "size":  5757
-                         },
-    "games/kids_games.js":  {
-                                "sha256":  "7D9F79B82AB1554EA6AB8C47FAB9E7DDB1BD7D93171A081597B3FFCA18405658",
-                                "size":  5099
-                            },
-    "assets/audio/speech/t.mp3":  {
-                                      "sha256":  "E0E15F60ED2AFB40B412562744516CD65EDAA60A60E3DA53857FAF5795F52641",
-                                      "size":  5184
-                                  },
-    "assets/audio/speech/dva_psa.mp3":  {
-                                            "sha256":  "6290971126F100C10F96D8CA6E023840000D29F6530EF409DFA928C0BB77AE54",
-                                            "size":  8448
-                                        },
-    "assets/audio/speech/devet_zaba.mp3":  {
-                                               "sha256":  "FD1A25E0A80BEA02B6B70C577B5D1AFB4861085121E23355D479CA5A6C63F51D",
-                                               "size":  11328
-                                           },
-    "assets/audio/speech/bela.mp3":  {
-                                         "sha256":  "3358B66A836F5648A57CAF6BF4DC593587D73A3FA6EBA6CEAEC9CA6270F445A3",
-                                         "size":  7296
-                                     },
-    "assets/audio/speech/nos.mp3":  {
-                                        "sha256":  "E4BD74E6ADA9EBC85937E0FAB4F3057F1FB668B2414859C9FC1CAC490848C9BB",
-                                        "size":  6912
-                                    },
-    "assets/audio/speech/v.mp3":  {
-                                      "sha256":  "D65E086AA7179692A515654A5431C85015B0943C54E1E1C01C13E096E08E3DF4",
-                                      "size":  5568
-                                  },
-    "assets/audio/speech/slon.mp3":  {
-                                         "sha256":  "F34608E25E52728F5AC687342E1BAE78DB62A63E5890FFC0BB8198596436F729",
-                                         "size":  6912
-                                     },
-    "assets/audio/speech/b.mp3":  {
-                                      "sha256":  "5EC0AE41F84B667A437414484A7AFB2EC10BD5D22079D2C123142FCF84D84C3F",
-                                      "size":  5376
-                                  },
-    "assets/images/explorer/02_walk_right.png":  {
-                                                     "sha256":  "D35E9D3C2AB8B910D24F06AB0CC3EB703894D383D798B4224DF97CC76A7F5480",
-                                                     "size":  99542
-                                                 },
-    "pages/driving.html":  {
-                               "sha256":  "89BC8B934E0E76BED177DF7214C39A6568F70E5E3C2E3BB10BE4C7104F8B71DE",
-                               "size":  2567
-                           },
-    "pages/space.html":  {
-                             "sha256":  "AB9549989954A6D44A4A4D6CBAA85EC35629E68D0A8A91568E38DEC4B844157E",
-                             "size":  2799
-                         },
-    "games/adventure-modes.js":  {
-                                     "sha256":  "268E5744538B62040AC3123D4ED2F437907429BCF464CCDC87CED48BF4845EBD",
-                                     "size":  14697
-                                 },
-    "assets/audio/speech/siva.mp3":  {
-                                         "sha256":  "72BE24910EA374DA02C8181D4B6D7E5313CF7EA8FEA5FE91B8A8D31B6098AC0D",
-                                         "size":  7680
-                                     },
-    "assets/audio/speech/osam.mp3":  {
-                                         "sha256":  "6AD437FA689DEAABFFE511F37AEC210BD0662E1846E1F21CD808193EE62C61DD",
-                                         "size":  7488
-                                     },
-    "assets/audio/speech/plava.mp3":  {
-                                          "sha256":  "9FBF225C808838AD3358731E81CB9C1106008B174D092B1D70B71658D32D17C3",
-                                          "size":  6720
-                                      },
-    "assets/audio/speech/k.mp3":  {
-                                      "sha256":  "9BF6587989E9D2FFDF5B287D4536EDD9EA5C6EED241A9C31053BC474D09F64AD",
-                                      "size":  4800
-                                  },
-    "assets/audio/speech/gusenica.mp3":  {
-                                             "sha256":  "17BEF0223E0EED62F4DE1F152BCA82C6DD68DAD0C23439F453F01630166C3D14",
-                                             "size":  9600
-                                         },
-    "assets/audio/speech/helikopter.mp3":  {
-                                               "sha256":  "8EBFEE12544599F2F209154C3A31CD1EADE45B7899DF138C4325AE56377B97C9",
-                                               "size":  11520
-                                           },
-    "assets/audio/speech/m.mp3":  {
-                                      "sha256":  "DB947ACAF9C8C8F776BA06541DC79FE1A986BF4D9DE5BE419CC2A5843DF28C5E",
-                                      "size":  5760
-                                  },
-    "shared/motion.js":  {
-                             "sha256":  "A7AFEEB89CA9B8CC1D0A7DE3E6CE808ABEDBCF4BC8E19B2AB7F67F8E417C8E94",
-                             "size":  683
-                         },
-    "games/kitty.js":  {
-                           "sha256":  "DC06A900FB8003F6217B4CAD7723A4C769AD424E0168148E1D9DA2B013DB8CCE",
-                           "size":  5531
-                       },
-    "data/serbian.js":  {
-                            "sha256":  "61FCD83C087E5D3860BB80F2DCD9ECE0E876DC271B6F92192A379B51D70D5F50",
-                            "size":  4846
-                        },
-    "assets/audio/cat.ogg":  {
-                                 "sha256":  "34D45DB58A5AD7B9586514BD30350F0E6C43AD9391B253CFEE82A08DA21EAB67",
-                                 "size":  14306
-                             },
-    "assets/audio/speech/g.mp3":  {
-                                      "sha256":  "2EA182F5094B22937182F2324F03E67B215E8706E75E6C034AF3DC36392432EF",
-                                      "size":  5760
-                                  },
-    "assets/audio/speech/kvadar.mp3":  {
-                                           "sha256":  "8AF70D8481D646C0542CD644F162FD12F0220AE65BA0CE9F9B92EEE0D737D3DB",
-                                           "size":  7488
-                                       },
-    "assets/audio/speech/zelena.mp3":  {
-                                           "sha256":  "4F8C53222641A5B9912A841A70A2A8A1F7B7A97A8C9D431FE59A57E3C998A37E",
-                                           "size":  7488
-                                       },
-    "assets/audio/speech/dz.mp3":  {
-                                       "sha256":  "F0DF23BC66204CDCECD9D4D1651E41F614E91042FA35B2B2DFA21A0A36E8CC7C",
-                                       "size":  6336
-                                   },
-    "assets/audio/speech/krava.mp3":  {
-                                          "sha256":  "0686DA50527513A9E9C3AB145F785698E5C69BC4F05D31973F18C2BFF0C9AC86",
-                                          "size":  6720
-                                      },
-    "assets/audio/speech/riba.mp3":  {
-                                         "sha256":  "F94049DA9B11FE90C6F68939F44399B952211F59BA62F3717644897C9DC27A86",
-                                         "size":  6720
-                                     },
-    "assets/audio/elephant.ogg":  {
-                                      "sha256":  "E5F3120E5EACA87CC080BBF57BD185C96D52FD0F63CC1DFE33228C8BFA29F3BC",
-                                      "size":  18502
-                                  },
-    "assets/audio/speech/narandzasta.mp3":  {
-                                                "sha256":  "B3079287C7C4A732E530A218EDBC08462D5FBB272FF53C37C9F6F0528E257B1D",
-                                                "size":  10176
-                                            },
-    "assets/audio/speech/pet_slonova.mp3":  {
-                                                "sha256":  "D6609F0B2CCF9438E91177EE7DD89C4A2607CEA30715D890D0AC18F1FF6124CF",
-                                                "size":  10368
-                                            },
-    "index.html":  {
-                       "sha256":  "8754E222995E88E9C78F4FFC6F10F47C941737CAD510305ADEB3EACCE6E3D6E0",
-                       "size":  20877
-                   },
-    "assets/images/explorer/06_idle_right_c.png":  {
-                                                       "sha256":  "8000439CFDAA764F0FB75522AEAA79B4EB45962C6AD09D8E4A6C687E984166C1",
-                                                       "size":  75758
-                                                   },
-    "assets/audio/speech/pas.mp3":  {
-                                        "sha256":  "31A6A6EA2F0575F5EE71A5D500FE79425087496BDF5BD8F331EC7969628F1B41",
-                                        "size":  5952
-                                    },
-    "assets/audio/cow.ogg":  {
-                                 "sha256":  "AC0A7DC56E6ABC7B17A45D8BEA5644350516DD2B995F1DA506849892AAF8650B",
-                                 "size":  25975
-                             },
-    "assets/audio/speech/jabuka.mp3":  {
-                                           "sha256":  "797A6A839B6F44A3DFFF7A28A3EB5FB602491327B3B5102D0F0F82BB5DAEEAE3",
-                                           "size":  8448
-                                       },
-    "assets/audio/speech/zh.mp3":  {
-                                       "sha256":  "264C7D2A4A8F90AFCA275477A84DE19B3525554EECBC1BD9608F700B7BB0A7B8",
-                                       "size":  5760
-                                   },
-    "assets/images/explorer_kitty/02_walk_right.png":  {
-                                                           "sha256":  "8A10ABC385D0312ED268B303C80AE437A57C8149A65CF6734CDB39E6F7A131DB",
-                                                           "size":  81214
-                                                       },
-    "shared/main.js":  {
-                           "sha256":  "D72235E5A621A5D5337A393F9B89B7E109668D03B29907968483F5E0541A0635",
-                           "size":  3371
-                       },
-    "assets/audio/speech/cj.mp3":  {
-                                       "sha256":  "01FA5375218621D8DBA2A210134BD0363AB0AD0826E1BA6C3CACD8A2C528113B",
-                                       "size":  5952
-                                   },
-    "pages/papper_kitty.html":  {
-                                    "sha256":  "C95B90C9EC8F80AD47DF7FD777DB4B35800D66866885CC4706646E85FDF3101D",
-                                    "size":  13327
-                                },
-    "assets/audio/speech/cetiri_krave.mp3":  {
-                                                 "sha256":  "000AA17331896E02EBD8913E3A1C1FCE2E64FD1A685F3D8E1B60DCCD214A7ECF",
-                                                 "size":  11904
-                                             },
-    "assets/audio/pig-grunt.ogg":  {
-                                       "sha256":  "1C3D7B63B87E4D85C0DB20E0649E72FE4BA2AA9FD8DA11424B23E8DEB9C6FA37",
-                                       "size":  12702
-                                   },
-    "shared/utils.js":  {
-                            "sha256":  "C01DC5FCEAAB85A52A7980675CD69C979BA7B5E2FC90FF59A9AB6583EC38E806",
-                            "size":  263
-                        },
-    "assets/audio/speech/cetiri.mp3":  {
-                                           "sha256":  "FB1529487AD4D2AE8DBFFC89B65766C962F3AC08E8387E83D962AF98D727D335",
-                                           "size":  7872
-                                       },
-    "pages/ocean.html":  {
-                             "sha256":  "C79310910A3E590FA145D624A0BFB2CD308B241304C3404582904309DF7416EA",
-                             "size":  2797
-                         },
-    "assets/audio/speech/d.mp3":  {
-                                      "sha256":  "176FA34536B43F85979E03A743A9A939F8B3C4842DCF8847C706C76DFE32E2BF",
-                                      "size":  5760
-                                  },
-    "assets/audio/chicken.ogg":  {
-                                     "sha256":  "4365E69559707563E1F30054BD0A7C5CAE927FF56A20288882A85FE9597ED71F",
-                                     "size":  25300
-                                 },
-    "assets/audio/speech/nula.mp3":  {
-                                         "sha256":  "40921898C7F3814B7AB10BB591A20E7A529EE1DB91EE0CDE6BD08EFF6BFF4F8C",
-                                         "size":  6336
-                                     },
-    "assets/audio/speech/svinja.mp3":  {
-                                           "sha256":  "1FBC33B92F9AB9705EDF1B5203C4A2FA48813F5439CE3841BDFA93671C89F85E",
-                                           "size":  8064
-                                       },
-    "assets/icons/download-192.png":  {
-                                          "sha256":  "A6D0B5C3D7C5EB872A30926C646DB05733AFB19B7D484C11A3BD4F2521F88A0C",
-                                          "size":  44285
-                                      },
-    "assets/audio/speech/f.mp3":  {
-                                      "sha256":  "5F39689310493AE47A0CB5D3C23C88DBF5F65DA7FC23EC2DA7284AE7A07439FF",
-                                      "size":  6528
-                                  },
-    "pages/classroom.html":  {
-                                 "sha256":  "3E33AB292AE45EB564F23AA543849E7DFA9CCAA2AB506FD8B17FDFBB76658A98",
-                                 "size":  16159
-                             },
-    "assets/audio/speech/z.mp3":  {
-                                      "sha256":  "CA9CDC365FDF59B5F8973FDE89B78431AE520B3078D29F9568A9D12505558B95",
-                                      "size":  5760
-                                  },
-    "assets/icons/icon-512.png":  {
-                                      "sha256":  "BA21F22D56DCEDDEE1BA38B7E8543071B1B726A5783ADECC1660A17341D3A23A",
-                                      "size":  216177
-                                  },
-    "assets/images/explorer_kitty/04_idle_right_b.png":  {
-                                                             "sha256":  "E08086A20FF2C8A9186A6FBCDBC9537C1FDE0E98E30E6F8ED26EDC0D2A06127A",
-                                                             "size":  92177
-                                                         },
-    "assets/images/dino/brontosaurus.png":  {
-                                                "sha256":  "523279A33B2171037C20A1228ADED840928124A359F342E08D0EABA02315E67F",
-                                                "size":  424821
-                                            },
-    "assets/audio/speech/kocka.mp3":  {
-                                          "sha256":  "35598C3A1E77504399AC48EFC0C63C6E6336BDE40BCF60FEEA9A37094BDB1C8F",
-                                          "size":  6912
-                                      },
-    "games/animal_puzzle.js":  {
-                                   "sha256":  "28CAB06C5A48BEB101FDE1EE2F0DB2972DB8C8BFD3EE7516FE750A507D4F353B",
-                                   "size":  31823
-                               },
-    "pages/animal_memory.html":  {
-                                     "sha256":  "3534E8F0807A2550AAFD592FD1682DCEE857E96EC802F0535F7CA86A419336E7",
-                                     "size":  4725
-                                 },
-    "assets/audio/speech/flamingo.mp3":  {
-                                             "sha256":  "F5290AAC9D57C3D9AEBABF4D2A7348D45F8A6DF7A53A5DF4BE15D19230017E06",
-                                             "size":  9024
-                                         },
-    "shared/audio.js":  {
-                            "sha256":  "4199E66F027F69A01E6971CA2766F1425DE1C49A7CCAA872BF7F1A34B7B343C2",
-                            "size":  5896
-                        },
-    "assets/fonts/fredoka-latin-ext.woff2":  {
-                                                 "sha256":  "18A1723C878C0D8ACC2E45A108FD62FBB976E408337804AFA2908982FAC13E2A",
-                                                 "size":  4576
-                                             },
-    "assets/audio/speech/piramida.mp3":  {
-                                             "sha256":  "FD22B9D6B2766BA57364595510E65D3196664FF3F46C7E1BD028529E2FA95D5F",
-                                             "size":  8640
-                                         },
-    "assets/audio/speech/crna.mp3":  {
-                                         "sha256":  "75AF3352B910722A9B9F36CB51D4E41AF79BFAE94778004107423A66DD65ADC9",
-                                         "size":  7296
-                                     },
-    "games/candy.js":  {
-                           "sha256":  "01727D6F73C4D16F421BA2274DAE947743BB633E08FBA15C7E99E07DA7C67184",
-                           "size":  19433
-                       },
-    "assets/audio/speech/devet.mp3":  {
-                                          "sha256":  "45A30AAC94A13ECBE71F3E7B8578BCCBE9CA208C77C8746172ABF956A46BFAC4",
-                                          "size":  7104
-                                      },
-    "assets/audio/speech/patka.mp3":  {
-                                          "sha256":  "211F8F8EEF4369CA4B682C2D53A155581DD16B16941A671FFE62C6D794F6FE7E",
-                                          "size":  6912
-                                      },
-    "assets/images/explorer/04_idle_right_b.png":  {
-                                                       "sha256":  "74A5A819571EDE8812B6B8FD6D3B4BB0C8F9BB1ECBAD56F88366EE2EB8428BD5",
-                                                       "size":  76872
-                                                   },
-    "games/ocean.js":  {
-                           "sha256":  "9916C368CB6EED03E34BA1BFD535938FB5F51AAE49FD96212DB6F96AF5665C52",
-                           "size":  40414
-                       },
-    "pages/shapes.html":  {
-                              "sha256":  "363EB80D5800616274952D310243A6CEA10AB7B2BC62929C92EDD3DF9587958D",
-                              "size":  10944
-                          }
+{
+  "assets/audio/cat.ogg": {
+    "sha256": "34d45db58a5ad7b9586514bd30350f0e6c43ad9391b253cfee82a08da21eab67",
+    "size": 14306
+  },
+  "assets/audio/chicken.ogg": {
+    "sha256": "4365e69559707563e1f30054bd0a7c5cae927ff56a20288882a85fe9597ed71f",
+    "size": 25300
+  },
+  "assets/audio/cow.ogg": {
+    "sha256": "ac0a7dc56e6abc7b17a45d8bea5644350516dd2b995f1da506849892aaf8650b",
+    "size": 25975
+  },
+  "assets/audio/dog.ogg": {
+    "sha256": "e4438897b68360e54c9e9319a8aea14a78527f022c2b78086f4b2348c03b2fa1",
+    "size": 82638
+  },
+  "assets/audio/duck.ogg": {
+    "sha256": "8a42ac12fc1dad2096366722b52f4bd17bf8175c90f791e04b01b93f99d4faa3",
+    "size": 53498
+  },
+  "assets/audio/elephant.ogg": {
+    "sha256": "e5f3120e5eaca87cc080bbf57bd185c96d52fd0f63cc1dfe33228c8bfa29f3bc",
+    "size": 18502
+  },
+  "assets/audio/fox.mp3": {
+    "sha256": "cd899da0d8b797b330e7fe6e665bb2d5a670b12215148a789a01faae1bdafae0",
+    "size": 534528
+  },
+  "assets/audio/frog.oga": {
+    "sha256": "cb7ad91b3943678c50e16f914cf5652e9da0bd782b5efb065d95d89549ff7b89",
+    "size": 83798
+  },
+  "assets/audio/horse.ogg": {
+    "sha256": "ea5171e324c69469e4d6dd99782d88c020091e5fc8808bb63ae24923dcdf65a4",
+    "size": 45897
+  },
+  "assets/audio/lion.ogg": {
+    "sha256": "ab237d0f960e83412251d0c11f69959f3c2e8d3b14595f7181c3056f7fa18bf7",
+    "size": 77611
+  },
+  "assets/audio/pig-grunt.ogg": {
+    "sha256": "1c3d7b63b87e4d85c0db20e0649e72fe4ba2aa9fd8da11424b23e8deb9c6fa37",
+    "size": 12702
+  },
+  "assets/audio/sheep.ogg": {
+    "sha256": "88442faf01e307727a6b39ad274fed07be56d1ce52dea299b9d56cf56ec8c405",
+    "size": 11902
+  },
+  "assets/audio/speech/a.mp3": {
+    "sha256": "f3367d34a65237afafb62c407d481b149410e5722188d6949bb787cc530c6ffa",
+    "size": 6528
+  },
+  "assets/audio/speech/automobil.mp3": {
+    "sha256": "925910014f402cba89885112ff217d4beaf57b215ee596e9dee7859af5e446d2",
+    "size": 9408
+  },
+  "assets/audio/speech/b.mp3": {
+    "sha256": "5ec0ae41f84b667a437414484a7afb2ec10bd5d22079d2c123142fcf84d84c3f",
+    "size": 5376
+  },
+  "assets/audio/speech/banana.mp3": {
+    "sha256": "0747bad8b48a165aa76179621c55e1c5df96d0bd0f89aee7845c779647b45398",
+    "size": 7872
+  },
+  "assets/audio/speech/bela.mp3": {
+    "sha256": "3358b66a836f5648a57caf6bf4dc593587d73a3fa6eba6ceaec9ca6270f445a3",
+    "size": 7296
+  },
+  "assets/audio/speech/braon.mp3": {
+    "sha256": "e88e7d6c19444334a30d484261ec66e77cfe61d364537e52d0cb603f7be4535a",
+    "size": 7296
+  },
+  "assets/audio/speech/bravo.mp3": {
+    "sha256": "7df62a91cee69c6d2f3658ca850891c223142c154d7d6b406ceabacbaf2bc328",
+    "size": 7680
+  },
+  "assets/audio/speech/c.mp3": {
+    "sha256": "086625d6bfcdb28bb32d193e307af8fe483bda143c9776b47486bdaca0564a4b",
+    "size": 5952
+  },
+  "assets/audio/speech/cetiri.mp3": {
+    "sha256": "fb1529487ad4d2ae8dbffc89b65766c962f3ac08e8387e83d962af98d727d335",
+    "size": 7872
+  },
+  "assets/audio/speech/cetiri_krave.mp3": {
+    "sha256": "000aa17331896e02ebd8913e3a1c1fce2e64fd1a685f3d8e1b60dccd214a7ecf",
+    "size": 11904
+  },
+  "assets/audio/speech/ch.mp3": {
+    "sha256": "4feb0b289a85bc7f2bcca56ee0a0874388b24684a5604d2d9dbc1a59142fc2b9",
+    "size": 4992
+  },
+  "assets/audio/speech/chamac.mp3": {
+    "sha256": "671837ce2c8ba4069501384668b3d5c386bb88bb4daa7d8c59fb6c55df0de88a",
+    "size": 7296
+  },
+  "assets/audio/speech/cj.mp3": {
+    "sha256": "01fa5375218621d8dba2a210134bd0363ab0ad0826e1ba6c3cacd8a2c528113b",
+    "size": 5952
+  },
+  "assets/audio/speech/cjuran.mp3": {
+    "sha256": "0708c72ecb8df5d14bccec2dbe7f1a4db7fbaccdb77cd2eaa105ba9b8e5e07a2",
+    "size": 7488
+  },
+  "assets/audio/speech/crna.mp3": {
+    "sha256": "75af3352b910722a9b9f36cb51d4e41af79bfae94778004107423a66dd65adc9",
+    "size": 7296
+  },
+  "assets/audio/speech/crvena.mp3": {
+    "sha256": "6fc71d25cfcdda67713f02d6538c936d901de086fe4bffda4daed2f8d43bea5b",
+    "size": 7872
+  },
+  "assets/audio/speech/cvet.mp3": {
+    "sha256": "99496432ceddc220e6e6fffc0ebec273cb54bbad198065ab2115b9a19660fd40",
+    "size": 6912
+  },
+  "assets/audio/speech/d.mp3": {
+    "sha256": "176fa34536b43f85979e03a743a9a939f8b3c4842dcf8847c706c76dfe32e2bf",
+    "size": 5760
+  },
+  "assets/audio/speech/deset.mp3": {
+    "sha256": "b9c0f740dee532183c63a53c40de4dc0cbc6a9962e1c498fe5c23d5515dcce9e",
+    "size": 8064
+  },
+  "assets/audio/speech/deset_svinja.mp3": {
+    "sha256": "e3868efb2888c9d08489cba748a86b15ccfac80d34a27fc73323ffbd3513b6f3",
+    "size": 11136
+  },
+  "assets/audio/speech/devet.mp3": {
+    "sha256": "45a30aac94a13ecbe71f3e7b8578bccbe9ca208c77c8746172abf956a46bfac4",
+    "size": 7104
+  },
+  "assets/audio/speech/devet_zaba.mp3": {
+    "sha256": "fd1a25e0a80bea02b6b70c577b5d1afb4861085121e23355d479ca5a6c63f51d",
+    "size": 11328
+  },
+  "assets/audio/speech/dj.mp3": {
+    "sha256": "321b3265457920482424f0c31806a7f49cdc967b2418ee1404b647cb075f77fd",
+    "size": 5184
+  },
+  "assets/audio/speech/djak.mp3": {
+    "sha256": "128f1989378b89b335315bb70308da4c92cdcb04feb5af81d8fd26e730613730",
+    "size": 5760
+  },
+  "assets/audio/speech/drvo.mp3": {
+    "sha256": "4ad43f561e7d1f608c8ca4c1f6c40248401e9fab1e1ef8ca877ffcfda60936f8",
+    "size": 7488
+  },
+  "assets/audio/speech/dva.mp3": {
+    "sha256": "0b2a95d413e385931f174f73c414b24c789ceb7176036c631ad01622127a92e8",
+    "size": 5952
+  },
+  "assets/audio/speech/dva_psa.mp3": {
+    "sha256": "6290971126f100c10f96d8ca6e023840000d29f6530ef409dfa928c0bb77ae54",
+    "size": 8448
+  },
+  "assets/audio/speech/dz.mp3": {
+    "sha256": "f0df23bc66204cdcecd9d4d1651e41f614e91042fa35b2b2dfa21a0a36e8cc7c",
+    "size": 6336
+  },
+  "assets/audio/speech/dzemper.mp3": {
+    "sha256": "ff284c42a99b0aa5dc3fef22be0fcd5ae51a39f2c47b6abdc8f427782e9bdbd9",
+    "size": 8256
+  },
+  "assets/audio/speech/e.mp3": {
+    "sha256": "6a7764e7b52dfa572b9f324f661e545507888e1ffe48d91f313574a30860a722",
+    "size": 4800
+  },
+  "assets/audio/speech/ekran.mp3": {
+    "sha256": "44b7e704e17c1fc217e11fcf2145e57702588f81a3a46237fdd9717c1417fc43",
+    "size": 7104
+  },
+  "assets/audio/speech/f.mp3": {
+    "sha256": "5f39689310493ae47a0cb5d3c23c88dbf5f65da7fc23ec2da7284ae7a07439ff",
+    "size": 6528
+  },
+  "assets/audio/speech/flamingo.mp3": {
+    "sha256": "f5290aac9d57c3d9aebabf4d2a7348d45f8a6df7a53a5df4be15d19230017e06",
+    "size": 9024
+  },
+  "assets/audio/speech/g.mp3": {
+    "sha256": "2ea182f5094b22937182f2324f03e67b215e8706e75e6c034af3dc36392432ef",
+    "size": 5760
+  },
+  "assets/audio/speech/gusenica.mp3": {
+    "sha256": "17bef0223e0eed62f4de1f152bca82c6dd68dad0c23439f453f01630166c3d14",
+    "size": 9600
+  },
+  "assets/audio/speech/h.mp3": {
+    "sha256": "529ff5ca8bf8ceca138645e3dcbb90e72f4a22b6f2d21100b89039eb205df511",
+    "size": 4800
+  },
+  "assets/audio/speech/helikopter.mp3": {
+    "sha256": "8ebfee12544599f2f209154c3a31cd1eade45b7899df138c4325ae56377b97c9",
+    "size": 11520
+  },
+  "assets/audio/speech/i.mp3": {
+    "sha256": "3257aea5f258b27cd98d77fd11ae5680c247dfe0c7a4c79dd46f6263ce94e507",
+    "size": 4800
+  },
+  "assets/audio/speech/igla.mp3": {
+    "sha256": "e0fa60e135c910a1b793a39e719b535a801141069b8e7150fee0bf6e6790003d",
+    "size": 6720
+  },
+  "assets/audio/speech/j.mp3": {
+    "sha256": "240ae2990d52fbc0cb3923466d609abeedb4f67d4286d91add2bf59a4b4a5c5e",
+    "size": 5760
+  },
+  "assets/audio/speech/jabuka.mp3": {
+    "sha256": "797a6a839b6f44a3dfff7a28a3eb5fb602491327b3b5102d0f0f82bb5daeeae3",
+    "size": 8448
+  },
+  "assets/audio/speech/jao.mp3": {
+    "sha256": "d9cd56bc055ed4dcf81860236342a92f71c3948b70abe25429ca9798baa849ed",
+    "size": 15597
+  },
+  "assets/audio/speech/jedan.mp3": {
+    "sha256": "8bd0150223539c893dbbf8f5bcd2a4cfd57a446352c15ccc76b51180135494b0",
+    "size": 7296
+  },
+  "assets/audio/speech/jedan_pas.mp3": {
+    "sha256": "ba6ef1dda5dd8dccc76d5755d479fce27c7fe0297d5f8742653f30cd1dd49b6a",
+    "size": 9984
+  },
+  "assets/audio/speech/k.mp3": {
+    "sha256": "9bf6587989e9d2ffdf5b287d4536edd9ea5c6eed241a9c31053bc474d09f64ad",
+    "size": 4800
+  },
+  "assets/audio/speech/kocka.mp3": {
+    "sha256": "35598c3a1e77504399ac48efc0c63c6e6336bde40bcf60feea9a37094bdb1c8f",
+    "size": 6912
+  },
+  "assets/audio/speech/koka.mp3": {
+    "sha256": "7add4746243e7c10f423021e5f2f83b3cf4d1f76d88b4cff9280f153e9176f97",
+    "size": 6528
+  },
+  "assets/audio/speech/konj.mp3": {
+    "sha256": "44c352e161211cae80c626fc2cfcc05867fa0fb417b4979df88d50440ed7198b",
+    "size": 5760
+  },
+  "assets/audio/speech/krava.mp3": {
+    "sha256": "0686da50527513a9e9c3ab145f785698e5c69bc4f05d31973f18c2bff0c9ac86",
+    "size": 6720
+  },
+  "assets/audio/speech/krug.mp3": {
+    "sha256": "5f5a05fd5b4f6352b4627ba81ba081c63887239ad3adda1284906ae812ff4c04",
+    "size": 6720
+  },
+  "assets/audio/speech/kupa.mp3": {
+    "sha256": "ac613110934e83e3454ce5b04f6aef8dd2202618beb8a865cab468e5d6405bd0",
+    "size": 6528
+  },
+  "assets/audio/speech/kvadar.mp3": {
+    "sha256": "8af70d8481d646c0542cd644f162fd12f0220ae65ba0ce9f9b92eee0d737d3db",
+    "size": 7488
+  },
+  "assets/audio/speech/kvadrat.mp3": {
+    "sha256": "7f6119c90f9e177ed948a88c2b5bd3f97d77c3d23a7d00682c23a8d863c10207",
+    "size": 7872
+  },
+  "assets/audio/speech/l.mp3": {
+    "sha256": "1d7ecb59ac3298e53faf13f289dba3babd43f8c09b347c7344dce3ab4fa50a5c",
+    "size": 4992
+  },
+  "assets/audio/speech/lav.mp3": {
+    "sha256": "e91713d728ed0e780bb011045ed8f335566f7e9b4c23247b9a6e9c305a5a1ca4",
+    "size": 5760
+  },
+  "assets/audio/speech/lisica.mp3": {
+    "sha256": "5c12c277aa4da7ec960ee3a2dffd5faf1d5a06fa111022fd0914a1e32139cd78",
+    "size": 8448
+  },
+  "assets/audio/speech/lj.mp3": {
+    "sha256": "32bbe712b1edc455fc55644d6481db9c259acd4e8e97d836fa609d4b835231ce",
+    "size": 4992
+  },
+  "assets/audio/speech/ljubav.mp3": {
+    "sha256": "e6797b93c96af7fbd695ba2ba8281f1e1ba7513781dc1c86fba6ed630389c66c",
+    "size": 7488
+  },
+  "assets/audio/speech/ljubicasta.mp3": {
+    "sha256": "2f7cd3083860a830fd7f9dccf7215e2c468b52334ad861e6a076cfa2c4e44cbd",
+    "size": 9024
+  },
+  "assets/audio/speech/lopta.mp3": {
+    "sha256": "8d3b911aa1ac056cc8093e14795d19787c69f9cdaeadfcd0df41f2aceb756f65",
+    "size": 6720
+  },
+  "assets/audio/speech/m.mp3": {
+    "sha256": "db947acaf9c8c8f776ba06541dc79fe1a986bf4d9de5be419cc2a5843df28c5e",
+    "size": 5760
+  },
+  "assets/audio/speech/macka.mp3": {
+    "sha256": "46f85e8377550a6b4c3bb709970cf775d2d9bb5f7f93144f115ffb9f4af4f5e6",
+    "size": 7296
+  },
+  "assets/audio/speech/n.mp3": {
+    "sha256": "77d4baf318a2ada726ff6bd95828b4e6a6d2089b08c1405ec7682502c7ff2264",
+    "size": 5568
+  },
+  "assets/audio/speech/narandzasta.mp3": {
+    "sha256": "b3079287c7c4a732e530a218edbc08462d5fbb272ff53c37c9f6f0528e257b1d",
+    "size": 10176
+  },
+  "assets/audio/speech/nj.mp3": {
+    "sha256": "7589a8ebcad141b368c275f59ba1c4b076376cda222d7bda811d084d0bdc7e8d",
+    "size": 5568
+  },
+  "assets/audio/speech/njuska.mp3": {
+    "sha256": "8c3a4ce2d6e1386e70d8adeb839007eadaf978fbd9908df0ddf68c52e5056c70",
+    "size": 8064
+  },
+  "assets/audio/speech/nos.mp3": {
+    "sha256": "e4bd74e6ada9ebc85937e0fab4f3057f1fb668b2414859c9fc1cac490848c9bb",
+    "size": 6912
+  },
+  "assets/audio/speech/nula.mp3": {
+    "sha256": "40921898c7f3814b7ab10bb591a20e7a529ee1db91ee0cde6bd08eff6bff4f8c",
+    "size": 6336
+  },
+  "assets/audio/speech/o.mp3": {
+    "sha256": "934999d2c8c90c4a0a596b221f73698c8320501328da7bd9e5441d1cd414f255",
+    "size": 6144
+  },
+  "assets/audio/speech/oko.mp3": {
+    "sha256": "66b120e4997fc1bcb7526493c3fcfa7a84c468a26d433ffcdab647363564a180",
+    "size": 5760
+  },
+  "assets/audio/speech/osam.mp3": {
+    "sha256": "6ad437fa689deaabffe511f37aec210bd0662e1846e1f21cd808193ee62c61dd",
+    "size": 7488
+  },
+  "assets/audio/speech/osam_konja.mp3": {
+    "sha256": "347b91d41aaa9f30110db063ea7eec1e576c7845a2a88d5c22aca8346dafd6ee",
+    "size": 10560
+  },
+  "assets/audio/speech/ovca.mp3": {
+    "sha256": "06648b5512eacbd5e8190607348eb3e3cbf2addbb63e5955437787417288b2d9",
+    "size": 7488
+  },
+  "assets/audio/speech/p.mp3": {
+    "sha256": "cb7dfec12d971bd37c81b40e2e2162c31d993af64ad6c3990cab155d176124d4",
+    "size": 5184
+  },
+  "assets/audio/speech/pas.mp3": {
+    "sha256": "31a6a6ea2f0575f5ee71a5d500fe79425087496bdf5bd8f331ec7969628f1b41",
+    "size": 5952
+  },
+  "assets/audio/speech/patka.mp3": {
+    "sha256": "211f8f8eef4369ca4b682c2d53a155581dd16b16941a671ffe62c6d794f6fe7e",
+    "size": 6912
+  },
+  "assets/audio/speech/pet.mp3": {
+    "sha256": "f636b46daa1956bfcd07a9135be28dbacfcb9122d01ba02795d1b3c227d82f05",
+    "size": 5568
+  },
+  "assets/audio/speech/pet_slonova.mp3": {
+    "sha256": "d6609f0b2ccf9438e91177ee7dd89c4a2607cea30715d890d0ac18f1ff6124cf",
+    "size": 10368
+  },
+  "assets/audio/speech/piramida.mp3": {
+    "sha256": "fd22b9d6b2766ba57364595510e65d3196664ff3f46c7e1bd028529e2fa95d5f",
+    "size": 8640
+  },
+  "assets/audio/speech/plava.mp3": {
+    "sha256": "9fbf225c808838ad3358731e81cb9c1106008b174d092b1d70b71658d32d17c3",
+    "size": 6720
+  },
+  "assets/audio/speech/r.mp3": {
+    "sha256": "59ad80116bae179ffdb10c83a03915d87991792d6f481ea881c4e10084a0861c",
+    "size": 5760
+  },
+  "assets/audio/speech/riba.mp3": {
+    "sha256": "f94049da9b11fe90c6f68939f44399b952211f59ba62f3717644897c9dc27a86",
+    "size": 6720
+  },
+  "assets/audio/speech/roze.mp3": {
+    "sha256": "cd613a8433bd1897653fb2f3689845ed6cd4c2ea90a5dd90a997a6a6e7a7722f",
+    "size": 7296
+  },
+  "assets/audio/speech/s.mp3": {
+    "sha256": "f6e9364ca12d3f216c274bcb2c26c79159d8fcad2ee05fb30482f4b34a2a7a79",
+    "size": 6720
+  },
+  "assets/audio/speech/sedam.mp3": {
+    "sha256": "2e9ea1b4d1da8cb224734c4814805ea1d9a4a33025308ab8c6e3b9f864e78598",
+    "size": 8256
+  },
+  "assets/audio/speech/sedam_pataka.mp3": {
+    "sha256": "f0ca0b7608d69e8535fce47db483a29b869cfdd30aadbe0a4b931793ffbc69ca",
+    "size": 12480
+  },
+  "assets/audio/speech/sesir.mp3": {
+    "sha256": "578ecb16e7d81915ae133b24cbd3756da4bcea15379e0168555503ba13436efd",
+    "size": 8064
+  },
+  "assets/audio/speech/sest.mp3": {
+    "sha256": "cbcf49fb2b07ac5d9adccc9b2510ba37c406b67e58d5e4849aafa1e4ad6ffc65",
+    "size": 7680
+  },
+  "assets/audio/speech/sest_lavova.mp3": {
+    "sha256": "d1c09853dd313a6ef0101834a0593c7d7bd01cbaf8b44fb972eec9e82adfc938",
+    "size": 10944
+  },
+  "assets/audio/speech/sh.mp3": {
+    "sha256": "a9aa097a1a330ab077d6709904a270ef924c2c5bf16fc8d4563e5d3f646900f2",
+    "size": 6144
+  },
+  "assets/audio/speech/siva.mp3": {
+    "sha256": "72be24910ea374da02c8181d4b6d7e5313cf7ea8fea5fe91b8a8d31b6098ac0d",
+    "size": 7680
+  },
+  "assets/audio/speech/slon.mp3": {
+    "sha256": "f34608e25e52728f5ac687342e1bae78db62a63e5890ffc0bb8198596436f729",
+    "size": 6912
+  },
+  "assets/audio/speech/svinja.mp3": {
+    "sha256": "1fbc33b92f9ab9705edf1b5203c4a2fa48813f5439ce3841bdfa93671c89f85e",
+    "size": 8064
+  },
+  "assets/audio/speech/t.mp3": {
+    "sha256": "e0e15f60ed2afb40b412562744516cd65edaa60a60e3da53857faf5795f52641",
+    "size": 5184
+  },
+  "assets/audio/speech/torta.mp3": {
+    "sha256": "570df53ecc7b6d3103fbb0f3634033253573943ebbfbd5921ba2e5a87857b096",
+    "size": 7104
+  },
+  "assets/audio/speech/tri.mp3": {
+    "sha256": "88a52fbf5dcb2b9718b584b6dd3caeff23c32f031519624480703dde54ce8164",
+    "size": 6144
+  },
+  "assets/audio/speech/tri_macke.mp3": {
+    "sha256": "950dad6719542b845807346acb065898198ddfd529cab3f713ff0952745ec0f1",
+    "size": 9600
+  },
+  "assets/audio/speech/trougao.mp3": {
+    "sha256": "84622fa35d2f3ff72ac7446dca91528cbe3135ffac4784fe8a83ef37b4a387f7",
+    "size": 8448
+  },
+  "assets/audio/speech/u.mp3": {
+    "sha256": "9aa82c04fb0957ba91583deb2cd3519b0217f5caf62701915e9b6e2931be2968",
+    "size": 6528
+  },
+  "assets/audio/speech/uvo.mp3": {
+    "sha256": "3c41cf33edfe14cb5724fd43868e015efcf9c22c321e5dedc3691832bff84757",
+    "size": 6528
+  },
+  "assets/audio/speech/v.mp3": {
+    "sha256": "d65e086aa7179692a515654a5431c85015b0943c54e1e1c01c13e096e08e3df4",
+    "size": 5568
+  },
+  "assets/audio/speech/valjak.mp3": {
+    "sha256": "448cad84cd8e47eb63251f7ac5b66ed75ef19c9f51a8fc194b58ddadd92baf04",
+    "size": 7296
+  },
+  "assets/audio/speech/vuk.mp3": {
+    "sha256": "1b0bba13f56b8f82670e0b1253e84f05fc0864f5c86281af6d5467e915ac3e4c",
+    "size": 6336
+  },
+  "assets/audio/speech/z.mp3": {
+    "sha256": "ca9cdc365fdf59b5f8973fde89b78431ae520b3078d29f9568a9d12505558b95",
+    "size": 5760
+  },
+  "assets/audio/speech/zaba.mp3": {
+    "sha256": "f647fcb24f9880c813a1af6a9fd7dc2682d7e3ec4976c33ebe270c87ae315129",
+    "size": 7488
+  },
+  "assets/audio/speech/zelena.mp3": {
+    "sha256": "4f8c53222641a5b9912a841a70a2a8a1f7b7a97a8c9d431fe59a57e3c998a37e",
+    "size": 7488
+  },
+  "assets/audio/speech/zh.mp3": {
+    "sha256": "264c7d2a4a8f90afca275477a84de19b3525554eecbc1bd9608f700b7bb0a7b8",
+    "size": 5760
+  },
+  "assets/audio/speech/zuta.mp3": {
+    "sha256": "3a93997f181b8b8e5e8b12a2db89569f2a3e4216653a8119016a65d8e77409ea",
+    "size": 7872
+  },
+  "assets/audio/speech/zvezda.mp3": {
+    "sha256": "40248bb676eafdf9570e798c7c37a71519c7b745eac0a39ad28a2f5e0286c43b",
+    "size": 8640
+  },
+  "assets/fonts/fredoka-latin-ext.woff2": {
+    "sha256": "18a1723c878c0d8acc2e45a108fd62fbb976e408337804afa2908982fac13e2a",
+    "size": 4576
+  },
+  "assets/fonts/fredoka-latin.woff2": {
+    "sha256": "99d6c78e043710d4f83ed90716779798b7b04eb690f73e0ad0e8f32d1f0e98c2",
+    "size": 29732
+  },
+  "assets/icons/download-128.png": {
+    "sha256": "29fafd32992c543e1d238d3ddf7398c4e9b8a7357cd70e2a1c4b76c574dc7893",
+    "size": 23828
+  },
+  "assets/icons/download-192.png": {
+    "sha256": "a6d0b5c3d7c5eb872a30926c646db05733afb19b7d484c11a3bd4f2521f88a0c",
+    "size": 44285
+  },
+  "assets/icons/download-512.png": {
+    "sha256": "fc3c32fd629306b11c0212adec95c9ac5c6ed80bd418da4d9af29003e23d43c6",
+    "size": 271626
+  },
+  "assets/icons/icon-192.png": {
+    "sha256": "879591d8407f2d94126b866618b624303df61e6b88f7bc0b416bcbf6909d4438",
+    "size": 34988
+  },
+  "assets/icons/icon-192.svg": {
+    "sha256": "5994cf1eae22b6633f47d6ebbfd511c8b34e6678ec214614a5cd64f7ca317087",
+    "size": 626
+  },
+  "assets/icons/icon-512.png": {
+    "sha256": "ba21f22d56dceddee1ba38b7e8543071b1b726a5783adecc1660a17341d3a23a",
+    "size": 216177
+  },
+  "assets/icons/icon-512.svg": {
+    "sha256": "5b83b292b2d99a16df2c89b9280c00c4122585f4bdc5fc33a67219fffcef17be",
+    "size": 557
+  },
+  "assets/images/dino/brontosaurus.png": {
+    "sha256": "523279a33b2171037c20a1228aded840928124a359f342e08d0eaba02315e67f",
+    "size": 424821
+  },
+  "assets/images/dino/tiranosaurus-rex.png": {
+    "sha256": "878e0b341772b0001918c70eb6a317e99d5e939622a16a120d7338367f888e98",
+    "size": 619312
+  },
+  "assets/images/driving-car.png": {
+    "sha256": "e01106f9d7d7e730e6df2937e9072a838b8de961cfcf64a800d8076db26eeaf9",
+    "size": 729411
+  },
+  "assets/images/explorer/01_idle_right.png": {
+    "sha256": "2b57af337ea4cfd0bc1f762062a35f91fc42e7e9c6b7e77774670acdd1350c4d",
+    "size": 78697
+  },
+  "assets/images/explorer/02_walk_right.png": {
+    "sha256": "d35e9d3c2ab8b910d24f06ab0cc3eb703894d383d798b4224df97cc76a7f5480",
+    "size": 99542
+  },
+  "assets/images/explorer/03_run_right.png": {
+    "sha256": "e343d102cfe7b469411469ea141cb8094590546c9f379bdf405010a8947d90ef",
+    "size": 94405
+  },
+  "assets/images/explorer/04_idle_right_b.png": {
+    "sha256": "74a5a819571ede8812b6b8fd6d3b4bb0c8f9bb1ecbad56f88366ee2eb8428bd5",
+    "size": 76872
+  },
+  "assets/images/explorer/05_jump_right.png": {
+    "sha256": "aba2b3a04a0a5f555a92b47d32c2530af2c72ebbee63aa11b9c05896e028c7df",
+    "size": 72515
+  },
+  "assets/images/explorer/06_idle_right_c.png": {
+    "sha256": "8000439cfdaa764f0fb75522aeaa79b4eb45962c6ad09d8e4a6c687e984166c1",
+    "size": 75758
+  },
+  "assets/images/explorer_kitty/01_idle_right.png": {
+    "sha256": "223e3e0236f521eb962fd066cf085a67c6ad07c9c3a07d705b2e10c57733a83f",
+    "size": 95629
+  },
+  "assets/images/explorer_kitty/02_walk_right.png": {
+    "sha256": "8a10abc385d0312ed268b303c80ae437a57c8149a65cf6734cdb39e6f7a131db",
+    "size": 81214
+  },
+  "assets/images/explorer_kitty/03_run_right.png": {
+    "sha256": "49a484931293d1f46411b101c2aa9a988d8ae44f5e2437e3e9090ae0298265b8",
+    "size": 77769
+  },
+  "assets/images/explorer_kitty/04_idle_right_b.png": {
+    "sha256": "e08086a20ff2c8a9186a6fbcdbc9537c1fde0e98e30e6f8ed26edc0d2a06127a",
+    "size": 92177
+  },
+  "assets/images/explorer_kitty/05_jump_right.png": {
+    "sha256": "6e546ac09f12e900d9759160bfa09382fcfa1d73e57d9b7226f7cf02e5a3cd02",
+    "size": 74695
+  },
+  "assets/images/explorer_kitty/06_idle_right_c.png": {
+    "sha256": "6fc288b1b13420ef37dd40fbf879400305c37c19c6ad62ea356345fa424c0249",
+    "size": 90262
+  },
+  "assets/lib/three.module.min.js": {
+    "sha256": "f7cee3c7533449a1505cc12cb5128b89e3d4fd3d7ea62b05f9f5464a217472ee",
+    "size": 687458
+  },
+  "data/serbian.js": {
+    "sha256": "75f5783874d86925ee87ed112db121c3a867157e9d82fd99d0bf59102403ec30",
+    "size": 4703
+  },
+  "games/adventure-modes.js": {
+    "sha256": "268e5744538b62040ac3123d4ed2f437907429bcf464ccdc87ced48bf4845ebd",
+    "size": 14697
+  },
+  "games/adventure-music.js": {
+    "sha256": "50bfdd873cdb3c2d97e8ca539aab1bd94337c0309d6c9f6edfa2a56fb173017c",
+    "size": 15662
+  },
+  "games/adventure.js": {
+    "sha256": "e3cf456b858bf20b261cd6f53d899ad6684de23ac9b5559c93a8169be5e48746",
+    "size": 53623
+  },
+  "games/animal_counting.js": {
+    "sha256": "2dd9c15eafd17d6fba6599e3ae7128251862ddf641daf9a0b6930cd5c70192bc",
+    "size": 10328
+  },
+  "games/animal_memory.js": {
+    "sha256": "97f96b2f95416b74e393f40a654b855238dc552b5c23ddab70ffa1c022dc597a",
+    "size": 6371
+  },
+  "games/animal_puzzle.js": {
+    "sha256": "f9127850e8fa546d55fefca94647348020891d4cdd7ef5d240203ae4d993ff59",
+    "size": 31223
+  },
+  "games/animals.js": {
+    "sha256": "6269d1d9260b1f11451cfa35dadef754fba3ca3a63fcc315d153d915c636a9c2",
+    "size": 5603
+  },
+  "games/candy.js": {
+    "sha256": "16101ccb525dd42aef375945c8d3773c5a92c24af2ad8f157d60b523b5ee1354",
+    "size": 18899
+  },
+  "games/classroom.js": {
+    "sha256": "fa14517aea55421287ec87799909697b884d2570370345701ed286a3d4940718",
+    "size": 13185
+  },
+  "games/coloring.js": {
+    "sha256": "611e45d9f2e2e756e52061ba0fb19db8b9bcf2a7a213c12da8444b6403e88eb5",
+    "size": 18077
+  },
+  "games/dino.js": {
+    "sha256": "dadb80a73e6ef42642a9ca2de2f048856974ded36edd7f551d911bdc8bf00d22",
+    "size": 38114
+  },
+  "games/driving.js": {
+    "sha256": "64871dfd360bb88f83400e29682b66e338c5ab384db7c3f7414588ec52cad824",
+    "size": 17984
+  },
+  "games/kids_games.js": {
+    "sha256": "d66615b8337c1db3429af2d3ae406ee8832c63f58c90fc022850aebab2cdb726",
+    "size": 4961
+  },
+  "games/kitty-standalone.js": {
+    "sha256": "7ac6d1103f148e39fcc86b22e3edb556497d0d1b5d420bcb88b9f789dcd2f6e5",
+    "size": 99125
+  },
+  "games/kitty.js": {
+    "sha256": "dc06a900fb8003f6217b4cad7723a4c769ad424e0168148e1d9da2b013db8cce",
+    "size": 5531
+  },
+  "games/ocean.js": {
+    "sha256": "9916c368cb6eed03e34ba1bfd535938fb5f51aae49fd96212db6f96af5665c52",
+    "size": 40414
+  },
+  "games/piano.js": {
+    "sha256": "6d55c88412fdc0180b5cc1b097d4b5b11252af5e47c71964b0e0db4839974039",
+    "size": 8990
+  },
+  "games/racing-config.js": {
+    "sha256": "9c4ff8294bb7adcf8a7102ae5f64d4b918a3dccc198e7fc6993e7177154ad0e6",
+    "size": 11877
+  },
+  "games/racing.js": {
+    "sha256": "fb194cce08255061e9d542b01d4630159fa1de7d62d7dc161aa1d94c4fa1ea9f",
+    "size": 62407
+  },
+  "games/racing3d-config.js": {
+    "sha256": "8ddb67c70dd37f1866e48c103f77b5dcebbecfc59061e9fb4b2b82546a913e01",
+    "size": 4779
+  },
+  "games/racing3d.mjs": {
+    "sha256": "84fb484ff8d733219d0bc8c9a9b0edf1b04306c520139aea1d890db41f9a0d4c",
+    "size": 97387
+  },
+  "games/shapes.js": {
+    "sha256": "c0da2fa03eeb02cb33b6a00af27574f22bb8d6cde8ecbde86818eb044980bef3",
+    "size": 4737
+  },
+  "games/space.js": {
+    "sha256": "3903542c53372eb4e90ad56e910d2d204e6707e1cfeecf638e192a3d6efdddd2",
+    "size": 43992
+  },
+  "games/tracing.js": {
+    "sha256": "c1560f4037b9c6c4e0e6885e67b57af397591126af2da07d9e474ab2c8d9b14e",
+    "size": 19825
+  },
+  "index.html": {
+    "sha256": "1f7b774d56669ea0c71a1225d4e4ceeb92b5eb9d880215b33c33af7428b4c86d",
+    "size": 20483
+  },
+  "manifest.json": {
+    "sha256": "3688e52bfdd8ac8c347edf097d9f2142f3b255563e336a8036ccf9ffc50d4aae",
+    "size": 555
+  },
+  "offline-manifest.json": {
+    "sha256": "ca4e6687fb79b589a276bd69935094ea16b6ef55463fab27059b52dd600c705a",
+    "size": 28781
+  },
+  "pages/animal_counting.html": {
+    "sha256": "302ad699ecd9266b5b2cbc172c49741e6799b6cce3722a4b91faf1dea0d899cf",
+    "size": 5419
+  },
+  "pages/animal_memory.html": {
+    "sha256": "f6373b962c77e6ed843ab360156824a262375fd8085d3203fa7147faaf219e66",
+    "size": 4785
+  },
+  "pages/animal_puzzle.html": {
+    "sha256": "1f7635512068387646ed069ce6a384c910c2004788896a3f365c2159ed0d0597",
+    "size": 4373
+  },
+  "pages/animals.html": {
+    "sha256": "c2d8d81392d2eaedf731f7a11be1684359233497b2bcb458226d92d17cc8d4a9",
+    "size": 13104
+  },
+  "pages/classroom.html": {
+    "sha256": "e70cd6e523f3b883cfb8168203493bd5315871ced216854176a481905c913e59",
+    "size": 15827
+  },
+  "pages/coloring.html": {
+    "sha256": "e2005d7c6497e5775de188a0d4c6b5dc1584357ad007ee79aab21c48ca8941e9",
+    "size": 8877
+  },
+  "pages/dino.html": {
+    "sha256": "f5ea04951ffad2c3dcef20635fa8f2f6b7fb5934f9eb46978c34125c50a83635",
+    "size": 2702
+  },
+  "pages/driving.html": {
+    "sha256": "6b73f8b790ed8323f816c40814fe61a79c4488debe990905f849498ad23bd48f",
+    "size": 2509
+  },
+  "pages/matching_game.html": {
+    "sha256": "3b9ca24b685d59b636336e8ce47e426b75cf14d795602042fc5dd85373ed258a",
+    "size": 13632
+  },
+  "pages/ocean.html": {
+    "sha256": "0d3f154024c490c40d194720de81bf38f86a55cbaaeb2993332dc01e927c8638",
+    "size": 2735
+  },
+  "pages/papper_kitty.html": {
+    "sha256": "709d2d4d3b72a079929309769ce2ab4bb6c4b82dd525146e108a6d65511fbf36",
+    "size": 12940
+  },
+  "pages/piano.html": {
+    "sha256": "0f4b8e7ae0dc73c48677219f50ba99e346f4556b0434398a04a8d22b0b30c985",
+    "size": 10383
+  },
+  "pages/racing.html": {
+    "sha256": "4a7ba7235697c51437fadb96e18f2f3317fe07acb7ebe187acacc37daf64c62b",
+    "size": 15871
+  },
+  "pages/racing3d.html": {
+    "sha256": "8cbe9eb66da13e64022ae91d106c647ff15db39528e984867f005817c746493f",
+    "size": 13581
+  },
+  "pages/shapes.html": {
+    "sha256": "dfd4f645c9d9af43466eb664ca377004ea98c6a98eadd3488d2a581316a54f71",
+    "size": 10707
+  },
+  "pages/space.html": {
+    "sha256": "b16e28618919966fc1e8d181a8112860788e87fcc675b3e7d9ae81319a20b9c7",
+    "size": 2737
+  },
+  "pages/tracing.html": {
+    "sha256": "27d3aed09865bcdb529a9d3f62855635bbfd719124e63b6389459d78aaf0a249",
+    "size": 11051
+  },
+  "shared/accessibility.css": {
+    "sha256": "8822734489b536c885c376b77a352b7954ed536279effdfcd3738510e5e5f010",
+    "size": 1586
+  },
+  "shared/adventure.css": {
+    "sha256": "7abfdec5eedf52560d967c8f00380b64b1ffc6300b06ae9d14e08bb75bae0021",
+    "size": 10969
+  },
+  "shared/audio-buses.js": {
+    "sha256": "b8824b6fafd3c78b1501f44933a97a6b4b9e1b799e8792193e9ef4727883362f",
+    "size": 3489
+  },
+  "shared/audio.js": {
+    "sha256": "4199e66f027f69a01e6971ca2766f1425de1c49a7ccaa872bf7f1a34b7b343c2",
+    "size": 5896
+  },
+  "shared/celebration.js": {
+    "sha256": "3e3cb1091a3b17fcde2e1595d030d47f81cd71579b1090d19e4e20dc45a7af9f",
+    "size": 1173
+  },
+  "shared/feedback.js": {
+    "sha256": "ec2e8521fc995dfe58583a5c17d674433925d05486ea874585d5c3562905b986",
+    "size": 1983
+  },
+  "shared/input.js": {
+    "sha256": "62c9942972dd03a5e17e5b4eb23ab4b52953fc0945a1f39269c98b20f65ee658",
+    "size": 2650
+  },
+  "shared/main.js": {
+    "sha256": "d72235e5a621a5d5337a393f9b89b7e109668d03b29907968483f5e0541a0635",
+    "size": 3371
+  },
+  "shared/motion.js": {
+    "sha256": "9af5d9bf9110b8ff1f4fa6f6bc119558493565e5d5578f56f54f58ed705df381",
+    "size": 665
+  },
+  "shared/navigation.js": {
+    "sha256": "ff13c5057611605d60f3d1ce9900e2ba895a3f15b9ae112f4e5957eeabeddda8",
+    "size": 8941
+  },
+  "shared/speech.js": {
+    "sha256": "ae318ffd18eb44624f8dc18294c90e940824386534f9daef1d9a1ab4fe66ebca",
+    "size": 8607
+  },
+  "shared/utils.js": {
+    "sha256": "c544f8c213352a6e67ffa503a6a2373f2515c9c26b3d8bfa36ac0fffd0883334",
+    "size": 254
+  },
+  "shared/viewport.js": {
+    "sha256": "19526039c5527eba8284a6f52337afaad6622ecb451da09a2684aa8e36109fc9",
+    "size": 2266
+  },
+  "styles/design-tokens.css": {
+    "sha256": "4be087d3a503715a32df9bbf7b02a4f04c2df28f9f66328f56624ff6a4d11916",
+    "size": 932
+  },
+  "styles/viewport.css": {
+    "sha256": "091b8d9c9ba882d4cf47da2ab93b002ba29d4d93972126439e68955e9efdea84",
+    "size": 1058
+  },
+  "sw-cache-list.json": {
+    "sha256": "1375d203135e1d5be98bb8b4ce4dec852de908aa72fe6e7271077b103469ea5d",
+    "size": 6659
+  },
+  "sw.js": {
+    "sha256": "75a6bbec5a0b4f7e300d829340e84092ff3ddaade507c75b884fe0d71ea493d4",
+    "size": 5782
+  }
 }
