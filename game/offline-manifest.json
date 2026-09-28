@@ -640,8 +640,8 @@
     "size": 4961
   },
   "games/kitty-standalone.js": {
-    "sha256": "7ac6d1103f148e39fcc86b22e3edb556497d0d1b5d420bcb88b9f789dcd2f6e5",
-    "size": 99125
+    "sha256": "869c44e4e600489c69c88d8b6b6b21b9823a74d85a121df9f812f97e41d7e3fc",
+    "size": 100013
   },
   "games/kitty.js": {
     "sha256": "dc06a900fb8003f6217b4cad7723a4c769ad424e0168148e1d9da2b013db8cce",
@@ -692,8 +692,8 @@
     "size": 555
   },
   "offline-manifest.json": {
-    "sha256": "53bc20903daa42e60b8bf19be807c504711348fbccc2036a0b4664181ab3e4d0",
-    "size": 28781
+    "sha256": "e92bba903859c995074183e95311c5fa145cdc37c24a2e89ef23c626d061eafe",
+    "size": 28916
   },
   "pages/animal_counting.html": {
     "sha256": "6a19ca4a7070d0ee4809c64f8e18d905561f630d053bb32ac435ebc9b2f8e277",
