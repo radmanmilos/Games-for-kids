@@ -500,6 +500,7 @@ function ambDesert(vol, t) {
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 let coinCount = 0;
+let maxExploredX = 0;
 let worldLoaded = false;
 
 function resizeCanvas() {
@@ -940,6 +941,7 @@ function loadWorld() {
     document.getElementById('world-name').innerText = w.name;
     document.getElementById('win-modal').classList.remove('show');
     levelCompleted = false;
+    maxExploredX = 0;
 
     player = {
         x: Math.max(280, Math.min(w.grounds[0].x + w.grounds[0].w - 70, canvas.width * 0.3)),
@@ -1094,9 +1096,10 @@ function spawnParticles(x, y, color) {
     }
 }
 
+let lastSafeX = 50, lastSafeY = 50;
 function respawnKitty() {
-    player.y = 50;
-    player.x = Math.max(50, player.x - 220);
+    player.x = lastSafeX;
+    player.y = lastSafeY;
     player.vy = 0;
 }
 
@@ -1134,6 +1137,14 @@ function update() {
     player.squish += (1 - player.squish) * 0.12;
     player.tailAngle = Math.sin(Date.now() * 0.01) * 0.3;
 
+    // Exploration reward: bonus coin for reaching new areas
+    if (!levelCompleted && player.x > maxExploredX + 400) {
+        maxExploredX = player.x;
+        coinCount++;
+        document.getElementById('coin-count').innerText = coinCount;
+        playSound('coin');
+    }
+
     // Moving Platform Update & Riding logic
     movingPlatforms.forEach(mp => {
         if (levelCompleted) return;
@@ -1165,7 +1176,7 @@ function update() {
             player.x < p.x + p.width &&
             player.vy >= 0 &&
             player.y + player.height >= p.y &&
-            previousY + player.height <= p.y + 24) {
+            previousY + player.height <= p.y + 40) {
 
             player.grounded = true;
             player.vy = 0;
@@ -1218,6 +1229,12 @@ function update() {
             player.vx = 0;
         }
     });
+
+    // Track last safe grounded position for soft respawn
+    if (player.grounded) {
+        lastSafeX = player.x;
+        lastSafeY = player.y;
+    }
 
     // Forgiving Toddler Teleport
     if (!levelCompleted && player.y > canvas.height + 100) respawnKitty();
@@ -1603,12 +1620,21 @@ function draw() {
         ctx.restore();
     });
 
-    // Draw Collectibles (per-world emoji, no backing circle, bobbing + sparkling)
+    // Draw Collectibles (per-world emoji, glowing backing circle, bobbing + sparkling)
     coins.forEach(c => {
         if (!c.collected) {
             const bob = Math.sin(t * 2.2 + c.x * 0.05) * 5;
             const cy = c.y + bob;
             ctx.save();
+            // Glow backing circle
+            const glow = ctx.createRadialGradient(c.x, cy, 4, c.x, cy, 28);
+            glow.addColorStop(0, 'rgba(255,255,255,0.5)');
+            glow.addColorStop(1, 'rgba(255,255,255,0)');
+            ctx.fillStyle = glow;
+            ctx.beginPath();
+            ctx.arc(c.x, cy, 28, 0, Math.PI * 2);
+            ctx.fill();
+            // Emoji
             ctx.globalAlpha = 1;
             ctx.font = '36px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
             ctx.textAlign = 'center';

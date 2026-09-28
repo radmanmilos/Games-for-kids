@@ -243,12 +243,13 @@ Features:
 - Touch controls
 - Physics
 - Camera
-- Coins
+- Coins (with glow backing for visibility)
 - Multiple levels
 - Win screen
 - Synthesized audio
 - Character picker at game start (kitty default / explorer girl, task 90)
 - Character-specific death sounds (cat for the kitty, "Јао!" for the girl, task 90)
+- **Toddler-first (task 125):** soft respawn to last safe position, forgiving platforms (40px tolerance), exploration reward (bonus coin for new areas)
 
 Educational goals:
 
