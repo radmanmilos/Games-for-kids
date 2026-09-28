@@ -6,6 +6,7 @@
 (function(){
   const animals = ['Cat','Dog','Fox','Cow','Pig','Duck','Horse','Chicken'];
   const emojiMap = {Cat:'🐱',Dog:'🐶',Fox:'🦊',Cow:'🐮',Pig:'🐷',Duck:'🦆',Horse:'🐴',Chicken:'🐔'};
+  const svgMap = {Cat:'cat',Dog:'dog',Fox:'fox',Cow:'cow',Pig:'pig',Duck:'duck',Horse:'horse',Chicken:'chicken'};
   const nameMap = {Cat:'Мачка',Dog:'Пас',Fox:'Лисица',Cow:'Крава',Pig:'Свиња',Duck:'Патка',Horse:'Коњ',Chicken:'Кока'};
   const boardEl = document.getElementById('board');
   const statusEl = document.getElementById('memoryStatus');
@@ -48,7 +49,7 @@
       card.dataset.index = idx;
       card.setAttribute('aria-label', 'Скривена картица');
       card.addEventListener('click', onCardClick);
-      const face = emojiMap[name] || name;
+      const face = (window.ILLUSTRATIONS && window.ILLUSTRATIONS.svg(svgMap[name])) || emojiMap[name] || name;
       card.innerHTML = `
         <div class="card-inner">
           <div class="card-face card-back"></div>

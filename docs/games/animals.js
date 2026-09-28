@@ -19,7 +19,7 @@ const animalNames = {Dog:'Пас',Cat:'Мачка',Cow:'Крава',Lion:'Лав
 
 function showAnimal(){
   const a = animals[animalIdx];
-  animalCard.textContent = a.emoji;
+  animalCard.innerHTML = (window.ILLUSTRATIONS && window.ILLUSTRATIONS.svg(a.name.toLowerCase())) || a.emoji;
   animalCard.style.background = a.bg;
 }
 function startAnimals(){
@@ -94,7 +94,7 @@ function renderRecog(){
     const el = document.createElement('button');
     el.className = 'recog-choice';
     el.style.background = a.bg;
-    el.textContent = a.emoji;
+    el.innerHTML = (window.ILLUSTRATIONS && window.ILLUSTRATIONS.svg(a.name.toLowerCase())) || a.emoji;
     el.setAttribute('aria-label', animalNames[a.name] || a.name);
     el.dataset.name = a.name;
     el.addEventListener('click', ()=> recogPick(a, el));

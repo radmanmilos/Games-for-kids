@@ -29,7 +29,7 @@ const ANIMALS = ['🐶','🐱','🐮','🦁','🐘','🐸','🐷','🦆','🦊',
 
   // --- Flashcard mode ---
   const init = await h.evalv(`JSON.stringify({
-    cardText: document.getElementById('animalCard').textContent,
+    cardHTML: document.getElementById('animalCard').innerHTML,
     cardBg: document.getElementById('animalCard').style.background,
     nextVisible: !!document.getElementById('animalNext'),
     cardRole: document.getElementById('animalCard').getAttribute('role'),
@@ -37,17 +37,17 @@ const ANIMALS = ['🐶','🐱','🐮','🦁','🐘','🐸','🐷','🦆','🦊',
     cardAria: document.getElementById('animalCard').getAttribute('aria-label')
   })`);
   const I = JSON.parse(init);
-  check('card shows an animal emoji', ANIMALS.includes(I.cardText), I.cardText);
+  check('card shows an animal illustration (SVG or emoji)', I.cardHTML.includes('<svg') || ANIMALS.some(a => I.cardHTML.includes(a)), I.cardHTML.substring(0, 80));
   check('card has pastel background', I.cardBg.length > 0, I.cardBg);
   check('next button is present', I.nextVisible === true);
   check('card is keyboard accessible (role=button, tabIndex=0)', I.cardRole === 'button' && I.cardTab === 0);
   check('card has aria-label', !!I.cardAria, I.cardAria);
 
-  const first = await h.evalv(`document.getElementById('animalCard').textContent`);
+  const first = await h.evalv(`document.getElementById('animalCard').innerHTML`);
   await h.evalv(CLICK('#animalNext'));
   await sleep(80);
-  const second = await h.evalv(`document.getElementById('animalCard').textContent`);
-  check('next button changes the animal', first !== second, first + ' -> ' + second);
+  const second = await h.evalv(`document.getElementById('animalCard').innerHTML`);
+  check('next button changes the animal', first !== second, 'changed');
 
   await h.evalv(`document.getElementById('animalCard').classList.add('bounce')`);
   const bounced = await h.evalv(`document.getElementById('animalCard').classList.contains('bounce')`);
@@ -65,8 +65,8 @@ const ANIMALS = ['🐶','🐱','🐮','🦁','🐘','🐸','🐷','🦆','🦊',
 
   await h.evalv(CLICK('#animalNext'));
   await sleep(80);
-  const stable = await h.evalv(`document.getElementById('animalCard').textContent`);
-  check('animal stays on screen after next', ANIMALS.includes(stable), stable);
+  const stable = await h.evalv(`document.getElementById('animalCard').innerHTML`);
+  check('animal stays on screen after next', stable.includes('<svg') || ANIMALS.some(a => stable.includes(a)), stable.substring(0, 80));
 
   // --- Recognition mode ---
   const toggleExists = await h.evalv(`!!document.getElementById('recogToggle')`);

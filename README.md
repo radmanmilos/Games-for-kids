@@ -207,7 +207,7 @@ Educational goals:
 
 ---
 
-## 🐱🐶 Match Game
+## 🐱🐶 Match Game (Candy)
 
 Purpose:
 
