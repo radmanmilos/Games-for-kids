@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 134. DONE — Phase 5, Task: TEST-003 — Visual regression testing. (2026-09-28, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED 2026-09-28 — `tools/screenshot.js`, `.gitignore`.** New screenshot tool for visual regression testing: captures screenshots of 12 representative pages (hub, animals, classroom, coloring, memory, piano, shapes, driving, ocean, dino, space, racing3d) at 3 sizes (phone 390×844, tablet 820×1180, desktop 1280×800) = 36 screenshots total. Screenshots saved to `tools/screenshots/` (gitignored). Usage: `node tools/screenshot.js [--pages hub,animals] [--sizes phone,desktop]`. Acceptance criterion met: visual regression testing is now automated.
+    - **Validation:** `node tools/screenshot.js --pages hub,animals --sizes phone,desktop` → 6 screenshots captured (full run: 36 screenshots). `node --check` clean. NOT committed (user commits/pushes).
+
 - 133. DONE — Phase 5, Task: TEST-002 — Touch interruption tests. (2026-09-28, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED 2026-09-28 — `tools/shapes_smoke.js`.** Added touch interruption checks to the shapes smoke test (drag game): (1) **pointercancel** — simulate a pointer cancel event, verify the piece is not placed. (2) **Second finger (multi-touch)** — simulate a second touch, verify the game does not break. (3) **Page hidden** — simulate the page being hidden, verify the game does not break. A fresh round is started before the checks so pieces are available. Acceptance criterion met: the smoke test now covers pointercancel, multi-touch, and page-hidden scenarios.
     - **Validation:** `node tools/shapes_smoke.js` → **16 checks, ALL PASS** (was 13). `node --check` clean. NOT committed (user commits/pushes).
