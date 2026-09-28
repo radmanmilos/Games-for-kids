@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 122. DONE — Phase 2, Game 9: GAME-MATCH-001 — Toddler-first matching (memory game). (2026-09-28, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED 2026-09-28 — `game/games/animal_memory.js`, `game/pages/animal_memory.html`, `tools/memory_smoke.js`.** Toddler-first memory game: (1) **No visible score in toddler mode** — the status line ("Парова: N од M · Потези: N") is hidden in easy mode (default), shown only in Средње/Тешко. (2) **"Пронађен пар!" feedback** — the match popup text changed from "Пар!" to "Пронађен пар!". (3) **Large cards in toddler mode** — `body.toddler` class increases card min-height and font size. (4) **Toddler class toggling** — `document.body.classList.toggle('toddler', difficulty === 'easy')` on boot and difficulty switch. Acceptance criterion met: the default experience is a simple matching game (2×2, 2 pairs, no score), not an optimization challenge.
+    - **Validation:** `node tools/memory_smoke.js` → **12 checks, ALL PASS** (was 8). `node tools/hub_smoke.js` → **10/10 PASS**. `node --check` clean. NOT committed (user commits/pushes).
+
 - 118. DONE — Phase 2, Game 5: GAME-ANIMALS-001 — Animal recognition mode. (2026-09-27, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED + COMMITTED 2026-09-27.** Added "Пронађи животињу" recognition mode. Adaptive difficulty: rounds 1-3 = 2 choices, round 4+ = 3. Correct: green glow + celebrate + speak name + play sound + auto-advance. Wrong: gentleMiss + shake, after 2 misses correct answer glows yellow as hint. `animals_smoke.js` 13 → **24 checks, ALL PASS**. Committed `8e4ac79`.
 

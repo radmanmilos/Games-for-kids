@@ -28,8 +28,8 @@
                                             "size":  8448
                                         },
     "pages/piano.html":  {
-                             "sha256":  "C00883763A9B94B81564F0BB502DA89EF79CF0BD756924988FF1A503E3B995C2",
-                             "size":  8246
+                             "sha256":  "FA5B9C7BA56A8E91D4438ABB75918AD2AAACB87E4ADA469AECC75ECAB0C2380C",
+                             "size":  10607
                          },
     "games/adventure.js":  {
                                "sha256":  "5AEBE3E574D0B6724CA7BCB27EBE38498C5E16447E8BC6BDB980230A040136D6",
@@ -256,8 +256,8 @@
                              "size":  17984
                          },
     "games/piano.js":  {
-                           "sha256":  "C29489F5288C70E6D4A3814E9AC824CD89D0E6BE25EA12497C180D3FAF9FCF76",
-                           "size":  6575
+                           "sha256":  "6D55C88412FDC0180B5CC1B097D4B5B11252AF5E47C71964B0E0DB4839974039",
+                           "size":  8990
                        },
     "assets/audio/speech/r.mp3":  {
                                       "sha256":  "59AD80116BAE179FFDB10C83A03915D87991792D6F481EA881C4E10084A0861C",
@@ -288,7 +288,7 @@
                                         "size":  6144
                                     },
     "offline-manifest.json":  {
-                                  "sha256":  "D522545EAA011EF52695B05A781DB04E44B82AE5749987B014FB9E18C9BBCA58",
+                                  "sha256":  "F6738CE2A7F35C155CA065141A29721C7946A29E78721A7B594190B71257D121",
                                   "size":  52086
                               },
     "pages/dino.html":  {

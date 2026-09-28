@@ -1,9 +1,10 @@
-/* Petrin svet Memory (Памтица) smoke test — task 116 (GAME-MEMORY-001).
+/* Petrin svet Memory (Памтица) smoke test — task 116 (GAME-MEMORY-001) + task 122 (GAME-MATCH-001).
    Drives pages/animal_memory.html headlessly: board boots in easy mode (4 cards),
-   difficulty selector switches board sizes, the status line tracks pairs/moves,
-   the card back uses the game icon (🃏), a floating "Пар!" popup appears on each
-   matched pair, mismatches only advance the move counter, and all pairs can be
-   completed.
+   toddler-first (no visible score, large cards, "Пронађен пар!" feedback),
+   difficulty selector switches board sizes, the status line tracks pairs/moves
+   in older modes, the card back uses the game icon (🃏), a floating "Пронађен пар!"
+   popup appears on each matched pair, mismatches only advance the move counter,
+   and all pairs can be completed.
    Run:  node tools/memory_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -21,8 +22,11 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   }
   check('memory page boots in easy mode (4 cards, 2x2)', ready);
 
-  const status0 = await h.evalv(`document.getElementById('memoryStatus').textContent`);
-  check('status line starts at 0/2 pairs, 0 moves (easy)', status0 === 'Парова: 0 од 2 · Потези: 0', status0);
+  const status0 = await h.evalv(`document.getElementById('memoryStatus').style.display`);
+  check('status line hidden in toddler mode (easy)', status0 === 'none', status0);
+
+  const toddlerClass = await h.evalv(`document.body.classList.contains('toddler')`);
+  check('body has toddler class in easy mode', toddlerClass === true, toddlerClass);
 
   const cardBack = await h.evalv(`getComputedStyle(document.querySelector('.card-back'), '::before').content`);
   check('card back uses the game icon (🃏)', cardBack === '"🃏"', cardBack);
@@ -43,12 +47,15 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     pops: document.querySelectorAll('.match-pop').length,
     matched: document.querySelectorAll('#board .card.matched').length
   }))()`);
-  check('matching a pair: status 1/2, 1 move, popup, 2 matched cards', M1.status === 'Парова: 1 од 2 · Потези: 1' && M1.pops === 1 && M1.matched === 2, JSON.stringify(M1));
+  check('matching a pair: popup "Пронађен пар!", 2 matched cards', M1.pops === 1 && M1.matched === 2, JSON.stringify(M1));
+
+  const popText = await h.evalv(`document.querySelector('.match-pop') ? document.querySelector('.match-pop').textContent : ''`);
+  check('popup text is "Пронађен пар!"', popText === 'Пронађен пар!', popText);
 
   // Popup removes itself
   await sleep(1000);
   const popsGone = await h.evalv(`document.querySelectorAll('.match-pop').length`);
-  check('"Пар!" popup removes itself', popsGone === 0, popsGone + ' pop(s) left');
+  check('"Пронађен пар!" popup removes itself', popsGone === 0, popsGone + ' pop(s) left');
 
   // Complete remaining pair (easy mode)
   const D = await h.evalv(`(() => {
@@ -63,7 +70,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     }
     return { status: document.getElementById('memoryStatus').textContent, matched: cards().length };
   })()`);
-  check('all 2 pairs complete (easy): status 2/2, moves 2', D.status === 'Парова: 2 од 2 · Потези: 2' && D.matched === 4, JSON.stringify(D));
+  check('all 2 pairs complete (easy): 4 matched cards', D.matched === 4, JSON.stringify(D));
 
   // Switch to standard mode: 8 pairs = 16 cards, then test mismatch
   await h.evalv(`document.querySelector('.diff-btn[data-diff="standard"]').click()`);

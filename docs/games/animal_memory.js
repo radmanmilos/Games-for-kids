@@ -22,7 +22,10 @@
   };
 
   function updateStatus(){
-    if(statusEl) statusEl.textContent = 'Парова: ' + matches + ' од ' + DIFFS[difficulty].pairs + ' · Потези: ' + moves;
+    if(!statusEl) return;
+    if(difficulty === 'easy'){ statusEl.style.display = 'none'; return; }
+    statusEl.style.display = '';
+    statusEl.textContent = 'Парова: ' + matches + ' од ' + DIFFS[difficulty].pairs + ' · Потези: ' + moves;
   }
 
   function shuffle(arr){
@@ -72,7 +75,7 @@
   function popPair(a, b){
     const pop = document.createElement('div');
     pop.className = 'match-pop';
-    pop.textContent = 'Пар!';
+    pop.textContent = 'Пронађен пар!';
     const board = a.parentElement;
     board.appendChild(pop);
     const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect(), br = board.getBoundingClientRect();
@@ -134,6 +137,7 @@
       difficulty = btn.dataset.diff;
       diffBtns.forEach(b => b.style.outline = '');
       btn.style.outline = '3px solid #4A3F6B';
+      document.body.classList.toggle('toddler', difficulty === 'easy');
       buildBoard();
     });
   });
@@ -151,5 +155,6 @@
   });
 
   // initial build
+  document.body.classList.toggle('toddler', difficulty === 'easy');
   buildBoard();
 })();
