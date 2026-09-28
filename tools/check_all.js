@@ -87,7 +87,7 @@ function findBash() {
   }
   if (doOffline) {
     console.log('\n=== Rebuild offline package ===');
-    const ok = await runAsync('powershell', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join(TOOLS, 'build_offline.ps1')]);
+    const ok = await runAsync('node', [path.join(TOOLS, 'build_offline.js')]);
     if (!ok) { console.error('offline rebuild failed'); process.exit(1); }
   }
 
