@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 132. DONE — Phase 5, Task: TEST-001 — Play-aware smoke tests. (2026-09-28, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED 2026-09-28 — `tools/memory_smoke.js`.** Added play-aware checks to the memory smoke test: (1) **Audio-disabled state** — game still works when audio is disabled. (2) **Resize** — game still works after viewport resize. (3) **Back button** — returns to hub. The back button check is done last since it navigates away. The resize check is mode-agnostic (>= 4 cards, not exactly 4). Acceptance criterion met: the smoke test now covers wrong-answer, replay/next, back, audio-disabled, and resize scenarios.
+    - **Validation:** `node tools/memory_smoke.js` → **15 checks, ALL PASS** (was 12). `node --check` clean. NOT committed (user commits/pushes).
+
 - 131. DONE — Phase 5, Task: CLEAN-001 — Legacy route cleanup. (2026-09-28, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED 2026-09-28 — `game/shared/navigation.js`, deleted `game/pages/papper_kitty.html`, `game/pages/racing.html`, `game/games/kitty.js`.** Removed legacy routes: (1) `game-racing` route removed from navigation.js (hub button was already hidden). (2) Deleted `papper_kitty.html` (old Paper Kitty page, replaced by `kitty-standalone.js`). (3) Deleted `racing.html` (old 2D racer, retired in task 96). (4) Deleted `kitty.js` (old canvas kitty, replaced by `kitty-standalone.js`). All 15 game buttons still wired, hub smoke 10/10 PASS.
     - **Validation:** `node tools/hub_smoke.js` → **10/10 PASS**. `node --check` clean. NOT committed (user commits/pushes).

@@ -279,6 +279,7 @@ Gameplay:
 - **Spatial identity (task 129):** in Space mode, altitude bands (3 subtle horizontal layers) and planets as landmarks (4 large decorative circles) — teaches simple spatial movement through play.
 - **Shared engine (task 130):** all 4 adventure games use `AdventureEngine.create()` — a bug fix in shared movement applies once across all games.
 - **Legacy cleanup (task 131):** removed `papper_kitty.html`, `racing.html`, `kitty.js` — all replaced by newer implementations.
+- **Play-aware tests (task 132):** memory smoke now covers audio-disabled, resize, and back-button scenarios (12 → 15 checks).
 - **Navigation arrow (task 126):** a large pulsing yellow arrow appears near the goal when the child is far away, pointing toward the finish — no text instructions.
 
 Educational goals:

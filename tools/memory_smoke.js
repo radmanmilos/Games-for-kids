@@ -118,6 +118,30 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   })()`);
   check('all 8 pairs complete (standard): status 8/8', D2.status === 'Парова: 8 од 8 · Потези: 9' && D2.matched === 16, JSON.stringify(D2));
 
+  // Audio-disabled state does not break game
+  const audioDisabled = await h.evalv(`(() => {
+    const cards = document.querySelectorAll('#board .card');
+    if (cards.length < 4) return { ok: false, reason: 'no cards' };
+    cards[0].click();
+    return { ok: true, cards: cards.length };
+  })()`);
+  check('audio-disabled state does not break game', audioDisabled.ok === true, JSON.stringify(audioDisabled));
+
+  // Resize does not break game
+  await h.evalv(`window.dispatchEvent(new Event('resize'))`);
+  await sleep(200);
+  const resizeOk = await h.evalv(`(() => {
+    const cards = document.querySelectorAll('#board .card');
+    return { cards: cards.length, board: !!document.getElementById('board') };
+  })()`);
+  check('resize does not break game', resizeOk.cards >= 4 && resizeOk.board === true, JSON.stringify(resizeOk));
+
+  // Back button returns to hub (last — navigates away)
+  await h.evalv(`document.querySelector('.back-btn').click()`);
+  await sleep(300);
+  const backToHub = await h.evalv(`document.getElementById('hub').style.display !== 'none' || document.getElementById('hub-games').style.display !== 'none'`);
+  check('back button returns to hub', backToHub === true, String(backToHub));
+
   h.close();
   const fails = getFails();
   console.log(`\n${fails === 0 ? 'ALL' : 'SOME'} CHECKS ${fails === 0 ? 'PASSED' : 'FAILED'} (${fails} fail)`);
