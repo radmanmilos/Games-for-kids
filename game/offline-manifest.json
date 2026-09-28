@@ -596,8 +596,8 @@
     "size": 15662
   },
   "games/adventure.js": {
-    "sha256": "38fe2e959e23e3977dfe13ef6ef7e867a55dbc81b13d0eaaf3943ca3afb6fe12",
-    "size": 55280
+    "sha256": "c110a5f19f106ba1392200cff90bc872adf8ab6b1e3c4be7c2458a2663cebefa",
+    "size": 56124
   },
   "games/animal_counting.js": {
     "sha256": "bb3fe4532ce0f9ee3388a71a75c5c4244bcb9f3976d9a87544da96c8c190d8fb",
@@ -692,7 +692,7 @@
     "size": 555
   },
   "offline-manifest.json": {
-    "sha256": "f2ec288b47a1c259deef360e78264c6dd9776e60d2d4a20630612f70c9da75fc",
+    "sha256": "14fa989de50cf290aa30a2032b71e880732226ab5844f3ae7ed84d4857c5de91",
     "size": 28917
   },
   "pages/animal_counting.html": {
