@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 130. DONE — Phase 3, Task: ADV-001 — Shared adventure engine boundary. (2026-09-28, Ponytail Lazy Dev; user approved.)
+    - **VERIFIED 2026-09-28 — no code changes needed.** All 4 adventure games (Driving, Ocean, Dino, Space) already use `AdventureEngine.create()` from `game/games/adventure.js`. The shared engine provides: player movement (updateDrive/updateFly/updateGround), collision infrastructure, camera (cameraX + follow), world loading (loadWorld), checkpoint/recovery (respawnPlayer), input handling (keys + touch), common feedback (bumpCount/lastHitAt), and common audio API (AdventureMusic). Game-specific layers provide: movement model, obstacles, goals, collectibles, environment, visual language, learning hook. Acceptance criterion met: a bug fix in shared movement (e.g. the jump buffer, forgiving collision, soft respawn added in tasks 125/128) is applied once and affects all four games. No duplication exists.
+    - **Phase 3 complete: all 7 tasks DONE.**
+
 - 129. DONE — Phase 3, Task: GAME-SPACE-001 — Spatial flight identity. (2026-09-28, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED 2026-09-28 — `game/games/adventure.js`.** Added spatial flight identity to fly mode: (1) **Altitude bands** — 3 subtle horizontal lines (8% alpha, #B8E8FF) at 25%/50%/75% of canvas height, showing altitude layers. (2) **Planets as landmarks** — 4 large decorative circles (15% alpha, 4 colors: #FF6F91/#4FC3F7/#FFD23F/#67C971) at fixed positions in the background, giving each world a sense of place. Acceptance criterion met: Space now has its own visual identity (altitude bands + planet landmarks) that differentiates it from other fly-mode games.
     - **Validation:** `node tools/space_smoke.js` → **21 checks, ALL PASS**. `node --check` clean. NOT committed (user commits/pushes).
