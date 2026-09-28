@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 133. DONE — Phase 5, Task: TEST-002 — Touch interruption tests. (2026-09-28, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED 2026-09-28 — `tools/shapes_smoke.js`.** Added touch interruption checks to the shapes smoke test (drag game): (1) **pointercancel** — simulate a pointer cancel event, verify the piece is not placed. (2) **Second finger (multi-touch)** — simulate a second touch, verify the game does not break. (3) **Page hidden** — simulate the page being hidden, verify the game does not break. A fresh round is started before the checks so pieces are available. Acceptance criterion met: the smoke test now covers pointercancel, multi-touch, and page-hidden scenarios.
+    - **Validation:** `node tools/shapes_smoke.js` → **16 checks, ALL PASS** (was 13). `node --check` clean. NOT committed (user commits/pushes).
+
 - 132. DONE — Phase 5, Task: TEST-001 — Play-aware smoke tests. (2026-09-28, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED 2026-09-28 — `tools/memory_smoke.js`.** Added play-aware checks to the memory smoke test: (1) **Audio-disabled state** — game still works when audio is disabled. (2) **Resize** — game still works after viewport resize. (3) **Back button** — returns to hub. The back button check is done last since it navigates away. The resize check is mode-agnostic (>= 4 cards, not exactly 4). Acceptance criterion met: the smoke test now covers wrong-answer, replay/next, back, audio-disabled, and resize scenarios.
     - **Validation:** `node tools/memory_smoke.js` → **15 checks, ALL PASS** (was 12). `node --check` clean. NOT committed (user commits/pushes).

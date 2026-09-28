@@ -280,6 +280,7 @@ Gameplay:
 - **Shared engine (task 130):** all 4 adventure games use `AdventureEngine.create()` — a bug fix in shared movement applies once across all games.
 - **Legacy cleanup (task 131):** removed `papper_kitty.html`, `racing.html`, `kitty.js` — all replaced by newer implementations.
 - **Play-aware tests (task 132):** memory smoke now covers audio-disabled, resize, and back-button scenarios (12 → 15 checks).
+- **Touch interruption tests (task 133):** shapes smoke now covers pointercancel, multi-touch, and page-hidden scenarios (13 → 16 checks).
 - **Navigation arrow (task 126):** a large pulsing yellow arrow appears near the goal when the child is far away, pointing toward the finish — no text instructions.
 
 Educational goals:

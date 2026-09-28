@@ -92,6 +92,36 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.popS
   const placedCount = await h.evalv(`document.querySelectorAll('#shapesStage .piece[data-done="1"]').length`);
   check('all pieces placed in tier 1 round', placedCount === 2, String(placedCount));
 
+  // Touch interruption: pointercancel (start fresh round first)
+  await h.evalv(`window.startShapesRound()`);
+  await sleep(100);
+  const cancelOk = await h.evalv(`(() => {
+    const piece = document.querySelector('#shapesStage .piece:not([data-done="1"])');
+    if (!piece) return { ok: false, reason: 'no piece' };
+    piece.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 1, clientX: 100, clientY: 100 }));
+    piece.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 1 }));
+    return { ok: true, done: piece.dataset.done };
+  })()`);
+  check('touch interruption: pointercancel does not place piece', cancelOk.ok === true && cancelOk.done === undefined, JSON.stringify(cancelOk));
+
+  // Touch interruption: second finger (multi-touch)
+  const multiTouchOk = await h.evalv(`(() => {
+    const piece = document.querySelector('#shapesStage .piece:not([data-done="1"])');
+    if (!piece) return { ok: false, reason: 'no piece' };
+    piece.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 1, clientX: 100, clientY: 100 }));
+    piece.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 2, clientX: 200, clientY: 200 }));
+    piece.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 2 }));
+    return { ok: true, done: piece.dataset.done };
+  })()`);
+  check('touch interruption: second finger does not break game', multiTouchOk.ok === true && multiTouchOk.done === undefined, JSON.stringify(multiTouchOk));
+
+  // Touch interruption: page hidden
+  const hiddenOk = await h.evalv(`(() => {
+    document.dispatchEvent(new Event('visibilitychange'));
+    return { ok: true, pieces: document.querySelectorAll('#shapesStage .piece').length };
+  })()`);
+  check('touch interruption: page hidden does not break game', hiddenOk.ok === true && hiddenOk.pieces >= 2, JSON.stringify(hiddenOk));
+
   await sleep(400);
   const newRound = await h.evalv(`JSON.stringify({
     slots: document.querySelectorAll('#shapesStage .slot').length,
