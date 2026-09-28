@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 127. DONE — Phase 3, Task: GAME-OCEAN-001 — Ocean identity. (2026-09-28, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED 2026-09-28 — `game/games/adventure.js`.** Added bubble trail to fly mode: 5 gentle bubbles float toward the goal when the child is far away (`player.x < goal.x - 400`), providing visual guidance without arrows. Bubbles pulse gently (sine wave, 2s cycle) and fade with distance. No text instructions — purely visual navigation. Acceptance criterion met: Ocean now has its own visual identity (bubble trails) that differentiates it from Driving (navigation arrow).
+    - **Validation:** `node tools/ocean_smoke.js` → **20 checks, ALL PASS**. `node --check` clean. NOT committed (user commits/pushes).
+
 - 126. DONE — Phase 3, Task: GAME-DRIVE-001 — Driving identity. (2026-09-28, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED 2026-09-28 — `game/games/adventure.js`.** Added navigation arrow to drive mode: a large pulsing yellow arrow with plum outline appears near the goal when the child is far away (`player.x < goal.x - 500`), pointing toward the finish. The arrow pulses gently (scale 1 ± 0.1, 3s cycle) to attract attention without being distracting. No text instructions — purely visual navigation. Acceptance criterion met: the game now has a visual navigation cue that makes it feel like a vehicle exploration game.
     - **Validation:** `node tools/driving_smoke.js` → **17 checks, ALL PASS**. `node --check` clean. NOT committed (user commits/pushes).

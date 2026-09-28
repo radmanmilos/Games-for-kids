@@ -274,6 +274,8 @@ Gameplay:
 - 10 themed worlds: Градски трг, Поље сунцокрета, Јесења шума, Зимски пут, Планински пут, Ноћни град, Пустињска магистрала, Тропско острво, Морска обала, Космичка стаза.
 - Every world has its own synthesized music theme with an ambient layer (horns, crickets, birdsong, wind, rumble, owl hoots, desert wind, waves, sleigh bells).
 - **Navigation arrow (task 126):** a large pulsing yellow arrow appears near the goal when the child is far away, pointing toward the finish — no text instructions.
+- **Bubble trail (task 127):** in Ocean mode, gentle bubbles float toward the goal when the child is far away — visual guidance without arrows.
+- **Navigation arrow (task 126):** a large pulsing yellow arrow appears near the goal when the child is far away, pointing toward the finish — no text instructions.
 
 Educational goals:
 

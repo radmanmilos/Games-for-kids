@@ -1180,6 +1180,22 @@
                 }
             }
 
+            if (mode === 'fly' && !levelCompleted && goal && player.x < goal.x - 400) {
+                // Bubble trail: gentle bubbles floating toward the goal
+                for (let i = 0; i < 5; i++) {
+                    const bx = player.x + 300 + i * 120 + Math.sin(t * 1.5 + i) * 20;
+                    const by = goal.y + goal.height / 2 + Math.sin(t * 2 + i * 0.8) * 40;
+                    const br = 6 + i * 2;
+                    ctx.save();
+                    ctx.globalAlpha = 0.5 - i * 0.06;
+                    ctx.fillStyle = '#B8E8FF';
+                    ctx.beginPath();
+                    ctx.arc(bx, by, br, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
             ctx.save();
             const carBob = mode === 'drive' ? Math.sin(t * 10) * 2 : 0;
             const heroBob = cfg.heroBob ? Math.sin(t * 6) * cfg.heroBob : 0;
