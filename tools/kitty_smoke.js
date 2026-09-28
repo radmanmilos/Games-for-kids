@@ -7,11 +7,11 @@ const fs = require('fs');
 const path = require('path');
 const { start, check, getFails } = require('./headless.js');
 
-const HTML = path.join(__dirname, '..', 'game', 'pages', 'papper_kitty.html');
+const HTML = path.join(__dirname, '..', 'game', 'pages', 'explorer.html');
 const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
 
 (async () => {
-  const h = await start({ page: '/pages/papper_kitty.html', tag: 'kitty-smoke', width: 1280, height: 800 });
+  const h = await start({ page: '/pages/explorer.html', tag: 'kitty-smoke', width: 1280, height: 800 });
   await h.sleep(600);
 
   let ready = false;

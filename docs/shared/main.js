@@ -15,7 +15,8 @@ const standaloneMap = {
     'dino': ['dino-back', 'startDino', 'hub-games'],
     'space': ['space-back', 'startSpace', 'hub-games'],
     'racing': ['racing-back', 'startRacing', 'hub-games'],
-    'racing3d': ['r3d-back', 'startRacing3D', 'hub-games']
+    'racing3d': ['r3d-back', 'startRacing3D', 'hub-games'],
+    'explorer': ['back-btn', null, 'hub-games']
 };
 const standaloneGame = standaloneMap[standalonePage];
 

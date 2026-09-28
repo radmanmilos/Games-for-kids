@@ -49,7 +49,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     };
   })())`);
   const G = JSON.parse(games);
-  check('games tile opens games sub-hub (10 buttons, kitty back target intact)', G.active === 'hub-games' && G.title === '🎮 ИГРЕ' && G.go.split(',').length === 10 && G.go === 'game-kitty,game-driving,game-ocean,game-dino,game-space,game-candy,game-memory,game-puzzle,game-racing,game-racing3d', games);
+  check('games tile opens games sub-hub (10 buttons, explorer back target intact)', G.active === 'hub-games' && G.title === '🎮 ИГРЕ' && G.go.split(',').length === 10 && G.go === 'game-explorer,game-driving,game-ocean,game-dino,game-space,game-candy,game-memory,game-puzzle,game-racing,game-racing3d', games);
 
   await h.evalv(`document.querySelector('#hub-games .back-btn').click()`);
   await sleep(300);
@@ -75,9 +75,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('learning back button returns to landing', back2 === 'hub', back2);
 
   const html = fs.readFileSync(path.join(__dirname, '..', 'game', 'index.html'), 'utf8');
-  const allGo = ['game-kitty','game-driving','game-ocean','game-dino','game-space','game-candy','game-memory','game-puzzle','game-classroom','game-tracing','game-animals','game-shapes','game-counting','game-coloring','game-piano'];
+  const allGo = ['game-explorer','game-driving','game-ocean','game-dino','game-space','game-candy','game-memory','game-puzzle','game-classroom','game-tracing','game-animals','game-shapes','game-counting','game-coloring','game-piano'];
   check('all 15 game buttons still wired (data-go present)', allGo.every(id => html.includes(`data-go="${id}"`)), allGo.join(','));
-  check('kitty back button targets the games sub-hub', html.includes('id="game-kitty"') && /id="game-kitty"[\s\S]*?data-go="hub-games"/.test(html), 'data-go="hub-games"');
+  check('explorer back button targets the games sub-hub', html.includes('data-go="game-explorer"') && /data-go="game-explorer"[\s\S]*?aria-label="Мала истраживачица"/.test(html), 'data-go="game-explorer"');
 
   // Regression guard (task 105): on a short landscape viewport the 24vh grid
   // margin + 2 columns put the last row below the fold, so the racing3d button
