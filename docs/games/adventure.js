@@ -1216,6 +1216,35 @@
                 }
             }
 
+            if (mode === 'fly') {
+                // Altitude bands: subtle horizontal layers showing altitude
+                for (let i = 0; i < 3; i++) {
+                    const bandY = canvas.height * (0.25 + i * 0.25);
+                    ctx.save();
+                    ctx.globalAlpha = 0.08;
+                    ctx.fillStyle = '#B8E8FF';
+                    ctx.fillRect(0, bandY, canvas.width, 2);
+                    ctx.restore();
+                }
+
+                // Planets as landmarks: large decorative circles in the background
+                const planets = [
+                    { x: 800, y: 120, r: 60, color: '#FF6F91' },
+                    { x: 2400, y: 200, r: 45, color: '#4FC3F7' },
+                    { x: 4200, y: 100, r: 70, color: '#FFD23F' },
+                    { x: 5800, y: 180, r: 50, color: '#67C971' }
+                ];
+                planets.forEach(p => {
+                    ctx.save();
+                    ctx.globalAlpha = 0.15;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                });
+            }
+
             ctx.save();
             const carBob = mode === 'drive' ? Math.sin(t * 10) * 2 : 0;
             const heroBob = cfg.heroBob ? Math.sin(t * 6) * cfg.heroBob : 0;

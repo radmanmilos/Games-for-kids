@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 129. DONE — Phase 3, Task: GAME-SPACE-001 — Spatial flight identity. (2026-09-28, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED 2026-09-28 — `game/games/adventure.js`.** Added spatial flight identity to fly mode: (1) **Altitude bands** — 3 subtle horizontal lines (8% alpha, #B8E8FF) at 25%/50%/75% of canvas height, showing altitude layers. (2) **Planets as landmarks** — 4 large decorative circles (15% alpha, 4 colors: #FF6F91/#4FC3F7/#FFD23F/#67C971) at fixed positions in the background, giving each world a sense of place. Acceptance criterion met: Space now has its own visual identity (altitude bands + planet landmarks) that differentiates it from other fly-mode games.
+    - **Validation:** `node tools/space_smoke.js` → **21 checks, ALL PASS**. `node --check` clean. NOT committed (user commits/pushes).
+
 - 128. DONE — Phase 3, Task: GAME-DINO-001 — Forgiving jump timing. (2026-09-28, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED 2026-09-28 — `game/games/adventure.js`, `tools/dino_smoke.js`.** Toddler-first dino changes: (1) **Jump buffer** — jump press remembered for 150ms before landing, so a slightly early jump still executes. (2) **Forgiving collision** — tolerance increased from 24px to 40px. (3) **Soft respawn** — returns to last safe grounded position (`lastSafeX/lastSafeY`) instead of moving back 220px. (4) **Track safe position** — `lastSafeX/lastSafeY` updated every frame while grounded. Acceptance criterion met: a child who reacts slightly late still gets many successful jumps.
     - **Validation:** `node tools/dino_smoke.js` → **40 checks, ALL PASS**. `node --check` clean. NOT committed (user commits/pushes).

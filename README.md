@@ -276,6 +276,7 @@ Gameplay:
 - **Navigation arrow (task 126):** a large pulsing yellow arrow appears near the goal when the child is far away, pointing toward the finish — no text instructions.
 - **Bubble trail (task 127):** in Ocean mode, gentle bubbles float toward the goal when the child is far away — visual guidance without arrows.
 - **Forgiving jump (task 128):** in Dino mode, jump buffer (150ms), forgiving collision (40px), and soft respawn to last safe position — a child who reacts slightly late still gets many successful jumps.
+- **Spatial identity (task 129):** in Space mode, altitude bands (3 subtle horizontal layers) and planets as landmarks (4 large decorative circles) — teaches simple spatial movement through play.
 - **Navigation arrow (task 126):** a large pulsing yellow arrow appears near the goal when the child is far away, pointing toward the finish — no text instructions.
 
 Educational goals:
