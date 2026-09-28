@@ -1157,6 +1157,27 @@
                 ctx.beginPath();
                 ctx.ellipse(player.x + player.width / 2, player.y + player.height + 3, player.width * 0.42, 6, 0, 0, Math.PI * 2);
                 ctx.fill();
+
+                // Navigation arrow: large arrow near goal when child is far away
+                if (!levelCompleted && goal && player.x < goal.x - 500) {
+                    const arrowX = goal.x - 80;
+                    const arrowY = goal.y + goal.height / 2;
+                    const pulse = 1 + Math.sin(t * 3) * 0.1;
+                    ctx.save();
+                    ctx.translate(arrowX, arrowY);
+                    ctx.scale(pulse, pulse);
+                    ctx.fillStyle = '#FFD23F';
+                    ctx.strokeStyle = '#4A3F6B';
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.moveTo(-30, -40);
+                    ctx.lineTo(30, 0);
+                    ctx.lineTo(-30, 40);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.restore();
+                }
             }
 
             ctx.save();

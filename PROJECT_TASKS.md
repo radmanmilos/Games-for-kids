@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 126. DONE — Phase 3, Task: GAME-DRIVE-001 — Driving identity. (2026-09-28, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED 2026-09-28 — `game/games/adventure.js`.** Added navigation arrow to drive mode: a large pulsing yellow arrow with plum outline appears near the goal when the child is far away (`player.x < goal.x - 500`), pointing toward the finish. The arrow pulses gently (scale 1 ± 0.1, 3s cycle) to attract attention without being distracting. No text instructions — purely visual navigation. Acceptance criterion met: the game now has a visual navigation cue that makes it feel like a vehicle exploration game.
+    - **Validation:** `node tools/driving_smoke.js` → **17 checks, ALL PASS**. `node --check` clean. NOT committed (user commits/pushes).
+
 - 125. DONE — Phase 3, Task: GAME-EXPLORER-001 — Exploration-first Explorer. (2026-09-28, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED 2026-09-28 — `game/games/kitty-standalone.js`, `tools/kitty_smoke.js`.** Toddler-first explorer changes: (1) **Soft respawn** — `respawnKitty()` returns to last safe grounded position (`lastSafeX/lastSafeY`) instead of moving back 220px. (2) **Forgiving platforms** — collision tolerance increased from 24px to 40px. (3) **Glow collectibles** — radial gradient backing circle behind coins for visibility. (4) **Exploration reward** — bonus coin for reaching new areas (`maxExploredX + 400`). (5) **Reset on world load** — `maxExploredX = 0` in `loadWorld()`. Acceptance criterion met: a toddler can move around for several minutes without understanding complex rules and still have fun.
     - **Validation:** `node tools/kitty_smoke.js` → **27 checks, ALL PASS** (was 26 pass / 1 fail — stale assertion fixed for soft respawn). `node --check` clean. NOT committed (user commits/pushes).
