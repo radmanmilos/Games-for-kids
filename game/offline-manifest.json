@@ -643,10 +643,6 @@
     "sha256": "869c44e4e600489c69c88d8b6b6b21b9823a74d85a121df9f812f97e41d7e3fc",
     "size": 100013
   },
-  "games/kitty.js": {
-    "sha256": "dc06a900fb8003f6217b4cad7723a4c769ad424e0168148e1d9da2b013db8cce",
-    "size": 5531
-  },
   "games/ocean.js": {
     "sha256": "9916c368cb6eed03e34ba1bfd535938fb5f51aae49fd96212db6f96af5665c52",
     "size": 40414
@@ -692,7 +688,7 @@
     "size": 555
   },
   "offline-manifest.json": {
-    "sha256": "8b8de7df480aa5add35e0844ac3ca3e3c77fda33552aa8d4dfc15fe5d54a7db6",
+    "sha256": "81a394e7fded0540ec1cb142d0f1c1789f03e0153f1731424de2d80b7877c686",
     "size": 28917
   },
   "pages/animal_counting.html": {
@@ -735,17 +731,9 @@
     "sha256": "0d3f154024c490c40d194720de81bf38f86a55cbaaeb2993332dc01e927c8638",
     "size": 2735
   },
-  "pages/papper_kitty.html": {
-    "sha256": "709d2d4d3b72a079929309769ce2ab4bb6c4b82dd525146e108a6d65511fbf36",
-    "size": 12940
-  },
   "pages/piano.html": {
     "sha256": "0f4b8e7ae0dc73c48677219f50ba99e346f4556b0434398a04a8d22b0b30c985",
     "size": 10383
-  },
-  "pages/racing.html": {
-    "sha256": "4a7ba7235697c51437fadb96e18f2f3317fe07acb7ebe187acacc37daf64c62b",
-    "size": 15871
   },
   "pages/racing3d.html": {
     "sha256": "8cbe9eb66da13e64022ae91d106c647ff15db39528e984867f005817c746493f",
@@ -804,8 +792,8 @@
     "size": 665
   },
   "shared/navigation.js": {
-    "sha256": "ff13c5057611605d60f3d1ce9900e2ba895a3f15b9ae112f4e5957eeabeddda8",
-    "size": 8941
+    "sha256": "818818209224afd8304febd8f41a15a3643d4744a781ec59396afcff0f285533",
+    "size": 8946
   },
   "shared/speech.js": {
     "sha256": "ae318ffd18eb44624f8dc18294c90e940824386534f9daef1d9a1ab4fe66ebca",
@@ -828,8 +816,8 @@
     "size": 1058
   },
   "sw-cache-list.json": {
-    "sha256": "16effe1fb308019b3fe19800accd4abe8e2c2cf3873557a04abfed7c17e32d36",
-    "size": 6688
+    "sha256": "c69ec671c7a0d4b228e7ce436d7d7b78e8543eccb009554eeccc5490cc9957b4",
+    "size": 6616
   },
   "sw.js": {
     "sha256": "75a6bbec5a0b4f7e300d829340e84092ff3ddaade507c75b884fe0d71ea493d4",
