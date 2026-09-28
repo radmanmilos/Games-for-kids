@@ -688,8 +688,8 @@
     "size": 555
   },
   "offline-manifest.json": {
-    "sha256": "81a394e7fded0540ec1cb142d0f1c1789f03e0153f1731424de2d80b7877c686",
-    "size": 28917
+    "sha256": "e5e01275922db139cf3ef432113c01ad6ff5466cf5ee2134a3beb0be85c2a885",
+    "size": 28525
   },
   "pages/animal_counting.html": {
     "sha256": "6a19ca4a7070d0ee4809c64f8e18d905561f630d053bb32ac435ebc9b2f8e277",
