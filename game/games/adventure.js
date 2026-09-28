@@ -60,6 +60,7 @@
         let stairSteps = [];
         let lastHitAt = 0;
         let bumpCount = 0;
+        let jumpBufferUntil = 0;
         let worldOrder = shuffleArr(cfg.levels.map((_, i) => i));
         let worldPos = 0;
         let paused = false;
@@ -356,6 +357,7 @@
             }
         }
 
+        let lastSafeX = 50, lastSafeY = 50;
         function respawnPlayer() {
             bumpCount++;
             if (mode === 'drive') {
@@ -364,8 +366,8 @@
                 player.x = cameraX + player.offsetX;
                 lastHitAt = performance.now();
             } else if (mode === 'ground') {
-                player.y = 50;
-                player.x = Math.max(50, player.x - 220);
+                player.x = lastSafeX;
+                player.y = lastSafeY;
                 player.vy = 0;
             } else {
                 player.y = Math.max(60, player.y - 120);
@@ -472,6 +474,9 @@
                     player.grounded = false;
                     player.squish = 1.35;
                     window.AdventureMusic.play('jump');
+                } else if (keys.jump && !player.grounded) {
+                    // Jump buffer: remember jump press for 150ms before landing
+                    jumpBufferUntil = performance.now() + 150;
                 }
             } else {
                 player.vx *= 0.8;
@@ -506,7 +511,7 @@
                     player.x < p.x + p.width &&
                     player.vy >= 0 &&
                     player.y + player.height >= p.y &&
-                    previousY + player.height <= p.y + 24) {
+                    previousY + player.height <= p.y + 40) {
                     player.grounded = true;
                     player.vy = 0;
                     player.y = p.y - player.height;
@@ -554,6 +559,21 @@
                     player.vx = 0;
                 }
             });
+
+            // Track last safe grounded position for soft respawn
+            if (player.grounded) {
+                lastSafeX = player.x;
+                lastSafeY = player.y;
+            }
+
+            // Execute jump buffer: if jump was pressed slightly before landing
+            if (player.grounded && jumpBufferUntil > performance.now()) {
+                player.vy = player.jumpPower;
+                player.grounded = false;
+                player.squish = 1.35;
+                window.AdventureMusic.play('jump');
+                jumpBufferUntil = 0;
+            }
 
             if (!levelCompleted && player.y > canvas.height + 100) respawnPlayer();
 

@@ -151,19 +151,17 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const runL = await h.evalv(`window.__adv.player.x`);
   check('running: right key moves forward, left key moves back', runR > run0 && runL < runR, JSON.stringify({ run0, runR, runL }));
 
-  const j0 = await h.evalv(`(() => { const a = window.__adv; a.loadWorld(); a.keys.left = a.keys.right = false; for (let i = 0; i < 200; i++) a.update(); return JSON.stringify({ y: a.player.y, g: a.player.grounded }); })()`);
-  const jj0 = JSON.parse(j0);
-  const jump = await h.evalv(`(() => {
+  const jj0 = await h.evalv(`(() => { const a = window.__adv; a.loadWorld(); a.keys.left = a.keys.right = false; for (let i = 0; i < 200; i++) a.update(); return { y: a.player.y, g: a.player.grounded }; })()`);
+  const jpj = await h.evalv(`(() => {
     const a = window.__adv;
     const startY = a.player.y;
     let minY = startY;
     a.keys.jump = true;
     for (let i = 0; i < 40; i++) { a.update(); if (a.player.y < minY) minY = a.player.y; }
     a.keys.jump = false;
-    return JSON.stringify({ startY: startY, minY: minY, endY: a.player.y });
+    return { startY: startY, minY: minY, endY: a.player.y };
   })()`);
-  const jpj = JSON.parse(jump);
-  check('jump: holding jump lifts the dino off the ground', jj0.g === true && jpj.minY < jpj.startY, JSON.stringify({ jj0, jump }));
+  check('jump: holding jump lifts the dino off the ground', jj0.g === true && jpj.minY < jpj.startY, JSON.stringify({ jj0, jpj }));
 
   const coin = await h.evalv(`(() => {
     const a = window.__adv;
@@ -174,10 +172,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     a.player.x = c.x;
     a.player.y = c.y;
     a.update();
-    return JSON.stringify({ before: before, count: a.coinCount, collected: c.collected, hud: document.getElementById('adv-coin-count').textContent });
+    return { before: before, count: a.coinCount, collected: c.collected, hud: document.getElementById('adv-coin-count').textContent };
   })()`);
-  const coj = JSON.parse(coin);
-  check('coin pickup: count +1, HUD updated', coj.count === coj.before + 1 && coj.collected === true && coj.hud === String(coj.before + 1), coin);
+  const coj = coin;
+  check('coin pickup: count +1, HUD updated', coj.count === coj.before + 1 && coj.collected === true && coj.hud === String(coj.before + 1), JSON.stringify(coj));
 
   const pipe = await h.evalv(`(() => {
     const a = window.__adv;

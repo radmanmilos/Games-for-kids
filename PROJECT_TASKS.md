@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 128. DONE — Phase 3, Task: GAME-DINO-001 — Forgiving jump timing. (2026-09-28, Ponytail Lazy Dev; user approved.)
+    - **IMPLEMENTED 2026-09-28 — `game/games/adventure.js`, `tools/dino_smoke.js`.** Toddler-first dino changes: (1) **Jump buffer** — jump press remembered for 150ms before landing, so a slightly early jump still executes. (2) **Forgiving collision** — tolerance increased from 24px to 40px. (3) **Soft respawn** — returns to last safe grounded position (`lastSafeX/lastSafeY`) instead of moving back 220px. (4) **Track safe position** — `lastSafeX/lastSafeY` updated every frame while grounded. Acceptance criterion met: a child who reacts slightly late still gets many successful jumps.
+    - **Validation:** `node tools/dino_smoke.js` → **40 checks, ALL PASS**. `node --check` clean. NOT committed (user commits/pushes).
+
 - 127. DONE — Phase 3, Task: GAME-OCEAN-001 — Ocean identity. (2026-09-28, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED 2026-09-28 — `game/games/adventure.js`.** Added bubble trail to fly mode: 5 gentle bubbles float toward the goal when the child is far away (`player.x < goal.x - 400`), providing visual guidance without arrows. Bubbles pulse gently (sine wave, 2s cycle) and fade with distance. No text instructions — purely visual navigation. Acceptance criterion met: Ocean now has its own visual identity (bubble trails) that differentiates it from Driving (navigation arrow).
     - **Validation:** `node tools/ocean_smoke.js` → **20 checks, ALL PASS**. `node --check` clean. NOT committed (user commits/pushes).
