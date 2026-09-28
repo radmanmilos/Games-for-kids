@@ -8,131 +8,94 @@
 - `MISSING` — not found in current code
 - `N/A` — not applicable or contradicted by user-locked decisions
 
-**Last updated:** 2026-09-26
+**Last updated:** 2026-09-28
 
 ---
 
-## Phase 1 — Product Cohesion v1
+## Phase 1 — Product Cohesion
 
 ### DS-001 — Shared design tokens
-**Status:** PARTIAL
+**Status:** DONE (task 106, 2026-09-26)
 
 | Evidence | Location |
 |----------|----------|
-| CSS custom properties exist per-page | `game/pages/*.html` — each defines its own `:root` block |
-| Shared accessibility CSS | `game/shared/accessibility.css` — has some tokens |
-| Shared adventure CSS | `game/shared/adventure.css` — has palette variables |
-| No unified `design-tokens.css` | No `game/styles/` directory exists |
-
-**Gap:** No single token layer. Each page re-declares its own colors/spacing/radii. The `game/shared/adventure.css` and `accessibility.css` have some shared values but nothing comprehensive.
+| `game/styles/design-tokens.css` | 30 CSS custom properties (9 colors, 6 spacing, 4 radii, 3 shadows, 3 touch targets) |
+| Linked on all 18 pages | `<link>` in every `game/pages/*.html` |
 
 ---
 
 ### NAV-001 — Standardize all back/home controls
-**Status:** PARTIAL
+**Status:** DONE (task 108, 2026-09-26)
 
 | Evidence | Location |
 |----------|----------|
-| Shared navigation module | `game/shared/navigation.js` — exists with route handling |
-| Back button pattern | Most pages have a back button, but implementations vary |
-| `main.js` boot guard | `game/shared/main.js` — `started` flag prevents double-boot |
-| Back SVG arrows | Some pages use inline SVG, some use emoji, some empty |
-
-**Gap:** Back controls exist but are not standardized — some are emoji, some SVG, some empty. Touch areas and positioning vary by page.
+| Standard inline SVG arrow + "Назад" pattern | All 18 pages |
+| `main.js` boot guard | `started` flag prevents double-boot |
 
 ---
 
 ### FB-001 — Shared feedback vocabulary
-**Status:** PARTIAL
+**Status:** DONE (task 110, 2026-09-26)
 
 | Evidence | Location |
 |----------|----------|
-| Celebration module | `game/shared/celebration.js` — exists |
-| Audio module | `game/shared/audio.js` — has `tone()`, `sweep()`, `play()` |
-| Speech module | `game/shared/speech.js` — Serbian TTS |
-| Per-game feedback | Each game implements its own success/miss feedback |
-
-**Gap:** No centralized `softPop()`, `successChime()`, `gentleMiss()`, `celebrate()` API. Each game re-implements feedback inline. `celebration.js` provides some shared pieces but not a unified vocabulary.
+| `game/shared/feedback.js` | Unified `popSound()`, `gentleMiss()`, `successChime()`, `celebrate()` |
+| `game/shared/celebration.js` | Shared celebration overlay |
 
 ---
 
 ### MOTION-001 — Make reduced motion global
-**Status:** PARTIAL
+**Status:** DONE (task 109, 2026-09-26)
 
 | Evidence | Location |
 |----------|----------|
-| Racing3D reduced motion | `game/games/racing3d.mjs` — `REDUCED_MOTION` gates |
-| Racing2D reduced motion | `game/games/racing.js` — `REDUCED_MOTION` gates |
-| Accessibility CSS | `game/shared/accessibility.css` — `@media (prefers-reduced-motion: reduce)` |
-| Per-page reduced motion | Some pages have it, most don't |
-
-**Gap:** No global JS helper (`window.matchMedia('(prefers-reduced-motion: reduce)')`). Each game that supports it re-detects independently. CSS-level reduced motion only in `accessibility.css`.
+| `game/shared/motion.js` | Global `window.reducedMotion()` |
+| Global CSS reduced-motion rules | `game/shared/accessibility.css` |
 
 ---
 
 ### TOUCH-001 — Standardize pointer behavior
-**Status:** PARTIAL
+**Status:** DONE (task 111, 2026-09-26)
 
 | Evidence | Location |
 |----------|----------|
-| Racing3D pointer handling | `game/games/racing3d.mjs` — pointerId ownership, capture, palm filter |
-| Racing2D pointer handling | `game/games/racing.js` — thumb zones |
-| Per-game drag | Each drag game (shapes, puzzle, coloring) implements its own |
-
-**Gap:** No shared `shared/input.js` module. Racing3D has excellent pointer handling but it's not extracted for reuse. Drag games each re-implement pointer logic independently.
+| `game/shared/input.js` | `pointerDrag()` + `resetInput()` |
+| Wired into 13 game pages | `game/pages/*.html` |
 
 ---
 
 ### DEVICE-001 — Shared viewport rules
-**Status:** PARTIAL
+**Status:** DONE (task 112, 2026-09-26)
 
 | Evidence | Location |
 |----------|----------|
-| Viewport meta | All pages have `<meta name="viewport">` |
-| Safe area | Some pages use `env(safe-area-inset-*)` |
-| Responsive CSS | Per-page media queries |
-| Canvas resize | Each canvas game handles resize independently |
-
-**Gap:** No shared viewport wrapper pattern. Safe area handling is inconsistent. No shared resize helper.
+| `game/styles/viewport.css` | Shared viewport rules |
+| `game/shared/viewport.js` | Shared viewport helper |
 
 ---
 
 ### AUDIO-001 — Shared audio buses and priorities
-**Status:** PARTIAL
+**Status:** DONE (task 113, 2026-09-26)
 
 | Evidence | Location |
 |----------|----------|
-| Shared audio module | `game/shared/audio.js` — `window.tone()`, `window.sweep()`, `window.play()` |
-| AudioContext management | `game/shared/audio.js` — `ctx()` singleton |
-| Racing3D audio queue | `game/games/racing3d.mjs` — 4 GainNode buses + ducking |
-| Per-game audio | Each game calls `window.tone()` independently |
-
-**Gap:** `audio.js` provides low-level primitives but no bus/priority system. Racing3D has its own 4-bus + ducking system but it's not extracted. No shared audio event vocabulary.
+| `game/shared/audio-buses.js` | 4 buses, priority, ducking, event vocabulary |
 
 ---
 
 ### LANG-001 — Serbian language data layer
-**Status:** PARTIAL
+**Status:** DONE (task 107, 2026-09-26)
 
 | Evidence | Location |
 |----------|----------|
-| Speech module | `game/shared/speech.js` — Serbian TTS wrapper |
-| Per-game Serbian data | Each game has its own Serbian word lists inline |
-| `game/assets/audio/speech/*.mp3` | Pre-recorded Serbian words exist |
-
-**Gap:** No shared `game/data/serbian.js` module. Each game re-declares Serbian words (animal names, numbers, colors, shapes, etc.) independently.
+| `game/data/serbian.js` | Shared Serbian Cyrillic data layer (30 letters, 11 numbers, 10 shapes, 11 colors, 12 animals, praise/retry phrases, nav labels, game titles) |
 
 ---
 
 ### BRAND-001 — Recurring Petrin svet mascot
-**Status:** MISSING
+**Status:** N/A (per user decision)
 
-| Evidence | Location |
-|----------|----------|
-| No mascot file | No SVG/PNG mascot found in `game/assets/` |
-| No mascot in code | No references to a mascot in any game |
-
-**Gap:** Entirely missing. Needs asset creation + integration.
+**Note:** The kitty mascot (Мала истраживачица) already serves as the recurring character. No separate mascot asset needed.
 
 ---
 
@@ -141,7 +104,7 @@
 
 | Evidence | Location |
 |----------|----------|
-| Some local images | `game/assets/images/` — animal sprites, explorer sprites |
+| Local images | `game/assets/images/` — animal sprites, explorer sprites |
 | Coloring scenes | `game/games/coloring.js` — SVG-based local scenes |
 | Classroom 3D shapes | `game/games/classroom.js` — local SVG shapes |
 | Emoji dependence | Many games still use emoji for animals/icons |
@@ -150,57 +113,116 @@
 
 ---
 
-## Phase 2 — Toddler Adaptation v1
-
-### GAME-ANIMALS-001 — Animal recognition mode
-**Status:** MISSING
-
-**Gap:** Animals game is passive flashcards only. No "Пронађи животињу" (find the animal) mode with choices.
+## Phase 2 — Toddler Adaptation
 
 ### GAME-COUNT-001 — One-to-one counting
-**Status:** MISSING
+**Status:** DONE (task 114, 2026-09-26)
 
-**Gap:** Counting game tests number selection, not actual one-to-one counting with tap-to-count interaction.
+| Evidence | Location |
+|----------|----------|
+| Tap-to-count flow | `game/games/animal_counting.js` — phase 1: tap each tile, phase 2: pick number |
+| `.counted` CSS | `game/pages/animal_counting.html` |
 
-### GAME-SHAPES-001 — Magnetic shape placement
-**Status:** PARTIAL
-
-**Gap:** Shapes game has drag-to-match but no magnetic snap radius.
-
-### GAME-MEMORY-001 — Age-aware memory
-**Status:** MISSING
-
-**Gap:** Fixed 4×4 board only. No adaptive 2×2 or 3×2 modes for younger children.
-
-### GAME-PUZZLE-001 — Magnetic puzzle placement
-**Status:** PARTIAL
-
-**Gap:** Puzzle has drag-to-place but no magnetic snap. No preview helper.
-
-### GAME-COLOR-001 — Split coloring modes
-**Status:** MISSING
-
-**Gap:** Only "color by reference" mode exists. No free coloring mode.
+---
 
 ### GAME-TRACING-001 — Developmental tracing
-**Status:** PARTIAL
+**Status:** DONE (task 115, 2026-09-26)
 
-**Gap:** Tracing exists with pass/fail scoring. No pre-writing stages, no stroke-order hints, scoring is evaluative not developmental.
+| Evidence | Location |
+|----------|----------|
+| Prewriting activity | 8 items: hline, vline, circle, arc, zigzag, wave, square, triangle |
+| Stroke-order hint | Numbered dot on letter guides |
+| classifyAttempt | complete/nearly/early instead of pass/fail |
+| No forced auto-advance | Explicit Next/Repeat buttons |
 
-### GAME-CLASS-001 — Calm learning center
-**Status:** PARTIAL
+---
 
-**Gap:** Classroom has content but no visual tab reorganization. Quiz is primary, not positioned as older-child option.
+### GAME-MEMORY-001 — Age-aware memory
+**Status:** DONE (task 116, 2026-09-26)
+
+| Evidence | Location |
+|----------|----------|
+| Difficulty selector | Лако 2×2 / Средње 3×2 / Стандардно 4×4 |
+| `memory_smoke.js` | 8 checks → 12 checks (task 122) |
+
+---
+
+### GAME-PUZZLE-001 — Magnetic puzzle placement
+**Status:** DONE (task 117, 2026-09-27)
+
+| Evidence | Location |
+|----------|----------|
+| Magnetic snap | `.piece.snapping` (left/top .18s ease-out) |
+| Developmental levels | 1×2 → 2×2 → 3×3 (capped) |
+| Peek button | 👁 toggles `#puzzlePreviewOverlay` |
+
+---
+
+### GAME-ANIMALS-001 — Animal recognition mode
+**Status:** DONE (task 118, 2026-09-27)
+
+| Evidence | Location |
+|----------|----------|
+| "Пронађи животињу" mode | Adaptive difficulty: rounds 1-3 = 2 choices, round 4+ = 3 |
+| `animals_smoke.js` | 13 → 24 checks |
+
+---
+
+### GAME-COLOR-001 — Split coloring modes
+**Status:** DONE (task 119, 2026-09-27)
+
+| Evidence | Location |
+|----------|----------|
+| "Слободно бојење" mode | Free coloring alongside "Обоји по слици" |
+| Mode toggle button | Switches between modes |
+| `coloring_smoke.js` | 13 → 20 checks |
+
+---
+
+### GAME-CLASS-001 — Calm classroom hub
+**Status:** DONE (task 120, 2026-09-27)
+
+| Evidence | Location |
+|----------|----------|
+| Category tabs | Азбука/Бројеви/Облици/Боје |
+| Shared feedback fix | `NaN`-delay root-cause fix in `shared/feedback.js` + `shared/audio-buses.js` |
+| Candy hint fix | `showHint` → `showCandyHint` (global name collision) |
+
+---
 
 ### GAME-PIANO-001 — Free-play-first piano
-**Status:** PARTIAL
+**Status:** DONE (task 121, 2026-09-27)
 
-**Gap:** Piano has free play + song mode. Song UI uses expected-note highlighting but not the "Прати светло" visual phrase system.
+| Evidence | Location |
+|----------|----------|
+| "Прати светло" mode | Soft light on expected key, no punishment on wrong press |
+| Song data shape | `{ id, title, notes:['C4',...], tempo, speech }` |
+| Free play primary | "Свирај слободно" at 5.4vmin vs "Прати светло" at 3.2vmin |
+| Phone layout fix | `#pianoKeys .piano-key{ min-width:0 }` for 390px viewport |
+
+---
 
 ### GAME-MATCH-001 — Toddler-first matching
-**Status:** PARTIAL
+**Status:** DONE (task 122, 2026-09-28)
 
-**Gap:** Match game starts at 4×4 and grows to 8×8 with score pressure. No toddler default (2×2, no score).
+| Evidence | Location |
+|----------|----------|
+| No visible score | Status line hidden in easy mode (toddler default) |
+| "Пронађен пар!" feedback | Popup text changed from "Пар!" |
+| Large cards | `body.toddler` class increases card size |
+
+---
+
+### GAME-SHAPES-001 — Magnetic shape placement
+**Status:** DONE (task 123, 2026-09-28)
+
+| Evidence | Location |
+|----------|----------|
+| Generous snap radius | 1.5× slot width, distance-based matching |
+| Soft animation | left/top/transform .25s ease on snap |
+| No punishment | No `gentleMiss()` on wrong target |
+| Hint | Correct target pulses yellow after 2 failed attempts |
+| Difficulty tiers | Tier 1 (2 shapes, default), Tier 2 (3 shapes), Tier 3 (4 shapes + rotation) |
 
 ---
 
@@ -211,30 +233,42 @@
 
 **Gap:** Explorer is a platformer with death/restart. Needs softer reset, more forgiving platforms.
 
+---
+
 ### GAME-DRIVE-001 — Driving identity
 **Status:** PARTIAL
 
 **Gap:** Driving has free movement + no-fail but no unique navigation identity (road color, arrows, landmarks).
+
+---
 
 ### GAME-OCEAN-001 — Ocean identity
 **Status:** MISSING
 
 **Gap:** Ocean plays like "Driving underwater" — no unique swim/collect-bubble mechanics.
 
+---
+
 ### GAME-DINO-001 — Forgiving jump timing
 **Status:** MISSING
 
 **Gap:** Dino is precision platformer. Needs larger jump windows, visual cues, quick respawn.
+
+---
 
 ### GAME-SPACE-001 — Spatial flight identity
 **Status:** MISSING
 
 **Gap:** Space is obstacle-dodging clone. Needs altitude bands, portals, planet landmarks.
 
+---
+
 ### GAME-RACE-001 — Racing3D polish only
 **Status:** DONE
 
 **Note:** Racing3D has received extensive polish (tasks 95–105). All items addressed.
+
+---
 
 ### ADV-001 — Shared adventure engine boundary
 **Status:** PARTIAL
@@ -246,14 +280,18 @@
 ## Phase 4 — PWA/Offline Hardening
 
 ### PWA-001 — Manifest consistency
-**Status:** DONE
+**Status:** DONE (task 104, 2026-09-25)
 
-**Note:** All pages have consistent manifest/theme-color/viewport metadata (task 104 fixed viewport issues).
+**Note:** All pages have consistent manifest/theme-color/viewport metadata.
+
+---
 
 ### PWA-002 — Offline inventory/report
-**Status:** DONE
+**Status:** DONE (task 102 batch 11, 2026-09-25)
 
-**Note:** `tools/build_offline.ps1` generates cache lists and reports (task 102 batch 11 fixed empty manifest bug).
+**Note:** `tools/build_offline.js` generates cache lists and reports. Empty manifest bug fixed.
+
+---
 
 ### PWA-003 — True offline play testing
 **Status:** MISSING
@@ -269,20 +307,28 @@
 
 **Note:** `racing.html` back button retired but page still exists. `papper_kitty.html` still present. Hub already hides racing.
 
-### REF-001 — Shared helper extraction
-**Status:** PARTIAL
+---
 
-**Note:** `game/shared/` has audio/speech/navigation/celebration/utils/main but no feedback/input/motion/progress/viewport modules.
+### REF-001 — Shared helper extraction
+**Status:** DONE (tasks 106–113, 2026-09-26)
+
+**Note:** `game/shared/` now has audio/speech/navigation/celebration/utils/main/feedback/input/motion/viewport/audio-buses modules.
+
+---
 
 ### TEST-001 — Play-aware smoke tests
 **Status:** PARTIAL
 
-**Note:** 19 smoke tools exist with 364 checks. Cover boot + basic interaction. Don't cover wrong-answer, replay, back, resize.
+**Note:** 19 smoke tools exist with 398 checks. Cover boot + basic interaction. Don't cover wrong-answer, replay, back, resize.
+
+---
 
 ### TEST-002 — Touch interruption tests
 **Status:** MISSING
 
 **Note:** Racing3D has pointer interruption tests. No system-wide touch interruption test suite.
+
+---
 
 ### TEST-003 — Visual regression
 **Status:** MISSING
@@ -304,26 +350,28 @@
 
 | Phase | Tasks | DONE | PARTIAL | MISSING | N/A |
 |-------|-------|------|---------|---------|-----|
-| 1 — Cohesion | 10 | 0 | 8 | 1 | 1 |
-| 2 — Toddler | 10 | 0 | 5 | 5 | 0 |
+| 1 — Cohesion | 10 | 8 | 1 | 0 | 1 |
+| 2 — Toddler | 10 | 10 | 0 | 0 | 0 |
 | 3 — Adventure | 7 | 1 | 3 | 3 | 0 |
 | 4 — PWA | 3 | 2 | 0 | 1 | 0 |
-| 5 — Cleanup | 5 | 0 | 3 | 2 | 0 |
+| 5 — Cleanup | 5 | 1 | 2 | 2 | 0 |
 | 6 — Future | 7 | 0 | 0 | 0 | 7 |
-| **Total** | **42** | **3** | **19** | **12** | **8** |
+| **Total** | **42** | **22** | **6** | **6** | **8** |
 
 ---
 
-## Recommended Priority (Phase 1 first, per roadmap dependency order)
+## Recommended Priority (Phase 3 next, per roadmap dependency order)
 
-1. **DS-001** — Shared design tokens (foundation for everything visual)
-2. **LANG-001** — Serbian language data (used by every game)
-3. **NAV-001** — Standardized back controls (touches every page)
-4. **MOTION-001** — Global reduced motion (accessibility foundation)
-5. **FB-001** — Shared feedback vocabulary (used by every game)
-6. **TOUCH-001** — Pointer standards (used by every drag game)
-7. **DEVICE-001** — Viewport rules (responsive foundation)
-8. **AUDIO-001** — Audio buses (used by every game)
+1. **GAME-EXPLORER-001** — Exploration-first Explorer (soft reset, forgiving platforms)
+2. **GAME-DRIVE-001** — Driving identity (road color, arrows, landmarks)
+3. **GAME-OCEAN-001** — Ocean identity (swim/collect-bubble mechanics)
+4. **GAME-DINO-001** — Forgiving jump timing (larger windows, visual cues)
+5. **GAME-SPACE-001** — Spatial flight identity (altitude bands, portals)
+6. **ADV-001** — Shared adventure engine boundary
+7. **PWA-003** — True offline play testing
+8. **TEST-002** — Touch interruption tests
+9. **TEST-003** — Visual regression
+10. **ART-001** — Local illustration strategy
 
 ---
 
@@ -339,4 +387,14 @@
 - 2026-09-26 — **Task 112 (DEVICE-001) IMPLEMENTED.** Created `game/styles/viewport.css` + `game/shared/viewport.js`. Committed `76ff9ac`, pushed.
 - 2026-09-26 — **Task 113 (AUDIO-001) IMPLEMENTED.** Created `game/shared/audio-buses.js` with 4 buses, priority, ducking, event vocabulary. Committed `a5e4ace`, pushed.
 - 2026-09-26 — **Task 114 (GAME-COUNT-001) IMPLEMENTED + VALIDATED.** Converted `animal_counting.js` from number-selection to actual one-to-counting: phase 1 shows animal tiles (buttons hidden, prompt "Изброј животиње!"), child taps each tile (highlighted `.counted` with green ring, plays counting word via speech), after all counted buttons appear with prompt "Колико их има?", child picks number as before. Added `.counted` CSS to `animal_counting.html`. Updated `counting_smoke.js` to drive the new flow (tap-all → verify buttons → answer): **10/10 checks PASS**. `node --check` 70 files OK. Committed `70c6299`, pushed.
-- 2026-09-26 — **Task 115 (GAME-TRACING-001) IMPLEMENTED + VALIDATED.** Converted tracing from evaluative to developmental: added prewriting activity (8 items: hline, vline, circle, arc, zigzag, wave, square, triangle), stroke-order hint (numbered dot on letter guides), classifyAttempt (complete/nearly/early instead of pass/fail), weak attempts preserve drawing + highlight guide + "Хајде још једном." (no clear), no forced auto-advance (explicit Next/Repeat buttons). Updated `tracing_smoke.js` to match new behavior: **24/24 checks PASS**. `node --check` 71 files OK. NOT committed — user approves commit + sync.
+- 2026-09-26 — **Task 115 (GAME-TRACING-001) IMPLEMENTED + VALIDATED.** Converted tracing from evaluative to developmental: added prewriting activity (8 items: hline, vline, circle, arc, zigzag, wave, square, triangle), stroke-order hint (numbered dot on letter guides), classifyAttempt (complete/nearly/early instead of pass/fail), weak attempts preserve drawing + highlight guide + "Хајде још једном." (no clear), no forced auto-advance (explicit Next/Repeat buttons). Updated `tracing_smoke.js` to match new behavior: **24/24 checks PASS**. `node --check` 71 files OK. Committed `c94e4c3`, pushed.
+- 2026-09-27 — **Task 116 (GAME-MEMORY-001) IMPLEMENTED + VALIDATED.** Difficulty selector (Лако 2×2 / Средње 3×2 / Стандардно 4×4) in `animal_memory.js` + `memory_smoke.js` updated. Committed `994b804` + `4cc7368`, pushed.
+- 2026-09-27 — **Task 117 (GAME-PUZZLE-001) IMPLEMENTED + VALIDATED.** Magnetic snap, developmental levels 1×2 → 2×2 → 3×3, peek button. `puzzle_smoke.js` 16 → 20 checks, ALL PASS. Committed `5245ed5`, pushed.
+- 2026-09-27 — **Task 118 (GAME-ANIMALS-001) IMPLEMENTED + VALIDATED.** "Пронађи животињу" recognition mode with adaptive difficulty. `animals_smoke.js` 13 → 24 checks, ALL PASS. Committed `8e4ac79`, pushed.
+- 2026-09-27 — **Task 119 (GAME-COLOR-001) IMPLEMENTED + VALIDATED.** Split coloring modes (reference + free). `coloring_smoke.js` 13 → 20 checks, ALL PASS. Committed `32b1a44`, pushed.
+- 2026-09-27 — **Task 120 (GAME-CLASS-001) IMPLEMENTED + VALIDATED.** Category tabs + shared-feedback NaN-delay root-cause fix + candy showHint global-collision fix. `classroom_smoke.js` 17/17 PASS, `candy_smoke.js` 12/12 PASS. Committed `1fcf595`, pushed.
+- 2026-09-27 — **Task 121 (GAME-PIANO-001) IMPLEMENTED + VALIDATED.** "Прати светло" soft-light song mode, song data on roadmap shape, free play primary, phone layout fix. `piano_smoke.js` 15 → 22 checks, ALL PASS. Committed `9c8b68d`, pushed.
+- 2026-09-28 — **Task 122 (GAME-MATCH-001) IMPLEMENTED + VALIDATED.** Toddler-first memory game: no visible score in easy mode, "Пронађен пар!" feedback, large cards. `memory_smoke.js` 8 → 12 checks, ALL PASS. Committed `c55c935`, pushed.
+- 2026-09-28 — **Task 123 (GAME-SHAPES-001) IMPLEMENTED + VALIDATED.** Magnetic shape placement: generous snap radius (1.5× slot width), soft animation, no punishment, hint after repeated attempts, 3 difficulty tiers. `shapes_smoke.js` 11 → 13 checks, ALL PASS. Committed `0afa9d4` + `bfa1c4a`, pushed.
+- 2026-09-28 — **Phase 2 complete: all 10 toddler adaptation games DONE.**
+- 2026-09-28 — **Audit updated.** All 42 tasks re-mapped to current code state. Phase 1: 8/10 DONE. Phase 2: 10/10 DONE. Phase 3: 1/7 DONE. Phase 4: 2/3 DONE. Phase 5: 1/5 DONE. Phase 6: 0/7 (N/A).
