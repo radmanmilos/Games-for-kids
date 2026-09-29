@@ -35,6 +35,12 @@
     #worlds-close{margin-top:3vmin;border:3px solid white;border-radius:12px;background:rgba(255,255,255,.15);color:white;padding:1.5vmin 3vmin;font:600 clamp(12px,2.5vmin,20px) 'Fredoka',sans-serif;cursor:pointer;}
     .back-btn{position:absolute;top:2vmin;left:2vmin;z-index:30;width:10vmin;height:10vmin;border-radius:50%;border:none;background:rgba(74,63,107,.85);color:white;font-size:5vmin;display:flex;align-items:center;justify-content:center;cursor:pointer;}
     .back-btn:active{transform:scale(.9);}
+    .btn{pointer-events:auto;width:100px;height:100px;border-radius:50%;border:6px solid #fff;display:flex;justify-content:center;align-items:center;font-size:40px;color:white;box-shadow:0 8px 0 rgba(0,0,0,.3),inset 0 -4px 0 rgba(0,0,0,.2);cursor:pointer;text-shadow:3px 3px 0 rgba(0,0,0,.3);font-family:inherit;}
+    .btn:active{transform:translateY(4px);box-shadow:0 4px 0 rgba(0,0,0,.3);}
+    .btn-left{background-color:#e52521;}
+    .btn-right{background-color:#fbd000;color:#4A3F6B;text-shadow:none;}
+    .btn-jump{width:120px;height:120px;background-color:#43b047;border-color:#fff;font-size:50px;animation:pulse 2s infinite ease-in-out;}
+    @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
   </style>
 </head>
 <body>
@@ -43,9 +49,13 @@
     <div class="hud" id="level-num">Свет 1</div>
     <div class="hud" id="world-name">Свет</div>
     <div class="hud" id="coin-count">⭐ 0</div>
+    <span id="collect-emoji" style="position:absolute;left:-9999px;top:-9999px;">🍓</span>
     <button class="hud-btn" id="worlds-btn" aria-label="Изабери свет">🌍</button>
     <button class="hud-btn" id="music-btn" aria-label="Музика">🔊</button>
     <button class="back-btn" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <div class="btn btn-left" id="btn-left">◀</div>
+    <div class="btn btn-right" id="btn-right">▶</div>
+    <div class="btn btn-jump" id="btn-jump">🐾</div>
     <div id="win-modal" role="dialog" aria-label="Победа">
       <h2 id="win-title">СВЕТ ПРЕЂЕН!</h2>
       <p id="win-sub"></p>
