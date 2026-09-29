@@ -8,11 +8,45 @@ This file summarizes the current workspace, conventions, and project state so th
 
 ## First thing next session — pick one (user decides)
 
-1. **Active work: Master Implementation Plan execution — ALL 18 TASKS DONE.** The plan (`resources/General_reviews/Petrin_svet_Master_Implementation_Plan.md`) defined 18 hardening tasks. All committed + pushed. `game/data/app-registry.js` is the single authoritative source for all 17 pages (16 games + parent). **Next:** See "Next Activities" below. **Uncommitted tree right now:** `HANDOVER_PROMPT.md`, `README.md` + the `docs/` mirror. User commits/pushes.
+1. **Active work: Fresh Elevation Roadmap (R0–R27).** The old 18-task plan is DONE. The new roadmap (`resources/General_reviews/Petrin_svet_Fresh_Elevation_Roadmap_2026-09-29.md`) defines 29 activities (R0–R27b) in dependency order. **Progress: 0/29 done.** R0 (baseline truth) is IN PROGRESS — 4 failing smoke tests reproduced and classified. **Next:** R1 — fix the 4 classified failures. See "Progress Tracker" below.
 2. **Racing3d play-test** — still pending user device re-test (task 105 is DONE; the full 8-world game is stable).
 3. **Both open questions from task 105 are CLOSED (2026-09-25, user delegated the calls). Do not re-open either:** (a) **no particle-material pooling** — the per-particle opacity fade at `racing3d.mjs:1520` makes per-mesh materials load-bearing, and the measurement showed no burst problem; (b) **keep the reduced-motion gates** — the user has only ever complained about excess motion, the gates cost non-reduced-motion users nothing, and the fully-gated build is what the user has been testing all along. Both are recorded with reasons in `PROJECT_TASKS.md` task 105.
 4. **RESOLVED 2026-09-27 (task 120 session) — the battery is fully green again: 19/19 tools, 398 checks, 0 fail.** The candy hint bug was a second instance of the same lesson as the classroom 🏅 bug, and it was ALSO never a flake: a **global name collision**. `candy.js` declared top-level `function showHint()` (a classic script ⇒ `window.showHint`), and `shared/feedback.js` exports its own `window.showHint(el)`; `matching_game.html` loads the game at line 282 and `feedback.js` at line **286**, so the shared module silently replaced the game's function. The 💡 button then called the shared version with `el === undefined` → `if (!el) return;` → a no-op with **no error at all**. The 💡 hint had been dead since task 66 (2026-08-07) shipped. Fixed by renaming the game-local function to `showCandyHint()` (2 lines; the shared API is untouched). Recorded in `AGENTS.md` → Footguns: never give a game file a generic top-level name that a shared module also exports. **Lesson to carry forward: a shared module loading *after* a game script can replace any same-named global with zero diagnostics, and "the test reproduces alone" was the only reason we found either bug.**
 5. **All commits pushed to origin/main** (through task 117, 2026-09-27; tasks 118/119/120 tabs were committed locally, 120's fix is still uncommitted). SSH key configured. Standing instruction: "commit and sync" = commit + sync-docs + push.
+
+## Progress Tracker (R0–R27)
+
+| # | ID | Task | Status |
+|---|---|---|---|
+| 1 | R0 | 151 | IN PROGRESS — 4 failures classified |
+| 2 | R1 | 152 | NEW |
+| 3 | R2 | 153 | NEW |
+| 4 | R3 | 154 | NEW |
+| 5 | R4 | 155 | NEW |
+| 6 | R5 | 156 | NEW |
+| 7 | R6 | 157 | NEW |
+| 8 | R7 | 158 | NEW |
+| 9 | R8 | 159 | NEW |
+| 10 | R9 | 160 | NEW |
+| 11 | R10 | 161 | NEW |
+| 12 | R11 | 162 | NEW |
+| 13 | R12 | 163 | NEW |
+| 14 | R13 | 164 | NEW |
+| 15 | R14 | 165 | NEW |
+| 16 | R15 | 166 | NEW |
+| 17 | R16 | 167 | NEW |
+| 18 | R17 | 168 | NEW |
+| 19 | R18 | 169 | NEW |
+| 20 | R19 | 170 | NEW |
+| 21 | R20 | 171 | NEW |
+| 22 | R21 | 172 | NEW |
+| 23 | R22 | 173 | NEW |
+| 24 | R23 | 174 | NEW |
+| 25 | R24 | 175 | NEW |
+| 26 | R25 | 176 | NEW |
+| 27 | R26 | 177 | NEW |
+| 28 | R27 | 178 | NEW |
+| 29 | R27b | — | NEW |
 
 ## Cross-platform setup
 

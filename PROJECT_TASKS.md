@@ -17,6 +17,20 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 151. IN PROGRESS — R0: Baseline Truth Reconciliation. (2026-09-29, Ponytail Lazy Dev.)
+    - **Goal:** Create a factual current-state baseline from the actual HEAD rather than trusting DONE markers. Reproduce the 4 failing smoke tests individually and classify each.
+    - **Reproduced 2026-09-29 (all 4 fail in isolation):**
+
+    | Check | Reproduces alone | Classification | Root cause | Fix |
+    |---|---|---|---|---|
+    | adventure_smoke: ground mode mouse hit knocks back | YES | **D — test fixture** | Test sets `m.visible=true` + `m.y=m.visibleY` but does NOT set `m.animationStart`. The update loop computes `elapsed = performance.now() - 0` = huge, so the mouse is hidden (line 596-598) before the collision check at line 607 runs. `bumpCount` stays 0. | Set `m.animationStart = performance.now()` in the test fixture. |
+    | classroom_smoke: wrong tap nudges, question stays | YES | **B — stale test** | Game uses `SERBIAN.retry[0]` = "Хајде поново!" (`game/data/serbian.js:105`). Test expects "Покушај поново". Serbian data layer was updated (task 107/141) but the test was not synced. | Update test to expect "Хајде поново!". |
+    | counting_smoke: wrong tap nudge "Покушај поново" | YES | **B — stale test** | Same root cause as classroom. Game uses `SERBIAN.retry[0]` = "Хајде поново!" (`game/games/animal_counting.js:171`). Test expects "Покушај поново". | Update test to expect "Хајде поново!". |
+    | racing3d_smoke: start picker 8 world cards | YES | **A — product bug** | `window.__r3d` never becomes ready (module boot failure). Canvas width = 0. The `evalv` at line 56 returns `[object Object]` instead of JSON — the page's JS context is broken. Root cause: likely a JS error during module init that prevents `window.__r3d` from being set. | Investigate module boot error, fix root cause. |
+
+    - **Current HEAD:** `6b78c2b` (docs: add Fresh Elevation Roadmap)
+    - **Next:** R1 — fix the 4 classified failures
+
 - 135. DONE — Master Plan, Task 1: Animal Art Recovery. (2026-09-28, Ponytail Lazy Dev; user approved.)
     - **IMPLEMENTED 2026-09-28 — reverted ART-001.** The custom SVG animal illustrations were "visually too crude" per the Master Implementation Plan. Restored native Unicode emoji for all animal artwork: removed `game/shared/illustrations.js`, removed `<script>` from 4 game pages, reverted `animals.js`/`animal_counting.js`/`animal_memory.js`/`candy.js` to use emoji. Also fixed the memory smoke back-button check (was returning `[object Object]`).
     - **Validation:** `animals_smoke.js` 25/25 PASS, `memory_smoke.js` 15/15 PASS, `counting_smoke.js` 12/12 PASS, `candy_smoke.js` 12/12 PASS. `node --check` clean. Committed `0923ee9` + `b8feafa`, pushed.
