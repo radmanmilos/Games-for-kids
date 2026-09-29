@@ -7,10 +7,10 @@
   function safeArea() {
     const style = getComputedStyle(document.documentElement);
     return {
-      top: parseInt(style.getPropertyValue('--sat')) || 0,
-      right: parseInt(style.getPropertyValue('--sar')) || 0,
-      bottom: parseInt(style.getPropertyValue('--sab')) || 0,
-      left: parseInt(style.getPropertyValue('--sal')) || 0,
+      top: parseInt(style.getPropertyValue('--safe-top')) || 0,
+      right: parseInt(style.getPropertyValue('--safe-right')) || 0,
+      bottom: parseInt(style.getPropertyValue('--safe-bottom')) || 0,
+      left: parseInt(style.getPropertyValue('--safe-left')) || 0,
     };
   }
 

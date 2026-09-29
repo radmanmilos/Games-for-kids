@@ -10,10 +10,10 @@ html, body {
 /* Safe-area-aware page wrapper */
 .ps-page {
   padding:
-    max(var(--ps-space-4), env(safe-area-inset-top))
-    max(var(--ps-space-4), env(safe-area-inset-right))
-    max(var(--ps-space-4), env(safe-area-inset-bottom))
-    max(var(--ps-space-4), env(safe-area-inset-left));
+    max(var(--space-4), env(safe-area-inset-top))
+    max(var(--space-4), env(safe-area-inset-right))
+    max(var(--space-4), env(safe-area-inset-bottom))
+    max(var(--space-4), env(safe-area-inset-left));
 }
 
 /* Canvas games should fill viewport safely */
