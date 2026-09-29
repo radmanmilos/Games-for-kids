@@ -21,6 +21,9 @@ Important: The AI assistant and any contributor must read this file first when s
     - **IMPLEMENTED 2026-09-28 — reverted ART-001.** The custom SVG animal illustrations were "visually too crude" per the Master Implementation Plan. Restored native Unicode emoji for all animal artwork: removed `game/shared/illustrations.js`, removed `<script>` from 4 game pages, reverted `animals.js`/`animal_counting.js`/`animal_memory.js`/`candy.js` to use emoji. Also fixed the memory smoke back-button check (was returning `[object Object]`).
     - **Validation:** `animals_smoke.js` 25/25 PASS, `memory_smoke.js` 15/15 PASS, `counting_smoke.js` 12/12 PASS, `candy_smoke.js` 12/12 PASS. `node --check` clean. Committed `0923ee9` + `b8feafa`, pushed.
 
+- 150. DONE — Master Plan, Task 18: New Learning Content Roadmap. (2026-09-29, Ponytail Lazy Dev.)
+    - **IMPLEMENTED 2026-09-29.** Created `resources/General_reviews/Learning_Content_Roadmap.md` — 9 proposed new learning games in 3 phases (Core Skills, Language, STEM). Each extends existing games and follows shared architecture.
+
 - 149. DONE — Master Plan, Task 17: CI / GitHub Actions. (2026-09-29, Ponytail Lazy Dev.)
     - **IMPLEMENTED 2026-09-29.** Created `.github/workflows/ci.yml` — 3 jobs: fast (syntax + registry + hub smoke), smoke (16 parallel game smokes), release (offline E2E + touch interruption). Expensive tests separated into release job.
 
