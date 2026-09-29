@@ -7,20 +7,11 @@ const path = require('path');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-const PAGES = {
-  hub: '/index.html',
-  animals: '/pages/animals.html',
-  classroom: '/pages/classroom.html',
-  coloring: '/pages/coloring.html',
-  memory: '/pages/animal_memory.html',
-  piano: '/pages/piano.html',
-  shapes: '/pages/shapes.html',
-  driving: '/pages/driving.html',
-  ocean: '/pages/ocean.html',
-  dino: '/pages/dino.html',
-  space: '/pages/space.html',
-  racing3d: '/pages/racing3d.html'
-};
+const REGISTRY_PATH = path.resolve(__dirname, '..', 'game', 'data', 'app-registry.js');
+const registrySrc = fs.existsSync(REGISTRY_PATH) ? fs.readFileSync(REGISTRY_PATH, 'utf8') : 'window.APP_REGISTRY = [];';
+const APP_REGISTRY = new Function(registrySrc + '; return window.APP_REGISTRY;')();
+const PAGES = { hub: '/index.html' };
+for (const app of APP_REGISTRY) { PAGES[app.id] = '/' + app.path; }
 
 const SIZES = {
   phone: { width: 390, height: 844, mobile: true },

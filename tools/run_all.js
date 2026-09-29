@@ -45,14 +45,12 @@ for (const a of args) {
 }
 if (!(opts.concurrency >= 1)) opts.concurrency = CONCURRENCY_DEFAULT;
 
-/* ---- game-file -> smoke mapping ---- */
-const PAGE_SMOKE = {
-  animals: 'animals_smoke', shapes: 'shapes_smoke', matching_game: 'candy_smoke',
-  animal_memory: 'memory_smoke', animal_puzzle: 'puzzle_smoke', animal_counting: 'counting_smoke',
-  coloring: 'coloring_smoke', classroom: 'classroom_smoke', tracing: 'tracing_smoke', piano: 'piano_smoke',
-  driving: 'driving_smoke', ocean: 'ocean_smoke', dino: 'dino_smoke', space: 'space_smoke',
-  racing: 'racing_smoke', racing3d: 'racing3d_smoke', papper_kitty: 'kitty_smoke',
-};
+/* ---- game-file -> smoke mapping (reads from app-registry.js) ---- */
+const REGISTRY_PATH = path.join(ROOT, 'game', 'data', 'app-registry.js');
+const registrySrc = fs.existsSync(REGISTRY_PATH) ? fs.readFileSync(REGISTRY_PATH, 'utf8') : 'window.APP_REGISTRY = [];';
+const APP_REGISTRY = new Function(registrySrc + '; return window.APP_REGISTRY;')();
+const PAGE_SMOKE = {};
+for (const app of APP_REGISTRY) { PAGE_SMOKE[app.id] = app.smoke; }
 const GAME_SMOKE = {
   animals: 'animals_smoke', shapes: 'shapes_smoke', candy: 'candy_smoke', kitty: 'kitty_smoke',
   'kitty-standalone': 'kitty_smoke', animal_puzzle: 'puzzle_smoke', animal_counting: 'counting_smoke',
@@ -63,8 +61,7 @@ const GAME_SMOKE = {
   'adventure-modes': ['adventure_smoke', 'driving_smoke', 'ocean_smoke', 'dino_smoke', 'space_smoke'],
   driving: ['driving_smoke', 'adventure_smoke'], ocean: ['ocean_smoke', 'adventure_smoke'],
   dino: ['dino_smoke', 'adventure_smoke'], space: ['space_smoke', 'adventure_smoke'],
-  racing: 'racing_smoke', 'racing-config': 'racing_smoke', racing3d: 'racing3d_smoke',
-  'racing3d-config': 'racing3d_smoke',
+  racing3d: 'racing3d_smoke', 'racing3d-config': 'racing3d_smoke',
 };
 // broad patterns -> whole battery (safe default)
 const BROAD = () => allSmokes();

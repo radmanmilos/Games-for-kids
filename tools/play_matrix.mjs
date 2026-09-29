@@ -42,7 +42,14 @@ const DEVICES = [
   { name: 'tablet-landscape', width: 1180, height: 820, touch: true },
   { name: 'desktop', width: 1280, height: 800, touch: false },
 ];
-const DEFAULT_PAGES = ['/index.html', '/pages/tracing.html', '/pages/coloring.html', '/pages/piano.html', '/pages/racing.html', '/pages/racing3d.html'];
+import { readFileSync, existsSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const REGISTRY_PATH = resolve(__dirname, '..', 'game', 'data', 'app-registry.js');
+const registrySrc = existsSync(REGISTRY_PATH) ? readFileSync(REGISTRY_PATH, 'utf8') : 'window.APP_REGISTRY = [];';
+const APP_REGISTRY = new Function(registrySrc + '; return window.APP_REGISTRY;')();
+const DEFAULT_PAGES = ['/index.html', ...APP_REGISTRY.map(a => '/' + a.path)];
 
 /* ---- arg parsing ---- */
 const argv = process.argv.slice(2);

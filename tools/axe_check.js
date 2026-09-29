@@ -27,7 +27,10 @@ const { start, serve, sleep } = require('./headless.js');
 
 const CACHE = path.join(__dirname, '.cache', 'axe.min.js');
 const AXE_CDN = 'https://cdn.jsdelivr.net/npm/axe-core@4.10.2/axe.min.js';
-const DEFAULT_PAGES = ['/index.html', '/pages/tracing.html', '/pages/coloring.html', '/pages/animals.html', '/pages/piano.html', '/pages/racing.html', '/pages/animal_memory.html'];
+const REGISTRY_PATH = path.resolve(__dirname, '..', 'game', 'data', 'app-registry.js');
+const registrySrc = fs.existsSync(REGISTRY_PATH) ? fs.readFileSync(REGISTRY_PATH, 'utf8') : 'window.APP_REGISTRY = [];';
+const APP_REGISTRY = new Function(registrySrc + '; return window.APP_REGISTRY;')();
+const DEFAULT_PAGES = ['/index.html', ...APP_REGISTRY.map(a => '/' + a.path)];
 
 const argv = process.argv.slice(2);
 const opts = { pages: [], all: false, report: false, wcag: null };
