@@ -21,6 +21,11 @@ Important: The AI assistant and any contributor must read this file first when s
     - **IMPLEMENTED 2026-09-28 — reverted ART-001.** The custom SVG animal illustrations were "visually too crude" per the Master Implementation Plan. Restored native Unicode emoji for all animal artwork: removed `game/shared/illustrations.js`, removed `<script>` from 4 game pages, reverted `animals.js`/`animal_counting.js`/`animal_memory.js`/`candy.js` to use emoji. Also fixed the memory smoke back-button check (was returning `[object Object]`).
     - **Validation:** `animals_smoke.js` 25/25 PASS, `memory_smoke.js` 15/15 PASS, `counting_smoke.js` 12/12 PASS, `candy_smoke.js` 12/12 PASS. `node --check` clean. Committed `0923ee9` + `b8feafa`, pushed.
 
+- 139. DONE — Master Plan, Task 5: True Offline Browser Test. (2026-09-29, Ponytail Lazy Dev.)
+    - **IMPLEMENTED 2026-09-29.** Created `tools/offline_smoke.mjs` — two-phase test: (1) online caching pass, (2) offline verification with all network blocked. Checks service worker readiness, hub UI, and all 16 game pages load with main UI present.
+    - **Result:** 16/18 pass. 2 failures: `animal_counting` and `animal_puzzle` — their game scripts are not cached by the service worker, so they fail to load offline. This is a real finding (service worker cache gap), not a test bug.
+    - **Next:** Investigate service worker cache configuration to ensure all game scripts are cached.
+
 - 138. DONE — Master Plan, Task 4: PWA Metadata Consistency. (2026-09-29, Ponytail Lazy Dev.)
     - **IMPLEMENTED 2026-09-29.** Added `<link rel="manifest" href="../manifest.json">`, `<meta name="theme-color" content="#4A3F6B">`, and `viewport-fit=cover` to all 16 standalone pages. Created `tools/validate_pages.js` — validates lang="sr", manifest, theme-color, viewport-fit=cover, and registry-to-disk consistency.
     - **Validation:** `node tools/validate_pages.js` → OK: 16 pages validated, all metadata present.
