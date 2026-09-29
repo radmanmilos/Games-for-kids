@@ -21,6 +21,10 @@ Important: The AI assistant and any contributor must read this file first when s
     - **IMPLEMENTED 2026-09-28 — reverted ART-001.** The custom SVG animal illustrations were "visually too crude" per the Master Implementation Plan. Restored native Unicode emoji for all animal artwork: removed `game/shared/illustrations.js`, removed `<script>` from 4 game pages, reverted `animals.js`/`animal_counting.js`/`animal_memory.js`/`candy.js` to use emoji. Also fixed the memory smoke back-button check (was returning `[object Object]`).
     - **Validation:** `animals_smoke.js` 25/25 PASS, `memory_smoke.js` 15/15 PASS, `counting_smoke.js` 12/12 PASS, `candy_smoke.js` 12/12 PASS. `node --check` clean. Committed `0923ee9` + `b8feafa`, pushed.
 
+- 142. DONE — Master Plan, Task 9: Release Validation Orchestrator. (2026-09-29, Ponytail Lazy Dev.)
+    - **IMPLEMENTED 2026-09-29.** Created `tools/check_release.js` — two-mode release validation. Fast mode (default): syntax + hub smoke. Release mode (--release): full QA stack (syntax, registry, metadata, all smokes, offline E2E, docs sync, offline package). Fixed `run_all.js` to use mock `window` for registry loading in Node.js.
+    - **Validation:** `node tools/check_release.js` runs clean.
+
 - 141. DONE — Master Plan, Task 7: Serbian Data Layer Integration. (2026-09-29, Ponytail Lazy Dev.)
     - **IMPLEMENTED 2026-09-29.** Added `data/serbian.js` to 3 pages (animal_counting, animal_puzzle, classroom). Migrated 4 hardcoded Serbian strings to use `SERBIAN.retry[0]` and `SERBIAN.back` with fallback. Created `ANTI_LOOP_RULES.md`.
     - **Validation:** `node --check` clean on all modified files.

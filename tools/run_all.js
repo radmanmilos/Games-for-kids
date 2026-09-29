@@ -48,7 +48,8 @@ if (!(opts.concurrency >= 1)) opts.concurrency = CONCURRENCY_DEFAULT;
 /* ---- game-file -> smoke mapping (reads from app-registry.js) ---- */
 const REGISTRY_PATH = path.join(ROOT, 'game', 'data', 'app-registry.js');
 const registrySrc = fs.existsSync(REGISTRY_PATH) ? fs.readFileSync(REGISTRY_PATH, 'utf8') : 'window.APP_REGISTRY = [];';
-const APP_REGISTRY = new Function(registrySrc + '; return window.APP_REGISTRY;')();
+const mockWindow = {};
+const APP_REGISTRY = new Function('window', registrySrc + '; return window.APP_REGISTRY;')(mockWindow);
 const PAGE_SMOKE = {};
 for (const app of APP_REGISTRY) { PAGE_SMOKE[app.id] = app.smoke; }
 const GAME_SMOKE = {
