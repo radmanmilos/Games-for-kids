@@ -9,7 +9,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const REGISTRY_PATH = path.resolve(__dirname, '..', 'game', 'data', 'app-registry.js');
 const registrySrc = fs.existsSync(REGISTRY_PATH) ? fs.readFileSync(REGISTRY_PATH, 'utf8') : 'window.APP_REGISTRY = [];';
-const APP_REGISTRY = new Function(registrySrc + '; return window.APP_REGISTRY;')();
+const mockWindow = {};
+const APP_REGISTRY = new Function('window', registrySrc + '; return window.APP_REGISTRY;')(mockWindow);
 const PAGES = { hub: '/index.html' };
 for (const app of APP_REGISTRY) { PAGES[app.id] = '/' + app.path; }
 

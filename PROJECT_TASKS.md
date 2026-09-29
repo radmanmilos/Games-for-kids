@@ -21,6 +21,10 @@ Important: The AI assistant and any contributor must read this file first when s
     - **IMPLEMENTED 2026-09-28 — reverted ART-001.** The custom SVG animal illustrations were "visually too crude" per the Master Implementation Plan. Restored native Unicode emoji for all animal artwork: removed `game/shared/illustrations.js`, removed `<script>` from 4 game pages, reverted `animals.js`/`animal_counting.js`/`animal_memory.js`/`candy.js` to use emoji. Also fixed the memory smoke back-button check (was returning `[object Object]`).
     - **Validation:** `animals_smoke.js` 25/25 PASS, `memory_smoke.js` 15/15 PASS, `counting_smoke.js` 12/12 PASS, `candy_smoke.js` 12/12 PASS. `node --check` clean. Committed `0923ee9` + `b8feafa`, pushed.
 
+- 145. DONE — Master Plan, Task 12: Full Screenshot Coverage. (2026-09-29, Ponytail Lazy Dev.)
+    - **IMPLEMENTED 2026-09-29.** `screenshot.js` now reads from `app-registry.js` — covers all 16 games + hub across 3 sizes (phone, tablet, desktop) = 51 screenshots. Fixed `window` mock for Node.js execution.
+    - **Note:** Full capture takes >2 minutes (51 browser page loads). Run `node tools/screenshot.js` to capture.
+
 - 144. DONE — Master Plan, Task 11: System-Wide Touch Interruption Tests. (2026-09-29, Ponytail Lazy Dev.)
     - **IMPLEMENTED 2026-09-29.** Created `tools/touch_interruption_smoke.js` — simulates pointerdown+cancel, drag interrupted, multi-touch, page hidden, and UI integrity check on all 16 games. `--game <name>` flag for single-game testing.
     - **Validation:** `node tools/touch_interruption_smoke.js --game animals` → 5/5 PASS.
