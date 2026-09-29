@@ -278,7 +278,7 @@ Gameplay:
 - **Forgiving jump (task 128):** in Dino mode, jump buffer (150ms), forgiving collision (40px), and soft respawn to last safe position — a child who reacts slightly late still gets many successful jumps.
 - **Spatial identity (task 129):** in Space mode, altitude bands (3 subtle horizontal layers) and planets as landmarks (4 large decorative circles) — teaches simple spatial movement through play.
 - **Shared engine (task 130):** all 4 adventure games use `AdventureEngine.create()` — a bug fix in shared movement applies once across all games.
-- **Legacy cleanup (task 131):** removed `papper_kitty.html`, `racing.html`, `kitty.js` — all replaced by newer implementations.
+- **Legacy cleanup (task 131):** removed `papper_kitty.html`, `racing.html`, `kitty-standalone.js` — all replaced by newer implementations.
 - **Play-aware tests (task 132):** memory smoke now covers audio-disabled, resize, and back-button scenarios (12 → 15 checks).
 - **Touch interruption tests (task 133):** shapes smoke now covers pointercancel, multi-touch, and page-hidden scenarios (13 → 16 checks).
 - **Visual regression (task 134):** `tools/screenshot.js` captures 36 screenshots (12 pages × 3 sizes) for visual regression testing.
@@ -537,7 +537,7 @@ Educational goals:
 Paper Kitty Adventure has been fully integrated into Petrin svet and the placeholder is gone. The project is now a modular application:
 
 - **Hub landing (task 64, 2026-08-05):** `index.html` opens on the "🌈 Петрин свет" title with two big group tiles — **УЧЕЊЕ first** (icon = 2×2 emoji combo 🏫📝/🎹🎨) then 🎮 **ИГРЕ** (Kitty, Driving, Ocean, Dino, Space, Candy, Memory, Puzzle, Racing). Each tile opens that group's sub-hub screen with the round game buttons; a back arrow returns to the landing. УЧЕЊЕ = Classroom, Tracing, Animals, Shapes, Counting, Coloring, Piano.
-- **Kitty Adventure** runs inside the main app screen (embedded `papper_kitty.html`).
+- **Explorer (Мала истраживачица)** is a standalone page (`pages/explorer.html`) — the canonical Explorer route.
 - All other games open as standalone pages launched from the hub.
 - Navigation, audio, speech, and utilities are shared modules.
 - **Accessibility / reduced motion (task 83, 2026-08-07, REVERTED):** the shared `window.reducedMotion()` utility in `shared/utils.js` (JS gates) + `@media (prefers-reduced-motion: reduce)` collapse in `shared/accessibility.css` was implemented then **fully reverted per user decision** — the user's OS has `prefers-reduced-motion: reduce` active, so it stripped the memory card-flip, candy combo/hint/level-up, and obstacle-hit-particle animations that ARE the gameplay feedback for kids. All animations are restored. Two pre-existing task-79 split regressions were fixed along the way: driving's dashed road divider now renders (`roadTopY()` fix) and ocean/space obstacles draw again (restored `cfg.drawObstacle` dispatch).
@@ -596,7 +596,7 @@ Back button
 Main Menu (landing)
 ```
 
-`shared/navigation.js` drives every `data-go` button. Most games load their own page; Kitty is the one in-app screen (embedded via iframe so it keeps its own canvas loop and HUD).
+`shared/navigation.js` drives every `data-go` button. All games are standalone pages under `pages/`.
 
 ---
 
@@ -626,7 +626,7 @@ drawKitty();
 stopKitty();
 ```
 
-This is implemented in `games/kitty.js`: the animation loop stops when leaving the game, and standalone pages expose `start<Game>()` entrypoints booted by `shared/main.js`.
+Standalone pages expose `start<Game>()` entrypoints booted by `shared/main.js`.
 
 Example:
 
@@ -820,8 +820,7 @@ assets/
 ```
 
 - `index.html` is the hub. It loads every game module and embeds Kitty.
-- The standalone pages (`pages/animals.html`, `pages/shapes.html`, `pages/matching_game.html`, `pages/animal_puzzle.html`, `pages/animal_counting.html`, `pages/animal_memory.html`, `pages/coloring.html`, `pages/classroom.html`, `pages/tracing.html`, `pages/piano.html`, `pages/driving.html`, `pages/ocean.html`, `pages/dino.html`, `pages/space.html`, `pages/racing.html`) each load only the modules they need.
-- `papper_kitty.html` is the self-contained Kitty runtime, embedded in the hub via iframe.
+- The standalone pages (`pages/animals.html`, `pages/shapes.html`, `pages/matching_game.html`, `pages/animal_puzzle.html`, `pages/animal_counting.html`, `pages/animal_memory.html`, `pages/coloring.html`, `pages/classroom.html`, `pages/tracing.html`, `pages/piano.html`, `pages/driving.html`, `pages/ocean.html`, `pages/dino.html`, `pages/space.html`, `pages/racing3d.html`, `pages/explorer.html`) each load only the modules they need.
 
 ```
 games/
@@ -829,7 +828,7 @@ games/
 animals.js
 shapes.js
 candy.js
-kitty.js
+kitty-standalone.js
 kitty-standalone.js
 animal_puzzle.js
 animal_counting.js
@@ -931,7 +930,7 @@ games/
 animals.js
 shapes.js
 candy.js
-kitty.js
+kitty-standalone.js
 kitty-standalone.js
 animal_puzzle.js
 animal_counting.js
@@ -1111,7 +1110,7 @@ Created:
 - animals.js
 - shapes.js
 - candy.js
-- kitty.js
+- kitty-standalone.js
 - animal_puzzle.js
 - animal_counting.js
 - animal_memory.js
