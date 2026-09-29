@@ -17,5 +17,6 @@ window.APP_REGISTRY = [
   { id: 'dino', path: 'pages/dino.html', category: 'games', title: 'Дино', smoke: 'dino_smoke', screenshot: true, offline: true, toddler: false },
   { id: 'space', path: 'pages/space.html', category: 'games', title: 'Свемир', smoke: 'space_smoke', screenshot: true, offline: true, toddler: false },
   { id: 'racing3d', path: 'pages/racing3d.html', category: 'games', title: 'Мала тркачица 3Д', smoke: 'racing3d_smoke', screenshot: true, offline: true, toddler: false },
-  { id: 'explorer', path: 'pages/explorer.html', category: 'games', title: 'Мала истраживачица', smoke: 'kitty_smoke', screenshot: true, offline: true, toddler: false }
+  { id: 'explorer', path: 'pages/explorer.html', category: 'games', title: 'Мала истраживачица', smoke: 'kitty_smoke', screenshot: true, offline: true, toddler: false },
+  { id: 'parent', path: 'pages/parent.html', category: 'parent', title: 'За родитеље', smoke: null, screenshot: false, offline: true, toddler: false }
 ];

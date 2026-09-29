@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#4A3F6B">
+  <link rel="manifest" href="../manifest.json">
+  <title>За родитеље — Петрин свет</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔒</text></svg>">
+  <link rel="stylesheet" href="../styles/viewport.css">
+  <link rel="stylesheet" href="../styles/design-tokens.css">
+  <link rel="stylesheet" href="../shared/accessibility.css">
+  <style>
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;}
+    html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:var(--cream);font-family:'Fredoka',sans-serif;}
+    #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4vmin;}
+    .parent-card{background:white;border-radius:var(--radius-lg);padding:6vmin;max-width:600px;width:100%;box-shadow:0 8px 0 rgba(0,0,0,.15);}
+    .parent-card h1{color:var(--plum);font-size:clamp(20px,4vmin,36px);margin:0 0 4vmin;text-align:center;}
+    .parent-btn{display:flex;align-items:center;gap:3vmin;width:100%;padding:3vmin 4vmin;margin:2vmin 0;border:3px solid var(--plum);border-radius:var(--radius-md);background:white;color:var(--plum);font:600 clamp(14px,2.5vmin,20px) 'Fredoka',sans-serif;cursor:pointer;text-align:left;}
+    .parent-btn:active{transform:scale(.97);}
+    .parent-btn.primary{background:var(--plum);color:white;}
+    .parent-btn:disabled{opacity:.5;cursor:default;}
+    .parent-status{margin-top:3vmin;padding:2vmin 3vmin;border-radius:var(--radius-sm);background:var(--cream);color:var(--plum);font:600 clamp(12px,2vmin,16px) 'Fredoka',sans-serif;text-align:center;}
+    .back-btn{position:absolute;top:4vmin;left:4vmin;width:12vmin;height:12vmin;border-radius:50%;border:none;background:var(--plum);color:white;font-size:6vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);cursor:pointer;}
+  </style>
+</head>
+<body>
+  <div id="app">
+    <button class="back-btn" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <div class="parent-card">
+      <h1>🔒 За родитеље</h1>
+      <button class="parent-btn primary" id="download-offline">📥 Преузми за офлајн рад</button>
+      <button class="parent-btn" id="check-updates">🔄 Провери ажурирања</button>
+      <button class="parent-btn" id="reset-progress">🗑 Обриши локални напредак</button>
+      <button class="parent-btn" id="audio-test">🔊 Тест звука</button>
+      <div class="parent-status" id="parent-status">Спремно</div>
+    </div>
+  </div>
+  <script src="../shared/navigation.js"></script>
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/audio-buses.js"></script>
+  <script src="../shared/speech.js"></script>
+  <script src="../shared/utils.js"></script>
+  <script src="../shared/main.js"></script>
+  <script>
+    (function() {
+      const status = document.getElementById('parent-status');
+      const downloadBtn = document.getElementById('download-offline');
+      const checkBtn = document.getElementById('check-updates');
+      const resetBtn = document.getElementById('reset-progress');
+      const audioBtn = document.getElementById('audio-test');
+
+      // Download offline
+      downloadBtn.addEventListener('click', async () => {
+        downloadBtn.disabled = true;
+        downloadBtn.setAttribute('aria-busy', 'true');
+        status.textContent = 'Покрећем...';
+        try {
+          if ('serviceWorker' in navigator) {
+            const reg = await navigator.serviceWorker.ready;
+            if (reg.active) {
+              reg.active.postMessage({ cmd: 'cacheAll' });
+              status.textContent = 'Спремам...';
+            } else {
+              status.textContent = 'Сервис још није спреман';
+              downloadBtn.disabled = false;
+            }
+          } else {
+            status.textContent = 'Офлајн није подржан';
+            downloadBtn.disabled = false;
+          }
+        } catch (e) {
+          status.textContent = 'Грешка: ' + e.message;
+          downloadBtn.disabled = false;
+        }
+      });
+
+      // Check updates
+      checkBtn.addEventListener('click', async () => {
+        checkBtn.disabled = true;
+        status.textContent = 'Проверавам...';
+        try {
+          if ('serviceWorker' in navigator) {
+            const reg = await navigator.serviceWorker.ready;
+            if (reg.active) {
+              reg.active.postMessage({ cmd: 'checkForUpdates' });
+            } else {
+              status.textContent = 'Сервис још није спреман';
+            }
+          } else {
+            status.textContent = 'Није подржано';
+          }
+        } catch (e) {
+          status.textContent = 'Грешка: ' + e.message;
+        }
+        checkBtn.disabled = false;
+      });
+
+      // Reset progress
+      resetBtn.addEventListener('click', () => {
+        if (confirm('Обриши сав локални напредак?')) {
+          localStorage.clear();
+          status.textContent = 'Напредак обрисан';
+        }
+      });
+
+      // Audio test
+      audioBtn.addEventListener('click', () => {
+        try {
+          const ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.frequency.value = 440;
+          gain.gain.value = 0.3;
+          osc.start();
+          osc.stop(ctx.currentTime + 0.3);
+          status.textContent = 'Тест звука: 🔊';
+        } catch (e) {
+          status.textContent = 'Звук није доступан';
+        }
+      });
+
+      // Listen for SW messages
+      if ('serviceWorker' in navigator && navigator.serviceWorker.addEventListener) {
+        navigator.serviceWorker.addEventListener('message', (e) => {
+          const data = e.data || {};
+          if (data.type === 'cache-complete') {
+            status.textContent = 'Сачувано за офлајн рад';
+            downloadBtn.disabled = false;
+            downloadBtn.removeAttribute('aria-busy');
+          }
+          if (data.type === 'check-result') {
+            status.textContent = data.changed && data.changed > 0 ? 'Ажурирање доступно' : 'Нема ажурирања';
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

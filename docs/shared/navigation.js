@@ -37,6 +37,7 @@
         // game-racing route removed (task 131 CLEAN-001) — hub button already hidden
         if (id === 'game-racing3d') { location.href = 'pages/racing3d.html'; return; }
         if (id === 'game-explorer') { location.href = 'pages/explorer.html'; return; }
+        if (id === 'game-parent') { location.href = 'pages/parent.html'; return; }
         screens.forEach(screen => screen.classList.toggle('active', screen.id === id));
         if (id === 'game-animals' && typeof window.startAnimals === 'function') window.startAnimals();
         if (id === 'game-shapes' && typeof window.startShapesRound === 'function') window.startShapesRound();

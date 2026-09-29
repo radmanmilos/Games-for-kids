@@ -21,6 +21,10 @@ Important: The AI assistant and any contributor must read this file first when s
     - **IMPLEMENTED 2026-09-28 — reverted ART-001.** The custom SVG animal illustrations were "visually too crude" per the Master Implementation Plan. Restored native Unicode emoji for all animal artwork: removed `game/shared/illustrations.js`, removed `<script>` from 4 game pages, reverted `animals.js`/`animal_counting.js`/`animal_memory.js`/`candy.js` to use emoji. Also fixed the memory smoke back-button check (was returning `[object Object]`).
     - **Validation:** `animals_smoke.js` 25/25 PASS, `memory_smoke.js` 15/15 PASS, `counting_smoke.js` 12/12 PASS, `candy_smoke.js` 12/12 PASS. `node --check` clean. Committed `0923ee9` + `b8feafa`, pushed.
 
+- 147. DONE — Master Plan, Task 15: Parent Area. (2026-09-29, Ponytail Lazy Dev.)
+    - **IMPLEMENTED 2026-09-29.** Created `game/pages/parent.html` — parent area with offline download, check updates, reset progress, audio test. Added 🔒 lock icon in hub (bottom-right corner) linking to parent area. Registered in `app-registry.js`, `navigation.js`, `main.js`.
+    - **Validation:** `node --check` clean on all modified files.
+
 - 146. DONE — Master Plan, Task 13: Legacy Code + Cache Cleanup. (2026-09-29, Ponytail Lazy Dev.)
     - **IMPLEMENTED 2026-09-29.** Removed legacy racing code: `game/games/racing.js`, `game/games/racing-config.js`, `tools/racing_smoke.js`. Removed racing entries from `sw-cache-list.json`. Added note in `run_all.js` about racing removal.
     - **Validation:** `node --check` clean on all modified files.

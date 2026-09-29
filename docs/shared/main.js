@@ -16,7 +16,8 @@ const standaloneMap = {
     'space': ['space-back', 'startSpace', 'hub-games'],
     'racing': ['racing-back', 'startRacing', 'hub-games'],
     'racing3d': ['r3d-back', 'startRacing3D', 'hub-games'],
-    'explorer': ['back-btn', null, 'hub-games']
+    'explorer': ['back-btn', null, 'hub-games'],
+    'parent': ['back-btn', null, 'hub']
 };
 const standaloneGame = standaloneMap[standalonePage];
 
