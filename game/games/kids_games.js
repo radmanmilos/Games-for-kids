@@ -106,7 +106,7 @@
       if (window.gentleMiss) window.gentleMiss();
       btn.classList.add('wrong');
       setTimeout(() => btn.classList.remove('wrong'), 450);
-      Q('kidsFeedback').textContent = 'Покушај још једном!';
+      Q('kidsFeedback').textContent = (typeof SERBIAN !== 'undefined' && SERBIAN.retry) ? SERBIAN.retry[0] : 'Покушај још једном!';
     }
   }
 

@@ -1,32 +1,53 @@
-# Anti-Loop Rules
+# Anti-Looping Rules
 
-**Purpose:** Prevent the thinking pattern of going in circles — finding an issue, fixing it, realizing that's not it, finding the same issue again, fixing it again, etc.
+## The Problem
+The agent repeatedly reads the same files, investigates the same issues, and never takes action. This wastes the user's time and context.
 
-## The Rule
+## Rules
 
-**Maximum 2 attempts per diagnosis.** After 2 attempts to diagnose/fix the same symptom:
+### 1. Maximum 2 attempts per diagnosis
+After 2 attempts to diagnose/fix the same symptom: **STOP, ESCALATE, CHANGE APPROACH**.
 
-1. **STOP** — do not try a third fix for the same symptom.
-2. **ESCALATE** — tell the user: "I've tried X and Y for [symptom]. I'm going in circles. Can you help me break out?"
-3. **CHANGE APPROACH** — if continuing, use a fundamentally different method (not another variation of the same approach).
+### 2. No repeated file reads
+If you've read a file once and have the information you need, **DO NOT READ IT AGAIN**. Take action with what you have.
 
-## Recognition Triggers
+### 3. Action over investigation
+When you have enough context to act, **ACT IMMEDIATELY**. Do not:
+- Re-read files you've already read
+- Re-run commands you've already run
+- Re-investigate issues you've already diagnosed
+- Ask clarifying questions when the path forward is clear
 
-You are looping if you catch yourself:
-- Re-reading the same code with the same hypothesis
-- Making an edit that's structurally identical to a previous failed edit
-- Thinking "maybe if I just try this again" about the same fix
-- Re-explaining the same root cause in different words
-- Feeling like you're "starting over" on the same problem
+### 4. Commit frequently
+After every completed micro-step:
+- Update docs
+- Sync
+- Commit
+- Push
 
-## Immediate Action When You Recognize a Loop
+Do not batch multiple tasks before committing.
 
-1. **State it out loud:** "I'm going in circles."
-2. **Write down what you've tried** (max 2 items).
-3. **Ask the user** or **switch to a completely different approach**.
+### 5. If stuck, ask — don't loop
+If you genuinely cannot proceed after 2 attempts:
+- Tell the user what you've tried
+- Ask for guidance
+- Do NOT keep trying variations of the same approach
 
-## Why This Matters
+### 6. One tool call per step
+Make ONE tool call, get the result, then decide the next step. Do not chain multiple investigations in a single response.
 
-The user cannot see your thinking. If you loop silently for 20 turns, they experience a frozen agent. If you loop for 2 turns and speak up, they experience an agent that knows its limits and collaborates.
+## Enforcement
+If you catch yourself looping:
+1. STOP immediately
+2. Commit whatever progress you have
+3. Tell the user: "I was looping. Current state: [X]. Next step: [Y]."
+4. Wait for user direction
 
-**Better to appear stuck than to actually waste the user's time.**
+## Signs You're Looping
+- Reading the same file for the 3rd+ time
+- Running the same command twice
+- Investigating the same issue without new information
+- Your response starts with "Let me check..." for the 3rd+ time
+- You're about to write the same code you wrote before
+
+**STOP. COMMIT. REPORT.**
