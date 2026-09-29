@@ -103,7 +103,7 @@ const COUNT_ALL = `(function(){
     score: document.getElementById('countScoreValue').textContent
   })`);
   const W = JSON.parse(wrong);
-  check('wrong tap: nudge "Покушај поново", score unchanged', W.result === 'Покушај поново' && W.score === '1', wrong);
+  check('wrong tap: nudge "Хајде поново!", score unchanged', W.result === 'Хајде поново!' && W.score === '1', wrong);
 
   // --- Finish remaining levels: count all, then correct answer ---
   let level = 2;

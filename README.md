@@ -408,6 +408,7 @@ A full 3D (WebGL / three.js, r169 vendored in `game/assets/lib/`) racing game, b
   - **Mechanical queue:** particles now store the `spin` callers ask for (nothing ever spun), the particle cap is exact, the context-loss sentence is complete, `racing3d` is in the Playwright viewport matrix, `resetInput()` clears stuck steering on launch/blur/tab-hide, compound sound motifs are anchored to the first note so the audio bus's 40 ms drain can't stretch them, and the dead `ACCEL = 16` constant is now the real `ACCEL_RATE = 2.2`.
   - **Perf hooks (dev/test only):** `__r3d.perf()` reports draw calls, triangles, particle count, average and worst frame time, DPR and draw-buffer pixels. Measured: **71 draw calls driving → 162 during a confetti burst** (≈ +1 per particle). Burst frame time did not degrade beyond noise, and each particle fades independently via its own material (`racing3d.mjs:1520`), so sharing materials would make a whole burst fade in lockstep. **Pooling is therefore deliberately not done** (decided 2026-09-25) — revisit only if a real device shows burst frame-time spikes.
 - Validation: `node tools/racing3d_smoke.js` (**32/32 PASS**), `node tools/hub_smoke.js` (**10/10 PASS**), `node tools/play_matrix.mjs racing3d` (**10/10 cells**: chromium + webkit × 5 viewports), `node tools/check_all.js --docs --offline` (**19/19 tools, 364 checks, 0 fail**).
+- **WebGL gate (2026-09-29, R1).** `racing3d` is the only WebGL game, and **headless Linux hosts often have no WebGL** (`--disable-gpu`, and Chromium builds without SwiftShader — ANGLE then aborts with `SwANGLE failed with error EGL_NOT_INITIALIZED`). On such a host `racing3d_smoke.js` runs 3 real checks (the "3D није доступан овде" fallback, page chrome, and the shared `RACING_CONFIG` load = 8 worlds / 8 music / 3 obstacle types) and reports the 32-check race battery as a counted **SKIP**, exiting non-zero only on a real failure. A skip is never a pass, and the race is **not covered** on those hosts — it needs a GPU/SwiftShader host (CI) or a real-device play-test. `racing-config.js` is asserted in *both* modes, so the task-146 regression that silently left the game with 0 worlds stays guarded. Details in `PROJECT_TASKS.md` task 152 and `AGENTS.md` → Footguns.
 - Tuning so far (2026-09-11, from user play-test feedback): `MAX_SPEED` 132→70→35; **quaternion-slerp chase cam** (no more upside-down flip on hills, hills tamed); **`DoubleSide` fix** — the road/dashes/edges ribbons were wound down-facing and back-face culled (the road was literally invisible; root cause, not a color issue); road is now a classic two-lane asphalt with dashed center line + solid white edges; camera pulled in tight; kart holds its line when released (the slip-angle body yaw was later removed in round 6).
 
 Educational goals:
@@ -845,8 +846,9 @@ driving.js
 ocean.js
 dino.js
 space.js
-racing.js
 racing-config.js
+racing3d-config.js
+racing3d.mjs
 ```
 
 ```
@@ -947,8 +949,9 @@ driving.js
 ocean.js
 dino.js
 space.js
-racing.js
 racing-config.js
+racing3d-config.js
+racing3d.mjs
 
 shared/
 

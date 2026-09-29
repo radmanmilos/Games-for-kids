@@ -16,6 +16,10 @@
        intermittently made Chrome "not start". Each start() uses a fresh unique
        profile, retries, and close() kills only this run's Chrome by profile tag.
      - CHROME_PATH env overrides the Chrome binary.
+     - skip(name, why) records a check that could not run because the ENVIRONMENT
+       lacks a capability. Use it ONLY for that. Never use a skip (or a stubbed
+       hook) to make a real failure disappear: a skip still prints SKIP and is
+       counted, so reduced coverage never reads as a green battery.
 */
 const { execFile, execFileSync } = require('child_process');
 const path = require('path');
@@ -51,9 +55,19 @@ const MIME = {
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 let fails = 0;
+let skips = 0;
 function check(name, ok, info) {
   console.log((ok ? 'PASS ' : 'FAIL ') + name + (info ? '  [' + info + ']' : ''));
   if (!ok) fails++;
+}
+
+/* Record a check that could NOT run because the environment lacks a capability
+   (e.g. no WebGL in headless Chrome). A skip is NOT a pass: it is counted and
+   reported so reduced coverage can never be mistaken for a green battery.
+   `why` must say what was missing. */
+function skip(name, why) {
+  skips++;
+  console.log('SKIP ' + name + (why ? '  [' + why + ']' : ''));
 }
 
 /* Kill Chrome processes whose command line contains `tag` (e.g. a profile path). */
@@ -168,4 +182,4 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800, dpr = 1 } 
   return { c, evalv, evalp, navigate, close, port: httpPort, sleep };
 }
 
-module.exports = { start, serve, check, sleep, getFails: () => fails };
+module.exports = { start, serve, check, skip, sleep, getFails: () => fails, getSkips: () => skips };

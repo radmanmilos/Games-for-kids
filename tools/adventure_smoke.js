@@ -147,13 +147,20 @@ async function waitReady(h) {
     const a = window.__adv;
     const m = a.mice[0];
     m.visible = true;
-    m.y = m.visibleY;
+    // The update loop recomputes mouse.y from (now - animationStart) on every
+    // frame, so assigning m.y = m.visibleY here is pointless on its own: with a
+    // fresh timestamp elapsed is ~0, which lands in the RISE branch and lerps y
+    // back to hiddenY (pipe.y + 26), so the hit test (needs y <= visibleY + 8)
+    // can never match. Start the pop 800 ms in the past to sit in the middle of
+    // the 350..1250 ms HOLD window, where the loop pins y to exactly visibleY.
+    // 900 ms of slack keeps this deterministic under parallel-load timing.
+    m.animationStart = performance.now() - 800;
     a.player.x = m.x;
-    a.player.y = m.y - a.player.height;
+    a.player.y = m.visibleY - a.player.height;
     a.player.vx = 0;
     a.player.vy = 0;
     a.update();
-    return JSON.stringify({ bumpCount: a.bumpCount, visible: m.visible });
+    return JSON.stringify({ bumpCount: a.bumpCount, visible: m.visible, my: m.y, visY: m.visibleY });
   })()`);
   const gbr = JSON.parse(groundBumpResult);
   check('ground mode: mouse hit knocks back (bumpCount++, mouse hides)', gbr.bumpCount === 1 && gbr.visible === false, groundBumpResult);

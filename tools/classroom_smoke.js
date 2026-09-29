@@ -117,7 +117,7 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
   await sleep(120);
   const w = await h.evalv(`JSON.stringify({ fb: document.getElementById('kidsFeedback').textContent, prog: document.getElementById('kidsProgress').textContent })`);
   const wj = JSON.parse(w);
-  check('wrong tap nudges, question stays', wj.fb === 'Покушај још једном!' && wj.prog === '1 од 8', w);
+  check('wrong tap nudges, question stays', wj.fb === 'Хајде поново!' && wj.prog === '1 од 8', w);
 
   for (let i = 0; i < 8; i++) {
     let busy = true;

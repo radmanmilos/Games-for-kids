@@ -6,12 +6,82 @@
    raises speed, and hub wiring (button / navigation / standalone boot) is in
    place.
    Run:  node tools/racing3d_smoke.js
-   Requires Node >= 22. CHROME_PATH env optional. */
-const { start, check, getFails } = require('./headless.js');
+   Requires Node >= 22. CHROME_PATH env optional.
+
+   WebGL gate: on a host with no WebGL context (headless Chrome + --disable-gpu
+   and no SwiftShader) the race cannot run, so those checks are reported as a
+   counted SKIP, not a pass. The no-WebGL fallback path and the shared
+   RACING_CONFIG load are still asserted, because both work without WebGL. */
+const { start, check, skip, getFails, getSkips } = require('./headless.js');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 (async () => {
     const h = await start({ page: '/pages/racing3d.html', tag: 'racing3d-smoke', width: 1100, height: 700 });
+
+    // --- Environment gate -----------------------------------------------------
+    // This is the ONLY WebGL game, and headless Chrome has no WebGL on some hosts
+    // (Linux/CI with --disable-gpu and no SwiftShader: ANGLE needs VK_KHR_surface,
+    // which a software container does not provide). When WebGL is missing the game
+    // correctly shows its "3D није доступан овде" fallback and never sets
+    // window.__r3d, so the whole WebGL battery below is unrunnable.
+    //
+    // That is an ENVIRONMENT limit, so it is reported as a counted SKIP — never as
+    // a pass. Making it "pass" (by stubbing __r3d or exiting early with a green
+    // summary) is exactly the anti-pattern that hid the real racing-config.js
+    // regression in the first place. See R1 in PROJECT_TASKS.md.
+    // Wait for the page to finish loading and the game to attempt its boot,
+    // otherwise the probes below race the <script> tags and see an empty page.
+    for (let i = 0; i < 40; i++) {
+        const loaded = await h.evalv(`document.readyState === 'complete' && typeof window.startRacing3D === 'function'`);
+        if (loaded) break;
+        await sleep(250);
+    }
+    await sleep(500);
+
+    const webglOK = await h.evalv(`(function () {
+        try {
+            const c = document.createElement('canvas');
+            return !!(c.getContext('webgl2') || c.getContext('webgl'));
+        } catch (e) { return false; }
+    })()`);
+
+    if (!webglOK) {
+        const fb = JSON.parse(await h.evalv(`JSON.stringify({
+            msg: document.getElementById('r3d-countdown').textContent,
+            shown: document.getElementById('r3d-countdown').classList.contains('show'),
+            worlds: (window.RACING_CONFIG && window.RACING_CONFIG.worlds || []).length,
+            music: window.RACING_CONFIG && window.RACING_CONFIG.music
+                ? Object.keys(window.RACING_CONFIG.music).length : 0,
+            obstacles: window.RACING_CONFIG && window.RACING_CONFIG.obstacleTypes
+                ? Object.keys(window.RACING_CONFIG.obstacleTypes).length : 0,
+            startFn: typeof window.startRacing3D,
+            chromeOk: !!document.getElementById('r3d-back') &&
+                      !!document.getElementById('r3d-left') &&
+                      !!document.getElementById('r3d-right')
+        })`));
+
+        // The fallback itself is real, testable behaviour, so assert it properly.
+        check('no-WebGL fallback: shows "3D није доступан овде" instead of a blank page',
+            fb.shown === true && fb.msg === '3D није доступан овде', JSON.stringify(fb));
+
+        // Runs with or without WebGL, so the config regression stays covered even
+        // here: task 146 deleted racing-config.js while racing3d.html still loads
+        // it, which silently left the game with zero worlds.
+        check('shared RACING_CONFIG loaded for racing3d (8 worlds, 8 music tracks, 3 obstacle types)',
+            fb.worlds === 8 && fb.music === 8 && fb.obstacles === 3, JSON.stringify(fb));
+
+        check('page chrome present on the fallback path (back + steering buttons wired)',
+            fb.chromeOk === true && fb.startFn === 'function', JSON.stringify(fb));
+
+        skip('WebGL race battery (module boot, canvas, world picker, countdown, steering, boost, drift, bank, rumble, mini-map, hills, triangles, frame-timing, touch/palm, visibility, decor, shadows, boost visuals, input reset, perf)',
+            'no WebGL context in this environment');
+
+        const f = getFails();
+        console.log(`\nracing3d: ${getSkips()} SKIPPED (no WebGL) — the 3D race is NOT covered here.`);
+        console.log('This battery needs a WebGL-capable host, or the user play-test on a real device.');
+        h.close();
+        process.exit(f ? 1 : 0);
+    }
 
     let ready = false;
     for (let i = 0; i < 40 && !ready; i++) {

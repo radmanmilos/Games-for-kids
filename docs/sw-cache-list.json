@@ -162,6 +162,7 @@
   "games/kitty-standalone.js",
   "games/ocean.js",
   "games/piano.js",
+  "games/racing-config.js",
   "games/racing3d-config.js",
   "games/racing3d.mjs",
   "games/shapes.js",
