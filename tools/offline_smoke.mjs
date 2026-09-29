@@ -74,6 +74,15 @@ async function run() {
   }
   check('service worker ready', swReady, swReady ? 'SW active' : 'SW not active');
 
+  // Trigger explicit cacheAll to ensure all assets are cached
+  await h.evalv(`(() => {
+    const btn = document.getElementById('download-offline');
+    if (btn) btn.click();
+    return 'clicked';
+  })()`);
+  // Wait for cache to complete
+  await h.sleep(3000);
+
   // Visit every game page to populate cache
   for (const game of GAMES) {
     await h.navigate(`http://127.0.0.1:${srv.port}${game.path}`);
