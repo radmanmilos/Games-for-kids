@@ -64,6 +64,7 @@ const GAME_SMOKE = {
   dino: ['dino_smoke', 'adventure_smoke'], space: ['space_smoke', 'adventure_smoke'],
   racing3d: 'racing3d_smoke', 'racing3d-config': 'racing3d_smoke',
 };
+// Note: racing (2D) removed — racing.html deleted, racing.js/racing-config.js removed
 // broad patterns -> whole battery (safe default)
 const BROAD = () => allSmokes();
 
