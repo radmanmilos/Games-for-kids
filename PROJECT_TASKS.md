@@ -21,6 +21,10 @@ Important: The AI assistant and any contributor must read this file first when s
     - **IMPLEMENTED 2026-09-28 — reverted ART-001.** The custom SVG animal illustrations were "visually too crude" per the Master Implementation Plan. Restored native Unicode emoji for all animal artwork: removed `game/shared/illustrations.js`, removed `<script>` from 4 game pages, reverted `animals.js`/`animal_counting.js`/`animal_memory.js`/`candy.js` to use emoji. Also fixed the memory smoke back-button check (was returning `[object Object]`).
     - **Validation:** `animals_smoke.js` 25/25 PASS, `memory_smoke.js` 15/15 PASS, `counting_smoke.js` 12/12 PASS, `candy_smoke.js` 12/12 PASS. `node --check` clean. Committed `0923ee9` + `b8feafa`, pushed.
 
+- 144. DONE — Master Plan, Task 11: System-Wide Touch Interruption Tests. (2026-09-29, Ponytail Lazy Dev.)
+    - **IMPLEMENTED 2026-09-29.** Created `tools/touch_interruption_smoke.js` — simulates pointerdown+cancel, drag interrupted, multi-touch, page hidden, and UI integrity check on all 16 games. `--game <name>` flag for single-game testing.
+    - **Validation:** `node tools/touch_interruption_smoke.js --game animals` → 5/5 PASS.
+
 - 143. DONE — Master Plan, Task 10: Real Visual Regression. (2026-09-29, Ponytail Lazy Dev.)
     - **IMPLEMENTED 2026-09-29.** Created `tools/visual_compare.js` — baseline-vs-current screenshot comparison. Byte-level diff with configurable threshold (default 2%). `--update` flag copies current to baseline. Workflow: `screenshot.js` → `visual_compare.js --update` (first run) → `visual_compare.js` (subsequent runs).
     - **Validation:** `node tools/visual_compare.js` runs clean (no baselines yet — expected).
