@@ -3,7 +3,7 @@
    Generates game/sw-cache-list.json, produces docs/game-offline.zip,
    and writes game/offline-manifest.json with SHA256 and size for each asset.
    Usage: node tools/build_offline.js */
-const { execFileSync, execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -62,12 +62,32 @@ fs.writeFileSync(outPath, JSON.stringify(manifest, null, 2));
 console.log('[build_offline] wrote ' + outPath + ' (' + Object.keys(manifest).length + ' entries)');
 
 const zipPath = path.join(DOCS, 'game-offline.zip');
-if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
+
+// R5 (task 165): build to a temporary name and move it into place only on
+// success. The old code unlinked the existing archive FIRST, so any failure
+// after that point — and on this machine the very next line fails, because
+// `zip` is not on PATH — destroyed the artifact it was supposed to replace.
+// A failed build must leave the previous archive untouched.
+const zipTmp = zipPath + '.tmp';
 console.log('[build_offline] creating ZIP: ' + zipPath);
 
 const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'offline-zip-'));
-fs.cpSync(GAME, tmpDir, { recursive: true });
-execSync('cd ' + JSON.stringify(tmpDir) + ' && zip -r ' + JSON.stringify(zipPath) + ' .', { stdio: 'inherit' });
-fs.rmSync(tmpDir, { recursive: true, force: true });
+try {
+  fs.cpSync(GAME, tmpDir, { recursive: true });
+  execFileSync('zip', ['-r', zipTmp, '.'], { cwd: tmpDir, stdio: 'inherit' });
+  // Only now is it safe to touch the real path.
+  fs.mkdirSync(path.dirname(zipPath), { recursive: true });
+  fs.renameSync(zipTmp, zipPath);
+} catch (e) {
+  // Clean up the partial temp archive; never leave it to be mistaken for the real one.
+  try { if (fs.existsSync(zipTmp)) fs.unlinkSync(zipTmp); } catch {}
+  console.error('[build_offline] ZIP creation FAILED. The existing ' + path.basename(zipPath) + ' was left untouched.');
+  console.error('[build_offline] cause: ' + (e.code === 'ENOENT'
+    ? 'the `zip` command is not on PATH — install it, or run tools/build_offline.ps1 (PowerShell Compress-Archive) on Windows'
+    : (e.message || String(e)).split('\n')[0]));
+  process.exit(1);
+} finally {
+  fs.rmSync(tmpDir, { recursive: true, force: true });
+}
 
 console.log('[build_offline] done. ZIP: ' + zipPath);

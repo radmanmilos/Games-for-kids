@@ -1,0 +1,13 @@
+# R5 (task 165): pin the CI workflow to LF in the worktree.
+#
+# Why: tools/validate_workflow.js asserts the workflow contains no CR, because a
+# stray \r in a `run:` block breaks the shell step it lands in. This host has
+# core.autocrlf=true, so without this rule a fresh Windows clone checks the file
+# out as CRLF and the fast gate fails for a reason that has nothing to do with
+# the workflow being wrong — the machine-dependent class of bug task 164 just
+# removed from the offline manifest (see tools/manifest_hash.js).
+#
+# Scope: workflows only. game/ and docs/ are intentionally NOT pinned — they stay
+# CRLF-tolerant and are compared through the canonical-bytes helper instead.
+.github/workflows/*.yml text eol=lf
+.github/workflows/*.yaml text eol=lf

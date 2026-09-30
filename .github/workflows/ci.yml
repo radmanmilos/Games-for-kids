@@ -58,17 +58,9 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Syntax (node --check over game/ + tools/)
-        run: node tools/check_syntax.js
-
-      - name: Registry / routes + PWA metadata
-        run: node tools/validate_pages.js
-
-      - name: Offline inventory (deployment artifacts)
-        run: node tools/validate_offline.js
-
-      - name: Hub smoke
-        run: node tools/hub_smoke.js
+      - name: Fast gate (syntax, registry/metadata, CI workflow, generated
+            artifacts, offline inventory, hub smoke — all read-only)
+        run: node tools/check_fast.js
 
   # ---------------------------------------------------------------------------
   # Job B — game-smoke matrix. fail-fast: false is the whole point of R4:
@@ -100,12 +92,17 @@ jobs:
 
   # ---------------------------------------------------------------------------
   # Job C — release QA. Depends on fast + every smoke leg.
-  # NOTE: tools/check_release.js is NOT used here: it is still mutating (it
-  # rewrites docs/ via sync-docs.sh and re-runs the whole battery). R5 makes it
-  # a read-only release gate, and only then does it belong in this job.
+  # tools/check_release.js is deliberately NOT run here: it re-runs the whole
+  # battery, which this pipeline already did in parallel, one leg per job. Run
+  # it locally before a release instead. It IS read-only now (task 165) — the
+  # old version rewrote docs/ via sync-docs.sh and rebuilt the offline pack,
+  # which is why it could never be a gate.
+  #
+  # validate_offline.js is NOT repeated here either: it is part of the fast
+  # gate, so this job would be doing the same work twice.
   # ---------------------------------------------------------------------------
   release:
-    name: Release QA (offline E2E, artifacts, a11y report)
+    name: Release QA (offline E2E, a11y report)
     needs: [fast, smoke]
     runs-on: ubuntu-latest
     steps:
@@ -114,9 +111,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Deployment artifact validation
-        run: node tools/validate_offline.js
 
       # KNOWN RED, non-blocking: offline_smoke.mjs phase 2 starts a fresh
       # profile with no service worker and then blocks 127.0.0.1 as well, so it

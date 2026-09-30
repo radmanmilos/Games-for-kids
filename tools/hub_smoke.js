@@ -14,9 +14,39 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 (async () => {
   const h = await start({ page: '/', tag: 'hub-smoke', width: 1100, height: 700 });
 
+  // Readiness wait, NOT retry-until-pass. A `.click()` that navigates is applied
+  // by the page's own handler, and under parallel load a fixed sleep races it:
+  // the observed flake was `active: 'hub', go: ''` — the assertion ran before
+  // the class swap, so it reported a wrong-game-panel failure for a hub that was
+  // fine. Poll a condition unrelated to the assertion (navigation applied), then
+  // let the assertion itself fail honestly if the panel is still wrong.
+  const waitForActive = async (id, tries = 40, extra = null) => {
+    for (let i = 0; i < tries; i++) {
+      const got = await h.evalv(`(document.querySelector('.screen.active')||{}).id`);
+      if (got === id) {
+        if (!extra) return true;
+        const ok2 = await h.evalv(extra);
+        if (ok2) return true;
+      }
+      await sleep(50);
+    }
+    return false;
+  };
+
+  // Readiness wait on SCRIPT EXECUTION, not on static markup. The landing is
+  // already `.active` in the shipped HTML, so waiting for that alone proves
+  // nothing about the page's behaviour: in ~20% of runs the first click landed
+  // before `shared/navigation.js` had run, the tile had no listener yet, and
+  // `goTo` was never called at all (traced: `window.goTo === undefined` at click
+  // time, empty call trace, no thrown error). A child cannot tap before the page
+  // loads, so this is a harness race, not a game defect - and a readiness wait is
+  // the honest fix, not a longer sleep.
   let ready = false;
   for (let i = 0; i < 25 && !ready; i++) {
-    ready = await h.evalv(`document.getElementById('hub') && document.getElementById('hub').classList.contains('active')`);
+    ready = await h.evalv(
+      `!!(document.getElementById('hub') && document.getElementById('hub').classList.contains('active')) &&
+       typeof window.goTo === 'function'`
+    );
     if (!ready) await sleep(200);
   }
   check('hub landing rendered (active)', ready);
@@ -39,25 +69,28 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('learning tile shows 4 emoji cells (2x2)', L.learnEmojis === '🏫,📝,🎹,🎨', landing);
 
   await h.evalv(`document.querySelector('.hub-tile.tile-games').click()`);
-  await sleep(300);
+  const gamesReady = await waitForActive('hub-games', 60,
+    `(() => { const a = document.querySelector('.screen.active'); return !!a && a.id === 'hub-games' && a.querySelectorAll('.hub-grid [data-go]').length === 10; })()`);
   const games = await h.evalv(`JSON.stringify((() => {
     const act = document.querySelector('.screen.active');
     return {
+      ready: ${gamesReady},
       active: act && act.id,
-      title: document.querySelector('.hub-sub-title') ? document.querySelector('.hub-sub-title').textContent : '',
+      title: (act && act.querySelector('.hub-sub-title')) ? act.querySelector('.hub-sub-title').textContent : '',
       go: [...act.querySelectorAll('.hub-grid [data-go]')].map(b => b.dataset.go).join(',')
     };
   })())`);
   const G = JSON.parse(games);
-  check('games tile opens games sub-hub (10 buttons, explorer back target intact)', G.active === 'hub-games' && G.title === '🎮 ИГРЕ' && G.go.split(',').length === 10 && G.go === 'game-explorer,game-driving,game-ocean,game-dino,game-space,game-candy,game-memory,game-puzzle,game-racing,game-racing3d', games);
+  check('games tile opens games sub-hub (10 buttons, explorer back target intact)', gamesReady && G.active === 'hub-games' && G.title === '🎮 ИГРЕ' && G.go.split(',').length === 10 && G.go === 'game-explorer,game-driving,game-ocean,game-dino,game-space,game-candy,game-memory,game-puzzle,game-racing,game-racing3d', games);
 
   await h.evalv(`document.querySelector('#hub-games .back-btn').click()`);
-  await sleep(300);
+  await waitForActive('hub');
   const back1 = await h.evalv(`document.querySelector('.screen.active').id`);
   check('games back button returns to landing', back1 === 'hub', back1);
 
   await h.evalv(`document.querySelector('.hub-tile.tile-learning').click()`);
-  await sleep(300);
+  await waitForActive('hub-learning', 60,
+    `(() => { const a = document.querySelector('.screen.active'); return !!a && a.id === 'hub-learning' && a.querySelectorAll('.hub-grid [data-go]').length === 7; })()`);
   const learning = await h.evalv(`JSON.stringify((() => {
     const act = document.querySelector('.screen.active');
     return {
@@ -70,7 +103,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('learning tile opens learning sub-hub (7 buttons)', L2.active === 'hub-learning' && L2.title === '🧠 УЧЕЊЕ' && L2.go.split(',').length === 7 && L2.go === 'game-classroom,game-tracing,game-animals,game-shapes,game-counting,game-coloring,game-piano', learning);
 
   await h.evalv(`document.querySelector('#hub-learning .back-btn').click()`);
-  await sleep(300);
+  await waitForActive('hub');
   const back2 = await h.evalv(`document.querySelector('.screen.active').id`);
   check('learning back button returns to landing', back2 === 'hub', back2);
 
@@ -95,9 +128,19 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   // margin + 2 columns put the last row below the fold, so the racing3d button
   // was only reachable after navigating into and back out of a game.
   await h.c.send('Emulation.setDeviceMetricsOverride', { width: 844, height: 390, deviceScaleFactor: 1, mobile: false });
-  await sleep(300);
+  await waitForActive('hub');
   await h.evalv(`window.goTo('hub-games')`);
-  await sleep(400);
+  // The layout guard needs the reflowed grid, not just the class swap: poll until
+  // the racing3d button actually has a non-zero height in the new viewport.
+  let laidOut = false;
+  for (let i = 0; i < 25 && !laidOut; i++) {
+    laidOut = await h.evalv(
+      `(() => { const b = document.querySelector('[data-go="game-racing3d"]');
+        if (!b) return false; const r = b.getBoundingClientRect();
+        return (document.querySelector('.screen.active')||{}).id === 'hub-games' && r.height > 0; })()`
+    );
+    if (!laidOut) await sleep(50);
+  }
   const shortVp = await h.evalv(`JSON.stringify((() => {
     const vh = window.innerHeight;
     const bad = [];

@@ -168,18 +168,30 @@ check('caregiver docs ship in the ZIP but stay out of the runtime cache list',
 // =========================================================================
 // 8. Generation is deterministic (re-running the generator is a no-op)
 //    Compared canonically: a Windows checkout holds this JSON as CRLF while the
-//    generator rewrites it as LF, so a raw byte compare reports a "change" that
-//    is only line endings — an inventory the validator would call unstable on
-//    one OS and perfectly stable on every other.
+//    generator emits LF, so a raw byte compare reports a "change" that is only
+//    line endings — an inventory the validator would call unstable on one OS
+//    and perfectly stable on every other.
+//
+//    R5 (task 165): the generator is invoked with --stdout, so it returns the
+//    fresh list INSTEAD of writing it. This check used to overwrite
+//    game/sw-cache-list.json and then compare the file with itself, which meant
+//    a read-only "validator" mutated the worktree and a green run silently
+//    repaired a stale inventory instead of reporting it. That is exactly the
+//    anti-pattern R5 exists to remove: a check must FAIL on a stale artifact,
+//    never quietly rewrite it. Freshness of this file is now owned by
+//    tools/validate_generated.js; this check only proves the generator is
+//    deterministic and agrees with the committed list.
 // =========================================================================
-const before = fs.readFileSync(listPath);
+const committed = fs.readFileSync(listPath);
 let genOk = true, genInfo = '';
 try {
-  execFileSync('node', [path.join(TOOLS, 'generate_sw_list.js')], { stdio: 'pipe' });
-  const after = fs.readFileSync(listPath);
-  genOk = canonicalBytes(before).equals(canonicalBytes(after));
-  genInfo = genOk ? 're-running the generator reproduced the list (canonically)'
-                  : 're-running the generator CHANGED sw-cache-list.json';
+  const fresh = execFileSync(process.execPath, [path.join(TOOLS, 'generate_sw_list.js'), '--stdout'], {
+    encoding: 'utf8',
+    maxBuffer: 8 * 1024 * 1024
+  });
+  genOk = canonicalBytes(committed).equals(canonicalBytes(Buffer.from(fresh, 'utf8')));
+  genInfo = genOk ? 'a fresh generation reproduced the list (canonically, writing nothing)'
+                  : 'a fresh generation DIFFERS from sw-cache-list.json — run: node tools/generate_sw_list.js';
 } catch (e) {
   genOk = false;
   genInfo = 'generator failed: ' + (e.stderr ? e.stderr.toString().trim().split('\n')[0] : e.message);

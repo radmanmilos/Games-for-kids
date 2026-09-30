@@ -37,24 +37,33 @@ node tools/<game>_smoke.js             # one smoke directly, fastest loop
 ## 3. Before declaring done
 
 ```bash
-node tools/check_all.js                # node --check + the FULL battery
-node tools/check_all.js --docs         # + tools/sync-docs.sh (required: game/ changed)
-node tools/check_all.js --docs --offline  # + tools/build_offline.js (only for new/changed assets)
+node tools/check_fast.js                 # read-only fast gate, ~9 s (syntax, registry, CI workflow,
+                                         # generated artifacts, offline inventory, hub smoke)
+node tools/check_release.js              # read-only release gate: check_fast + the FULL battery
+node tools/sync-docs.sh                  # REQUIRED whenever game/ changed - this is the command that
+                                         # writes docs/; the gates above will FAIL on an unsynced mirror
+node tools/build_offline.js              # only for new/changed offline assets (needs `zip`; use the .ps1 on Windows)
 ```
 
-`check_all.js` exits non-zero if any stage fails. Do not report a game change as
-done until it exits 0.
+`check_fast.js` and `check_release.js` exit non-zero if any stage fails, and they
+**write nothing** \u2014 a stale artifact is reported with the command that fixes it,
+never repaired in place (R5). `check_all.js --docs --offline` still exists as the
+one command that regenerates, and belongs to a release/commit boundary or a broad
+refactor rather than a scoped fix.
 
 **If nothing under `game/` changed** (a `tools/`, `docs/` or CI-only change), the
-full battery is the wrong gate — the same rule AGENTS.md states. Run only what the
-change needs:
+full battery is the wrong gate \u2014 the same rule AGENTS.md states. `check_fast.js`
+covers it in ~9 s, and it includes the validators a `tools/`-only change needs:
 
 ```bash
-node tools/check_syntax.js         # tools/ or game/ JS syntax, no browser
-node tools/validate_pages.js       # registry / routes / PWA metadata
-node tools/validate_offline.js     # offline cache list + manifest
-node tools/hub_smoke.js            # the hub itself
+node tools/check_fast.js         # supersedes running these by hand:
+                                 # check_syntax.js  validate_pages.js  validate_workflow.js
+                                 # validate_generated.js  validate_offline.js  hub_smoke.js
 ```
+
+For a CI-workflow change, `validate_workflow.js` is the point: it proves the
+workflow still references existing tools, that every `needs.<job>.outputs` read is
+a direct dependency, and that the matrix is still generated from the battery.
 
 ## Reading results
 
@@ -62,7 +71,8 @@ node tools/hub_smoke.js            # the hub itself
 - A smoke that exits non-zero with **0 checks** did not fail an assertion — its
   Chrome never booted (parallel port/profile contention). The runner already
   retries those twice; only a third failure is a real problem. Re-run it alone:
-  `node tools/<name>_smoke.js`.
+  `node tools/<name>_smoke.js`. `check_fast.js` retries the same signature for its
+  own stages.
 - Assertions can go **stale** against current behaviour. When a check fails,
   first read the live page state in the FAIL info and decide whether the *game*
   or the *assertion* is wrong. Fix assertions to the observed truth; never
