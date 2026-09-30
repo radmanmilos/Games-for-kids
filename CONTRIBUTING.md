@@ -12,7 +12,11 @@
 
 Before opening a PR, run the smallest targeted check that covers your change:
 
-- Syntax: `node --check game/shared/*.js game/games/*.js`
+- Syntax (whole repo, no browser): `node tools/check_syntax.js` — `node --check` over every `.js`/`.mjs` in `game/` + `tools/`
+- Registry / routes / PWA metadata: `node tools/validate_pages.js`
+- Offline inventory (cache list + manifest): `node tools/validate_offline.js`
+- Parent area (offline download, update check, reset, version) → `node tools/parent_smoke.js`
+- Service-worker update path → `node tools/sw_update_smoke.js`
 - Hub changes → `node tools/hub_smoke.js`
 - Kitty changes → `node tools/kitty_smoke.js`
 - Adventure engine / Driving / Ocean / Dino / Space → `node tools/adventure_smoke.js` (25 checks)
@@ -22,11 +26,31 @@ Before opening a PR, run the smallest targeted check that covers your change:
 - Candy → `node tools/candy_smoke.js`
 - Puzzle → `node tools/puzzle_smoke.js`
 - Classroom kids tier → `node tools/classroom_smoke.js`
-- Racing (Мала тркачица) → `node tools/racing_smoke.js`
 - Racing 3D (Мала тркачица 3Д) → `node tools/racing3d_smoke.js`
+- Touch-interruption resilience (4 shards) → `node tools/run_all.js --game touch_interruption`
 - Animals / Shapes / Counting / Coloring → `node tools/animals_smoke.js`, `node tools/shapes_smoke.js`, `node tools/counting_smoke.js`, `node tools/coloring_smoke.js`
+- Everything at once → `node tools/check_all.js` (syntax + the full battery; add `--docs` after any `game/` change). `node tools/run_all.js --list` shows the battery, `--game <name>` narrows it, `--resume` survives a host that kills the process.
 
 If a smoke does not exist for the game you changed, run the page manually in Live Server and verify the interaction visually.
+
+## CI (GitHub Actions)
+
+`.github/workflows/ci.yml` runs on every push and PR, and is split so that one failure can never hide the others:
+
+| Job | What it runs | When |
+| --- | --- | --- |
+| `setup` | derives the smoke list from `node tools/run_all.js --list --json` | every push/PR |
+| `fast` | `check_syntax.js` → `validate_pages.js` → `validate_offline.js` → `hub_smoke.js` (**no** game battery) | every push/PR |
+| `smoke` | one leg per smoke, `fail-fast: false`, `max-parallel: 6` | every push/PR |
+| `release` | offline-inventory validation, offline E2E, a11y report | every push/PR |
+| `extended` | `play_matrix.mjs` (chromium + webkit × 5 viewports) | manual run or weekly |
+
+Consequences for contributors:
+
+- **A new smoke needs no workflow edit** — the matrix is generated from the battery. If you add `tools/*_smoke.js`, it is picked up automatically.
+- `offline_smoke.mjs` and `axe_check.js --report` are `continue-on-error` until R6/R10 make them trustworthy gates; they still run and still print their report.
+- `tools/check_release.js` is deliberately **not** in CI: it mutates `docs/` and rebuilds the offline pack. That has to become read-only first (R5).
+- A red `fast` job means a syntax/registry/inventory/hub problem — not a game. Read the failing leg's own matrix cell before suspecting a game.
 
 ## Task lifecycle
 

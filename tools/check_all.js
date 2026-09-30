@@ -9,9 +9,10 @@
      node tools/check_all.js --docs --offline       # full pre-commit ritual
      node tools/check_all.js --game racing3d        # passes through to run_all
 */
-const { spawn, spawnSync } = require('child_process');
+const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const { runSyntax } = require('./check_syntax.js');
 
 const ROOT = path.resolve(__dirname, '..');
 const GAME = path.join(ROOT, 'game');
@@ -28,28 +29,9 @@ for (const dir of [GAME, TOOLS]) {
 }
 
 /* ---- stage 1: syntax check all JS/MJS under a directory (recursive) ---- */
-function collectJs(dir, out = []) {
-  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (ent.name === 'node_modules' || ent.name.startsWith('.')) continue;
-    const full = path.join(dir, ent.name);
-    if (ent.isDirectory()) collectJs(full, out);
-    else if (ent.isFile() && /\.(js|mjs)$/.test(ent.name)) out.push(full);
-  }
-  return out;
-}
-
 function runCheck() {
-  const files = collectJs(GAME).concat(collectJs(TOOLS));
-  console.log('=== Syntax check: node --check (' + files.length + ' files) ===');
-  let failed = 0;
-  for (const f of files) {
-    const r = spawnSync(process.execPath, ['--check', f], { encoding: 'utf8' });
-    if (r.status !== 0) {
-      failed++;
-      console.error('SYNTAX FAIL: ' + path.relative(ROOT, f) + '\n' + (r.stderr || r.stdout || '').trim());
-    }
-  }
-  return failed;
+  const r = runSyntax({ dirs: [GAME, TOOLS] });
+  return r.failed;
 }
 
 function runAsync(cmd, argsList, opts = {}) {

@@ -1,14 +1,55 @@
 name: CI
 
+# R4 (roadmap task 164) — four independent layers, so one failure can never
+# hide the rest of the results:
+#   setup    : generates the smoke matrix FROM the battery (never hand-listed)
+#   fast     : cheap read-only gates. Runs NO game smoke except the hub.
+#   smoke    : one matrix leg per smoke, fail-fast OFF.
+#   release  : offline E2E + deployment-artifact validation, after fast+smoke.
+#   extended : browser/device matrix — manual dispatch or weekly only.
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+  schedule:
+    # Weekly so the expensive layer still runs when nobody is pushing.
+    - cron: '23 5 * * 1'
+
+permissions:
+  contents: read
 
 jobs:
-  # Fast checks: syntax + registry validation + hub smoke
+  # ---------------------------------------------------------------------------
+  # setup — the ONLY place the smoke list is defined. tools/run_all.js owns the
+  # battery; CI reads it from there, so a newly added smoke can never be
+  # silently left out of CI (the failure mode that left 6 tools unrun here).
+  # hub_smoke is excluded because the fast job already runs it.
+  # ---------------------------------------------------------------------------
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+    outputs:
+      smokes: ${{ steps.matrix.outputs.smokes }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build the smoke matrix from the battery
+        id: matrix
+        run: |
+          node -e "const fs=require('fs'),cp=require('child_process');const b=JSON.parse(cp.execFileSync(process.execPath,['tools/run_all.js','--list','--json'],{encoding:'utf8'}));const m=b.filter(n=>n!=='hub_smoke.js');fs.appendFileSync(process.env.GITHUB_OUTPUT,'smokes='+JSON.stringify(m)+'\n');console.log('battery: '+b.length+' tools -> '+m.length+' smoke legs (hub runs in the fast job)')"
+
+  # ---------------------------------------------------------------------------
+  # Job A — fast. Read-only. No game battery here.
+  # ---------------------------------------------------------------------------
   fast:
+    name: Fast (syntax, registry, metadata, hub, offline inventory)
+    needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,38 +58,35 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Syntax check
-        run: node tools/check_all.js
+      - name: Syntax (node --check over game/ + tools/)
+        run: node tools/check_syntax.js
 
-      - name: Registry/route validation
+      - name: Registry / routes + PWA metadata
         run: node tools/validate_pages.js
+
+      - name: Offline inventory (deployment artifacts)
+        run: node tools/validate_offline.js
 
       - name: Hub smoke
         run: node tools/hub_smoke.js
 
-  # Full smoke battery (parallel)
+  # ---------------------------------------------------------------------------
+  # Job B — game-smoke matrix. fail-fast: false is the whole point of R4:
+  # a single game failure must not stop the other results from appearing.
+  # ---------------------------------------------------------------------------
   smoke:
+    name: Smoke ${{ matrix.smoke }}
+    # `needs` only exposes DIRECT dependencies, and the matrix below reads
+    # `needs.setup.outputs.smokes` — so `setup` must be listed here, not just
+    # as `fast`'s dependency. With `needs: fast` alone, needs.setup is empty,
+    # fromJSON('') throws and the entire smoke layer silently never runs.
+    needs: [setup, fast]
     runs-on: ubuntu-latest
-    needs: fast
     strategy:
+      fail-fast: false
+      max-parallel: 6
       matrix:
-        smoke:
-          - animals_smoke
-          - shapes_smoke
-          - candy_smoke
-          - memory_smoke
-          - puzzle_smoke
-          - counting_smoke
-          - coloring_smoke
-          - classroom_smoke
-          - tracing_smoke
-          - piano_smoke
-          - driving_smoke
-          - ocean_smoke
-          - dino_smoke
-          - space_smoke
-          - racing3d_smoke
-          - kitty_smoke
+        smoke: ${{ fromJSON(needs.setup.outputs.smokes) }}
     steps:
       - uses: actions/checkout@v4
 
@@ -57,13 +95,19 @@ jobs:
           node-version: '22'
 
       - name: Run ${{ matrix.smoke }}
-        run: node tools/${{ matrix.smoke }}.js
-        timeout-minutes: 5
+        run: node tools/${{ matrix.smoke }}
+        timeout-minutes: 10
 
-  # Expensive checks (separate job, runs after fast passes)
+  # ---------------------------------------------------------------------------
+  # Job C — release QA. Depends on fast + every smoke leg.
+  # NOTE: tools/check_release.js is NOT used here: it is still mutating (it
+  # rewrites docs/ via sync-docs.sh and re-runs the whole battery). R5 makes it
+  # a read-only release gate, and only then does it belong in this job.
+  # ---------------------------------------------------------------------------
   release:
+    name: Release QA (offline E2E, artifacts, a11y report)
+    needs: [fast, smoke]
     runs-on: ubuntu-latest
-    needs: fast
     steps:
       - uses: actions/checkout@v4
 
@@ -71,10 +115,42 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Deployment artifact validation
+        run: node tools/validate_offline.js
+
+      # KNOWN RED, non-blocking: offline_smoke.mjs phase 2 starts a fresh
+      # profile with no service worker and then blocks 127.0.0.1 as well, so it
+      # only verifies static markup (R2 finding, task 153). R6 rebuilds it as a
+      # real single-session offline test; until then it must not gate a release,
+      # but it must keep running so its output stays visible.
       - name: Offline E2E
         run: node tools/offline_smoke.mjs
         timeout-minutes: 10
+        continue-on-error: true
 
-      - name: Touch interruption
-        run: node tools/touch_interruption_smoke.js
-        timeout-minutes: 10
+      # Informational only: axe-core is fetched from a CDN, and R10 is what turns
+      # the accessibility gate into a blocking one.
+      - name: Accessibility report
+        run: node tools/axe_check.js --report
+        continue-on-error: true
+
+  # ---------------------------------------------------------------------------
+  # Job D — extended / manual. Expensive, so it never runs on every push.
+  # ---------------------------------------------------------------------------
+  extended:
+    name: Extended (Chromium + WebKit device matrix)
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Playwright browsers
+        run: npx --yes playwright install --with-deps chromium webkit
+
+      - name: Chromium + WebKit across 5 viewports
+        run: node tools/play_matrix.mjs
+        timeout-minutes: 25

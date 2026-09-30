@@ -39,11 +39,22 @@ node tools/<game>_smoke.js             # one smoke directly, fastest loop
 ```bash
 node tools/check_all.js                # node --check + the FULL battery
 node tools/check_all.js --docs         # + tools/sync-docs.sh (required: game/ changed)
-node tools/check_all.js --docs --offline  # + tools/build_offline.ps1 (only for new/changed assets)
+node tools/check_all.js --docs --offline  # + tools/build_offline.js (only for new/changed assets)
 ```
 
 `check_all.js` exits non-zero if any stage fails. Do not report a game change as
 done until it exits 0.
+
+**If nothing under `game/` changed** (a `tools/`, `docs/` or CI-only change), the
+full battery is the wrong gate — the same rule AGENTS.md states. Run only what the
+change needs:
+
+```bash
+node tools/check_syntax.js         # tools/ or game/ JS syntax, no browser
+node tools/validate_pages.js       # registry / routes / PWA metadata
+node tools/validate_offline.js     # offline cache list + manifest
+node tools/hub_smoke.js            # the hub itself
+```
 
 ## Reading results
 

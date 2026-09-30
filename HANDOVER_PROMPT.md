@@ -8,7 +8,9 @@ This file summarizes the current workspace, conventions, and project state so th
 
 ## First thing next session — pick one (user decides)
 
-1. **Active work: Fresh Elevation Roadmap (R0–R27).** The old 18-task plan is DONE. The new roadmap (`resources/General_reviews/Petrin_svet_Fresh_Elevation_Roadmap_2026-09-29.md`) defines 29 activities (R0–R27b) in dependency order. **Progress: 5/29 done (R0, R1, R2, R3, R12).** Battery is **24 tools**. **Settled 2026-09-30 (user decision): the parent area's manual ZIP link is HIDDEN, not deleted** — `docs/game-offline.zip` has been untracked since `83aae92` so GitHub Pages never publishes it; the anchor stays in the markup with `hidden`, and `parent_smoke.js` pins the decision. Revisit by publishing the ZIP and dropping the attribute. **Next: R4 (task 157) — CI topology refactor**, to be read with task 156 (this host kills the process on a resource spike, so CI shard counts and timeouts need to suit a constrained runner), then the R21–R27 learning-content pilots if the user wants new games rather than more infrastructure.
+1. **Active work: Fresh Elevation Roadmap (R0–R27).** The old 18-task plan is DONE. The new roadmap (`resources/General_reviews/Petrin_svet_Fresh_Elevation_Roadmap_2026-09-29.md`) defines 29 activities (R0–R27b) in dependency order. **Progress: 6/29 done (R0, R1, R2, R3, R4, R12).** Battery is **24 tools**. **Settled 2026-09-30 (user decision): the parent area's manual ZIP link is HIDDEN, not deleted** — `docs/game-offline.zip` has been untracked since `83aae92` so GitHub Pages never publishes it; the anchor stays in the markup with `hidden`, and `parent_smoke.js` pins the decision. Revisit by publishing the ZIP and dropping the attribute. **Next: R5 — make validation commands semantically clean** (roadmap's own suggestion: `check_release.js` must stop mutating `docs/`, `check_fast.js` / `validate_generated.js` are named in the roadmap but **do not exist**; R4's new `tools/check_syntax.js` already covers the read-only fast-gate half of it), to be read with task 156 (this host kills the process on a resource spike, so CI shard counts and timeouts need to suit a constrained runner), then the R21–R27 learning-content pilots if the user wants new games rather than more infrastructure.
+   - **⚠ R4 (task 164) is DONE and it found that CI HAD BEEN RED ON EVERY PUSH.** `.github/workflows/ci.yml:79` still ran `node tools/touch_interruption_smoke.js`, deleted in `e4817a4` when task 156 split it into 4 shards — so the `release` job failed and touch-interruption coverage was gone from CI. The `fast` job was also running the *entire* battery via `check_all.js` (the opposite of R4's Job A), the hand-listed 16-smoke matrix had already gone stale (missing `adventure`/`parent`/`sw_update` + all four shards), and there was no `fail-fast: false`. Now: `setup` (generates the matrix from `run_all.js --list --json` → 24 tools = 1 hub leg + 23 matrix legs, so a new smoke can never be silently omitted) → `fast` (syntax/validate_pages/validate_offline/hub) → `smoke` (`fail-fast: false`, `max-parallel: 6`) → `release` → `extended` (manual/weekly only). **Unverified in real CI until the user commits + pushes** — no YAML parser exists on this host, so the workflow was structurally probed with a throwaway script and **negative-tested** (re-inserting the deleted-tool line makes the probe fail).
+   - **⚠ R4 also found a latent offline-pack bug that would have bitten later: the manifest hashed raw work-tree bytes, so it was machine-dependent.** No `.gitattributes` + `core.autocrlf=true` on this Windows checkout means text files are CRLF locally and LF in git/CI; the committed manifest was genuinely **mixed** (13 of 63 text entries hashed as CRLF, 50 as LF). It verifies today, so nothing is broken *now* — but the next rebuild here would have baked CRLF hashes in and made every Linux checkout plus the parent's «Проверити ажурирања» report the whole app as changed. Fixed via the new shared `tools/manifest_hash.js` (canonical bytes: LF for text, identity for binary) used by BOTH `build_offline.js` and `validate_offline.js`; regenerating reproduces the committed manifest **byte-for-byte**, so no `game/` change resulted. Same task also fixed `build_offline.js` crashing on this repo's spaced path (`Cannot find module 'E:\GitHub\Games'` — unquoted interpolated shell command, now `execFileSync` with an argv array).
    - **⚠ TWO REAL PRODUCTION BUGS in the update path, both now fixed — the parent area's «Проверити ажурирања» had been incapable of ever reporting "up to date" for two independent reasons.** (1) The manifest listed its own hash (task 153), so it always differed from the cached copy. (2) `sw.js` read the cached manifest from a **hard-coded `/game/offline-manifest.json`** while this site is served from a **subpath** (`https://<host>/Games-for-kids/`), so the lookup missed entirely and *every* file looked changed every time. Both are now pinned by `tools/validate_offline.js` and the new `tools/sw_update_smoke.js`, which deliberately serves the app under `/some/deep/prefix/`. **Worth asking the user to press «Проверити ажурирања» on the published site now — it should finally report a clean result.**
    - **⚠ Biggest open finding (from R2, root-caused, not guessed): `tools/offline_smoke.mjs` does not actually test offline.** Its two phases call `start()` with different tags, and `start()` always creates a *unique* temp profile, so **phase 2 has no service worker and an empty Cache Storage**; it then blocks `*://*/*`, which also blocks `127.0.0.1`, so **no JavaScript loads at all** — it only verifies static markup. Its 15 green checks are false confidence; the 2 red ones are the only pages that build UI from JS at runtime. **Do not treat offline playability as tested.** Fixing it (one session: register SW → `cacheAll` → visit pages → go offline in the same context) is **R6 / task 159**.
    - **R2 shipped `tools/validate_offline.js`** (10 checks + the required report), wired into `check_all.js --offline`. It found a real bug on its first run: **`offline-manifest.json` was listing its own hash**, which — because the manifest is written after hashing — made `sw.js checkForUpdates()` report the manifest as changed on *every* update check, so the parent area's «Проверити ажурирања» could never return clean. Fixed in `build_offline.js` and now enforced by the validator. Manifest is 206 entries against a 207-entry cache list.
@@ -27,42 +29,40 @@ This file summarizes the current workspace, conventions, and project state so th
 
 ## Progress Tracker (R0–R27)
 
+**Task numbers below are the real `PROJECT_TASKS.md` numbers, not the roadmap's "suggested task number"** — those drifted (the roadmap proposed 155–178, but 155 became the user-reported-bug fix, 156 the resource-budget task and 163 landed R12 early). Unfiled roadmap items show `—`. **6/29 done (R0, R1, R2, R3, R4, R12).**
+
 | # | ID | Task | Status |
 |---|---|---|---|
 | 1 | R0 | 151 | DONE — 4 failures classified (**2 of the 4 root causes were later found WRONG; see the correction note in `PROJECT_TASKS.md` 151**) |
-| 2 | R1 | 152 | **DONE — 19/19 tools, 435 checks, 0 fail, 1 skip** |
-| 3 | R2 | 153 | **DONE — offline inventory validator + report; found & fixed the manifest self-hash bug and the Linux Chrome leak** |
-| 4 | R3 | 154 | **DONE — fixed a live subpath bug in the service worker; added `sw_update_smoke.js` (battery is now 20 tools)** |
-| 5 | R12 | 163 | **DONE — parent area now has version + connection status + manual ZIP link; hub guard asserts the child launcher stays clean** |
-| — | 156 | 156 | IN PROGRESS — test suite resource budget; touch_interruption split into 4 shards, `piano` next |
-| — | 156 | 156 | NEW — test suite resource budget & speed (host kills the process on a usage spike) |
-| 3 | R2 | 153 | NEW |
-| 4 | R3 | 154 | NEW |
-| 5 | R4 | 155 | NEW |
-| 6 | R5 | 156 | NEW |
-| 7 | R6 | 157 | NEW |
-| 8 | R7 | 158 | NEW |
-| 9 | R8 | 159 | NEW |
-| 10 | R9 | 160 | NEW |
-| 11 | R10 | 161 | NEW |
-| 12 | R11 | 162 | NEW |
-| 13 | R12 | 163 | NEW |
-| 14 | R13 | 164 | NEW |
-| 15 | R14 | 165 | NEW |
-| 16 | R15 | 166 | NEW |
-| 17 | R16 | 167 | NEW |
-| 18 | R17 | 168 | NEW |
-| 19 | R18 | 169 | NEW |
-| 20 | R19 | 170 | NEW |
-| 21 | R20 | 171 | NEW |
-| 22 | R21 | 172 | NEW |
-| 23 | R22 | 173 | NEW |
-| 24 | R23 | 174 | NEW |
-| 25 | R24 | 175 | NEW |
-| 26 | R25 | 176 | NEW |
-| 27 | R26 | 177 | NEW |
-| 28 | R27 | 178 | NEW |
+| 2 | R1 | 152 | DONE — 19/19 tools, 435 checks, 0 fail, 1 skip |
+| 3 | R2 | 153 | DONE — offline inventory validator + report; found & fixed the manifest self-hash bug and the Linux Chrome leak |
+| 4 | R3 | 154 | DONE — fixed a live subpath bug in the service worker; added `sw_update_smoke.js` |
+| 5 | R4 | 164 | DONE — CI topology refactor: 5 jobs, self-generating matrix, `fail-fast: false`; **CI was red before it** (referenced a deleted tool) |
+| 6 | R5 | — | NEW — make validation commands semantically clean (`check_release.js` still mutates; `check_fast.js` / `validate_generated.js` do not exist yet) |
+| 7 | R6 | — | NEW — true offline play E2E (`offline_smoke.mjs` is known-red: no SW in phase 2) |
+| 8 | R7 | — | NEW — registry becomes a full test contract |
+| 9 | R8 | — | NEW — runtime error / console / unhandled-rejection gate |
+| 10 | R9 | — | NEW — visual regression operational |
+| 11 | R10 | — | NEW — accessibility gate that measures the real product |
+| 12 | R11 | — | NEW — browser/device matrix as a real quality gate |
+| 13 | R12 | 163 | DONE — parent area has version + connection status + manual ZIP link (**ZIP link hidden per user decision 2026-09-30**); hub guard asserts the child launcher stays clean |
+| 14 | R13 | — | NEW |
+| 15 | R14 | — | NEW |
+| 16 | R15 | — | NEW |
+| 17 | R16 | — | NEW |
+| 18 | R17 | — | NEW |
+| 19 | R18 | — | NEW |
+| 20 | R19 | — | NEW |
+| 21 | R20 | — | NEW — portfolio-level playtest protocol |
+| 22 | R21 | — | NEW — learning pilot: more/less/same |
+| 23 | R22 | — | NEW — learning pilot: sorting |
+| 24 | R23 | — | NEW — learning pilot: Serbian phonics |
+| 25 | R24 | — | NEW — learning pilot: sequencing |
+| 26 | R25 | — | NEW — learning pilot: rhythm |
+| 27 | R26 | — | NEW — learning pilot: spatial concepts |
+| 28 | R27 | — | NEW — learning pilot: maze/path |
 | 29 | R27b | — | NEW |
+| — | *not a roadmap item* | 156 | IN PROGRESS — test-suite resource budget & speed; touch_interruption split into 4 shards, **`piano` profiling next** |
 
 ## Cross-platform setup
 

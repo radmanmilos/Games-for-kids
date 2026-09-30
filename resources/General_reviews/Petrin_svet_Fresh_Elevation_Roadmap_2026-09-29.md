@@ -924,7 +924,8 @@ Do not hard-code `/game/` or repository names.
 
 **Priority:** P0  
 **Dependencies:** R1, R2, R3  
-**Suggested task number:** 155
+**Suggested task number:** 155 — **actual task: 164** (155 became the user-reported-bug fix, 156 the resource-budget task)
+**Status: DONE 2026-09-30 (task 164).** Implemented as a 5-job workflow: `setup` generates the smoke matrix from `run_all.js --list --json` (so a new smoke can never be silently omitted), `fast` runs the read-only gates + hub smoke, `smoke` runs one leg per smoke with `fail-fast: false`, `release` runs offline-inventory validation plus the offline E2E and a11y report (`continue-on-error` until R6/R10), `extended` runs the Playwright device matrix manually/weekly. **The old `ci.yml` had been failing on every push** (it invoked a smoke deleted in task 156) and its hand-listed matrix had already gone stale. Deviations from the target architecture below, all deliberate and recorded in `PROJECT_TASKS.md` 164: `check_release.js` was left OUT of the release job because it is still mutating (it rewrites `docs/` and re-runs the whole battery) — that is R5's job, and the roadmap's own `check_fast.js` / `validate_generated.js` were replaced by the existing `check_syntax.js` + `validate_pages.js` + `validate_offline.js`, which already do the read-only half.
 
 ## Goal
 
@@ -3106,7 +3107,7 @@ This is the recommended implementation queue after the current 18-task plan.
 | 2 | R1 / 152 | P0 | Fix four failing smoke checks | 151 | green smoke battery |
 | 3 | R2 / 153 | P0 | Offline inventory reconciliation | 151,152 | exact runtime cache inventory |
 | 4 | R3 / 154 | P0 | Service-worker/update path correctness | 153 | deployment-safe offline/update |
-| 5 | R4 / 155 | P0 | CI topology refactor | 152–154 | independent CI signal |
+| 5 | R4 / 164 | P0 | CI topology refactor — **DONE 2026-09-30** | 152–154 | independent CI signal |
 | 6 | R5 / 156 | P0 | Validation command semantics | 155 | trustworthy release command |
 | 7 | R6 / 157 | P0/P1 | Behavioral offline E2E | 153–156 | prove actual offline play |
 | 8 | R7 / 158 | P1 | Full registry test contract | 157 | remove duplicated app lists |

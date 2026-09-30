@@ -14,6 +14,7 @@
      node tools/run_all.js --sequential        # same as --concurrency 1
      node tools/run_all.js --resume [dir]      # skip smokes that already passed in <dir>
      node tools/run_all.js --list              # print the battery and exit
+     node tools/run_all.js --list --json        # same, as a JSON array (used by CI)
 
    Constrained hosts (phone / Acode sandbox): the process can be killed outright on
    a CPU/RAM spike, losing the whole run. Use `--concurrency 1 --sequential` there,
@@ -42,11 +43,12 @@ const LAUNCH_RETRIES = 2;
 
 const args = process.argv.slice(2);
 const positional = [];
-const opts = { concurrency: CONCURRENCY_DEFAULT, watch: false, list: false, resume: null };
+const opts = { concurrency: CONCURRENCY_DEFAULT, watch: false, list: false, json: false, resume: null };
 for (let i = 0; i < args.length; i++) {
   const a = args[i];
   if (a === '--watch') opts.watch = true;
   else if (a === '--list') opts.list = true;
+  else if (a === '--json') opts.json = true;
   else if (a === '--sequential') opts.concurrency = 1;
   else if (a === '--resume') opts.resume = args[i + 1] && !args[i + 1].startsWith('--') ? args[++i] : path.join(TMPDIR, 'run_all_resume');
   else if (a.startsWith('--concurrency=')) opts.concurrency = parseInt(a.split('=')[1], 10) || CONCURRENCY_DEFAULT;
@@ -277,7 +279,10 @@ async function watchLoop() {
 
 (async () => {
   if (opts.list) {
-    for (const n of allSmokes()) console.log('  ' + n);
+    // --json feeds CI's matrix job: the workflow never hard-codes the battery,
+    // so a newly added smoke can never be silently left out of CI.
+    if (opts.json) console.log(JSON.stringify(allSmokes()));
+    else for (const n of allSmokes()) console.log('  ' + n);
     process.exit(0);
   }
   if (opts.watch) { await watchLoop(); return; }

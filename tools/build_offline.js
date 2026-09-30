@@ -3,11 +3,11 @@
    Generates game/sw-cache-list.json, produces docs/game-offline.zip,
    and writes game/offline-manifest.json with SHA256 and size for each asset.
    Usage: node tools/build_offline.js */
-const { execSync } = require('child_process');
-const crypto = require('crypto');
+const { execFileSync, execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const { hashFile } = require('./manifest_hash.js');
 
 const TOOLS = __dirname;
 const REPO = path.resolve(TOOLS, '..');
@@ -15,7 +15,10 @@ const GAME = path.join(REPO, 'game');
 const DOCS = path.join(REPO, 'docs');
 
 console.log('[build_offline] regenerating sw-cache-list.json');
-execSync('node ' + path.join(TOOLS, 'generate_sw_list.js'), { stdio: 'inherit' });
+// execFileSync with an argv array, NOT execSync with an interpolated command:
+// this repo's path contains a space ("Games for kids"), so the unquoted form
+// died with "Cannot find module 'E:\GitHub\Games'" before generating anything.
+execFileSync(process.execPath, [path.join(TOOLS, 'generate_sw_list.js')], { stdio: 'inherit' });
 
 if (!fs.existsSync(DOCS)) fs.mkdirSync(DOCS, { recursive: true });
 
@@ -43,9 +46,12 @@ for (const entry of swList) {
     failed++;
     continue;
   }
-  const hash = crypto.createHash('sha256').update(fs.readFileSync(abs)).digest('hex');
-  const size = fs.statSync(abs).size;
-  manifest[entry] = { sha256: hash, size };
+  // Hash the CANONICAL bytes (LF for text) via manifest_hash.js, not the raw
+  // work-tree bytes: git stores LF, GitHub Pages serves LF, and a manifest built
+  // on a CRLF checkout (Windows core.autocrlf=true) would otherwise disagree
+  // with the very same commit checked out on Linux/macOS.
+  const { sha256, size } = hashFile(abs);
+  manifest[entry] = { sha256, size };
 }
 
 if (Object.keys(manifest).length === 0) { console.error('Refusing to write an empty offline manifest'); process.exit(2); }

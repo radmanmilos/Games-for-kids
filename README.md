@@ -774,12 +774,18 @@ Development tooling kept here (not part of the runtime):
 
 Test tooling lives in `tools/` (see `tools/README.md`). Run with `node tools/<file>.js` — no install needed, no `package.json`.
 
-- **`node tools/check_all.js`** — the one-command validation ritual: `node --check` over `game/` + `tools/`, then the whole 19-tool smoke battery in parallel. Add `--docs` to also run `tools/sync-docs.sh` (required whenever `game/` changed) and `--offline` to rebuild the offline package.
-- **`tools/build_offline.ps1`** hashes through the .NET BCL, not the `Get-FileHash` cmdlet, because `check_all.js` spawns `powershell` and the child inherits a `PSModulePath` that cannot auto-load `Microsoft.PowerShell.Utility`. It now also refuses to write an empty or partial `game/offline-manifest.json` and exits non-zero, so a broken offline pack can never be reported as green again.
-- **`node tools/run_all.js`** — the parallel smoke runner on its own. `--game <name>`, `--since <sha>` (only the smokes covering your changes), `--watch` (re-run affected smokes as you save), `--concurrency N`, `--list`.
+- **`node tools/check_all.js`** — the one-command validation ritual: `node --check` over `game/` + `tools/`, then the whole 24-tool smoke battery in parallel. Add `--docs` to also run `tools/sync-docs.sh` (required whenever `game/` changed) and `--offline` to rebuild the offline package.
+- **`node tools/check_syntax.js`** — the read-only half of that ritual on its own: `node --check` over every `.js`/`.mjs` in `game/` + `tools/`, no browser. This is what CI's `fast` job runs.
+- **`node tools/validate_pages.js`** / **`node tools/validate_offline.js`** — read-only structural gates: the game registry/routes/PWA metadata, and the three offline inventories (cache list, manifest, ZIP contents). Both also run in CI's `fast` job, so a bad manifest fails the build instead of shipping.
+- **`tools/manifest_hash.js`** — canonical-bytes hashing (text hashed as LF, binaries byte-for-byte) shared by the offline builder and validator. Without it the manifest was hashed off raw work-tree bytes, so with `core.autocrlf=true` on Windows it depended on the machine that built it, and a Windows rebuild would have made every Linux checkout plus the parent area's «Проверити ажурирања» report the whole app as changed. `tools/build_offline.ps1` hashes through the .NET BCL, not the `Get-FileHash` cmdlet, because `check_all.js` spawns `powershell` and the child inherits a `PSModulePath` that cannot auto-load `Microsoft.PowerShell.Utility`. It now also refuses to write an empty or partial `game/offline-manifest.json` and exits non-zero, so a broken offline pack can never be reported as green again. Note: `tools/build_offline.js` is the Node entry point; its ZIP step needs `zip` on PATH (missing on Windows — use the `.ps1` there).
+- **`node tools/run_all.js`** — the parallel smoke runner on its own. `--game <name>`, `--since <sha>` (only the smokes covering your changes), `--watch` (re-run affected smokes as you save), `--concurrency N`, `--list`, `--list --json`.
 - **`node tools/<game>_smoke.js`** — one game directly; fastest edit loop.
-- Optional deeper gates: **`node tools/play_matrix.mjs`** (chromium + webkit across 5 phone/tablet/desktop viewports) and **`node tools/axe_check.js`** (axe-core a11y scan; fetches axe once into the git-ignored `tools/.cache/`).
+- Optional deeper gates: **`node tools/play_matrix.mjs`** (chromium + webkit across 5 phone/tablet/desktop viewports) and **`node tools/axe_check.js`** (axe-core a11y scan; fetches axe once into the git-ignored `Tools/.cache/`).
 - The `.opencode/skills/validate-game-change/SKILL.md` skill spells out which smokes to run for which change.
+
+### CI (GitHub Actions)
+
+`.github/workflows/ci.yml` runs on every push and PR, split into independent layers so one failure cannot hide the others: a `setup` job generates the smoke matrix from `node tools/run_all.js --list --json` (so a newly added smoke is never silently left out), `fast` runs the read-only gates + the hub smoke, `smoke` runs one leg per smoke with `fail-fast: false`, `release` runs offline-inventory validation plus the (currently non-blocking) offline E2E and a11y report, and `extended` runs the Playwright device matrix manually or weekly. See `CONTRIBUTING.md` → CI.
 
 Nothing inside this folder is required for the final application to run.
 

@@ -18,6 +18,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
+const { canonicalBytes, hashFile } = require('./manifest_hash.js');
 
 const REPO = path.resolve(__dirname, '..');
 const GAME = path.join(REPO, 'game');
@@ -98,17 +99,19 @@ check('manifest keys match cache-list keys exactly (minus the manifest itself)',
 
 // =========================================================================
 // 4. Manifest hashes + sizes match the real files (integrity)
+//    Compared through manifest_hash.js (canonical LF for text), because the
+//    manifest describes the bytes GitHub Pages serves, not whatever line
+//    endings the machine that built it happened to have on disk.
 // =========================================================================
-const crypto = require('crypto');
 const badHash = [], badSize = [];
 check('manifest does not list itself (it cannot contain its own hash)',
   !Object.prototype.hasOwnProperty.call(manifest, SELF),
   'offline-manifest.json correctly absent from its own contents');
 for (const [k, v] of Object.entries(manifest)) {
   if (!exists(k)) { badHash.push(k + ' (absent)'); continue; }
-  const buf = fs.readFileSync(path.join(GAME, k));
-  if (crypto.createHash('sha256').update(buf).digest('hex') !== v.sha256) badHash.push(k);
-  if (buf.length !== v.size) badSize.push(k);
+  const real = hashFile(path.join(GAME, k));
+  if (real.sha256 !== v.sha256) badHash.push(k);
+  if (real.size !== v.size) badSize.push(k);
 }
 check('manifest sha256 matches the real bytes of every file', badHash.length === 0,
   badHash.length ? badHash.slice(0, 5).join(', ') : 'all ' + manKeys.length + ' verified');
@@ -164,14 +167,18 @@ check('caregiver docs ship in the ZIP but stay out of the runtime cache list',
 
 // =========================================================================
 // 8. Generation is deterministic (re-running the generator is a no-op)
+//    Compared canonically: a Windows checkout holds this JSON as CRLF while the
+//    generator rewrites it as LF, so a raw byte compare reports a "change" that
+//    is only line endings — an inventory the validator would call unstable on
+//    one OS and perfectly stable on every other.
 // =========================================================================
-const before = fs.readFileSync(listPath, 'utf8');
+const before = fs.readFileSync(listPath);
 let genOk = true, genInfo = '';
 try {
   execFileSync('node', [path.join(TOOLS, 'generate_sw_list.js')], { stdio: 'pipe' });
-  const after = fs.readFileSync(listPath, 'utf8');
-  genOk = before === after;
-  genInfo = genOk ? 're-running the generator reproduced the list byte-for-byte'
+  const after = fs.readFileSync(listPath);
+  genOk = canonicalBytes(before).equals(canonicalBytes(after));
+  genInfo = genOk ? 're-running the generator reproduced the list (canonically)'
                   : 're-running the generator CHANGED sw-cache-list.json';
 } catch (e) {
   genOk = false;
