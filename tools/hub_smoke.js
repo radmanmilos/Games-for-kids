@@ -79,6 +79,18 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('all 15 game buttons still wired (data-go present)', allGo.every(id => html.includes(`data-go="${id}"`)), allGo.join(','));
   check('explorer back button targets the games sub-hub', html.includes('data-go="game-explorer"') && /data-go="game-explorer"[\s\S]*?aria-label="Мала истраживачица"/.test(html), 'data-go="game-explorer"');
 
+  // R12 acceptance: no technical / offline-management action may be exposed on the
+  // child launcher. Only the parent lock may lead to those. This is a static check
+  // on the child hub's markup, so it cannot be defeated by a re-layout.
+  const TECHNICAL = ['download-offline', 'check-updates', 'offline-zip', 'download-status',
+                     'reset-progress', 'audio-test', 'offline-manifest', 'serviceWorker'];
+  const leaked = TECHNICAL.filter(id => html.includes(id));
+  check('R12: child hub exposes NO technical/offline controls (parent lock is the only entry)',
+    leaked.length === 0, leaked.length ? 'leaked: ' + leaked.join(',') : 'clean');
+  check('R12: child hub keeps exactly one parent entry point',
+    (html.match(/data-go="game-parent"/g) || []).length === 1, 'game-parent links=' +
+    (html.match(/data-go="game-parent"/g) || []).length);
+
   // Regression guard (task 105): on a short landscape viewport the 24vh grid
   // margin + 2 columns put the last row below the fold, so the racing3d button
   // was only reachable after navigating into and back out of a game.

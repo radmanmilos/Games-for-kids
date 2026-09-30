@@ -21,6 +21,13 @@
     .parent-btn.primary{background:var(--plum);color:white;}
     .parent-btn:disabled{opacity:.5;cursor:default;}
     .parent-status{margin-top:3vmin;padding:2vmin 3vmin;border-radius:var(--radius-sm);background:var(--cream);color:var(--plum);font:600 clamp(12px,2vmin,16px) 'Fredoka',sans-serif;text-align:center;}
+    /* R12: the parent surface is where every technical fact lives — connection,
+       version, manual ZIP — so none of it has to sit on the child launcher. */
+    .parent-meta{display:flex;flex-wrap:wrap;gap:2vmin;justify-content:center;align-items:center;margin:0 0 3vmin;}
+    .meta-item{display:flex;align-items:center;gap:1vmin;padding:1vmin 2.5vmin;border-radius:999px;background:var(--cream);color:var(--plum);font:600 clamp(11px,1.8vmin,15px) 'Fredoka',sans-serif;}
+    .meta-dot{width:1.4vmin;height:1.4vmin;border-radius:50%;background:#67C971;box-shadow:0 0 0 .4vmin rgba(103,201,113,.25);}
+    .meta-dot.offline{background:#E2574C;box-shadow:0 0 0 .4vmin rgba(226,87,76,.25);}
+    .parent-link{display:block;margin-top:3vmin;text-align:center;color:var(--plum);font:600 clamp(12px,2vmin,16px) 'Fredoka',sans-serif;text-decoration:underline;}
     .back-btn{position:absolute;top:4vmin;left:4vmin;width:12vmin;height:12vmin;border-radius:50%;border:none;background:var(--plum);color:white;font-size:6vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);cursor:pointer;}
   </style>
 </head>
@@ -29,10 +36,15 @@
     <button class="back-btn" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <div class="parent-card">
       <h1>🔒 За родитеље</h1>
+      <div class="parent-meta">
+        <span class="meta-item"><span class="meta-dot" id="conn-dot"></span><span id="conn-status">Онлајн</span></span>
+        <span class="meta-item" id="version-info">Верзија: …</span>
+      </div>
       <button class="parent-btn primary" id="download-offline">📥 Преузми за офлајн рад</button>
       <button class="parent-btn" id="check-updates">🔄 Провери ажурирања</button>
       <button class="parent-btn" id="reset-progress">🗑 Обриши локални напредак</button>
       <button class="parent-btn" id="audio-test">🔊 Тест звука</button>
+      <a class="parent-link" id="offline-zip" href="../game-offline.zip" download>📦 ZIP за ручно преузимање</a>
       <div class="parent-status" id="parent-status">Спремно</div>
     </div>
   </div>
@@ -49,6 +61,27 @@
       const checkBtn = document.getElementById('check-updates');
       const resetBtn = document.getElementById('reset-progress');
       const audioBtn = document.getElementById('audio-test');
+      const connStatus = document.getElementById('conn-status');
+      const connDot = document.getElementById('conn-dot');
+      const versionInfo = document.getElementById('version-info');
+
+      // R12: connection status — live, so a parent who loses wifi mid-session
+      // sees it immediately rather than after a failed action.
+      const renderConn = () => {
+        const on = navigator.onLine !== false;
+        connStatus.textContent = on ? 'Онлајн' : 'Офлајн';
+        connDot.className = 'meta-dot' + (on ? '' : ' offline');
+      };
+      renderConn();
+      window.addEventListener('online', renderConn);
+      window.addEventListener('offline', renderConn);
+
+      // R12: version, from the single source of truth (manifest.json). It is in
+      // the cache list, so this still resolves when the page is used offline.
+      fetch('../manifest.json')
+        .then(r => r.json())
+        .then(m => { versionInfo.textContent = 'Верзија: ' + (m.version || 'нема'); })
+        .catch(() => { versionInfo.textContent = 'Верзија: непозната'; });
 
       // Download offline
       downloadBtn.addEventListener('click', async () => {
