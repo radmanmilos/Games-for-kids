@@ -52,9 +52,17 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const popText = await h.evalv(`document.querySelector('.match-pop') ? document.querySelector('.match-pop').textContent : ''`);
   check('popup text is "Пронађен пар!"', popText === 'Пронађен пар!', popText);
 
-  // Popup removes itself
-  await sleep(1000);
-  const popsGone = await h.evalv(`document.querySelectorAll('.match-pop').length`);
+  // Popup removes itself.
+  // The popup is removed by the Web Animations `onfinish` of a 900ms animation
+  // (animal_memory.js:90), so a fixed 1000ms sleep left only a 100ms margin and
+  // failed under parallel load. Poll for removal instead of assuming the
+  // animation finished on schedule.
+  let popsGone = -1;
+  for (let i = 0; i < 30; i++) {
+    popsGone = await h.evalv(`document.querySelectorAll('.match-pop').length`);
+    if (popsGone === 0) break;
+    await sleep(150);
+  }
   check('"Пронађен пар!" popup removes itself', popsGone === 0, popsGone + ' pop(s) left');
 
   // Complete remaining pair (easy mode)
@@ -136,15 +144,30 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   })()`);
   check('resize does not break game', resizeOk.cards >= 4 && resizeOk.board === true, JSON.stringify(resizeOk));
 
-  // Back button returns to hub (last — navigates away)
+  // Back button returns to hub (last — navigates away).
+  // The handler waits 90ms then sets location.href to '../index.html#hub-games',
+  // so this check races a real navigation: querying too early inspects the OLD
+  // document, which has no #hub/#hub-games at all, and reads null. Poll for the
+  // landed hub instead of assuming a fixed delay.
   await h.evalv(`document.querySelector('.back-btn').click()`);
-  await sleep(300);
-  const backToHub = await h.evalv(`(() => {
-    const hub = document.getElementById('hub');
-    const hubGames = document.getElementById('hub-games');
-    return (hub && hub.style.display !== 'none') || (hubGames && hubGames.style.display !== 'none');
-  })()`);
-  check('back button returns to hub', backToHub === true, JSON.stringify(backToHub));
+  let backToHub = false, backInfo = null;
+  for (let i = 0; i < 40 && !backToHub; i++) {
+    backInfo = await h.evalv(`(() => {
+      const hub = document.getElementById('hub');
+      const hubGames = document.getElementById('hub-games');
+      return JSON.stringify({
+        landed: location.pathname.endsWith('/index.html'),
+        hash: location.hash,
+        hub: !!(hub && hub.style.display !== 'none'),
+        hubGames: !!(hubGames && hubGames.style.display !== 'none')
+      });
+    })()`);
+    let bj;
+    try { bj = JSON.parse(backInfo); } catch (e) { bj = null; }
+    if (bj && (bj.hub || bj.hubGames)) backToHub = true;
+    else await sleep(150);
+  }
+  check('back button returns to hub', backToHub === true, backInfo);
 
   h.close();
   const fails = getFails();

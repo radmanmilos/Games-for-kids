@@ -31,6 +31,30 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
     picker && picker.shown && picker.count === 2 && picker.ids === 'kitty,explorer',
     JSON.stringify(picker));
 
+  // Regression guard (2026-09-30, user-reported "the explorer does not start").
+  // #char-modal shipped with no CSS at all, so it stayed in normal flow inside
+  // #app (position:fixed; overflow:hidden) and its buttons landed ~1090px down,
+  // clipped off-screen: a child could see "Изабери лик" but could not tap a
+  // hero, so the game never started. The boot check above passed anyway because
+  // it clicks the button programmatically, which bypasses hit-testing. Assert
+  // the buttons are genuinely on-screen and are the topmost element at their own
+  // centre, i.e. that a real tap can reach them.
+  const tappable = await h.evalv(`(() => {
+    return [...document.querySelectorAll('.char-btn')].map(b => {
+      const r = b.getBoundingClientRect();
+      const cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2;
+      const top = document.elementFromPoint(cx, cy);
+      return {
+        ch: b.dataset.character,
+        inViewport: r.top >= 0 && r.left >= 0 && r.bottom <= innerHeight && r.right <= innerWidth,
+        onTop: !!(top && top.closest && top.closest('.char-btn') === b)
+      };
+    });
+  })()`);
+  check('character picker is tappable: both hero buttons fully on-screen and topmost at their centre',
+    Array.isArray(tappable) && tappable.length === 2 &&
+    tappable.every(t => t.inViewport && t.onTop), JSON.stringify(tappable));
+
   await h.evalv(`document.querySelector('.char-btn[data-character="kitty"]').click()`);
 
   const bootName = await h.evalv('document.getElementById("world-name").textContent');
@@ -119,12 +143,23 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
     patrol && patrol.walked >= 100 && patrol.minX >= patrol.lo - 1 && patrol.maxX <= patrol.hi + 1,
     JSON.stringify(patrol));
 
+  // Dropping the player from 210px above the walker covers ground, and the game
+  // awards coins from three independent sources: the stomp itself, the
+  // exploration bonus (player.x > maxExploredX + 400, awarded every 400px of new
+  // ground), and collectible pickups. Measuring the global counter across the
+  // whole fall therefore counted 1-3 coins depending on where the player and the
+  // pickups happened to be — a flaky assertion, not a product fault. Neutralize
+  // the two incidental sources so the counter measures only the stomp award:
+  // pre-set maxExploredX (kills the exploration bonus) and collect the nearby
+  // coins up front (they stay collected).
   const stomp = await h.evalv(`(() => {
     worldPos = 0; loadWorld();
     walkers[0].vx = 0;
     player.x = walkers[0].x;
     player.y = groundY - 210;
     player.vy = 0; player.grounded = false; player.vx = 0;
+    maxExploredX = player.x;          // no exploration bonus during the fall
+    coins.forEach(c => { c.collected = true; });
     const before = coinCount;
     let dead = false;
     for (let i = 0; i < 240; i++) {

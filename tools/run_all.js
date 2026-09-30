@@ -32,15 +32,16 @@ const LAUNCH_RETRIES = 2;
 const args = process.argv.slice(2);
 const positional = [];
 const opts = { concurrency: CONCURRENCY_DEFAULT, watch: false, list: false };
-for (const a of args) {
+for (let i = 0; i < args.length; i++) {
+  const a = args[i];
   if (a === '--watch') opts.watch = true;
   else if (a === '--list') opts.list = true;
   else if (a.startsWith('--concurrency=')) opts.concurrency = parseInt(a.split('=')[1], 10) || CONCURRENCY_DEFAULT;
-  else if (a === '--concurrency') opts.concurrency = parseInt(args[args.indexOf(a) + 1], 10) || CONCURRENCY_DEFAULT;
+  else if (a === '--concurrency') { opts.concurrency = parseInt(args[i + 1], 10) || CONCURRENCY_DEFAULT; i++; }
   else if (a.startsWith('--game=')) opts.game = a.split('=')[1];
-  else if (a === '--game') opts.game = args[args.indexOf(a) + 1];
+  else if (a === '--game') { opts.game = args[i + 1]; i++; }
   else if (a.startsWith('--since=')) opts.since = a.split('=')[1];
-  else if (a === '--since') opts.since = args[args.indexOf(a) + 1];
+  else if (a === '--since') { opts.since = args[i + 1]; i++; }
   else positional.push(a);
 }
 if (!(opts.concurrency >= 1)) opts.concurrency = CONCURRENCY_DEFAULT;

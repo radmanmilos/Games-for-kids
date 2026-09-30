@@ -64,7 +64,11 @@ async function run() {
   // Phase 1: Online — cache all resources
   console.log('Phase 1: Online — caching resources...');
   const srv = await serve();
-  const h = await start({ page: '/index.html', tag: 'offline-smoke', width: 1280, height: 800 });
+  // Phase 1 runs on the parent page, not the hub: the #download-offline button that
+  // triggers the explicit cacheAll moved behind the parent lock in task 147, so this
+  // opened page is the one that actually has the button. Phase 2 still verifies the
+  // hub and every game page offline.
+  const h = await start({ page: '/pages/parent.html', tag: 'offline-smoke', width: 1280, height: 800 });
 
   // Wait for service worker
   let swReady = false;

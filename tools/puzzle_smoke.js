@@ -129,6 +129,29 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('second puzzle is 2×2 (4 pieces), next scene title "Немир у кући"',
     L2.pieces === 4 && L2.title === 'Немир у кући' && L2.label === 'Слагалица 2  ·  2×2', JSON.stringify(L2));
 
+  // Wait until the ring layout has actually been applied. The pieces are
+  // positioned in JS, so measuring too early (under parallel load) caught all of
+  // them still stacked at the same spot and reported overlaps = 6 = C(4,2), i.e.
+  // every pair overlapping. Readiness signal is "every piece has a non-zero size
+  // and all pieces sit at distinct positions" — the assertion below (no overlaps)
+  // is still made afterwards and can still fail, so this is not a retry-until-pass.
+  const ringReady = await h.evalp(`(async () => {
+    const settle = () => [...document.querySelectorAll('#puzzleStage .piece')].map(p => {
+      const r = p.getBoundingClientRect();
+      return { w: r.width, h: r.height, x: Math.round(r.left), y: Math.round(r.top) };
+    });
+    for (let i = 0; i < 40; i++) {
+      const ps = settle();
+      if (ps.length && ps.every(p => p.w > 0 && p.h > 0) &&
+          new Set(ps.map(p => p.x + ':' + p.y)).size === ps.length) {
+        return 'settled after ' + i + ' polls';
+      }
+      await new Promise(r => setTimeout(r, 100));
+    }
+    return 'NOT_SETTLED';
+  })()`);
+  check('piece ring layout is applied before geometry is measured', ringReady === 'settled after 0 polls' || /^settled after [1-9]/.test(ringReady), ringReady);
+
   const ring3 = await h.evalv(`JSON.stringify((() => {
     const b = document.getElementById('puzzleBoard').getBoundingClientRect();
     const ps = [...document.querySelectorAll('#puzzleStage .piece')];
