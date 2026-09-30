@@ -137,11 +137,17 @@ async function checkForUpdates(sourceClient) {
     }
     const online = await onlineRes.json();
 
-    // Read the cached manifest if present
+    // Read the cached manifest if present.
+    // This MUST be the same scope-aware URL used for the network fetch above.
+    // It used to be the hard-coded '/game/offline-manifest.json', which is wrong
+    // for this project's real deployment (GitHub Pages serves docs/ from
+    // /Games-for-kids/, so APP_ROOT is https://.../Games-for-kids/ and the cache
+    // key is not /game/...). That made cache.match() miss, cachedManifest stayed
+    // null, and EVERY file was reported as changed on every update check.
     const cache = await caches.open(CACHE_NAME);
     let cachedManifest = null;
     try {
-      const cachedResp = await cache.match('/game/offline-manifest.json');
+      const cachedResp = await cache.match(OFFLINE_MANIFEST_URL);
       if (cachedResp) cachedManifest = await cachedResp.json();
     } catch (e) {
       // ignore parse errors
