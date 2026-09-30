@@ -15,6 +15,9 @@
      - Stale Chrome processes lock their temp profile and the debug port, which
        intermittently made Chrome "not start". Each start() uses a fresh unique
        profile, retries, and close() kills only this run's Chrome by profile tag.
+       killChromeByTag() has BOTH a Windows (pwsh) and a POSIX (pkill -f on the
+       unique profile path) branch - the Windows-only version silently leaked
+       every browser on Linux and starved the suite.
      - CHROME_PATH env overrides the Chrome binary.
      - skip(name, why) records a check that could not run because the ENVIRONMENT
        lacks a capability. Use it ONLY for that. Never use a skip (or a stubbed
@@ -72,11 +75,23 @@ function skip(name, why) {
 
 /* Kill Chrome processes whose command line contains `tag` (e.g. a profile path). */
 function killChromeByTag(tag) {
+  // Windows: the profile path appears in the process command line, so match on it.
+  if (process.platform === 'win32') {
+    try {
+      execFileSync('pwsh', ['-NoProfile', '-Command',
+        `Get-Process chrome -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match [regex]::Escape('${tag}') } | Stop-Process -Force -ErrorAction SilentlyContinue`],
+        { timeout: 8000, stdio: 'ignore' });
+    } catch (e) { /* pwsh not available or nothing to kill — fine */ }
+    return;
+  }
+  // Linux/macOS: the pwsh branch above is a silent no-op, so close() reaped
+  // NOTHING and every smoke run leaked its Chrome. On a busy machine those
+  // orphans keep burning CPU and starve later runs — which is a very likely
+  // source of the "only fails under parallel load" flakes. start() gives every
+  // run a unique profile path, so matching on it is safe and precise.
   try {
-    execFileSync('pwsh', ['-NoProfile', '-Command',
-      `Get-Process chrome -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match [regex]::Escape('${tag}') } | Stop-Process -Force -ErrorAction SilentlyContinue`],
-      { timeout: 8000, stdio: 'ignore' });
-  } catch (e) { /* pwsh not available or nothing to kill — fine */ }
+    execFileSync('pkill', ['-f', 'user-data-dir=' + tag], { stdio: 'ignore' });
+  } catch (e) { /* nothing to kill — fine */ }
 }
 
 function cdp(wsUrl) {

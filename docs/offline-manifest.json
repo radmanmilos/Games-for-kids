@@ -680,16 +680,12 @@
     "size": 19825
   },
   "index.html": {
-    "sha256": "8127e5ebf6222d50cd40e523f44ce0369e42c8128cf12a04b8ee948bbcb4e374",
-    "size": 19586
+    "sha256": "20abe70dd01a75a233949687c421e1220668bbc15b61cb963c1a962935fa4ccd",
+    "size": 19006
   },
   "manifest.json": {
     "sha256": "3688e52bfdd8ac8c347edf097d9f2142f3b255563e336a8036ccf9ffc50d4aae",
     "size": 555
-  },
-  "offline-manifest.json": {
-    "sha256": "8d57af6c95d05d170011c34ed0e7c166d61629c103c18487808632b5763d6e68",
-    "size": 28390
   },
   "pages/animal_counting.html": {
     "sha256": "ad37df0b3c415f4e93b6d2a4a27168aa99edc2598df26d04edb729498d01db35",
@@ -724,8 +720,8 @@
     "size": 2617
   },
   "pages/explorer.html": {
-    "sha256": "0bd3994689d294d669ea65ffa8d38b8a3820f091538f17e7e4aa1efae5411f57",
-    "size": 6905
+    "sha256": "19f6f66055862ce7e36cfd3e882377c60da990fdb17305b1e76653182bbaac57",
+    "size": 7612
   },
   "pages/matching_game.html": {
     "sha256": "d9c416457492a30a6fa862699a431ad0c3e5d6f8ba08a331f00ed30ac01839d5",

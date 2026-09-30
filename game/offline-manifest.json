@@ -687,10 +687,6 @@
     "sha256": "3688e52bfdd8ac8c347edf097d9f2142f3b255563e336a8036ccf9ffc50d4aae",
     "size": 555
   },
-  "offline-manifest.json": {
-    "sha256": "3b40a01b39bd5dd7ab993771ed891da45e0aa8415b14f36c3e9a4bd7bb3fb447",
-    "size": 28654
-  },
   "pages/animal_counting.html": {
     "sha256": "ad37df0b3c415f4e93b6d2a4a27168aa99edc2598df26d04edb729498d01db35",
     "size": 5622

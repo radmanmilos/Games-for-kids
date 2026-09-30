@@ -10,8 +10,14 @@
      node tools/run_all.js --game racing3d     # filter by mapped game/page name
      node tools/run_all.js --since <sha>       # only smokes for files changed since <sha>
      node tools/run_all.js --watch             # re-run affected smokes on game/ change
-     node tools/run_all.js --concurrency 6     # workers (default 4)
+     node tools/run_all.js --concurrency 6     # workers (default 4, or $RUN_ALL_CONCURRENCY)
+     node tools/run_all.js --sequential        # same as --concurrency 1
+     node tools/run_all.js --resume [dir]      # skip smokes that already passed in <dir>
      node tools/run_all.js --list              # print the battery and exit
+
+   Constrained hosts (phone / Acode sandbox): the process can be killed outright on
+   a CPU/RAM spike, losing the whole run. Use `--concurrency 1 --sequential` there,
+   and `--resume` to skip what already passed (see task 156).
 
    Mapping: game-file pattern -> smoke script(s). Broad/unknown changes (shared/*,
    audio, sw.js) default to the WHOLE battery (safe; it is parallel, so cheap).
@@ -24,18 +30,25 @@ const TOOLS = __dirname;
 const ROOT = path.resolve(__dirname, '..');
 const GAME = path.join(ROOT, 'game');
 const SMOKE_DIR = TOOLS;
-const CONCURRENCY_DEFAULT = 4;
+/* Concurrency default. Each smoke boots its own headless Chrome, so concurrency
+   is the dominant driver of peak CPU/RAM. On a constrained host (phone / Acode
+   sandbox) the process can be killed outright on a usage spike, which loses the
+   whole run — override with RUN_ALL_CONCURRENCY=1 or --concurrency 1. */
+const CONCURRENCY_DEFAULT = parseInt(process.env.RUN_ALL_CONCURRENCY || '4', 10) || 4;
+const TMPDIR = process.env.TMPDIR || process.env.TEMP || '/tmp';
 const CHILD_TIMEOUT_MS = 300000;
 const WATCH_POLL_MS = 700;
 const LAUNCH_RETRIES = 2;
 
 const args = process.argv.slice(2);
 const positional = [];
-const opts = { concurrency: CONCURRENCY_DEFAULT, watch: false, list: false };
+const opts = { concurrency: CONCURRENCY_DEFAULT, watch: false, list: false, resume: null };
 for (let i = 0; i < args.length; i++) {
   const a = args[i];
   if (a === '--watch') opts.watch = true;
   else if (a === '--list') opts.list = true;
+  else if (a === '--sequential') opts.concurrency = 1;
+  else if (a === '--resume') opts.resume = args[i + 1] && !args[i + 1].startsWith('--') ? args[++i] : path.join(TMPDIR, 'run_all_resume');
   else if (a.startsWith('--concurrency=')) opts.concurrency = parseInt(a.split('=')[1], 10) || CONCURRENCY_DEFAULT;
   else if (a === '--concurrency') { opts.concurrency = parseInt(args[i + 1], 10) || CONCURRENCY_DEFAULT; i++; }
   else if (a.startsWith('--game=')) opts.game = a.split('=')[1];
@@ -116,6 +129,24 @@ function resolveSmokes() {
   return [...new Set(list.filter(n => n.endsWith('_smoke.js')))];
 }
 
+/* --resume: skip smokes that already passed in a previous (possibly killed) run.
+   Each finished smoke is written to <dir>/<smoke>.json as it lands, so a host
+   that kills the process on a usage spike loses at most the one in-flight smoke
+   instead of the entire battery. */
+function resumePath(name) { return path.join(opts.resume, name.replace('_smoke.js', '.json')); }
+function alreadyPassed(name) {
+  try {
+    const r = JSON.parse(fs.readFileSync(resumePath(name), 'utf8'));
+    return r.code === 0 && r.fail === 0;
+  } catch (e) { return false; }
+}
+function recordResume(name, rec) {
+  try {
+    fs.mkdirSync(opts.resume, { recursive: true });
+    fs.writeFileSync(resumePath(name), JSON.stringify(rec));
+  } catch (e) { /* resume is best-effort */ }
+}
+
 function smokesForGitDiff(since) {
   let changed;
   try {
@@ -140,15 +171,29 @@ async function runBatch(smokes, label) {
   let done = 0;
   await new Promise((resolve) => {
     function launch(name, attempt = 0) {
+      // --resume: a smoke that already passed in an earlier (killed) run is
+      // reported from its checkpoint instead of being re-run.
+      if (attempt === 0 && opts.resume && alreadyPassed(name)) {
+        const prior = JSON.parse(fs.readFileSync(resumePath(name), 'utf8'));
+        results.set(name, prior);
+        console.log(`\n----- ${name} [exit 0, ${prior.pass} pass / 0 fail (from --resume checkpoint)]`);
+        done++;
+        if (done === smokes.length) resolve();
+        else if (next < smokes.length) launch(smokes[next++]);
+        return;
+      }
       const child = spawn(process.execPath, [path.join(SMOKE_DIR, name)], { cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'] });
+      const started = Date.now();
       let out = '';
       const timer = setTimeout(() => { console.log(`  [timeout ${CHILD_TIMEOUT_MS}ms] ${name}`); child.kill('SIGKILL'); }, CHILD_TIMEOUT_MS);
       child.stdout.on('data', d => { out += d; });
       child.stderr.on('data', d => { out += d; });
       child.on('close', code => {
         clearTimeout(timer);
+        const ms = Date.now() - started;
         const pass = (out.match(/^PASS /gm) || []).length;
         const fail = (out.match(/^FAIL /gm) || []).length;
+        const skip = (out.match(/^SKIP /gm) || []).length;
         // Non-zero exit with zero checks means Chrome never booted (port/profile/lock
         // contention under parallel load), not an assertion failure. Retry once.
         if (code !== 0 && pass === 0 && fail === 0 && attempt < LAUNCH_RETRIES) {
@@ -156,8 +201,9 @@ async function runBatch(smokes, label) {
           launch(name, attempt + 1);
           return;
         }
-        results.set(name, { name, code, pass, fail });
-        console.log(`\n----- ${name} [exit ${code}, ${pass} pass / ${fail} fail]\n${out.trimEnd()}`);
+        results.set(name, { name, code, pass, fail, skip, ms });
+        if (opts.resume) recordResume(name, { name, code, pass, fail, skip, ms });
+        console.log(`\n----- ${name} [exit ${code}, ${pass} pass / ${fail} fail${skip ? ' / ' + skip + ' skip' : ''}, ${(ms / 1000).toFixed(1)}s]\n${out.trimEnd()}`);
         done++;
         active--;
         if (done === smokes.length) resolve();
@@ -175,8 +221,16 @@ function printSummary(results) {
   for (const r of results) {
     const ok = r.code === 0 && r.fail === 0;
     if (!ok) fails++;
-    console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${r.name.padEnd(24)} exit=${r.code} checks pass=${r.pass} fail=${r.fail}`);
+    console.log(`  ${ok ? 'PASS' : 'FAIL'}  ${r.name.padEnd(24)} exit=${r.code} checks pass=${r.pass} fail=${r.fail}${r.skip ? ' skip=' + r.skip : ''} ${((r.ms || 0) / 1000).toFixed(1)}s`);
   }
+  // Slowest tools first: the suite is dominated by per-tool Chrome boot cost and
+  // fixed sleeps, so the optimisation targets are always visible (task 156).
+  const byTime = [...results].sort((a, b) => (b.ms || 0) - (a.ms || 0));
+  const totalMs = results.reduce((a, r) => a + (r.ms || 0), 0);
+  const totalChecks = results.reduce((a, r) => a + r.pass + r.fail, 0);
+  console.log('  --- slowest ---');
+  byTime.slice(0, 5).forEach(r => console.log(`  ${((r.ms || 0) / 1000).toFixed(1).padStart(6)}s  ${r.name} (${r.pass + r.fail} checks)`));
+  console.log(`  total ${(totalMs / 1000).toFixed(1)}s across ${results.length} tools, ${totalChecks} checks, ${totalChecks ? Math.round(totalMs / totalChecks) : 0} ms/check`);
   console.log(fails === 0
     ? `ALL ${results.length} TOOLS PASS`
     : `${fails}/${results.length} TOOL(S) FAILED — see blocks above`);

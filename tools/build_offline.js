@@ -29,6 +29,15 @@ let failed = 0;
 for (const entry of swList) {
   const rel = entry.replace(/^\//, '');
   const abs = path.join(GAME, rel);
+  // The manifest cannot describe itself: it is written AFTER these hashes are
+  // computed, so a self-entry could only ever hold the hash of the PREVIOUS
+  // manifest. That is not a harmless artifact — sw.js checkForUpdates() diffs the
+  // online manifest against the cached one and reports every differing key, so a
+  // self-entry made "offline-manifest.json" show up as changed on EVERY update
+  // check, and "Проверити ажурирања" could never report a clean result.
+  // The file stays in sw-cache-list.json (sw.js reads it back out of the cache to
+  // diff against), it is simply not listed inside its own contents.
+  if (rel === 'offline-manifest.json') continue;
   if (!fs.existsSync(abs)) {
     console.warn('Skipping missing file: ' + entry);
     failed++;

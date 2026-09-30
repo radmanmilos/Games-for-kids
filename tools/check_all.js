@@ -89,8 +89,13 @@ function findBash() {
     console.log('\n=== Rebuild offline package ===');
     const ok = await runAsync('node', [path.join(TOOLS, 'build_offline.js')]);
     if (!ok) { console.error('offline rebuild failed'); process.exit(1); }
+    // Validate the inventory AFTER rebuilding, so a bad manifest or a cache
+    // entry pointing at a deleted file fails the ritual instead of shipping.
+    console.log('\n=== Validate offline inventory ===');
+    const vok = await runAsync('node', [path.join(TOOLS, 'validate_offline.js')]);
+    if (!vok) { console.error('offline inventory validation failed'); process.exit(1); }
   }
 
-  console.log('\ncheck_all complete: syntax + ' + (doDocs ? 'docs + ' : '') + (doOffline ? 'offline + ' : '') + 'smokes all green.');
+  console.log('\ncheck_all complete: syntax + ' + (doDocs ? 'docs + ' : '') + (doOffline ? 'offline + inventory + ' : '') + 'smokes all green.');
   process.exit(0);
 })().catch(e => { console.error('check_all ERROR:', e); process.exit(1); });
