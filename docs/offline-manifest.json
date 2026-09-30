@@ -684,8 +684,8 @@
     "size": 19006
   },
   "manifest.json": {
-    "sha256": "3688e52bfdd8ac8c347edf097d9f2142f3b255563e336a8036ccf9ffc50d4aae",
-    "size": 555
+    "sha256": "44cc7ca21e6e183718a4ceb5fd955c0e3b9727671c86c62cb92df3cc218b37d1",
+    "size": 577
   },
   "pages/animal_counting.html": {
     "sha256": "ad37df0b3c415f4e93b6d2a4a27168aa99edc2598df26d04edb729498d01db35",
@@ -732,8 +732,8 @@
     "size": 2843
   },
   "pages/parent.html": {
-    "sha256": "0e95341e352629649116a85f5b038273c7a29dd849b092fcdc5e22b52b8654f2",
-    "size": 6975
+    "sha256": "bb6d88452b03e55a075e81614f5dc3e5da1a24216accac29780ff6dd34252bc6",
+    "size": 9922
   },
   "pages/piano.html": {
     "sha256": "8545292b56cdd9dc4087907b00110c093f7394d17d1b970b3d5c101ed37c3095",
