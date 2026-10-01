@@ -16,18 +16,16 @@
 const path = require('path');
 const fs = require('fs');
 const { start, serve } = require('./headless.js');
+const { all: registryAll } = require('./registry.js');
 
 const ROOT = path.resolve(__dirname, '..');
-const REGISTRY = path.join(ROOT, 'game', 'data', 'app-registry.js');
 const SHARD_COUNT = 4;
 const SHARD_IDS = ['a', 'b', 'c', 'd'];
 
-/* The game list, straight from the app registry (evaluated with a mock window,
-   the same trick run_all/axe_check use). */
+/* The game list, straight from the shared registry module. `all()`, not
+   `children()`: the parent lock is part of the surface a child touches too. */
 function loadGames() {
-  const src = fs.existsSync(REGISTRY) ? fs.readFileSync(REGISTRY, 'utf8') : 'window.APP_REGISTRY = [];';
-  const APP_REGISTRY = new Function('window', src + '; return window.APP_REGISTRY;')({});
-  return APP_REGISTRY.map(a => ({ id: a.id, path: '/' + a.path }));
+  return registryAll().map(a => ({ id: a.id, path: a.url }));
 }
 
 /* Ordered, contiguous, evenly-sized slices. Ordered rather than hashed so
@@ -123,7 +121,7 @@ async function runShard(label, games) {
     try {
       await testGame(game, check, h);
     } finally {
-      h.close();
+      await h.close();
     }
     console.log('');
   }

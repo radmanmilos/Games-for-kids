@@ -5,6 +5,7 @@
    Run:  node tools/animals_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
+const { checkRouteWired } = require('./route_contract.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -159,10 +160,9 @@ const ANIMALS = ['🐶','🐱','🐮','🦁','🐘','🐸','🐷','🦆','🦊',
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
   check('hub button wired (data-go="game-animals")', indexHtml.includes('data-go="game-animals"'));
-  const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
-  check('navigation route wired (game-animals -> animals.html)', nav.includes("'game-animals'") && nav.includes("'pages/animals.html'"));
-  const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (animals -> animals-back/startAnimals)', main.includes("'animals': ['animals-back', 'startAnimals', 'hub-learning']"));
+  // R7: the route/back wiring lives in app-registry.js now, not in navigation.js.
+  checkRouteWired('animals', 'game-animals', 'pages/animals.html',
+    { back: 'animals-back', start: 'startAnimals', check });
 
   h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);

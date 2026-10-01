@@ -1008,6 +1008,36 @@ Added a character picker to the Little Explorer game (`papper_kitty.html` + `kit
 
 ---
 
+### 167. DONE — Single source of truth for the app list (2026-10-01, Ponytail Lazy Dev)
+
+Roadmap R7. `game/data/app-registry.js` is now the only place the app/page/route list exists, and seven tools that each carried their own copy were rewired onto one shared loader (`tools/registry.js`: `all`, `children`, `parents`, `byId`, `byRoute`, `roleOf`, `routesByGroup`, `allHubRoutes`).
+
+Runtime:
+- `game/shared/navigation.js` and `game/shared/main.js` resolve routes and boot state from the registry instead of hardcoded tables; the 14 pages that use shared main boot load `data/app-registry.js` before `shared/main.js` (self-wiring `animal_counting` / `animal_memory` / `animal_puzzle` intentionally unchanged, and the registry records that with `back: null, start: null`).
+- Registry fields are limited to what a live consumer reads — `route`, `hubGroup`, `hubOrder`, `back`, `start` — plus `role` derived from `category`. No speculative fields.
+
+Tools rewired: `offline_smoke.mjs` (16 children, parent URL and 17 hub buttons all derived — its hardcoded parent count drifted before), `hub_smoke.js`, `run_all.js`, `axe_check.js`, `play_matrix.mjs`, `touch_interruption_core.js` (all 17 entries including `parent` preserved), `screenshot.js`, `validate_pages.js`.
+
+Validation:
+- `validate_pages.js` now enforces the contract (unique id/route, path exists under `pages/`, page present in the registry — **promoted from warning to failure**, hub button exists for every route, retired route absent from both registry and visible hub markup, unique hubOrder per group, valid `back` id, defined `start` global).
+- Three guard negative tests, because **a check that cannot fail proves nothing**: `guards/registry_guards_negtest.js` (12 mutations, each must produce the guard's own message — a bare non-zero exit lets an unrelated failure be credited), `guards/route_contract_negtest.js` (6 wrong-wiring forms + real-wiring control; `route_contract.js` replaced ten smokes' hand-written greps for route tables that no longer exist, which passed vacuously), `guards/games_map_negtest.js` (the derived game-file→smoke mapping). Wired into `check_release.js` and the release CI job, **not** `check_fast` — they edit and restore a tracked source file, which a read-only gate must never do.
+
+Deleted: `tools/racing_probe.js` and its two stale PNGs — it probed `pages/racing.html`, deleted in task 156.
+
+### 168. DONE — Three harness bugs that made checks pass while proving nothing (2026-10-01, Ponytail Lazy Dev)
+
+Found while closing out R7. All three are the same family as the task-120 anti-pattern.
+
+1. **Chrome debug port derived arithmetically** (`headless.js`, was `httpPort + 100 + Math.random()*1000`). Windows hands out ephemeral ports around 49582-57766 and Hyper-V/WinNAT reserves 17 blocks inside that span, so ~9% of derived ports were unbindable. Chrome could not listen, never published `/json/version`, and the smoke exited non-zero with **0 checks** — the intermittent `touch_interruption_b` failure that had been attributed to host load for several tasks. Now `freePort()` (`listen(0)`). Negative-tested: reverting only that line reproduces the failure on a port inside an excluded range.
+2. **`close()` was not awaited.** It fired `killChromeByTag` and returned, so a tool booting several browsers in one process raced a still-dying Chrome. It is now `async`, waits for the port to go quiet, and deletes the profile dir — 1503 stale profiles had accumulated in `%TEMP%` (**32 GB**, now cleared).
+3. **`screenshot.js` could not fail.** It called `navigate('/index.html')` with a relative URL, which never resolves from `about:blank` (every capture was a blank 4.7 KB PNG); it applied `Emulation.setDeviceMetricsOverride` *before* navigating, and the override is dropped on a cross-document navigation; and it omitted `deviceScaleFactor`, without which Chrome silently ignores the entire call — so phone/tablet/desktop produced three byte-identical files. It now navigates absolutely, waits for readiness, sets the override after load, and **fails** if any capture is under 20 KB or if N captures have fewer than N distinct sizes. Both regressions negative-tested.
+
+Also chased and disproved: piped stdio as a boot blocker (Chrome writes ~100 bytes; boots pass with `stdio: 'ignore'` too) and port overflow past 65535 (ephemeral ports never get that high here). Boot patience is 4 attempts / ~24 s with a message stating "no assertions ran".
+
+**Validated:** `run_all.js --concurrency 2` — **ALL 24 TOOLS PASS, 492 checks**. `check_fast.js` 6/6 green (writes nothing). `check_release.js` green, nothing written. `offline_smoke.mjs` 16/16. All three guard suites green. `validate_pages.js` 17 pages OK. `git diff --check` clean.
+
+---
+
 ## Appendix: Task 11 expected behavior
 
 Animal Scene Puzzle must follow this interaction:

@@ -5,6 +5,7 @@
    Run:  node tools/counting_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
+const { checkRouteWired } = require('./route_contract.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -125,10 +126,12 @@ const COUNT_ALL = `(function(){
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
   check('hub button wired (data-go="game-counting")', indexHtml.includes('data-go="game-counting"'));
-  const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
-  check('navigation route wired (game-counting -> animal_counting.html)', nav.includes("'game-counting'") && nav.includes("'pages/animal_counting.html'"));
-  const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('page boots via inline DOMContentLoaded (counting.html)', main.includes('startAnimalCounting') || fs.readFileSync(path.join(root, 'game', 'pages', 'animal_counting.html'), 'utf8').includes('startAnimalCounting'));
+  // R7: the route lives in app-registry.js; animal_counting self-boots from an
+  // inline DOMContentLoaded handler, so back/start are both null by design.
+  checkRouteWired('animal_counting', 'game-counting', 'pages/animal_counting.html',
+    { back: null, start: null, check });
+  check('page boots via inline DOMContentLoaded (counting.html)',
+    fs.readFileSync(path.join(root, 'game', 'pages', 'animal_counting.html'), 'utf8').includes('startAnimalCounting'));
 
   h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);

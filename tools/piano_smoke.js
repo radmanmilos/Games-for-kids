@@ -6,6 +6,7 @@
    Run:  node tools/piano_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
+const { checkRouteWired } = require('./route_contract.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -193,10 +194,9 @@ const LIT_IDX = `Array.from(document.querySelectorAll('.piano-key')).indexOf(doc
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
   check('hub button wired (data-go="game-piano")', indexHtml.includes('data-go="game-piano"'));
-  const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
-  check('navigation route wired (game-piano -> piano.html)', nav.includes("'game-piano'") && nav.includes("'pages/piano.html'"));
-  const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (piano -> piano-back/startPiano)', main.includes("'piano': ['piano-back', 'startPiano', 'hub-learning']"));
+// R7: the route/back wiring lives in app-registry.js now, not in navigation.js.
+  checkRouteWired('piano', 'game-piano', 'pages/piano.html',
+    { back: 'piano-back', start: 'startPiano', check });
 
   // Roadmap song-data shape: { id, title, notes:['C4',...], tempo, speech } - so Serbian
   // children's songs can be added later without touching the engine.

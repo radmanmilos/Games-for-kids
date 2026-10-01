@@ -128,6 +128,24 @@ jobs:
         run: node tools/axe_check.js --report
         continue-on-error: true
 
+      # R7. The guards prove the checks they guard can actually FAIL: each one
+      # breaks game/data/app-registry.js on purpose and requires a non-zero exit
+      # with a specific message. They are separate files (not *_smoke.js), so
+      # run_all does not pick them up, and they are wired here rather than into
+      # check_fast because they mutate a tracked source file and restore it -
+      # a read-only gate must never do that.
+      - name: Registry contract guards (negative test)
+        run: node tools/guards/registry_guards_negtest.js
+
+      - name: Route-contract assertions (negative test)
+        run: node tools/guards/route_contract_negtest.js
+
+      # The derived game-file -> smoke mapping in run_all.js replaced a hand-written
+      # table that had already drifted from the registry. This guard proves the
+      # mapping is complete and that it can fail: it also edits a page and restores it.
+      - name: Game-file smoke mapping guard (negative test)
+        run: node tools/guards/games_map_negtest.js
+
   # ---------------------------------------------------------------------------
   # Job D — extended / manual. Expensive, so it never runs on every push.
   # ---------------------------------------------------------------------------

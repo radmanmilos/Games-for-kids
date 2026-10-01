@@ -33,6 +33,49 @@ const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Applic
 const ROOT = path.resolve(__dirname, '..', 'game');
 const TMP = process.env.TMPDIR || process.env.TEMP || '/tmp';
 
+/* How long to wait for Chrome to expose its debugging port.
+   This is deliberately generous. These smokes run 4-way parallel on a
+   constrained host (and in CI), where a cold Chrome can take several seconds to
+   answer /json/version. Running out of patience produces a smoke that exits
+   non-zero with ZERO checks, which in the summary is indistinguishable from a
+   real failure - the shape that made tools/touch_interruption_b_smoke.js fail
+   intermittently in R7 while every one of its assertions was fine. */
+const BOOT_ATTEMPTS = 4;
+const BOOT_POLL_TRIES = 30;
+const BOOT_POLL_MS = 200;
+const BOOT_RETRY_PAUSE_MS = 500;
+
+/* Teardown bounds for close(): how long to wait for Chrome to stop answering its
+   debug port before moving on. Cheap insurance - in the normal case the first
+   poll already finds the port closed. */
+const TEARDOWN_TRIES = 20;
+const TEARDOWN_POLL_MS = 50;
+
+/* Ask the OS for an unused TCP port.
+
+   This used to be `httpPort + 100 + Math.random()*1000`, which is wrong on
+   Windows: ephemeral ports sit around 52290-57760, and Hyper-V/WinNAT reserves
+   dozens of ~100-port blocks inside that span (`netsh interface ipv4 show
+   excludedportrange protocol=tcp` listed 52240-52339, 53865-53964, 55973-56072,
+   56473-56572 and more). Chrome then cannot bind its --remote-debugging-port at
+   all, so it never publishes /json/version and the smoke dies with
+   "Chrome did not start" and ZERO checks run. That is exactly how
+   tools/touch_interruption_b_smoke.js failed intermittently in R7 while all its
+   assertions passed, and why lengthening the boot timeout could not fix it.
+
+   listen(0) hands back a port the OS has just confirmed is free, which is
+   exactly the guarantee we need. */
+async function freePort() {
+  return new Promise((resolve, reject) => {
+    const s = require('net').createServer();
+    s.once('error', reject);
+    s.listen(0, '127.0.0.1', () => {
+      const { port } = s.address();
+      s.close(() => resolve(port));
+    });
+  });
+}
+
 function findChrome() {
   if (fs.existsSync(CHROME)) return CHROME;
   const candidates = [
@@ -119,6 +162,7 @@ function cdp(wsUrl) {
    iframe and throws Unsafe-attempt warnings, so EVERY harness (including the
    Playwright/a11y tools) must go through this. Returns { port, close }. */
 async function serve() {
+  const sockets = new Set();
   const server = http.createServer((req, res) => {
     let p = decodeURIComponent(req.url.split('?')[0]);
     if (p === '/') p = '/index.html';
@@ -129,8 +173,21 @@ async function serve() {
       res.end(data);
     });
   });
+  // Keep-alive sockets outlive server.close(), which only stops NEW connections.
+  // offline_smoke's negative control needs the origin to be physically gone, and
+  // Chrome holds a warm socket - without tracking and destroying them the control
+  // silently passed whenever that socket happened to be dead, and failed when it
+  // was alive. A control that is sometimes right proves nothing.
+  server.on('connection', s => { sockets.add(s); s.on('close', () => sockets.delete(s)); });
   await new Promise(r => server.listen(0, r));
-  return { port: server.address().port, close: () => server.close() };
+  return {
+    port: server.address().port,
+    close: () => {
+      server.close();
+      for (const s of sockets) s.destroy();
+      sockets.clear();
+    },
+  };
 }
 
 async function start({ page, tag = 'pkv', width = 1280, height = 800, dpr = 1 } = {}) {
@@ -138,7 +195,7 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800, dpr = 1 } 
   const httpPort = srv.port;
 
   const profile = path.join(TMP, 'pkv-' + tag + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e6));
-  const dbgPort = httpPort + 100 + Math.floor(Math.random() * 1000);
+  const dbgPort = await freePort();
 
   const chromeBin = findChrome();
   if (!chromeBin) {
@@ -153,18 +210,29 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800, dpr = 1 } 
     '--disable-sync', '--disable-features=Translate,MediaRouter,OptimizationGuideModelDownloading',
     '--no-sandbox', '--mute-audio', 'about:blank',
   ];
+  /* Retry Chrome's boot properly. The old loop tried twice and polled 20x100ms =
+   2s per attempt, which on a loaded host (4 shards booting at once) was often
+   not enough - the smoke then died with "Chrome did not start" and ZERO checks
+   ran, so a run reported fail=0 and exited non-zero. That is a crash, not a
+   failed assertion, and it recurred on tools/touch_interruption_b_smoke.js in
+   R7 until the shards stopped dying. Widening the wait and the retry count is
+   the honest fix: nothing is being asserted less often, the browser just gets
+   longer to show up. */
   let version = null;
-  for (let attempt = 0; attempt < 2 && !version; attempt++) {
+  for (let attempt = 0; attempt < BOOT_ATTEMPTS && !version; attempt++) {
     execFile(chromeBin, CHROME_FLAGS);
-    for (let i = 0; i < 20 && !version; i++) {
+    for (let i = 0; i < BOOT_POLL_TRIES && !version; i++) {
       try { version = await (await fetch(`http://127.0.0.1:${dbgPort}/json/version`)).json(); }
-      catch { await sleep(100); }
+      catch { await sleep(BOOT_POLL_MS); }
     }
-    if (!version) { killChromeByTag(profile); await sleep(250); }
+    if (!version) { killChromeByTag(profile); await sleep(BOOT_RETRY_PAUSE_MS); }
   }
   if (!version) {
     srv.close();
-    throw new Error('Chrome did not start (debug port ' + dbgPort + ') — skipped in this environment');
+    const msg = 'Chrome did not start (debug port ' + dbgPort + ') after ' +
+      BOOT_ATTEMPTS + ' attempts (~' + Math.round(BOOT_ATTEMPTS * BOOT_POLL_TRIES * BOOT_POLL_MS / 1000) +
+      's of waiting) — no assertions ran';
+    throw new Error(msg);
   }
 
   const dbg = await cdp(version.webSocketDebuggerUrl);
@@ -190,7 +258,26 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800, dpr = 1 } 
     return r.result ? r.result.value : undefined;
   };
   const navigate = url => c.send('Page.navigate', { url });
-  const close = () => { srv.close(); killChromeByTag(profile); };
+  /* Tear down for real. killChromeByTag() is a request, not a guarantee: Chrome
+     keeps its debug port answering for a moment afterwards. A shard that runs
+     several games in one process (tools/touch_interruption_{a..d}_smoke.js) then
+     calls start() again immediately, and the new instance loses the race - which
+     is why touch_interruption_b_smoke.js intermittently exited with
+     "Chrome did not start" while every one of its assertions had passed. So we
+     wait for the port to go quiet, bounded, and clean up the profile dir we
+     created (it is ~20MB and would otherwise pile up in %TEMP% forever). */
+  const close = async () => {
+    srv.close();
+    killChromeByTag(profile);
+    for (let i = 0; i < TEARDOWN_TRIES; i++) {
+      let alive = false;
+      try { await fetch(`http://127.0.0.1:${dbgPort}/json/version`); alive = true; } catch { /* gone */ }
+      if (!alive) break;
+      await sleep(TEARDOWN_POLL_MS);
+    }
+    try { fs.rmSync(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 }); }
+    catch { /* still locked; %TEMP% cleanup is not the smoke's job */ }
+  };
   // Shut the origin down while keeping the browser alive. After this nothing can
   // come off the wire, so "it still works" proves it came from the app's own cache.
   const closeServer = () => srv.close();

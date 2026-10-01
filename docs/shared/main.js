@@ -2,29 +2,34 @@
 document.body.addEventListener('pointerdown', () => { if (window.ctx) window.ctx(); }, {once: true});
 
 const standalonePage = location.pathname.split('/').pop().toLowerCase().replace(/\.html$/, '');
-const standaloneMap = {
-    'animals': ['animals-back', 'startAnimals', 'hub-learning'],
-    'shapes': ['shapes-back', 'startShapesRound', 'hub-learning'],
-    'matching_game': ['candy-back', 'startCandy', 'hub-games'],
-    'coloring': ['coloring-back', 'startColoring', 'hub-learning'],
-    'classroom': ['classroom-back', 'startClassroom', 'hub-learning'],
-    'tracing': ['tracing-back', 'startTracing', 'hub-learning'],
-    'piano': ['piano-back', 'startPiano', 'hub-learning'],
-    'driving': ['driving-back', 'startDriving', 'hub-games'],
-    'ocean': ['ocean-back', 'startOcean', 'hub-games'],
-    'dino': ['dino-back', 'startDino', 'hub-games'],
-    'space': ['space-back', 'startSpace', 'hub-games'],
-    'racing': ['racing-back', 'startRacing', 'hub-games'],
-    'racing3d': ['r3d-back', 'startRacing3D', 'hub-games'],
-    'explorer': ['back-btn', null, 'hub-games'],
-    'parent': ['back-btn', null, 'hub']
-};
-const standaloneGame = standaloneMap[standalonePage];
+
+/* R7: the per-page boot table comes from data/app-registry.js instead of a
+   hand-written map here. That map was a second app list that had already gone
+   stale - it still listed the 2D `racing` page deleted in task 131 (CLEAN-001),
+   and it was missing animal_counting/animal_memory/animal_puzzle entirely,
+   which is why those pages had to wire their own back button.
+   Registry entries with `back: null` / `start: null` are pages that handle
+   themselves, and are correctly skipped here. */
+function entryForPage(page) {
+  const list = (window.APP_REGISTRY || []);
+  for (const app of list) {
+    if (app.path.toLowerCase().endsWith('/' + page + '.html')) return app;
+  }
+  return null;
+}
+
+const standaloneGame = entryForPage(standalonePage);
+
+/* Where a page's back button returns to: its own sub-hub when the registry
+   declares one, the landing screen for the parent area. */
+const backTarget = standaloneGame && standaloneGame.hubGroup ? 'hub-' + standaloneGame.hubGroup : 'hub';
+
+if (standaloneGame && standaloneGame.back) {
+    const backBtn = document.getElementById(standaloneGame.back);
+    if (backBtn) backBtn.addEventListener('click', () => { if (window.popSound) window.popSound(); setTimeout(() => location.href = '../index.html#' + backTarget, 90); });
+}
 
 if (standaloneGame) {
-    const backBtn = document.getElementById(standaloneGame[0]);
-    if (backBtn) backBtn.addEventListener('click', () => { if (window.popSound) window.popSound(); setTimeout(() => location.href = '../index.html#' + standaloneGame[2], 90); });
-
     // Try to call the page's startup function. If it's not yet defined (script load order
     // differences), retry a few times before giving up. This is safe and avoids race
     // conditions between shared/main.js and per-game scripts.
@@ -33,7 +38,8 @@ if (standaloneGame) {
     let started = false;
     const tryStart = (retries) => {
         if (started) return;
-        const fnName = standaloneGame[1];
+        const fnName = standaloneGame.start;
+        if (!fnName) return;
         if (typeof window[fnName] === 'function') {
             started = true;
             try { window[fnName](); } catch(e){ console.warn('Error running', fnName, e); }
@@ -59,8 +65,7 @@ if (standaloneGame) {
 // Helper for pages to return to their parent hub subsection in a consistent way.
 window.returnToParent = function(){
     try{
-        const mapEntry = standaloneMap[standalonePage];
-        const target = (mapEntry && mapEntry[2]) ? mapEntry[2] : 'hub';
+        const target = backTarget;
         if (window.top !== window && window.top && typeof window.top.goTo === 'function') {
             window.top.goTo(target);
         } else if (typeof window.goTo === 'function') {

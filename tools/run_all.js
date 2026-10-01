@@ -26,6 +26,7 @@
 const { execFile, spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const { all: registryAll, byId } = require('./registry.js');
 
 const TOOLS = __dirname;
 const ROOT = path.resolve(__dirname, '..');
@@ -62,25 +63,76 @@ for (let i = 0; i < args.length; i++) {
 if (!(opts.concurrency >= 1)) opts.concurrency = CONCURRENCY_DEFAULT;
 
 /* ---- game-file -> smoke mapping (reads from app-registry.js) ---- */
-const REGISTRY_PATH = path.join(ROOT, 'game', 'data', 'app-registry.js');
-const registrySrc = fs.existsSync(REGISTRY_PATH) ? fs.readFileSync(REGISTRY_PATH, 'utf8') : 'window.APP_REGISTRY = [];';
-const mockWindow = {};
-const APP_REGISTRY = new Function('window', registrySrc + '; return window.APP_REGISTRY;')(mockWindow);
 const PAGE_SMOKE = {};
-for (const app of APP_REGISTRY) { PAGE_SMOKE[app.id] = app.smoke; }
-const GAME_SMOKE = {
-  animals: 'animals_smoke', shapes: 'shapes_smoke', candy: 'candy_smoke', kitty: 'kitty_smoke',
-  'kitty-standalone': 'kitty_smoke', animal_puzzle: 'puzzle_smoke', animal_counting: 'counting_smoke',
-  animal_memory: 'memory_smoke', coloring: 'coloring_smoke', classroom: 'classroom_smoke',
-  kids_games: 'classroom_smoke', tracing: 'tracing_smoke', piano: 'piano_smoke',
-  adventure: ['adventure_smoke', 'driving_smoke', 'ocean_smoke', 'dino_smoke', 'space_smoke'],
-  'adventure-music': ['adventure_smoke', 'driving_smoke', 'ocean_smoke', 'dino_smoke', 'space_smoke'],
-  'adventure-modes': ['adventure_smoke', 'driving_smoke', 'ocean_smoke', 'dino_smoke', 'space_smoke'],
-  driving: ['driving_smoke', 'adventure_smoke'], ocean: ['ocean_smoke', 'adventure_smoke'],
-  dino: ['dino_smoke', 'adventure_smoke'], space: ['space_smoke', 'adventure_smoke'],
-  racing3d: 'racing3d_smoke', 'racing3d-config': 'racing3d_smoke',
+for (const app of registryAll()) { PAGE_SMOKE[app.id] = app.smoke; }
+/* ---- game-file -> smoke mapping ------------------------------------------
+   This used to be a hand-written GAME_SMOKE table, which was a second app list
+   that had to be kept in step with the registry by hand (and had already drifted:
+   `candy.js` vs the registry's `matching_game`). It is now DERIVED, in both
+   directions:
+     - games/<id>.js        -> the smoke of the app with that id, where they agree
+     - games/<x>.js         -> the smokes of every page that loads it, for shared
+                                modules (adventure.js is loaded by 4 pages, so all
+                                4 of their smokes are relevant)
+   The leftover cases (kids_games.js -> classroom, racing-config.js -> racing3d)
+   are declared here explicitly because they are module/config files with no id of
+   their own. That list is short, has no app metadata in it, and is verified
+   against the registry by tools/guards/registry_guards_negtest.js - so if a page
+   starts loading a new shared module, the "page loads" rule picks it up and this
+   table cannot silently go stale the way GAME_SMOKE could. */
+const SHARED_MODULE_SMOKE = {
+  'kids_games': ['classroom_smoke'],
+  'racing-config': ['racing3d_smoke'],
+  // racing3d-config.js is config for the racing3d module; no page loads it
+  // directly, so the page rule below cannot reach racing3d_smoke.
+  'racing3d-config': ['racing3d_smoke'],
 };
-// Note: racing (2D) removed — racing.html deleted, racing.js/racing-config.js removed
+/* Games file -> id. Only needed where the filename and the registry id differ. */
+const GAME_FILE_ALIAS = { candy: 'matching_game', 'kitty-standalone': 'explorer' };
+
+/* game/games/adventure.js is a shared adventure ENGINE, loaded by the driving,
+   ocean, dino and space pages. adventure_smoke.js drives that engine through its
+   own page (pages/adventure.html), which no longer exists as a registry app, so
+   the "pages that load it" rule below cannot reach its smoke - hence naming it
+   here. The other four come from that rule. */
+const ENGINE_SMOKE = { adventure: ['adventure_smoke'] };
+
+/* The game-file smoke table that used to live here was hand-written and had
+   already drifted from app-registry.js (candy.js vs matching_game, explorer vs
+   kitty-standalone). A negative test for the derived version asserts that every
+   engine/shared module listed above is genuinely reachable, so this declaration
+   cannot quietly become an empty list that still "passes". */
+
+function smokesForGameFile(base) {
+  // A shared module's own smoke comes FIRST, then every page that loads it.
+  // adventure.js is the shared engine for driving/ocean/dino/space, and its own
+  // adventure_smoke drives it through a page that no longer exists in the registry,
+  // so it is named explicitly; the other four come from the page-loading rule
+  // below. Order is stable so --list output is reproducible.
+  const named = SHARED_MODULE_SMOKE[base] || ENGINE_SMOKE[base];
+  if (named && named.length) {
+    const extra = pagesLoadingGame(base);
+    return [...new Set([...named, ...extra])];
+  }
+  const app = byId(GAME_FILE_ALIAS[base] || base);
+  if (app && app.smoke) return [app.smoke];
+  return pagesLoadingGame(base);
+}
+
+/* Every page that loads game/games/<base>.js inherits that page's smoke. This is
+   what covers shared modules like adventure.js without a hand-written list, and
+   it cannot go stale: if a page starts (or stops) loading a module, the set moves
+   with it. */
+function pagesLoadingGame(base) {
+  const dir = path.join(ROOT, 'game', 'pages');
+  const hit = new Set();
+  for (const page of fs.readdirSync(dir).filter(n => n.endsWith('.html'))) {
+    if (!fs.readFileSync(path.join(dir, page), 'utf8').includes(`games/${base}.`)) continue;
+    const app = byId(path.basename(page, '.html'));
+    if (app && app.smoke) hit.add(app.smoke);
+  }
+  return [...hit].sort();
+}
 // broad patterns -> whole battery (safe default)
 const BROAD = () => allSmokes();
 
@@ -107,8 +159,7 @@ function mapFileToSmokes(rel) {
   }
   if (p.startsWith('games/')) {
     const base = path.basename(p).replace(/\.(js|mjs)$/, '');
-    const m = GAME_SMOKE[base];
-    if (m) hit.push(...(Array.isArray(m) ? m : [m]));
+    hit.push(...smokesForGameFile(base));
   }
   if (p.startsWith('assets/')) return [];
   return hit.length ? [...new Set(hit)] : BROAD();

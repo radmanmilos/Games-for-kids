@@ -15,9 +15,13 @@
  * in the offline inventory must fail to load. Without that control a bug that
  * left the network reachable would pass silently.
  *
- * Interaction coverage is a table keyed by registry id, and every registry
- * entry with offline:true must have a row — a new game cannot join the app
- * without also joining this test. R7 promotes the table into the registry.
+* Interaction coverage is a table keyed by registry id, and every registry
+ * entry with offline:true must have a row - a new game cannot join the app
+ * without also joining this test. R7 done: the table's ids, page paths and the
+ * parent exclusion come from tools/registry.js, so this file no longer carries its
+ * own copy of the app list. The table still owns the parts that are genuinely
+ * test fixtures and cannot live in the registry - the per-game readiness predicate
+ * and the gesture that proves the game responds.
  */
 
 import { createRequire } from 'node:module';
@@ -27,12 +31,21 @@ import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
 const { start, check, skip, sleep } = require('./headless.js');
+const { children, parents } = require('./registry.js');
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..', 'game');
 
 const CACHE_NAME = 'petrin-v2';
 const BASE = 'http://127.0.0.1';
+
+/* R7: the parent page is the only place that triggers caching, so its URL comes
+ * from the registry's own `role: parent` classification rather than a literal. */
+const PARENT_URL = (parents()[0] || {}).url;
+if (!PARENT_URL) {
+  check('the registry declares exactly one parent surface', false, 'no entry has category "parent"');
+  process.exit(1);
+}
 
 /* ------------------------------------------------------------------ *
  * Phase 5 (audio) happens before the browser starts: prove every audio
@@ -77,7 +90,7 @@ const adventureAct = (key, selector) => async h => {
 
 const APPS = [
   {
-    id: 'animals', page: '/pages/animals.html', back: '#animals-back',
+    id: 'animals', back: '#animals-back',
     ready: `(()=>{const c=document.querySelector('#animalCard');return !!c && c.textContent.trim().length>0})()`,
     act: async h => {
       const before = await h.evalv(`document.querySelector('#animalCard').textContent`);
@@ -88,7 +101,7 @@ const APPS = [
     },
   },
   {
-    id: 'animal_counting', page: '/pages/animal_counting.html', back: '#game-counting .back-btn',
+    id: 'animal_counting', back: '#game-counting .back-btn',
     ready: `document.querySelectorAll('#countScene .count-tile').length>0`,
     act: async h => {
       // phase 1: a child taps every animal to count it; the answer buttons only
@@ -114,7 +127,7 @@ const APPS = [
     },
   },
   {
-    id: 'animal_memory', page: '/pages/animal_memory.html', back: '#controls .back-btn',
+    id: 'animal_memory', back: '#controls .back-btn',
     ready: `document.querySelectorAll('#board .card').length>0`,
     act: async h => {
       const n = await h.evalv(`(()=>{const c=[...document.querySelectorAll('#board .card')];
@@ -132,7 +145,7 @@ const APPS = [
     },
   },
   {
-    id: 'animal_puzzle', page: '/pages/animal_puzzle.html', back: '#game-puzzle .back-btn',
+    id: 'animal_puzzle', back: '#game-puzzle .back-btn',
     ready: `!!document.getElementById('sceneButton')`,
     start: async h => {
       const t = await h.tap('#sceneButton');
@@ -164,7 +177,7 @@ const APPS = [
     },
   },
   {
-    id: 'classroom', page: '/pages/classroom.html', back: '#classroom-back',
+    id: 'classroom', back: '#classroom-back',
     ready: `!!document.querySelector('#classroomHub .activity-btn')`,
     start: async h => {
       const t = await h.tap('#classroomHub .activity-btn[data-activity="alphabet"]');
@@ -181,7 +194,7 @@ const APPS = [
     },
   },
   {
-    id: 'coloring', page: '/pages/coloring.html', back: '#coloring-back',
+    id: 'coloring', back: '#coloring-back',
     ready: `document.querySelectorAll('#coloringSvg .coloring-region').length>0`,
     act: async h => {
       const want = await h.evalv(`document.querySelector('#coloringSvg .coloring-region').dataset.target`);
@@ -195,7 +208,7 @@ const APPS = [
     },
   },
   {
-    id: 'tracing', page: '/pages/tracing.html', back: '#tracing-back',
+    id: 'tracing', back: '#tracing-back',
     ready: `!!document.querySelector('#tracingHub .activity-btn')`,
     start: async h => {
       const t = await h.tap('#tracingHub .activity-btn[data-activity="letters"]');
@@ -211,7 +224,7 @@ const APPS = [
     },
   },
   {
-    id: 'piano', page: '/pages/piano.html', back: '#piano-back',
+    id: 'piano', back: '#piano-back',
     ready: `document.querySelectorAll('.piano-key').length>0`,
     act: async h => {
       const t1 = await h.tap('#modeSong');
@@ -227,7 +240,7 @@ const APPS = [
     },
   },
   {
-    id: 'shapes', page: '/pages/shapes.html', back: '#shapes-back',
+    id: 'shapes', back: '#shapes-back',
     ready: `document.querySelectorAll('#shapesStage .piece').length>0`,
     act: async h => {
       const type = await h.evalv(`document.querySelector('#shapesStage .piece:not([data-done])')?.dataset.type`);
@@ -240,38 +253,40 @@ const APPS = [
     },
   },
   {
-    id: 'matching_game', page: '/pages/matching_game.html', back: '#candy-back',
+    id: 'matching_game', back: '#candy-back',
     ready: `document.querySelectorAll('#candyGrid .candy').length>0`,
     act: async h => {
-      // A deal can legitimately have no move. That is not an offline failure: the game
-      // answers it itself with a star 400ms later (candy.js:157), and tapping the
-      // star refills the cell (candy.js:219 explodeStarAt). So drive that path
-      // instead of asserting on a hint the game honestly refused to give.
-      let lit = 0;
-      for (let attempt = 0; attempt < 3 && lit < 2; attempt++) {
-        const t1 = await h.tap('#candyHintBtn');
-        if (!t1.ok) return { ok: false, why: 'hint button: ' + t1.why };
-        const hinted = await h.waitFor(`document.querySelectorAll('#candyGrid .candy.hint').length>=2
-          || !!document.querySelector('#candyGrid .hint-float')`,
-          { timeout: 4000, label: 'the hint to answer' });
-        if (!hinted.ok) return hinted;
-        lit = await h.evalv(`document.querySelectorAll('#candyGrid .candy.hint').length`);
-        if (lit >= 2) break;
-        // it refused: wait for the star it promised, then tap it to refill
-        const said = await h.evalv(`(document.querySelector('#candyGrid .hint-float')||{}).textContent||''`);
+      // Two honest outcomes, both real interactions:
+      //  (a) the deal has a move -> the hint names it, and the child matches it.
+      //  (b) the deal has none -> the game says so and spawns a star 400ms later
+      //      (candy.js:157); tapping that star refills the cell (explodeStarAt).
+      // Case (b) used to be reported as a failure, and "retry the hint 3x" was
+      // tried first - that is retry-until-pass and it still failed when the star
+      // handed back another unplayable tile. Branching on what the game actually
+      // said is the honest shape: each branch asserts a state change that matters.
+      const t1 = await h.tap('#candyHintBtn');
+      if (!t1.ok) return { ok: false, why: 'hint button: ' + t1.why };
+      const hinted = await h.waitFor(`document.querySelectorAll('#candyGrid .candy.hint').length>=2
+        || !!document.querySelector('#candyGrid .hint-float')`,
+        { timeout: 4000, label: 'the hint to answer' });
+      if (!hinted.ok) return hinted;
+
+      const lit = await h.evalv(`document.querySelectorAll('#candyGrid .candy.hint').length`);
+      const said = await h.evalv(`(document.querySelector('#candyGrid .hint-float')||{}).textContent||''`);
+
+      if (lit < 2) {
         if (!said.includes('Нема потеза')) {
           return { ok: false, why: 'hint button answered: "' + said + '" but no pair is highlighted' };
         }
         const star = await h.waitFor(`document.querySelectorAll('#candyGrid .candy.star').length>0`,
           { timeout: 6000, label: 'the promised star tile' });
-        if (!star.ok) return { ok: false, why: 'no move available and no star appeared (attempt ' + (attempt + 1) + ')' };
+        if (!star.ok) return { ok: false, why: 'no move available and no star appeared' };
         const ts = await h.tap('#candyGrid .candy.star');
         if (!ts.ok) return { ok: false, why: 'star tile: ' + ts.why };
-        await h.sleep(500);
+        return h.waitFor(`document.querySelectorAll('#candyGrid .candy.star').length===0`,
+          { timeout: 5000, label: 'the star to be consumed and the cell refilled' });
       }
-      if (lit < 2) {
-        return { ok: false, why: 'the hint never highlighted a pair after 3 attempts' };
-      }
+
       // drag by index: the hint window is short, re-resolving selectors can miss it
       const pair = await h.evalv(`(()=>{const c=[...document.querySelectorAll('#candyGrid .candy')];
         const ix=c.map((e,i)=>e.classList.contains('hint')?i:-1).filter(i=>i>=0);
@@ -287,17 +302,17 @@ const APPS = [
     },
   },
   {
-    id: 'driving', page: '/pages/driving.html', back: '#driving-back',
+    id: 'driving', back: '#driving-back',
     ready: `!!window.__adv && !!document.querySelector('#adv-controls [data-adv="up"]')`,
     act: adventureAct('up', '#adv-controls [data-adv="up"]'),
   },
   {
-    id: 'ocean', page: '/pages/ocean.html', back: '#ocean-back',
+    id: 'ocean', back: '#ocean-back',
     ready: `!!window.__adv && !!document.querySelector('#adv-controls [data-adv="right"]')`,
     act: adventureAct('right', '#adv-controls [data-adv="right"]'),
   },
   {
-    id: 'dino', page: '/pages/dino.html', back: '#dino-back',
+    id: 'dino', back: '#dino-back',
     ready: `!!window.__adv && !!document.querySelector('#adv-controls [data-adv="jump"]')`,
     start: async h => {
       const shown = await h.waitFor(`document.querySelectorAll('#adv-dino-grid .adv-dino-btn').length>0`,
@@ -311,12 +326,12 @@ const APPS = [
     act: adventureAct('jump', '#adv-controls [data-adv="jump"]'),
   },
   {
-    id: 'space', page: '/pages/space.html', back: '#space-back',
+    id: 'space', back: '#space-back',
     ready: `!!window.__adv && !!document.querySelector('#adv-controls [data-adv="up"]')`,
     act: adventureAct('up', '#adv-controls [data-adv="up"]'),
   },
   {
-    id: 'racing3d', page: '/pages/racing3d.html', back: '#r3d-back',
+    id: 'racing3d', back: '#r3d-back',
     // the start button exists in markup long before the modal is shown, so waiting
 // on its presence returns a button that is still zero-size
     ready: `(()=>{const b=document.getElementById('r3d-start-btn');
@@ -342,7 +357,7 @@ const APPS = [
     },
   },
   {
-    id: 'explorer', page: '/pages/explorer.html', back: '#back-btn',
+    id: 'explorer', back: '#back-btn',
     ready: `!!document.querySelector('#char-modal.show .char-btn[data-character="kitty"]')`,
     start: async h => {
       const t = await h.tap('#char-modal .char-btn[data-character="kitty"]');
@@ -366,16 +381,26 @@ const APPS = [
   },
 ];
 
-/* registry must be covered — a new offline game cannot skip this test */
-const registry = fs.readFileSync(path.join(ROOT, 'data', 'app-registry.js'), 'utf8');
-const registryIds = [...registry.matchAll(/id:\s*'([^']+)'/g)].map(m => m[1])
-  .filter(id => new RegExp(`id:\\s*'${id}'[^\\n]*offline:\\s*true`).test(registry));
-const childIds = registryIds.filter(id => id !== 'parent');
-const uncovered = childIds.filter(id => !APPS.some(a => a.id === id));
-const extra = APPS.filter(a => !childIds.includes(a.id)).map(a => a.id);
-check(`offline interaction coverage: ${childIds.length} registry children, ${APPS.length} specs`,
+/* Every registry child must be covered - a new offline game cannot skip this test.
+ * R7: ids, pages and the parent exclusion now come from tools/registry.js instead of
+ * a regex scrape of the registry source plus a hardcoded `'parent'` filter. The old
+ * scrape was line-shape dependent (one object per line) and would have silently
+ * stopped matching the moment an entry was reformatted. */
+const offlineChildren = children().filter(a => a.offline);
+const uncovered = offlineChildren.filter(a => !APPS.some(s => s.id === a.id));
+const extra = APPS.filter(s => !offlineChildren.some(a => a.id === s.id)).map(s => s.id);
+check(`offline interaction coverage: ${offlineChildren.length} registry children, ${APPS.length} specs`,
   uncovered.length === 0 && extra.length === 0,
-  [...uncovered.map(i => 'missing ' + i), ...extra.map(i => 'unknown ' + i)].join(', ') || 'exact match');
+  [...uncovered.map(a => 'missing ' + a.id), ...extra.map(i => 'unknown ' + i)].join(', ') || 'exact match');
+
+/* Join the per-game interaction specs to the registry. `id` above is the join key;
+ * the page path is only ever read from here, so a spec can never point at a page
+ * that is not the one the registry says belongs to that id. */
+for (const spec of APPS) {
+  const app = offlineChildren.find(a => a.id === spec.id);
+  if (!app) continue;
+  spec.page = app.url;
+}
 
 // landscape on purpose: racing3d shows a full-screen "rotate me" overlay in
 // portrait, and the classroom activity row needs the width to fit on screen
@@ -386,7 +411,7 @@ try {
   /* ---------------- Phase 1: prime the cache while online ---------------- */
   const wait = ms => sleep(ms);
 
-  await h.navigate(`${BASE}:${h.port}/pages/parent.html`);
+  await h.navigate(`${BASE}:${h.port}${PARENT_URL}`);
   const loaded = await h.waitFor(`!!document.getElementById('download-offline')`,
     { label: 'the parent page' });
   check('P1 parent page (the only place that triggers caching) loads', loaded.ok, loaded.why || 'ok');
@@ -479,8 +504,10 @@ await h.c.send('Network.enable');
     { label: 'the learning group to open' });
   check('P3 a child can walk hub -> group -> game offline', inGroup.ok, inGroup.why || 'group opened');
   const total = await h.evalv(`document.querySelectorAll('#hub-games .hub-btn, #hub-learning .hub-btn').length`);
-  check('P3 every game is listed offline (17 buttons: 16 games + the parent area)',
-    total === 17, total + ' game buttons');
+  // one button per child game plus the parent lock, counted from the registry
+  const expectedButtons = children().length + parents().length;
+  check(`P3 every game is listed offline (${expectedButtons} buttons: ${children().length} games + the parent area)`,
+    total === expectedButtons, total + ' game buttons');
 
   /* ------- Phase 4 + 6: every child app plays, then returns to hub ------ */
   for (const a of APPS) {
@@ -546,7 +573,7 @@ await h.c.send('Network.enable');
   }
 
   /* ---------------- the caregiver page, offline too ---------------------- */
-  await h.navigate(`${BASE}:${h.port}/pages/parent.html`);
+  await h.navigate(`${BASE}:${h.port}${PARENT_URL}`);
   const p = await h.waitFor(`!!document.getElementById('check-updates')`, { label: 'the parent page' });
   check('P4 parent page loads offline', p.ok, p.why || 'ok');
   if (p.ok) {

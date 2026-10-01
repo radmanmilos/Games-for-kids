@@ -147,6 +147,15 @@ if (!FAST_ONLY) {
   stage('smoke battery (all tools)', node, [path.join(TOOLS, 'run_all.js'), ...passthrough], { timeout: 3600000 });
 }
 
+/* R7 guards. These prove the registry contract checks can actually fail, which
+   is the same "a check that cannot fail proves nothing" rule the offline gate
+   enforces. They temporarily edit game/data/app-registry.js and restore it, so
+   they run BEFORE the fingerprint comparison below and the read-only contract
+   still holds: a restored file has the original bytes. */
+for (const g of ['registry_guards_negtest.js', 'route_contract_negtest.js', 'games_map_negtest.js']) {
+  stage(`registry guard (${g})`, node, [path.join(TOOLS, 'guards', g)], { timeout: 300000 });
+}
+
 if (DEEP) {
   // 3+4. Blocking offline E2E (R6 promoted it), advisory accessibility report.
   // Both print their real result; only the second one is non-blocking.

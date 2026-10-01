@@ -24,14 +24,11 @@
 const fs = require('fs');
 const path = require('path');
 const { start, serve, sleep } = require('./headless.js');
+const { all: registryAll } = require('./registry.js');
 
 const CACHE = path.join(__dirname, '.cache', 'axe.min.js');
 const AXE_CDN = 'https://cdn.jsdelivr.net/npm/axe-core@4.10.2/axe.min.js';
-const REGISTRY_PATH = path.resolve(__dirname, '..', 'game', 'data', 'app-registry.js');
-const registrySrc = fs.existsSync(REGISTRY_PATH) ? fs.readFileSync(REGISTRY_PATH, 'utf8') : 'window.APP_REGISTRY = [];';
-const mockWindow = {};
-const APP_REGISTRY = new Function('window', registrySrc + '; return window.APP_REGISTRY;')(mockWindow);
-const DEFAULT_PAGES = ['/index.html', ...APP_REGISTRY.map(a => '/' + a.path)];
+const DEFAULT_PAGES = ['/index.html', ...registryAll().map(a => a.url)];
 
 const argv = process.argv.slice(2);
 const opts = { pages: [], all: false, report: false, wcag: null };

@@ -10,6 +10,7 @@
    Exit 0 = all valid, 1 = failures found. */
 const fs = require('fs');
 const path = require('path');
+const { all: registryAll, RETIRED_ROUTES } = require('./registry.js');
 
 const ROOT = path.resolve(__dirname, '..');
 const PAGES_DIR = path.join(ROOT, 'game', 'pages');
@@ -39,24 +40,129 @@ for (const page of pages) {
 
 // Validate registry entries exist on disk
 if (fs.existsSync(REGISTRY)) {
-  const src = fs.readFileSync(REGISTRY, 'utf8');
-  const mockWindow = {};
-  const APP_REGISTRY = new Function('window', src + '; return window.APP_REGISTRY;')(mockWindow);
-  for (const app of APP_REGISTRY) {
+  const apps = registryAll();
+  for (const app of apps) {
     const filePath = path.join(ROOT, 'game', app.path);
     if (!fs.existsSync(filePath)) {
       failures.push(`registry: ${app.id} -> ${app.path} not found on disk`);
     }
   }
-  // Check for pages not in registry
-  const registryPaths = new Set(APP_REGISTRY.map(a => a.path.replace('pages/', '')));
+  /* Check for pages not in registry. This is a FAILURE, not a warning: R7 made the
+   registry the single source of truth, so an unregistered page is a page no tool
+   covers and no runtime route knows about - it ships as an orphan. It was a
+   warning, and the negative test below proved a warning is invisible: deleting an
+   entry produced a green run while `space_smoke` and offline coverage silently
+   stopped covering a page. */
+  const registryPaths = new Set(apps.map(a => a.path.replace('pages/', '')));
   for (const page of pages) {
     if (!registryPaths.has(page)) {
-      warnings.push(`page ${page} exists but not in app-registry.js`);
+      failures.push(`page ${page} exists but not in app-registry.js`);
     }
   }
 } else {
   failures.push('game/data/app-registry.js not found');
+}
+
+/* ---- registry contract (R7) ----
+   The registry is now the single source of truth for routes, hub order and the
+   back/start wiring that every tool and the runtime itself read. These checks
+   exist so that "the tools and the app agree" cannot silently rot: a duplicate
+   id, a route the hub does not render, or a retired route that leaked back into
+   a live list all produce a failure rather than a test that quietly covers less.
+   Negative-tested by temporarily breaking each field and confirming a failure. */
+if (fs.existsSync(REGISTRY)) {
+  const apps = registryAll();
+  const indexHtml = fs.readFileSync(path.join(ROOT, 'game', 'index.html'), 'utf8');
+
+  const seenIds = new Set();
+  for (const app of apps) {
+    if (!app.id) failures.push('registry: an entry has no id');
+    else if (seenIds.has(app.id)) failures.push(`registry: duplicate id "${app.id}"`);
+    seenIds.add(app.id);
+    if (app.path && !app.path.startsWith('pages/')) {
+      failures.push(`registry: ${app.id} path "${app.path}" must live under pages/`);
+    }
+  }
+
+  // Every route a tool would navigate to must exist as a registry entry.
+  const routes = apps.map(a => a.route).filter(Boolean);
+  const seenRoutes = new Set();
+  for (const r of routes) {
+    if (seenRoutes.has(r)) failures.push(`registry: duplicate route "${r}"`);
+    seenRoutes.add(r);
+    const routeOwner = apps.find(a => a.route === r);
+    if (routeOwner && routeOwner.category !== 'parent' && !indexHtml.includes(`data-go="${r}"`)) {
+      failures.push(`registry: route "${r}" has no hub button in index.html`);
+    }
+  }
+
+  // Retired routes must stay retired: hidden in the markup AND absent from the
+  // live hub ordering the tools use to pick what to test.
+  for (const d of RETIRED_ROUTES) {
+    const entry = apps.find(a => a.route === d.route);
+    if (entry) failures.push(`retired route "${d.route}" is still present in the registry`);
+    const markupLines = indexHtml.split('\n');
+    for (const line of markupLines) {
+      if (!line.includes(`data-go="${d.route}"`)) continue;
+      const hidden = /\bhidden\b/i.test(line) || /display:\s*none/i.test(line);
+      if (!hidden) failures.push(`retired route "${d.route}" has a visible hub button`);
+    }
+  }
+
+  // Hub order must be a permutation of the grouped entries, with no gaps, so a
+  // newly added game cannot land in the wrong group or collide with an order.
+  for (const g of ['games', 'learning']) {
+    const members = apps.filter(a => a.hubGroup === g);
+    const orders = members.map(a => a.hubOrder).filter(o => typeof o === 'number');
+    const dupes = orders.filter((o, i) => orders.indexOf(o) !== i);
+    if (dupes.length) failures.push(`registry: duplicate hubOrder ${dupes.join(', ')} in group "${g}"`);
+    for (const a of members) {
+      if (typeof a.hubOrder !== 'number') failures.push(`registry: ${a.id} is in hubGroup "${g}" but has no hubOrder`);
+    }
+  }
+
+  /* Every runtime field the registry feeds into main.js must actually resolve,
+   or the page boots silently broken. The two fields mean different things and
+   need different evidence:
+     - `back` is passed to document.getElementById, so the id must be in the page.
+     - `start` is called as window[fnName](), so the name must be defined as a
+       global function by one of the page's own scripts.
+   A missing one is not an error main.js can report - tryStart() just gives up
+   silently - which is exactly why it needs a gate here. null means "this page
+   handles itself" (animal_counting/animal_memory/animal_puzzle) and is allowed. */
+  for (const app of apps) {
+    if (app.category === 'parent') continue;
+    const pagePath = path.join(ROOT, 'game', app.path);
+    if (!fs.existsSync(pagePath)) continue;
+    const pageHtml = fs.readFileSync(pagePath, 'utf8');
+    const pageDir = path.dirname(pagePath);
+
+    if (app.back && !pageHtml.includes(`id="${app.back}"`)) {
+      failures.push(`registry: ${app.id}.back = "${app.back}" but no such element id in ${app.path}`);
+    }
+
+    if (app.start) {
+      const scripts = [...pageHtml.matchAll(/<script[^>]*\ssrc="([^"]+)"/g)]
+        .map(m => path.resolve(pageDir, m[1]))
+        .filter(p => fs.existsSync(p));
+      /* Two ways a page can publish a global boot function, and the codebase uses
+         both: `window.startX = function () {}` in the standalone games, and a
+         bare `function startX()` in the small ones. Matching only one of them
+         reported six working games as broken, so accept either. */
+      const patterns = [
+        new RegExp(`function\\s+${app.start}\\s*\\(`),
+        new RegExp(`(?:var|let|const)\\s+${app.start}\\s*=`),
+        new RegExp(`window\\.${app.start}\\s*=`),
+      ];
+      const defines = scripts.some(p => {
+        const src = fs.readFileSync(p, 'utf8');
+        return patterns.some(re => re.test(src));
+      });
+      if (!defines) {
+        failures.push(`registry: ${app.id}.start = "${app.start}" but no page script defines that global function`);
+      }
+    }
+  }
 }
 
 // Output

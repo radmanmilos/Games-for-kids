@@ -19,33 +19,21 @@
         });
     }
 
+    // R7: the route -> page map comes from data/app-registry.js. This used to be
+    // 17 hand-written `if (id === 'game-x') location.href = 'pages/y.html'` lines,
+    // a third hand-authored app list that had already gone stale - it still
+    // carried a comment about the deleted 2D `racing` route.
+    // app-registry.js loads AFTER this file, so the lookup happens per call.
+    function registryEntryForRoute(route) {
+        const list = window.APP_REGISTRY || [];
+        for (const app of list) if (app.route === route) return app;
+        return null;
+    }
+
     window.goTo = function (id) {
-        if (id === 'game-animals') { location.href = 'pages/animals.html'; return; }
-        if (id === 'game-shapes') { location.href = 'pages/shapes.html'; return; }
-        if (id === 'game-candy') { location.href = 'pages/matching_game.html'; return; }
-        if (id === 'game-puzzle') { location.href = 'pages/animal_puzzle.html'; return; }
-        if (id === 'game-counting') { location.href = 'pages/animal_counting.html'; return; }
-        if (id === 'game-memory') { location.href = 'pages/animal_memory.html'; return; }
-        if (id === 'game-coloring') { location.href = 'pages/coloring.html'; return; }
-        if (id === 'game-classroom') { location.href = 'pages/classroom.html'; return; }
-        if (id === 'game-tracing') { location.href = 'pages/tracing.html'; return; }
-        if (id === 'game-piano') { location.href = 'pages/piano.html'; return; }
-        if (id === 'game-driving') { location.href = 'pages/driving.html'; return; }
-        if (id === 'game-ocean') { location.href = 'pages/ocean.html'; return; }
-        if (id === 'game-dino') { location.href = 'pages/dino.html'; return; }
-        if (id === 'game-space') { location.href = 'pages/space.html'; return; }
-        // game-racing route removed (task 131 CLEAN-001) — hub button already hidden
-        if (id === 'game-racing3d') { location.href = 'pages/racing3d.html'; return; }
-        if (id === 'game-explorer') { location.href = 'pages/explorer.html'; return; }
-        if (id === 'game-parent') { location.href = 'pages/parent.html'; return; }
+        const app = registryEntryForRoute(id);
+        if (app) { location.href = app.path; return; }
         screens.forEach(screen => screen.classList.toggle('active', screen.id === id));
-        if (id === 'game-animals' && typeof window.startAnimals === 'function') window.startAnimals();
-        if (id === 'game-shapes' && typeof window.startShapesRound === 'function') window.startShapesRound();
-        if (id === 'game-candy' && typeof window.startCandy === 'function') window.startCandy();
-        if (id === 'game-puzzle' && typeof window.startAnimalPuzzle === 'function') window.startAnimalPuzzle();
-        if (id === 'game-counting' && typeof window.startAnimalCounting === 'function') window.startAnimalCounting();
-        if (id === 'game-kitty' && typeof window.startKitty === 'function') window.startKitty();
-        if (id === 'game-coloring' && typeof window.startColoring === 'function') window.startColoring();
     };
 
     document.querySelectorAll('[data-go]').forEach(element => {

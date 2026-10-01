@@ -8,6 +8,7 @@
    Run:  node tools/space_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
+const { checkRouteWired } = require('./route_contract.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -225,10 +226,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
   check('hub button wired (data-go="game-space")', indexHtml.includes('data-go="game-space"'));
-  const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
-  check('navigation route wired (game-space -> space.html)', nav.includes("'game-space'") && nav.includes("'pages/space.html'"));
-  const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (space -> space-back/startSpace)', main.includes("'space': ['space-back', 'startSpace', 'hub-games']"));
+// R7: the route/back wiring lives in app-registry.js now, not in navigation.js.
+  checkRouteWired('space', 'game-space', 'pages/space.html',
+    { back: 'space-back', start: 'startSpace', check });
   const space = fs.readFileSync(path.join(root, 'game', 'games', 'space.js'), 'utf8');
   check('space config: no heroFlip (🚀 faces right natively) + heroBob set', !space.includes('heroFlip: true') && space.includes('heroBob: 4'));
 

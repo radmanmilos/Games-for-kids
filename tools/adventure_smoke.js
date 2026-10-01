@@ -4,6 +4,7 @@
    goal trigger, and resize re-anchor across drive/fly/ground modes.
    Run: node tools/adventure_smoke.js */
 const { start, check, getFails } = require('./headless.js');
+const { checkRouteWired } = require('./route_contract.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -245,10 +246,9 @@ async function waitReady(h) {
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
   check('hub button wired (data-go="game-driving")', indexHtml.includes('data-go="game-driving"'));
-  const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
-  check('navigation route wired (game-driving -> driving.html)', nav.includes("'game-driving'") && nav.includes("'pages/driving.html'"));
-  const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (driving -> driving-back/startDriving)', main.includes("'driving': ['driving-back', 'startDriving', 'hub-games']"));
+  // R7: the route/back wiring lives in app-registry.js now, not in navigation.js.
+  checkRouteWired('driving', 'game-driving', 'pages/driving.html',
+    { back: 'driving-back', start: 'startDriving', check });
 
   h.close();
   process.exit(getFails() ? 1 : 0);

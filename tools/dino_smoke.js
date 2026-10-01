@@ -8,6 +8,7 @@
    Run:  node tools/dino_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
+const { checkRouteWired } = require('./route_contract.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -330,10 +331,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
   check('hub button wired (data-go="game-dino")', indexHtml.includes('data-go="game-dino"'));
-  const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
-  check('navigation route wired (game-dino -> dino.html)', nav.includes("'game-dino'") && nav.includes("'pages/dino.html'"));
-  const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (dino -> dino-back/startDino)', main.includes("'dino': ['dino-back', 'startDino', 'hub-games']"));
+// R7: the route/back wiring lives in app-registry.js now, not in navigation.js.
+  checkRouteWired('dino', 'game-dino', 'pages/dino.html',
+    { back: 'dino-back', start: 'startDino', check });
   const dino = fs.readFileSync(path.join(root, 'game', 'games', 'dino.js'), 'utf8');
   check('dino config: heroFlip set (PNG sprites face left natively) + jump power set', dino.includes('heroFlip: true') && dino.includes('jumpPower: -13.5'));
   check('dino config: file:// crop fallback present (getImageData is tainted under file://)', dino.includes('DINO_CROP_FALLBACK') && dino.includes('bronto: { x: 264, y: 106, w: 1529, h: 1633 }') && dino.includes('t_rex: { x: 154, y: 112, w: 1691, h: 1775 }'));

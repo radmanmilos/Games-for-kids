@@ -8,6 +8,7 @@
    Run:  node tools/ocean_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
+const { checkRouteWired } = require('./route_contract.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -213,10 +214,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
   check('hub button wired (data-go="game-ocean")', indexHtml.includes('data-go="game-ocean"'));
-  const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
-  check('navigation route wired (game-ocean -> ocean.html)', nav.includes("'game-ocean'") && nav.includes("'pages/ocean.html'"));
-  const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (ocean -> ocean-back/startOcean)', main.includes("'ocean': ['ocean-back', 'startOcean', 'hub-games']"));
+// R7: the route/back wiring lives in app-registry.js now, not in navigation.js.
+  checkRouteWired('ocean', 'game-ocean', 'pages/ocean.html',
+    { back: 'ocean-back', start: 'startOcean', check });
   const ocean = fs.readFileSync(path.join(root, 'game', 'games', 'ocean.js'), 'utf8');
   check('ocean config: heroFlip + heroBob set', ocean.includes('heroFlip: true') && ocean.includes('heroBob: 5'));
 

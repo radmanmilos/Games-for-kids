@@ -6,6 +6,7 @@
    Run:  node tools/coloring_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
+const { checkRouteWired } = require('./route_contract.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -122,10 +123,9 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
   check('hub button wired (data-go="game-coloring")', indexHtml.includes('data-go="game-coloring"'));
-  const nav = fs.readFileSync(path.join(root, 'game', 'shared', 'navigation.js'), 'utf8');
-  check('navigation route wired (game-coloring -> coloring.html)', nav.includes("'game-coloring'") && nav.includes("'pages/coloring.html'"));
-  const main = fs.readFileSync(path.join(root, 'game', 'shared', 'main.js'), 'utf8');
-  check('standalone boot wired (coloring -> coloring-back/startColoring)', main.includes("'coloring': ['coloring-back', 'startColoring', 'hub-learning']"));
+// R7: the route/back wiring lives in app-registry.js now, not in navigation.js.
+  checkRouteWired('coloring', 'game-coloring', 'pages/coloring.html',
+    { back: 'coloring-back', start: 'startColoring', check });
 
   h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);

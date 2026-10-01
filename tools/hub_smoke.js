@@ -6,10 +6,26 @@
    Run:  node tools/hub_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
+const { routesByGroup, allHubRoutes, RETIRED_ROUTES } = require('./registry.js');
 const fs = require('fs');
 const path = require('path');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* R7: the expected button order per sub-hub comes from the registry's `route` +
+ * `hubGroup` + `hubOrder`, not from lists hand-written here. Three such lists used
+ * to live in this file and had already drifted - `game-racing` was asserted as a
+ * live games button even though its page was deleted in task 131 and the button is
+ * `hidden`. A typo in a route id now fails these checks instead of passing because
+ * the test agreed with the typo.
+ *
+ * The games sub-hub ships 10 buttons: the 9 live routes plus the hidden, retired
+ * `game-racing`, kept in the markup so the grid layout does not shift. That
+ * retirement is the ONLY reason this file still names a route the registry does
+ * not declare, and even its position comes from the registry module. */
+const GAMES_EXPECTED = allHubRoutes().slice(0, routesByGroup('games').length + RETIRED_ROUTES.length);
+const LEARNING_EXPECTED = routesByGroup('learning');
+const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.route === r));
 
 (async () => {
   const h = await start({ page: '/', tag: 'hub-smoke', width: 1100, height: 700 });
@@ -81,7 +97,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     };
   })())`);
   const G = JSON.parse(games);
-  check('games tile opens games sub-hub (10 buttons, explorer back target intact)', gamesReady && G.active === 'hub-games' && G.title === '🎮 ИГРЕ' && G.go.split(',').length === 10 && G.go === 'game-explorer,game-driving,game-ocean,game-dino,game-space,game-candy,game-memory,game-puzzle,game-racing,game-racing3d', games);
+  check('games tile opens games sub-hub (10 buttons, explorer back target intact)', gamesReady && G.active === 'hub-games' && G.title === '🎮 ИГРЕ' && G.go.split(',').length === GAMES_EXPECTED.length && G.go === GAMES_EXPECTED.join(','), games);
 
   await h.evalv(`document.querySelector('#hub-games .back-btn').click()`);
   await waitForActive('hub');
@@ -100,7 +116,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     };
   })())`);
   const L2 = JSON.parse(learning);
-  check('learning tile opens learning sub-hub (7 buttons)', L2.active === 'hub-learning' && L2.title === '🧠 УЧЕЊЕ' && L2.go.split(',').length === 7 && L2.go === 'game-classroom,game-tracing,game-animals,game-shapes,game-counting,game-coloring,game-piano', learning);
+  check('learning tile opens learning sub-hub (7 buttons)', L2.active === 'hub-learning' && L2.title === '🧠 УЧЕЊЕ' && L2.go.split(',').length === LEARNING_EXPECTED.length && L2.go === LEARNING_EXPECTED.join(','), learning);
 
   await h.evalv(`document.querySelector('#hub-learning .back-btn').click()`);
   await waitForActive('hub');
@@ -108,8 +124,15 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('learning back button returns to landing', back2 === 'hub', back2);
 
   const html = fs.readFileSync(path.join(__dirname, '..', 'game', 'index.html'), 'utf8');
-  const allGo = ['game-explorer','game-driving','game-ocean','game-dino','game-space','game-candy','game-memory','game-puzzle','game-classroom','game-tracing','game-animals','game-shapes','game-counting','game-coloring','game-piano'];
-  check('all 15 game buttons still wired (data-go present)', allGo.every(id => html.includes(`data-go="${id}"`)), allGo.join(','));
+  check(`all ${ALL_LIVE_ROUTES.length} child routes still wired (data-go present)`, ALL_LIVE_ROUTES.every(id => html.includes(`data-go="${id}"`)), ALL_LIVE_ROUTES.join(','));
+  // The retired routes are named in ONE place (tools/registry.js). Each must still be
+  // present in the markup - so the grid does not reflow - but hidden, because
+  // navigation.js resolves routes from the registry and these resolve to nothing.
+  const retiredInMarkup = RETIRED_ROUTES.filter(d => html.includes(`data-go="${d.route}"`));
+  const retiredHidden = retiredInMarkup.length === RETIRED_ROUTES.length
+    && retiredInMarkup.every(d => new RegExp(`<[^>]*data-go="${d.route}"[^>]*hidden`).test(html));
+  check('retired hub routes are still in the markup but hidden (layout stability)', retiredHidden,
+    RETIRED_ROUTES.map(d => d.route + (retiredInMarkup.includes(d) ? '=present' : '=ABSENT')).join(','));
   check('explorer back button targets the games sub-hub', html.includes('data-go="game-explorer"') && /data-go="game-explorer"[\s\S]*?aria-label="Мала истраживачица"/.test(html), 'data-go="game-explorer"');
 
   // R12 acceptance: no technical / offline-management action may be exposed on the
