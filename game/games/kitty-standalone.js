@@ -1,6 +1,17 @@
 // --- Web Audio Synthesizer ---
 const AudioContext = window.AudioContext || window.webkitAudioContext;
+const KITTY_SFX_EVENTS = new Map([
+    ['jump', 'jump'],
+    ['coin', 'coin'],
+    ['win', 'goal'],
+    ['pop', 'pop'],
+]);
 let audioCtx = null;
+
+function connectKittyAudio(node, bus) {
+    if (window.audioBuses) window.audioBuses.connect(node, bus);
+    else node.connect(audioCtx.destination);
+}
 
 function playHurtSound() {
     if (selectedCharacter === 'kitty') {
@@ -17,6 +28,7 @@ function playCatSound() {
         catSound = new Audio('../assets/audio/cat.ogg');
         catSound.volume = 0.85;
     }
+    if (window.audioBuses) window.audioBuses.registerMedia(catSound, 'sfx');
     catSound.currentTime = 0;
     const p = catSound.play();
     if (p) p.catch(() => {});
@@ -26,6 +38,10 @@ function playCatSound() {
 function playGirlHurt() {
     // Prefer the project's shared pre-generated speech MP3s (speech.speak).
     try {
+        if (window.audioBuses && window.speech && typeof window.speech.speak === 'function') {
+            window.audioBuses.speakWithDuck('Јао!', function () {});
+            return;
+        }
         if (window.speech && typeof window.speech.speak === 'function') {
             window.speech.speak('Јао!', function () {});
             return;
@@ -49,7 +65,8 @@ function playGirlHurt() {
 
     // WebAudio fallback: short vowel/exclamation synth (best-effort)
     try {
-        if (!audioCtx) audioCtx = new AudioContext();
+        if (!audioCtx) audioCtx = window.audioBuses ? window.audioBuses.getAudioContext() : new AudioContext();
+        if (!audioCtx) return;
         const now = audioCtx.currentTime;
         // two-oscillator short exclamation, descending pitch
         const o1 = audioCtx.createOscillator();
@@ -67,7 +84,7 @@ function playGirlHurt() {
         g.gain.setValueAtTime(0.0001, now);
         g.gain.linearRampToValueAtTime(0.22, now + 0.02);
         g.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
-        o1.connect(filt); o2.connect(filt); filt.connect(g); g.connect(audioCtx.destination);
+        o1.connect(filt); o2.connect(filt); filt.connect(g); connectKittyAudio(g, 'sfx');
         o1.start(now); o2.start(now);
         o1.stop(now + 0.6); o2.stop(now + 0.6);
     } catch (e) {
@@ -77,7 +94,8 @@ function playGirlHurt() {
 
 function initAudio() {
     if (!audioCtx) {
-        audioCtx = new AudioContext();
+        audioCtx = window.audioBuses ? window.audioBuses.getAudioContext() : new AudioContext();
+        if (!audioCtx) return;
         if (musicTheme) startMusic(musicTheme);
     }
 }
@@ -90,6 +108,11 @@ window.addEventListener('pointerdown', function _firstAudioGesture() {
 }, { once: true, passive: true });
 
 function playSound(type) {
+    const eventName = KITTY_SFX_EVENTS.get(type);
+    if (window.audioBuses && eventName) {
+        window.audioBuses.play(eventName);
+        return;
+    }
     if (!audioCtx) return;
     const now = audioCtx.currentTime;
 
@@ -97,7 +120,7 @@ function playSound(type) {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        connectKittyAudio(gain, 'sfx');
         osc.type = 'sine';
         osc.frequency.setValueAtTime(200, now);
         osc.frequency.exponentialRampToValueAtTime(500, now + 0.12);
@@ -109,7 +132,7 @@ function playSound(type) {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        connectKittyAudio(gain, 'sfx');
         osc.type = 'triangle';
         osc.frequency.setValueAtTime(987.77, now); // B5
         osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6
@@ -123,7 +146,7 @@ function playSound(type) {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            connectKittyAudio(gain, 'sfx');
 
             const start = now + (idx * 0.07);
             osc.type = 'sine';
@@ -140,7 +163,7 @@ function playSound(type) {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        connectKittyAudio(gain, 'sfx');
         osc.type = 'square';
         osc.frequency.setValueAtTime(600, now);
         osc.frequency.exponentialRampToValueAtTime(420, now + 0.05);
@@ -280,7 +303,7 @@ function scheduleStep(cfg, step, t, eighth) {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        connectKittyAudio(gain, 'music');
         osc.type = cfg.wave;
         osc.frequency.value = noteFreq(cfg.root, mel);
         gain.gain.setValueAtTime(0, t);
@@ -294,7 +317,7 @@ function scheduleStep(cfg, step, t, eighth) {
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.connect(gain);
-        gain.connect(audioCtx.destination);
+        connectKittyAudio(gain, 'music');
         osc.type = 'sine';
         osc.frequency.value = noteFreq(cfg.root, cfg.bass[bassIdx]);
         gain.gain.setValueAtTime(0, t);
@@ -339,7 +362,7 @@ function ambBird(vol, t) {
         const base = 2200 + Math.random() * 1400;
         const o = audioCtx.createOscillator();
         const g = audioCtx.createGain();
-        o.connect(g); g.connect(audioCtx.destination);
+        o.connect(g); connectKittyAudio(g, 'music');
         o.type = 'sine';
         o.frequency.setValueAtTime(base, t0);
         o.frequency.exponentialRampToValueAtTime(base * 1.4, t0 + 0.05);
@@ -356,7 +379,7 @@ function ambCricket(vol, t) {
         const t0 = t + k * 0.09;
         const o = audioCtx.createOscillator();
         const g = audioCtx.createGain();
-        o.connect(g); g.connect(audioCtx.destination);
+        o.connect(g); connectKittyAudio(g, 'music');
         o.type = 'sine';
         o.frequency.value = 4300;
         g.gain.setValueAtTime(0, t0);
@@ -375,7 +398,7 @@ function ambWind(vol, t, dur, freq) {
     f.type = 'lowpass';
     f.frequency.value = freq || 500;
     const g = audioCtx.createGain();
-    src.connect(f); f.connect(g); g.connect(audioCtx.destination);
+    src.connect(f); f.connect(g); connectKittyAudio(g, 'music');
     const d = dur || 1.5;
     g.gain.setValueAtTime(0, t);
     g.gain.linearRampToValueAtTime(vol, t + d * 0.35);
@@ -393,7 +416,7 @@ function ambRustle(vol, t) {
         f.type = 'highpass';
         f.frequency.value = 1800 + Math.random() * 1400;
         const g = audioCtx.createGain();
-        src.connect(f); f.connect(g); g.connect(audioCtx.destination);
+        src.connect(f); f.connect(g); connectKittyAudio(g, 'music');
         const t0 = t + k * (0.1 + Math.random() * 0.15);
         const d = 0.12 + Math.random() * 0.1;
         g.gain.setValueAtTime(0, t0);
@@ -406,7 +429,7 @@ function ambRustle(vol, t) {
 function ambDrip(vol, t) {
     const o = audioCtx.createOscillator();
     const g = audioCtx.createGain();
-    o.connect(g); g.connect(audioCtx.destination);
+    o.connect(g); connectKittyAudio(g, 'music');
     o.type = 'sine';
     o.frequency.setValueAtTime(900 + Math.random() * 300, t);
     o.frequency.exponentialRampToValueAtTime(180, t + 0.14);
@@ -419,7 +442,7 @@ function ambDrip(vol, t) {
 function ambBubble(vol, t) {
     const o = audioCtx.createOscillator();
     const g = audioCtx.createGain();
-    o.connect(g); g.connect(audioCtx.destination);
+    o.connect(g); connectKittyAudio(g, 'music');
     o.type = 'sine';
     const f0 = 250 + Math.random() * 300;
     o.frequency.setValueAtTime(f0, t);
@@ -436,7 +459,7 @@ function ambFlute(vol, t) {
         const t0 = t + i * 0.32;
         const o = audioCtx.createOscillator();
         const g = audioCtx.createGain();
-        o.connect(g); g.connect(audioCtx.destination);
+        o.connect(g); connectKittyAudio(g, 'music');
         o.type = 'sine';
         o.frequency.value = noteFreq(440, semi);
         const lfo = audioCtx.createOscillator();
@@ -458,7 +481,7 @@ function ambBell(vol, t) {
     [0, 7, 12].forEach((semi) => {
         const o = audioCtx.createOscillator();
         const g = audioCtx.createGain();
-        o.connect(g); g.connect(audioCtx.destination);
+        o.connect(g); connectKittyAudio(g, 'music');
         o.type = 'triangle';
         o.frequency.value = noteFreq(659.25, semi);
         g.gain.setValueAtTime(0, t);
@@ -473,7 +496,7 @@ function ambCoo(vol, t) {
         const t0 = t + i * 0.14;
         const o = audioCtx.createOscillator();
         const g = audioCtx.createGain();
-        o.connect(g); g.connect(audioCtx.destination);
+        o.connect(g); connectKittyAudio(g, 'music');
         o.type = 'sine';
         o.frequency.value = 440 * Math.pow(2, semi / 12) * 0.5;
         g.gain.setValueAtTime(0, t0);
@@ -487,7 +510,7 @@ function ambDesert(vol, t) {
     ambWind(vol, t, 1.8, 420);
     const o = audioCtx.createOscillator();
     const g = audioCtx.createGain();
-    o.connect(g); g.connect(audioCtx.destination);
+    o.connect(g); connectKittyAudio(g, 'music');
     o.type = 'sine';
     o.frequency.value = 110;
     g.gain.setValueAtTime(0, t);

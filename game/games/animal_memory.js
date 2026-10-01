@@ -107,7 +107,11 @@
     popPair(a, b);
     // speak the animal name first, then play its sound (no overlap)
     const playSound = ()=>{ try{ if(window.playAnimalSound) window.playAnimalSound(a.dataset.name); }catch(_){} };
-    try{ if(window.speech && window.speech.speak) window.speech.speak(nameMap[a.dataset.name] || a.dataset.name, playSound); else playSound(); }catch(_){ playSound(); }
+    try {
+      if (window.audioBuses) window.audioBuses.speakWithDuck(nameMap[a.dataset.name] || a.dataset.name, playSound);
+      else if (window.speech && window.speech.speak) window.speech.speak(nameMap[a.dataset.name] || a.dataset.name, playSound);
+      else playSound();
+    } catch (_) { playSound(); }
     // small celebrate hook: add a brief aria alert
     const msg = document.createElement('div'); msg.style.position='absolute'; msg.style.left='-9999px'; msg.setAttribute('role','status');     msg.textContent = 'Пар!'; document.body.appendChild(msg);
     setTimeout(()=> document.body.removeChild(msg), 800);

@@ -4,12 +4,24 @@
     'use strict';
 
     const AC = window.AudioContext || window.webkitAudioContext;
+    const sfxEvents = new Map([
+        ['jump', 'jump'],
+        ['coin', 'coin'],
+        ['win', 'goal'],
+        ['pop', 'pop'],
+        ['bump', 'bump'],
+    ]);
     let audioCtx = null;
     let noiseBuf = null;
 
     function init() {
         if (!audioCtx) audioCtx = new AC();
         return audioCtx;
+    }
+
+    function routeAudio(node, bus = 'music') {
+        if (window.audioBuses) window.audioBuses.connect(node, bus);
+        else node.connect(audioCtx.destination);
     }
 
     function noteFreq(root, semi) {
@@ -24,6 +36,11 @@
     }
 
     function play(type) {
+        const eventName = sfxEvents.get(type);
+        if (window.audioBuses && eventName) {
+            window.audioBuses.play(eventName);
+            return;
+        }
         if (!audioCtx) return;
         const now = audioCtx.currentTime;
 
@@ -31,7 +48,7 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            routeAudio(gain, 'sfx');
             osc.type = 'sine';
             osc.frequency.setValueAtTime(200, now);
             osc.frequency.exponentialRampToValueAtTime(500, now + 0.12);
@@ -43,7 +60,7 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            routeAudio(gain, 'sfx');
             osc.type = 'triangle';
             osc.frequency.setValueAtTime(987.77, now);
             osc.frequency.setValueAtTime(1318.51, now + 0.08);
@@ -57,7 +74,7 @@
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.connect(gain);
-                gain.connect(audioCtx.destination);
+                routeAudio(gain, 'sfx');
                 const start = now + (idx * 0.07);
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(freq, start);
@@ -71,7 +88,7 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            routeAudio(gain, 'sfx');
             osc.type = 'square';
             osc.frequency.setValueAtTime(600, now);
             osc.frequency.exponentialRampToValueAtTime(420, now + 0.05);
@@ -83,7 +100,7 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            routeAudio(gain, 'sfx');
             osc.type = 'square';
             osc.frequency.setValueAtTime(220, now);
             osc.frequency.exponentialRampToValueAtTime(110, now + 0.18);
@@ -148,7 +165,7 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            routeAudio(gain);
             osc.type = cfg.wave;
             osc.frequency.value = noteFreq(cfg.root, mel);
             gain.gain.setValueAtTime(0, t);
@@ -162,7 +179,7 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.connect(gain);
-            gain.connect(audioCtx.destination);
+            routeAudio(gain);
             osc.type = 'sine';
             osc.frequency.value = noteFreq(cfg.root, cfg.bass[bassIdx]);
             gain.gain.setValueAtTime(0, t);
@@ -201,7 +218,7 @@
             const base = 2200 + Math.random() * 1400;
             const o = audioCtx.createOscillator();
             const g = audioCtx.createGain();
-            o.connect(g); g.connect(audioCtx.destination);
+            o.connect(g); routeAudio(g);
             o.type = 'sine';
             o.frequency.setValueAtTime(base, t0);
             o.frequency.exponentialRampToValueAtTime(base * 1.4, t0 + 0.05);
@@ -218,7 +235,7 @@
             const t0 = t + k * 0.09;
             const o = audioCtx.createOscillator();
             const g = audioCtx.createGain();
-            o.connect(g); g.connect(audioCtx.destination);
+            o.connect(g); routeAudio(g);
             o.type = 'sine';
             o.frequency.value = 4300;
             g.gain.setValueAtTime(0, t0);
@@ -237,7 +254,7 @@
         f.type = 'lowpass';
         f.frequency.value = freq || 500;
         const g = audioCtx.createGain();
-        src.connect(f); f.connect(g); g.connect(audioCtx.destination);
+        src.connect(f); f.connect(g); routeAudio(g);
         const d = dur || 1.5;
         g.gain.setValueAtTime(0, t);
         g.gain.linearRampToValueAtTime(vol, t + d * 0.35);
@@ -255,7 +272,7 @@
             f.type = 'highpass';
             f.frequency.value = 1800 + Math.random() * 1400;
             const g = audioCtx.createGain();
-            src.connect(f); f.connect(g); g.connect(audioCtx.destination);
+            src.connect(f); f.connect(g); routeAudio(g);
             const t0 = t + k * (0.1 + Math.random() * 0.15);
             const d = 0.12 + Math.random() * 0.1;
             g.gain.setValueAtTime(0, t0);
@@ -268,7 +285,7 @@
     function ambDrip(vol, t) {
         const o = audioCtx.createOscillator();
         const g = audioCtx.createGain();
-        o.connect(g); g.connect(audioCtx.destination);
+        o.connect(g); routeAudio(g);
         o.type = 'sine';
         o.frequency.setValueAtTime(900 + Math.random() * 300, t);
         o.frequency.exponentialRampToValueAtTime(180, t + 0.14);
@@ -281,7 +298,7 @@
     function ambBubble(vol, t) {
         const o = audioCtx.createOscillator();
         const g = audioCtx.createGain();
-        o.connect(g); g.connect(audioCtx.destination);
+        o.connect(g); routeAudio(g);
         o.type = 'sine';
         const f0 = 250 + Math.random() * 300;
         o.frequency.setValueAtTime(f0, t);
@@ -298,7 +315,7 @@
             const t0 = t + i * 0.32;
             const o = audioCtx.createOscillator();
             const g = audioCtx.createGain();
-            o.connect(g); g.connect(audioCtx.destination);
+            o.connect(g); routeAudio(g);
             o.type = 'sine';
             o.frequency.value = noteFreq(440, semi);
             const lfo = audioCtx.createOscillator();
@@ -320,7 +337,7 @@
         [0, 7, 12].forEach((semi) => {
             const o = audioCtx.createOscillator();
             const g = audioCtx.createGain();
-            o.connect(g); g.connect(audioCtx.destination);
+            o.connect(g); routeAudio(g);
             o.type = 'triangle';
             o.frequency.value = noteFreq(659.25, semi);
             g.gain.setValueAtTime(0, t);
@@ -335,7 +352,7 @@
             const t0 = t + i * 0.14;
             const o = audioCtx.createOscillator();
             const g = audioCtx.createGain();
-            o.connect(g); g.connect(audioCtx.destination);
+            o.connect(g); routeAudio(g);
             o.type = 'sine';
             o.frequency.value = 440 * Math.pow(2, semi / 12) * 0.5;
             g.gain.setValueAtTime(0, t0);
@@ -349,7 +366,7 @@
         ambWind(vol, t, 1.8, 420);
         const o = audioCtx.createOscillator();
         const g = audioCtx.createGain();
-        o.connect(g); g.connect(audioCtx.destination);
+        o.connect(g); routeAudio(g);
         o.type = 'sine';
         o.frequency.value = 110;
         g.gain.setValueAtTime(0, t);
@@ -363,7 +380,7 @@
             const t0 = t + i * 0.09;
             const o = audioCtx.createOscillator();
             const g = audioCtx.createGain();
-            o.connect(g); g.connect(audioCtx.destination);
+            o.connect(g); routeAudio(g);
             o.type = 'square';
             o.frequency.value = noteFreq(220, semi);
             g.gain.setValueAtTime(0, t0);
@@ -382,7 +399,7 @@
         f.type = 'lowpass';
         f.frequency.value = 700;
         const g = audioCtx.createGain();
-        src.connect(f); f.connect(g); g.connect(audioCtx.destination);
+        src.connect(f); f.connect(g); routeAudio(g);
         const d = 1.4;
         g.gain.setValueAtTime(0, t);
         g.gain.linearRampToValueAtTime(vol, t + d * 0.5);

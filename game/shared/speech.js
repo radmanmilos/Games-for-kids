@@ -50,10 +50,21 @@
         pickVoice();
         window.speechSynthesis.onvoiceschanged = pickVoice;
     }
+    function cancelSpeech(notifyAudioBuses) {
+        if (speechAudio._currentFinish) {
+            speechAudio.removeEventListener('ended', speechAudio._currentFinish);
+            speechAudio.removeEventListener('error', speechAudio._currentFinish);
+            speechAudio._currentFinish = null;
+        }
+        speechAudio.pause();
+        speechAudio.currentTime = 0;
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        if (notifyAudioBuses && window.audioBuses) window.audioBuses.speechCancelled();
+    }
     window.speech = {
         speak(text, onDone) {
             if (!text) { if (onDone) onDone(); return; }
-            window.speech.cancel();
+            cancelSpeech(false);
             const file = speechFiles[text];
             if (file) {
                 speechAudio.src = assetRoot + file;
@@ -69,6 +80,7 @@
                     }
                     if (onDone) onDone();
                 };
+                if (window.audioBuses) window.audioBuses.registerMedia(speechAudio, 'speech');
                 // store finish so cancel() can remove the listeners safely
                 speechAudio._currentFinish = finish;
                 speechAudio.addEventListener('ended', finish, { once: true });
@@ -90,15 +102,7 @@
             }
         },
         cancel() {
-            // remove any pending finish listeners to avoid accumulation
-            if (speechAudio._currentFinish) {
-                speechAudio.removeEventListener('ended', speechAudio._currentFinish);
-                speechAudio.removeEventListener('error', speechAudio._currentFinish);
-                speechAudio._currentFinish = null;
-            }
-            speechAudio.pause();
-            speechAudio.currentTime = 0;
-            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            cancelSpeech(true);
         }
     };
 }());

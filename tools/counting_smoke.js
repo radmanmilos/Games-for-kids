@@ -11,7 +11,7 @@ const path = require('path');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function(){}};window.popSound=window.gentleMiss=window.successChime=window.celebrate=function(){}; true`;
+const STUB = `window.__audioEvents=[];window.speech={speak:function(t,cb){if(cb)cb();},cancel:function(){}};window.audioBuses.play=function(name){window.__audioEvents.push('play:'+name);};window.audioBuses.speakWithDuck=function(text,cb){window.__audioEvents.push('speak:'+text);if(cb)cb();}; true`;
 
 const CLICK = sel => `document.querySelector('${sel}').click(); true`;
 
@@ -54,6 +54,8 @@ const COUNT_ALL = `(function(){
   // Tap all tiles to count them
   const tapped = await h.evalv(COUNT_ALL);
   await sleep(150);
+  const speechRoutes = await h.evalv(`window.__audioEvents.filter(event => event.startsWith('speak:')).length`);
+  check('count labels route through shared speech bus', speechRoutes === L1.sceneTiles, String(speechRoutes));
   const afterCount = await h.evalv(`JSON.stringify({
     counted: document.querySelectorAll('#countScene .count-tile.counted').length,
     buttons: document.querySelectorAll('#countButtons button').length,

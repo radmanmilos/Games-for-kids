@@ -16,6 +16,10 @@
   }
 
   function successChime() {
+    if (window.audioBuses) {
+      window.audioBuses.play('correct');
+      return;
+    }
     if (window.tone) {
       window.tone(880, 0.08, 0, 'sine', 0.15);
       setTimeout(() => window.tone(1174, 0.1, 0, 'sine', 0.12), 70);
@@ -23,12 +27,20 @@
   }
 
   function gentleMiss() {
+    if (window.audioBuses) {
+      window.audioBuses.play('gentle-miss');
+      return;
+    }
     if (window.tone) window.tone(220, 0.12, 0, 'sine', 0.1);
   }
 
   function celebrate() {
     if (window.celebrate) {
       window.celebrate();
+      return;
+    }
+    if (window.audioBuses) {
+      window.audioBuses.play('celebration');
       return;
     }
     if (window.tone) {
@@ -48,7 +60,8 @@
       do { idx = Math.floor(Math.random() * phrases.length); } while (idx === lastRetry && phrases.length > 1);
       lastRetry = idx;
     }
-    if (window.speech && window.speech.speak) window.speech.speak(phrases[idx]);
+    if (window.audioBuses) window.audioBuses.speakWithDuck(phrases[idx]);
+    else if (window.speech && window.speech.speak) window.speech.speak(phrases[idx]);
   }
 
   function showHint(el) {

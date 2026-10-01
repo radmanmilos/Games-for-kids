@@ -18,6 +18,7 @@
         clearTimeout(el._timer);
         el._timer = setTimeout(() => el.classList.remove('show'), 1400);
         if (window.successChime) window.successChime();
-        if (window.speech && window.speech.speak) window.speech.speak('Браво!');
+        if (window.audioBuses) window.audioBuses.speakWithDuck('Браво!');
+        else if (window.speech && window.speech.speak) window.speech.speak('Браво!');
     };
 }());

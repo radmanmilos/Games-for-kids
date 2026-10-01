@@ -20,6 +20,7 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
     if (!ready) await h.sleep(300);
   }
   check('boot: game globals ready', ready === true, ready ? 'WORLDS + loadWorld present' : 'not ready');
+  await h.evalv(`window.audioBuses.play=function(){};window.audioBuses.connect=function(){};window.audioBuses.registerMedia=function(){};window.audioBuses.speakWithDuck=function(t,cb){if(cb)cb();}; true`);
 
   // Task 90: the character picker must show before the world loads.
   const picker = await h.evalv(`(() => {

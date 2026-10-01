@@ -53,7 +53,8 @@
     const next = () => {
       if (i >= phrases.length) { if (onDone) onDone(); return; }
       const text = phrases[i++];
-      if (window.speech && window.speech.speak) window.speech.speak(text, next);
+      if (window.audioBuses) window.audioBuses.speakWithDuck(text, next);
+      else if (window.speech && window.speech.speak) window.speech.speak(text, next);
       else next();
     };
     next();

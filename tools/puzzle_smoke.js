@@ -23,6 +23,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     if (!ready) await sleep(200);
   }
   check('puzzle page boots with scene preview + start button', ready);
+  await h.evalv(`window.audioBuses.play=function(){}; true`);
 
   const introPeek = await h.evalv(`document.getElementById('puzzlePeek').hidden && document.getElementById('puzzlePreviewOverlay').hidden`);
   check('peek button + overlay hidden on the intro screen', introPeek === true);

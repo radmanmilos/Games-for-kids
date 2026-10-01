@@ -56,19 +56,23 @@
     };
 
     window.popSound = function () {
+        if (window.audioBuses) { window.audioBuses.play('tap'); return; }
         window.tone(600, 0.15);
         window.tone(900, 0.12, 0.06);
     };
 
     window.flipSound = function () {
+        if (window.audioBuses) { window.audioBuses.play('flip'); return; }
         window.sweep(400, 950, 0.09, 0, 'sine', 0.18);
     };
 
     window.successChime = function () {
+        if (window.audioBuses) { window.audioBuses.play('correct'); return; }
         [523, 659, 784, 1047].forEach((frequency, index) => window.tone(frequency, 0.22, index * 0.11));
     };
 
     window.gentleMiss = function () {
+        if (window.audioBuses) { window.audioBuses.play('gentle-miss'); return; }
         window.tone(220, 0.25, 0, 'sine');
     };
 
@@ -116,6 +120,12 @@
     function playFoxSynth() {
         // short synthesized 'yip' sequence for fox
         // two quick pitches sliding down
+        if (window.audioBuses) {
+            window.audioBuses.playTone('sfx', 1200, 0.12, 'sine', 0.25);
+            window.audioBuses.playTone('sfx', 900, 0.08, 'sine', 0.25, 0.06);
+            window.audioBuses.playSweep('sfx', 1400, 800, 0.18, 'sine', 0.25, 0.14);
+            return;
+        }
         window.tone(1200, 0.12);
         window.tone(900, 0.08, 0.06);
         // small sweep ending
@@ -124,6 +134,12 @@
 
     function playChickenSynth() {
         // short cartoonish 'cluck' - two rapid descending toks
+        if (window.audioBuses) {
+            [[520, 0], [330, 0.1], [470, 0.2], [300, 0.3]].forEach(([frequency, delay]) => {
+                window.audioBuses.playTone('sfx', frequency, 0.07, 'sine', 0.25, delay);
+            });
+            return;
+        }
         window.tone(520, 0.07);
         window.tone(330, 0.06, 0.1);
         window.tone(470, 0.07, 0.2);
@@ -141,7 +157,9 @@
         if (!audio || audio.networkState === 3 || audio._failed) { fallback(); return; }
         clearTimeout(audio.stopTimer);
         try { audio.currentTime = 0; } catch (_) {}
-        const playback = audio.play();
+        const playback = window.audioBuses
+            ? window.audioBuses.play('animal-sound', audio)
+            : audio.play();
         if (playback) playback.catch(fallback);
         const maxDuration = { Dog: 1600, Cat: 1400, Cow: 1800, Lion: 1800, Elephant: 1600, Frog: 1600, Pig: 1000, Duck: 1800, Fox: 3000, Sheep: 1600, Horse: 2000, Chicken: 2500 }[name] || 1600;
         audio.stopTimer = setTimeout(() => { audio.pause(); audio.currentTime = 0; }, maxDuration);

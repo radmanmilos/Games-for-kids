@@ -11,7 +11,7 @@ const path = require('path');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-const STUB = `window.speech={speak:function(){},cancel:function(){}};window.popSound=window.gentleMiss=window.successChime=window.celebrate=function(){}; true`;
+const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audioBuses.play=function(){};window.audioBuses.speakWithDuck=function(t,cb){if(cb)cb();};window.celebrate=function(){}; true`;
 
 (async () => {
   const h = await start({ page: '/pages/shapes.html', tag: 'shapes-smoke', width: 1024, height: 800 });

@@ -22,6 +22,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     if (!ready) await sleep(200);
   }
   check('driving booted (window.__adv ready)', ready);
+  await h.evalv(`window.audioBuses.connect=function(){}; true`);
 
   const boot = await h.evalv(`(() => {
     const t = document.createElement('div');

@@ -13,7 +13,7 @@ const path = require('path');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // gentleMiss counts its calls: the "Прати светло" wrong-key path must never call it.
-const STUB = `window.__miss=0;window.speech={speak:function(){},cancel:function(){}};window.tone=window.popSound=function(){};window.gentleMiss=function(){window.__miss++;};window.celebrate=function(){};true`;
+const STUB = `window.__miss=0;window.speech={speak:function(){},cancel:function(){}};window.audioBuses.play=function(){};window.audioBuses.speakWithDuck=function(t,cb){if(cb)cb();};window.gentleMiss=function(){window.__miss++;};window.celebrate=function(){};true`;
 
 const CLICK = sel => `document.querySelector('${sel}').click(); true`;
 const LIT_IDX = `Array.from(document.querySelectorAll('.piano-key')).indexOf(document.querySelector('.piano-key.lit'))`;

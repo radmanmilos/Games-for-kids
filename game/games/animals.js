@@ -30,7 +30,8 @@ function playAnimal(){
   const a = animals[animalIdx];
   animalCard.classList.add('bounce');
   const playSound = ()=> playAnimalSound(a.name);
-  if(window.speech && window.speech.speak) window.speech.speak(animalNames[a.name] || a.name, playSound);
+  if (window.audioBuses) window.audioBuses.speakWithDuck(animalNames[a.name] || a.name, playSound);
+  else if(window.speech && window.speech.speak) window.speech.speak(animalNames[a.name] || a.name, playSound);
   else playSound();
   setTimeout(()=> animalCard.classList.remove('bounce'), 200);
 }
@@ -109,7 +110,8 @@ function recogPick(picked, el){
     recogAnswered = true;
     el.classList.add('recog-correct');
     if(window.speech && window.speech.speak){
-      window.speech.speak(animalNames[picked.name] || picked.name, ()=> playAnimalSound(picked.name));
+      if (window.audioBuses) window.audioBuses.speakWithDuck(animalNames[picked.name] || picked.name, () => playAnimalSound(picked.name));
+      else window.speech.speak(animalNames[picked.name] || picked.name, () => playAnimalSound(picked.name));
     } else {
       playAnimalSound(picked.name);
     }

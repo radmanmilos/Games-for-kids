@@ -16,7 +16,7 @@ const PIXELS = id => `(function(){const cv=document.getElementById('${id}');cons
 
 const CLEAR_OVERLAYS = `document.querySelectorAll('.celebration-overlay.show').forEach(e=>e.classList.remove('show')); true`;
 
-const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function(){}};window.popSound=window.gentleMiss=function(){}; true`;
+const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function(){}};window.audioBuses.play=function(){};window.audioBuses.speakWithDuck=function(t,cb){if(cb)cb();}; true`;
 
 const ENTER = kind => `document.querySelector('#tracingHub .activity-btn[data-activity="${kind}"]').click(); true`;
 const CLICK = id => `document.getElementById('${id}').click(); true`;

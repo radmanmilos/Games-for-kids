@@ -21,6 +21,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     if (!ready) await sleep(200);
   }
   check('candy boots at level 1 (16 tiles, score 0)', ready);
+  await h.evalv(`window.audioBuses.play=function(){};window.audioBuses.speakWithDuck=function(t,cb){if(cb)cb();};window.playAnimalSound=function(){}; true`);
 
   const lv1 = await h.evalv(`JSON.stringify((() => {
     const grid = document.getElementById('candyGrid');

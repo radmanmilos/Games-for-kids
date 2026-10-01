@@ -49,7 +49,8 @@
     function noteDuration(i) { return (song().hold[i] || 1) * song().tempo / 1000; }
 
     function playNote(i) {
-        if (window.tone) window.tone(KEY_FREQS[i], 1.0, 0, 'triangle');
+        if (window.audioBuses) window.audioBuses.play('note', KEY_FREQS[i]);
+        else if (window.tone) window.tone(KEY_FREQS[i], 1.0, 0, 'triangle');
         const k = keys[i];
         k.classList.remove('hit');
         void k.offsetWidth;
@@ -159,7 +160,8 @@
     }
 
     function announceSong() {
-        if (window.speech && song().speech) window.speech.speak(song().speech);
+        if (song().speech && window.audioBuses) window.audioBuses.speakWithDuck(song().speech);
+        else if (window.speech && song().speech) window.speech.speak(song().speech);
     }
 
     function setSong(i) {

@@ -12,7 +12,7 @@ const path = require('path');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function(){}};window.popSound=window.gentleMiss=window.successChime=function(){};window.celebrate=function(){};window.playAnimalSound=function(){}; true`;
+const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function(){}};window.audioBuses.play=function(){};window.audioBuses.speakWithDuck=function(t,cb){if(cb)cb();};window.celebrate=function(){};window.playAnimalSound=function(){}; true`;
 
 (async () => {
   const h = await start({ page: '/pages/coloring.html', tag: 'coloring-smoke', width: 1024, height: 800 });

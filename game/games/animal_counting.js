@@ -71,7 +71,10 @@
           counted++;
           t.classList.add('counted');
           if(typeof popSound === 'function') popSound();
-          if(window.speech && window.speech.speak && numberNames[counted]) window.speech.speak(numberNames[counted]);
+          if (numberNames[counted]) {
+            if (window.audioBuses) window.audioBuses.speakWithDuck(numberNames[counted]);
+            else if (window.speech && window.speech.speak) window.speech.speak(numberNames[counted]);
+          }
           if (counted >= n) {
             countingDone = true;
             result.innerText = 'Колико их има?';
@@ -151,7 +154,10 @@
         // play animal sound if available
         const animalName = screen.dataset.animal || 'Dog';
         if(typeof playAnimalSound === 'function') playAnimalSound(animalName);
-        if(window.speech && window.speech.speak && numberNames[val]) setTimeout(()=> window.speech.speak(numberNames[val]), 500);
+        if (numberNames[val]) setTimeout(() => {
+          if (window.audioBuses) window.audioBuses.speakWithDuck(numberNames[val]);
+          else if (window.speech && window.speech.speak) window.speech.speak(numberNames[val]);
+        }, 500);
         // animate
         animateSuccess();
         // lock choices: keep the correct choice visible and highlighted until user clicks Next

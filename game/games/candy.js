@@ -331,8 +331,14 @@ function hasPossibleMove(){
   return false;
 }
 
-function starSound(){ [784,988,1175,1568].forEach((f,i)=> tone(f,0.15,i*0.07,'sine')); }
-function starBoom(){ [300,450,650,900,1250].forEach((f,i)=> tone(f,0.25,i*0.05,'triangle')); }
+function starSound(){
+  if (window.audioBuses) { window.audioBuses.play('star-appear'); return; }
+  [784,988,1175,1568].forEach((f,i)=> tone(f,0.15,i*0.07,'sine'));
+}
+function starBoom(){
+  if (window.audioBuses) { window.audioBuses.play('star-explode'); return; }
+  [300,450,650,900,1250].forEach((f,i)=> tone(f,0.25,i*0.05,'triangle'));
+}
 
 function spawnStar(){
   candyBusy = true;
@@ -416,7 +422,8 @@ function showCombo(mult){
     { transform: 'translate(-50%,-60%) scale(1.2)', opacity: 1 },
     { transform: 'translate(-50%,-95%) scale(1)', opacity: 0 }
   ], { duration: 900, easing: 'cubic-bezier(.34,1.56,.64,1)' });
-  [660, 880, 1100].forEach((f,i)=> tone(f, 0.18, i*0.08, 'triangle'));
+  if (window.audioBuses) window.audioBuses.play('combo');
+  else [660, 880, 1100].forEach((f,i)=> tone(f, 0.18, i*0.08, 'triangle'));
 }
 
 function resolveMatches(){
@@ -531,4 +538,3 @@ function showHintMsg(text){
 
 const hintBtn = document.getElementById('candyHintBtn');
 if(hintBtn) hintBtn.addEventListener('click', ()=>{ if(window.popSound) window.popSound(); showCandyHint(); });
-

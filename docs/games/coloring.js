@@ -251,7 +251,8 @@ function renderColoringPalette(){
     swatch.setAttribute('aria-label', p.name);
     swatch.addEventListener('click', ()=>{
       coloringColor = p.color;
-      if(window.speech) window.speech.speak(p.name);
+      if (window.audioBuses) window.audioBuses.speakWithDuck(p.name);
+      else if (window.speech) window.speech.speak(p.name);
       renderColoringPalette();
     });
     paletteEl.appendChild(swatch);
@@ -297,7 +298,9 @@ function buildColoringScene(){
   coloringNameEl.textContent = coloringSceneLabels[scene.name] || scene.name;
   const progressEl = document.getElementById('coloringProgress');
   if(progressEl) progressEl.textContent = 'Животиња ' + (coloringSceneIdx + 1) + ' од ' + coloringSceneOrder.length;
-  if(window.speech) window.speech.speak('Обој ' + (coloringSceneLabels[scene.name] || scene.name));
+  const phrase = 'Обој ' + (coloringSceneLabels[scene.name] || scene.name);
+  if (window.audioBuses) window.audioBuses.speakWithDuck(phrase);
+  else if (window.speech) window.speech.speak(phrase);
 }
 
 function tapColoringRegion(el){

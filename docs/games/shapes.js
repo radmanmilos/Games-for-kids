@@ -72,7 +72,8 @@ function placePiece(piece, slot){
   slot.style.border = 'none';
   slot.style.background = 'transparent';
   successChime();
-  if(window.speech && window.speech.speak) window.speech.speak(shapeNames[piece.dataset.name] || piece.dataset.name);
+  if (window.audioBuses) window.audioBuses.speakWithDuck(shapeNames[piece.dataset.name] || piece.dataset.name);
+  else if(window.speech && window.speech.speak) window.speech.speak(shapeNames[piece.dataset.name] || piece.dataset.name);
   placedCount++;
   if(placedCount >= roundShapes.length){
     setTimeout(()=>{

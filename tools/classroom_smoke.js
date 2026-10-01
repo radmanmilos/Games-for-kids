@@ -3,16 +3,15 @@
    4 quiz games, wrong-answer nudge, correct-answer advance, session end + replay.
    Also tests category tabs: 4 tabs visible in activity mode, active state,
    tab switching between categories.
-   Only the speech + WebAudio primitives are stubbed, so the real shared feedback
-   wrappers (popSound / gentleMiss / successChime / celebrate) execute — that is
-   what pins the window.tone(freq, dur, delay, type, vol) signature (task 120).
+   Shared audio entry points are recorded so the activity proves it uses semantic
+   events and ducked speech; audio-buses_smoke.js covers Web Audio routing itself.
    Run:  node tools/classroom_smoke.js  (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function(){}};window.tone=window.sweep=function(){}; true`;
+const STUB = `window.__audioEvents=[];window.speech={speak:function(t,cb){if(cb)cb();},cancel:function(){}};window.audioBuses.play=function(name){window.__audioEvents.push('play:'+name);};window.audioBuses.speakWithDuck=function(text,cb){window.__audioEvents.push('speak:'+text);if(cb)cb();}; true`;
 
 const CLICK = sel => `document.querySelector('${sel}').click(); true`;
 
@@ -81,6 +80,12 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
   })`);
   const CT = JSON.parse(colorsTab);
   check('tab switch to Боје updates activity', CT.activeTab === 'colors' && CT.title === 'Боје', colorsTab);
+
+  await h.evalv(`window.__audioEvents.length=0; true`);
+  await h.evalv(CLICK('#activityGrid .class-tile'));
+  const classroomAudio = JSON.parse(await h.evalv(`JSON.stringify(window.__audioEvents)`));
+  check('classroom routes taps and labels through shared audio buses',
+    classroomAudio[0] === 'play:tap' && classroomAudio.some(event => event.startsWith('speak:')), classroomAudio.join('|'));
 
   // Back to hub
   await h.evalv(CLICK('#classroomBack'));

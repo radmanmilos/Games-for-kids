@@ -89,7 +89,7 @@
     });
     Q('kidsProgress').textContent = (index + 1) + ' од ' + session.length;
     Q('kidsFeedback').textContent = '';
-    window.speech.speak(cfg.speakOf(item));
+    window.audioBuses.speakWithDuck(cfg.speakOf(item));
   }
 
   function pick(btn, isAnswer) {
@@ -100,7 +100,7 @@
       if (window.popSound) window.popSound();
       btn.classList.add('correct');
       Q('kidsFeedback').textContent = SERBIAN.praise[0];
-      window.speech.speak(CONFIG[kind].speakOf(session[index]));
+      window.audioBuses.speakWithDuck(CONFIG[kind].speakOf(session[index]));
       setTimeout(() => {
         index++;
         if (index >= session.length) finish();
@@ -122,7 +122,7 @@
 
   Q('kidsPrompt').addEventListener('click', () => {
     if (busy || !session.length) return;
-    window.speech.speak(CONFIG[kind].speakOf(session[index]));
+    window.audioBuses.speakWithDuck(CONFIG[kind].speakOf(session[index]));
   });
   Q('kidsReplay').addEventListener('click', () => {
     if (window.popSound) window.popSound();

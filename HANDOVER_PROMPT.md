@@ -6,9 +6,9 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — R14 / task 174 DONE
+## Current session — R15 / task 175 DONE; R16 next
 
-R8 / task 169 is complete and pushed as `57e3724`. R9 / task 170 was pushed as `57dbc2a`; R10 / task 171 was pushed as `6be5474`, and R11 / task 172 was pushed as `2669955` on 2026-10-01. R9 screenshot capture covers hub + all 16 `screenshot:true` apps at five viewports = 85 images; fixed-frame captures repeated pixel-identically. Its reviewed PNGs and manifest are under `resources/visual-baselines/`, with replacement requiring full-matrix `--approve-baseline`.
+R8 / task 169 is complete and pushed as `57e3724`. R9 / task 170 was pushed as `57dbc2a`; R10 / task 171 as `6be5474`; R11 / task 172 as `2669955`; R13 / task 173 as `3ee9218`; and R14 / task 174 as `8b2a7e0` on 2026-10-01. R9 screenshot capture covers hub + all 16 `screenshot:true` apps at five viewports = 85 images; fixed-frame captures repeated pixel-identically. Its reviewed PNGs and manifest are under `resources/visual-baselines/`, with replacement requiring full-matrix `--approve-baseline`.
 
 R9 validation: `node tools/visual_compare.js` compared 85/85 with 0 failures; `node tools/run_all.js visual_compare_smoke.js` passed 5/5; `node tools/check_release.js --concurrency 1 --resume` passed 26 tools / 559 checks, all guards green. No game files changed, so `docs/` remains an exact mirror.
 
@@ -24,11 +24,19 @@ R13 / task 173 completed and pushed as `3ee9218` on 2026-10-01. Removed only unu
 
 ## R14 / task 174 — Finish the Shared Serbian Data Layer
 
-R14 completed 2026-10-01. The registry's 17 titles now read from `game/data/serbian.js`; the hub and all registry pages load the shared data before other scripts. Migrated stable animal, shape, color, number, classroom, tracing, navigation, retry, reaction, and praise vocabulary into the relevant consumers. Shared speech mappings now derive phrase keys from this data, enforce list-length agreement, and were checked against 111 existing audio assets. Corrected the shared tracing label to `Зигзаг`.
+R14 completed and was pushed as `8b2a7e0` on 2026-10-01. The registry's 17 titles now read from `game/data/serbian.js`; the hub and all registry pages load the shared data before other scripts. Migrated stable animal, shape, color, number, classroom, tracing, navigation, retry, reaction, and praise vocabulary into the relevant consumers. Shared speech mappings now derive phrase keys from this data, enforce list-length agreement, and were checked against 111 existing audio assets. Corrected the shared tracing label to `Зигзаг`.
 
 Added `tools/audit_serbian_strings.js`, a non-blocking advisory that scanned 53 game HTML/JS files and reported 55 repeated Cyrillic strings. Manually reviewed the remaining report: repeated page templates, context-dependent wording, and game-specific labels are intentionally left local.
 
-Validation: full battery 26 tools / 560 checks passed; tracing smoke passed 26 checks after the spelling correction; `validate_pages.js` validated all 17 pages; `check_fast.js` passed all 6 stages. Regenerated the offline inventory and synced `docs/`. ZIP creation remains blocked because `zip` is not installed. Task 156's profiling item remains independently IN PROGRESS. Next roadmap item: R15 — Finish Shared Audio Architecture Adoption.
+Validation: full battery 26 tools / 560 checks passed; tracing smoke passed 26 checks after the spelling correction; `validate_pages.js` validated all 17 pages; `check_fast.js` passed all 6 stages. Regenerated the offline inventory and synced `docs/`. ZIP creation remains blocked because `zip` is not installed. Task 156 is separately queued as NEW; its dedicated profiling work has not resumed. Next roadmap item: R16.
+
+## R15 / task 175 — Finish Shared Audio Architecture Adoption
+
+R15 is complete locally. Shared audio now routes through master/speech/music/SFX buses, semantic events, media gain control and speech ducking that restores on finish, timeout or cancellation. Migrated Counting, Memory, Shapes, Puzzle, Animals, Classroom, Coloring, Piano, Match Game and the Adventure family (including Explorer), while leaving Racing3D unchanged. The shared speech asset player, feedback and celebrations also participate in ducking.
+
+Added `tools/audio_buses_smoke.js` with deterministic fake-Web-Audio tests for bus separation, semantic events, Adventure routing, speech asset gain, duck/restore/cancel, and unavailable audio. Updated affected game smokes to stub/assert the new audio-bus APIs.
+
+Validation: targeted 17 smokes passed 378 checks; Adventure/Explorer retest passed 7 smokes / 172 checks; full battery passed 27 tools / 573 checks; `check_fast.js` passed all 6 stages. Regenerated the offline manifest and synced `docs/`. ZIP generation remains unavailable because `zip` is not installed. Changes have not yet been committed or pushed.
 
 ## Historical snapshot through R7
 
@@ -54,7 +62,7 @@ Validation: full battery 26 tools / 560 checks passed; tracing smoke passed 26 c
 
 ## Progress Tracker (R0–R27)
 
-**Task numbers below are the real `PROJECT_TASKS.md` numbers, not the roadmap's "suggested task number"** — those drifted (the roadmap proposed 155–178, but 155 became the user-reported-bug fix, 156 the resource-budget task and 163 landed R12 early). Unfiled roadmap items show `—`. **8/29 done (R0, R1, R2, R3, R4, R5, R6, R12).**
+**Task numbers below are the real `PROJECT_TASKS.md` numbers, not the roadmap's "suggested task number"** — those drifted (the roadmap proposed 155–178, but 155 became the user-reported-bug fix, 156 the resource-budget task and 163 landed R12 early). Unfiled roadmap items show `—`. **16/29 done (R0–R15).**
 
 | # | ID | Task | Status |
 |---|---|---|---|
@@ -66,16 +74,14 @@ Validation: full battery 26 tools / 560 checks passed; tracing smoke passed 26 c
 | 6 | R5 | — | DONE 2026-09-30 (task 165) — validation commands are one meaning each: `check_fast.js` (read-only 6-stage gate), `validate_generated.js`, `validate_workflow.js` added; `check_release.js` rewritten as a read-only release gate that self-enforces the contract |
 | 7 | R6 | 166 | DONE — true offline play E2E: one session, real offline controls (origin killed), 16 games driven with trusted input + geometry, **101 checks, 0 fail, 0 skip**; fixed 3 product bugs (dead back buttons in `explorer`/`parent`, racing3d start-modal trapping the back button, parent's update-check hanging forever offline) |
 | 8 | R7 | 167 + 168 | DONE 2026-10-01 - `app-registry.js` is the single source of truth (shared `tools/registry.js`; 8 tools rewired; runtime routes, validation, offline coverage and the game-file-to-smoke mapping all derived); 3 guard negative-test suites so the new checks provably can fail. **Task 168 is the one to remember: 3 harness bugs that made checks pass while proving nothing** - the Chrome debug port was derived arithmetically and ~9% were unbindable on Windows (the real cause of the "intermittent" touch_interruption failures), `close()` was not awaited, and `screenshot.js` could not fail (relative navigate = blank PNGs, override applied before navigation, missing `deviceScaleFactor` = all sizes byte-identical). Battery **24/24, 492 checks**. |
-| 9 | R8 | — | NEW — runtime error / console / unhandled-rejection gate |
+| 9 | R8 | 169 | DONE — runtime-error, console, unhandled-rejection and resource-failure gate. |
 | 10 | R9 | 170 | DONE 2026-10-01 — 85 reviewed baselines; deterministic decoded-pixel compare; explicit approval required for updates. |
 | 11 | R10 | 171 | DONE 2026-10-01 — pinned axe-core, 18-surface blocking gate, contrast fixes. |
 | 12 | R11 | 172 | DONE 2026-10-01 — blocking 180-cell Chromium/WebKit matrix; fixed portrait classroom overflow and covered coloring next button; 85 approved baselines refreshed. |
-| 11 | R10 | — | NEW — accessibility gate that measures the real product |
-| 12 | R11 | — | NEW — browser/device matrix as a real quality gate |
 | 13 | R12 | 163 | DONE — parent area has version + connection status + manual ZIP link (**ZIP link hidden per user decision 2026-09-30**); hub guard asserts the child launcher stays clean |
 | 14 | R13 | 173 | DONE — removed dead embedded Kitty/Explorer UI from the hub. |
 | 15 | R14 | 174 | DONE — stable shared Serbian vocabulary, speech mappings and advisory duplicate-string audit. |
-| 16 | R15 | — | NEW |
+| 16 | R15 | 175 | DONE — shared audio routing, semantic events, speech ducking and game-family adoption. |
 | 17 | R16 | — | NEW |
 | 18 | R17 | — | NEW |
 | 19 | R18 | — | NEW |
@@ -89,7 +95,7 @@ Validation: full battery 26 tools / 560 checks passed; tracing smoke passed 26 c
 | 27 | R26 | — | NEW — learning pilot: spatial concepts |
 | 28 | R27 | — | NEW — learning pilot: maze/path |
 | 29 | R27b | — | NEW |
-| — | *not a roadmap item* | 156 | IN PROGRESS — test-suite resource budget & speed; touch_interruption split into 4 shards, **`piano` profiling next** |
+| — | *not a roadmap item* | 156 | NEW — dedicated test-suite profiling is queued; existing resilience work (resume support and four touch-interruption shards) is already present. |
 
 ## Cross-platform setup
 

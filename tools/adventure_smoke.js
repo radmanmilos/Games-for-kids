@@ -25,6 +25,7 @@ async function waitReady(h) {
   // ---- DRIVE MODE (driving.html) ----
   const driveReady = await waitReady(h);
   check('drive mode: engine boots (window.__adv ready)', driveReady);
+  await h.evalv(`window.audioBuses.connect=function(){}; true`);
 
   const driveMode = await h.evalv(`window.__adv.mode`);
   check('drive mode: mode is drive', driveMode === 'drive');

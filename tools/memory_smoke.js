@@ -21,6 +21,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     if (!ready) await sleep(200);
   }
   check('memory page boots in easy mode (4 cards, 2x2)', ready);
+  await h.evalv(`window.audioBuses.play=function(){};window.audioBuses.speakWithDuck=function(t,cb){if(cb)cb();}; true`);
 
   const status0 = await h.evalv(`document.getElementById('memoryStatus').style.display`);
   check('status line hidden in toddler mode (easy)', status0 === 'none', status0);

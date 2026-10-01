@@ -11,7 +11,7 @@ const path = require('path');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function(){}};window.popSound=window.gentleMiss=window.successChime=function(){}; true`;
+const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function(){}};window.audioBuses.play=function(){};window.audioBuses.speakWithDuck=function(t,cb){if(cb)cb();};window.playAnimalSound=function(){}; true`;
 
 const CLICK = sel => `document.querySelector('${sel}').click(); true`;
 

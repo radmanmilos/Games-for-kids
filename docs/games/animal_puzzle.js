@@ -471,7 +471,8 @@
         dragging = true;
         piece.classList.add('dragging');
         piece.setPointerCapture(event.pointerId);
-        if(typeof tone === 'function') tone(520, 0.06, 0, 'triangle');
+        if (window.audioBuses) window.audioBuses.play('place');
+        else if(typeof tone === 'function') tone(520, 0.06, 0, 'triangle');
       });
       piece.tabIndex = 0;
       piece.addEventListener('keydown',(event)=>{
