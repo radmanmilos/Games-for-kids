@@ -23,10 +23,6 @@
  * The contract is enforced, not just documented: the generated artifacts are
  * fingerprinted before and after the run, and any change is a hard failure.
  *
- * One stage is ADVISORY, and says so in its output rather than quietly passing:
- * `axe_check.js --report` only becomes a blocking gate in R10. It runs, and its
- * result is printed — it just does not decide the exit code.
- *
  * R6 promoted `offline_smoke.mjs` from advisory to blocking. It had been
  * "known-red" because its phase 2 started a fresh profile with no service
  * worker, so it only verified static markup; the rewrite primes and cuts the
@@ -157,10 +153,9 @@ for (const g of ['registry_guards_negtest.js', 'route_contract_negtest.js', 'gam
 }
 
 if (DEEP) {
-  // 3+4. Blocking offline E2E (R6 promoted it), advisory accessibility report.
-  // Both print their real result; only the second one is non-blocking.
+  // The full release gate includes offline play and the R10 accessibility gate.
   stage('offline E2E (blocking)', node, [path.join(TOOLS, 'offline_smoke.mjs')], { timeout: 900000 });
-  stage('accessibility report (advisory)', node, [path.join(TOOLS, 'axe_check.js'), '--report'], { timeout: 900000, blocking: false });
+  stage('accessibility report (blocking)', node, [path.join(TOOLS, 'axe_check.js'), '--report'], { timeout: 900000 });
 }
 
 // ---------------------------------------------------------------------------

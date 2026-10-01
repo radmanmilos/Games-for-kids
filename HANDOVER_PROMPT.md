@@ -6,17 +6,17 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — R9 / task 170 DONE; R10 next
+## Current session — R10 / task 171 DONE; R11 next
 
-R8 / task 169 is complete and pushed as `57e3724`. R9 / task 170 completed 2026-10-01. Screenshot capture covers the hub and all 16 `screenshot:true` apps at five viewports = 85 images. It records commit/browser/capture/page/viewport/DPR metadata, seeds random state, and advances a fixed clock through exactly 60 animation frames. A full repeat was pixel-identical (0.0000% changed), with no browser runtime errors. `visual_compare.js` performs dependency-free PNG pixel comparisons, reports changed-pixel percentage and average RGB delta, and creates visual diffs on failure; `visual_compare_smoke.js` passes 5/5. User explicitly approved the initial baselines; 85 PNGs plus `manifest.json` are tracked under `resources/visual-baselines/`. Baseline replacement is only through full-matrix `--approve-baseline`.
+R8 / task 169 is complete and pushed as `57e3724`. R9 / task 170 completed and was pushed as `57dbc2a` on 2026-10-01. Screenshot capture covers the hub and all 16 `screenshot:true` apps at five viewports = 85 images. It records commit/browser/capture/page/viewport/DPR metadata, seeds random state, and advances a fixed clock through exactly 60 animation frames. A full repeat was pixel-identical (0.0000% changed), with no browser runtime errors. `visual_compare.js` performs dependency-free PNG pixel comparisons, reports changed-pixel percentage and average RGB delta, and creates visual diffs on failure; `visual_compare_smoke.js` passes 5/5. User explicitly approved the initial baselines; 85 PNGs plus `manifest.json` are tracked under `resources/visual-baselines/`. Baseline replacement is only through full-matrix `--approve-baseline`.
 
-Validation: `node tools/visual_compare.js` compared 85/85 with 0 failures; `node tools/run_all.js visual_compare_smoke.js` passed 5/5; `node tools/check_fast.js` passed 6/6. No game files changed, so `docs/` remains an exact mirror.
+R9 validation: `node tools/visual_compare.js` compared 85/85 with 0 failures; `node tools/run_all.js visual_compare_smoke.js` passed 5/5; `node tools/check_release.js --concurrency 1 --resume` passed 26 tools / 559 checks, all guards green. No game files changed, so `docs/` remains an exact mirror.
 
-The first full release-gate run found `games_map_negtest.js` treating the new global tooling smokes as per-game coverage requirements. Updated the guard to exclude runtime-error and visual-comparison tooling smokes. Final `node tools/check_release.js --concurrency 1 --resume` passed: 26 tools / 559 checks, all guards green; the release gate confirmed it wrote nothing.
+R10 / task 171 completed 2026-10-01. Pinned axe-core 4.10.2 is vendored under `tools/vendor/` with its MPL-2.0 license and SHA-256 validation; no runtime app or CDN dependency. `axe_check.js` scans hub + 16 child games + parent, fails on serious/critical findings or incomplete coverage, and reports moderate/minor totals. CI and `check_release.js --release` are blocking. Fixed two serious contrast issues on animal-memory difficulty buttons. Full scan: 18/18 clean, zero runtime errors; invalid-page negative test exited 2. `node tools/check_release.js --release --concurrency 1 --resume`: 26/26 tools, 559 checks, offline E2E and accessibility passed; gate confirmed read-only. Synced `docs/` after the page/manifest update. The ZIP phase of `build_offline.js` could not run because `zip` is unavailable; `docs/game-offline.zip` remains intentionally absent/hidden per the existing user decision.
 
-## Next up after R9 (continue under user's standing approval unless a decision is needed)
+## Next up after R10 (continue under user's standing approval unless a decision is needed)
 
-Continue with R10 / task 161, Accessibility Gate That Measures the Real Product, in `resources/General_reviews/Petrin_svet_Fresh_Elevation_Roadmap_2026-09-29.md`; update docs, sync, commit and push each completed task. Progress: 11/29 complete (R0–R9 and R12). Task 156's profiling item remains independently marked IN PROGRESS.
+Continue with R11 / task 172, Browser / Device Matrix as a Real Quality Gate, in `resources/General_reviews/Petrin_svet_Fresh_Elevation_Roadmap_2026-09-29.md`; update docs, sync, commit and push each completed task. Progress: 12/29 complete (R0–R10 and R12). Task 156's profiling item remains independently marked IN PROGRESS.
 
 ## Historical snapshot through R7
 
@@ -56,6 +56,8 @@ Continue with R10 / task 161, Accessibility Gate That Measures the Real Product,
 | 8 | R7 | 167 + 168 | DONE 2026-10-01 - `app-registry.js` is the single source of truth (shared `tools/registry.js`; 8 tools rewired; runtime routes, validation, offline coverage and the game-file-to-smoke mapping all derived); 3 guard negative-test suites so the new checks provably can fail. **Task 168 is the one to remember: 3 harness bugs that made checks pass while proving nothing** - the Chrome debug port was derived arithmetically and ~9% were unbindable on Windows (the real cause of the "intermittent" touch_interruption failures), `close()` was not awaited, and `screenshot.js` could not fail (relative navigate = blank PNGs, override applied before navigation, missing `deviceScaleFactor` = all sizes byte-identical). Battery **24/24, 492 checks**. |
 | 9 | R8 | — | NEW — runtime error / console / unhandled-rejection gate |
 | 10 | R9 | 170 | DONE 2026-10-01 — 85 reviewed baselines; deterministic decoded-pixel compare; explicit approval required for updates. |
+| 11 | R10 | 171 | DONE 2026-10-01 — pinned axe-core, 18-surface blocking gate, contrast fixes. |
+| 12 | R11 | 172 | NEW — browser/device quality matrix. |
 | 11 | R10 | — | NEW — accessibility gate that measures the real product |
 | 12 | R11 | — | NEW — browser/device matrix as a real quality gate |
 | 13 | R12 | 163 | DONE — parent area has version + connection status + manual ZIP link (**ZIP link hidden per user decision 2026-09-30**); hub guard asserts the child launcher stays clean |

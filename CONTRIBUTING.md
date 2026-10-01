@@ -33,7 +33,7 @@ Before opening a PR, run the smallest targeted check that covers your change:
 - Animals / Shapes / Counting / Coloring → `node tools/animals_smoke.js`, `node tools/shapes_smoke.js`, `node tools/counting_smoke.js`, `node tools/coloring_smoke.js`
 - Everything at once → `node tools/check_all.js` (syntax + the full battery; add `--docs` after any `game/` change). `node tools/run_all.js --list` shows the battery, `--game <name>` narrows it, `--resume` survives a host that kills the process.
 - Quick read-only gate (~9 s, writes nothing) → `node tools/check_fast.js`. This is exactly what CI's `fast` job runs.
-- Before a release → `node tools/check_release.js` (read-only: `check_fast` + the whole battery).
+- Before a release → `node tools/check_release.js --release` (read-only: `check_fast` + the whole battery + blocking offline and accessibility gates).
 
 If a smoke does not exist for the game you changed, run the page manually in Live Server and verify the interaction visually.
 
@@ -46,13 +46,13 @@ If a smoke does not exist for the game you changed, run the page manually in Liv
 | `setup` | derives the smoke list from `node tools/run_all.js --list --json` | every push/PR |
 | `fast` | `check_fast.js` — syntax, registry/metadata, CI-workflow topology, generated-artifact freshness, offline inventory, hub smoke (**no** game battery; read-only) | every push/PR |
 | `smoke` | one leg per smoke, `fail-fast: false`, `max-parallel: 6` | every push/PR |
-| `release` | offline E2E + a11y report (`continue-on-error`) | every push/PR |
+| `release` | blocking offline E2E + serious/critical accessibility scan | every push/PR |
 | `extended` | `play_matrix.mjs` (chromium + webkit × 5 viewports) | manual run or weekly |
 
 Consequences for contributors:
 
 - **A new smoke needs no workflow edit** — the matrix is generated from the battery. If you add `tools/*_smoke.js`, it is picked up automatically.
-- `axe_check.js --report` remains `continue-on-error` until R10; offline E2E is blocking, and `runtime_error_smoke.js` is part of the generated blocking smoke matrix.
+- `axe_check.js --report` is blocking for incomplete scans and serious/critical violations. Its pinned axe-core 4.10.2 tool asset is vendored under `tools/vendor/`; `game/` never depends on it. Moderate/minor findings remain visible in the page-by-page report without failing CI.
 - **No CI step or validator may regenerate what it inspects** (R5). If you edit `game/`, run `node tools/sync-docs.sh` (or `check_all.js --docs`) and commit the result; `check_fast.js` and `check_release.js` will *fail* on an unsynced `docs/` rather than fixing it, which is deliberate — a check that repairs what it inspects can never report a stale artifact.
 - `tools/check_release.js` is deliberately **not** a CI job: it re-runs the entire battery, which the `smoke` matrix already ran in parallel, one leg per job. Run it locally before a release.
 - The CI workflow's own shape is guarded by `tools/validate_workflow.js` (11 checks, runs inside `check_fast`), so the R4 fixes — a deleted tool reference, a matrix generated from the battery, `fail-fast: false`, a direct `needs` for every `needs.*.outputs` read — cannot silently regress.
@@ -61,7 +61,7 @@ Consequences for contributors:
 ## Task lifecycle
 
 - Mark the task **IN PROGRESS** in `PROJECT_TASKS.md` when starting and **DONE** with a dated note (who, what, why) when finished.
-- Current engineering task: **R10 / task 161 — accessibility gate that measures the real product**; R8 / task 169 and R9 / task 170 (operational visual regression) are complete.
+- R10 / task 171 (blocking accessibility gate) is complete. **Next: R11 / task 172 — browser/device matrix as a real quality gate.**
 - Refresh `README.md` and `HANDOVER_PROMPT.md` alongside it. Missing docs updates are a regression (see `AGENTS.md` → Working rhythm).
 - Never commit or push to `main` automatically — the user does that explicitly.
 

@@ -11,3 +11,7 @@
 # CRLF-tolerant and are compared through the canonical-bytes helper instead.
 .github/workflows/*.yml text eol=lf
 .github/workflows/*.yaml text eol=lf
+
+# Preserve the pinned upstream bytes checked by axe_check.js; autocrlf would
+# otherwise alter the SHA-256 on a Windows checkout.
+tools/vendor/axe-core-4.10.2.min.js text eol=lf

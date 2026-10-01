@@ -122,11 +122,11 @@ jobs:
         run: node tools/offline_smoke.mjs
         timeout-minutes: 10
 
-      # Informational only: axe-core is fetched from a CDN, and R10 is what turns
-      # the accessibility gate into a blocking one.
+      # R10: the pinned axe-core build is vendored under tools/vendor; serious or
+      # critical violations and incomplete scans both fail this release job.
       - name: Accessibility report
         run: node tools/axe_check.js --report
-        continue-on-error: true
+        timeout-minutes: 15
 
       # R7. The guards prove the checks they guard can actually FAIL: each one
       # breaks game/data/app-registry.js on purpose and requires a non-zero exit
