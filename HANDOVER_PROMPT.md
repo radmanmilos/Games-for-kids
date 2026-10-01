@@ -6,13 +6,17 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Latest completed session — R8 / task 169 DONE (2026-10-01)
+## Current session — R9 / task 170 DONE; R10 next
 
-The headless harness now captures page exceptions, `console.error`, unhandled promise rejections, same-origin failed resources, and relevant service-worker registration warnings; every smoke checks before exit. The new `runtime_error_smoke.js` scans all registry pages plus the hub and negative-tests each capture path. The full run passed **25 tools / 554 checks**, fast gate 6/6, offline E2E all 16 games. It exposed and fixed an `ellipse()` argument error in `animal_puzzle.js`. `docs/` is synced and the canonical manifest regenerated. R7 remains pushed as `3898a09`; R8 changes are local and uncommitted. Task 156 remains independently marked IN PROGRESS.
+R8 / task 169 is complete and pushed as `57e3724`. R9 / task 170 completed 2026-10-01. Screenshot capture covers the hub and all 16 `screenshot:true` apps at five viewports = 85 images. It records commit/browser/capture/page/viewport/DPR metadata, seeds random state, and advances a fixed clock through exactly 60 animation frames. A full repeat was pixel-identical (0.0000% changed), with no browser runtime errors. `visual_compare.js` performs dependency-free PNG pixel comparisons, reports changed-pixel percentage and average RGB delta, and creates visual diffs on failure; `visual_compare_smoke.js` passes 5/5. User explicitly approved the initial baselines; 85 PNGs plus `manifest.json` are tracked under `resources/visual-baselines/`. Baseline replacement is only through full-matrix `--approve-baseline`.
 
-## First thing next session — R9 visual regression (user decides)
+Validation: `node tools/visual_compare.js` compared 85/85 with 0 failures; `node tools/run_all.js visual_compare_smoke.js` passed 5/5; `node tools/check_fast.js` passed 6/6. No game files changed, so `docs/` remains an exact mirror.
 
-Continue the Fresh Elevation Roadmap (`resources/General_reviews/Petrin_svet_Fresh_Elevation_Roadmap_2026-09-29.md`). Progress: **10/29 complete** (R0–R8 and R12); R9 (visual regression operational baseline) is next. Current smoke battery: **25 tools**.
+The first full release-gate run found `games_map_negtest.js` treating the new global tooling smokes as per-game coverage requirements. Updated the guard to exclude runtime-error and visual-comparison tooling smokes. Final `node tools/check_release.js --concurrency 1 --resume` passed: 26 tools / 559 checks, all guards green; the release gate confirmed it wrote nothing.
+
+## Next up after R9 (continue under user's standing approval unless a decision is needed)
+
+Continue with R10 / task 161, Accessibility Gate That Measures the Real Product, in `resources/General_reviews/Petrin_svet_Fresh_Elevation_Roadmap_2026-09-29.md`; update docs, sync, commit and push each completed task. Progress: 11/29 complete (R0–R9 and R12). Task 156's profiling item remains independently marked IN PROGRESS.
 
 ## Historical snapshot through R7
 
@@ -51,7 +55,7 @@ Continue the Fresh Elevation Roadmap (`resources/General_reviews/Petrin_svet_Fre
 | 7 | R6 | 166 | DONE — true offline play E2E: one session, real offline controls (origin killed), 16 games driven with trusted input + geometry, **101 checks, 0 fail, 0 skip**; fixed 3 product bugs (dead back buttons in `explorer`/`parent`, racing3d start-modal trapping the back button, parent's update-check hanging forever offline) |
 | 8 | R7 | 167 + 168 | DONE 2026-10-01 - `app-registry.js` is the single source of truth (shared `tools/registry.js`; 8 tools rewired; runtime routes, validation, offline coverage and the game-file-to-smoke mapping all derived); 3 guard negative-test suites so the new checks provably can fail. **Task 168 is the one to remember: 3 harness bugs that made checks pass while proving nothing** - the Chrome debug port was derived arithmetically and ~9% were unbindable on Windows (the real cause of the "intermittent" touch_interruption failures), `close()` was not awaited, and `screenshot.js` could not fail (relative navigate = blank PNGs, override applied before navigation, missing `deviceScaleFactor` = all sizes byte-identical). Battery **24/24, 492 checks**. |
 | 9 | R8 | — | NEW — runtime error / console / unhandled-rejection gate |
-| 10 | R9 | — | NEW — visual regression operational |
+| 10 | R9 | 170 | DONE 2026-10-01 — 85 reviewed baselines; deterministic decoded-pixel compare; explicit approval required for updates. |
 | 11 | R10 | — | NEW — accessibility gate that measures the real product |
 | 12 | R11 | — | NEW — browser/device matrix as a real quality gate |
 | 13 | R12 | 163 | DONE — parent area has version + connection status + manual ZIP link (**ZIP link hidden per user decision 2026-09-30**); hub guard asserts the child launcher stays clean |

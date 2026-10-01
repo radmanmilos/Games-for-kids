@@ -63,21 +63,19 @@ const smokesForGameFile = loadMapping();
 const files = fs.readdirSync(GAMES).map(f => f.replace(/\.(js|mjs)$/, ''));
 say(files.length > 0, `read ${files.length} game files from game/games`);
 
-/* Every per-game smoke must be reachable from a page or a game file. The
-   whole-app smokes are intentionally excluded: hub_smoke, parent_smoke,
-   sw_update_smoke and the four touch_interruption shards are not per-game and
-   must never be triggered by editing one game's file - run_all.js maps
-   game/pages/* and game/games/* only, and reaches these by name or by the
-   broad fallback. */
-const WHOLE_APP_SMOKES = new Set([
+/* Only per-game smokes must be reachable from a page or game file. Whole-app
+   and tooling-level smokes are intentionally excluded: they exercise global
+   surfaces or test the harness itself, not one game changed by --since. */
+const NON_GAME_SMOKES = new Set([
   'hub_smoke', 'parent_smoke', 'sw_update_smoke',
   'touch_interruption_a_smoke', 'touch_interruption_b_smoke',
   'touch_interruption_c_smoke', 'touch_interruption_d_smoke',
+  'runtime_error_smoke', 'visual_compare_smoke',
 ]);
 const allSmokeNames = fs.readdirSync(path.join(ROOT, 'tools'))
   .filter(n => n.endsWith('_smoke.js'))
   .map(n => n.replace(/\.js$/, ''))
-  .filter(n => !WHOLE_APP_SMOKES.has(n));
+  .filter(n => !NON_GAME_SMOKES.has(n));
 const covered = new Set();
 for (const f of files) for (const s of smokesForGameFile(f)) covered.add(s);
 const pageSmokes = registryAll().map(a => a.smoke).filter(Boolean);

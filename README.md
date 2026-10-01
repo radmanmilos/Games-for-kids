@@ -281,7 +281,7 @@ Gameplay:
 - **Legacy cleanup (task 131):** removed `papper_kitty.html`, `racing.html`, `kitty-standalone.js` — all replaced by newer implementations.
 - **Play-aware tests (task 132):** memory smoke now covers audio-disabled, resize, and back-button scenarios (12 → 15 checks).
 - **Touch interruption tests (task 133):** shapes smoke now covers pointercancel, multi-touch, and page-hidden scenarios (13 → 16 checks).
-- **Visual regression (task 134):** `tools/screenshot.js` captures 36 screenshots (12 pages × 3 sizes) for visual regression testing.
+- **Visual regression (R9/task 170):** captures the hub and all 16 `screenshot:true` apps at five phone/tablet/desktop viewports (85 images). `node tools/visual_compare.js` compares decoded pixels against reviewed baselines; changed-pixel metrics and failure diffs are reported. Baselines live in `resources/visual-baselines/` and can be replaced only by explicitly running `node tools/visual_compare.js --approve-baseline` after reviewing the complete capture set.
 - **Animal art recovery (task 135):** reverted custom SVG illustrations — restored native Unicode emoji for all animal artwork (per Master Implementation Plan: custom SVGs were "visually too crude")
 - **Navigation arrow (task 126):** a large pulsing yellow arrow appears near the goal when the child is far away, pointing toward the finish — no text instructions.
 
@@ -544,7 +544,7 @@ Paper Kitty Adventure has been fully integrated into Petrin svet and the placeho
 - Navigation, audio, speech, and utilities are shared modules.
 - **Accessibility / reduced motion (task 83, 2026-08-07, REVERTED):** the shared `window.reducedMotion()` utility in `shared/utils.js` (JS gates) + `@media (prefers-reduced-motion: reduce)` collapse in `shared/accessibility.css` was implemented then **fully reverted per user decision** — the user's OS has `prefers-reduced-motion: reduce` active, so it stripped the memory card-flip, candy combo/hint/level-up, and obstacle-hit-particle animations that ARE the gameplay feedback for kids. All animations are restored. Two pre-existing task-79 split regressions were fixed along the way: driving's dashed road divider now renders (`roadTopY()` fix) and ocean/space obstacles draw again (restored `cfg.drawObstacle` dispatch).
 
-**Current focus: Phase 6 — Roadmap Cohesion.** R8 (runtime error capture) is complete; **R9 (visual regression baseline) is next**. The smoke suite now fails on uncaught runtime exceptions, console errors, unhandled rejections, and same-origin resource failures. See `PROJECT_TASKS.md` for task results and the [Development Roadmap](#development-roadmap) for phase history.
+**Current focus: Phase 6 — Roadmap Cohesion.** R8 (runtime error capture) and R9 (operational visual regression) are complete; **R10 (accessibility gate) is next**. The screenshot baseline covers 85 deterministic captures across 17 surfaces and five viewports; comparisons use decoded pixels and require explicit approval to replace baselines. See `PROJECT_TASKS.md` for task status and the [Development Roadmap](#development-roadmap) for phase history.
 
 ---
 

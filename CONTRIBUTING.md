@@ -18,6 +18,7 @@ Before opening a PR, run the smallest targeted check that covers your change:
 - Parent area (offline download, update check, reset, version) → `node tools/parent_smoke.js`
 - Service-worker update path → `node tools/sw_update_smoke.js`
 - Runtime exceptions, console errors, rejected promises and local resource failures → `node tools/runtime_error_smoke.js`
+- Visual baseline capture and pixel comparison → `node tools/visual_compare.js` (85 images; decoded pixels; failure diffs in `tools/screenshots/diff/`); algorithm smoke → `node tools/run_all.js visual_compare_smoke.js`. Replace the full baseline only after review, with the explicit `--approve-baseline` option.
 - Hub changes → `node tools/hub_smoke.js`
 - Kitty changes → `node tools/kitty_smoke.js`
 - Adventure engine / Driving / Ocean / Dino / Space → `node tools/adventure_smoke.js` (25 checks)
@@ -60,7 +61,7 @@ Consequences for contributors:
 ## Task lifecycle
 
 - Mark the task **IN PROGRESS** in `PROJECT_TASKS.md` when starting and **DONE** with a dated note (who, what, why) when finished.
-- Latest completed engineering milestone: **R8 / task 169 — runtime error, console error and unhandled-rejection capture**; see `PROJECT_TASKS.md` for the active task.
+- Current engineering task: **R10 / task 161 — accessibility gate that measures the real product**; R8 / task 169 and R9 / task 170 (operational visual regression) are complete.
 - Refresh `README.md` and `HANDOVER_PROMPT.md` alongside it. Missing docs updates are a regression (see `AGENTS.md` → Working rhythm).
 - Never commit or push to `main` automatically — the user does that explicitly.
 

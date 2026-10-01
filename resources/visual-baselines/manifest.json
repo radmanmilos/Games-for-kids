@@ -1,0 +1,575 @@
+{
+  "schemaVersion": 1,
+  "commitSha": "57e37242b9ba78edd56ceec8574fa9107dc82da1",
+  "browser": {
+    "product": "Chrome/154.0.8037.92",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/154.0.0.0 Safari/537.36",
+    "protocolVersion": "1.3"
+  },
+  "generatedAt": "2026-10-01T14:31:38.662Z",
+  "pageSet": [
+    "hub",
+    "animals",
+    "animal_counting",
+    "animal_memory",
+    "animal_puzzle",
+    "classroom",
+    "coloring",
+    "tracing",
+    "piano",
+    "shapes",
+    "matching_game",
+    "driving",
+    "ocean",
+    "dino",
+    "space",
+    "racing3d",
+    "explorer"
+  ],
+  "viewports": {
+    "phone-portrait": {
+      "width": 390,
+      "height": 844,
+      "deviceScaleFactor": 1,
+      "mobile": true
+    },
+    "phone-landscape": {
+      "width": 844,
+      "height": 390,
+      "deviceScaleFactor": 1,
+      "mobile": true
+    },
+    "tablet-portrait": {
+      "width": 820,
+      "height": 1180,
+      "deviceScaleFactor": 1,
+      "mobile": true
+    },
+    "tablet-landscape": {
+      "width": 1180,
+      "height": 820,
+      "deviceScaleFactor": 1,
+      "mobile": true
+    },
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "deviceScaleFactor": 1,
+      "mobile": false
+    }
+  },
+  "screenshots": [
+    {
+      "file": "hub_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 55028
+    },
+    {
+      "file": "hub_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 54255
+    },
+    {
+      "file": "hub_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 138174
+    },
+    {
+      "file": "hub_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 139305
+    },
+    {
+      "file": "hub_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 135416
+    },
+    {
+      "file": "animals_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 25945
+    },
+    {
+      "file": "animals_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 25427
+    },
+    {
+      "file": "animals_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 69018
+    },
+    {
+      "file": "animals_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 68493
+    },
+    {
+      "file": "animals_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 66678
+    },
+    {
+      "file": "animal_counting_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 21326
+    },
+    {
+      "file": "animal_counting_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 25789
+    },
+    {
+      "file": "animal_counting_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 67172
+    },
+    {
+      "file": "animal_counting_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 67265
+    },
+    {
+      "file": "animal_counting_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 55436
+    },
+    {
+      "file": "animal_memory_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 33162
+    },
+    {
+      "file": "animal_memory_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 42931
+    },
+    {
+      "file": "animal_memory_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 80690
+    },
+    {
+      "file": "animal_memory_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 81305
+    },
+    {
+      "file": "animal_memory_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 81833
+    },
+    {
+      "file": "animal_puzzle_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 30091
+    },
+    {
+      "file": "animal_puzzle_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 60265
+    },
+    {
+      "file": "animal_puzzle_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 70926
+    },
+    {
+      "file": "animal_puzzle_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 75810
+    },
+    {
+      "file": "animal_puzzle_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 72789
+    },
+    {
+      "file": "classroom_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 52184
+    },
+    {
+      "file": "classroom_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 59287
+    },
+    {
+      "file": "classroom_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 155890
+    },
+    {
+      "file": "classroom_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 165048
+    },
+    {
+      "file": "classroom_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 157881
+    },
+    {
+      "file": "coloring_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 49882
+    },
+    {
+      "file": "coloring_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 41980
+    },
+    {
+      "file": "coloring_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 103218
+    },
+    {
+      "file": "coloring_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 90822
+    },
+    {
+      "file": "coloring_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 87776
+    },
+    {
+      "file": "tracing_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 56508
+    },
+    {
+      "file": "tracing_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 44250
+    },
+    {
+      "file": "tracing_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 163520
+    },
+    {
+      "file": "tracing_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 129930
+    },
+    {
+      "file": "tracing_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 123317
+    },
+    {
+      "file": "piano_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 17349
+    },
+    {
+      "file": "piano_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 16709
+    },
+    {
+      "file": "piano_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 37407
+    },
+    {
+      "file": "piano_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 36911
+    },
+    {
+      "file": "piano_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 35964
+    },
+    {
+      "file": "shapes_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 12622
+    },
+    {
+      "file": "shapes_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 11639
+    },
+    {
+      "file": "shapes_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 23285
+    },
+    {
+      "file": "shapes_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 22333
+    },
+    {
+      "file": "shapes_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 21412
+    },
+    {
+      "file": "matching_game_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 74884
+    },
+    {
+      "file": "matching_game_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 66089
+    },
+    {
+      "file": "matching_game_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 207150
+    },
+    {
+      "file": "matching_game_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 207644
+    },
+    {
+      "file": "matching_game_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 180251
+    },
+    {
+      "file": "driving_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 49856
+    },
+    {
+      "file": "driving_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 58517
+    },
+    {
+      "file": "driving_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 68511
+    },
+    {
+      "file": "driving_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 80393
+    },
+    {
+      "file": "driving_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 76628
+    },
+    {
+      "file": "ocean_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 55664
+    },
+    {
+      "file": "ocean_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 54943
+    },
+    {
+      "file": "ocean_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 69668
+    },
+    {
+      "file": "ocean_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 74659
+    },
+    {
+      "file": "ocean_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 80584
+    },
+    {
+      "file": "dino_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 45331
+    },
+    {
+      "file": "dino_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 44662
+    },
+    {
+      "file": "dino_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 54444
+    },
+    {
+      "file": "dino_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 53187
+    },
+    {
+      "file": "dino_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 53168
+    },
+    {
+      "file": "space_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 61000
+    },
+    {
+      "file": "space_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 67117
+    },
+    {
+      "file": "space_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 82832
+    },
+    {
+      "file": "space_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 84603
+    },
+    {
+      "file": "space_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 90626
+    },
+    {
+      "file": "racing3d_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 61141
+    },
+    {
+      "file": "racing3d_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 52975
+    },
+    {
+      "file": "racing3d_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 51366
+    },
+    {
+      "file": "racing3d_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 85664
+    },
+    {
+      "file": "racing3d_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 87943
+    },
+    {
+      "file": "explorer_phone-portrait.png",
+      "width": 390,
+      "height": 844,
+      "bytes": 19552
+    },
+    {
+      "file": "explorer_phone-landscape.png",
+      "width": 844,
+      "height": 390,
+      "bytes": 18436
+    },
+    {
+      "file": "explorer_tablet-portrait.png",
+      "width": 820,
+      "height": 1180,
+      "bytes": 48142
+    },
+    {
+      "file": "explorer_tablet-landscape.png",
+      "width": 1180,
+      "height": 820,
+      "bytes": 47211
+    },
+    {
+      "file": "explorer_desktop.png",
+      "width": 1280,
+      "height": 800,
+      "bytes": 45459
+    }
+  ],
+  "approvedAt": "2026-10-01T14:31:38.724Z",
+  "approvedBy": "explicit --approve-baseline invocation"
+}

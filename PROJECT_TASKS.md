@@ -17,8 +17,12 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
-- 170. NEW — R9: Make Visual Regression Operational. (Next roadmap item; await user approval before starting.)
-    - Establish a useful, measurable visual baseline and verify screenshot differences reflect the real rendered page rather than blank or identical captures.
+- 170. DONE — R9: Make Visual Regression Operational. (2026-10-01, Ponytail Lazy Dev; user explicitly approved the initial baselines after review.)
+    - `screenshot.js` captures hub + all 16 registry apps with `screenshot:true` at the five roadmap viewports = 85 images. It records commit/browser/timestamp/page/viewport/DPR metadata, waits for fonts/images, seeds randomness, disables CSS motion, and advances a fixed clock exactly 60 animation frames.
+    - Added dependency-free PNG decode/encode and pixel comparison. It validates image dimensions, reports changed-pixel percentage and average RGB-channel delta (pixel delta 16; 0.1% changed-pixel threshold), and writes highlighted or side-by-side visual diffs under ignored `tools/screenshots/diff/` on failure. `visual_compare_smoke.js` proves PNG checksums/round-trip, pixel metrics, diff output, and dimension failure.
+    - User approved the initial capture set on 2026-10-01. Added 85 reviewed images and `resources/visual-baselines/manifest.json`; baseline changes require the explicit `--approve-baseline` operation and that operation rejects partial matrices.
+    - **Release-gate fix:** adding the global visual/runtime smokes exposed that `games_map_negtest.js` classified every `*_smoke.js` as per-game. It now explicitly excludes global tooling smokes alongside whole-app smokes; its negative and positive controls pass.
+    - **Validation:** full 85-image capture repeated with 0.0000% changed; `node tools/visual_compare.js` compared all 85 images with 0 failures; `node tools/run_all.js visual_compare_smoke.js` — 5/5; `node tools/check_release.js --concurrency 1 --resume` — fast gate green, 26/26 tools / 559 checks, all three guards green. No game files changed; `docs/` remains an exact mirror.
 - 169. DONE — R8: Runtime Error / Console / Unhandled-Rejection Gate. (2026-10-01, Ponytail Lazy Dev.)
     - Reusable CDP capture now covers uncaught exceptions, console errors, unhandled promise rejections, failed same-origin runtime resources, and relevant service-worker registration warnings. All headless smokes await `close()` so the gate contributes to their exit status; the touch-interruption shards assert through their own runner.
     - Added `runtime_error_smoke.js`, which visits the hub and all 17 registry surfaces with zero runtime errors, then injects an exception, console error, rejected promise, and missing script to prove each detector fires. The CI matrix discovers it automatically from `run_all.js --list`.
@@ -199,8 +203,7 @@ Important: The AI assistant and any contributor must read this file first when s
     - **Validation:** `node tools/touch_interruption_smoke.js --game animals` → 5/5 PASS.
 
 - 143. DONE — Master Plan, Task 10: Real Visual Regression. (2026-09-29, Ponytail Lazy Dev.)
-    - **IMPLEMENTED 2026-09-29.** Created `tools/visual_compare.js` — baseline-vs-current screenshot comparison. Byte-level diff with configurable threshold (default 2%). `--update` flag copies current to baseline. Workflow: `screenshot.js` → `visual_compare.js --update` (first run) → `visual_compare.js` (subsequent runs).
-    - **Validation:** `node tools/visual_compare.js` runs clean (no baselines yet — expected).
+    - **Original implementation, superseded by R9/task 170.** Used byte-level PNG comparison and a freely callable `--update`; R9 replaces it with decoded-pixel metrics and explicit full-matrix baseline approval.
 
 - 142. DONE — Master Plan, Task 9: Release Validation Orchestrator. (2026-09-29, Ponytail Lazy Dev.)
     - **IMPLEMENTED 2026-09-29.** Created `tools/check_release.js` — two-mode release validation. Fast mode (default): syntax + hub smoke. Release mode (--release): full QA stack (syntax, registry, metadata, all smokes, offline E2E, docs sync, offline package). Fixed `run_all.js` to use mock `window` for registry loading in Node.js.

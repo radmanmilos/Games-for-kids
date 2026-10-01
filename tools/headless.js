@@ -477,6 +477,11 @@ async function start({
   return {
     c, evalv, evalp, navigate, close, closeServer, port: httpPort, sleep,
     tap, press, release, hold, drag, dragTo, stroke, boxOf, waitFor,
+    browser: {
+      product: version.Browser || '',
+      userAgent: version['User-Agent'] || '',
+      protocolVersion: version['Protocol-Version'] || '',
+    },
     getRuntimeErrors: () => runtimeErrors.slice(),
     checkRuntimeErrors,
   };
