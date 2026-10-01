@@ -720,8 +720,8 @@
     "size": 2617
   },
   "pages/explorer.html": {
-    "sha256": "19f6f66055862ce7e36cfd3e882377c60da990fdb17305b1e76653182bbaac57",
-    "size": 7612
+    "sha256": "1362658a73070931aeec42763cd915afcb6948d9789ba964b5283e45510e67e5",
+    "size": 7626
   },
   "pages/matching_game.html": {
     "sha256": "d9c416457492a30a6fa862699a431ad0c3e5d6f8ba08a331f00ed30ac01839d5",
@@ -732,15 +732,15 @@
     "size": 2843
   },
   "pages/parent.html": {
-    "sha256": "bb6d88452b03e55a075e81614f5dc3e5da1a24216accac29780ff6dd34252bc6",
-    "size": 9922
+    "sha256": "fae9880e02d120cdbbe8fda4bc03353d7fac5428e69dd7793ea90e9bc54b2759",
+    "size": 10334
   },
   "pages/piano.html": {
     "sha256": "8545292b56cdd9dc4087907b00110c093f7394d17d1b970b3d5c101ed37c3095",
     "size": 10473
   },
   "pages/racing3d.html": {
-    "sha256": "9300d4e2c9ec8536b9bdce27b786eaf1695b71dc416dc9ef43a387a2ff17f1b9",
+    "sha256": "5420b36c15244aaa873e20a986e29ba76207883b33c54c220d09b50434c99ed1",
     "size": 13671
   },
   "pages/shapes.html": {

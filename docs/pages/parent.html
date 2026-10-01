@@ -36,7 +36,7 @@
 </head>
 <body>
   <div id="app">
-    <button class="back-btn" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <button id="back-btn" class="back-btn" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <div class="parent-card">
       <h1>🔒 За родитеље</h1>
       <div class="parent-meta">
@@ -174,6 +174,12 @@
           }
           if (data.type === 'check-result') {
             status.textContent = data.changed && data.changed > 0 ? 'Ажурирање доступно' : 'Нема ажурирања';
+          }
+          // Offline the manifest fetch in the worker fails, so the only answer the
+          // parent ever got was «Проверавам...» with the button stuck disabled.
+          if (data.type === 'check-error') {
+            status.textContent = 'Нема интернета — ажурирања се не могу проверити';
+            checkBtn.disabled = false;
           }
         });
       }

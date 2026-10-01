@@ -191,10 +191,123 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800, dpr = 1 } 
   };
   const navigate = url => c.send('Page.navigate', { url });
   const close = () => { srv.close(); killChromeByTag(profile); };
+  // Shut the origin down while keeping the browser alive. After this nothing can
+  // come off the wire, so "it still works" proves it came from the app's own cache.
+  const closeServer = () => srv.close();
+
+  // --- trusted input -------------------------------------------------------
+  // el.click() bypasses hit-testing, so a smoke can pass while a child cannot
+  // reach the control (task-120 anti-pattern). Everything below drives real
+  // gestures: geometry is proven first, then CDP dispatches a trusted event so
+  // capture/drag/touch code paths actually run.
+  const boxOf = selector => evalv(`(function(){
+    const e = document.querySelector(${JSON.stringify(selector)});
+    if (!e) return { ok: false, why: 'element not found' };
+    e.scrollIntoView({ block: 'center', inline: 'center' });
+    const r = e.getBoundingClientRect();
+    if (r.width < 1 || r.height < 1) return { ok: false, why: 'element has zero size' };
+    if (r.left < 0 || r.top < 0 || r.right > innerWidth || r.bottom > innerHeight)
+      return { ok: false, why: 'outside the viewport (' + Math.round(r.left) + ',' + Math.round(r.top) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height) + ')' };
+    // Prefer the centre, but a shape can leave its own bounding box empty (an
+    // L-shaped SVG region, a donut), so probe a few points before giving up.
+    const hits = t => { const p = document.elementFromPoint(t[0], t[1]); return !!p && (p === e || e.contains(p)); };
+    const pts = [[.5,.5],[.5,.35],[.5,.65],[.35,.5],[.65,.5],[.35,.35],[.65,.35],[.35,.65],[.65,.65]];
+    for (const [fx, fy] of pts) {
+      const x = r.left + r.width * fx, y = r.top + r.height * fy;
+      if (hits([x, y])) return { ok: true, x: x, y: y, rect: { l: r.left, t: r.top, w: r.width, h: r.height } };
+    }
+    const top = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    return { ok: false, why: 'covered by ' + (top ? (top.id || top.className || top.tagName) : 'nothing') };
+  })()`);
+
+  // A release must carry button:'left' or Chrome drops it — with button:'none'
+  // the game's key-up handler never runs and the control stays stuck down.
+  const mouse = (type, x, y, buttons) => c.send('Input.dispatchMouseEvent', {
+    type, x, y,
+    button: type === 'mouseMoved' && !buttons ? 'none' : 'left',
+    buttons, clickCount: buttons || type === 'mouseReleased' ? 1 : 0,
+  });
+  const pressAt = async (x, y) => { await mouse('mouseMoved', x, y, 0); await mouse('mousePressed', x, y, 1); };
+  const releaseAt = (x, y) => mouse('mouseReleased', x, y, 0);
+
+  // Tap = verify a child could reach it, then send a real press+release.
+  const tap = async selector => {
+    const b = await boxOf(selector);
+    if (!b.ok) return b;
+    await pressAt(b.x, b.y);
+    await releaseAt(b.x, b.y);
+    return b;
+  };
+  const drag = async (fromSel, toSel, steps = 12) => {
+    const a = await boxOf(fromSel), b = await boxOf(toSel);
+    if (!a.ok) return { ok: false, why: 'start ' + a.why };
+    if (!b.ok) return { ok: false, why: 'end ' + b.why };
+    await dragTo(a.x, a.y, b.x, b.y, steps);
+    return { ok: true };
+  };
+  // Same gesture, but the drop point is a viewport coordinate — for scatter-drag
+  // puzzles where the target is a computed cell, not a DOM node.
+  const dragTo = async (x1, y1, x2, y2, steps = 14) => {
+    await pressAt(x1, y1);
+    for (let i = 1; i <= steps; i++) {
+      await mouse('mouseMoved', x1 + (x2 - x1) * i / steps, y1 + (y2 - y1) * i / steps, 1);
+      await sleep(16);
+    }
+    await releaseAt(x2, y2);
+  };
+  // Scribble across an element — a dense zigzag, because one straight line can
+  // land under an ink threshold (tracing needs MIN_INK=40 grid cells).
+  const stroke = async (selector, steps = 60) => {
+    const a = await boxOf(selector);
+    if (!a.ok) return a;
+    // stay inside the element's own box — deriving points from the viewport
+    // origin puts the press on the page background, not the target
+    const L = a.rect.l + a.rect.w * 0.08, R = a.rect.l + a.rect.w * 0.92;
+    const T = a.rect.t + a.rect.h * 0.08, B = a.rect.t + a.rect.h * 0.92;
+    await pressAt(L, (T + B) / 2);
+    for (let i = 1; i <= steps; i++) {
+      const tri = Math.abs(((i / 6) % 2) - 1);   // triangle wave top↔bottom
+      await mouse('mouseMoved', L + (R - L) * (i / steps), T + (B - T) * tri, 1);
+      await sleep(8);
+    }
+    await releaseAt(R, (T + B) / 2);
+    return a;
+  };
+  const press = async selector => {
+    const b = await boxOf(selector);
+    if (!b.ok) return b;
+    await pressAt(b.x, b.y);
+    return b;
+  };
+  const release = async selector => {
+    const b = await boxOf(selector);
+    if (!b.ok) return b;
+    await releaseAt(b.x, b.y);
+    return b;
+  };
+  const hold = async (selector, ms) => {
+    const b = await press(selector);
+    if (!b.ok) return b;
+    await sleep(ms);
+    await releaseAt(b.x, b.y);
+    return b;
+  };
+  // Readiness wait: poll a condition unrelated to the assertion. Never a retry
+  // on the assertion itself — that would make it vacuous.
+  const waitFor = async (expression, { timeout = 8000, interval = 100, label = '' } = {}) => {
+    const t0 = Date.now();
+    for (;;) {
+      let v;
+      try { v = await evalv(expression); } catch { v = false; }
+      if (v && v !== false && !(typeof v === 'object' && v.__err)) return { ok: true, value: v };
+      if (Date.now() - t0 > timeout) return { ok: false, why: 'timed out waiting for ' + (label || expression) };
+      await sleep(interval);
+    }
+  };
 
   if (page) await navigate(`http://127.0.0.1:${httpPort}${page}`);
 
-  return { c, evalv, evalp, navigate, close, port: httpPort, sleep };
+  return { c, evalv, evalp, navigate, close, closeServer, port: httpPort, sleep, tap, press, release, hold, drag, dragTo, stroke, boxOf, waitFor };
 }
 
 module.exports = { start, serve, check, skip, sleep, getFails: () => fails, getSkips: () => skips };

@@ -112,15 +112,15 @@ jobs:
         with:
           node-version: '22'
 
-      # KNOWN RED, non-blocking: offline_smoke.mjs phase 2 starts a fresh
-      # profile with no service worker and then blocks 127.0.0.1 as well, so it
-      # only verifies static markup (R2 finding, task 153). R6 rebuilds it as a
-      # real single-session offline test; until then it must not gate a release,
-      # but it must keep running so its output stays visible.
+      # BLOCKING as of R6. This used to be continue-on-error because phase 2
+      # started a fresh profile with no service worker and then blocked
+      # 127.0.0.1 as well, so it only verified static markup (R2 finding, task
+      # 153) - a green that meant nothing. It now primes the cache and cuts the
+      # origin in ONE session and plays all 16 games with trusted input, so a
+      # failure here is a real offline regression and the release stops.
       - name: Offline E2E
         run: node tools/offline_smoke.mjs
         timeout-minutes: 10
-        continue-on-error: true
 
       # Informational only: axe-core is fetched from a CDN, and R10 is what turns
       # the accessibility gate into a blocking one.

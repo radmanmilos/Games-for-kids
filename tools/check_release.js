@@ -23,11 +23,15 @@
  * The contract is enforced, not just documented: the generated artifacts are
  * fingerprinted before and after the run, and any change is a hard failure.
  *
- * Two stages are ADVISORY, and say so in their output rather than quietly
- * passing: `offline_smoke.mjs` is known-red (R2 found its phase 2 starts a
- * fresh profile with no service worker, so it only verifies static markup; R6
- * rebuilds it) and `axe_check.js --report` only becomes a blocking gate in R10.
- * They run, and their result is printed — they just do not decide the exit code.
+ * One stage is ADVISORY, and says so in its output rather than quietly passing:
+ * `axe_check.js --report` only becomes a blocking gate in R10. It runs, and its
+ * result is printed — it just does not decide the exit code.
+ *
+ * R6 promoted `offline_smoke.mjs` from advisory to blocking. It had been
+ * "known-red" because its phase 2 started a fresh profile with no service
+ * worker, so it only verified static markup; the rewrite primes and cuts the
+ * network in ONE session and drives all 16 games with trusted input, so a
+ * failure there is a real offline regression and the release must stop.
  */
 const { spawnSync } = require('child_process');
 const crypto = require('crypto');
@@ -144,8 +148,9 @@ if (!FAST_ONLY) {
 }
 
 if (DEEP) {
-  // 3+4. Advisory only — see the header. Both print their real result.
-  stage('offline E2E (advisory)', node, [path.join(TOOLS, 'offline_smoke.mjs')], { timeout: 900000, blocking: false });
+  // 3+4. Blocking offline E2E (R6 promoted it), advisory accessibility report.
+  // Both print their real result; only the second one is non-blocking.
+  stage('offline E2E (blocking)', node, [path.join(TOOLS, 'offline_smoke.mjs')], { timeout: 900000 });
   stage('accessibility report (advisory)', node, [path.join(TOOLS, 'axe_check.js'), '--report'], { timeout: 900000, blocking: false });
 }
 
