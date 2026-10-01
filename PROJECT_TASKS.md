@@ -17,6 +17,12 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 172. DONE — R11: Browser / Device Matrix as a Real Quality Gate. (Completed 2026-10-01, Ponytail Lazy Dev; user approved the minimal layout fixes and visual-baseline refresh.)
+    - `play_matrix.mjs` is now a blocking Chromium/WebKit gate across all 18 pages and five viewports. It checks runtime/resource errors, overflow, expected orientation and Racing3D's tablet rotation prompt, real touch delivery, and reachable unobstructed controls. Missing browsers count as skipped cells and exit 2. Phone-portrait cells test touch palette selection and tracing-canvas drawing; the candy board must have 16 distinct positions and finite layout animations settled before hit-testing.
+    - Fixed the classroom's portrait hub overflow and the coloring next-button/mode-toggle overlap. Controls inside scrollable UI are scrolled into view and hit-tested; controls behind active modals are excluded.
+    - WebKit lacked `AudioContext` on this host; synthesized effects now warn once and safely disable rather than aborting game actions.
+    - User explicitly approved refreshing the visual baseline on 2026-10-01. `visual_compare.js --approve-baseline` refreshed all 85 images; a repeated comparison was pixel-identical (85/85, 0.0000% changed).
+    - **Validation:** full matrix 180/180 cells, zero skips; `classroom_smoke.js` 18/18; `coloring_smoke.js` 23/23; `check_fast.js` 6/6; `check_release.js --release --concurrency 1 --resume` 26 tools / 559 checks, all green and read-only. Regenerated the offline inventory and synced `docs/`; ZIP creation remains unavailable because `zip` is not installed, consistent with the existing hidden-link decision.
 - 171. DONE — R10: Accessibility Gate That Measures the Real Product. (2026-10-01, Ponytail Lazy Dev, per user's standing approval to continue roadmap work.)
     - Vendored axe-core 4.10.2 in `tools/vendor/` with MPL-2.0 license, pinned SHA-256 and version check; no CDN/cache dependency, package install, or child-app runtime asset.
     - `axe_check.js` scans the hub, all 16 registry children and parent (18 surfaces), reuses one browser with readiness waits, reports impact totals, exits 1 for serious/critical violations under `--report`, and exits 2 for a missing asset, integrity mismatch, invalid/missing page, or incomplete scan. Moderate/minor findings remain separately reported.

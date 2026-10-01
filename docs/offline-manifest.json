@@ -704,12 +704,12 @@
     "size": 13246
   },
   "pages/classroom.html": {
-    "sha256": "4a3046fddd11dface736fb0de74745585d057212823e418d355282c0b5caa87b",
-    "size": 16012
+    "sha256": "e5856b6d43dd3186bc77f1289a81fb4bda4664f7d06b2433c3bb5947b7266722",
+    "size": 16166
   },
   "pages/coloring.html": {
-    "sha256": "67da301205f8b0f3f6b009c06ac5cb8914c86f84efb8bd651272d8cc0df6118f",
-    "size": 9019
+    "sha256": "3844eb349485f7e60c6fd655b4f2e3fd54e608de69e0033f599ee6f2299f6ea3",
+    "size": 9042
   },
   "pages/dino.html": {
     "sha256": "d0ea022ed47d2bee6bbdce2fdb087bc7e569d50724633d55eb87ea02e1995f3a",
@@ -768,8 +768,8 @@
     "size": 3489
   },
   "shared/audio.js": {
-    "sha256": "4199e66f027f69a01e6971ca2766f1425de1c49a7ccaa872bf7f1a34b7b343c2",
-    "size": 5896
+    "sha256": "d400197f47d4db3d1554081c70a9736fcc06ed3327cbe6f43f3afabf96df9be4",
+    "size": 6357
   },
   "shared/celebration.js": {
     "sha256": "3e3cb1091a3b17fcde2e1595d030d47f81cd71579b1090d19e4e20dc45a7af9f",

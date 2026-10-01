@@ -1,6 +1,13 @@
 (function () {
     let audioContext;
     let unlocked = false;
+    let unavailableReported = false;
+
+    function reportUnavailableAudio() {
+        if (unavailableReported) return;
+        unavailableReported = true;
+        console.warn('Web Audio API is unavailable; synthesized effects are disabled.');
+    }
 
     // iOS Safari only opens the output path once a real buffer is played inside
     // the gesture: resume() on its own settles asynchronously (~200-400ms), so the
@@ -17,7 +24,12 @@
     }
 
     window.ctx = function () {
-        if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const AudioContextType = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextType) {
+            reportUnavailableAudio();
+            return null;
+        }
+        if (!audioContext) audioContext = new AudioContextType();
         if (audioContext.state === 'suspended') {
             const p = audioContext.resume();
             if (p && p.catch) p.catch(() => {});
@@ -28,6 +40,7 @@
 
     window.tone = function (freq, dur, delay = 0, type = 'sine', vol = 0.25) {
         const audio = window.ctx();
+        if (!audio) return;
         const oscillator = audio.createOscillator();
         const gain = audio.createGain();
         oscillator.type = type;
@@ -61,6 +74,7 @@
 
     window.sweep = function (from, to, duration, delay = 0, type = 'sine', volume = 0.3) {
         const audio = window.ctx();
+        if (!audio) return;
         const oscillator = audio.createOscillator();
         const gain = audio.createGain();
         oscillator.type = type;

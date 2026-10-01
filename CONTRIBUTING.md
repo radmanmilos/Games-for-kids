@@ -47,7 +47,7 @@ If a smoke does not exist for the game you changed, run the page manually in Liv
 | `fast` | `check_fast.js` — syntax, registry/metadata, CI-workflow topology, generated-artifact freshness, offline inventory, hub smoke (**no** game battery; read-only) | every push/PR |
 | `smoke` | one leg per smoke, `fail-fast: false`, `max-parallel: 6` | every push/PR |
 | `release` | blocking offline E2E + serious/critical accessibility scan | every push/PR |
-| `extended` | `play_matrix.mjs` (chromium + webkit × 5 viewports) | manual run or weekly |
+| `extended` | blocking `play_matrix.mjs` (Chromium + WebKit × 5 viewports; missing-engine skips fail coverage) | manual run or weekly |
 
 Consequences for contributors:
 
@@ -61,7 +61,7 @@ Consequences for contributors:
 ## Task lifecycle
 
 - Mark the task **IN PROGRESS** in `PROJECT_TASKS.md` when starting and **DONE** with a dated note (who, what, why) when finished.
-- R10 / task 171 (blocking accessibility gate) is complete. **Next: R11 / task 172 — browser/device matrix as a real quality gate.**
+- R11 / task 172 (blocking browser/device matrix) is complete; **next after its commit/push: R13 / task 173 — hub cleanup after Explorer migration**.
 - Refresh `README.md` and `HANDOVER_PROMPT.md` alongside it. Missing docs updates are a regression (see `AGENTS.md` → Working rhythm).
 - Never commit or push to `main` automatically — the user does that explicitly.
 

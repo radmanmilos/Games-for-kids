@@ -6,17 +6,23 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — R10 / task 171 DONE; R11 next
+## Current session — R11 / task 172 DONE; R13 next
 
-R8 / task 169 is complete and pushed as `57e3724`. R9 / task 170 completed and was pushed as `57dbc2a` on 2026-10-01. Screenshot capture covers the hub and all 16 `screenshot:true` apps at five viewports = 85 images. It records commit/browser/capture/page/viewport/DPR metadata, seeds random state, and advances a fixed clock through exactly 60 animation frames. A full repeat was pixel-identical (0.0000% changed), with no browser runtime errors. `visual_compare.js` performs dependency-free PNG pixel comparisons, reports changed-pixel percentage and average RGB delta, and creates visual diffs on failure; `visual_compare_smoke.js` passes 5/5. User explicitly approved the initial baselines; 85 PNGs plus `manifest.json` are tracked under `resources/visual-baselines/`. Baseline replacement is only through full-matrix `--approve-baseline`.
+R8 / task 169 is complete and pushed as `57e3724`. R9 / task 170 was pushed as `57dbc2a`; R10 / task 171 was pushed as `6be5474` on 2026-10-01. R9 screenshot capture covers hub + all 16 `screenshot:true` apps at five viewports = 85 images; fixed-frame captures repeated pixel-identically. Its reviewed PNGs and manifest are under `resources/visual-baselines/`, with replacement requiring full-matrix `--approve-baseline`.
 
 R9 validation: `node tools/visual_compare.js` compared 85/85 with 0 failures; `node tools/run_all.js visual_compare_smoke.js` passed 5/5; `node tools/check_release.js --concurrency 1 --resume` passed 26 tools / 559 checks, all guards green. No game files changed, so `docs/` remains an exact mirror.
 
 R10 / task 171 completed 2026-10-01. Pinned axe-core 4.10.2 is vendored under `tools/vendor/` with its MPL-2.0 license and SHA-256 validation; no runtime app or CDN dependency. `axe_check.js` scans hub + 16 child games + parent, fails on serious/critical findings or incomplete coverage, and reports moderate/minor totals. CI and `check_release.js --release` are blocking. Fixed two serious contrast issues on animal-memory difficulty buttons. Full scan: 18/18 clean, zero runtime errors; invalid-page negative test exited 2. `node tools/check_release.js --release --concurrency 1 --resume`: 26/26 tools, 559 checks, offline E2E and accessibility passed; gate confirmed read-only. Synced `docs/` after the page/manifest update. The ZIP phase of `build_offline.js` could not run because `zip` is unavailable; `docs/game-offline.zip` remains intentionally absent/hidden per the existing user decision.
 
-## Next up after R10 (continue under user's standing approval unless a decision is needed)
+R11 / task 172 completed 2026-10-01. The Playwright gate now checks Chromium/WebKit across all 17 registry pages plus the hub at five viewports (180 cells): runtime/resource errors, horizontal overflow, media-query orientation and Racing3D's tablet rotation prompt, real touch delivery, and control visibility/hit-testing. Controls are scrolled into view only through normal scroll containers; active-modal underlays are not treated as currently actionable. Missing engines count as skipped cells and exit 2. On phone portrait, the matrix verifies a real touch selecting a coloring swatch and a touch-pointer stroke on the tracing canvas; candy readiness requires 16 distinct tile positions and settled finite CSS animations. CI runs the full gate weekly and on manual dispatch.
 
-Continue with R11 / task 172, Browser / Device Matrix as a Real Quality Gate, in `resources/General_reviews/Petrin_svet_Fresh_Elevation_Roadmap_2026-09-29.md`; update docs, sync, commit and push each completed task. Progress: 12/29 complete (R0–R10 and R12). Task 156's profiling item remains independently marked IN PROGRESS.
+The matrix found and fixed two real layout defects: portrait classroom hub choices overflowing the screen, and the coloring mode toggle covering the next-scene button. The Racing3D start control is reachable within its scrollable picker; its existing orientation decision remains unchanged. This host's WebKit build has no `AudioContext`, so `shared/audio.js` now warns once and safely disables synthesized effects rather than aborting actions. The user explicitly approved refreshing the affected visual snapshots on 2026-10-01; all 85 baselines were refreshed and a repeated comparison was pixel-identical (85/85, 0.0000% changed).
+
+R11 validation: full matrix 180/180 cells, 0 skipped; classroom smoke 18/18; coloring smoke 23/23; `node tools/check_fast.js` 6/6; `node tools/check_release.js --release --concurrency 1 --resume` 26 tools / 559 checks, read-only. Regenerated the offline inventory and synced `docs/`. ZIP creation could not run because `zip` is not installed; the archive remains absent/hidden per the existing user decision.
+
+## Next up after R11
+
+After committing and pushing task 172, continue with R13 / task 173, “Hub Cleanup After Explorer Migration,” in the roadmap. Remove only code proven dead; do not redesign the hub. Progress: 13/29 complete (R0–R12, with R13 still new); task 156's profiling item remains independently marked IN PROGRESS.
 
 ## Historical snapshot through R7
 
@@ -57,11 +63,11 @@ Continue with R11 / task 172, Browser / Device Matrix as a Real Quality Gate, in
 | 9 | R8 | — | NEW — runtime error / console / unhandled-rejection gate |
 | 10 | R9 | 170 | DONE 2026-10-01 — 85 reviewed baselines; deterministic decoded-pixel compare; explicit approval required for updates. |
 | 11 | R10 | 171 | DONE 2026-10-01 — pinned axe-core, 18-surface blocking gate, contrast fixes. |
-| 12 | R11 | 172 | NEW — browser/device quality matrix. |
+| 12 | R11 | 172 | DONE 2026-10-01 — blocking 180-cell Chromium/WebKit matrix; fixed portrait classroom overflow and covered coloring next button; 85 approved baselines refreshed. |
 | 11 | R10 | — | NEW — accessibility gate that measures the real product |
 | 12 | R11 | — | NEW — browser/device matrix as a real quality gate |
 | 13 | R12 | 163 | DONE — parent area has version + connection status + manual ZIP link (**ZIP link hidden per user decision 2026-09-30**); hub guard asserts the child launcher stays clean |
-| 14 | R13 | — | NEW |
+| 14 | R13 | 173 | NEW — hub cleanup after Explorer migration. |
 | 15 | R14 | — | NEW |
 | 16 | R15 | — | NEW |
 | 17 | R16 | — | NEW |
