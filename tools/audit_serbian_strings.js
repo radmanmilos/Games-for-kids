@@ -93,12 +93,12 @@ function scanHtml(source, file) {
   const starts = lineStarts(source);
   let visible = mask(source, /<!--[\s\S]*?-->/g);
   const scripts = [];
-  visible = visible.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, (tag, offset) => {
+  visible = visible.replace(/<script\b[^>]*>[\s\S]*?<\/script(?:\s+[^>]*)?>/gi, (tag, offset) => {
     const openEnd = tag.indexOf('>') + 1;
     scripts.push({ source: tag.slice(openEnd, tag.lastIndexOf('<')), offset: offset + openEnd });
     return tag.replace(/[^\n]/g, ' ');
   });
-  visible = visible.replace(/<style\b[^>]*>[\s\S]*?<\/style\s*>/gi, tag => tag.replace(/[^\n]/g, ' '));
+  visible = visible.replace(/<style\b[^>]*>[\s\S]*?<\/style(?:\s+[^>]*)?>/gi, tag => tag.replace(/[^\n]/g, ' '));
 
   const attributes = /\b(?:aria-label|alt|title|placeholder|value)\s*=\s*(["'])(.*?)\1/gi;
   for (const match of visible.matchAll(attributes)) add(starts, match.index + match[0].indexOf(match[2]), file, match[2]);
