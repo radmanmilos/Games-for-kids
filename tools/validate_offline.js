@@ -136,7 +136,7 @@ for (const page of htmlFiles) {
   for (const raw of refs) {
     const ref = raw.trim();
     if (!ref || extRef.test(ref) || ref.startsWith('data:') || ref.startsWith('#') ||
-        ref.startsWith('mailto:') || ref.startsWith('javascript:')) continue;
+        ref.startsWith('mailto:') || ref.startsWith('javascript:') || ref.startsWith('vbscript:')) continue;
     const clean = ref.split('?')[0].split('#')[0];
     if (!clean) continue;
     const resolved = path.posix.normalize(path.posix.join(dir, clean));
