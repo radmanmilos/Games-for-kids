@@ -584,12 +584,12 @@
     "size": 687458
   },
   "data/app-registry.js": {
-    "sha256": "176b63b0061f62e9080476f622be748530c3257a155fe5dbf21257c01c8372fa",
-    "size": 7138
+    "sha256": "c213e2e917760262c27aa4f68e89599e84a7b97873eccc62206bdd2c720ad79d",
+    "size": 7327
   },
   "data/serbian.js": {
-    "sha256": "75f5783874d86925ee87ed112db121c3a867157e9d82fd99d0bf59102403ec30",
-    "size": 4703
+    "sha256": "7931cd1806fc3884354bc3cf2a4ab25c33245dd94bbb1a2be02f6d926fe2404c",
+    "size": 6935
   },
   "games/adventure-modes.js": {
     "sha256": "268e5744538b62040ac3123d4ed2f437907429bcf464ccdc87ced48bf4845ebd",
@@ -604,32 +604,32 @@
     "size": 57346
   },
   "games/animal_counting.js": {
-    "sha256": "81a5796a8c4cf0446398796173675ca93143534c9e49851768c7fb3e18245999",
-    "size": 10470
+    "sha256": "8228aa4c1ca6a97608cea6ebfb2d018eb0ae1e9fcec9fba1b6277216bbf4699a",
+    "size": 10250
   },
   "games/animal_memory.js": {
-    "sha256": "b902ec7b32d68c9d991057c95dc580a8f394a3e69f41cdf51b4f216bd1e0cf16",
-    "size": 6485
+    "sha256": "f90493180cffe09c2051e9d54ccfe7bb5339c3de331e3d12dd3d51080a1778aa",
+    "size": 6364
   },
   "games/animal_puzzle.js": {
-    "sha256": "e47df9b1ae8ee2b133f38173d9bdf4f105d81c5af7e57e03ee202bc47f1892f7",
-    "size": 31296
+    "sha256": "e69ceb96c1036937df0ae2c3194b77ee0fc125cf32fca6d5ce7559e6ae389e14",
+    "size": 31220
   },
   "games/animals.js": {
-    "sha256": "6269d1d9260b1f11451cfa35dadef754fba3ca3a63fcc315d153d915c636a9c2",
-    "size": 5603
+    "sha256": "f40515d3297de3ddef67bb40be1da97cb059c18fa78530612d26f9729dba4bc3",
+    "size": 5415
   },
   "games/candy.js": {
     "sha256": "16101ccb525dd42aef375945c8d3773c5a92c24af2ad8f157d60b523b5ee1354",
     "size": 18899
   },
   "games/classroom.js": {
-    "sha256": "fa14517aea55421287ec87799909697b884d2570370345701ed286a3d4940718",
-    "size": 13185
+    "sha256": "6e51a8ce216be37e8234d8150798d0624d17e3b4c8dae50d8e2513f144a1d851",
+    "size": 9597
   },
   "games/coloring.js": {
-    "sha256": "611e45d9f2e2e756e52061ba0fb19db8b9bcf2a7a213c12da8444b6403e88eb5",
-    "size": 18077
+    "sha256": "09ebca58e49c5687678a78a3e2bd7b2276b09a69c669cafbe3bf680da78f143d",
+    "size": 17421
   },
   "games/dino.js": {
     "sha256": "dadb80a73e6ef42642a9ca2de2f048856974ded36edd7f551d911bdc8bf00d22",
@@ -640,8 +640,8 @@
     "size": 17984
   },
   "games/kids_games.js": {
-    "sha256": "1fdd96845e1a13ad5effafd3b1bd340eb1352a208e949c65eafa8e24f3ec0044",
-    "size": 5032
+    "sha256": "d13f996c833a98ff86a150d5419d26f8a0891b80de9d472bf20a75d5f6f0f92c",
+    "size": 5018
   },
   "games/kitty-standalone.js": {
     "sha256": "869c44e4e600489c69c88d8b6b6b21b9823a74d85a121df9f812f97e41d7e3fc",
@@ -660,100 +660,100 @@
     "size": 9441
   },
   "games/racing3d-config.js": {
-    "sha256": "8ddb67c70dd37f1866e48c103f77b5dcebbecfc59061e9fb4b2b82546a913e01",
-    "size": 4779
+    "sha256": "ca9901f2c1af8d0f885908ff7dcd2cd9e5e44e1bfff5378e32db6efa830bdf8d",
+    "size": 4817
   },
   "games/racing3d.mjs": {
-    "sha256": "84fb484ff8d733219d0bc8c9a9b0edf1b04306c520139aea1d890db41f9a0d4c",
-    "size": 97387
+    "sha256": "5e7065851954243b7317cd7227ce18b56db92dccbf156b9f9a150c293d9c8bae",
+    "size": 97419
   },
   "games/shapes.js": {
-    "sha256": "b6ddfddd45f2373b0e8130000023728d19bfecec59984b132a8dcbdfa1491a41",
-    "size": 6131
+    "sha256": "b662a038b20a90db3e3006570c2f2d0f0cd09bb76bcb8d4390b0ac0d2654a15d",
+    "size": 6161
   },
   "games/space.js": {
     "sha256": "3903542c53372eb4e90ad56e910d2d204e6707e1cfeecf638e192a3d6efdddd2",
     "size": 43992
   },
   "games/tracing.js": {
-    "sha256": "c1560f4037b9c6c4e0e6885e67b57af397591126af2da07d9e474ab2c8d9b14e",
-    "size": 19825
+    "sha256": "9a30282e04beb60411cab11e45d76858f33db2c31295c433d2e1c5e88ca078aa",
+    "size": 16957
   },
   "index.html": {
-    "sha256": "eb2aa3847d26100c86e0f6a1aaf67ffe3e9e6cb5207101f7a551c08412468ed3",
-    "size": 17123
+    "sha256": "1613393767cdb1135dbb6785bd34155c1a7dd11006449be72457cd8d473aa3fa",
+    "size": 17163
   },
   "manifest.json": {
     "sha256": "44cc7ca21e6e183718a4ceb5fd955c0e3b9727671c86c62cb92df3cc218b37d1",
     "size": 577
   },
   "pages/animal_counting.html": {
-    "sha256": "ad37df0b3c415f4e93b6d2a4a27168aa99edc2598df26d04edb729498d01db35",
+    "sha256": "8fea1cc72fdf8eef60e3813bbffbef1ad13a9a86a8db611c33d2113c4680fa24",
     "size": 5622
   },
   "pages/animal_memory.html": {
-    "sha256": "3c390f09b8b4aa438a28296594af5f4d956499ee8468473888fa165b52991c7b",
-    "size": 4953
+    "sha256": "ca895b4d60858c5324a4915dfae7bb18fe61d76a54461757fb75281a258269b0",
+    "size": 4998
   },
   "pages/animal_puzzle.html": {
-    "sha256": "d0893ee5858a13376b28f641c30cea694683b7c973a3cffe248442337a47c2a2",
+    "sha256": "0554e7d9701c37017b4e36ec624b4fbf07781049fea6f6d7d3cf19502cd3ef8d",
     "size": 4576
   },
   "pages/animals.html": {
-    "sha256": "2137efa1f0a6a7c0b53d7680e8abc0754141a15d489d2b6c43db6c3c58b72b29",
-    "size": 13246
+    "sha256": "0dd9be7d05bd568a45caa081e84eaa782702840d57da2da3824e73a763f2f1db",
+    "size": 13289
   },
   "pages/classroom.html": {
-    "sha256": "e5856b6d43dd3186bc77f1289a81fb4bda4664f7d06b2433c3bb5947b7266722",
+    "sha256": "2b34122264e02355fb35607e2caac6d35ac8b9abb2bdda008dcf794bdf338a81",
     "size": 16166
   },
   "pages/coloring.html": {
-    "sha256": "3844eb349485f7e60c6fd655b4f2e3fd54e608de69e0033f599ee6f2299f6ea3",
-    "size": 9042
+    "sha256": "500fabd1037641b446635d900d81e5122d8307ad7d6276e506d9d19788323f79",
+    "size": 9085
   },
   "pages/dino.html": {
-    "sha256": "d0ea022ed47d2bee6bbdce2fdb087bc7e569d50724633d55eb87ea02e1995f3a",
-    "size": 2862
+    "sha256": "c0c682e768d977f8def70b1e8862b5001fb1a815de36e158120c6bbdf155c679",
+    "size": 2905
   },
   "pages/driving.html": {
-    "sha256": "2af1affab6443e80a8e3799649266cc290171df857753f77d7bfa65eb8d10521",
-    "size": 2669
+    "sha256": "4006c5fb3f344f39bb71d8a84dba6f479c04414ce483331e8a9987fe659ba0d9",
+    "size": 2712
   },
   "pages/explorer.html": {
-    "sha256": "ebcd6a0c378414c2b0e880d788f87948af8a8bb7c12c78c46a5b432a765ec26f",
-    "size": 7676
+    "sha256": "d6f0f7dcbcab63be098b0b2b5eefb7f953f43ec2b8c4b7560e54a6e3ad3fd151",
+    "size": 7721
   },
   "pages/matching_game.html": {
-    "sha256": "9e3341ccb03b04e8929d8b5c86eceeb00985199baf286e658a7d9e9417c4a5f5",
-    "size": 13774
+    "sha256": "06c448b33b67026037f6512fc06dc9282b19877aa19956ed829cc97d269d1276",
+    "size": 13817
   },
   "pages/ocean.html": {
-    "sha256": "a0892cee030f4522c074c0623285999aec26c72c0b8ecb5172205bc52c9049ee",
-    "size": 2895
+    "sha256": "94963b5926cd131583bebf4bc436f6f0687a32f517ed1f1ca1688ebdb43fca7d",
+    "size": 2938
   },
   "pages/parent.html": {
-    "sha256": "49f6f94e56e43ff3203446c0f9b8357d27e207c02bafc354032c8356978c1b5b",
-    "size": 10384
+    "sha256": "87caa32feb5ae1eb9751e95b5eb67a50c500e1739ee7673a9badf594f74ccba9",
+    "size": 10429
   },
   "pages/piano.html": {
-    "sha256": "8dd92480a8aa7936c2c482644f26736f50db8a40fb0bd3bb1afa7ad59457e880",
-    "size": 10525
+    "sha256": "4804e38a37be0f8eb281e07aac1075f5d483943a744f36e2f24094a1512bb93b",
+    "size": 10568
   },
   "pages/racing3d.html": {
-    "sha256": "345987185d70bc5a766754c3b0e1420988a005b14b3f79e83a3583c0784a4c9b",
-    "size": 13723
+    "sha256": "99ff1671f84e5f7bb4c8c1096fc80159dd58e494ca3980edb2755e587c694bf4",
+    "size": 13766
   },
   "pages/shapes.html": {
-    "sha256": "3691e24a52b32de5d01e8d3b9134add5960a3e182072687f07e43aa6715053bb",
-    "size": 11714
+    "sha256": "1847abe31febb09f37fe9d4f644e8ae1b11ba8d9acb2ba49a1250c54a9c5801c",
+    "size": 11757
   },
   "pages/space.html": {
-    "sha256": "5c61198af0c666f2a898ccbcc9134465bdfb771ebef1983d8ca4ff830484b04f",
-    "size": 2897
+    "sha256": "7fd6bc48f18ade66a9efdfb6a79a8f5b8f0de733971cdaff0e7f6f5fa7774b22",
+    "size": 2940
   },
   "pages/tracing.html": {
-    "sha256": "1937537d527b7cfe20aa66efb651d759a8849e40983c8ea6e170fb31a063a635",
-    "size": 11193
+    "sha256": "8f4178d38e2ebf8c0ccd7ee7b18068c8010428ef78a9d1b1605976261284b8d5",
+    "size": 11236
   },
   "shared/accessibility.css": {
     "sha256": "8822734489b536c885c376b77a352b7954ed536279effdfcd3738510e5e5f010",
@@ -796,8 +796,8 @@
     "size": 7408
   },
   "shared/speech.js": {
-    "sha256": "ae318ffd18eb44624f8dc18294c90e940824386534f9daef1d9a1ab4fe66ebca",
-    "size": 8607
+    "sha256": "b0dc6813c0a79c0a682da3b0c3304748d568d032cd1bcfd9420c7c49997eeca3",
+    "size": 5537
   },
   "shared/utils.js": {
     "sha256": "c544f8c213352a6e67ffa503a6a2373f2515c9c26b3d8bfa36ac0fffd0883334",

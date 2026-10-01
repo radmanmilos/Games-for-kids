@@ -95,11 +95,12 @@
 
     // Kart color picker (recolors the chassis only — toddler-friendly flavor,
     // no stat differences).
+    const colors = window.SERBIAN.colors;
     const KART_COLORS = [
-        { name: 'Црвена', color: 0xe52521 },
-        { name: 'Плава', color: 0x3f9be0 },
-        { name: 'Зелена', color: 0x43c65f },
-        { name: 'Љубичаста', color: 0x9b6df0 }
+        { name: colors[0].name, color: 0xe52521 },
+        { name: colors[4].name, color: 0x3f9be0 },
+        { name: colors[3].name, color: 0x43c65f },
+        { name: colors[5].name, color: 0x9b6df0 }
     ];
 
     window.RACING3D_CONFIG = {

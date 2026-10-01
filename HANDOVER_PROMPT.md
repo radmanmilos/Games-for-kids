@@ -6,7 +6,7 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — R13 / task 173 DONE; R14 next
+## Current session — R14 / task 174 DONE
 
 R8 / task 169 is complete and pushed as `57e3724`. R9 / task 170 was pushed as `57dbc2a`; R10 / task 171 was pushed as `6be5474`, and R11 / task 172 was pushed as `2669955` on 2026-10-01. R9 screenshot capture covers hub + all 16 `screenshot:true` apps at five viewports = 85 images; fixed-frame captures repeated pixel-identically. Its reviewed PNGs and manifest are under `resources/visual-baselines/`, with replacement requiring full-matrix `--approve-baseline`.
 
@@ -20,11 +20,15 @@ The matrix found and fixed two real layout defects: portrait classroom hub choic
 
 R11 validation: full matrix 180/180 cells, 0 skipped; classroom smoke 18/18; coloring smoke 23/23; `node tools/check_fast.js` 6/6; `node tools/check_release.js --release --concurrency 1 --resume` 26 tools / 559 checks, read-only. Regenerated the offline inventory and synced `docs/`. ZIP creation could not run because `zip` is not installed; the archive remains absent/hidden per the existing user decision.
 
-R13 / task 173 completed 2026-10-01. Removed only unused embedded Kitty/iframe UI styles from `game/index.html`; the active Explorer button and `.hub-btn.kitty` appearance remain unchanged. `hub_smoke.js` now rejects iframe markup and legacy Kitty selectors. Current docs describe Explorer as a standalone page and its back navigation as registry-driven. Source reduction: 1,901 characters. Hub screenshots remained pixel-identical at all five approved viewports; `hub_smoke.js` and `node tools/check_fast.js` passed. Regenerated offline inventory and synced `docs/`; ZIP creation remains blocked by missing `zip`.
+R13 / task 173 completed and pushed as `3ee9218` on 2026-10-01. Removed only unused embedded Kitty/iframe UI styles from `game/index.html`; the active Explorer button and `.hub-btn.kitty` appearance remain unchanged. `hub_smoke.js` now rejects iframe markup and legacy Kitty selectors. Current docs describe Explorer as a standalone page and its back navigation as registry-driven. Source reduction: 1,901 characters. Hub screenshots remained pixel-identical at all five approved viewports; `hub_smoke.js` and `node tools/check_fast.js` passed. Regenerated offline inventory and synced `docs/`; ZIP creation remains blocked by missing `zip`.
 
-## Next: R14 — Finish the Shared Serbian Data Layer
+## R14 / task 174 — Finish the Shared Serbian Data Layer
 
-Follow the roadmap's small-domain migration order; avoid blind replacements, preserve genuinely game-specific phrases, and add a non-blocking audit report for likely duplicated child-facing Cyrillic strings. Task 156's profiling item remains independently marked IN PROGRESS.
+R14 completed 2026-10-01. The registry's 17 titles now read from `game/data/serbian.js`; the hub and all registry pages load the shared data before other scripts. Migrated stable animal, shape, color, number, classroom, tracing, navigation, retry, reaction, and praise vocabulary into the relevant consumers. Shared speech mappings now derive phrase keys from this data, enforce list-length agreement, and were checked against 111 existing audio assets. Corrected the shared tracing label to `Зигзаг`.
+
+Added `tools/audit_serbian_strings.js`, a non-blocking advisory that scanned 53 game HTML/JS files and reported 55 repeated Cyrillic strings. Manually reviewed the remaining report: repeated page templates, context-dependent wording, and game-specific labels are intentionally left local.
+
+Validation: full battery 26 tools / 560 checks passed; tracing smoke passed 26 checks after the spelling correction; `validate_pages.js` validated all 17 pages; `check_fast.js` passed all 6 stages. Regenerated the offline inventory and synced `docs/`. ZIP creation remains blocked because `zip` is not installed. Task 156's profiling item remains independently IN PROGRESS. Next roadmap item: R15 — Finish Shared Audio Architecture Adoption.
 
 ## Historical snapshot through R7
 
@@ -70,7 +74,7 @@ Follow the roadmap's small-domain migration order; avoid blind replacements, pre
 | 12 | R11 | — | NEW — browser/device matrix as a real quality gate |
 | 13 | R12 | 163 | DONE — parent area has version + connection status + manual ZIP link (**ZIP link hidden per user decision 2026-09-30**); hub guard asserts the child launcher stays clean |
 | 14 | R13 | 173 | DONE — removed dead embedded Kitty/Explorer UI from the hub. |
-| 15 | R14 | — | NEW |
+| 15 | R14 | 174 | DONE — stable shared Serbian vocabulary, speech mappings and advisory duplicate-string audit. |
 | 16 | R15 | — | NEW |
 | 17 | R16 | — | NEW |
 | 18 | R17 | — | NEW |

@@ -17,6 +17,11 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 174. DONE — R14: Finish the Shared Serbian Data Layer. (Completed 2026-10-01, Ponytail Lazy Dev.)
+    - Audited existing usage and centralized stable titles, animal/shape/color/number vocabulary, classroom and tracing labels, and shared navigation/retry/reaction phrases. All 17 registry titles now come from `game/data/serbian.js`; the hub and every page load the data before other scripts.
+    - Migrated the relevant game consumers and Serbian speech mappings; list-length guards prevent vocabulary/audio ordering drift. Verified all 111 centralized speech phrases resolve to existing audio assets, and corrected the shared tracing label to `Зигзаг`.
+    - Added `tools/audit_serbian_strings.js` as a non-blocking advisory. Manual review of its 55 remaining repeated strings found repeated page templates, context-dependent wording, and game-specific labels; these remain local rather than being blindly rewritten.
+    - **Validation:** full battery 26 tools / 560 checks passed; tracing smoke passed 26 checks after the spelling correction; `validate_pages.js` validated all 17 pages; `check_fast.js` passed all 6 stages. Regenerated offline inventory and synced `docs/`; ZIP output remains unavailable because `zip` is not installed.
 - 173. DONE — R13: Hub Cleanup After Explorer Migration. (Completed 2026-10-01, Ponytail Lazy Dev.)
     - Removed the dead Kitty embedded-screen/iframe selectors and score, canvas, control, win, and back-button styles from `game/index.html`; kept the live `.hub-btn.kitty` styling and registry-driven Explorer route unchanged. Runtime/navigation searches found no consumers of the removed selectors.
     - Added a `hub_smoke.js` regression guard against legacy embedded markup/selectors, corrected current HTTP/navigation documentation, and synced `docs/`.

@@ -24,19 +24,7 @@ function sceneHintColor(scene){
   const rgb = hexToRgb(candidates[0].color);
   return 'rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+',0.3)';
 }
-const coloringPalette = [
-  {name:'Црвена',      color:'#FF4F5E'},
-  {name:'Наранџаста', color:'#FF8C42'},
-  {name:'Жута',       color:'#FFD23F'},
-  {name:'Зелена',     color:'#67C971'},
-  {name:'Плава',      color:'#4FC3F7'},
-  {name:'Љубичаста',  color:'#9B6DFF'},
-  {name:'Розе',       color:'#FF6F91'},
-  {name:'Браон',      color:'#8B5E3C'},
-  {name:'Сива',       color:'#9AA5B1'},
-  {name:'Бела',       color:'#FFFFFF'},
-  {name:'Црна',       color:'#3A3A3A'},
-];
+const coloringPalette = SERBIAN.colors.map(({name, hex})=>({name, color:hex}));
 const coloringScenes = [
   {
     name: 'Dog',
@@ -232,10 +220,7 @@ const coloringScenes = [
     ]
   },
 ];
-const coloringSceneLabels = {
-  Dog:'Пас', Cat:'Мачка', Cow:'Крава', Lion:'Лав', Elephant:'Слон',
-  Frog:'Жаба', Pig:'Свиња', Duck:'Патка', Fox:'Лисица', Sheep:'Овца', Horse:'Коњ', Chicken:'Кока'
-};
+const coloringSceneLabels = SERBIAN.animals;
 let coloringSceneIdx = 0;
 let coloringSceneOrder = [];
 let coloringMode = 'ref'; // 'ref' = Обоји по слици, 'free' = Слободно бојење

@@ -7,7 +7,7 @@
   const animals = ['Cat','Dog','Fox','Cow','Pig','Duck','Horse','Chicken'];
   const emojiMap = {Cat:'🐱',Dog:'🐶',Fox:'🦊',Cow:'🐮',Pig:'🐷',Duck:'🦆',Horse:'🐴',Chicken:'🐔'};
   const svgMap = {Cat:'cat',Dog:'dog',Fox:'fox',Cow:'cow',Pig:'pig',Duck:'duck',Horse:'horse',Chicken:'chicken'};
-  const nameMap = {Cat:'Мачка',Dog:'Пас',Fox:'Лисица',Cow:'Крава',Pig:'Свиња',Duck:'Патка',Horse:'Коњ',Chicken:'Кока'};
+  const nameMap = SERBIAN.animals;
   const boardEl = document.getElementById('board');
   const statusEl = document.getElementById('memoryStatus');
   const restartBtn = document.getElementById('restart');

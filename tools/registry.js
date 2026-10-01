@@ -18,11 +18,15 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const REGISTRY_PATH = path.join(ROOT, 'game', 'data', 'app-registry.js');
+const SERBIAN_PATH = path.join(ROOT, 'game', 'data', 'serbian.js');
 
 function loadRegistry() {
   if (!fs.existsSync(REGISTRY_PATH)) return [];
+  if (!fs.existsSync(SERBIAN_PATH)) throw new Error('Missing game/data/serbian.js');
+  const window = {};
+  new Function('window', fs.readFileSync(SERBIAN_PATH, 'utf8'))(window);
   const src = fs.readFileSync(REGISTRY_PATH, 'utf8');
-  return new Function('window', src + '; return window.APP_REGISTRY;')({}) || [];
+  return new Function('window', src + '; return window.APP_REGISTRY;')(window) || [];
 }
 
 /* role is DERIVED, not stored: the registry already carries

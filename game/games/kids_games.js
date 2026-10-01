@@ -11,24 +11,28 @@
 
   const CONFIG = {
     alphabet: {
-      title: 'Азбука за децу', dataKey: 'alphabet', question: 'Које је ово слово?',
+      title: SERBIAN.classroom.kidsTitles.alphabet, dataKey: 'alphabet',
+      question: SERBIAN.classroom.questions.alphabet,
       speakOf: it => it.name,
       tile: it => '<span class="kids-glyph">' + it.label + '</span>',
     },
     numbers: {
-      title: 'Бројеви за децу', dataKey: 'numbers', question: 'Колико има?',
+      title: SERBIAN.classroom.kidsTitles.numbers, dataKey: 'numbers',
+      question: SERBIAN.classroom.questions.numbers,
       speakOf: it => it.name,
       tile: it => '<span class="kids-glyph">' + it.label + '</span>',
       countRow: true,
     },
     colors: {
-      title: 'Боје за децу', dataKey: 'colors', question: 'Која је ово боја?',
+      title: SERBIAN.classroom.kidsTitles.colors, dataKey: 'colors',
+      question: SERBIAN.classroom.questions.colors,
       speakOf: it => it.name,
       swatch: it => it.hex,
       tile: () => '',
     },
     shapes: {
-      title: 'Облици за децу', dataKey: 'shapes', question: 'Који је ово облик?',
+      title: SERBIAN.classroom.kidsTitles.shapes, dataKey: 'shapes',
+      question: SERBIAN.classroom.questions.shapes,
       speakOf: it => it.name,
       tile: it => it.svg ? '<span class="kids-shape">' + it.svg + '</span>' : '<span class="kids-glyph">' + it.emoji + '</span>',
     },
@@ -95,7 +99,7 @@
       correct++;
       if (window.popSound) window.popSound();
       btn.classList.add('correct');
-      Q('kidsFeedback').textContent = 'Тачно!';
+      Q('kidsFeedback').textContent = SERBIAN.praise[0];
       window.speech.speak(CONFIG[kind].speakOf(session[index]));
       setTimeout(() => {
         index++;
@@ -106,7 +110,7 @@
       if (window.gentleMiss) window.gentleMiss();
       btn.classList.add('wrong');
       setTimeout(() => btn.classList.remove('wrong'), 450);
-      Q('kidsFeedback').textContent = (typeof SERBIAN !== 'undefined' && SERBIAN.retry) ? SERBIAN.retry[0] : 'Покушај још једном!';
+      Q('kidsFeedback').textContent = SERBIAN.retry[0];
     }
   }
 

@@ -61,7 +61,7 @@ Consequences for contributors:
 ## Task lifecycle
 
 - Mark the task **IN PROGRESS** in `PROJECT_TASKS.md` when starting and **DONE** with a dated note (who, what, why) when finished.
-- R13 / task 173 (hub cleanup after the Explorer migration) is complete. Next engineering task: **R14 — finish the shared Serbian data layer**.
+- Current engineering task: **R14 / task 174 — shared Serbian data layer, completed 2026-10-01**. Next in the roadmap: R15 — finish shared audio architecture adoption. R13 / task 173 is pushed as `3ee9218`.
 - Refresh `README.md` and `HANDOVER_PROMPT.md` alongside it. Missing docs updates are a regression (see `AGENTS.md` → Working rhythm).
 - Never commit or push to `main` automatically — the user does that explicitly.
 

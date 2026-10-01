@@ -5,7 +5,12 @@ const shapeDefs = [
   {type:'triangle', color:'#67C971', name:'Triangle'},
   {type:'star', color:'#FFD23F', name:'Star'},
 ];
-const shapeNames = {Circle:'Круг',Square:'Квадрат',Triangle:'Троугао',Star:'Звезда'};
+const shapeNames = {
+  Circle: SERBIAN.shapes[0],
+  Square: SERBIAN.shapes[1],
+  Triangle: SERBIAN.shapes[2],
+  Star: SERBIAN.shapes[3],
+};
 const stage = document.getElementById('shapesStage');
 let placedCount = 0;
 let roundShapes = [];

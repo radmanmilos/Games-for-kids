@@ -317,6 +317,8 @@ const CHECK_RESULT = `JSON.stringify({
     const pre = await h.evalv(CHECK_ACT);
     let P = JSON.parse(pre || '{}');
     check('prewriting loads Водоравна линија (1 of 8)', P.title2 === 'Прво цртање' && P.cap === 'Нацртај Водоравна линија' && P.counter === '1 од 8', pre);
+    const zigzag = await h.evalv(`window.SERBIAN.tracing.prewriting[4]`);
+    check('shared prewriting vocabulary spells zigzag correctly', zigzag === 'Зигзаг', zigzag);
 
     // 18. index.html hub wiring
     await h.navigate(`http://127.0.0.1:${h.port}/index.html`);

@@ -15,6 +15,7 @@ const { all: registryAll, RETIRED_ROUTES } = require('./registry.js');
 const ROOT = path.resolve(__dirname, '..');
 const PAGES_DIR = path.join(ROOT, 'game', 'pages');
 const REGISTRY = path.join(ROOT, 'game', 'data', 'app-registry.js');
+const SERBIAN = require(path.join(ROOT, 'game', 'data', 'serbian.js'));
 
 const REQUIRED = [
   { name: 'lang="sr"', re: /<html\s+lang="sr"/i },
@@ -36,6 +37,11 @@ for (const page of pages) {
       failures.push(`${page}: missing ${req.name}`);
     }
   }
+  const languageScript = html.search(/<script\b[^>]*src=["'][^"']*data\/serbian\.js["'][^>]*>/i);
+  const firstScript = html.search(/<script\b[^>]*src=/i);
+  if (firstScript >= 0 && (languageScript < 0 || languageScript > firstScript)) {
+    failures.push(`${page}: data/serbian.js must load before page scripts`);
+  }
 }
 
 // Validate registry entries exist on disk
@@ -45,6 +51,9 @@ if (fs.existsSync(REGISTRY)) {
     const filePath = path.join(ROOT, 'game', app.path);
     if (!fs.existsSync(filePath)) {
       failures.push(`registry: ${app.id} -> ${app.path} not found on disk`);
+    }
+    if (!SERBIAN.titles[app.id] || app.title !== SERBIAN.titles[app.id]) {
+      failures.push(`registry: ${app.id} title does not match game/data/serbian.js`);
     }
   }
   /* Check for pages not in registry. This is a FAILURE, not a warning: R7 made the
@@ -73,6 +82,11 @@ if (fs.existsSync(REGISTRY)) {
 if (fs.existsSync(REGISTRY)) {
   const apps = registryAll();
   const indexHtml = fs.readFileSync(path.join(ROOT, 'game', 'index.html'), 'utf8');
+  const languageScript = indexHtml.search(/<script\b[^>]*src=["'][^"']*data\/serbian\.js["'][^>]*>/i);
+  const firstScript = indexHtml.search(/<script\b[^>]*src=/i);
+  if (languageScript < 0 || firstScript < 0 || languageScript > firstScript) {
+    failures.push('index.html: data/serbian.js must load before page scripts');
+  }
 
   const seenIds = new Set();
   for (const app of apps) {

@@ -4,7 +4,7 @@
     let screen = document.getElementById('game-counting');
     if(!screen){
       screen = document.createElement('div'); screen.id='game-counting'; screen.className='screen';
-      screen.innerHTML = `<button class="back-btn" aria-label="${(typeof SERBIAN !== 'undefined' && SERBIAN.back) ? SERBIAN.back : 'Назад на игре'}"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+      screen.innerHTML = `<button class="back-btn" aria-label="${SERBIAN.nav.back}"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
         <div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:8vh">
           <div style="display:flex;gap:12px;align-items:center;">
             <h2 style="margin:0 8px 0 0">Изброј животиње</h2>
@@ -29,7 +29,7 @@
       {name:'Chicken', emoji:'🐔'}
     ];
     const GAME_ICON = '🔢';
-    const numberNames = ['','један','два','три','четири','пет','шест','седам','осам','девет','десет'];
+    const numberNames = ['', ...SERBIAN.numbers.slice(1).map(number => number.name)];
     const maxLevels = 10;
     let level = 1;
     let score = 0;
@@ -168,7 +168,7 @@
         });
         nextBtn.style.display = 'inline-block';
       } else {
-        result.innerText = (typeof SERBIAN !== 'undefined' && SERBIAN.retry) ? SERBIAN.retry[0] : 'Покушај поново';
+        result.innerText = SERBIAN.retry[0];
         if(typeof gentleMiss === 'function') gentleMiss();
       }
     }

@@ -6,53 +6,6 @@
 (function () {
   const AUTOPLAY_PAUSE = 1500;
 
-  const ALPHABET = [
-    { label: 'А', name: 'а', word: 'Аутомобил', emoji: '🚗' },
-    { label: 'Б', name: 'б', word: 'Банана', emoji: '🍌' },
-    { label: 'В', name: 'в', word: 'Вук', emoji: '🐺' },
-    { label: 'Г', name: 'г', word: 'Гусеница', emoji: '🐛' },
-    { label: 'Д', name: 'д', word: 'Дрво', emoji: '🌳' },
-    { label: 'Ђ', name: 'ђ', word: 'Ђак', emoji: '🧑‍🎓' },
-    { label: 'Е', name: 'е', word: 'Екран', emoji: '🖥️' },
-    { label: 'Ж', name: 'ж', word: 'Жаба', emoji: '🐸' },
-    { label: 'З', name: 'з', word: 'Звезда', emoji: '⭐' },
-    { label: 'И', name: 'и', word: 'Игла', emoji: '🪡' },
-    { label: 'Ј', name: 'ј', word: 'Јабука', emoji: '🍎' },
-    { label: 'К', name: 'к', word: 'Крава', emoji: '🐮' },
-    { label: 'Л', name: 'л', word: 'Лав', emoji: '🦁' },
-    { label: 'Љ', name: 'љ', word: 'Љубав', emoji: '❤️' },
-    { label: 'М', name: 'м', word: 'Мачка', emoji: '🐱' },
-    { label: 'Н', name: 'н', word: 'Нос', emoji: '👃' },
-    { label: 'Њ', name: 'њ', word: 'Њушка', emoji: '🐽' },
-    { label: 'О', name: 'о', word: 'Око', emoji: '👁️' },
-    { label: 'П', name: 'п', word: 'Пас', emoji: '🐶' },
-    { label: 'Р', name: 'р', word: 'Риба', emoji: '🐟' },
-    { label: 'С', name: 'с', word: 'Слон', emoji: '🐘' },
-    { label: 'Т', name: 'т', word: 'Торта', emoji: '🎂' },
-    { label: 'Ћ', name: 'ћ', word: 'Ћуран', emoji: '🦃' },
-    { label: 'У', name: 'у', word: 'Уво', emoji: '👂' },
-    { label: 'Ф', name: 'ф', word: 'Фламинго', emoji: '🦩' },
-    { label: 'Х', name: 'х', word: 'Хеликоптер', emoji: '🚁' },
-    { label: 'Ц', name: 'ц', word: 'Цвет', emoji: '🌼' },
-    { label: 'Ч', name: 'ч', word: 'Чамац', emoji: '⛵' },
-    { label: 'Џ', name: 'џ', word: 'Џемпер', emoji: '🧥' },
-    { label: 'Ш', name: 'ш', word: 'Шешир', emoji: '🎩' },
-  ];
-
-  const NUMBERS = [
-    { label: '0', name: 'нула', sentence: 'Нула', emoji: '', count: 0 },
-    { label: '1', name: 'један', sentence: 'Један пас', emoji: '🐶', count: 1 },
-    { label: '2', name: 'два', sentence: 'Два пса', emoji: '🐶', count: 2 },
-    { label: '3', name: 'три', sentence: 'Три мачке', emoji: '🐱', count: 3 },
-    { label: '4', name: 'четири', sentence: 'Четири краве', emoji: '🐮', count: 4 },
-    { label: '5', name: 'пет', sentence: 'Пет слонова', emoji: '🐘', count: 5 },
-    { label: '6', name: 'шест', sentence: 'Шест лавова', emoji: '🦁', count: 6 },
-    { label: '7', name: 'седам', sentence: 'Седам патака', emoji: '🦆', count: 7 },
-    { label: '8', name: 'осам', sentence: 'Осам коња', emoji: '🐴', count: 8 },
-    { label: '9', name: 'девет', sentence: 'Девет жаба', emoji: '🐸', count: 9 },
-    { label: '10', name: 'десет', sentence: 'Десет свиња', emoji: '🐷', count: 10 },
-  ];
-
   const SHAPE_SVGS = {
     lopta: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="42" fill="#FF6F91"/><ellipse cx="35" cy="36" rx="15" ry="10" fill="rgba(255,255,255,.5)"/></svg>',
     kocka: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,10 88,29 50,48 12,29" fill="#A67BFF"/><polygon points="12,29 50,48 50,90 12,71" fill="#8A55E8"/><polygon points="50,48 88,29 88,71 50,90" fill="#9B6DFF"/></svg>',
@@ -62,40 +15,30 @@
     piramida: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,6 14,74 86,74" fill="#57B663"/><polygon points="50,6 86,74 50,86" fill="#4FA85A"/><polygon points="50,6 14,74 50,86" fill="#67C971"/></svg>',
   };
 
-  const SHAPES = [
-    { name: 'Круг', emoji: '🔵' },
-    { name: 'Квадрат', emoji: '🟪' },
-    { name: 'Троугао', emoji: '🔺' },
-    { name: 'Звезда', emoji: '⭐' },
-    { name: 'Лопта', svg: SHAPE_SVGS.lopta },
-    { name: 'Коцка', svg: SHAPE_SVGS.kocka },
-    { name: 'Квадар', svg: SHAPE_SVGS.kvadar },
-    { name: 'Ваљак', svg: SHAPE_SVGS.valjak },
-    { name: 'Купа', svg: SHAPE_SVGS.kupa },
-    { name: 'Пирамида', svg: SHAPE_SVGS.piramida },
+  const SHAPE_PRESENTATION = [
+    { emoji: '🔵' },
+    { emoji: '🟪' },
+    { emoji: '🔺' },
+    { emoji: '⭐' },
+    { svg: SHAPE_SVGS.lopta },
+    { svg: SHAPE_SVGS.kocka },
+    { svg: SHAPE_SVGS.kvadar },
+    { svg: SHAPE_SVGS.valjak },
+    { svg: SHAPE_SVGS.kupa },
+    { svg: SHAPE_SVGS.piramida },
   ];
-
-  const COLORS = [
-    { name: 'Црвена', hex: '#FF4F5E' },
-    { name: 'Наранџаста', hex: '#FF8C42' },
-    { name: 'Жута', hex: '#FFD23F' },
-    { name: 'Зелена', hex: '#67C971' },
-    { name: 'Плава', hex: '#4FC3F7' },
-    { name: 'Љубичаста', hex: '#9B6DFF' },
-    { name: 'Розе', hex: '#FF6F91' },
-    { name: 'Браон', hex: '#8B5E3C' },
-    { name: 'Сива', hex: '#9AA5B1' },
-    { name: 'Бела', hex: '#FFFFFF' },
-    { name: 'Црна', hex: '#3A3A3A' },
-  ];
+  const ALPHABET = SERBIAN.alphabet;
+  const NUMBERS = SERBIAN.numbers;
+  const SHAPES = SERBIAN.shapes.map((name, index) => ({ name, ...SHAPE_PRESENTATION[index] }));
+  const COLORS = SERBIAN.colors;
 
   const TILE_PASTELS = ['#FFE9EF', '#E9F4FF', '#FFF4D6', '#E8F7E6', '#F1EBFF', '#FFEFE0', '#E4F7FB', '#FBEAF6'];
 
   const ACTIVITIES = {
-    alphabet: { title: 'Азбука', items: ALPHABET },
-    numbers: { title: 'Бројеви', items: NUMBERS },
-    shapes: { title: 'Облици', items: SHAPES },
-    colors: { title: 'Боје', items: COLORS },
+    alphabet: { title: SERBIAN.classroom.activities.alphabet, items: ALPHABET },
+    numbers: { title: SERBIAN.classroom.activities.numbers, items: NUMBERS },
+    shapes: { title: SERBIAN.classroom.activities.shapes, items: SHAPES },
+    colors: { title: SERBIAN.classroom.activities.colors, items: COLORS },
   };
 
   let currentActivity = null;

@@ -75,8 +75,8 @@ function main() {
     Array.isArray(r3dCfg.kartColors) && r3dCfg.kartColors.length
       ? r3dCfg.kartColors
       : [
-          { name: "Црвена", color: 0xe52521 },
-          { name: "Плава", color: 0x3f9be0 },
+          { name: window.SERBIAN.colors[0].name, color: 0xe52521 },
+          { name: window.SERBIAN.colors[4].name, color: 0x3f9be0 },
         ];
   const obstacleCfg = Object.assign(
     {},

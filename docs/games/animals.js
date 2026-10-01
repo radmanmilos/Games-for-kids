@@ -15,7 +15,7 @@ const animals = [
 ];
 let animalIdx = 0;
 const animalCard = document.getElementById('animalCard');
-const animalNames = {Dog:'Пас',Cat:'Мачка',Cow:'Крава',Lion:'Лав',Elephant:'Слон',Frog:'Жаба',Pig:'Свиња',Duck:'Патка',Fox:'Лисица',Sheep:'Овца',Horse:'Коњ',Chicken:'Кока'};
+const animalNames = SERBIAN.animals;
 
 function showAnimal(){
   const a = animals[animalIdx];

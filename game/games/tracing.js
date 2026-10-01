@@ -15,76 +15,22 @@
   const MIN_NEAR = 0.8;
   const MAX_INK = 2000;
 
-  const LETTERS = [
-    { label: 'А', name: 'а', word: 'Аутомобил', emoji: '🚗' },
-    { label: 'Б', name: 'б', word: 'Банана', emoji: '🍌' },
-    { label: 'В', name: 'в', word: 'Вук', emoji: '🐺' },
-    { label: 'Г', name: 'г', word: 'Гусеница', emoji: '🐛' },
-    { label: 'Д', name: 'д', word: 'Дрво', emoji: '🌳' },
-    { label: 'Ђ', name: 'ђ', word: 'Ђак', emoji: '🧑‍🎓' },
-    { label: 'Е', name: 'е', word: 'Екран', emoji: '🖥️' },
-    { label: 'Ж', name: 'ж', word: 'Жаба', emoji: '🐸' },
-    { label: 'З', name: 'з', word: 'Звезда', emoji: '⭐' },
-    { label: 'И', name: 'и', word: 'Игла', emoji: '🪡' },
-    { label: 'Ј', name: 'ј', word: 'Јабука', emoji: '🍎' },
-    { label: 'К', name: 'к', word: 'Крава', emoji: '🐮' },
-    { label: 'Л', name: 'л', word: 'Лав', emoji: '🦁' },
-    { label: 'Љ', name: 'љ', word: 'Љубав', emoji: '❤️' },
-    { label: 'М', name: 'м', word: 'Мачка', emoji: '🐱' },
-    { label: 'Н', name: 'н', word: 'Нос', emoji: '👃' },
-    { label: 'Њ', name: 'њ', word: 'Њушка', emoji: '🐽' },
-    { label: 'О', name: 'о', word: 'Око', emoji: '👁️' },
-    { label: 'П', name: 'п', word: 'Пас', emoji: '🐶' },
-    { label: 'Р', name: 'р', word: 'Риба', emoji: '🐟' },
-    { label: 'С', name: 'с', word: 'Слон', emoji: '🐘' },
-    { label: 'Т', name: 'т', word: 'Торта', emoji: '🎂' },
-    { label: 'Ћ', name: 'ћ', word: 'Ћуран', emoji: '🦃' },
-    { label: 'У', name: 'у', word: 'Уво', emoji: '👂' },
-    { label: 'Ф', name: 'ф', word: 'Фламинго', emoji: '🦩' },
-    { label: 'Х', name: 'х', word: 'Хеликоптер', emoji: '🚁' },
-    { label: 'Ц', name: 'ц', word: 'Цвет', emoji: '🌼' },
-    { label: 'Ч', name: 'ч', word: 'Чамац', emoji: '⛵' },
-    { label: 'Џ', name: 'џ', word: 'Џемпер', emoji: '🧥' },
-    { label: 'Ш', name: 'ш', word: 'Шешир', emoji: '🎩' },
-  ];
-
-  const NUMBERS = [
-    { label: '0', name: 'нула' },
-    { label: '1', name: 'један' },
-    { label: '2', name: 'два' },
-    { label: '3', name: 'три' },
-    { label: '4', name: 'четири' },
-    { label: '5', name: 'пет' },
-    { label: '6', name: 'шест' },
-    { label: '7', name: 'седам' },
-    { label: '8', name: 'осам' },
-    { label: '9', name: 'девет' },
-    { label: '10', name: 'десет' },
-  ];
-
-  const SHAPES = [
-    { label: 'Круг', name: 'Круг', shape: 'circle' },
-    { label: 'Квадрат', name: 'Квадрат', shape: 'square' },
-    { label: 'Троугао', name: 'Троугао', shape: 'triangle' },
-    { label: 'Звезда', name: 'Звезда', shape: 'star' },
-  ];
-
-  const PREWRITING = [
-    { label: 'Водоравна линија', name: 'водоравна линија', shape: 'hline' },
-    { label: 'Усправна линија', name: 'усправна линија', shape: 'vline' },
-    { label: 'Круг', name: 'круг', shape: 'circle' },
-    { label: 'Лук', name: 'лук', shape: 'arc' },
-    { label: 'Зизак', name: 'зизак', shape: 'zigzag' },
-    { label: 'Талас', name: 'талас', shape: 'wave' },
-    { label: 'Квадрат', name: 'квадрат', shape: 'square' },
-    { label: 'Троугао', name: 'троугао', shape: 'triangle' },
-  ];
+  const LETTERS = SERBIAN.alphabet;
+  const NUMBERS = SERBIAN.numbers;
+  const SHAPE_IDS = ['circle', 'square', 'triangle', 'star'];
+  const SHAPES = SERBIAN.shapes.slice(0, SHAPE_IDS.length).map((name, index) => ({
+    label: name, name, shape: SHAPE_IDS[index],
+  }));
+  const PREWRITING_SHAPES = ['hline', 'vline', 'circle', 'arc', 'zigzag', 'wave', 'square', 'triangle'];
+  const PREWRITING = SERBIAN.tracing.prewriting.map((label, index) => ({
+    label, name: label.toLowerCase(), shape: PREWRITING_SHAPES[index],
+  }));
 
   const ACTIVITIES = {
-    prewriting: { title: 'Прво цртање', items: PREWRITING },
-    letters: { title: 'Слова', items: LETTERS },
-    numbers: { title: 'Бројеви', items: NUMBERS },
-    shapes: { title: 'Облици', items: SHAPES },
+    prewriting: { title: SERBIAN.tracing.activities.prewriting, items: PREWRITING },
+    letters: { title: SERBIAN.tracing.activities.letters, items: LETTERS },
+    numbers: { title: SERBIAN.tracing.activities.numbers, items: NUMBERS },
+    shapes: { title: SERBIAN.tracing.activities.shapes, items: SHAPES },
   };
 
   const SHAPE_SVGS = {
