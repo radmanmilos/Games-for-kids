@@ -1,5 +1,5 @@
 /* Shared headless-Chrome harness for the Petrin svet project (dev only).
-   Serves game/ over HTTP (file:// breaks audio, the kitty iframe, and throws
+   Serves game/ over HTTP (file:// breaks audio and throws
    Unsafe-attempt warnings), boots headless Chrome on a UNIQUE temp profile, and
    exposes an evalv / navigate / close API. No deps: Node >= 22 (global fetch +
    WebSocket). Usage from a tools/*.js script:
@@ -166,8 +166,8 @@ function cdp(wsUrl) {
   });
 }
 
-/* Serve game/ over HTTP on an ephemeral port. file:// breaks audio, the kitty
-   iframe and throws Unsafe-attempt warnings, so EVERY harness (including the
+/* Serve game/ over HTTP on an ephemeral port. file:// breaks audio and throws
+   Unsafe-attempt warnings, so EVERY harness (including the
    Playwright/a11y tools) must go through this. Returns { port, close }. */
 async function serve() {
   const sockets = new Set();

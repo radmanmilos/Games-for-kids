@@ -537,14 +537,14 @@ Educational goals:
 
 Paper Kitty Adventure has been fully integrated into Petrin svet and the placeholder is gone. The project is now a modular application:
 
-- **Hub landing (task 64, 2026-08-05):** `index.html` opens on the "🌈 Петрин свет" title with two big group tiles — **УЧЕЊЕ first** (icon = 2×2 emoji combo 🏫📝/🎹🎨) then 🎮 **ИГРЕ** (Kitty, Driving, Ocean, Dino, Space, Candy, Memory, Puzzle, Racing). Each tile opens that group's sub-hub screen with the round game buttons; a back arrow returns to the landing. УЧЕЊЕ = Classroom, Tracing, Animals, Shapes, Counting, Coloring, Piano.
+- **Hub landing (task 64, 2026-08-05):** `index.html` opens on the "🌈 Петрин свет" title with two big group tiles — **УЧЕЊЕ first** (icon = 2×2 emoji combo 🏫📝/🎹🎨) then 🎮 **ИГРЕ** (Explorer, Driving, Ocean, Dino, Space, Candy, Memory, Puzzle, Racing). Each tile opens that group's sub-hub screen with the round game buttons; a back arrow returns to the landing. УЧЕЊЕ = Classroom, Tracing, Animals, Shapes, Counting, Coloring, Piano.
 - **Explorer (Мала истраживачица)** is a standalone page (`pages/explorer.html`) — the canonical Explorer route. **Fixed 2026-09-30:** `#char-modal` had no CSS, so the "Изабери лик" hero buttons rendered off-screen (clipped by `#app{overflow:hidden}`) and the game could not be started by a child; it now has the same modal rules as `#win-modal`, and `kitty_smoke` asserts the buttons are in-viewport and topmost via `elementFromPoint`.
 - **Parent area (task 147 + fix 2026-09-30):** the 🔒 button on the hub opens `pages/parent.html`, which owns the offline download, update check, progress reset and audio test. These controls were previously **duplicated on the child-facing hub** (a 140×140 download button, status line, "Проверити ажурирања" and a "ZIP за ручно преузимање" link); they now exist **only** in the parent area. **R12 (task 163) completed the parent surface:** a live **connection status** (Онлајн/Офлајн, updates on `online`/`offline` events), the app **version** (single source of truth: `version` in `manifest.json`, fetched by the page so it also resolves offline), and the **manual ZIP link**. `tools/parent_smoke.js` covers the surface and `hub_smoke.js` statically asserts the child launcher never regains a technical control. **Known gap (user decision 2026-09-30):** the manual ZIP link is present in the markup but **hidden** — `docs/game-offline.zip` has been untracked since `83aae92`, so GitHub Pages never publishes it and the link would 404 for a real parent. Revisit by publishing the ZIP, then dropping the `hidden` attribute.
 - All other games open as standalone pages launched from the hub.
 - Navigation, audio, speech, and utilities are shared modules.
 - **Accessibility / reduced motion (task 83, 2026-08-07, REVERTED):** the shared `window.reducedMotion()` utility in `shared/utils.js` (JS gates) + `@media (prefers-reduced-motion: reduce)` collapse in `shared/accessibility.css` was implemented then **fully reverted per user decision** — the user's OS has `prefers-reduced-motion: reduce` active, so it stripped the memory card-flip, candy combo/hint/level-up, and obstacle-hit-particle animations that ARE the gameplay feedback for kids. All animations are restored. Two pre-existing task-79 split regressions were fixed along the way: driving's dashed road divider now renders (`roadTopY()` fix) and ocean/space obstacles draw again (restored `cfg.drawObstacle` dispatch).
 
-**Current focus: Phase 6 — Roadmap Cohesion.** R8 (runtime error capture), R9 (operational visual regression), R10 (blocking accessibility gate), and R11 (blocking 180-cell browser/device matrix) are complete. The R11 layout fixes are covered by the explicitly approved 85-image visual-baseline refresh; future baseline replacement still requires user approval. Next: R13, hub cleanup after the Explorer migration. See `PROJECT_TASKS.md` for task status and the [Development Roadmap](#development-roadmap) for phase history.
+**Current focus: Phase 6 — Roadmap Cohesion.** R8 (runtime error capture), R9 (operational visual regression), R10 (blocking accessibility gate), R11 (blocking 180-cell browser/device matrix), and R13 (hub cleanup after the Explorer migration) are complete. R13 removed only dead embedded-game styles and preserved the standalone Explorer route and hub appearance. Next: R14, the shared Serbian data layer. See `PROJECT_TASKS.md` for task status and the [Development Roadmap](#development-roadmap) for phase history.
 
 ---
 
@@ -556,7 +556,7 @@ The live site is served by GitHub Pages from the **`docs/` folder on the `main` 
 - **When `game/` changes, replace the ENTIRE `docs/` content with the new `game/` content.** Run `tools/sync-docs.sh` (deletes `docs/` and copies `game/` into it), then commit and push — the site is live.
 - One-time setup (already done): Settings → Pages → **Source: `Deploy from a branch`** → `main` → `/docs`. No build step (plain static HTML; the app uses only relative paths, so it works under the `/Games-for-kids/` subpath).
 - The earlier GitHub Actions workflow (`.github/workflows/deploy.yml`, deploy `game/` → `gh-pages`) was **abandoned** — GitHub Pages refused to deploy from `game/`, so it was removed per user decision. Keep it that way: no workflow, `docs/` mirror only.
-- Local preview: use Live Server on `game/` over HTTP — never `file://` (breaks audio, the kitty iframe, and throws Unsafe-attempt warnings).
+- Local preview: use Live Server on `game/` over HTTP — never `file://` (breaks audio and throws Unsafe-attempt warnings).
 
 ## Offline installation (Task 94, in progress)
 
@@ -572,7 +572,7 @@ The one-tap download is self-healing (task 101, 2026-09-22): each file is fetche
 
 # Navigation Model
 
-The app follows a hybrid model:
+The hub launches each game as a standalone page:
 
 ```
 Petrin svet (index.html landing: 🌈 title + two group tiles — УЧЕЊЕ 🏫📝🎹🎨 first, then 🎮 ИГРЕ)
@@ -587,7 +587,7 @@ Group sub-hub (round game buttons — ИГРЕ 9, УЧЕЊЕ 7)
 
 ↓
 
-Standalone game page (or in-app Kitty screen)
+Standalone game page
 
 ↓
 
@@ -595,7 +595,7 @@ Back button
 
 ↓
 
-Main Menu (landing)
+Group sub-hub
 ```
 
 `shared/navigation.js` drives every `data-go` button. All games are standalone pages under `pages/`.

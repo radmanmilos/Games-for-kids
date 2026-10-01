@@ -2,7 +2,7 @@
    Drives index.html headlessly: the landing shows the title + two tiles (ИГРЕ /
    УЧЕЊЕ), the games sub-hub shows its 8 buttons, the learning sub-hub its 7, the
    back buttons return to the landing, and the static wiring is in place (every
-   game data-go present, kitty's back button returns to the games sub-hub).
+   game data-go present, with no legacy embedded Kitty/Explorer UI in the hub).
    Run:  node tools/hub_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -134,6 +134,10 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
   check('retired hub routes are still in the markup but hidden (layout stability)', retiredHidden,
     RETIRED_ROUTES.map(d => d.route + (retiredInMarkup.includes(d) ? '=present' : '=ABSENT')).join(','));
   check('explorer back button targets the games sub-hub', html.includes('data-go="game-explorer"') && /data-go="game-explorer"[\s\S]*?aria-label="Мала истраживачица"/.test(html), 'data-go="game-explorer"');
+  const legacyEmbeddedUI = /<iframe\b/i.test(html)
+    || /#(?:game-kitty|kitty-(?:container|canvas|score|controls|win|next|embedded))\b/i.test(html);
+  check('hub has no legacy embedded Kitty/Explorer UI', !legacyEmbeddedUI,
+    legacyEmbeddedUI ? 'legacy iframe or selector found' : 'clean');
 
   // R12 acceptance: no technical / offline-management action may be exposed on the
   // child launcher. Only the parent lock may lead to those. This is a static check

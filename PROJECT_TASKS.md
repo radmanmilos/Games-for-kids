@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 173. DONE — R13: Hub Cleanup After Explorer Migration. (Completed 2026-10-01, Ponytail Lazy Dev.)
+    - Removed the dead Kitty embedded-screen/iframe selectors and score, canvas, control, win, and back-button styles from `game/index.html`; kept the live `.hub-btn.kitty` styling and registry-driven Explorer route unchanged. Runtime/navigation searches found no consumers of the removed selectors.
+    - Added a `hub_smoke.js` regression guard against legacy embedded markup/selectors, corrected current HTTP/navigation documentation, and synced `docs/`.
+    - `game/index.html` is 1,901 characters smaller; the hub remained pixel-identical at all five approved viewports. `hub_smoke.js` and the six-stage fast gate passed. The offline inventory regenerated; ZIP output remains unavailable because `zip` is not installed.
 - 172. DONE — R11: Browser / Device Matrix as a Real Quality Gate. (Completed 2026-10-01, Ponytail Lazy Dev; user approved the minimal layout fixes and visual-baseline refresh.)
     - `play_matrix.mjs` is now a blocking Chromium/WebKit gate across all 18 pages and five viewports. It checks runtime/resource errors, overflow, expected orientation and Racing3D's tablet rotation prompt, real touch delivery, and reachable unobstructed controls. Missing browsers count as skipped cells and exit 2. Phone-portrait cells test touch palette selection and tracing-canvas drawing; the candy board must have 16 distinct positions and finite layout animations settled before hit-testing.
     - Fixed the classroom's portrait hub overflow and the coloring next-button/mode-toggle overlap. Controls inside scrollable UI are scrolled into view and hit-tested; controls behind active modals are excluded.

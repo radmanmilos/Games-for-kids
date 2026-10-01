@@ -3,7 +3,7 @@
 ## Setup
 
 1. Clone the repo and open it in VS Code.
-2. Serve `game/` over HTTP — never `file://` (breaks audio, the kitty iframe, and throws `Unsafe-attempt` warnings).
+2. Serve `game/` over HTTP — never `file://` (breaks audio and throws `Unsafe-attempt` warnings).
    - Recommended: use the **Live Server** extension (`ritwickdey.LiveServer`).
 3. No `npm install` or build step is required. The app is plain HTML/CSS/JS.
 4. Serbian Cyrillic text and speech are mandatory for all child-facing content.
@@ -61,7 +61,7 @@ Consequences for contributors:
 ## Task lifecycle
 
 - Mark the task **IN PROGRESS** in `PROJECT_TASKS.md` when starting and **DONE** with a dated note (who, what, why) when finished.
-- R11 / task 172 (blocking browser/device matrix) is complete; **next after its commit/push: R13 / task 173 — hub cleanup after Explorer migration**.
+- R13 / task 173 (hub cleanup after the Explorer migration) is complete. Next engineering task: **R14 — finish the shared Serbian data layer**.
 - Refresh `README.md` and `HANDOVER_PROMPT.md` alongside it. Missing docs updates are a regression (see `AGENTS.md` → Working rhythm).
 - Never commit or push to `main` automatically — the user does that explicitly.
 

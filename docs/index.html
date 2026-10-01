@@ -130,23 +130,6 @@
               font-size: clamp(26px, 8vmin, 70px); }
   }
 
-  /* ---------- KITTY ADVENTURE ---------- */
-  #game-kitty{background:#5c94fc;}
-  #kitty-container{position:relative;width:100%;height:100%;display:flex;flex-direction:column;}
-  #kitty-canvas{flex:1;width:100%;min-height:0;display:block;}
-  #kitty-score{position:absolute;top:2vmin;left:20vmin;z-index:4;color:white;background:rgba(0,0,0,.45);border:4px solid white;border-radius:12px;padding:1vmin 2vmin;font:600 clamp(12px,2.4vmin,22px)/1.5 'Fredoka',sans-serif;pointer-events:none;}
-  #kitty-controls{height:min(24vh,180px);min-height:110px;background:#00a800;border-top:6px solid white;display:flex;align-items:center;justify-content:space-between;padding:12px 5vmin;}
-  .kitty-control{width:clamp(72px,13vmin,120px);aspect-ratio:1;border-radius:50%;border:5px solid white;color:white;font-size:clamp(28px,6vmin,54px);background:#e52521;box-shadow:0 7px 0 rgba(0,0,0,.3);touch-action:none;}
-  .kitty-control.right{background:#fbd000;color:#4A3F6B;}
-  .kitty-control.jump{background:#43b047;width:clamp(84px,15vmin,135px);}
-  .kitty-control:active{transform:translateY(4px);box-shadow:0 3px 0 rgba(0,0,0,.3);}
-  #kitty-win{display:none;position:absolute;inset:0;z-index:5;align-items:center;justify-content:center;flex-direction:column;background:rgba(0,0,0,.7);color:#FFD23F;text-align:center;padding:5vmin;}
-  #kitty-win.show{display:flex;}
-  #kitty-win h2{font-size:clamp(22px,5vmin,48px);margin:0 0 4vmin;}
-  #kitty-next{border:4px solid white;border-radius:12px;background:#67C971;color:white;padding:2vmin 4vmin;font:600 clamp(14px,2.5vmin,24px) 'Fredoka',sans-serif;box-shadow:0 6px 0 #267b35;}
-  #kitty-embedded{position:absolute;inset:0;width:100%;height:100%;border:0;background:#5c94fc;}
-  #game-kitty #kitty-score,#game-kitty #kitty-canvas,#game-kitty #kitty-win,#game-kitty #kitty-controls{display:none;}
-
   /* ---------- BACK BUTTON (shared) ---------- */
   .back-btn{
     position:absolute; top:4vmin; left:4vmin; z-index:20;
@@ -156,7 +139,6 @@
     box-shadow:0 1vmin 0 rgba(0,0,0,.2);
     cursor:pointer;
   }
-  #game-kitty .back-btn{ background:rgba(74,63,107,.85); }
   .back-btn:active{ transform:scale(.9) translateY(3px); }
 
   /* ---------- ANIMALS GAME ---------- */
