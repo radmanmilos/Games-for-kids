@@ -124,8 +124,36 @@ async function main() {
           for (const p of pages) {
             const page = await ctx.newPage();
             const errors = [];
-            page.on('pageerror', e => errors.push('pageerror: ' + e.message));
-            page.on('console', m => { if (m.type() === 'error' && !PAGE_ERRORS_IGNORED.some(r => r.test(m.text()))) errors.push('console: ' + m.text()); });
+            page.on('pageerror', e => {
+              if (!/(chrome-extension|devtools):\/\//i.test(e.stack || '')) errors.push('pageerror: ' + e.message);
+            });
+            page.on('console', m => {
+              const swWarning = m.type() === 'warning'
+                && /(?:service.?worker.*(?:register|registration|install)|SW register failed)/i.test(m.text());
+              if ((m.type() === 'error' || swWarning)
+                && !PAGE_ERRORS_IGNORED.some(r => r.test(m.text()))) errors.push(`${m.type()}: ${m.text()}`);
+            });
+            page.on('response', response => {
+              const url = response.url();
+              if (url.startsWith(`http://127.0.0.1:${srv.port}/`) && response.status() >= 400
+                && !/\/favicon\.ico(?:[?#]|$)/i.test(url)) {
+                errors.push(`resource: ${response.status()} ${url}`);
+              }
+            });
+            page.on('requestfailed', request => {
+              const url = request.url();
+              const failure = request.failure()?.errorText || '';
+              if (url.startsWith(`http://127.0.0.1:${srv.port}/`)
+                && !/\/favicon\.ico(?:[?#]|$)/i.test(url)
+                && failure !== 'net::ERR_ABORTED') errors.push(`resource: ${failure} ${url}`);
+            });
+            await page.addInitScript(() => {
+              window.__psUnhandled = [];
+              window.addEventListener('unhandledrejection', event => {
+                const reason = event.reason;
+                window.__psUnhandled.push(reason && (reason.stack || reason.message) || String(reason));
+              });
+            });
             let overflow = null, touchPoints = null;
             try {
               await page.goto(`http://127.0.0.1:${srv.port}${p}`, { waitUntil: 'load' });
@@ -134,7 +162,9 @@ async function main() {
                 scrollW: document.documentElement.scrollWidth,
                 innerW: window.innerWidth,
                 touch: navigator.maxTouchPoints,
+                unhandled: window.__psUnhandled || [],
               }));
+              errors.push(...m.unhandled.map(e => 'unhandledrejection: ' + e));
               overflow = m.scrollW - m.innerW;
               touchPoints = m.touch;
             } catch (e) {

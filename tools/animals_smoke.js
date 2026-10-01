@@ -164,7 +164,7 @@ const ANIMALS = ['🐶','🐱','🐮','🦁','🐘','🐸','🐷','🦆','🦊',
   checkRouteWired('animals', 'game-animals', 'pages/animals.html',
     { back: 'animals-back', start: 'startAnimals', check });
 
-  h.close();
+  await h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);
   process.exit(getFails() ? 1 : 0);
 })().catch(e => { console.error('animals_smoke crashed:', e); process.exit(1); });

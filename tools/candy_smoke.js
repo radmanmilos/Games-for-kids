@@ -110,7 +110,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   })()`);
   check('dead board spawns a star at every grid size (5x5)', JSON.parse(star5).star === true, star5);
 
-  h.close();
+  await h.close();
   const fails = getFails();
   console.log(`\n${fails === 0 ? 'ALL' : 'SOME'} CHECKS ${fails === 0 ? 'PASSED' : 'FAILED'} (${fails} fail)`);
   process.exit(fails ? 1 : 0);

@@ -115,7 +115,7 @@ const IMPACT_ORDER = { critical: 0, serious: 1, moderate: 2, minor: 3 };
       console.log('\n=== ' + p + ' — SCAN ERROR: ' + e.message);
       report.push({ page: p, error: e.message });
     } finally {
-      h.close();
+      await h.close();
     }
   }
   srv.close();

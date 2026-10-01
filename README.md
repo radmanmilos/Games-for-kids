@@ -544,7 +544,7 @@ Paper Kitty Adventure has been fully integrated into Petrin svet and the placeho
 - Navigation, audio, speech, and utilities are shared modules.
 - **Accessibility / reduced motion (task 83, 2026-08-07, REVERTED):** the shared `window.reducedMotion()` utility in `shared/utils.js` (JS gates) + `@media (prefers-reduced-motion: reduce)` collapse in `shared/accessibility.css` was implemented then **fully reverted per user decision** — the user's OS has `prefers-reduced-motion: reduce` active, so it stripped the memory card-flip, candy combo/hint/level-up, and obstacle-hit-particle animations that ARE the gameplay feedback for kids. All animations are restored. Two pre-existing task-79 split regressions were fixed along the way: driving's dashed road divider now renders (`roadTopY()` fix) and ocean/space obstacles draw again (restored `cfg.drawObstacle` dispatch).
 
-**Current focus: Phase 6 — Roadmap Cohesion** (per `PETRIN_SVET_MASTER_EXECUTION_ROADMAP.md`, user decision 2026-09-26). All **sixteen** games are playable. Phase 2 (Toddler Adaptation) is being worked one game at a time — 8 of 10 done through task 121 (GAME-PIANO-001); next is GAME-MATCH-001, then GAME-SHAPES-001. Racing3D (Phase 5) is stable and awaiting user play-test. See `PROJECT_TASKS.md` for live task status and the [Development Roadmap](#development-roadmap) for phase history.
+**Current focus: Phase 6 — Roadmap Cohesion.** R8 (runtime error capture) is complete; **R9 (visual regression baseline) is next**. The smoke suite now fails on uncaught runtime exceptions, console errors, unhandled rejections, and same-origin resource failures. See `PROJECT_TASKS.md` for task results and the [Development Roadmap](#development-roadmap) for phase history.
 
 ---
 

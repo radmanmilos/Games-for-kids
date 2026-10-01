@@ -127,7 +127,7 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
   checkRouteWired('coloring', 'game-coloring', 'pages/coloring.html',
     { back: 'coloring-back', start: 'startColoring', check });
 
-  h.close();
+  await h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);
   process.exit(getFails() ? 1 : 0);
 })().catch(e => { console.error('coloring_smoke crashed:', e); process.exit(1); });

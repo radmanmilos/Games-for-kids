@@ -221,7 +221,7 @@
       ctx.fillStyle='#C88850';
       ctx.beginPath(); ctx.ellipse(500,gy+16,34,16,0,0,Math.PI*2); ctx.fill();
       ctx.fillStyle='#D9534F'; ctx.beginPath(); ctx.ellipse(480,150,52,26,0,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle='#A83B2C'; ctx.beginPath(); ctx.ellipse(480,166,40,12,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#A83B2C'; ctx.beginPath(); ctx.ellipse(480,166,40,12,0,0,Math.PI*2); ctx.fill();
       ctx.fillStyle='#FFD23F'; ctx.beginPath(); ctx.arc(516,142,10,0,Math.PI*2); ctx.fill();
       ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(516,142,5,0,Math.PI*2); ctx.fill();
       ctx.fillStyle='#4A3F6B'; ctx.fillRect(470,132,22,6);

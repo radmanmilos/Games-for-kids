@@ -169,7 +169,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   }
   check('back button returns to hub', backToHub === true, backInfo);
 
-  h.close();
+  await h.close();
   const fails = getFails();
   console.log(`\n${fails === 0 ? 'ALL' : 'SOME'} CHECKS ${fails === 0 ? 'PASSED' : 'FAILED'} (${fails} fail)`);
   process.exit(fails ? 1 : 0);

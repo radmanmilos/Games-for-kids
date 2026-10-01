@@ -203,7 +203,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('eighth puzzle is 3×3 (9 pieces), label "Слагалица 8 · 3×3"',
     L8.pieces === 9 && L8.label === 'Слагалица 8  ·  3×3', JSON.stringify(L8));
 
-  h.close();
+  await h.close();
   const fails = getFails();
   console.log(`\n${fails === 0 ? 'ALL' : 'SOME'} CHECKS ${fails === 0 ? 'PASSED' : 'FAILED'} (${fails} fail)`);
   process.exit(fails ? 1 : 0);

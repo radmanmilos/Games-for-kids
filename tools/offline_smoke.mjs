@@ -404,7 +404,10 @@ for (const spec of APPS) {
 
 // landscape on purpose: racing3d shows a full-screen "rotate me" overlay in
 // portrait, and the classroom activity row needs the width to fit on screen
-const h = await start({ page: null, tag: 'offline-smoke', width: 1280, height: 800 });
+const h = await start({
+  page: null, tag: 'offline-smoke', width: 1280, height: 800,
+  ignoreResourceErrors: ['?nocache='],
+});
 const results = [];
 
 try {

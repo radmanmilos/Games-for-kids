@@ -430,6 +430,6 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   const sj = JSON.parse(settle);
   check('resize: ground re-anchored to the new canvas height, kitty lands on it', rj.ch >= 1100 && rj.gy0 === rj.gyExpected && sj.onGround === true && sj.grounded === true, JSON.stringify({ rj, sj }));
 
-  h.close();
+  await h.close();
   process.exit(getFails() ? 1 : 0);
 })().catch(e => { console.error('HARNESS ERROR:', e); process.exit(1); });

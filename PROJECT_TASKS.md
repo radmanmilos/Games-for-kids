@@ -17,6 +17,15 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 170. NEW — R9: Make Visual Regression Operational. (Next roadmap item; await user approval before starting.)
+    - Establish a useful, measurable visual baseline and verify screenshot differences reflect the real rendered page rather than blank or identical captures.
+- 169. DONE — R8: Runtime Error / Console / Unhandled-Rejection Gate. (2026-10-01, Ponytail Lazy Dev.)
+    - Reusable CDP capture now covers uncaught exceptions, console errors, unhandled promise rejections, failed same-origin runtime resources, and relevant service-worker registration warnings. All headless smokes await `close()` so the gate contributes to their exit status; the touch-interruption shards assert through their own runner.
+    - Added `runtime_error_smoke.js`, which visits the hub and all 17 registry surfaces with zero runtime errors, then injects an exception, console error, rejected promise, and missing script to prove each detector fires. The CI matrix discovers it automatically from `run_all.js --list`.
+    - Playwright device cells now also capture unhandled rejections and local failed resources. Narrow exclusions cover extension/devtools sources, favicon, canceled navigation, and the offline smoke's deliberate `?nocache=` request only.
+    - Gate surfaced and fixed a real product error in `animal_puzzle.js`: one scene called `CanvasRenderingContext2D.ellipse()` with six arguments instead of seven. `shapes_smoke.js` now models synthetic pointer events without triggering the browser's `setPointerCapture` precondition error; `sw_update_smoke.js` no longer makes an irrelevant 404 on the harness's unused origin.
+    - **Validation:** `node tools/run_all.js --concurrency 2` — 25/25 tools, 554 checks, 0 failures; `node tools/check_fast.js` — 6/6; `offline_smoke.mjs` — all 16 games; Chromium hub matrix — 5/5 viewports; `validate_generated.js` — 4/4. `docs/` synced (208 files), canonical manifest regenerated. The Windows Node ZIP step remains unavailable because `zip` is not installed; the hidden ZIP artifact is intentionally absent so `docs/` stays an exact mirror.
+
 - 151. DONE — R0: Baseline Truth Reconciliation. (2026-09-29, Ponytail Lazy Dev.)
     - **Goal:** Create a factual current-state baseline from the actual HEAD rather than trusting DONE markers. Reproduce the 4 failing smoke tests individually and classify each.
     - **Reproduced 2026-09-29 (all 4 fail in isolation):**
@@ -1035,6 +1044,14 @@ Found while closing out R7. All three are the same family as the task-120 anti-p
 Also chased and disproved: piped stdio as a boot blocker (Chrome writes ~100 bytes; boots pass with `stdio: 'ignore'` too) and port overflow past 65535 (ephemeral ports never get that high here). Boot patience is 4 attempts / ~24 s with a message stating "no assertions ran".
 
 **Validated:** `run_all.js --concurrency 2` — **ALL 24 TOOLS PASS, 492 checks**. `check_fast.js` 6/6 green (writes nothing). `check_release.js` green, nothing written. `offline_smoke.mjs` 16/16. All three guard suites green. `validate_pages.js` 17 pages OK. `git diff --check` clean.
+
+### 169. DONE — Runtime Error / Console / Unhandled-Rejection Gate (2026-10-01, Ponytail Lazy Dev)
+
+Roadmap R8. `tools/headless.js` now collects page exceptions, `console.error`, unhandled rejections, and failures for same-origin runtime resources, and checks the collection before each headless smoke exits. Service-worker registration warnings are captured narrowly. `tools/runtime_error_smoke.js` scans all registry pages plus the hub and negative-tests each capture path by provoking the corresponding failure; the generated CI smoke matrix includes it automatically. `play_matrix.mjs` adds unhandled-rejection and local-resource collection.
+
+This gate found a production exception in `game/games/animal_puzzle.js`: the space scene passed six arguments to `CanvasRenderingContext2D.ellipse()`; fixed by supplying the missing rotation argument. The shapes smoke's synthetic pointer events were also calling the native pointer-capture API without an active browser pointer; the fixture now isolates that API precondition rather than allowing a synthetic test error to mask product faults. The service-worker subpath smoke now starts without navigating to a nonexistent path on its unused local server.
+
+Validation: **25/25 tools, 554 checks, 0 failures** (`node tools/run_all.js --concurrency 2`); fast gate 6/6; offline E2E all 16 games; Chromium hub matrix 5/5 viewports; generated artifact validation 4/4. `docs/` synced to `game/` and the canonical offline manifest regenerated. The Windows ZIP command remains unavailable on this host; no ZIP was added to `docs/`, preserving the required exact mirror and the settled hidden-link decision.
 
 ---
 

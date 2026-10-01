@@ -250,6 +250,6 @@ async function waitReady(h) {
   checkRouteWired('driving', 'game-driving', 'pages/driving.html',
     { back: 'driving-back', start: 'startDriving', check });
 
-  h.close();
+  await h.close();
   process.exit(getFails() ? 1 : 0);
 })();

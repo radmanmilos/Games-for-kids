@@ -88,8 +88,8 @@ const mkManifest = entries => JSON.stringify(
   const base = `http://127.0.0.1:${port}${PREFIX}`;
   console.log(`serving game/ at ${base} (deliberate subpath)`);
 
-  const h = await start({ page: `${PREFIX}/index.html`, tag: 'sw-update-smoke', width: 1100, height: 700 });
-  // start() serves its own server; point the page at ours instead.
+  const h = await start({ page: null, tag: 'sw-update-smoke', width: 1100, height: 700 });
+  // start() serves its own origin; this test uses the dedicated subpath server.
   await h.navigate(base + '/index.html');
 
   // wait for the SW to control the page
@@ -154,7 +154,7 @@ const mkManifest = entries => JSON.stringify(
   t('after re-caching an identical manifest, updates report 0 changes again',
     r4 && r4.changed === 0, JSON.stringify(r4).slice(0, 200));
 
-  h.close();
+  await h.close();
   server.close();
 
   console.log(fails ? `\n${fails} FAIL` : '\nALL SERVICE-WORKER UPDATE CHECKS PASSED');

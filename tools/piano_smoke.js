@@ -189,7 +189,7 @@ const LIT_IDX = `Array.from(document.querySelectorAll('.piano-key')).indexOf(doc
   const repj = JSON.parse(rep);
   check('replay restarts song at "1 од 42" with lit C', repj.hidden === true && repj.counter === '1 од 42' && repj.litIdx === 0, rep);
 
-  h.close();
+  await h.close();
 
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
@@ -229,7 +229,7 @@ const LIT_IDX = `Array.from(document.querySelectorAll('.piano-key')).indexOf(doc
     const ks = [...document.querySelectorAll('.piano-key')].map(k => k.getBoundingClientRect());
     return { vw: innerWidth, n: ks.length, allIn: ks.every(b => b.left >= 0 && b.right <= innerWidth), w: Math.round(ks[0].width), h: Math.round(ks[0].height) };
   })())`);
-  narrow.close();
+  await narrow.close();
   const fitj = JSON.parse(fit);
   check('all 8 keys fit a 390px phone (no clipped, unreachable key)',
     fitj.n === 8 && fitj.allIn === true && fitj.w * fitj.h > 2000, fit);

@@ -149,6 +149,6 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
   const backj = JSON.parse(back);
   check('back returns to hub', backj.kidsHidden === true && backj.hubVisible === true, back);
 
-  h.close();
+  await h.close();
   process.exit(getFails() ? 1 : 0);
 })();

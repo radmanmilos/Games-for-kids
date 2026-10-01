@@ -8,7 +8,7 @@
      const h = await start({ page: '/pages/tracing.html', tag: 'tracing-smoke', width: 1280, height: 800 });
      await h.evalv('...expression...');
      check('name', condition, info);
-     h.close();                      // stops server + kills this run's Chrome
+     await h.close();                // checks browser errors, stops server + kills Chrome
      process.exit(fails ? 1 : 0);    // 'fails' is tracked here via check()
 
    Gotchas handled here:
@@ -140,9 +140,14 @@ function killChromeByTag(tag) {
 function cdp(wsUrl) {
   let id = 0;
   const pending = new Map();
+  const listeners = new Map();
   const ws = new WebSocket(wsUrl);
   return new Promise((resolve) => {
     ws.onopen = () => resolve({
+      on(method, handler) {
+        if (!listeners.has(method)) listeners.set(method, new Set());
+        listeners.get(method).add(handler);
+      },
       send(method, params = {}, sessionId) {
         return new Promise((res) => {
           const mid = ++id;
@@ -154,6 +159,9 @@ function cdp(wsUrl) {
     ws.onmessage = (ev) => {
       const msg = JSON.parse(ev.data);
       if (msg.id && pending.has(msg.id)) { pending.get(msg.id)(msg.result); pending.delete(msg.id); }
+      if (msg.method && listeners.has(msg.method)) {
+        for (const handler of listeners.get(msg.method)) handler(msg.params, msg.sessionId);
+      }
     };
   });
 }
@@ -190,7 +198,10 @@ async function serve() {
   };
 }
 
-async function start({ page, tag = 'pkv', width = 1280, height = 800, dpr = 1 } = {}) {
+async function start({
+  page, tag = 'pkv', width = 1280, height = 800, dpr = 1,
+  ignoreResourceErrors = [],
+} = {}) {
   const srv = await serve();
   const httpPort = srv.port;
 
@@ -238,9 +249,68 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800, dpr = 1 } 
   const dbg = await cdp(version.webSocketDebuggerUrl);
   const target = await dbg.send('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await dbg.send('Target.attachToTarget', { targetId: target.targetId, flatten: true });
-  const c = { send: (m, p) => dbg.send(m, p, sessionId) };
+  const c = { send: (m, p) => dbg.send(m, p, sessionId), on: (m, fn) => dbg.on(m, fn) };
   await c.send('Page.enable');
   await c.send('Runtime.enable');
+  await c.send('Network.enable');
+
+  const runtimeErrors = [];
+  const requestUrls = new Map();
+  const localOrigin = `http://127.0.0.1:${httpPort}/`;
+  const addRuntimeError = (kind, detail, source = '') => {
+    if (/^(chrome-extension|devtools):\/\//i.test(source)) return;
+    runtimeErrors.push({ kind, detail: String(detail || '(no details)'), source });
+  };
+  c.on('Runtime.exceptionThrown', ({ exceptionDetails = {} }) => {
+    addRuntimeError(
+      'exception',
+      exceptionDetails.exception?.description || exceptionDetails.text,
+      exceptionDetails.url || '',
+    );
+  });
+  c.on('Runtime.consoleAPICalled', ({ type, args = [], stackTrace }) => {
+    const detail = args.map(a => a.value ?? a.description ?? '').filter(Boolean).join(' ');
+    const serviceWorkerWarning = type === 'warning'
+      && /(?:service.?worker.*(?:register|registration|install)|SW register failed)/i.test(detail);
+    if (type !== 'error' && !serviceWorkerWarning) return;
+    const source = stackTrace?.callFrames?.[0]?.url || '';
+    addRuntimeError(serviceWorkerWarning ? 'service-worker' : 'console.error',
+      detail || 'console.error called', source);
+  });
+  c.on('Network.requestWillBeSent', ({ requestId, request, type }) => {
+    requestUrls.set(requestId, { url: request.url, type });
+  });
+  c.on('Network.responseReceived', ({ requestId, response, type }) => {
+    const url = response.url || requestUrls.get(requestId)?.url || '';
+    if (response.status >= 400) {
+      addResourceError(url, `${response.status} ${response.statusText || ''}`.trim(), type);
+    }
+  });
+  c.on('Network.loadingFailed', ({ requestId, errorText, canceled, type }) => {
+    const request = requestUrls.get(requestId);
+    if (request && !canceled && errorText !== 'net::ERR_ABORTED') {
+      addResourceError(request.url, errorText, type || request.type);
+    }
+    requestUrls.delete(requestId);
+  });
+  function addResourceError(url, detail, type) {
+    if (!url.startsWith(localOrigin) || /\/favicon\.ico(?:[?#]|$)/i.test(url)) return;
+    if (ignoreResourceErrors.some(part => url.includes(part))) return;
+    if (!['Document', 'Script', 'Stylesheet', 'Image', 'Font', 'Media', 'XHR', 'Fetch'].includes(type)) return;
+    addRuntimeError('resource', `${type || 'resource'} ${detail}`, url);
+  }
+  await c.send('Runtime.addBinding', { name: '__psReportUnhandledRejection' });
+  await c.send('Page.addScriptToEvaluateOnNewDocument', {
+    source: `window.addEventListener('unhandledrejection', event => {
+      const reason = event.reason;
+      const detail = reason && (reason.stack || reason.message) || String(reason);
+      window.__psReportUnhandledRejection(detail);
+    });`,
+  });
+  c.on('Runtime.bindingCalled', ({ name, payload, executionContextId }) => {
+    if (name !== '__psReportUnhandledRejection') return;
+    addRuntimeError('unhandledrejection', payload, String(executionContextId));
+  });
   if (width && height) {
     // dpr=2 lets a test compare pixel cost (see racing3d perf hooks)
     await c.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: dpr, mobile: false });
@@ -258,6 +328,15 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800, dpr = 1 } 
     return r.result ? r.result.value : undefined;
   };
   const navigate = url => c.send('Page.navigate', { url });
+  const checkRuntimeErrors = async () => {
+    await sleep(50);
+    const details = runtimeErrors.slice(0, 3)
+      .map(e => `${e.kind}: ${e.detail}${e.source ? ` (${e.source})` : ''}`)
+      .join('; ');
+    check('no browser runtime errors', runtimeErrors.length === 0,
+      runtimeErrors.length ? `${runtimeErrors.length} captured: ${details}` : 'none');
+    return runtimeErrors.length === 0;
+  };
   /* Tear down for real. killChromeByTag() is a request, not a guarantee: Chrome
      keeps its debug port answering for a moment afterwards. A shard that runs
      several games in one process (tools/touch_interruption_{a..d}_smoke.js) then
@@ -266,7 +345,8 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800, dpr = 1 } 
      "Chrome did not start" while every one of its assertions had passed. So we
      wait for the port to go quiet, bounded, and clean up the profile dir we
      created (it is ~20MB and would otherwise pile up in %TEMP% forever). */
-  const close = async () => {
+  const close = async ({ checkErrors = true } = {}) => {
+    if (checkErrors) await checkRuntimeErrors();
     srv.close();
     killChromeByTag(profile);
     for (let i = 0; i < TEARDOWN_TRIES; i++) {
@@ -394,7 +474,12 @@ async function start({ page, tag = 'pkv', width = 1280, height = 800, dpr = 1 } 
 
   if (page) await navigate(`http://127.0.0.1:${httpPort}${page}`);
 
-  return { c, evalv, evalp, navigate, close, closeServer, port: httpPort, sleep, tap, press, release, hold, drag, dragTo, stroke, boxOf, waitFor };
+  return {
+    c, evalv, evalp, navigate, close, closeServer, port: httpPort, sleep,
+    tap, press, release, hold, drag, dragTo, stroke, boxOf, waitFor,
+    getRuntimeErrors: () => runtimeErrors.slice(),
+    checkRuntimeErrors,
+  };
 }
 
 module.exports = { start, serve, check, skip, sleep, getFails: () => fails, getSkips: () => skips };

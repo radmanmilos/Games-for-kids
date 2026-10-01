@@ -221,7 +221,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   })()`);
   check('draw: space decor + vortex stargate goal render without error', draw === 'ok', draw);
 
-  h.close();
+  await h.close();
 
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');

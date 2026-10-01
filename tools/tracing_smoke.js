@@ -327,7 +327,7 @@ const CHECK_RESULT = `JSON.stringify({
     const srcCount = (indexHtml.match(/data-go="/g) || []).length;
     check('index.html has game-tracing button', I.btn === '✏️' && I.count === srcCount, idx);
   } finally {
-    h.close();
+    await h.close();
   }
   console.log(getFails() ? '\nRESULT: ' + getFails() + ' FAILED' : '\nRESULT: ALL PASS');
   process.exit(getFails() ? 1 : 0);

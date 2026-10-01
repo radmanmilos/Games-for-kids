@@ -133,7 +133,7 @@ const COUNT_ALL = `(function(){
   check('page boots via inline DOMContentLoaded (counting.html)',
     fs.readFileSync(path.join(root, 'game', 'pages', 'animal_counting.html'), 'utf8').includes('startAnimalCounting'));
 
-  h.close();
+  await h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);
   process.exit(getFails() ? 1 : 0);
 })().catch(e => { console.error('counting_smoke crashed:', e); process.exit(1); });

@@ -69,6 +69,6 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   })()`);
   check('audio test button is wired and reports status', audioState.pressed === true, JSON.stringify(audioState));
 
-  h.close();
+  await h.close();
   process.exit(getFails() ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });

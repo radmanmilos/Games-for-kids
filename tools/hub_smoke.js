@@ -178,7 +178,7 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
   const S = JSON.parse(shortVp);
   check('short landscape (844x390): every visible games button is inside the viewport, racing3d included', S.bad.length === 0 && S.racing3dBottom <= S.vh + 1, shortVp);
 
-  h.close();
+  await h.close();
   const fails = getFails();
   console.log(`\n${fails === 0 ? 'ALL' : 'SOME'} CHECKS ${fails === 0 ? 'PASSED' : 'FAILED'} (${fails} fail)`);
   process.exit(fails ? 1 : 0);

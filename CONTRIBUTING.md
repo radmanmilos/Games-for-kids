@@ -17,6 +17,7 @@ Before opening a PR, run the smallest targeted check that covers your change:
 - Offline inventory (cache list + manifest): `node tools/validate_offline.js`
 - Parent area (offline download, update check, reset, version) → `node tools/parent_smoke.js`
 - Service-worker update path → `node tools/sw_update_smoke.js`
+- Runtime exceptions, console errors, rejected promises and local resource failures → `node tools/runtime_error_smoke.js`
 - Hub changes → `node tools/hub_smoke.js`
 - Kitty changes → `node tools/kitty_smoke.js`
 - Adventure engine / Driving / Ocean / Dino / Space → `node tools/adventure_smoke.js` (25 checks)
@@ -44,13 +45,13 @@ If a smoke does not exist for the game you changed, run the page manually in Liv
 | `setup` | derives the smoke list from `node tools/run_all.js --list --json` | every push/PR |
 | `fast` | `check_fast.js` — syntax, registry/metadata, CI-workflow topology, generated-artifact freshness, offline inventory, hub smoke (**no** game battery; read-only) | every push/PR |
 | `smoke` | one leg per smoke, `fail-fast: false`, `max-parallel: 6` | every push/PR |
-| `release` | offline E2E + a11y report (both `continue-on-error`) | every push/PR |
+| `release` | offline E2E + a11y report (`continue-on-error`) | every push/PR |
 | `extended` | `play_matrix.mjs` (chromium + webkit × 5 viewports) | manual run or weekly |
 
 Consequences for contributors:
 
 - **A new smoke needs no workflow edit** — the matrix is generated from the battery. If you add `tools/*_smoke.js`, it is picked up automatically.
-- `offline_smoke.mjs` and `axe_check.js --report` are `continue-on-error` until R6/R10 make them trustworthy gates; they still run and still print their report.
+- `axe_check.js --report` remains `continue-on-error` until R10; offline E2E is blocking, and `runtime_error_smoke.js` is part of the generated blocking smoke matrix.
 - **No CI step or validator may regenerate what it inspects** (R5). If you edit `game/`, run `node tools/sync-docs.sh` (or `check_all.js --docs`) and commit the result; `check_fast.js` and `check_release.js` will *fail* on an unsynced `docs/` rather than fixing it, which is deliberate — a check that repairs what it inspects can never report a stale artifact.
 - `tools/check_release.js` is deliberately **not** a CI job: it re-runs the entire battery, which the `smoke` matrix already ran in parallel, one leg per job. Run it locally before a release.
 - The CI workflow's own shape is guarded by `tools/validate_workflow.js` (11 checks, runs inside `check_fast`), so the R4 fixes — a deleted tool reference, a matrix generated from the battery, `fail-fast: false`, a direct `needs` for every `needs.*.outputs` read — cannot silently regress.
@@ -59,6 +60,7 @@ Consequences for contributors:
 ## Task lifecycle
 
 - Mark the task **IN PROGRESS** in `PROJECT_TASKS.md` when starting and **DONE** with a dated note (who, what, why) when finished.
+- Latest completed engineering milestone: **R8 / task 169 — runtime error, console error and unhandled-rejection capture**; see `PROJECT_TASKS.md` for the active task.
 - Refresh `README.md` and `HANDOVER_PROMPT.md` alongside it. Missing docs updates are a regression (see `AGENTS.md` → Working rhythm).
 - Never commit or push to `main` automatically — the user does that explicitly.
 

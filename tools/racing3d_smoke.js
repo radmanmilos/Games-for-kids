@@ -79,7 +79,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         const f = getFails();
         console.log(`\nracing3d: ${getSkips()} SKIPPED (no WebGL) — the 3D race is NOT covered here.`);
         console.log('This battery needs a WebGL-capable host, or the user play-test on a real device.');
-        h.close();
+        await h.close();
         process.exit(f ? 1 : 0);
     }
 
@@ -664,6 +664,6 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         pf.calls > 0 && pf.triangles > 0 && pf.dpr === 1 &&
         pf.avgFrameMs > 0 && pf.worstFrameMs >= pf.avgFrameMs && pf.drawBufferPx > 0, perfCheck);
 
-    h.close();
+    await h.close();
     process.exit(getFails() ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });

@@ -96,11 +96,17 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.popS
   // Touch interruption: pointercancel (start fresh round first)
   await h.evalv(`window.startShapesRound()`);
   await sleep(100);
+  // Dispatched PointerEvents have no active platform pointer, so native
+  // setPointerCapture would throw before the interruption handler is exercised.
   const cancelOk = await h.evalv(`(() => {
     const piece = document.querySelector('#shapesStage .piece:not([data-done="1"])');
     if (!piece) return { ok: false, reason: 'no piece' };
-    piece.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 1, clientX: 100, clientY: 100 }));
-    piece.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 1 }));
+    const setCapture = piece.setPointerCapture;
+    piece.setPointerCapture = () => {};
+    try {
+      piece.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 1, clientX: 100, clientY: 100 }));
+      piece.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 1 }));
+    } finally { piece.setPointerCapture = setCapture; }
     return { ok: true, done: piece.dataset.done };
   })()`);
   check('touch interruption: pointercancel does not place piece', cancelOk.ok === true && cancelOk.done === undefined, JSON.stringify(cancelOk));
@@ -109,9 +115,13 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.popS
   const multiTouchOk = await h.evalv(`(() => {
     const piece = document.querySelector('#shapesStage .piece:not([data-done="1"])');
     if (!piece) return { ok: false, reason: 'no piece' };
-    piece.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 1, clientX: 100, clientY: 100 }));
-    piece.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 2, clientX: 200, clientY: 200 }));
-    piece.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 2 }));
+    const setCapture = piece.setPointerCapture;
+    piece.setPointerCapture = () => {};
+    try {
+      piece.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 1, clientX: 100, clientY: 100 }));
+      piece.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 2, clientX: 200, clientY: 200 }));
+      piece.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 2 }));
+    } finally { piece.setPointerCapture = setCapture; }
     return { ok: true, done: piece.dataset.done };
   })()`);
   check('touch interruption: second finger does not break game', multiTouchOk.ok === true && multiTouchOk.done === undefined, JSON.stringify(multiTouchOk));
@@ -139,7 +149,7 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.popS
   checkRouteWired('shapes', 'game-shapes', 'pages/shapes.html',
     { back: 'shapes-back', start: 'startShapesRound', check });
 
-  h.close();
+  await h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);
   process.exit(getFails() ? 1 : 0);
 })().catch(e => { console.error('shapes_smoke crashed:', e); process.exit(1); });

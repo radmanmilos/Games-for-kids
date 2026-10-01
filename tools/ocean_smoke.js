@@ -209,7 +209,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const mus2 = await h.evalv(`document.getElementById('adv-music-btn').textContent`);
   check('music toggle: 🔊 -> 🔇 -> 🔊', mus0 === '🔊' && mus1 === '🔇' && mus2 === '🔊', mus0 + '/' + mus1 + '/' + mus2);
 
-  h.close();
+  await h.close();
 
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');

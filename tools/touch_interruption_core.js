@@ -120,8 +120,11 @@ async function runShard(label, games) {
     const h = await start({ page: game.path, tag: `touch-${game.id}`, width: 1280, height: 800 });
     try {
       await testGame(game, check, h);
+      const runtimeErrors = h.getRuntimeErrors();
+      check(`${game.id}: no browser runtime errors`, runtimeErrors.length === 0,
+        runtimeErrors.slice(0, 2).map(e => `${e.kind}: ${e.detail}`).join('; ') || 'none');
     } finally {
-      await h.close();
+      await h.close({ checkErrors: false });
     }
     console.log('');
   }
