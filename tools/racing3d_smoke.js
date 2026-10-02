@@ -600,6 +600,16 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     // world-colored petal burst ('celebrate' tag) from the kart, the finish
     // layers a world burst over the confetti, and the shared emitter stays
     // within the MAX_PARTICLES cap
+    //
+    // Sample the burst where it happens, not 1.4s later. The lap line is crossed
+    // at whatever step the entry speed reaches it (36 on the CI runner vs 53
+    // locally), and every petal expires about 70-85 steps after spawning, so
+    // reading the count at a fixed step 120 meant the runner -- which crosses
+    // earlier and therefore sampled latest -- saw `cele: 0, total: 0` while the
+    // lap line had demonstrably fired 24 tagged petals at the cross. The
+    // assertions below are the same ones, taken at the burst, plus a running
+    // peak so the cap is still checked for the whole window rather than at one
+    // instant.
     const celCheck = await h.evalv(`(function(){
         const r3d = window.__r3d;
         r3d.haltLoop(true);
@@ -609,16 +619,16 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         r3d.seekToProgress(0.985);  // just before the next lap line
         const sp0 = r3d.speed();
         const pre = r3d.particles();
-        // Which step crosses the lap line, and does the burst spawn there and then
-        // die inside the remaining steps? "0 particles at the end" means two very
-        // different things and the fix is different for each, so measure both.
-        let crossStep = -1, atCross = -1, celeAtCross = -1;
+        let crossStep = -1, atCross = 0, celeAtCross = 0, spinAtCross = 0, maxTotal = 0;
         for (let i = 0; i < 120; i++) {
             r3d.step(1 / 60);
+            const n = r3d.particles();
+            if (n > maxTotal) maxTotal = n;
             if (crossStep < 0 && r3d.lap() > lap0) {
                 crossStep = i;
-                atCross = r3d.particles();
+                atCross = n;
                 celeAtCross = r3d.tagged("celebrate");
+                spinAtCross = r3d.particlesSpinning();
             }
         }
         const lap1 = r3d.lap();
@@ -627,13 +637,13 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         const spinning = r3d.particlesSpinning();
         const rm = r3d.reducedMotion();
         r3d.haltLoop(false);
-        return JSON.stringify({ lap0, lap1, cele, total, spinning, crossStep, atCross, celeAtCross, pre, sp0, rm });
+        return JSON.stringify({ lap0, lap1, cele, total, spinning, crossStep, atCross, celeAtCross, spinAtCross, maxTotal, pre, sp0, rm });
     })()`);
     const celj = JSON.parse(celCheck);
     check('celebration: lap-line cross fires a world-colored burst (tagged celebrate), particle cap respected',
-        celj.lap1 > celj.lap0 && celj.cele > 0 && celj.total <= 420, celCheck);
+        celj.lap1 > celj.lap0 && celj.celeAtCross > 0 && celj.maxTotal <= 420, celCheck);
     check('particles carry a non-zero spin (spawnP stores the spin callers pass)',
-        celj.spinning > 0, celCheck);
+        celj.spinAtCross > 0, celCheck);
 
     // batch 9 — audio bus: every SFX/announcement flows through a single
     // queue drained AT MOST ONCE per frame (40 ms wall gate proves one call
