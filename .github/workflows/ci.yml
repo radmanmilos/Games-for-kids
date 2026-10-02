@@ -87,7 +87,15 @@ jobs:
           node-version: '22'
 
       - name: Run ${{ matrix.smoke }}
-        run: node tools/${{ matrix.smoke }}
+        # Through run_all.js, NOT `node tools/<smoke>` directly. run_all.js retries
+        # a smoke that exits non-zero with ZERO checks twice, which is the
+        # documented Chrome-boot-crash signature; check_fast.js applies the same
+        # rule. Running the raw script bypassed the only guard the repo has for a
+        # cold browser, so on `ubuntu-latest` 19 of 26 legs went red with
+        # "Chrome did not start ... no assertions ran" while the same smokes pass
+        # locally. A failure with at least one FAIL is never retried, so this
+        # cannot hide a real regression.
+        run: node tools/run_all.js ${{ matrix.smoke }}
         timeout-minutes: 10
 
   # ---------------------------------------------------------------------------

@@ -45,6 +45,22 @@ const BOOT_POLL_TRIES = 30;
 const BOOT_POLL_MS = 200;
 const BOOT_RETRY_PAUSE_MS = 500;
 
+/* The DevTools handshake and every CDP command are bounded too, and this is not
+   defensive decoration - it fixes a hang that CI actually hit. `cdp()` resolved
+   only on `ws.onopen`, with no `onerror`, no `onclose` and no timeout, and
+   `send()` returned a promise that only settled from a message id which may
+   never arrive. A refused or lost DevTools connection therefore hung the whole
+   smoke forever: `ocean_smoke.js` on CI run 25 printed *nothing* for the whole
+   10-minute step timeout and was then reported as "Terminate orphan process:
+   node", with no assertion and no diagnostic anywhere. A harness that cannot
+   fail loudly is the same defect as a check that cannot fail. */
+const CDP_CONNECT_TIMEOUT_MS = 15000;
+const CDP_COMMAND_TIMEOUT_MS = 30000;
+
+/* One /json/version request must not be able to outlive the poll budget it is
+   counted against, or the "~Ns of waiting" in the boot error is a lie. */
+const BOOT_REQUEST_TIMEOUT_MS = 2000;
+
 /* Teardown bounds for close(): how long to wait for Chrome to stop answering its
    debug port before moving on. Cheap insurance - in the normal case the first
    poll already finds the port closed. */
@@ -142,23 +158,56 @@ function cdp(wsUrl) {
   const pending = new Map();
   const listeners = new Map();
   const ws = new WebSocket(wsUrl);
-  return new Promise((resolve) => {
-    ws.onopen = () => resolve({
-      on(method, handler) {
-        if (!listeners.has(method)) listeners.set(method, new Set());
-        listeners.get(method).add(handler);
-      },
-      send(method, params = {}, sessionId) {
-        return new Promise((res) => {
-          const mid = ++id;
-          pending.set(mid, res);
-          ws.send(JSON.stringify({ id: mid, method, params, ...(sessionId ? { sessionId } : {}) }));
-        });
-      },
-    });
+  return new Promise((resolve, reject) => {
+    /* The socket can die before it opens, or at any point afterwards. Either way
+       every command still in flight will now never be answered, so they are all
+       failed here rather than left pending forever. */
+    const fail = (why) => {
+      for (const [, p] of pending) p.rej(new Error(why));
+      pending.clear();
+      try { ws.close(); } catch { /* already gone */ }
+      reject(new Error(why));
+    };
+    const connectTimer = setTimeout(
+      () => fail(`CDP websocket did not open within ${CDP_CONNECT_TIMEOUT_MS}ms (${wsUrl})`),
+      CDP_CONNECT_TIMEOUT_MS);
+    ws.onopen = () => {
+      clearTimeout(connectTimer);
+      resolve({
+        on(method, handler) {
+          if (!listeners.has(method)) listeners.set(method, new Set());
+          listeners.get(method).add(handler);
+        },
+        send(method, params = {}, sessionId) {
+          return new Promise((res, rej) => {
+            const mid = ++id;
+            const timer = setTimeout(() => {
+              pending.delete(mid);
+              rej(new Error(`CDP ${method} (id ${mid}) got no response within ${CDP_COMMAND_TIMEOUT_MS}ms`));
+            }, CDP_COMMAND_TIMEOUT_MS);
+            pending.set(mid, { res, rej });
+            try {
+              ws.send(JSON.stringify({ id: mid, method, params, ...(sessionId ? { sessionId } : {}) }));
+            } catch (e) {
+              clearTimeout(timer);
+              pending.delete(mid);
+              rej(e);
+            }
+          });
+        },
+      });
+    };
+    ws.onerror = (ev) => {
+      clearTimeout(connectTimer);
+      fail(`CDP websocket error: ${(ev && ev.message) || 'connection failed'} (${wsUrl})`);
+    };
+    ws.onclose = () => {
+      clearTimeout(connectTimer);
+      fail(`CDP websocket closed unexpectedly (${wsUrl})`);
+    };
     ws.onmessage = (ev) => {
       const msg = JSON.parse(ev.data);
-      if (msg.id && pending.has(msg.id)) { pending.get(msg.id)(msg.result); pending.delete(msg.id); }
+      if (msg.id && pending.has(msg.id)) { pending.get(msg.id).res(msg.result); pending.delete(msg.id); }
       if (msg.method && listeners.has(msg.method)) {
         for (const handler of listeners.get(msg.method)) handler(msg.params, msg.sessionId);
       }
@@ -217,38 +266,72 @@ async function start({
   const CHROME_FLAGS = [
     '--headless=new', '--disable-gpu', `--remote-debugging-port=${dbgPort}`,
     '--user-data-dir=' + profile, '--no-first-run', '--no-default-browser-check',
-    '--disable-background-networking', '--disable-component-update', '--disable-default-apps',
+'--disable-background-networking', '--disable-component-update', '--disable-default-apps',
     '--disable-sync', '--disable-features=Translate,MediaRouter,OptimizationGuideModelDownloading',
+    /* /dev/shm is 64 MB on a GitHub runner, which is not enough for a Chrome
+       that is also serving a game page headlessly. Exhausting it kills the
+       renderer, and the symptom is exactly what CI showed: the debug port never
+       answered, and Chrome printed nothing at all. */
+    '--disable-dev-shm-usage',
+    /* Chrome >= 111 rejects a DevTools websocket that carries an Origin header
+       unless the browser is started with this. We launch Chrome ourselves on
+       loopback and speak CDP to it, so there is nothing to protect here. */
+    '--remote-allow-origins=*',
     '--no-sandbox', '--mute-audio', 'about:blank',
   ];
   /* Retry Chrome's boot properly. The old loop tried twice and polled 20x100ms =
-   2s per attempt, which on a loaded host (4 shards booting at once) was often
-   not enough - the smoke then died with "Chrome did not start" and ZERO checks
-   ran, so a run reported fail=0 and exited non-zero. That is a crash, not a
-   failed assertion, and it recurred on tools/touch_interruption_b_smoke.js in
-   R7 until the shards stopped dying. Widening the wait and the retry count is
-   the honest fix: nothing is being asserted less often, the browser just gets
-   longer to show up. */
-  let version = null;
-  for (let attempt = 0; attempt < BOOT_ATTEMPTS && !version; attempt++) {
+   * 2s per attempt, which on a loaded host (4 shards booting at once) was often
+   * not enough - the smoke then died with "Chrome did not start" and ZERO checks
+   * ran, so a run reported fail=0 and exited non-zero. That is a crash, not a
+   * failed assertion, and it recurred on tools/touch_interruption_b_smoke.js in
+   * R7 until the shards stopped dying. Widening the wait and the retry count is
+   * the honest fix: nothing is being asserted less often, the browser just gets
+   * longer to show up.
+   *
+   * The loop now covers the DevTools handshake as well, not just /json/version.
+   * It used to stop at "the port answers", so a refused websocket left the smoke
+   * with nothing to retry - and with no timeout either, it simply hung (see
+   * CDP_CONNECT_TIMEOUT_MS). Both phases now end in a bounded error, so a bad
+   * environment produces a named failure in ~1 minute instead of a silent
+   * 10-minute step timeout. */
+  let session = null;
+  let lastBootError = '';
+  for (let attempt = 0; attempt < BOOT_ATTEMPTS && !session; attempt++) {
+    if (attempt) await sleep(BOOT_RETRY_PAUSE_MS);
     execFile(chromeBin, CHROME_FLAGS);
+
+    let version = null;
     for (let i = 0; i < BOOT_POLL_TRIES && !version; i++) {
-      try { version = await (await fetch(`http://127.0.0.1:${dbgPort}/json/version`)).json(); }
-      catch { await sleep(BOOT_POLL_MS); }
+      try {
+        version = await (await fetch(`http://127.0.0.1:${dbgPort}/json/version`,
+          { signal: AbortSignal.timeout(BOOT_REQUEST_TIMEOUT_MS) })).json();
+      } catch { await sleep(BOOT_POLL_MS); }
     }
-    if (!version) { killChromeByTag(profile); await sleep(BOOT_RETRY_PAUSE_MS); }
+
+    if (version) {
+      try {
+        const dbg = await cdp(version.webSocketDebuggerUrl);
+        const target = await dbg.send('Target.createTarget', { url: 'about:blank' });
+        const { sessionId } = await dbg.send('Target.attachToTarget', { targetId: target.targetId, flatten: true });
+        session = { dbg, sessionId, version };
+      } catch (e) {
+        lastBootError = String((e && e.message) || e);
+        session = null;
+      }
+    }
+    if (!session) killChromeByTag(profile);
   }
-  if (!version) {
+  if (!session) {
     srv.close();
+    const waited = Math.round(BOOT_ATTEMPTS * BOOT_POLL_TRIES * (BOOT_POLL_MS + BOOT_REQUEST_TIMEOUT_MS) / 1000);
     const msg = 'Chrome did not start (debug port ' + dbgPort + ') after ' +
-      BOOT_ATTEMPTS + ' attempts (~' + Math.round(BOOT_ATTEMPTS * BOOT_POLL_TRIES * BOOT_POLL_MS / 1000) +
-      's of waiting) — no assertions ran';
+      BOOT_ATTEMPTS + ' attempts (~' + waited + 's of waiting)' +
+      (lastBootError ? ' — last handshake error: ' + lastBootError : '') +
+      ' — no assertions ran';
     throw new Error(msg);
   }
 
-  const dbg = await cdp(version.webSocketDebuggerUrl);
-  const target = await dbg.send('Target.createTarget', { url: 'about:blank' });
-  const { sessionId } = await dbg.send('Target.attachToTarget', { targetId: target.targetId, flatten: true });
+  const { dbg, sessionId } = session;
   const c = { send: (m, p) => dbg.send(m, p, sessionId), on: (m, fn) => dbg.on(m, fn) };
   await c.send('Page.enable');
   await c.send('Runtime.enable');
@@ -351,7 +434,7 @@ async function start({
     killChromeByTag(profile);
     for (let i = 0; i < TEARDOWN_TRIES; i++) {
       let alive = false;
-      try { await fetch(`http://127.0.0.1:${dbgPort}/json/version`); alive = true; } catch { /* gone */ }
+      try { await fetch(`http://127.0.0.1:${dbgPort}/json/version`, { signal: AbortSignal.timeout(BOOT_REQUEST_TIMEOUT_MS) }); alive = true; } catch { /* gone */ }
       if (!alive) break;
       await sleep(TEARDOWN_POLL_MS);
     }
@@ -478,9 +561,9 @@ async function start({
     c, evalv, evalp, navigate, close, closeServer, port: httpPort, sleep,
     tap, press, release, hold, drag, dragTo, stroke, boxOf, waitFor,
     browser: {
-      product: version.Browser || '',
-      userAgent: version['User-Agent'] || '',
-      protocolVersion: version['Protocol-Version'] || '',
+      product: session.version.Browser || '',
+      userAgent: session.version['User-Agent'] || '',
+      protocolVersion: session.version['Protocol-Version'] || '',
     },
     getRuntimeErrors: () => runtimeErrors.slice(),
     checkRuntimeErrors,

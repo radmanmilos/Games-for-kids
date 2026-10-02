@@ -790,7 +790,7 @@ Test tooling lives in `tools/` (see `tools/README.md`). Run with `node tools/<fi
 
 ### CI (GitHub Actions)
 
-`.github/workflows/ci.yml` runs on every push and PR, split into independent layers so one failure cannot hide the others: a `setup` job generates the smoke matrix from `node tools/run_all.js --list --json` (so a newly added smoke is never silently left out), `fast` runs the read-only gates + the hub smoke, `smoke` runs one leg per smoke with `fail-fast: false`, `release` runs blocking offline E2E and accessibility checks, and `extended` runs the complete Playwright device matrix manually or weekly. A manual workflow dispatch runs both release and extended coverage. See `CONTRIBUTING.md` → CI.
+`.github/workflows/ci.yml` runs on every push and PR, split into independent layers so one failure cannot hide the others: a `setup` job generates the smoke matrix from `node tools/run_all.js --list --json` (so a newly added smoke is never silently left out), `fast` runs the read-only gates + the hub smoke, `smoke` runs one leg per smoke with `fail-fast: false`, each leg through `node tools/run_all.js <smoke>` so it inherits the same boot-crash retry the local runners use (a smoke that exits non-zero with **zero** checks is a cold browser, not a failed assertion; a run with at least one `FAIL` is never retried), `release` runs blocking offline E2E and accessibility checks, and `extended` runs the complete Playwright device matrix manually or weekly. A manual workflow dispatch runs both release and extended coverage. See `CONTRIBUTING.md` → CI.
 
 Nothing inside this folder is required for the final application to run.
 

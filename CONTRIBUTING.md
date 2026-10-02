@@ -45,7 +45,7 @@ If a smoke does not exist for the game you changed, run the page manually in Liv
 | --- | --- | --- |
 | `setup` | derives the smoke list from `node tools/run_all.js --list --json` | every push/PR |
 | `fast` | `check_fast.js` — syntax, registry/metadata, CI-workflow topology, code-scanning-alert guards, generated-artifact freshness, offline inventory, hub smoke (**no** game battery; read-only) | every push/PR |
-| `smoke` | one leg per smoke, `fail-fast: false`, `max-parallel: 6` | every push/PR |
+| `smoke` | one leg per smoke via `run_all.js`, `fail-fast: false`, `max-parallel: 6` | every push/PR |
 | `release` | blocking offline E2E + serious/critical accessibility scan | every push/PR |
 | `extended` | blocking `play_matrix.mjs` (Chromium + WebKit × 5 viewports; missing-engine skips fail coverage) | manual run or weekly |
 

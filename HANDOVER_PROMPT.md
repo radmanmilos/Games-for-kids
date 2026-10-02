@@ -38,22 +38,26 @@ Added `tools/audio_buses_smoke.js` with deterministic fake-Web-Audio tests for b
 
 Validation: targeted 17 smokes passed 378 checks; Adventure/Explorer retest passed 7 smokes / 172 checks; full battery passed 27 tools / 573 checks; `check_fast.js` passed all 6 stages. Regenerated the offline manifest and synced `docs/`. ZIP generation remains unavailable because `zip` is not installed. Changes have not yet been committed or pushed.
 
+## Task 177 — CI fixed: it had never been green (all 25 runs failed)
+
+Done, evidence-first. `gh` is now installed and authenticated on this host (`gh auth login --web` device flow works here); the job-log endpoint returns `403` unauthenticated even for a public repo, so **never try to read a CI failure without `gh`**. Two distinct shapes, both confirmed from real log bodies:
+
+- **~26 s:** `counting_smoke crashed: Error: Chrome did not start (debug port 34903) after 4 attempts (~24s of waiting) — no assertions ran` (`headless.js:246`). That is the boot budget (`4 × 30 × 200ms` + 3 pauses) matched exactly, and 19/26 legs failed this way with Chrome printing nothing.
+- **612 s:** `ocean_smoke.js` printed **zero lines** for the whole 10-minute step timeout, then "Terminate orphan process: node". `cdp()` resolved only on `ws.onopen` with no `onerror`/`onclose`/timeout and `send()` only settled from a message id that may never arrive, so a refused DevTools websocket hung forever.
+
+Fixed in `tools/headless.js` (bounded connect/command/request timeouts, handshake moved inside the existing retry loop, `--disable-dev-shm-usage`, `--remote-allow-origins=*`) and in `.github/workflows/ci.yml` (each matrix leg now runs `node tools/run_all.js <smoke>` so it inherits the 0-check boot-crash retry that `run_all.js` and `check_fast.js` already had — the raw script was the only runner in the repo without it).
+
+Validation: `cdp()` probe rejects in 28 ms (refused) and 15015 ms (black hole, = `CDP_CONNECT_TIMEOUT_MS`); the `run_all.js` routing negative-tested — a broken assertion gives `pass=15 fail=1`, is **not** retried, exits 1; `validate_workflow.js` 11/11; `check_fast.js` 7/7; full battery **27/27 tools, 570 checks, 0 failures**. `game/` unchanged, so `docs/` and the offline inventories were already current. **The verification CI still owes us:** the Linux-only failure cannot be reproduced on this Windows host, so only the next push proves the runner is green.
+
 ## Task 176 — regression guards for the two code-scanning alerts
 
 Both GitHub Advanced Security alerts are fixed (`32c7e48` autofixed alert 8, `fc4c1ce` autofixed alert 7) and are now pinned by `tools/check_scan_alerts.js`: a dangerous-scheme filter must test `javascript:` **and** `vbscript:` (alert 7 was a partial denylist in `validate_offline.js`), and an HTML stripper must consume the whole closing tag (alert 8 ended at `<\/script\s*>`, which `</script foo="bar">` walks through, in `audit_serbian_strings.js`). The stripper rule is checked behaviourally (replace the element, mask it, require the body to be gone) rather than by matching the autofix's text, both checkers are self-tested against the pre-autofix shapes, and the repo scans must find at least one site each so the guard cannot pass vacuously. Wired into `check_fast.js` as a 7th stage. Negative-tested against the real files: reverting either autofix fails with `file:line` and exit 1. Known residual: `</script/>` is deliberately not covered.
 
 Validation: `check_scan_alerts.js` 5/5 across 94 files; `check_fast.js` 7/7 green in 9.6 s. `game/` unchanged, so `docs/` and the offline inventories were already current.
 
-## OPEN — CI has never been green (all 25 runs `failure`)
+## OPEN — nothing in flight
 
-This is the next task and it is **not** started. Facts established, all from the public GitHub API (job logs are 403 unauthenticated and `gh` is not installed on this host):
-
-- Workflow `369983727`. Runs #1–#25 have **all** concluded `failure` — this was never green, so there is no last-good commit to bisect against and the cause is structural, not a recent regression.
-- Current run `36911266081` (SHA `fc4c1ce`, #25): `fast` **passes**; 19 of 26 smoke legs fail. Passing: animals, audio_buses, driving, piano, touch_interruption A/B, visual_compare. Failing: adventure, candy, classroom, coloring, counting, dino, kitty, memory, ocean, parent, puzzle, racing3d, runtime_error, shapes, space, sw_update, touch_interruption C/D, tracing. The split is *random per job*, which argues against anything in the smoke's content.
-- Two failure shapes: ~32–38 s jobs and ~616–623 s jobs (the workflow's 10-minute step timeout).
-- The ~33 s shape matches the harness's boot budget exactly: `headless.js` `BOOT_ATTEMPTS 4 × BOOT_POLL_TRIES 30 × BOOT_POLL_MS 200` = 24 s plus 3 retry pauses, i.e. **"Chrome did not start … no assertions ran"**, a 0-check boot crash. `check_fast.js` retries that signature twice (`LAUNCH_RETRIES`), the raw smoke jobs do not — and `fast` in run #25 took 5 m 13 s against a ~9 s local baseline, consistent with a stage hitting `check_fast`'s 300 s per-stage `spawnSync` timeout and then being retried.
-- Two concrete, provable defects in `tools/headless.js` regardless of which shape dominates: `cdp()` resolves only on `ws.onopen` with **no timeout and no error handler**, and `cdg.send()` promises have **no timeout** — any lost or refused DevTools response hangs forever, which is the only code path that explains a silent 620 s timeout. The boot poll's `fetch` also has no per-request timeout, so the advertised "~24 s of waiting" is not a real bound. `--disable-dev-shm-usage` is absent from `CHROME_FLAGS` (`headless.js:217`), the standard fix for Chrome failing on a 64 MB `/dev/shm`, and would explain why it reproduces on `ubuntu-latest` but never on this Windows host.
-- **What is needed to finish:** the failing job's own log, which is the difference between a root-cause fix and a guess. Ask the user to paste one failing leg's tail from the Actions UI, or to approve installing `gh` / supplying a token.
+Task 177 (CI) and task 176 (scan-alert guards) are both committed and pushed. Next items, in the order the user set: **task 156** (profile test-suite resource usage/speed, prune provably unnecessary waits — `piano_smoke.js` is the slowest at 35 s / 25 checks and `touch_interruption_*` costs ~16–25 s each), then **R16** (asset and performance budget report; P1/P2, depends on R2/R6/R11, roadmap suggests task 167 but it is currently unfiled). One caveat carried forward: `zip` is not installed here, so the offline ZIP phase cannot run locally and the manual link stays hidden per the recorded user decision.
 
 ## Historical snapshot through R7
 
