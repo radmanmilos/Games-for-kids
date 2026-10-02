@@ -6,7 +6,21 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — task 178 IN PROGRESS (diagnostic trust); R16 still NOT started
+## Current session — task 181 pushed; awaiting CI run #41 to confirm, then close issue #3
+
+**`gh` is installed and authed** (official v2.102.0 arm64 tarball at `/usr/local/bin/gh`; Alpine has no `gh` package). The CI step logs are readable for the first time, and they changed the diagnosis completely.
+
+**The real root cause of the every-run Release QA failure (task 181, pushed):** Chrome boot crashes are **routine** on GitHub runners — **13 of 27 matrix legs hit one on run #40**, each printed `[boot crash, exit 1 — retrying (1/2)]` and **passed on the retry**. `Release QA` ran `offline_smoke.mjs` **raw**, so it had no retry and turned that routine event red every time. Fixed by routing it through `run_all.js` (with two extra changes needed: the boot-crash test now also honours headless.js's `no assertions ran` marker, because the tool prints 3 PASS lines before booting a browser; and the runner now accepts an explicit `.mjs` filename). Battery deliberately still 27.
+
+**⚠ Issue #3's pasted log was from an older run and described a mid-session CDP socket death that is NOT what was happening.** The real error is `Chrome did not start (debug port N) after 4 attempts ... no assertions ran`, with the browser **alive** on all four attempts and stderr empty. Do not re-investigate the CDP path.
+
+**⚠ Also found: `offline_smoke.mjs` had NO exit code** — it exited 0 while printing 3 FAILs, so the blocking gate could only ever go red by crashing. Fixed with `getFails()`. **Consequence to watch:** this gate has never completed on the runner, so it has never been proven green; a genuine assertion failure may surface on run #41. That is correct behaviour, not a regression.
+
+**Still true:** 3 local `racing3d`/WebGL failures are the documented no-WebGL limitation of this host — verified identical at clean HEAD. Do not stub WebGL to "fix" them; the runner has software WebGL.
+
+**Next actions:** (1) confirm run #41; (2) **close issue #3 once green** (the owner asked) — only when the gate actually passes; (3) the offline ZIP is gone (task 179) and `OFFLINE.md` documents the mechanism; (4) R16 remains **NEW and unstarted** — do not start it.
+
+## Historical — task 178 (diagnostic trust) + task 179 (ZIP removed) + task 180
 
 Task 178 is **local and uncommitted**. It did **not** fix run #39 and does not claim to.
 

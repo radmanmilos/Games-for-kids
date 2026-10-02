@@ -126,8 +126,22 @@ jobs:
       # 153) - a green that meant nothing. It now primes the cache and cuts the
       # origin in ONE session and plays all 16 games with trusted input, so a
       # failure here is a real offline regression and the release stops.
+      #
+      # Run through run_all.js, NOT raw. This was the last runner in the repo
+      # bypassing it, and it is why this job failed on every single run: Chrome
+      # boot crashes are ROUTINE on GitHub runners. In run #40, 13 of the 27
+      # matrix legs hit one, printed "[boot crash, exit 1 - retrying (1/2)]" and
+      # passed on the retry - all of them through run_all.js. This step had no
+      # retry, so the same routine event turned Release QA red every time
+      # ("Chrome did not start (debug port N) after 4 attempts ... no assertions
+      # ran", with the browser process still alive and the port simply silent).
+      # Passing the filename explicitly keeps it out of the battery (the CI
+      # matrix is generated from --list, which is unchanged at 27 tools) while
+      # giving it the retry. run_all.js also had to learn to see a boot crash
+      # that follows some PASS lines - this tool prints three disk/registry
+      # checks before it boots a browser, so the old "0 checks" rule missed it.
       - name: Offline E2E
-        run: node tools/offline_smoke.mjs
+        run: node tools/run_all.js offline_smoke.mjs --concurrency 1
         timeout-minutes: 10
 
       # R10: the pinned axe-core build is vendored under tools/vendor; serious or

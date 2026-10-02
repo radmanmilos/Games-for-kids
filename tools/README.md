@@ -12,6 +12,28 @@ diagnostic and sets a nonzero exit code instead of letting Node terminate during
 the unhandled-rejection storm. See `guards/cdp_fail_negtest.js` for the real
 disconnect regression test.
 
+**Chrome boot crashes are routine on GitHub runners, and `run_all.js` is the retry
+that absorbs them (task 181).** In run #40, 13 of 27 matrix legs hit
+`Chrome did not start (debug port N) after 4 attempts ... no assertions ran` with
+the browser process still **alive** and the port simply silent; all 13 passed on
+`run_all.js`'s retry. Two details make that retry usable by a release gate: the
+boot-crash test is `code !== 0 && ((pass === 0 && fail === 0) || /no assertions ran/
+.test(out))` — the marker clause matters because `offline_smoke.mjs` prints three
+PASS lines *before* it boots a browser, so the old zero-check rule missed it — and
+positional names ending in `.mjs` are accepted, so a gate that is deliberately not
+in the battery can be run explicitly (`node tools/run_all.js offline_smoke.mjs`)
+without joining it (the battery is still 27 tools). **Never run a `*_smoke` tool raw
+in CI**: that was the last asymmetry in the repo and it made `Release QA` red on every
+single run. `offline_smoke.mjs` also sets a nonzero exit code from `getFails()` — it
+used to have none, so the blocking gate could only go red by crashing, never by
+failing an assertion.
+
+`gh` is installed here (`/usr/local/bin/gh`, official tarball — Alpine has no `gh`
+package) and authed, so CI step logs are readable. Two traps: the device flow's
+waiting process is killed by a session restart and the token is then lost, so start
+it detached with `setsid`; and `gh api .../jobs/<id>/logs` fails with "the response
+contains terminal escape sequences" — use `gh run view <id> --log`.
+
 Task 156 profiling found Windows teardown spent 2.1–4.3 s starting PowerShell
 to locate Chrome by profile, while removing its profile took only ~32 ms.
 `close()` now terminates the exact `ChildProcess` handle first, waits up to the

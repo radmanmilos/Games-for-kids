@@ -30,7 +30,7 @@ import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
-const { start, check, skip, sleep } = require('./headless.js');
+const { start, check, skip, sleep, getFails } = require('./headless.js');
 const { children, parents } = require('./registry.js');
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -607,4 +607,17 @@ await h.c.send('Network.enable');
     bad.length === 0, bad.map(b => b[0]).join(', ') || 'all green');
 } finally {
   await h.close();
+}
+
+/* Exit non-zero when a check FAILED. This tool had no exit code at all: it fell
+   off the end of the IIFE with status 0, so every FAIL it printed was cosmetic
+   and the blocking Release QA step could only ever go red by crashing. That is
+   the same family as every other "a check that cannot fail" in this repo's
+   history, and it is the more dangerous half of the CI problem: on a host where
+   racing3d cannot boot (no WebGL) the run reported 3 FAILs and still exited 0.
+   A SKIP is still not a failure - skip() is for a missing environment capability
+   and is reported separately by getSkips(). */
+if (getFails()) {
+  console.error(`\n${getFails()} check(s) FAILED — the offline gate does not pass.`);
+  process.exit(1);
 }

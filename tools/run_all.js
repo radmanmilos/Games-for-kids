@@ -169,7 +169,11 @@ function mapFileToSmokes(rel) {
 function resolveSmokes() {
   let list;
   if (positional.length) {
-    list = positional.map(n => (n.endsWith('.js') ? n : n + '.js'));
+    // An explicit filename is taken as given, so a release-gate tool that is not
+    // part of the battery can still be run through this runner and inherit the
+    // boot-crash retry: `node tools/run_all.js offline_smoke.mjs`. Adding it to
+    // the battery instead would put a ~2-minute gate in every matrix leg.
+    list = positional.map(n => (/\.(js|mjs)$/.test(n) ? n : n + '.js'));
     list = list.filter(n => fs.existsSync(path.join(SMOKE_DIR, n)));
     if (!list.length) { console.error('No matching smoke files given; see node tools/run_all.js --list'); process.exit(1); }
   } else if (opts.since) {
@@ -179,7 +183,10 @@ function resolveSmokes() {
   } else {
     list = allSmokes();
   }
-  return [...new Set(list.filter(n => n.endsWith('_smoke.js')))];
+  // `_smoke.mjs` counts as a tool too: offline_smoke.mjs is the Release QA gate
+  // and is deliberately NOT in the battery, but it is still run through this
+  // runner (by explicit filename) so it inherits the boot-crash retry.
+  return [...new Set(list.filter(n => /_smoke\.m?js$/.test(n)))];
 }
 
 /* --resume: skip smokes that already passed in a previous (possibly killed) run.
@@ -247,9 +254,17 @@ async function runBatch(smokes, label) {
         const pass = (out.match(/^PASS /gm) || []).length;
         const fail = (out.match(/^FAIL /gm) || []).length;
         const skip = (out.match(/^SKIP /gm) || []).length;
-        // Non-zero exit with zero checks means Chrome never booted (port/profile/lock
-        // contention under parallel load), not an assertion failure. Retry once.
-        if (code !== 0 && pass === 0 && fail === 0 && attempt < LAUNCH_RETRIES) {
+        // A boot crash means Chrome never came up, not that an assertion failed.
+        // Two ways to see one:
+        //   - non-zero exit with zero checks at all (the usual case), or
+        //   - headless.js's own explicit marker in the throw message. A tool that
+        //     prints disk/registry PASS lines BEFORE it boots a browser still has
+        //     a boot crash, and the pass===0 rule alone would miss it. CI run #40
+        //     proved this: 13 of 27 matrix legs hit a boot crash and recovered on
+        //     retry, while Release QA — which ran offline_smoke.mjs raw, with no
+        //     retry — reported 3 passes and a hard failure for the same event.
+        const bootCrash = code !== 0 && ((pass === 0 && fail === 0) || /no assertions ran/.test(out));
+        if (bootCrash && attempt < LAUNCH_RETRIES) {
           console.log(`\n----- ${name} [boot crash, exit ${code} — retrying (${attempt + 1}/${LAUNCH_RETRIES})]`);
           launch(name, attempt + 1);
           return;
