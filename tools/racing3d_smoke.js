@@ -215,30 +215,46 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     }
     check('countdown finished -> driving mode', driveWait === true);
 
-    await h.evalv(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' })); true`);
-    await h.evalv(`window.__probeReset(); true`);
-    await sleep(400);
-    const stA = JSON.parse(await h.evalv(`JSON.stringify({ yaw: window.__r3d.steerState().steerYaw, lat: window.__r3d.lateral(), sp: window.__r3d.speed() })`));
-    await h.evalv(`window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' })); true`);
-    await sleep(150);
-    const stE1 = JSON.parse(await h.evalv(`JSON.stringify({ yaw: window.__r3d.steerState().steerYaw, lat: window.__r3d.lateral() })`));
-    await sleep(250);
-    const stE2 = JSON.parse(await h.evalv(`JSON.stringify({ yaw: window.__r3d.steerState().steerYaw, lat: window.__r3d.lateral() })`));
-    await sleep(900);
-    const stB = JSON.parse(await h.evalv(`JSON.stringify({ yaw: window.__r3d.steerState().steerYaw, lat: window.__r3d.lateral() })`));
-    const probeRelease = await h.evalv(`window.__probe()`);
-    await sleep(300);
-    const stC = JSON.parse(await h.evalv(`JSON.stringify({ lat: window.__r3d.lateral() })`));
-    await h.evalv(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' })); true`);
-    await sleep(400);
-    await h.evalv(`window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' })); true`);
-    const stLeft = JSON.parse(await h.evalv(`JSON.stringify({ lat: window.__r3d.lateral() })`));
+    // Frame-rate independent by construction. This used to hold the key and
+    // `await sleep(N)`, which only works if a frame costs less than the 50ms dt
+    // clamp. Measured on the Linux runner: 15 frames of 113ms (worst 183ms) gave
+    // 700ms of sim for 1700ms of wall clock, so every sleep below under-bought
+    // and the samples read a state the easing had not reached. Stepping a fixed
+    // dt delivers the exact sim budget on any host. The step counts are the
+    // previous millisecond budgets at 1/60 (400/150/250/900/300/400 -> 24/9/15/
+    // 54/18/24), so the assertion thresholds are unchanged.
+    const steerCheck = await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        const snap = () => ({ yaw: r3d.steerState().steerYaw, lat: r3d.lateral(), sp: r3d.speed() });
+        const run = (n) => { for (let i = 0; i < n; i++) r3d.step(1 / 60); };
+        r3d.haltLoop(true);
+        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+        run(24);
+        const stA = snap();
+        window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+        run(9);
+        const stE1 = snap();
+        run(15);
+        const stE2 = snap();
+        run(54);
+        const stB = snap();
+        run(18);
+        const stC = snap();
+        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+        run(24);
+        window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+        const stLeft = snap();
+        const rm = r3d.reducedMotion();
+        r3d.resetInput();
+        r3d.haltLoop(false);
+        return JSON.stringify({ stA, stE1, stE2, stB, stC, stLeft, rm });
+    })()`);
+    const stj = JSON.parse(steerCheck);
     check('steering: wheels turn in + car drifts, car stops while wheels still return slowly, no side-drift, reverses',
-        stA.sp > 10 && stA.yaw > 0.1 && stA.lat > 0.3 &&
-        stE1.yaw > 0.1 && stE2.yaw > 0.07 && Math.abs(stE2.lat - stE1.lat) < 0.4 &&
-        Math.abs(stB.yaw) < 0.05 && Math.abs(stC.lat - stB.lat) < 0.15 &&
-        stLeft.lat < stC.lat - 0.5,
-        JSON.stringify({ stA, stE1, stE2, stB, stC, stLeft, probe: JSON.parse(probeRelease) }));
+        stj.stA.sp > 10 && stj.stA.yaw > 0.1 && stj.stA.lat > 0.3 &&
+        stj.stE1.yaw > 0.1 && stj.stE2.yaw > 0.07 && Math.abs(stj.stE2.lat - stj.stE1.lat) < 0.4 &&
+        Math.abs(stj.stB.yaw) < 0.05 && Math.abs(stj.stC.lat - stj.stB.lat) < 0.15 &&
+        stj.stLeft.lat < stj.stC.lat - 0.5, steerCheck);
 
     const pads = await h.evalv(`JSON.stringify(window.__r3d.boostPads())`);
     const pj = JSON.parse(pads);
@@ -271,18 +287,31 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     check('drift engages while steering at speed (skid smoke) and disengages on release',
         driftA === true && driftB === false && driftPart > 0, 'drift=' + driftA + '->' + driftB + ' particles=' + driftPart);
 
-    await h.evalv(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' })); true`);
-    await h.evalv(`window.__probeReset(); true`);
-    await sleep(400);
-    const bankA = JSON.parse(await h.evalv(`JSON.stringify(window.__r3d.steerState())`));
-    await h.evalv(`window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' })); true`);
-    await sleep(1300);
-    const bankB = JSON.parse(await h.evalv(`JSON.stringify(window.__r3d.steerState())`));
-    const probeBank = JSON.parse(await h.evalv(`window.__probe()`));
+    // Same frame-rate-independent stepping as the steering batch above. The
+    // release decay is the clearest case: steerYaw returns to centre as
+    // exp(-2.8 * t), so 0.417 -> below 0.05 needs ~757ms of *simulated* time. A
+    // sleep(1300) bought only ~540ms of sim on the runner, leaving 0.121 and a
+    // false failure; 78 steps deliver the intended 1300ms everywhere.
+    const bankCheck = await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        const run = (n) => { for (let i = 0; i < n; i++) r3d.step(1 / 60); };
+        r3d.haltLoop(true);
+        window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
+        run(24);
+        const bankA = r3d.steerState();
+        window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+        run(78);
+        const bankB = r3d.steerState();
+        const rm = r3d.reducedMotion();
+        r3d.resetInput();
+        r3d.haltLoop(false);
+        return JSON.stringify({ bankA, bankB, rm });
+    })()`);
+    const bkj = JSON.parse(bankCheck);
     check('kart banks into the turn + wheels carry a spin pattern, then point forward on release',
-        bankA.spokes === 16 && bankA.roll > 0.15 && bankA.steerYaw > 0.1 &&
-        Math.abs(bankB.roll) < 0.05 && Math.abs(bankB.steerYaw) < 0.05 && Math.abs(bankB.yaw) < 0.05,
-        JSON.stringify({ bankA, bankB, probe: probeBank }));
+        bkj.bankA.spokes === 16 && bkj.bankA.roll > 0.15 && bkj.bankA.steerYaw > 0.1 &&
+        Math.abs(bkj.bankB.roll) < 0.05 && Math.abs(bkj.bankB.steerYaw) < 0.05 && Math.abs(bkj.bankB.yaw) < 0.05,
+        bankCheck);
 
     const rumA = await h.evalv(`window.__r3d.seekLateral(9.4); true`);
     await sleep(150);
@@ -393,41 +422,75 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
     // batch 4 — reactive decor billboards: reduced-motion gate off by default,
     // pulse scale up as the kart passes within ~10 u when amplitude is enabled
+    //
+    // Two host-dependencies were removed here, both caught by run #28 evidence:
+    //  - the billboard was picked with `decorNear(progress() + 0.05)`, i.e. from
+    //    wherever the kart happened to be. That differed per host (idx 6 locally,
+    //    idx 4 on the runner), and the pulse peaks a different number of steps
+    //    after the seek depending on entry speed, so the fixed 26-step budget
+    //    landed mid-decay on one host and at baseline on the other. The item is
+    //    now chosen by index, so the test cannot draw a different billboard.
+    //  - the assertion `ampInit === 0` asserted the *host's* OS setting
+    //    (prefers-reduced-motion), not a product behaviour, and REDUCED_MOTION is
+    //    read once at module load so a smoke cannot set it. The real invariant is
+    //    that decorAmp is initialised from REDUCED_MOTION, now asserted on any host.
+    // The return-to-baseline wait polls the *kart passing the billboard* (a state
+    // change), never the assertion itself; the baseline is then checked once.
     const decorCheck = await h.evalv(`(function(){
         const r3d = window.__r3d;
+        const rm = r3d.reducedMotion();
         r3d.haltLoop(true);
         const ampInit = r3d.decorAmp();
-        const d = r3d.decorNear(r3d.progress() + 0.05);
-        if (d.idx < 0) { r3d.haltLoop(false); return JSON.stringify({ none: true }); }
+        let d = null, idx = -1;
+        for (let i = 0; i < 40 && !d; i++) {
+            const a = r3d.decorAt(i);
+            if (a && a.t > 0.2 && a.t < 0.8) { d = a; idx = i; }
+        }
+        if (!d) { r3d.haltLoop(false); return JSON.stringify({ none: true }); }
         r3d.resetSteerState(0, 0, 0);
         r3d.setDecorAmp(0);
-        r3d.seekToProgress(d.t - 0.0005);
-        const baseOff = r3d.decorScale(d.idx);
+        // 2% of the track back, not 0.05%: the pulse only builds while the kart is
+        // within ~10u, so seeking to just before the billboard clears it in a
+        // single step and the pop never happens.
+        const lead = 0.02;
+        r3d.seekToProgress(d.t - lead);
+        const baseOff = r3d.decorScale(idx);
         for (let i = 0; i < 8; i++) r3d.step(1 / 60);
-        const midOff = r3d.decorScale(d.idx);
+        const midOff = r3d.decorScale(idx);
         r3d.setDecorAmp(1);
-        r3d.seekToProgress(d.t - 0.0005);
-        const baseOn = r3d.decorScale(d.idx);
-        for (let i = 0; i < 6; i++) r3d.step(1 / 60);
-        const midOn = r3d.decorScale(d.idx);
-        for (let i = 0; i < 20; i++) r3d.step(1 / 60);
-        const endOn = r3d.decorScale(d.idx);
-        // decay curve: does the scale actually climb back to 1, and how much
-        // further sim time does it need? 26 steps (433ms) may simply be too few.
-        const tail = [];
-        for (let k = 0; k < 6; k++) {
-            for (let i = 0; i < 30; i++) r3d.step(1 / 60);
-            tail.push(+r3d.decorScale(d.idx).toFixed(4));
+        r3d.seekToProgress(d.t - lead);
+        const baseOn = r3d.decorScale(idx);
+        // The pulse is a 0.3s sine that RE-TRIGGERS on every frame the kart is
+        // inside the ~10u radius, so while nearby the scale oscillates between 1
+        // and 1.15 forever and any single sample is a lottery -- 1.14095 is just
+        // 1 + 0.15*sin(phase), which is why two different hosts sampled the same
+        // value. So baseline can only be asserted once the kart is clear of the
+        // radius (pulse can no longer re-trigger) and the final 0.3s has elapsed.
+        const trigU = 0.03;  // real radius is 10/trackLen (~0.008); be generous
+        let peak = baseOn, clear = false, steps = 0, atClear = 0;
+        for (let k = 0; k < 900 && !clear; k++) {
+            r3d.step(1 / 60);
+            steps++;
+            const s = r3d.decorScale(idx);
+            if (s > peak) peak = s;
+            const p = r3d.progress();
+            // same min-distance the game uses, so "behind the billboard" also
+            // counts as near and the kart is not clear the moment we seek back
+            const delta = Math.min(((p - d.t) % 1 + 1) % 1, ((d.t - p) % 1 + 1) % 1);
+            clear = delta >= trigU;
         }
-        const rm = r3d.reducedMotion();
+        atClear = r3d.decorScale(idx);
+        for (let i = 0; i < 24; i++) r3d.step(1 / 60);  // 0.4s > the 0.3s pulse
+        const endOn = r3d.decorScale(idx);
         r3d.setDecorAmp(ampInit);
         r3d.haltLoop(false);
-        return JSON.stringify({ idx: d.idx, t: d.t, baseOff, midOff, baseOn, midOn, endOn, ampInit, rm, tail });
+        return JSON.stringify({ idx, t: d.t, baseOff, midOff, baseOn, peak, atClear, endOn, ampInit, rm, steps, clear });
     })()`);
     const dcj = JSON.parse(decorCheck);
     check('reactive decor: pulse gated off under reduced motion, scale pops when the kart passes and returns to baseline',
         dcj.none !== true && dcj.baseOff === 1 && dcj.midOff === 1 &&
-        dcj.baseOn === 1 && dcj.midOn > 1.05 && dcj.endOn === 1 && dcj.ampInit === 0, decorCheck);
+        dcj.baseOn === 1 && dcj.peak > 1.05 && dcj.clear === true && dcj.endOn === 1 &&
+        dcj.ampInit === (dcj.rm ? 0 : 1), decorCheck);
 
     // batch 5 — contact/blob shadows under kart/pickups/boost pads/obstacles.
     // Shared radial gradient sprite texture; depthWrite off + fog off stays the
