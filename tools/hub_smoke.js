@@ -142,7 +142,7 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
   // R12 acceptance: no technical / offline-management action may be exposed on the
   // child launcher. Only the parent lock may lead to those. This is a static check
   // on the child hub's markup, so it cannot be defeated by a re-layout.
-  const TECHNICAL = ['download-offline', 'check-updates', 'offline-zip', 'download-status',
+  const TECHNICAL = ['download-offline', 'check-updates', 'download-status',
                      'reset-progress', 'audio-test', 'offline-manifest', 'serviceWorker'];
   const leaked = TECHNICAL.filter(id => html.includes(id));
   check('R12: child hub exposes NO technical/offline controls (parent lock is the only entry)',

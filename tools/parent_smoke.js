@@ -1,5 +1,5 @@
 /* parent_smoke.js — R12: the parent area is the only surface with technical controls.
-   Also guards the new connection-status + version strip, and the manual ZIP link.
+   Also guards the new connection-status + version strip.
    Run: node tools/parent_smoke.js */
 const { start, check, getFails } = require('./headless.js');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -9,16 +9,14 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await sleep(1200);
 
   // R12 parent surface: offline download, update check, reset progress, audio test,
-  // plus the facts the roadmap requires — version and offline status. (The manual
-  // ZIP link is present but hidden; asserted separately below.)
+  // plus the facts the roadmap requires — version and offline status.
   const surface = JSON.parse(await h.evalv(`JSON.stringify({
     download: !!document.getElementById('download-offline'),
     check: !!document.getElementById('check-updates'),
     reset: !!document.getElementById('reset-progress'),
     audio: !!document.getElementById('audio-test'),
     zip: !!document.getElementById('offline-zip'),
-    zipHref: (document.getElementById('offline-zip') || {}).getAttribute
-      ? document.getElementById('offline-zip').getAttribute('href') : '',
+    zipLinks: document.querySelectorAll('a[href*=".zip"]').length,
     conn: (document.getElementById('conn-status') || {}).textContent || '',
     version: (document.getElementById('version-info') || {}).textContent || '',
     back: !!document.querySelector('.back-btn')
@@ -26,22 +24,14 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('R12: parent surface has download, update check, reset progress and audio test',
     surface.download && surface.check && surface.reset && surface.audio, JSON.stringify(surface));
 
-  // R12 asked for a manual ZIP link, but the archive is untracked and therefore
-  // not published, so the link 404s on the live site. Per user decision (2026-09-30)
-  // it stays in the markup but HIDDEN until the ZIP is actually deployed. Assert
-  // that it is genuinely not presented, not merely absent from the DOM.
-  const zip = JSON.parse(await h.evalv(`JSON.stringify((function(){
-    var a = document.getElementById('offline-zip');
-    if (!a) return { present: false };
-    var cs = getComputedStyle(a);
-    var r = a.getBoundingClientRect();
-    return { present: true, hiddenAttr: a.hasAttribute('hidden'),
-             display: cs.display, visible: cs.display !== 'none' && r.width > 0 && r.height > 0,
-             href: a.getAttribute('href') };
-  })())`));
-  check('R12: manual ZIP link is present but NOT shown (unpublished archive, hidden by decision)',
-    zip.present === true && zip.visible === false && zip.hiddenAttr === true,
-    JSON.stringify(zip));
+  // The manual ZIP download was REMOVED on 2026-10-02 (user decision), superseding
+  // the 2026-09-30 "keep it hidden" outcome. Offline is the service worker:
+  // "Преузми за офлајн рад" caches everything, so there is nothing to hand-unpack.
+  // This previously asserted the link was present-but-hidden; it now asserts the
+  // opposite, so the removed option cannot quietly return and 404 for a parent.
+  check('no manual ZIP download remains in the parent area',
+    surface.zip === false && surface.zipLinks === 0,
+    'offline-zip=' + surface.zip + ' zipAnchors=' + surface.zipLinks);
 
   // Version is fetched from manifest.json, so wait for it to actually land rather
   // than assuming a fixed delay (readiness wait, not a sleep). NB: evalv already

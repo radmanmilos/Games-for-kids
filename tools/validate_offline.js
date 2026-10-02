@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 /* tools/validate_offline.js — R2 (task 153): validate the offline inventory.
  *
- * The offline story has THREE inventories that are easy to conflate:
+ * The offline story has TWO inventories that are easy to conflate:
  *   1. game/sw-cache-list.json   — what the service worker pre-caches (generated)
  *   2. game/offline-manifest.json— sha256 + size for exactly those entries
- *   3. docs/game-offline.zip    — built by copying ALL of game/, so it is a
- *                                 strict superset (it also carries the caregiver
- *                                 doc game/docs/OFFLINE_INSTALL.md, which no
- *                                 runtime page loads and which therefore must NOT
- *                                 be in the runtime cache list).
+ *
+ * There was a third (docs/game-offline.zip, a manual download archive) until
+ * 2026-10-02, when it was removed by user decision: offline is the service
+ * worker, so there is nothing for a parent to unpack by hand. The classified
+ * caregiver doc game/docs/OFFLINE_INSTALL.md still ships — as a static file in
+ * the docs/ mirror — but no runtime page loads it, so it must NOT be in the
+ * runtime cache list. That rule is unchanged and is still checked below.
  *
  * Usage:  node tools/validate_offline.js          # validate + print the report
  *         node tools/validate_offline.js --quiet  # exit code only
@@ -157,13 +159,13 @@ check('no cache entry is a docs-only or resources file', leaked.length === 0,
   leaked.length ? leaked.join(', ') : 'clean');
 
 // =========================================================================
-// 7. Classified caregiver documents are packaged but not cached
+// 7. Classified caregiver documents are present but not cached
 // =========================================================================
 const caretaking = CAREGIVER_DOCS.filter(f => onDiskSet.has(f));
 const caretakingOk = caretaking.every(f => !listKeys.includes(f));
-check('caregiver docs ship in the ZIP but stay out of the runtime cache list',
+check('caregiver docs ship with the site but stay out of the runtime cache list',
   caretakingOk,
-  caretaking.length ? caretaking.join(', ') + ' packaged, not cached' : 'none configured');
+  caretaking.length ? caretaking.join(', ') + ' present, not cached' : 'none configured');
 
 // =========================================================================
 // 8. Generation is deterministic (re-running the generator is a no-op)
@@ -247,9 +249,8 @@ if (!QUIET) {
   console.log('Total runtime bytes: ' + mb(totalBytes));
   console.log('Largest assets:');
   sizes.slice(0, 5).forEach((s, i) => console.log('  ' + (i + 1) + '. ' + s.f + ' — ' + kb(s.n)));
-  console.log('\nZIP note: the ZIP copies all of game/, so it additionally carries the');
-  console.log('classified caregiver doc(s): ' + (caretaking.join(', ') || 'none') + '.');
-  console.log('Those are intentionally NOT in the runtime cache inventory.');
+  console.log('\nCaregiver doc(s): ' + (caretaking.join(', ') || 'none') + '.');
+  console.log('These are intentionally NOT in the runtime cache inventory.');
 }
 
 if (fails) {

@@ -65,12 +65,21 @@ say(files.length > 0, `read ${files.length} game files from game/games`);
 
 /* Only per-game smokes must be reachable from a page or game file. Whole-app
    and tooling-level smokes are intentionally excluded: they exercise global
-   surfaces or test the harness itself, not one game changed by --since. */
+   surfaces or test the harness itself, not one game changed by --since.
+
+   audio_buses_smoke belongs here for a different reason. It covers
+   game/shared/audio-buses.js, and mapFileToSmokes() sends EVERY game/shared/*
+   edit to BROAD() (the whole battery), so its coverage comes from the shared/
+   branch — not from the per-game rules this check asserts. It is not reachable
+   from any page or file in game/games/, which is exactly what made this guard
+   report "unreachable: audio_buses_smoke" and take down Release QA on CI runs
+   #34 and #37. It was a wrong claim in the CHECK, not missing coverage. */
 const NON_GAME_SMOKES = new Set([
   'hub_smoke', 'parent_smoke', 'sw_update_smoke',
   'touch_interruption_a_smoke', 'touch_interruption_b_smoke',
   'touch_interruption_c_smoke', 'touch_interruption_d_smoke',
   'runtime_error_smoke', 'visual_compare_smoke',
+  'audio_buses_smoke',
 ]);
 const allSmokeNames = fs.readdirSync(path.join(ROOT, 'tools'))
   .filter(n => n.endsWith('_smoke.js'))
@@ -83,6 +92,16 @@ for (const s of pageSmokes) covered.add(s);
 const uncovered = allSmokeNames.filter(s => !covered.has(s));
 say(uncovered.length === 0, `every per-game smoke is reachable via pages or game files`,
   uncovered.length ? 'unreachable: ' + uncovered.join(', ') : '');
+
+/* A name in NON_GAME_SMOKES must be a real smoke file, and must be pulled in by
+   the BROAD() branch. Otherwise the exclusion list is a place to hide a genuinely
+   unreachable smoke and this guard would pass while coverage was lost. */
+say(runner.includes('const BROAD = () => allSmokes();'),
+  'the shared/ fallback (BROAD) still resolves to the whole battery',
+  'if BROAD is gone, every game/shared/* exclusion above is unjustified');
+say(fs.existsSync(path.join(ROOT, 'tools', 'audio_buses_smoke.js')),
+  'the audio_buses smoke excluded above really exists',
+  'NON_GAME_SMOKES may only exclude smokes that are present');
 
 /* A smoke named for a game that does not exist is a stale reference. */
 const stale = pageSmokes.filter(s => {

@@ -411,6 +411,14 @@ async function start({
   for (let attempt = 0; attempt < BOOT_ATTEMPTS && !session; attempt++) {
     if (attempt) await sleep(BOOT_RETRY_PAUSE_MS);
     chromeExitEvent = null;
+    /* Per-attempt, so the CDP diagnostic can only ever describe the Chrome this
+       session actually connected to. It used to read the shared `chromeExitEvent`,
+       which any earlier attempt's still-dying child could also write — so
+       "Chrome exited code=0" could name a corpse from attempt 1 while the live
+       browser was perfectly healthy. That is the one line run #39's failure hinged
+       on, and a diagnostic that can silently describe the wrong process is worse
+       than no diagnostic at all. */
+    let exitEvent = null;
     const child = execFile(chromeBin, CHROME_FLAGS, { stdio: ['ignore', 'ignore', 'pipe'] });
     chromeProcess = child;
     let stderr = '';
@@ -418,7 +426,8 @@ async function start({
       if (stderr.length < 2000) stderr += d;
     });
     child.on('exit', (code, signal) => {
-      chromeExitEvent = { code, signal, attempt };
+      exitEvent = { code, signal, attempt };
+      chromeExitEvent = exitEvent;
       /* The mid-session variant of the Release QA crash (task 177 follow-up):
          Chrome booted fine, then died ~44 s in, which read as a websocket that
          just "closed". If the browser process itself exits while a CDP session
@@ -446,9 +455,9 @@ async function start({
            — "Chrome exited" vs "Chrome is alive and only the socket went". Run #34
            had no such evidence in the failure message at all. */
         const dbg = await cdp(version.webSocketDebuggerUrl, () => (
-          chromeExitEvent
-            ? `Chrome exited code=${chromeExitEvent.code} signal=${chromeExitEvent.signal}`
-            : `Chrome still running; stderr tail="${(stderr.trim().split('\n').slice(-6).join(' | ') || '(empty)')}"`
+          exitEvent
+            ? `Chrome exited code=${exitEvent.code} signal=${exitEvent.signal}`
+            : `Chrome still running (pid ${child.pid}); stderr tail="${(stderr.trim().split('\n').slice(-6).join(' | ') || '(empty)')}"`
         ));
         const target = await dbg.send('Target.createTarget', { url: 'about:blank' });
         const { sessionId } = await dbg.send('Target.attachToTarget', { targetId: target.targetId, flatten: true });

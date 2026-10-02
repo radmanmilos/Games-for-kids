@@ -12,8 +12,8 @@
  *      runs the ENTIRE 24-tool battery — so a label said syntax and the work
  *      done was every game smoke;
  *   2. it ran `sync-docs.sh`, rewriting the whole deployable `docs/` tree;
- *   3. in release mode it ran `build_offline.js`, regenerating the manifest and
- *      the ZIP.
+ *   3. in release mode it ran `build_offline.js`, regenerating the manifest
+ *      (and, until 2026-10-02, the ZIP).
  * A "check" that repairs what it inspects can never report a stale artifact,
  * because by the time it exits, the artifact is whatever the checker just made.
  * The rule now: **a release check FAILS on a stale artifact and writes nothing.
@@ -53,7 +53,7 @@ for (const flag of ['--concurrency', '--resume', '--game', '--since']) {
 // The read-only contract: fingerprint the generated artifacts, and prove at the
 // end that this command did not touch them.
 // ---------------------------------------------------------------------------
-const GENERATED = ['game/sw-cache-list.json', 'game/offline-manifest.json', 'game-offline.zip'];
+const GENERATED = ['game/sw-cache-list.json', 'game/offline-manifest.json'];
 function fingerprint() {
   const out = {};
   for (const rel of GENERATED) {

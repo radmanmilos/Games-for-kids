@@ -70,8 +70,10 @@ function sameBytes(a, b) {
 
 // ---------------------------------------------------------------------------
 // 1. docs/ must mirror game/ exactly — same file set, same canonical bytes.
-//    `docs/game-offline.zip` is intentionally absent (user decision
-//    2026-09-30: hidden link, archive untracked), so it is not expected here.
+//    Until 2026-10-02 this had to excuse docs/game-offline.zip, a manual download
+//    archive left in the tree by tools/build_offline.js. That archive is gone for
+//    good (user decision: offline is the service worker, nothing is hand-unpacked),
+//    so docs/ must mirror game/ exactly with no exceptions.
 // ---------------------------------------------------------------------------
 if (!fs.existsSync(DOCS)) {
   check('docs/ exists', false, 'missing — run: bash tools/sync-docs.sh');

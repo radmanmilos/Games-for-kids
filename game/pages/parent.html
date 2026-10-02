@@ -12,9 +12,6 @@
   <link rel="stylesheet" href="../shared/accessibility.css">
   <style>
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;}
-    /* Needed because the author rules below set display on these elements, and an
-       author rule beats the UA stylesheet's [hidden]{display:none}. */
-    [hidden]{display:none !important;}
     html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:var(--cream);font-family:'Fredoka',sans-serif;}
     #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4vmin;}
     .parent-card{background:white;border-radius:var(--radius-lg);padding:6vmin;max-width:600px;width:100%;box-shadow:0 8px 0 rgba(0,0,0,.15);}
@@ -24,13 +21,12 @@
     .parent-btn.primary{background:var(--plum);color:white;}
     .parent-btn:disabled{opacity:.5;cursor:default;}
     .parent-status{margin-top:3vmin;padding:2vmin 3vmin;border-radius:var(--radius-sm);background:var(--cream);color:var(--plum);font:600 clamp(12px,2vmin,16px) 'Fredoka',sans-serif;text-align:center;}
-    /* R12: the parent surface is where every technical fact lives — connection,
-       version, manual ZIP — so none of it has to sit on the child launcher. */
+    /* R12: the parent surface is where every technical fact lives — connection
+       status and version — so none of it has to sit on the child launcher. */
     .parent-meta{display:flex;flex-wrap:wrap;gap:2vmin;justify-content:center;align-items:center;margin:0 0 3vmin;}
     .meta-item{display:flex;align-items:center;gap:1vmin;padding:1vmin 2.5vmin;border-radius:999px;background:var(--cream);color:var(--plum);font:600 clamp(11px,1.8vmin,15px) 'Fredoka',sans-serif;}
     .meta-dot{width:1.4vmin;height:1.4vmin;border-radius:50%;background:#67C971;box-shadow:0 0 0 .4vmin rgba(103,201,113,.25);}
     .meta-dot.offline{background:#E2574C;box-shadow:0 0 0 .4vmin rgba(226,87,76,.25);}
-    .parent-link{display:block;margin-top:3vmin;text-align:center;color:var(--plum);font:600 clamp(12px,2vmin,16px) 'Fredoka',sans-serif;text-decoration:underline;}
     .back-btn{position:absolute;top:4vmin;left:4vmin;width:12vmin;height:12vmin;border-radius:50%;border:none;background:var(--plum);color:white;font-size:6vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);cursor:pointer;}
   </style>
 </head>
@@ -47,12 +43,10 @@
       <button class="parent-btn" id="check-updates">🔄 Провери ажурирања</button>
       <button class="parent-btn" id="reset-progress">🗑 Обриши локални напредак</button>
       <button class="parent-btn" id="audio-test">🔊 Тест звука</button>
-      <!-- Manual ZIP link. R12 wants it here, but it is HIDDEN for now: the
-           archive is written to docs/game-offline.zip and that file is untracked
-           in git (removed in 83aae92), so GitHub Pages never publishes it and the
-           link 404s for a real parent. Kept in the markup (not deleted) so it is
-           one attribute away once the ZIP is actually deployed. See task 163. -->
-      <a class="parent-link" id="offline-zip" href="../game-offline.zip" download hidden>📦 ZIP за ручно преузимање</a>
+      <!-- No manual ZIP download. The offline experience is the service worker:
+           "Преузми за офлајн рад" below caches every file the app needs, so there
+           is nothing for a parent to unpack by hand. Removed 2026-10-02 per user
+           decision (superseding the 2026-09-30 "keep it hidden" decision). -->
       <div class="parent-status" id="parent-status">Спремно</div>
     </div>
   </div>

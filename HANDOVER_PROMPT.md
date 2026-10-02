@@ -6,7 +6,25 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — task 156 DONE (suite resilience/performance); stop before R16
+## Current session — task 178 IN PROGRESS (diagnostic trust); R16 still NOT started
+
+Task 178 is **local and uncommitted**. It did **not** fix run #39 and does not claim to.
+
+**The blocker, unchanged:** the full Offline E2E step log cannot be read from this host. GitHub's job-log endpoint returns `403` unauthenticated even for a public repo, the check-run **annotations** endpoint is empty, and **`gh` is not installed here** (it was on the Windows host in task 177). To get the real log, install + `gh auth login --web`, or paste the raw step log.
+
+**Verified state of CI** (GitHub API, run **#39** on `359085b`): **30 jobs — 27 succeeded, 1 skipped, 1 failure.** The skipped one is `Extended` (correctly manual/weekly). The single failure is `Release QA (offline E2E, a11y report)`. **The whole 27-leg smoke matrix is green.** Release QA has failed on every execution (runs #31–#34, #37–#39).
+
+**Issue #3** is the only open issue and reports exactly this. **Do not apply its suggested fix.** It proposes "add connection retry logic" and offers "fix or remove this test". Both regress: the handshake is already inside the `BOOT_ATTEMPTS` loop (a retry cannot help a socket that dies *mid-session*), and `offline_smoke.mjs` is the only gate that proves offline playability — it found 3 real product bugs in R6. Do not remove it.
+
+**What task 178 actually changed** (`tools/headless.js`, one behaviour + one new guard): the CDP `describe()` diagnostic read the boot loop's shared `chromeExitEvent`, which any earlier attempt's dying child also writes and which is never cleared when a later attempt succeeds — so run #39's only evidence (`browser=Chrome exited code=0`) could be naming a corpse from attempt 1. It now reads a per-iteration `exitEvent` and names the live pid. Guard: `node tools/guards/chrome_diagnostic_negtest.js` (10 checks, negative-tested `9 passed / 1 failed` on a revert). **Lesson repeated:** a diagnostic is a check too, and it needed its own check — the first version of the guard **passed against the pre-fix code** because its assertion was behavioural against a socket-close-vs-exit-event race.
+
+**Next session, in order:**
+1. Read the real log (needs `gh` or a paste). Two unconfirmed leads: (a) task 177d's absorber appears not to have fired on the runner (no `[headless] Unhandled CDP failure:` line, yet the run still died as a fatal Node crash); (b) `ci.yml` still runs `offline_smoke.mjs` raw, the one runner bypassing `run_all.js`. **One cause is already eliminated:** task 180 fixed the `games_map_negtest` false claim, which is the failing step on runs #34 and #37 — so the remaining Offline E2E failure on #36/#38/#39 is a separate, still-unknown problem.
+2. **The offline ZIP is GONE (task 179, DONE 2026-10-02, user decision) — do not restore it.** The stray `docs/game-offline.zip` that made the local `check_fast.js` red at stage 5/7 is deleted, along with the hidden `#offline-zip` link, the ZIP step in both builders, and every reference. **`check_fast.js` is now 7/7 green.** Offline is the service worker; the mechanism is documented in the new **`OFFLINE.md`** at the repo root. This supersedes the 2026-09-30 "keep it hidden" decision (task 163).
+3. **`gh` is now installed on this host** (`/usr/local/bin/gh`, v2.102.0, official arm64 tarball — Alpine has no `gh` package, so `apk add gh` fails). Auth needed the device flow and it needs a human: run `gh auth login --web`, then open the printed URL and enter the one-time code. **Without it the CI step logs stay unreadable** (the job-log endpoint 403s unauthenticated even for a public repo, and check-run annotations are empty). Everything *except* logs works unauthenticated via `api.github.com`.
+4. R16 remains **NEW and unstarted**. The user asked to stop before R16; **do not start it.**
+
+## Historical — task 156 DONE (suite resilience/performance); stop before R16
 
 Task 177d is complete and pushed as `0ce34e9`. Task 156 is complete; user requested stopping before R16. Its Windows teardown profile found the process-tag `pwsh` kill cost 2.08–4.33 s while profile removal was ~32 ms. The harness now kills Chrome through the exact `ChildProcess` handle, waits for the debug port to close, and falls back to the existing profile match if necessary. A direct-kill probe found no remaining tagged Chrome processes. Teardown went from a 2448 ms median to 50–55 ms across five runs (52 ms average, ~97.9% lower).
 

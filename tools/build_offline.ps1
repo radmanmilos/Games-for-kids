@@ -1,6 +1,9 @@
 # tools/build_offline.ps1
-# Generates game/sw-cache-list.json (via node script), produces docs/game-offline.zip,
-# and writes game/offline-manifest.json with SHA256 and size for each asset.
+# Generates the two service-worker inventories:
+#   game/sw-cache-list.json    (what the worker pre-caches)
+#   game/offline-manifest.json (sha256 + size for exactly those entries)
+# Produces no archive. The ZIP step was removed 2026-10-02 by user decision:
+# offline is the service worker, so there is nothing to hand-unpack.
 
 Set-StrictMode -Version Latest
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
@@ -12,8 +15,6 @@ Write-Output "[build_offline] regenerating sw-cache-list.json"
 node ./generate_sw_list.js
 
 $gameDir = Join-Path $repoRoot 'game'
-$docs = Join-Path $repoRoot 'docs'
-if (-Not (Test-Path $docs)) { New-Item -ItemType Directory -Path $docs | Out-Null }
 
 # Build offline manifest with SHA256 and size for files listed in sw-cache-list.json
 $swListPath = Join-Path $gameDir 'sw-cache-list.json'
@@ -72,13 +73,8 @@ $outPath = Join-Path $gameDir 'offline-manifest.json'
 $manifest | ConvertTo-Json -Depth 4 | Out-File -Encoding UTF8 $outPath
 Write-Output "[build_offline] wrote $outPath ($($manifest.Count) entries)"
 
-# Package after generating the manifest so the ZIP contains the exact manifest
-# used by the service worker's update check.
-$zipPath = Join-Path $docs 'game-offline.zip'
-if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
-Write-Output "[build_offline] creating ZIP: $zipPath"
-Compress-Archive -Path (Join-Path $gameDir '*') -DestinationPath $zipPath -Force
+# No archive step. See the header: offline delivery is the service worker.
 
-Write-Output "[build_offline] done. ZIP: $zipPath" 
+Write-Output "[build_offline] done (service-worker inventories only; no archive is produced)."
 
 Pop-Location

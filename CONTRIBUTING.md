@@ -14,8 +14,8 @@ Before opening a PR, run the smallest targeted check that covers your change:
 
 - Syntax (whole repo, no browser): `node tools/check_syntax.js` — `node --check` over every `.js`/`.mjs` in `game/` + `tools/`
 - Registry / routes / PWA metadata: `node tools/validate_pages.js`
-- Offline inventory (cache list + manifest): `node tools/validate_offline.js`
-- Parent area (offline download, update check, reset, version) → `node tools/parent_smoke.js`
+- Offline inventory (cache list + manifest): `node tools/validate_offline.js`. There is **no ZIP** — offline delivery is the service worker; the mechanism is documented in `OFFLINE.md`.
+- Parent area (offline download, update check, reset, version) → `node tools/parent_smoke.js`. It also asserts **no manual ZIP link** — that option was removed 2026-10-02 (see `OFFLINE.md` for the mechanism that replaced it).
 - Service-worker update path → `node tools/sw_update_smoke.js`
 - Runtime exceptions, console errors, rejected promises and local resource failures → `node tools/runtime_error_smoke.js`
 - Visual baseline capture and pixel comparison → `node tools/visual_compare.js` (85 images; decoded pixels; failure diffs in `tools/screenshots/diff/`); algorithm smoke → `node tools/run_all.js visual_compare_smoke.js`. Replace the full baseline only after review, with the explicit `--approve-baseline` option.
@@ -62,7 +62,8 @@ Consequences for contributors:
 ## Task lifecycle
 
 - Mark the task **IN PROGRESS** in `PROJECT_TASKS.md` when starting and **DONE** with a dated note (who, what, why) when finished.
-- Current roadmap item: **R16**. R15 / task 175 (shared audio architecture adoption) is complete and documented; R14 / task 174 is pushed as `8b2a7e0`, and R13 / task 173 as `3ee9218`. Tasks 177 (CI), 177c (Release QA explorer geometry), 177d (CDP disconnect reporting), and 156 (suite resilience/performance) are complete. Task 177d was pushed as `0ce34e9`; task 156 reduced Windows Chrome teardown from a 2448 ms median to a 52 ms average, and its 27-tool / 575-check battery passed. Stop here as requested; R16 remains unstarted.
+- Current roadmap item: **R16**, still NEW/unstarted. Task 178 (the CDP diagnostic could name the wrong Chrome process) is in progress locally; it makes the next CI log trustworthy but **does not fix the Release QA failure in issue #3**, whose real step log is unreadable without `gh`. If you change `tools/headless.js`'s boot loop, run `node tools/guards/chrome_diagnostic_negtest.js`: the CDP `describe()` diagnostic must read **per-attempt** exit state, never the loop-wide `chromeExitEvent`, because it is the only record of why the browser went away. **Do not apply issue #3's suggested fix** (adding retry logic, or removing `offline_smoke.mjs`) — the handshake already retries, and that tool is the only gate proving offline playability.
+- **A diagnostic is a check too, and it needs its own guard.** The first version of `guards/chrome_diagnostic_negtest.js` **passed against the code it was written to catch**, because its assertion was behavioural against a race (whether the CDP socket close or the child `exit` event lands first). When a guard's premise can only be true by luck, pin the deterministic invariant (which binding the code can reach) and demote the flaky observation to supporting evidence.
 - **A layout that "passes" because the harness scrolls it into view is still broken** (task 177c). `headless.js`'s `boxOf` calls `scrollIntoView`, so a control clipped out of the viewport inside an `overflow:hidden` container gets scrolled into view and its geometry check passes — while a child still cannot see or tap it. When a test stands in for a human interaction, assert the geometry too, and remember that an animated control (e.g. a `pulse` scale) can tip a marginal check over only on some runs.
 - Refresh `README.md` and `HANDOVER_PROMPT.md` alongside it. Missing docs updates are a regression (see `AGENTS.md` → Working rhythm).
 - Never commit or push to `main` automatically — the user does that explicitly.

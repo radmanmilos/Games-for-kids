@@ -1,26 +1,23 @@
 #!/usr/bin/env node
-/* tools/build_offline.js — Node.js replacement for build_offline.ps1
-   Generates game/sw-cache-list.json, produces docs/game-offline.zip,
-   and writes game/offline-manifest.json with SHA256 and size for each asset.
-   Usage: node tools/build_offline.js */
+/* tools/build_offline.js — generates the two service-worker inventories:
+     game/sw-cache-list.json    (what the worker pre-caches)
+     game/offline-manifest.json (sha256 + size for exactly those entries)
+   Usage: node tools/build_offline.js
+   It writes nothing to docs/ and produces no archive — see the note at the end. */
 const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const os = require('os');
 const { hashFile } = require('./manifest_hash.js');
 
 const TOOLS = __dirname;
 const REPO = path.resolve(TOOLS, '..');
 const GAME = path.join(REPO, 'game');
-const DOCS = path.join(REPO, 'docs');
 
 console.log('[build_offline] regenerating sw-cache-list.json');
 // execFileSync with an argv array, NOT execSync with an interpolated command:
 // this repo's path contains a space ("Games for kids"), so the unquoted form
 // died with "Cannot find module 'E:\GitHub\Games'" before generating anything.
 execFileSync(process.execPath, [path.join(TOOLS, 'generate_sw_list.js')], { stdio: 'inherit' });
-
-if (!fs.existsSync(DOCS)) fs.mkdirSync(DOCS, { recursive: true });
 
 const swListPath = path.join(GAME, 'sw-cache-list.json');
 if (!fs.existsSync(swListPath)) { console.error('Missing ' + swListPath); process.exit(2); }
@@ -61,33 +58,11 @@ const outPath = path.join(GAME, 'offline-manifest.json');
 fs.writeFileSync(outPath, JSON.stringify(manifest, null, 2));
 console.log('[build_offline] wrote ' + outPath + ' (' + Object.keys(manifest).length + ' entries)');
 
-const zipPath = path.join(DOCS, 'game-offline.zip');
-
-// R5 (task 165): build to a temporary name and move it into place only on
-// success. The old code unlinked the existing archive FIRST, so any failure
-// after that point — and on this machine the very next line fails, because
-// `zip` is not on PATH — destroyed the artifact it was supposed to replace.
-// A failed build must leave the previous archive untouched.
-const zipTmp = zipPath + '.tmp';
-console.log('[build_offline] creating ZIP: ' + zipPath);
-
-const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'offline-zip-'));
-try {
-  fs.cpSync(GAME, tmpDir, { recursive: true });
-  execFileSync('zip', ['-r', zipTmp, '.'], { cwd: tmpDir, stdio: 'inherit' });
-  // Only now is it safe to touch the real path.
-  fs.mkdirSync(path.dirname(zipPath), { recursive: true });
-  fs.renameSync(zipTmp, zipPath);
-} catch (e) {
-  // Clean up the partial temp archive; never leave it to be mistaken for the real one.
-  try { if (fs.existsSync(zipTmp)) fs.unlinkSync(zipTmp); } catch {}
-  console.error('[build_offline] ZIP creation FAILED. The existing ' + path.basename(zipPath) + ' was left untouched.');
-  console.error('[build_offline] cause: ' + (e.code === 'ENOENT'
-    ? 'the `zip` command is not on PATH — install it, or run tools/build_offline.ps1 (PowerShell Compress-Archive) on Windows'
-    : (e.message || String(e)).split('\n')[0]));
-  process.exit(1);
-} finally {
-  fs.rmSync(tmpDir, { recursive: true, force: true });
-}
-
-console.log('[build_offline] done. ZIP: ' + zipPath);
+/* There is no ZIP step. Offline delivery is the service worker: the parent's
+   "Преузми за офлајн рад" caches everything in sw-cache-list.json, so there is no
+   archive for a parent to download and unpack by hand. The old step shelled out to
+   `zip` (missing on this host, so `check_all.js --offline` could never complete)
+   and wrote a ~5.4 MB binary that was never tracked in git, so GitHub Pages never
+   published it and the parent-area link pointed at a 404. Removed 2026-10-02 by
+   user decision; this tool now generates the two inventories and nothing else. */
+console.log('[build_offline] done (service-worker inventories only; no archive is produced).');
