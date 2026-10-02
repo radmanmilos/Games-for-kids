@@ -309,9 +309,36 @@ async function start({
    * 10-minute step timeout. */
   let session = null;
   let lastBootError = '';
+  let closingDown = false;
+  /* Diagnostics for the "Chrome did not start" crash (see Release QA, task 177
+     follow-up): the child is spawned through execFile with stdio, so Chrome's
+     own stderr and exit code are collected per attempt and attached to the
+     throw. A boot that prints NOTHING and never answers the debug port looks
+     identical to one killed by the runner — the stderr/exit evidence is the
+     only way to tell them apart from the log. */
+  const chromeStderrByAttempt = [];
+  let chromeExitEvent = null;
   for (let attempt = 0; attempt < BOOT_ATTEMPTS && !session; attempt++) {
     if (attempt) await sleep(BOOT_RETRY_PAUSE_MS);
-    execFile(chromeBin, CHROME_FLAGS);
+    chromeExitEvent = null;
+    const child = execFile(chromeBin, CHROME_FLAGS, { stdio: ['ignore', 'ignore', 'pipe'] });
+    let stderr = '';
+    child.stderr.on('data', d => {
+      if (stderr.length < 2000) stderr += d;
+    });
+    child.on('exit', (code, signal) => {
+      chromeExitEvent = { code, signal, attempt };
+      /* The mid-session variant of the Release QA crash (task 177 follow-up):
+         Chrome booted fine, then died ~44 s in, which read as a websocket that
+         just "closed". If the browser process itself exits while a CDP session
+         exists, that IS the story — record it on the tool's own stderr so a
+         future log can tell "Chrome was killed" from "the socket just dropped".
+         close() issues the only deliberate kill, so it sets closingDown first. */
+      if (session && !closingDown) {
+        console.error(`[headless] Chrome exited while a CDP session was open: code=${code} signal=${signal} (tag ${tag})`);
+        if (stderr.trim()) console.error(`[headless] Chrome stderr tail: ${stderr.trim().split('\n').slice(-8).join(' | ')}`);
+      }
+    });
 
     let version = null;
     for (let i = 0; i < BOOT_POLL_TRIES && !version; i++) {
@@ -332,14 +359,19 @@ async function start({
         session = null;
       }
     }
+    chromeStderrByAttempt.push({ attempt, stderr: stderr.trim(), exited: !!chromeExitEvent });
     if (!session) killChromeByTag(profile);
   }
   if (!session) {
     srv.close();
     const waited = Math.round(BOOT_ATTEMPTS * BOOT_POLL_TRIES * (BOOT_POLL_MS + BOOT_REQUEST_TIMEOUT_MS) / 1000);
+    const attemptedDetail = chromeStderrByAttempt
+      .map(a => `attempt ${a.attempt + 1}: exited=${a.exited}${a.stderr ? ' stderr="' + a.stderr.split('\n').slice(0, 4).join(' | ') + '"' : ' stderr=(empty)'}`)
+      .join('; ');
     const msg = 'Chrome did not start (debug port ' + dbgPort + ') after ' +
       BOOT_ATTEMPTS + ' attempts (~' + waited + 's of waiting)' +
       (lastBootError ? ' — last handshake error: ' + lastBootError : '') +
+      ' — [' + attemptedDetail + ']' +
       ' — no assertions ran';
     throw new Error(msg);
   }
@@ -442,6 +474,7 @@ async function start({
      wait for the port to go quiet, bounded, and clean up the profile dir we
      created (it is ~20MB and would otherwise pile up in %TEMP% forever). */
   const close = async ({ checkErrors = true } = {}) => {
+    closingDown = true;
     if (checkErrors) await checkRuntimeErrors();
     srv.close();
     killChromeByTag(profile);
