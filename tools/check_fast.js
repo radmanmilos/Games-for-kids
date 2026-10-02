@@ -32,6 +32,7 @@ const STAGES = [
   ['syntax', 'check_syntax.js', []],
   ['registry/metadata', 'validate_pages.js', []],
   ['ci workflow', 'validate_workflow.js', []],
+  ['scan-alert guards', 'check_scan_alerts.js', ['--quiet']],
   ['generated artifacts', 'validate_generated.js', []],
   ['offline inventory', 'validate_offline.js', ['--quiet']],
   ['hub smoke', 'hub_smoke.js', []]

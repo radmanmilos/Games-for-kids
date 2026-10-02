@@ -44,7 +44,7 @@ If a smoke does not exist for the game you changed, run the page manually in Liv
 | Job | What it runs | When |
 | --- | --- | --- |
 | `setup` | derives the smoke list from `node tools/run_all.js --list --json` | every push/PR |
-| `fast` | `check_fast.js` — syntax, registry/metadata, CI-workflow topology, generated-artifact freshness, offline inventory, hub smoke (**no** game battery; read-only) | every push/PR |
+| `fast` | `check_fast.js` — syntax, registry/metadata, CI-workflow topology, code-scanning-alert guards, generated-artifact freshness, offline inventory, hub smoke (**no** game battery; read-only) | every push/PR |
 | `smoke` | one leg per smoke, `fail-fast: false`, `max-parallel: 6` | every push/PR |
 | `release` | blocking offline E2E + serious/critical accessibility scan | every push/PR |
 | `extended` | blocking `play_matrix.mjs` (Chromium + WebKit × 5 viewports; missing-engine skips fail coverage) | manual run or weekly |
@@ -56,7 +56,8 @@ Consequences for contributors:
 - **No CI step or validator may regenerate what it inspects** (R5). If you edit `game/`, run `node tools/sync-docs.sh` (or `check_all.js --docs`) and commit the result; `check_fast.js` and `check_release.js` will *fail* on an unsynced `docs/` rather than fixing it, which is deliberate — a check that repairs what it inspects can never report a stale artifact.
 - `tools/check_release.js` is deliberately **not** a CI job: it re-runs the entire battery, which the `smoke` matrix already ran in parallel, one leg per job. Run it locally before a release.
 - The CI workflow's own shape is guarded by `tools/validate_workflow.js` (11 checks, runs inside `check_fast`), so the R4 fixes — a deleted tool reference, a matrix generated from the battery, `fail-fast: false`, a direct `needs` for every `needs.*.outputs` read — cannot silently regress.
-- A red `fast` job means a syntax/registry/inventory/generated-artifact/workflow/hub problem — not a game. Read the failing leg's own matrix cell before suspecting a game.
+- The two GitHub code-scanning alerts are guarded by `tools/check_scan_alerts.js` (5 checks, also inside `check_fast`): a dangerous-scheme filter must test `javascript:` **and** `vbscript:`, and an HTML stripper must consume the whole closing tag. Both rules are checked behaviourally and self-tested against the pre-autofix shapes, so the guard cannot report green by matching nothing. Known residual: the `</script/>` closing form is deliberately not covered.
+- A red `fast` job means a syntax/registry/inventory/generated-artifact/workflow/scan-alert/hub problem — not a game. Read the failing leg's own matrix cell before suspecting a game.
 
 ## Task lifecycle
 
