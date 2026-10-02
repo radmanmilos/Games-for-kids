@@ -62,7 +62,8 @@ Consequences for contributors:
 ## Task lifecycle
 
 - Mark the task **IN PROGRESS** in `PROJECT_TASKS.md` when starting and **DONE** with a dated note (who, what, why) when finished.
-- Current roadmap item: **R16**. R15 / task 175 (shared audio architecture adoption) is complete and documented; R14 / task 174 is pushed as `8b2a7e0`, and R13 / task 173 as `3ee9218`.
+- Current roadmap item: **R16**. R15 / task 175 (shared audio architecture adoption) is complete and documented; R14 / task 174 is pushed as `8b2a7e0`, and R13 / task 173 as `3ee9218`. Task 177 (CI, never green) and task 177c (Release QA) are complete locally: the first real Release QA run found a real product bug (the explorer's touch controls and HUD labels rendered below the fold), fixed it, and added the missing geometry guard in `kitty_smoke.js`. Next: **task 156**, then R16.
+- **A layout that "passes" because the harness scrolls it into view is still broken** (task 177c). `headless.js`'s `boxOf` calls `scrollIntoView`, so a control clipped out of the viewport inside an `overflow:hidden` container gets scrolled into view and its geometry check passes — while a child still cannot see or tap it. When a test stands in for a human interaction, assert the geometry too, and remember that an animated control (e.g. a `pulse` scale) can tip a marginal check over only on some runs.
 - Refresh `README.md` and `HANDOVER_PROMPT.md` alongside it. Missing docs updates are a regression (see `AGENTS.md` → Working rhythm).
 - Never commit or push to `main` automatically — the user does that explicitly.
 

@@ -6,7 +6,7 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — R15 / task 175 DONE; R16 next
+## Current session — task 177c DONE (Release QA: explorer controls were off-screen); next task 156, then R16
 
 R8 / task 169 is complete and pushed as `57e3724`. R9 / task 170 was pushed as `57dbc2a`; R10 / task 171 as `6be5474`; R11 / task 172 as `2669955`; R13 / task 173 as `3ee9218`; and R14 / task 174 as `8b2a7e0` on 2026-10-01. R9 screenshot capture covers hub + all 16 `screenshot:true` apps at five viewports = 85 images; fixed-frame captures repeated pixel-identically. Its reviewed PNGs and manifest are under `resources/visual-baselines/`, with replacement requiring full-matrix `--approve-baseline`.
 
@@ -53,6 +53,16 @@ Validation: `cdp()` probe rejects in 28 ms (refused) and 15015 ms (black hole, =
 
 **The one remaining CI failure is a different problem: `racing3d_smoke.js`, 28 pass / 5 fail.** It runs (so the runner *does* have software WebGL — the documented no-WebGL `SKIP` path does not trigger) and the five failures are all physics/animation sampling: steering drift, kart bank decay, reactive-decor scale return, and two particle checks that share one root (`cele: 0, total: 0, spinning: 0` — the lap line *was* crossed, `lap0: 1, lap1: 2`, but zero particles spawned). **All 33 pass locally**, so this reproduces only under the runner's software WebGL, where frame timing differs. Not yet started; it needs a decision, see below.
 
+## Task 177c — Release QA surfaced a real product bug: explorer controls were off-screen (fixed)
+
+`Release QA`'s first real execution found a **genuine bug**, not a runner artifact. `explorer.html` was migrated from `resources/papper_kitty.html` (canvas 70% + green `#controls` bar 30%) to a full-bleed canvas + overlay HUD, but only `.hud-btn`/`.back-btn` got `position:absolute`. `.btn` (`#btn-left/right/jump`) stayed in normal flow after the 100%-height canvas inside `#app{position:fixed;inset:0;overflow:hidden}`, so it rendered **below the fold on every viewport** — a child could not move or jump. The `.hud` labels had the same fault via **stale ID selectors** (`#hud-world/#hud-level/#hud-coins` vs the actual `#world-name/#level-num/#coin-count`). The offline smoke passed locally only because `boxOf`'s `scrollIntoView({block:'center'})` scrolls the clipped `#app` and clamped the button to the fold; on the runner the `.btn-jump` 6% `pulse` scale tipped it 1 px over (127 px = 120 × 1.06). Same task-120 anti-pattern as the old `#char-modal` bug: a test rescuing geometry no child could reach, and `kitty_smoke.js` asserted `.char-btn` but never `.btn`/`.hud`.
+
+Fixed in `game/pages/explorer.html` by overlaying the controls like the sibling `.adv-btn` games (`bottom:calc(2vmin + env(safe-area-inset-bottom))`; `◀`/`▶` left cluster, `🐾` bottom-right), raising `🌍`/`🔊` above the 120 px jump so they clear it, and repointing the HUD selectors at the real IDs. `tools/kitty_smoke.js` now asserts `#btn-left/right/jump` are fully on-screen **and** the topmost element at their centre (`elementFromPoint`), plus the HUD labels on-screen.
+
+Separately, run #33's blocker was a **`driving_smoke` timing race**: `steering` held the keys, slept a fixed 150 ms, and hoped the rAF loop had ticked; under CI load it hadn't (identical before/after). `updateDrive` moves a fixed step per `update()` call, so the test now pauses rAF and runs 5 explicit `update()` ticks — the deterministic stepping `racing3d_smoke` uses, never a longer sleep.
+
+Validation (local, host = Acode-on-phone): `kitty_smoke.js` exit 0 incl. the two new geometry checks; `driving_smoke.js` exit 0; `check_fast.js` **7/7** (after regenerating `game/offline-manifest.json` — the HTML hash moved; ZIP step still fails locally for lack of `zip`, which `validate_offline` does not check); `offline_smoke.mjs` **exit 0, all 16 games incl. `P4 explorer primary interaction offline`, no runtime errors**; `docs/` re-synced. **Awaiting user review + commit/push.**
+
 ## OPEN — one decision needed before the next task
 
 `racing3d_smoke.js` fails 5 assertions on CI and passes 33/33 on this Windows host, so the fix **cannot be validated locally**. AGENTS.md's rule for a test that fails only under different timing is a *readiness wait* on the condition that means the work was applied — never a looser assertion and never a longer sleep — but rewriting five physics/particle assertions blind, with no way to reproduce them here, risks trading a real red leg for local flakiness. Options: (a) convert those five samplings to readiness waits and accept that only the next CI run can confirm; (b) leave `racing3d` as a documented known-red CI leg and move on to task 156/R16; (c) first add diagnostics to the smoke so the next run reports the actual sampled values, then fix with evidence.
@@ -65,7 +75,7 @@ Validation: `check_scan_alerts.js` 5/5 across 94 files; `check_fast.js` 7/7 gree
 
 ## OPEN — nothing in flight
 
-Task 177 (CI) and task 176 (scan-alert guards) are both committed and pushed. Next items, in the order the user set: **task 156** (profile test-suite resource usage/speed, prune provably unnecessary waits — `piano_smoke.js` is the slowest at 35 s / 25 checks and `touch_interruption_*` costs ~16–25 s each), then **R16** (asset and performance budget report; P1/P2, depends on R2/R6/R11, roadmap suggests task 167 but it is currently unfiled). One caveat carried forward: `zip` is not installed here, so the offline ZIP phase cannot run locally and the manual link stays hidden per the recorded user decision.
+Task 177 (CI) and task 176 (scan-alert guards) are both committed and pushed. **Task 177c (Release QA) is complete locally and awaiting the user's review + commit/push** — the working tree has `game/pages/explorer.html` + `docs/pages/explorer.html` + `game/offline-manifest.json` + `docs/offline-manifest.json` + `tools/kitty_smoke.js` + `tools/driving_smoke.js` modified. Pushing it is what triggers the next CI run, which is the only place Release QA can be confirmed end-to-end (locally it is exit 0 / 16 games). Next items, in the order the user set: **task 156** (profile test-suite resource usage/speed, prune provably unnecessary waits — `piano_smoke.js` is the slowest at 35 s / 25 checks and `touch_interruption_*` costs ~16–25 s each), then **R16** (asset and performance budget report; P1/P2, depends on R2/R6/R11, roadmap suggests task 167 but it is currently unfiled). One caveat carried forward: `zip` is not installed here, so the offline ZIP phase cannot run locally and the manual link stays hidden per the recorded user decision.
 
 ## Historical snapshot through R7
 

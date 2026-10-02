@@ -58,6 +58,43 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
 
   await h.evalv(`document.querySelector('.char-btn[data-character="kitty"]').click()`);
 
+  // Regression guard (2026-10-02, offline E2E P4): the three play controls and
+  // the HUD labels were left in normal flow after the 100%-height canvas inside
+  // #app (position:fixed; overflow:hidden), so they rendered below the fold on
+  // every viewport — a child could not move or jump, and the world/level/coin
+  // labels were invisible. Same class of bug as #char-modal above. Wait for the
+  // picker to hide (readiness, not a sleep), then assert the controls are fully
+  // on-screen AND topmost at their centre (a real tap, not .click(), which
+  // bypasses hit-testing), and the pointer-events:none HUD labels are on-screen.
+  let pickerHidden = false;
+  for (let i = 0; i < 10 && !pickerHidden; i++) {
+    pickerHidden = await h.evalv(`!document.getElementById('char-modal').classList.contains('show')`);
+    if (!pickerHidden) await h.sleep(100);
+  }
+  const geom = await h.evalv(`(() => {
+    const box = (s, hitTest) => {
+      const b = document.querySelector(s);
+      if (!b) return { s, missing: true };
+      const r = b.getBoundingClientRect();
+      const inside = r.top >= 0 && r.left >= 0 && r.bottom <= innerHeight && r.right <= innerWidth;
+      if (!hitTest) return { s, inViewport: inside };
+      const cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2;
+      const top = document.elementFromPoint(cx, cy);
+      return { s, inViewport: inside, onTop: !!(top && top.closest && top.closest(s) === b) };
+    };
+    return {
+      controls: ['#btn-left', '#btn-right', '#btn-jump'].map(s => box(s, true)),
+      hud: ['#level-num', '#world-name', '#coin-count'].map(s => box(s, false))
+    };
+  })()`);
+  check('play controls tappable: left/right/jump fully on-screen and topmost at their centre',
+    pickerHidden === true && geom && geom.controls.length === 3 &&
+    geom.controls.every(c => !c.missing && c.inViewport && c.onTop),
+    'pickerHidden=' + pickerHidden + ' ' + JSON.stringify(geom && geom.controls));
+  check('HUD labels visible: level/world/coin fully on-screen',
+    geom && geom.hud.length === 3 && geom.hud.every(c => !c.missing && c.inViewport),
+    JSON.stringify(geom && geom.hud));
+
   const bootName = await h.evalv('document.getElementById("world-name").textContent');
   check('boot: world HUD renders after choosing the kitty', typeof bootName === 'string' && bootName.length > 0, bootName);
 

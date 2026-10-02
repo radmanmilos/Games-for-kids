@@ -67,20 +67,26 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const badSeq = seqj.filter(m => m.seq !== 32 || m.bass !== 16 || !m.root);
   check('music themes: 10 themes, each 32-step melody + 16-beat bass + root', seqj.length === 10 && badSeq.length === 0, seqs);
 
-  const s0 = await h.evalv(`(() => {
+  // Steering is driven by updateDrive(), which moves a FIXED step per update()
+  // tick (adventure.js). The old test held the keys, slept a fixed 150 ms and
+  // hoped the rAF loop had ticked; under CI load it sometimes had not (0
+  // movement -> red on an already-green host), because a fixed sleep buys
+  // simulated time only if the browser actually schedules frames. Advance the
+  // loop deterministically instead — pause rAF, run a known number of update()
+  // ticks, then assert (the same approach racing3d_smoke uses for physics).
+  const steering = await h.evalv(`(() => {
     const a = window.__adv;
+    a.setPaused(true);
     a.keys.up = true; a.keys.right = true;
-    return JSON.stringify({ y: a.player.y, ox: a.player.offsetX });
-  })()`);
-  await sleep(150);
-  const s1 = await h.evalv(`(() => {
-    const a = window.__adv;
-    const r = JSON.stringify({ y: a.player.y, ox: a.player.offsetX });
+    const before = { y: a.player.y, ox: a.player.offsetX };
+    for (let i = 0; i < 5; i++) a.update();
+    const after = { y: a.player.y, ox: a.player.offsetX };
     a.keys.up = false; a.keys.right = false;
-    return r;
+    a.setPaused(false);
+    return JSON.stringify({ before, after });
   })()`);
-  const sj0 = JSON.parse(s0), sj1 = JSON.parse(s1);
-  check('steering: up decreases y, right increases offsetX', sj1.y < sj0.y && sj1.ox > sj0.ox, s0 + ' -> ' + s1);
+  const sj = JSON.parse(steering);
+  check('steering: up decreases y, right increases offsetX', sj.after.y < sj.before.y && sj.after.ox > sj.before.ox, steering);
 
   const clamp = await h.evalv(`(() => {
     const a = window.__adv;
