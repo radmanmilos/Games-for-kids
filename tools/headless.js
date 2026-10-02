@@ -56,6 +56,18 @@ const BOOT_RETRY_PAUSE_MS = 500;
    fail loudly is the same defect as a check that cannot fail. */
 const CDP_CONNECT_TIMEOUT_MS = 15000;
 const CDP_COMMAND_TIMEOUT_MS = 30000;
+/* Runtime.evaluate gets a longer budget than the control-plane commands.
+   It is the only method whose cost scales with how fast the *page* draws: a
+   `Runtime.evaluate` has to be scheduled on the main thread, which the render
+   loop is holding for a whole frame. Measured on the software-WebGL CI runner
+   (no GPU, frames measured at 113ms, worst 183ms), a trivial 12-step racing3d
+   batch exceeded the flat 30s bound and aborted the smoke with
+   `CDP Runtime.evaluate (id 61) got no response within 30000ms` after 23 passing
+   checks -- a slow page misreported as a broken harness. Keeping the two apart
+   means the tight bound still guards navigation/attach (where a real wedge
+   lives, and where the connect fix above applies) while page evaluation is
+   allowed the time a slow page legitimately needs. */
+const CDP_EVALUATE_TIMEOUT_MS = 90000;
 
 /* One /json/version request must not be able to outlive the poll budget it is
    counted against, or the "~Ns of waiting" in the boot error is a lie. */
@@ -181,10 +193,11 @@ function cdp(wsUrl) {
         send(method, params = {}, sessionId) {
           return new Promise((res, rej) => {
             const mid = ++id;
+            const budget = method === 'Runtime.evaluate' ? CDP_EVALUATE_TIMEOUT_MS : CDP_COMMAND_TIMEOUT_MS;
             const timer = setTimeout(() => {
               pending.delete(mid);
-              rej(new Error(`CDP ${method} (id ${mid}) got no response within ${CDP_COMMAND_TIMEOUT_MS}ms`));
-            }, CDP_COMMAND_TIMEOUT_MS);
+              rej(new Error(`CDP ${method} (id ${mid}) got no response within ${budget}ms`));
+            }, budget);
             pending.set(mid, { res, rej });
             try {
               ws.send(JSON.stringify({ id: mid, method, params, ...(sessionId ? { sessionId } : {}) }));
