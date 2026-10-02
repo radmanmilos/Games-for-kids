@@ -53,7 +53,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await Promise.race([hung.catch(e => { msg = e && e.message || String(e); }), sleep(300)]);
   console.log('SURVIVED');
   console.log('MESSAGE: ' + msg);
-  // Leave process.exitCode intact: headless.js must mark this tool failed.
+  // Match real smokes: their explicit process.exit(getFails() ? 1 : 0) must
+  // not turn a fatal CDP disconnect into a green result.
+  process.exit(h.getFails() ? 1 : 0);
 })().catch(e => { console.error('SCENARIO ERROR: ' + (e && e.message || e)); process.exit(3); });
 `;
 

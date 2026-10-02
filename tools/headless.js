@@ -145,9 +145,14 @@ function skip(name, why) {
 }
 
 /* Kill Chrome processes whose command line contains `tag` (e.g. a profile path). */
-function killChromeByTag(tag) {
+function killChromeByTag(tag, child) {
   // Windows: the profile path appears in the process command line, so match on it.
   if (process.platform === 'win32') {
+    if (child && child.exitCode === null) {
+      try {
+        if (child.kill()) return;
+      } catch (e) { /* fall back to matching the profile */ }
+    }
     try {
       execFileSync('pwsh', ['-NoProfile', '-Command',
         `Get-Process chrome -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match [regex]::Escape('${tag}') } | Stop-Process -Force -ErrorAction SilentlyContinue`],
@@ -186,6 +191,7 @@ process.on('unhandledRejection', (reason) => {
     if (!reportedCdpFailures.has(reason)) {
       reportedCdpFailures.add(reason);
       console.error(`[headless] Unhandled CDP failure: ${reason.message}`);
+      fails++;
       process.exitCode = 1;
     }
     return;
@@ -401,10 +407,12 @@ async function start({
      only way to tell them apart from the log. */
   const chromeStderrByAttempt = [];
   let chromeExitEvent = null;
+  let chromeProcess = null;
   for (let attempt = 0; attempt < BOOT_ATTEMPTS && !session; attempt++) {
     if (attempt) await sleep(BOOT_RETRY_PAUSE_MS);
     chromeExitEvent = null;
     const child = execFile(chromeBin, CHROME_FLAGS, { stdio: ['ignore', 'ignore', 'pipe'] });
+    chromeProcess = child;
     let stderr = '';
     child.stderr.on('data', d => {
       if (stderr.length < 2000) stderr += d;
@@ -568,12 +576,19 @@ async function start({
     closingDown = true;
     if (checkErrors) await checkRuntimeErrors();
     srv.close();
-    killChromeByTag(profile);
-    for (let i = 0; i < TEARDOWN_TRIES; i++) {
-      let alive = false;
-      try { await fetch(`http://127.0.0.1:${dbgPort}/json/version`, { signal: AbortSignal.timeout(BOOT_REQUEST_TIMEOUT_MS) }); alive = true; } catch { /* gone */ }
-      if (!alive) break;
-      await sleep(TEARDOWN_POLL_MS);
+    killChromeByTag(profile, chromeProcess);
+    const waitForChromeStop = async () => {
+      for (let i = 0; i < TEARDOWN_TRIES; i++) {
+        try {
+          await fetch(`http://127.0.0.1:${dbgPort}/json/version`, { signal: AbortSignal.timeout(BOOT_REQUEST_TIMEOUT_MS) });
+          await sleep(TEARDOWN_POLL_MS);
+        } catch { return true; }
+      }
+      return false;
+    };
+    if (!(await waitForChromeStop()) && process.platform === 'win32') {
+      killChromeByTag(profile);
+      await waitForChromeStop();
     }
     try { fs.rmSync(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 }); }
     catch { /* still locked; %TEMP% cleanup is not the smoke's job */ }

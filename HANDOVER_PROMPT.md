@@ -6,11 +6,11 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — task 177d DONE (Release QA CDP disconnect reporting); next task 156, then R16
+## Current session — task 156 DONE (suite resilience/performance); stop before R16
 
-Run #34 confirmed task 177c on CI, then Release QA failed after its pre-browser checks with a CDP websocket close. Task 177d is now complete: `tools/headless.js` tags the shared fatal socket error, clears pending command timers, waits briefly for the close event after a websocket error, and reports one diagnostic containing close/browser state while setting exit code 1. Ordinary unhandled rejections still fail normally. `tools/guards/cdp_fail_negtest.js` proves the real disconnect path, failure status, cleanup, and non-CDP rejection behavior; its mutation control reproduces the old unhandled crash and restores the source.
+Task 177d is complete and pushed as `0ce34e9`. Task 156 is complete; user requested stopping before R16. Its Windows teardown profile found the process-tag `pwsh` kill cost 2.08–4.33 s while profile removal was ~32 ms. The harness now kills Chrome through the exact `ChildProcess` handle, waits for the debug port to close, and falls back to the existing profile match if necessary. A direct-kill probe found no remaining tagged Chrome processes. Teardown went from a 2448 ms median to 50–55 ms across five runs (52 ms average, ~97.9% lower).
 
-Validation: the CDP negative test passed 7/7; `node tools/offline_smoke.mjs` passed all 16 games and runtime-error checks; `node tools/check_fast.js` passed all 7 stages; `node --check` passed both changed JavaScript files. Next queued work is **task 156** (test-suite profiling/speed), then **R16**.
+Task 156 validation: full `node tools/run_all.js --concurrency 2 --resume <fresh-checkpoint>` passed 27/27 tools and 575 checks in 140.4 s aggregate tool time; all touch-interruption shards passed. `node tools/check_fast.js` passed 7/7; `node tools/guards/cdp_fail_negtest.js` passed 7/7; syntax and diff checks passed. The prior recorded concurrency-2 run was 260.1 s/570 checks; cross-run tool time varies, so the isolated teardown profile is the attribution evidence. The user asked to stop before R16; **do not start it**.
 
 R8 / task 169 is complete and pushed as `57e3724`. R9 / task 170 was pushed as `57dbc2a`; R10 / task 171 as `6be5474`; R11 / task 172 as `2669955`; R13 / task 173 as `3ee9218`; and R14 / task 174 as `8b2a7e0` on 2026-10-01. R9 screenshot capture covers hub + all 16 `screenshot:true` apps at five viewports = 85 images; fixed-frame captures repeated pixel-identically. Its reviewed PNGs and manifest are under `resources/visual-baselines/`, with replacement requiring full-matrix `--approve-baseline`.
 

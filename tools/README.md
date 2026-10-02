@@ -12,6 +12,13 @@ diagnostic and sets a nonzero exit code instead of letting Node terminate during
 the unhandled-rejection storm. See `guards/cdp_fail_negtest.js` for the real
 disconnect regression test.
 
+Task 156 profiling found Windows teardown spent 2.1–4.3 s starting PowerShell
+to locate Chrome by profile, while removing its profile took only ~32 ms.
+`close()` now terminates the exact `ChildProcess` handle first, waits up to the
+existing bounded debug-port window, and falls back to the profile-specific
+PowerShell match if Chrome is still serving. Five measured closes averaged 52 ms;
+POSIX keeps the existing profile-tag kill.
+
 ## Files
 
 | File | What it is |
