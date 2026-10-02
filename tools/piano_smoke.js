@@ -167,9 +167,24 @@ const LIT_IDX = `Array.from(document.querySelectorAll('.piano-key')).indexOf(doc
   for (let step = 0; step < 42; step++) {
     const idx = await h.evalv(LIT_IDX);
     if (idx < 0) break;
+    /* Readiness wait, NOT a sleep (task 156). This loop used to sleep a fixed
+       330ms after every tap: 42 x 330ms = 13.9s of the tool's 22s, i.e. 64% of
+       it, and the same cost whether the game had consumed the tap in 5ms or not
+       at all. What it was actually waiting for is knowable - a correct tap must
+       advance the note, so the counter changes (and on the final note the
+       finish panel appears instead). Polling that is both faster and stricter:
+       it can no longer pass by hoping 330ms was enough.
+       This waits on the game having applied the work, NOT on the assertion - the
+       finish panel below is still checked once, after the loop, and is never
+       polled, so this cannot degenerate into a retry-until-pass. */
+    const before = await h.evalv(`document.getElementById('pianoCounter').textContent`);
     await h.evalv(CLICK(`.piano-key:nth-child(${idx + 1})`));
     completed++;
-    await sleep(330);
+    const advanced = await h.waitFor(
+      `(document.getElementById('pianoCounter').textContent !== ${JSON.stringify(before)}) ||
+       document.getElementById('pianoFinish').classList.contains('show')`,
+      { timeout: 5000, interval: 20, label: `piano note ${step + 1} to be consumed` });
+    if (!advanced.ok) break;   // the finish-panel check below reports this
   }
   const fin = await h.evalv(`JSON.stringify({
     shown: document.getElementById('pianoFinish').classList.contains('show'),
