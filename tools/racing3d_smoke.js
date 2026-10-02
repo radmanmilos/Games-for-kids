@@ -90,6 +90,44 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     }
     check('racing3d booted (window.__r3d ready)', ready);
 
+    // --- diagnostics (task 177 follow-up) -------------------------------
+    // These 5 checks pass 33/33 on the Windows dev host and fail on the Linux
+    // runner, so the fix needs evidence rather than a guess. Two mechanisms
+    // could explain a cross-machine difference and they are not the same bug:
+    //
+    //  1. The sim clamps dt: `Math.min(clock.getDelta(), 0.05)` in the rAF loop.
+    //     At 60fps the clamp never binds, so `await sleep(N)` buys N ms of sim.
+    //     On a software-WebGL runner a frame can take >50ms, the clamp binds, and
+    //     the game runs at a fraction of wall-clock speed -- so every fixed sleep
+    //     in this file under-buys sim time and the physics samples read a state
+    //     the kart has not reached yet. __probe measures real frames and the sim
+    //     time they actually delivered (same 50ms clamp), so a sample payload can
+    //     report "how much sim time did this window really buy".
+    //  2. `prefers-reduced-motion` is read once at module load and is NOT
+    //     settable at runtime, so the host decides it. The decor check asserts
+    //     `ampInit === 0` (reduced motion ON); the Linux runner reports 1.
+    //
+    // Assertions are deliberately unchanged -- this only adds measurement.
+    await h.evalv(`(function(){
+        let frames = 0, simMs = 0, worstMs = 0, last = 0;
+        function tick(t) {
+            if (last) { const d = t - last; if (d > worstMs) worstMs = d; simMs += Math.min(d, 50); }
+            last = t; frames++;
+            requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+        window.__probeReset = function () { frames = 0; simMs = 0; worstMs = 0; last = 0; return true; };
+        window.__probe = function () {
+            return JSON.stringify({
+                frames: frames,
+                simMs: Math.round(simMs),
+                worstMs: Math.round(worstMs),
+                rm: window.__r3d.reducedMotion()
+            });
+        };
+        return true;
+    })()`);
+
     const boot = await h.evalv(`JSON.stringify({
         canvas: (document.querySelector('#r3d-view canvas') || {}).width || 0,
         world: document.getElementById('r3d-world').textContent,
@@ -178,6 +216,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     check('countdown finished -> driving mode', driveWait === true);
 
     await h.evalv(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' })); true`);
+    await h.evalv(`window.__probeReset(); true`);
     await sleep(400);
     const stA = JSON.parse(await h.evalv(`JSON.stringify({ yaw: window.__r3d.steerState().steerYaw, lat: window.__r3d.lateral(), sp: window.__r3d.speed() })`));
     await h.evalv(`window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' })); true`);
@@ -187,6 +226,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const stE2 = JSON.parse(await h.evalv(`JSON.stringify({ yaw: window.__r3d.steerState().steerYaw, lat: window.__r3d.lateral() })`));
     await sleep(900);
     const stB = JSON.parse(await h.evalv(`JSON.stringify({ yaw: window.__r3d.steerState().steerYaw, lat: window.__r3d.lateral() })`));
+    const probeRelease = await h.evalv(`window.__probe()`);
     await sleep(300);
     const stC = JSON.parse(await h.evalv(`JSON.stringify({ lat: window.__r3d.lateral() })`));
     await h.evalv(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' })); true`);
@@ -198,7 +238,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         stE1.yaw > 0.1 && stE2.yaw > 0.07 && Math.abs(stE2.lat - stE1.lat) < 0.4 &&
         Math.abs(stB.yaw) < 0.05 && Math.abs(stC.lat - stB.lat) < 0.15 &&
         stLeft.lat < stC.lat - 0.5,
-        JSON.stringify({ stA, stE1, stE2, stB, stC, stLeft }));
+        JSON.stringify({ stA, stE1, stE2, stB, stC, stLeft, probe: JSON.parse(probeRelease) }));
 
     const pads = await h.evalv(`JSON.stringify(window.__r3d.boostPads())`);
     const pj = JSON.parse(pads);
@@ -232,15 +272,17 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         driftA === true && driftB === false && driftPart > 0, 'drift=' + driftA + '->' + driftB + ' particles=' + driftPart);
 
     await h.evalv(`window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' })); true`);
+    await h.evalv(`window.__probeReset(); true`);
     await sleep(400);
     const bankA = JSON.parse(await h.evalv(`JSON.stringify(window.__r3d.steerState())`));
     await h.evalv(`window.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' })); true`);
     await sleep(1300);
     const bankB = JSON.parse(await h.evalv(`JSON.stringify(window.__r3d.steerState())`));
+    const probeBank = JSON.parse(await h.evalv(`window.__probe()`));
     check('kart banks into the turn + wheels carry a spin pattern, then point forward on release',
         bankA.spokes === 16 && bankA.roll > 0.15 && bankA.steerYaw > 0.1 &&
         Math.abs(bankB.roll) < 0.05 && Math.abs(bankB.steerYaw) < 0.05 && Math.abs(bankB.yaw) < 0.05,
-        JSON.stringify({ bankA, bankB }));
+        JSON.stringify({ bankA, bankB, probe: probeBank }));
 
     const rumA = await h.evalv(`window.__r3d.seekLateral(9.4); true`);
     await sleep(150);
@@ -370,9 +412,17 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         const midOn = r3d.decorScale(d.idx);
         for (let i = 0; i < 20; i++) r3d.step(1 / 60);
         const endOn = r3d.decorScale(d.idx);
+        // decay curve: does the scale actually climb back to 1, and how much
+        // further sim time does it need? 26 steps (433ms) may simply be too few.
+        const tail = [];
+        for (let k = 0; k < 6; k++) {
+            for (let i = 0; i < 30; i++) r3d.step(1 / 60);
+            tail.push(+r3d.decorScale(d.idx).toFixed(4));
+        }
+        const rm = r3d.reducedMotion();
         r3d.setDecorAmp(ampInit);
         r3d.haltLoop(false);
-        return JSON.stringify({ idx: d.idx, t: d.t, baseOff, midOff, baseOn, midOn, endOn, ampInit });
+        return JSON.stringify({ idx: d.idx, t: d.t, baseOff, midOff, baseOn, midOn, endOn, ampInit, rm, tail });
     })()`);
     const dcj = JSON.parse(decorCheck);
     check('reactive decor: pulse gated off under reduced motion, scale pops when the kart passes and returns to baseline',
@@ -494,13 +544,27 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         r3d.resetSteerState(0, 0, 0);
         const lap0 = r3d.lap();
         r3d.seekToProgress(0.985);  // just before the next lap line
-        for (let i = 0; i < 120; i++) r3d.step(1 / 60);
+        const sp0 = r3d.speed();
+        const pre = r3d.particles();
+        // Which step crosses the lap line, and does the burst spawn there and then
+        // die inside the remaining steps? "0 particles at the end" means two very
+        // different things and the fix is different for each, so measure both.
+        let crossStep = -1, atCross = -1, celeAtCross = -1;
+        for (let i = 0; i < 120; i++) {
+            r3d.step(1 / 60);
+            if (crossStep < 0 && r3d.lap() > lap0) {
+                crossStep = i;
+                atCross = r3d.particles();
+                celeAtCross = r3d.tagged("celebrate");
+            }
+        }
         const lap1 = r3d.lap();
         const cele = r3d.tagged("celebrate");
         const total = r3d.particles();
         const spinning = r3d.particlesSpinning();
+        const rm = r3d.reducedMotion();
         r3d.haltLoop(false);
-        return JSON.stringify({ lap0, lap1, cele, total, spinning });
+        return JSON.stringify({ lap0, lap1, cele, total, spinning, crossStep, atCross, celeAtCross, pre, sp0, rm });
     })()`);
     const celj = JSON.parse(celCheck);
     check('celebration: lap-line cross fires a world-colored burst (tagged celebrate), particle cap respected',
