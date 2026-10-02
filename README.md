@@ -6,10 +6,11 @@
 
 ## Current status (2026-10-02)
 
-- **CI is green except one job.** Latest run #39: 30 jobs, 27 succeeded, 1 skipped (`Extended`, manual/weekly by design), **1 failure — `Release QA` (Offline E2E)**. The full 27-leg smoke matrix passes. Tracked as GitHub issue **#3**; **its suggested fix (add retry logic / remove the test) must not be applied** — see `PROJECT_TASKS.md` task 178.
-- **Task 178 (in progress):** the CDP failure diagnostic could describe the *wrong* Chrome process; fixed and guarded. This makes the next CI log trustworthy but **does not fix run #39** — no root cause established yet, because the CI step log is unreadable without `gh` on this host.
+- **CI is green — for the first time in the repo's history.** Run **#41**: **29 jobs succeeded, 1 skipped** (`Extended`, manual/weekly by design), **0 failed**, including `Release QA`. `Release QA` had failed on *every* run since #31; issue **#3 is closed**. `gh` is installed and authed, so CI step logs are readable.
+- **`Release QA` root cause (task 181):** Chrome boot crashes are **routine** on GitHub runners — 13 of 27 matrix legs hit one on run #40, all recovered on `run_all.js`'s retry. The `Offline E2E` step was the only runner executing its tool **raw**, so it had no retry and turned a self-healing event red every time. Also fixed: `offline_smoke.mjs` **had no exit code**, so a blocking gate could only go red by crashing, never by failing an assertion. **Never run a `*_smoke` tool raw in CI.**
+- **Task 178/180:** the CDP diagnostic could describe the *wrong* Chrome process, and `games_map_negtest` asserted something it could never satisfy (that false red is what broke runs #34/#37). Both fixed and guarded with negative-tested regression guards.
 - **Offline is the service worker; there is no ZIP.** The manual download archive was removed 2026-10-02 (user decision) — it was never published, so the link 404'd. See [`OFFLINE.md`](OFFLINE.md).
-- Local gate: `node tools/check_fast.js` = **7/7 green**.
+- Local gate: `node tools/check_fast.js` = **7/7 green**. Note: 3 local `racing3d` failures are this host's missing WebGL, not a regression.
 - Roadmap: **16/29 done (R0–R15)**. R16 deliberately not started.
 
 ---

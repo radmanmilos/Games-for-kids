@@ -6,7 +6,21 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — task 181 pushed; awaiting CI run #41 to confirm, then close issue #3
+## Current session — task 181 DONE; CI IS GREEN (#41) and issue #3 is CLOSED
+
+**Session is complete.** Tree is clean and pushed (`a3658d5`). **Run #41: 29 succeeded, 1 skipped (`Extended`, manual/weekly by design), 0 failed** — `Release QA` passed for the first time in this repo's history, and **issue #3 is closed** with the root cause documented in its closing comment.
+
+**The proof the fix worked, not just that luck favoured us:** run #41 hit a boot crash *again*, the retry fired, and the gate then completed — `[boot crash, exit 1 — retrying (1/2)]` → `[exit 0, 103 pass / 0 fail, 67.4s]`, `PASS acceptance: every offline game loads, plays and returns (16 games) [all green]`, a11y `critical=0, serious=0, moderate=0, minor=0`. `racing3d` passed offline on the runner too, confirming the 3 local WebGL failures are host-only.
+
+**Two lessons to carry into the next session:**
+- **`Release QA` was not failing for the reason issue #3 claimed.** The pasted log was from an older run and showed a mid-session CDP socket death; the real error was a *boot* crash (`Chrome did not start ... no assertions ran`, browser alive, port silent). Root cause: boot crashes are routine on runners (13/27 legs on #40), every leg retries via `run_all.js`, and `Release QA` was the last runner executing its tool **raw**. **Never run a `*_smoke` tool raw in CI.** Full detail in `PROJECT_TASKS.md` task 181.
+- **`offline_smoke.mjs` had no exit code at all** — it exited 0 while printing failures, so a *blocking* gate could only go red by crashing, never by failing an assertion. Now `getFails()`-driven. Worth grepping other standalone tools for the same hole.
+
+**`gh` is installed and authed** (official v2.102.0 arm64 tarball at `/usr/local/bin/gh`; Alpine has no `gh` package). Logs: `gh run view <id> --log` (`gh api .../jobs/<id>/logs` rejects with "terminal escape sequences"). If re-auth is ever needed, start the device flow with `setsid` — a session restart kills the waiter and loses the token.
+
+**Standing state:** local `check_fast.js` 7/7; the offline ZIP is gone (task 179) and `OFFLINE.md` documents the mechanism; 3 local `racing3d`/WebGL failures are this host's missing WebGL, not a regression. **R16 remains NEW and unstarted** — the user asked to stop before it.
+
+## Historical — task 178 (diagnostic trust) + task 179 (ZIP removed) + task 180
 
 **`gh` is installed and authed** (official v2.102.0 arm64 tarball at `/usr/local/bin/gh`; Alpine has no `gh` package). The CI step logs are readable for the first time, and they changed the diagnosis completely.
 
