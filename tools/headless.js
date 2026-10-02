@@ -503,7 +503,13 @@ async function start({
     const r = e.getBoundingClientRect();
     if (r.width < 1 || r.height < 1) return { ok: false, why: 'element has zero size' };
     if (r.left < 0 || r.top < 0 || r.right > innerWidth || r.bottom > innerHeight)
-      return { ok: false, why: 'outside the viewport (' + Math.round(r.left) + ',' + Math.round(r.top) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height) + ')' };
+      return { ok: false, why: 'outside the viewport (' + Math.round(r.left) + ',' + Math.round(r.top) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height) + ')' +
+        ' win=' + innerWidth + 'x' + innerHeight + ' dpr=' + devicePixelRatio +
+        ' scroll=' + (document.scrollingElement || document.documentElement).scrollLeft + ',' + (document.scrollingElement || document.documentElement).scrollTop +
+        ' e=' + e.id + '.' + (e.className || '') +
+        ' disp=' + getComputedStyle(e).display + ' pos=' + getComputedStyle(e).position +
+        ' parentDisp=' + getComputedStyle(e.parentElement).display +
+        ' vmin=' + Math.min(innerWidth, innerHeight) / 100 };
     // Prefer the centre, but a shape can leave its own bounding box empty (an
     // L-shaped SVG region, a donut), so probe a few points before giving up.
     const hits = t => { const p = document.elementFromPoint(t[0], t[1]); return !!p && (p === e || e.contains(p)); };
