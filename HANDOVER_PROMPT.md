@@ -6,7 +6,11 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — task 177c DONE (Release QA: explorer controls were off-screen); next task 156, then R16
+## Current session — task 177d DONE (Release QA CDP disconnect reporting); next task 156, then R16
+
+Run #34 confirmed task 177c on CI, then Release QA failed after its pre-browser checks with a CDP websocket close. Task 177d is now complete: `tools/headless.js` tags the shared fatal socket error, clears pending command timers, waits briefly for the close event after a websocket error, and reports one diagnostic containing close/browser state while setting exit code 1. Ordinary unhandled rejections still fail normally. `tools/guards/cdp_fail_negtest.js` proves the real disconnect path, failure status, cleanup, and non-CDP rejection behavior; its mutation control reproduces the old unhandled crash and restores the source.
+
+Validation: the CDP negative test passed 7/7; `node tools/offline_smoke.mjs` passed all 16 games and runtime-error checks; `node tools/check_fast.js` passed all 7 stages; `node --check` passed both changed JavaScript files. Next queued work is **task 156** (test-suite profiling/speed), then **R16**.
 
 R8 / task 169 is complete and pushed as `57e3724`. R9 / task 170 was pushed as `57dbc2a`; R10 / task 171 as `6be5474`; R11 / task 172 as `2669955`; R13 / task 173 as `3ee9218`; and R14 / task 174 as `8b2a7e0` on 2026-10-01. R9 screenshot capture covers hub + all 16 `screenshot:true` apps at five viewports = 85 images; fixed-frame captures repeated pixel-identically. Its reviewed PNGs and manifest are under `resources/visual-baselines/`, with replacement requiring full-matrix `--approve-baseline`.
 

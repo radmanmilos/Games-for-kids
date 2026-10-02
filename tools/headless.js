@@ -165,25 +165,89 @@ function killChromeByTag(tag) {
   } catch (e) { /* nothing to kill — fine */ }
 }
 
-function cdp(wsUrl) {
+const CDP_FATAL = Symbol('cdp-socket-gone');
+const reportedCdpFailures = new WeakSet();
+
+/* Task 177d — Release QA died on the runner with nothing but
+   `Error: CDP websocket closed unexpectedly (ws://127.0.0.1:44583/...)  at fail
+   (headless.js:178)` in the log: no check output, no diagnostic, no browser
+   state. That is Node's unhandled-rejection kill. When the socket drops, fail()
+   must reject every command still in flight, and *some* of them are always
+   un-awaited: `evalv`/`evalp`/`navigate` are `async`, so an un-awaited call
+   leaves the OUTER promise unhandled even though the inner CDP promise has an
+   `await` on it. Nothing inside cdp() can reach that outer promise, so the
+   absorber has to live at the process level.
+
+   Socket-death rejections are reported once and set exitCode instead of letting
+   Node terminate midway through the smoke with an unhandled-rejection stack.
+   Every other rejection is re-thrown, preserving Node's default failure for bugs. */
+process.on('unhandledRejection', (reason) => {
+  if (reason && reason[CDP_FATAL]) {
+    if (!reportedCdpFailures.has(reason)) {
+      reportedCdpFailures.add(reason);
+      console.error(`[headless] Unhandled CDP failure: ${reason.message}`);
+      process.exitCode = 1;
+    }
+    return;
+  }
+  throw reason;
+});
+
+function cdp(wsUrl, diagnose) {
   let id = 0;
   const pending = new Map();
   const listeners = new Map();
   const ws = new WebSocket(wsUrl);
+  /* Why the socket went away, in the order it was learned, plus whatever the
+     caller knows about the browser process (`diagnose`). `fail()` is the only
+     thing that can end this connection, so this is the whole story of a CDP
+   death — and until task 177d the log contained none of it, because the process
+     was killed by an unhandled rejection before anything could be printed. */
+  const cause = [];
+  let lastClose = null;
+  let opened = false;
+  let failed = false;
+  let errorCloseTimer = null;
+  const describe = () => {
+    const extra = (typeof diagnose === 'function' ? diagnose() : '') || '';
+    return [
+      `code=${lastClose && lastClose.code}`,
+      `reason=${(lastClose && lastClose.reason) || '(none)'}`,
+      `wasClean=${lastClose && lastClose.wasClean}`,
+      cause.length ? `preceded-by=${cause.join('; ')}` : 'preceded-by=(nothing logged)',
+      extra ? `browser=${extra}` : 'browser=(no state available)',
+    ].join(' ');
+  };
   return new Promise((resolve, reject) => {
     /* The socket can die before it opens, or at any point afterwards. Either way
        every command still in flight will now never be answered, so they are all
-       failed here rather than left pending forever. */
+       failed here rather than left pending forever. The error is tagged CDP_FATAL
+       so the process-level absorber above can recognise it; an awaiting caller
+       still receives it unchanged. */
     const fail = (why) => {
-      for (const [, p] of pending) p.rej(new Error(why));
+      if (failed) return;
+      failed = true;
+      clearTimeout(connectTimer);
+      clearTimeout(errorCloseTimer);
+      const err = new Error(why);
+      err[CDP_FATAL] = true;
+      for (const [, p] of pending) {
+        clearTimeout(p.timer);
+        p.rej(err);
+      }
       pending.clear();
       try { ws.close(); } catch { /* already gone */ }
-      reject(new Error(why));
+      reject(err);
+    };
+    /* Notes whatever preceded the close so the reason survives into the error. */
+    const note = (kind, detail) => {
+      cause.push(kind + (detail ? ': ' + detail : ''));
     };
     const connectTimer = setTimeout(
-      () => fail(`CDP websocket did not open within ${CDP_CONNECT_TIMEOUT_MS}ms (${wsUrl})`),
+      () => fail(`CDP websocket did not open within ${CDP_CONNECT_TIMEOUT_MS}ms (${wsUrl}) — ${describe()}`),
       CDP_CONNECT_TIMEOUT_MS);
     ws.onopen = () => {
+      opened = true;
       clearTimeout(connectTimer);
       resolve({
         on(method, handler) {
@@ -194,15 +258,16 @@ function cdp(wsUrl) {
           return new Promise((res, rej) => {
             const mid = ++id;
             const budget = method === 'Runtime.evaluate' ? CDP_EVALUATE_TIMEOUT_MS : CDP_COMMAND_TIMEOUT_MS;
-            const timer = setTimeout(() => {
+            const entry = { res, rej, timer: null };
+            entry.timer = setTimeout(() => {
               pending.delete(mid);
               rej(new Error(`CDP ${method} (id ${mid}) got no response within ${budget}ms`));
             }, budget);
-            pending.set(mid, { res, rej });
+            pending.set(mid, entry);
             try {
               ws.send(JSON.stringify({ id: mid, method, params, ...(sessionId ? { sessionId } : {}) }));
             } catch (e) {
-              clearTimeout(timer);
+              clearTimeout(entry.timer);
               pending.delete(mid);
               rej(e);
             }
@@ -211,16 +276,34 @@ function cdp(wsUrl) {
       });
     };
     ws.onerror = (ev) => {
-      clearTimeout(connectTimer);
-      fail(`CDP websocket error: ${(ev && ev.message) || 'connection failed'} (${wsUrl})`);
+      const msg = (ev && ev.message) || 'connection failed';
+      note('websocket error', msg);
+      if (!opened) {
+        fail(`CDP websocket error: ${msg} (${wsUrl}) — ${describe()}`);
+      } else if (!errorCloseTimer) {
+        /* Node's WebSocket normally follows error with close. Give that event a
+           short window to provide its code/reason, but still bound the failure
+           if an implementation emits error without closing. */
+        errorCloseTimer = setTimeout(
+          () => fail(`CDP websocket error: ${msg} (${wsUrl}) — ${describe()}`),
+          1000,
+        );
+      }
     };
-    ws.onclose = () => {
+    ws.onclose = (ev) => {
       clearTimeout(connectTimer);
-      fail(`CDP websocket closed unexpectedly (${wsUrl})`);
+      clearTimeout(errorCloseTimer);
+      lastClose = ev || null;
+      fail(`CDP websocket closed unexpectedly (${wsUrl}) — ${describe()}`);
     };
     ws.onmessage = (ev) => {
       const msg = JSON.parse(ev.data);
-      if (msg.id && pending.has(msg.id)) { pending.get(msg.id).res(msg.result); pending.delete(msg.id); }
+      if (msg.id && pending.has(msg.id)) {
+        const entry = pending.get(msg.id);
+        clearTimeout(entry.timer);
+        entry.res(msg.result);
+        pending.delete(msg.id);
+      }
       if (msg.method && listeners.has(msg.method)) {
         for (const handler of listeners.get(msg.method)) handler(msg.params, msg.sessionId);
       }
@@ -350,7 +433,15 @@ async function start({
 
     if (version) {
       try {
-        const dbg = await cdp(version.webSocketDebuggerUrl);
+        /* Task 177d: hand cdp() a way to report the browser process's own state, so
+           the error a dropped socket produces names the two possible causes apart
+           — "Chrome exited" vs "Chrome is alive and only the socket went". Run #34
+           had no such evidence in the failure message at all. */
+        const dbg = await cdp(version.webSocketDebuggerUrl, () => (
+          chromeExitEvent
+            ? `Chrome exited code=${chromeExitEvent.code} signal=${chromeExitEvent.signal}`
+            : `Chrome still running; stderr tail="${(stderr.trim().split('\n').slice(-6).join(' | ') || '(empty)')}"`
+        ));
         const target = await dbg.send('Target.createTarget', { url: 'about:blank' });
         const { sessionId } = await dbg.send('Target.attachToTarget', { targetId: target.targetId, flatten: true });
         session = { dbg, sessionId, version };
