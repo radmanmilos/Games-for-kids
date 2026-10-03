@@ -1,5 +1,12 @@
 # Roadmap Audit — PETRIN_SVET_MASTER_EXECUTION_ROADMAP vs. Current Code
 
+**Scope (clarified 2026-10-04, R18):** This file audits the concepts of the
+**previous-generation** `resources/General_reviews/PETRIN_SVET_MASTER_EXECUTION_ROADMAP.md`
+(superseded). It is a historical mapping of those concepts to code state, not the
+active queue. The **active** implementation queue is the
+[Fresh Elevation Roadmap](resources/General_reviews/Petrin_svet_Fresh_Elevation_Roadmap_2026-09-29.md);
+see [`ROADMAP.md`](ROADMAP.md) for the single entry point.
+
 **Purpose:** Map every task in `resources/General_reviews/PETRIN_SVET_MASTER_EXECUTION_ROADMAP.md` to its current implementation state in `game/`. This file is the resumable progress record.
 
 **Status legend:**
@@ -8,7 +15,7 @@
 - `MISSING` — not found in current code
 - `N/A` — not applicable or contradicted by user-locked decisions
 
-**Last updated:** 2026-09-28
+**Last updated:** 2026-10-04
 
 ---
 

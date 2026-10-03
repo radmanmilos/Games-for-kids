@@ -1,3 +1,8 @@
+> **SUPERSEDED / COMPLETED (2026-10-04).** This is the old 18-task plan, kept for
+> history only. The active implementation queue is the
+> [Fresh Elevation Roadmap](Petrin_svet_Fresh_Elevation_Roadmap_2026-09-29.md).
+> See [`ROADMAP.md`](../../ROADMAP.md). Do not work from this file.
+
 # Петрин свет — Master Implementation Plan
 ## Current-state audit + prioritized execution plan for the implementation AI
 
