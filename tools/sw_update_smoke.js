@@ -108,6 +108,17 @@ const mkManifest = entries => JSON.stringify(
   await h.evalv(`(async () => { const r = await navigator.serviceWorker.ready; r.active.postMessage({ cmd: 'cacheAll' }); return true; })()`);
   await sleep(2500);
 
+  // R17: the cache name must derive from the single source of truth (manifest.json),
+  // so a version bump inherently creates a new cache and nothing hand-maintains the
+  // name. If self.location.href dropped the ?v= query this fails as 'petrin-v0'.
+  const expectedCache = 'petrin-v' + JSON.parse(fs.readFileSync(path.join(GAME, 'manifest.json'), 'utf8')).version;
+  const cacheNames = await h.evalp(`(async () => JSON.stringify(await caches.keys()))()`);
+  const petrinCaches = JSON.parse(cacheNames).filter(n => n.startsWith('petrin-'));
+  t('cache name derives from the manifest version', petrinCaches.includes(expectedCache),
+    'expected=' + expectedCache + ' actual=' + JSON.stringify(petrinCaches));
+  t('exactly one petrin-* cache exists (stale versions are evicted)',
+    petrinCaches.length === 1, JSON.stringify(petrinCaches));
+
   const cached = await h.evalp(`(async () => {
     const names = await caches.keys();
     const c = await caches.open(names[0]);

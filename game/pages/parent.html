@@ -27,6 +27,10 @@
     .meta-item{display:flex;align-items:center;gap:1vmin;padding:1vmin 2.5vmin;border-radius:999px;background:var(--cream);color:var(--plum);font:600 clamp(11px,1.8vmin,15px) 'Fredoka',sans-serif;}
     .meta-dot{width:1.4vmin;height:1.4vmin;border-radius:50%;background:#67C971;box-shadow:0 0 0 .4vmin rgba(103,201,113,.25);}
     .meta-dot.offline{background:#E2574C;box-shadow:0 0 0 .4vmin rgba(226,87,76,.25);}
+    /* R17: technical facts stay available but out of the way. */
+    .diagnostics{margin-top:3vmin;color:var(--plum);font:600 clamp(11px,1.8vmin,14px) 'Fredoka',sans-serif;}
+    .diagnostics summary{cursor:pointer;padding:1vmin 0;color:var(--plum);}
+    .diag-body{margin-top:1.5vmin;padding:2vmin 3vmin;border-radius:var(--radius-sm);background:var(--cream);line-height:1.7;word-break:break-word;user-select:text;-webkit-user-select:text;}
     .back-btn{position:absolute;top:4vmin;left:4vmin;width:12vmin;height:12vmin;border-radius:50%;border:none;background:var(--plum);color:white;font-size:6vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);cursor:pointer;}
   </style>
 </head>
@@ -38,6 +42,7 @@
       <div class="parent-meta">
         <span class="meta-item"><span class="meta-dot" id="conn-dot"></span><span id="conn-status">Онлајн</span></span>
         <span class="meta-item" id="version-info">Верзија: …</span>
+        <span class="meta-item" id="offline-copy-info">Офлајн копија: …</span>
       </div>
       <button class="parent-btn primary" id="download-offline">📥 Преузми за офлајн рад</button>
       <button class="parent-btn" id="check-updates">🔄 Провери ажурирања</button>
@@ -48,6 +53,10 @@
            is nothing for a parent to unpack by hand. Removed 2026-10-02 per user
            decision (superseding the 2026-09-30 "keep it hidden" decision). -->
       <div class="parent-status" id="parent-status">Спремно</div>
+      <details class="diagnostics">
+        <summary>Технички детаљи</summary>
+        <div class="diag-body" id="diag-body">…</div>
+      </details>
     </div>
   </div>
   <script src="../data/serbian.js"></script>
@@ -80,24 +89,72 @@
       window.addEventListener('online', renderConn);
       window.addEventListener('offline', renderConn);
 
-      // R12: version, from the single source of truth (manifest.json). It is in
+      // R17: version, from the single source of truth (manifest.json). It is in
       // the cache list, so this still resolves when the page is used offline.
+      let appVersion = null;
+
+      // R17: is a complete offline copy in Cache Storage? The service worker
+      // pre-caches the whole inventory on install, so the offline manifest being
+      // present in a cache is the honest signal that offline play is possible.
+      const offlineCopyInfo = document.getElementById('offline-copy-info');
+      const cacheHasOfflineManifest = async () => {
+        try {
+          for (const name of await caches.keys()) {
+            const cache = await caches.open(name);
+            const keys = await cache.keys();
+            if (keys.some(k => new URL(k.url).pathname.endsWith('/offline-manifest.json'))) return true;
+          }
+        } catch (e) { /* Cache Storage unavailable — treat as not ready */ }
+        return false;
+      };
+      const renderOfflineCopy = async () => {
+        const ready = await cacheHasOfflineManifest();
+        offlineCopyInfo.textContent = 'Офлајн копија: ' + (ready ? 'спремна' : 'није преузета');
+      };
+
+      // R17: technical facts live behind a disclosure, never in the parent's face.
+      const diagBody = document.getElementById('diag-body');
+      const renderDiag = async () => {
+        let cacheNames = [];
+        try { cacheNames = await caches.keys(); } catch (e) { /* ignore */ }
+        let scope = '';
+        try {
+          const reg = await navigator.serviceWorker.getRegistration();
+          if (reg) scope = reg.scope;
+        } catch (e) { /* ignore */ }
+        diagBody.textContent = [
+          'Верзија: ' + (appVersion || 'непозната'),
+          'Кеш: ' + (cacheNames.join(', ') || 'нема'),
+          'Опсег: ' + (scope || 'нема'),
+          'Веза: ' + (navigator.onLine !== false ? 'онлајн' : 'офлајн'),
+        ].join(' · ');
+      };
+
       fetch('../manifest.json')
         .then(r => r.json())
-        .then(m => { versionInfo.textContent = 'Верзија: ' + (m.version || 'нема'); })
-        .catch(() => { versionInfo.textContent = 'Верзија: непозната'; });
+        .then(m => {
+          appVersion = m.version || null;
+          versionInfo.textContent = 'Верзија: ' + (appVersion || 'нема');
+        })
+        .catch(() => { versionInfo.textContent = 'Верзија: непозната'; })
+        .then(renderDiag);
+      renderOfflineCopy();
 
-      // Download offline
+      // R17: set when the update check found a newer asset set and the parent has
+      // not yet re-cached. Drives the "Ажурирано" confirmation after the update.
+      let pendingUpdate = false;
+
+      // Download / update offline copy
       downloadBtn.addEventListener('click', async () => {
         downloadBtn.disabled = true;
         downloadBtn.setAttribute('aria-busy', 'true');
-        status.textContent = 'Покрећем...';
+        status.textContent = pendingUpdate ? 'Ажурирам...' : 'Покрећем...';
         try {
           if ('serviceWorker' in navigator) {
             const reg = await navigator.serviceWorker.ready;
             if (reg.active) {
               reg.active.postMessage({ cmd: 'cacheAll' });
-              status.textContent = 'Спремам...';
+              status.textContent = pendingUpdate ? 'Ажурирам...' : 'Спремам...';
             } else {
               status.textContent = 'Сервис још није спреман';
               downloadBtn.disabled = false;
@@ -164,12 +221,32 @@
         navigator.serviceWorker.addEventListener('message', (e) => {
           const data = e.data || {};
           if (data.type === 'cache-complete') {
-            status.textContent = 'Сачувано за офлајн рад';
+            if (pendingUpdate) {
+              status.textContent = 'Ажурирано';
+              downloadBtn.textContent = '📥 Преузми за офлајн рад';
+              pendingUpdate = false;
+            } else {
+              status.textContent = 'Сачувано за офлајн рад';
+            }
             downloadBtn.disabled = false;
             downloadBtn.removeAttribute('aria-busy');
+            renderOfflineCopy();
+            renderDiag();
           }
           if (data.type === 'check-result') {
-            status.textContent = data.changed && data.changed > 0 ? 'Ажурирање доступно' : 'Нема ажурирања';
+            if (data.changed && data.changed > 0) {
+              status.textContent = 'Постоји нова верзија';
+              pendingUpdate = true;
+              downloadBtn.textContent = '⬆️ Ажурирај офлајн копију';
+            } else {
+              status.textContent = 'Нема ажурирања';
+            }
+          }
+          // A new worker took over (version bump). Confirm it and refresh facts.
+          if (data.type === 'updated') {
+            status.textContent = 'Ажурирано';
+            renderOfflineCopy();
+            renderDiag();
           }
           // Offline the manifest fetch in the worker fails, so the only answer the
           // parent ever got was «Проверавам...» with the button stuck disabled.

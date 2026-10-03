@@ -1,4 +1,12 @@
-const CACHE_NAME = 'petrin-v2';
+// R17: the app version lives in manifest.json only (the single source of truth).
+// Pages register this worker as `sw.js?v=<version>` (see shared/navigation.js),
+// so the cache name is derived from the registration URL. This must be computed
+// at script evaluation every time: a service worker is re-evaluated per event
+// and keeps no module state, so a name resolved during `install` would be lost
+// on the next wake-up. Bumping the version installs a new worker, names a new
+// cache and lets activate() delete the superseded one.
+const SW_VERSION = new URL(self.location.href).searchParams.get('v') || '0';
+const CACHE_NAME = 'petrin-v' + SW_VERSION;
 const APP_ROOT = new URL('./', self.registration.scope);
 const CACHE_LIST_URL = new URL('sw-cache-list.json', APP_ROOT);
 const OFFLINE_MANIFEST_URL = new URL('offline-manifest.json', APP_ROOT);
@@ -21,6 +29,7 @@ self.addEventListener('install', event => {
     }
     // activate immediately
     self.skipWaiting();
+
   })());
 });
 
@@ -31,11 +40,20 @@ self.addEventListener('activate', event => {
     // Bumping CACHE_NAME must not orphan the previous copy: on a tablet the
     // old cache is a full offline copy, so it has to actually be deleted.
     const names = await caches.keys();
-    await Promise.all(
-      names
-        .filter(name => name.startsWith('petrin-') && name !== CACHE_NAME)
-        .map(name => caches.delete(name))
-    );
+    const superseded = names.filter(name => name.startsWith('petrin-') && name !== CACHE_NAME);
+    await Promise.all(superseded.map(name => caches.delete(name)));
+    // Tell every open page that an upgrade (not a first install) took over, so
+    // the parent area can surface "Ажурирано" without a manual reload. A first
+    // install has no superseded cache, so it stays quiet.
+    if (superseded.length > 0) {
+      try {
+        const clientsArr = await self.clients.matchAll({ includeUncontrolled: true });
+        for (const c of clientsArr) {
+          try { c.postMessage({ type: 'updated', version: CACHE_NAME }); } catch (_) {}
+        }
+      } catch (_) {}
+    }
+
   })());
 });
 
@@ -64,6 +82,7 @@ self.addEventListener('fetch', event => {
     } catch (e) {
       return cached || Response.error();
     }
+
   })());
 });
 

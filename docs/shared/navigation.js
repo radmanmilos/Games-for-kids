@@ -5,18 +5,32 @@
 
     // register service worker when available
     if ('serviceWorker' in navigator) {
-        const swUrl = new URL('../sw.js', document.currentScript && document.currentScript.src || location.href);
-        swReady = navigator.serviceWorker.register(swUrl.href).then(reg => {
-            swRegistration = reg;
-            console.log('SW registered', reg.scope);
-            return navigator.serviceWorker.ready;
-        }).then(reg => {
-            swRegistration = reg;
-            return reg;
-        }).catch(e => {
-            console.warn('SW register failed', e);
-            return null;
-        });
+        const here = (document.currentScript && document.currentScript.src) || location.href;
+        const swUrl = new URL('../sw.js', here);
+        // R17: manifest.json is the single source of truth for the app version.
+        // Passing it to the worker as a query string is what lets the worker name
+        // its cache `petrin-v<version>` with no second hand-written copy. A new
+        // version therefore registers a new worker URL, which is the update.
+        const manifestUrl = new URL('../manifest.json', here);
+        swReady = fetch(manifestUrl.href)
+            .then(r => r.json())
+            .then(m => (m && m.version) || null)
+            .catch(() => null)
+            .then(version => {
+                const registerUrl = new URL(swUrl.href);
+                if (version) registerUrl.searchParams.set('v', version);
+                return navigator.serviceWorker.register(registerUrl.href);
+            }).then(reg => {
+                swRegistration = reg;
+                console.log('SW registered', reg.scope);
+                return navigator.serviceWorker.ready;
+            }).then(reg => {
+                swRegistration = reg;
+                return reg;
+            }).catch(e => {
+                console.warn('SW register failed', e);
+                return null;
+            });
     }
 
     // R7: the route -> page map comes from data/app-registry.js. This used to be
@@ -48,7 +62,11 @@
         const btn = document.getElementById('download-offline');
         const status = document.getElementById('download-status');
         const checkBtn = document.getElementById('check-updates');
-        if (!btn) return;
+        // R17: this block owns the child launcher's legacy offline strip. The
+        // parent page has its own dedicated controls and no #download-status, so
+        // bail out there rather than attaching a second cacheAll handler to the
+        // same button (which ran the whole download twice).
+        if (!btn || !status) return;
         const setStatus = (txt) => { if (status) status.textContent = txt; };
         setStatus('Спремно');
         const getWorker = () => navigator.serviceWorker && (navigator.serviceWorker.controller || (swRegistration && swRegistration.active));

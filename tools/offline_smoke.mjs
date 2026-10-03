@@ -36,7 +36,6 @@ const { children, parents } = require('./registry.js');
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..', 'game');
 
-const CACHE_NAME = 'petrin-v2';
 const BASE = 'http://127.0.0.1';
 
 /* R7: the parent page is the only place that triggers caching, so its URL comes
@@ -451,17 +450,25 @@ const swReady = await h.waitFor(`!!navigator.serviceWorker.controller`,
   }
 
   const cached = await h.evalp(`(async()=>{
-    const c = await caches.open(${JSON.stringify(CACHE_NAME)});
+    const names = await caches.keys();
+    const name = names.find(n => n.startsWith('petrin-'));
+    if (!name) return JSON.stringify({ none: true, names });
+    const c = await caches.open(name);
     const keys = (await c.keys()).map(r=>new URL(r.url).pathname);
-    return JSON.stringify(keys);
+    return JSON.stringify({ name, keys });
   })()`);
   if (cached && !cached.__err) {
-    const have = new Set(JSON.parse(cached));
-    const notCached = assets.map(f => '/' + f.replace(/^\/+/, '')).filter(f => !have.has(f));
-    check(`P1 all ${assets.length} inventory files reached Cache Storage`, notCached.length === 0,
-      notCached.slice(0, 5).join(', ') || 'cache matches sw-cache-list.json');
+    const parsed = JSON.parse(cached);
+    if (parsed.none) {
+      check('P1 Cache Storage is readable', false, 'no petrin-* cache: ' + JSON.stringify(parsed.names));
+    } else {
+      const have = new Set(parsed.keys);
+      const notCached = assets.map(f => '/' + f.replace(/^\/+/, '')).filter(f => !have.has(f));
+      check(`P1 all ${assets.length} inventory files reached Cache Storage`, notCached.length === 0,
+        notCached.slice(0, 5).join(', ') || 'cache ' + parsed.name + ' matches sw-cache-list.json');
+    }
   } else {
-    check('P1 Cache Storage is readable', false, 'could not open ' + CACHE_NAME);
+    check('P1 Cache Storage is readable', false, 'caches.keys() failed');
   }
 
   for (const a of APPS) {

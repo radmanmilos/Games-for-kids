@@ -18,7 +18,19 @@ This file summarizes the current workspace, conventions, and project state so th
 
 **`gh` is installed and authed** (official v2.102.0 arm64 tarball at `/usr/local/bin/gh`; Alpine has no `gh` package). Logs: `gh run view <id> --log` (`gh api .../jobs/<id>/logs` rejects with "terminal escape sequences"). If re-auth is ever needed, start the device flow with `setsid` — a session restart kills the waiter and loses the token.
 
-**Standing state:** local `check_fast.js` 7/7; the offline ZIP is gone (task 179) and `OFFLINE.md` documents the mechanism; 3 local `racing3d`/WebGL failures are this host's missing WebGL, not a regression. **R16 remains NEW and unstarted** — the user asked to stop before it.
+**Standing state (2026-10-04):** local `check_fast.js` 7/7; the offline ZIP is gone (task 179) and `OFFLINE.md` documents the mechanism; 3 local `racing3d`/WebGL failures are this host's missing WebGL, not a regression. **R16 (task 182) and R17 (task 183) are DONE.** R16 added `ASSET_BUDGET.md` (committed `c2a40a2`). R17 made `game/manifest.json` the single version source: pages register `sw.js?v=<version>` and the worker derives `CACHE_NAME = 'petrin-v<version>'`, evicting superseded caches and confirming `Ажурирано` in the parent area. **Next roadmap item: R18 — Documentation and Roadmap Consolidation** (see section 27 of the roadmap). The old "stop before R16" instruction is superseded — the user asked to continue through the roadmap.
+
+## Current session — R16 + R17 DONE
+
+**R16 / task 182 (committed `c2a40a2`):** `ASSET_BUDGET.md` — asset-type counts, total bytes, largest files, per-page dependency map, evidence-based optimization priorities. Report only; no asset touched. Dependencies R2/R6/R11 were already DONE.
+
+**R17 / task 183 — PWA Install / Update / Version QA (DONE 2026-10-04):**
+- **Single source of truth:** only `game/manifest.json` holds `"version": "2.0.0"`. `shared/navigation.js` fetches it, then registers the worker as `sw.js?v=<version>`. `sw.js` computes `SW_VERSION` from `new URL(self.location.href).searchParams.get('v')` at **evaluation on every wake-up** (a worker keeps no module state, so resolving it once in `install` would be lost) and sets `CACHE_NAME = 'petrin-v' + SW_VERSION`.
+- **Lifecycle:** `activate()` claims clients, deletes every non-current `petrin-*` cache, and only on a real upgrade posts `{type:'updated', version}` to clients. `sw_update_smoke.js` proves this under a deliberate subpath (`/some/deep/prefix/`): `scriptURL=.../sw.js?v=2.0.0`, cache `petrin-v2.0.0`, exactly one `petrin-*` cache, 207 entries, full diff lifecycle. **This empirically confirms Chromium keeps the `?v=` query on the worker script URL** — without it the name silently falls back to `petrin-v0`.
+- **Parent UX (Serbian):** new `Офлајн копија: спремна/није преузета` line; change detected → `Постоји нова верзија` + `⬆️ Ажурирај офлајн копију`; re-cache done → `Ажурирано`; worker `updated` → `Ажурирано`. Version/cache/scope/connection facts moved into a `<details class="diagnostics">`.
+- **Fixed a pre-existing double-wiring:** `shared/navigation.js`'s legacy offline block also ran on `parent.html` (no `#download-status` there) yet still attached a second `cacheAll` handler — now guarded with `if (!btn || !status) return;`.
+- **Tests:** `parent_smoke.js` (14/14) drives the update flow with the exact worker messages; `offline_smoke.mjs` no longer hard-codes `petrin-v2` (discovers the active `petrin-*` cache). `check_fast.js` 7/7 after `docs/` sync + offline-inventory regen.
+- **Not yet committed/pushed** — awaiting the user's approval.
 
 ## Historical — task 178 (diagnostic trust) + task 179 (ZIP removed) + task 180
 
@@ -32,7 +44,7 @@ This file summarizes the current workspace, conventions, and project state so th
 
 **Still true:** 3 local `racing3d`/WebGL failures are the documented no-WebGL limitation of this host — verified identical at clean HEAD. Do not stub WebGL to "fix" them; the runner has software WebGL.
 
-**Next actions:** (1) confirm run #41; (2) **close issue #3 once green** (the owner asked) — only when the gate actually passes; (3) the offline ZIP is gone (task 179) and `OFFLINE.md` documents the mechanism; (4) R16 remains **NEW and unstarted** — do not start it.
+**Next actions:** (1) confirm run #41; (2) **close issue #3 once green** (the owner asked) — only when the gate actually passes; (3) the offline ZIP is gone (task 179) and `OFFLINE.md` documents the mechanism; (4) R16 + R17 are DONE — next roadmap item is **R18, Documentation and Roadmap Consolidation**.
 
 ## Historical — task 178 (diagnostic trust) + task 179 (ZIP removed) + task 180
 
@@ -50,7 +62,7 @@ Task 178 is **local and uncommitted**. It did **not** fix run #39 and does not c
 1. Read the real log (needs `gh` or a paste). Two unconfirmed leads: (a) task 177d's absorber appears not to have fired on the runner (no `[headless] Unhandled CDP failure:` line, yet the run still died as a fatal Node crash); (b) `ci.yml` still runs `offline_smoke.mjs` raw, the one runner bypassing `run_all.js`. **One cause is already eliminated:** task 180 fixed the `games_map_negtest` false claim, which is the failing step on runs #34 and #37 — so the remaining Offline E2E failure on #36/#38/#39 is a separate, still-unknown problem.
 2. **The offline ZIP is GONE (task 179, DONE 2026-10-02, user decision) — do not restore it.** The stray `docs/game-offline.zip` that made the local `check_fast.js` red at stage 5/7 is deleted, along with the hidden `#offline-zip` link, the ZIP step in both builders, and every reference. **`check_fast.js` is now 7/7 green.** Offline is the service worker; the mechanism is documented in the new **`OFFLINE.md`** at the repo root. This supersedes the 2026-09-30 "keep it hidden" decision (task 163).
 3. **`gh` is now installed on this host** (`/usr/local/bin/gh`, v2.102.0, official arm64 tarball — Alpine has no `gh` package, so `apk add gh` fails). Auth needed the device flow and it needs a human: run `gh auth login --web`, then open the printed URL and enter the one-time code. **Without it the CI step logs stay unreadable** (the job-log endpoint 403s unauthenticated even for a public repo, and check-run annotations are empty). Everything *except* logs works unauthenticated via `api.github.com`.
-4. R16 remains **NEW and unstarted**. The user asked to stop before R16; **do not start it.**
+4. R16 is DONE (task 182, `c2a40a2`) and R17 is DONE (task 183). The old "stop before R16" instruction is superseded; continue with R18.
 
 ## Historical — task 156 DONE (suite resilience/performance); stop before R16
 
@@ -151,7 +163,7 @@ The completed task commits are pushed to `origin/main`, including task 177c (`54
 
 ## Progress Tracker (R0–R27)
 
-**Task numbers below are the real `PROJECT_TASKS.md` numbers, not the roadmap's "suggested task number"** — those drifted (the roadmap proposed 155–178, but 155 became the user-reported-bug fix, 156 the resource-budget task and 163 landed R12 early). Unfiled roadmap items show `—`. **16/29 done (R0–R15).**
+**Task numbers below are the real `PROJECT_TASKS.md` numbers, not the roadmap's "suggested task number"** — those drifted (the roadmap proposed 155–178, but 155 became the user-reported-bug fix, 156 the resource-budget task and 163 landed R12 early). Unfiled roadmap items show `—`. **18/29 done (R0–R17).**
 
 | # | ID | Task | Status |
 |---|---|---|---|
@@ -171,8 +183,8 @@ The completed task commits are pushed to `origin/main`, including task 177c (`54
 | 14 | R13 | 173 | DONE — removed dead embedded Kitty/Explorer UI from the hub. |
 | 15 | R14 | 174 | DONE — stable shared Serbian vocabulary, speech mappings and advisory duplicate-string audit. |
 | 16 | R15 | 175 | DONE — shared audio routing, semantic events, speech ducking and game-family adoption. |
-| 17 | R16 | — | NEW |
-| 18 | R17 | — | NEW |
+| 17 | R16 | 182 | DONE — asset and performance budget report (`ASSET_BUDGET.md`; committed `c2a40a2`). |
+| 18 | R17 | 183 | DONE — manifest.json is the single version source; SW cache name derived from `sw.js?v=<version>`; update lifecycle + Serbian parent UX. |
 | 19 | R18 | — | NEW |
 | 20 | R19 | — | NEW |
 | 21 | R20 | — | NEW — portfolio-level playtest protocol |

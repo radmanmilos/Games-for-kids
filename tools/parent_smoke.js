@@ -19,6 +19,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     zipLinks: document.querySelectorAll('a[href*=".zip"]').length,
     conn: (document.getElementById('conn-status') || {}).textContent || '',
     version: (document.getElementById('version-info') || {}).textContent || '',
+    offlineCopy: (document.getElementById('offline-copy-info') || {}).textContent || '',
+    diagnostics: !!document.querySelector('details.diagnostics'),
+    diagBody: !!document.getElementById('diag-body'),
     back: !!document.querySelector('.back-btn')
   })`));
   check('R12: parent surface has download, update check, reset progress and audio test',
@@ -49,6 +52,40 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     surface.conn === 'Онлајн' || surface.conn === 'Офлајн', JSON.stringify(surface));
 
   check('parent page has a working back button', surface.back === true);
+
+  // R17: the offline-copy state must be a real, current fact, not a stale label.
+  check('R17: parent surface states the offline-copy status',
+    /^Офлајн копија: (спремна|није преузета)$/.test(surface.offlineCopy.trim()),
+    JSON.stringify(surface.offlineCopy));
+
+  // R17: technical facts live behind a disclosure, not in the parent's face.
+  check('R17: technical details live under a diagnostics disclosure',
+    surface.diagnostics === true && surface.diagBody === true, JSON.stringify(surface));
+
+  // R17 update flow: drive it deterministically with the exact letters the worker
+  // posts. A real deploy would post these; the UI's reaction is what must hold.
+  const fake = async (data) => {
+    await h.evalv(`navigator.serviceWorker.dispatchEvent(new MessageEvent('message', { data: ${JSON.stringify(data)} })); true`);
+    await sleep(150);
+  };
+  const textOf = sel => h.evalv(`((document.querySelector(${JSON.stringify(sel)})||{}).textContent || '').trim()`);
+
+  await fake({ type: 'check-result', changed: 2, changes: ['a.js', 'b.js'] });
+  let s = await textOf('#parent-status');
+  check('R17: a detected change prompts "Постоји нова верзија"',
+    s === 'Постоји нова верзија', JSON.stringify(s));
+  check('R17: an available update relabels the download button',
+    /Ажурирај/.test(await textOf('#download-offline')), JSON.stringify(await textOf('#download-offline')));
+
+  await fake({ type: 'cache-complete', total: 207, skipped: [] });
+  s = await textOf('#parent-status');
+  check('R17: completing the re-cache confirms "Ажурирано"', s === 'Ажурирано', JSON.stringify(s));
+  check('R17: the download button returns to its normal label after updating',
+    /Преузми/.test(await textOf('#download-offline')), JSON.stringify(await textOf('#download-offline')));
+
+  await fake({ type: 'updated', version: 'petrin-v2.0.0' });
+  s = await textOf('#parent-status');
+  check('R17: a worker upgrade confirms "Ажурирано"', s === 'Ажурирано', JSON.stringify(s));
 
   // The audio test should actually produce a running audio context.
   await h.evalv(`document.getElementById('audio-test').click(); true`);

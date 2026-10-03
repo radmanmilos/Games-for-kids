@@ -732,8 +732,8 @@
     "size": 2938
   },
   "pages/parent.html": {
-    "sha256": "b6757cd84ebb3820491341612a27fce86efa567bf9d4c575aeabcc655256b83b",
-    "size": 9866
+    "sha256": "08dd123389546f379f768553306c06fc5efe24d782bcfd191bbe140fae431306",
+    "size": 13600
   },
   "pages/piano.html": {
     "sha256": "4804e38a37be0f8eb281e07aac1075f5d483943a744f36e2f24094a1512bb93b",
@@ -792,8 +792,8 @@
     "size": 665
   },
   "shared/navigation.js": {
-    "sha256": "1098f3adc14e7145c6541d4ba3bb49fba86bf604bc3094fa889a7b34cf98a4d3",
-    "size": 7408
+    "sha256": "7f9e4bb87a49c1afb9f4051ae88ad3d3e17d0002fa09901d282acc838c2cad66",
+    "size": 8520
   },
   "shared/speech.js": {
     "sha256": "8b92f13f255e7d610d812085c4f9e3b2728ec9923514300cd967579c768417c6",
@@ -820,7 +820,7 @@
     "size": 6640
   },
   "sw.js": {
-    "sha256": "672e30d6c428a91c6761a0e897c6370c305b63caf89f025ff0050f48fca4b85f",
-    "size": 6248
+    "sha256": "cb988a394d0d5515fd0966cc745f2f78a6b3e32aac0e4d6a96548ad2f66917b1",
+    "size": 7406
   }
 }
