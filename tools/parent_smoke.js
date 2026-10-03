@@ -87,6 +87,32 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   s = await textOf('#parent-status');
   check('R17: a worker upgrade confirms "Ажурирано"', s === 'Ажурирано', JSON.stringify(s));
 
+  // R17: the offline download must show real movement, not a frozen label.
+  const barState = () => h.evalp(`(function(){
+    var b = document.getElementById('cache-bar'), f = document.getElementById('cache-bar-fill');
+    return JSON.stringify({ hidden: !!b.hidden, width: f.style.width || '', now: b.getAttribute('aria-valuenow') || '' });
+  })()`);
+  check('R17: the download progress bar starts hidden',
+    JSON.parse(await barState()).hidden === true);
+
+  await fake({ type: 'cache-progress', completed: 52, total: 208 });
+  let bar = JSON.parse(await barState());
+  s = await textOf('#parent-status');
+  check('R17: cache progress reveals the bar, fills it and states the count',
+    bar.hidden === false && bar.width === '25%' && bar.now === '25' && s === 'Преузимам 52/208 (25%)',
+    JSON.stringify({ bar, status: s }));
+
+  await fake({ type: 'cache-complete', total: 208, skipped: [] });
+  bar = JSON.parse(await barState());
+  check('R17: completing the download hides the progress bar',
+    bar.hidden === true && bar.width === '0%', JSON.stringify(bar));
+
+  await fake({ type: 'cache-error', message: 'network down' });
+  s = await textOf('#parent-status');
+  check('R17: a cache failure hides the bar and reports the error',
+    (JSON.parse(await barState()).hidden === true) && /Грешка при преузимању/.test(s),
+    JSON.stringify({ status: s }));
+
   // The audio test should actually produce a running audio context.
   await h.evalv(`document.getElementById('audio-test').click(); true`);
   await sleep(600);

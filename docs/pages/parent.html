@@ -31,6 +31,11 @@
     .diagnostics{margin-top:3vmin;color:var(--plum);font:600 clamp(11px,1.8vmin,14px) 'Fredoka',sans-serif;}
     .diagnostics summary{cursor:pointer;padding:1vmin 0;color:var(--plum);}
     .diag-body{margin-top:1.5vmin;padding:2vmin 3vmin;border-radius:var(--radius-sm);background:var(--cream);line-height:1.7;word-break:break-word;user-select:text;-webkit-user-select:text;}
+    /* R17: a parent must see that the offline download is moving, not just guess. */
+    .cache-bar{margin-top:2vmin;width:100%;height:2.6vmin;min-height:10px;border-radius:999px;background:var(--cream);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(74,63,107,.15);}
+    .cache-bar[hidden]{display:none;}
+    .cache-bar-fill{height:100%;width:0;border-radius:999px;background:var(--plum);transition:width .2s ease;}
+    @media (prefers-reduced-motion: reduce){.cache-bar-fill{transition:none;}}
     .back-btn{position:absolute;top:4vmin;left:4vmin;width:12vmin;height:12vmin;border-radius:50%;border:none;background:var(--plum);color:white;font-size:6vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);cursor:pointer;}
   </style>
 </head>
@@ -53,6 +58,7 @@
            is nothing for a parent to unpack by hand. Removed 2026-10-02 per user
            decision (superseding the 2026-09-30 "keep it hidden" decision). -->
       <div class="parent-status" id="parent-status">Спремно</div>
+      <div class="cache-bar" id="cache-bar" role="progressbar" aria-label="Преузимање за офлајн рад" aria-valuemin="0" aria-valuemax="100" hidden><div class="cache-bar-fill" id="cache-bar-fill"></div></div>
       <details class="diagnostics">
         <summary>Технички детаљи</summary>
         <div class="diag-body" id="diag-body">…</div>
@@ -77,6 +83,29 @@
       const connStatus = document.getElementById('conn-status');
       const connDot = document.getElementById('conn-dot');
       const versionInfo = document.getElementById('version-info');
+      const cacheBar = document.getElementById('cache-bar');
+      const cacheBarFill = document.getElementById('cache-bar-fill');
+
+      // R17: show real download progress so a parent can tell "working" from
+      // "stuck". Bar and text share one helper so they can never disagree.
+      const showProgress = (completed, total) => {
+        const pct = Math.round((completed / Math.max(1, total)) * 100);
+        cacheBar.hidden = false;
+        cacheBarFill.style.width = pct + '%';
+        cacheBar.setAttribute('aria-valuenow', String(pct));
+        status.textContent = 'Преузимам ' + completed + '/' + total + ' (' + pct + '%)';
+      };
+      const hideProgress = () => {
+        cacheBar.hidden = true;
+        cacheBarFill.style.width = '0%';
+        cacheBar.removeAttribute('aria-valuenow');
+      };
+      const beginProgress = (label) => {
+        cacheBar.hidden = false;
+        cacheBarFill.style.width = '0%';
+        cacheBar.setAttribute('aria-valuenow', '0');
+        status.textContent = label;
+      };
 
       // R12: connection status — live, so a parent who loses wifi mid-session
       // sees it immediately rather than after a failed action.
@@ -148,22 +177,24 @@
       downloadBtn.addEventListener('click', async () => {
         downloadBtn.disabled = true;
         downloadBtn.setAttribute('aria-busy', 'true');
-        status.textContent = pendingUpdate ? 'Ажурирам...' : 'Покрећем...';
+        beginProgress(pendingUpdate ? 'Ажурирам...' : 'Спремам...');
         try {
           if ('serviceWorker' in navigator) {
             const reg = await navigator.serviceWorker.ready;
             if (reg.active) {
               reg.active.postMessage({ cmd: 'cacheAll' });
-              status.textContent = pendingUpdate ? 'Ажурирам...' : 'Спремам...';
             } else {
+              hideProgress();
               status.textContent = 'Сервис још није спреман';
               downloadBtn.disabled = false;
             }
           } else {
+            hideProgress();
             status.textContent = 'Офлајн није подржан';
             downloadBtn.disabled = false;
           }
         } catch (e) {
+          hideProgress();
           status.textContent = 'Грешка: ' + e.message;
           downloadBtn.disabled = false;
         }
@@ -220,7 +251,11 @@
       if ('serviceWorker' in navigator && navigator.serviceWorker.addEventListener) {
         navigator.serviceWorker.addEventListener('message', (e) => {
           const data = e.data || {};
+          if (data.type === 'cache-progress') {
+            showProgress(data.completed || 0, data.total || 0);
+          }
           if (data.type === 'cache-complete') {
+            hideProgress();
             if (pendingUpdate) {
               status.textContent = 'Ажурирано';
               downloadBtn.textContent = '📥 Преузми за офлајн рад';
@@ -253,6 +288,12 @@
           if (data.type === 'check-error') {
             status.textContent = 'Нема интернета — ажурирања се не могу проверити';
             checkBtn.disabled = false;
+          }
+          if (data.type === 'cache-error') {
+            hideProgress();
+            status.textContent = 'Грешка при преузимању: ' + (data.message || 'непознато');
+            downloadBtn.disabled = false;
+            downloadBtn.removeAttribute('aria-busy');
           }
         });
       }
