@@ -33,11 +33,12 @@ This file summarizes the current workspace, conventions, and project state so th
 - **Not yet committed/pushed** — R17 is committed locally (`2a3dba7`, plus the progress-bar follow-up `07e6b9d`); not pushed to `main`.
 
 
-## Current session — R18 + R19 DONE (2026-10-04)
+## Current session — R18–R20 DONE (2026-10-04)
 
 - **R18 (task 184) — Documentation and Roadmap Consolidation.** `ROADMAP.md` is now the single roadmap index; the Fresh Elevation Roadmap is the one active queue. `Petrin_svet_Master_Implementation_Plan.md` and `PETRIN_SVET_MASTER_EXECUTION_ROADMAP.md` carry SUPERSEDED banners in `resources/General_reviews/`. `ROADMAP_AUDIT.md`'s scope is clarified. The stale "stop before R16 / do not start it" instructions were neutralised, and this file was split: session history now lives in `resources/General_reviews/HANDOVER_ARCHIVE.md`.
 - **R19 (task 185) — Local Progress, Carefully Constrained.** `shared/main.js` defines `window.PetrinProgress`: one `localStorage` key recording visits, games opened (`played`) and activities completed (`completed`), with an in-memory fallback so play never breaks if storage is unavailable. Completion is attributed by transparently wrapping `window.celebrate`; no per-game edits. The parent area has a `📊 Напредак` panel (`Шта је коришћено` / `Шта је вежбано`) and the existing reset button now also clears it. **No** XP/streak/badge/profile/sync — per the roadmap's "never add" list.
-- **Next roadmap item: R20 — Portfolio-Level Playtesting Protocol.**
+- **R20 (task 186) — Portfolio-Level Playtesting Protocol.** `PLAYTESTING.md`: four repeatable manual sessions (A first-time toddler flow, B five-game random walk, C offline, D parent handoff) with the exact Serbian labels a reviewer checks, plus `BLOCKER/MAJOR/MINOR/COSMETIC` classification and a log template. The live pass on a real device is the user's.
+- **Next roadmap item: R21 — More / Less / Same pilot.**
 
 ## History archived
 
@@ -46,7 +47,7 @@ Session logs and historical task write-ups (tasks 156, 176–181, R14/R15, the r
 
 ## Progress Tracker (R0–R27)
 
-**Task numbers below are the real `PROJECT_TASKS.md` numbers, not the roadmap's "suggested task number"** — those drifted (the roadmap proposed 155–178, but 155 became the user-reported-bug fix, 156 the resource-budget task and 163 landed R12 early). Unfiled roadmap items show `—`. **20/29 done (R0–R19).**
+**Task numbers below are the real `PROJECT_TASKS.md` numbers, not the roadmap's "suggested task number"** — those drifted (the roadmap proposed 155–178, but 155 became the user-reported-bug fix, 156 the resource-budget task and 163 landed R12 early). Unfiled roadmap items show `—`. **21/29 done (R0–R20).**
 
 | # | ID | Task | Status |
 |---|---|---|---|
@@ -70,7 +71,7 @@ Session logs and historical task write-ups (tasks 156, 176–181, R14/R15, the r
 | 18 | R17 | 183 | DONE — manifest.json is the single version source; SW cache name derived from `sw.js?v=<version>`; update lifecycle + Serbian parent UX. |
 | 19 | R18 | 184 | DONE — single roadmap index (`ROADMAP.md`); SUPERSEDED banners on the old plans; `HANDOVER_PROMPT.md` split into a short handoff + `resources/General_reviews/HANDOVER_ARCHIVE.md`. |
 | 20 | R19 | 185 | DONE — local progress store (`window.PetrinProgress`); parent-only `📊 Напредак` panel (`Шта је коришћено` / `Шта је вежбано`) + reset. No XP/streak/badge/profile/sync. |
-| 21 | R20 | — | NEW — portfolio-level playtest protocol |
+| 21 | R20 | 186 | DONE — `PLAYTESTING.md`: four manual sessions (toddler flow, five-game walk, offline, parent handoff) + `BLOCKER/MAJOR/MINOR/COSMETIC` classification. Live pass is the user's. |
 | 22 | R21 | — | NEW — learning pilot: more/less/same |
 | 23 | R22 | — | NEW — learning pilot: sorting |
 | 24 | R23 | — | NEW — learning pilot: Serbian phonics |

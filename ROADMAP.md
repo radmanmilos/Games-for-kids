@@ -12,7 +12,7 @@ labelled SUPERSEDED there; it is never the queue to work from.
 
 ## Current position (2026-10-04)
 
-- **R0–R19 DONE.** **R20 — Portfolio-Level Playtesting Protocol is next.**
+- **R0–R20 DONE.** **R21 — More / Less / Same Pilot is next.**
 - Authoritative task-by-task status and execution log: [`PROJECT_TASKS.md`](PROJECT_TASKS.md).
 - Progress tracker table (R0–R27): [`HANDOVER_PROMPT.md`](HANDOVER_PROMPT.md#progress-tracker-r0-r27).
 
@@ -25,6 +25,7 @@ labelled SUPERSEDED there; it is never the queue to work from.
 | `PROJECT_TASKS.md` | Task lifecycle and execution log (authoritative status). |
 | `ROADMAP_AUDIT.md` | Mapping of roadmap concepts to current implementation state. |
 | `README.md` | Product- and contributor-facing overview. |
+| `PLAYTESTING.md` | Manual portfolio-level playtest protocol (R20). |
 | `HANDOVER_PROMPT.md` | Current-state session handoff (history archived). |
 | `resources/General_reviews/` | Research, external reviews, design studies, historical plans. |
 

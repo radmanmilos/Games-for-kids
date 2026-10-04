@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 186. DONE — R20: Portfolio-Level Playtesting Protocol. (Completed 2026-10-04, Ponytail Lazy Dev.)
+    - **Deliverable:** `PLAYTESTING.md` — a repeatable manual protocol with four sessions (A first-time toddler flow; B five-game random walk across categories; C offline session; D parent handoff), the exact Serbian parent-area labels a reviewer checks, and the `BLOCKER / MAJOR / MINOR / COSMETIC` classification with a log template and the "do not overreact to cosmetic" rule. It sits on top of the automated gates (`check_release`, `run_all --list`, `play_matrix`, `axe_check`, `offline_smoke`).
+    - Linked from `ROADMAP.md` (document roles) and `CONTRIBUTING.md`. No `game/` change, so no docs sync/inventory regen was needed; `check_fast.js` stays 7/7.
+    - **Open for the user:** run Sessions A–D on a real device/tablet (Playwright MCP for a session-only desktop pass) and record findings with the template; the protocol is the deliverable, the live pass is the user's.
 - 185. DONE — R19: Local Progress, Carefully Constrained. (Completed 2026-10-04, Ponytail Lazy Dev.)
     - **Tiny local store, no reward system.** `shared/main.js` defines `window.PetrinProgress` — a namespaced object backed by one `localStorage` key (`petrinProgress`) recording `firstSeen`/`lastSeen`/`visits`, `played[gameId]` and `completed[gameId]` counts. It deliberately has **no** XP, streak, badge, locked content, profile or sync (the roadmap's "never add" list). Every read/write is wrapped in try/catch with an in-memory fallback, so play is identical if storage is missing or cleared (the R19 acceptance).
     - **Recording is automatic and low-touch.** On boot, `main.js` records the visit and, when the page is a game (registry `category !== 'parent'`), the game id. Completion is attributed by wrapping `window.celebrate` (celebration.js loads before main.js) — idempotent and transparent, so every existing celebration counts one completed activity with no per-game edits.
