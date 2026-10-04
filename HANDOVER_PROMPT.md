@@ -18,7 +18,7 @@ This file summarizes the current workspace, conventions, and project state so th
 
 **`gh` is installed and authed** (official v2.102.0 arm64 tarball at `/usr/local/bin/gh`; Alpine has no `gh` package). Logs: `gh run view <id> --log` (`gh api .../jobs/<id>/logs` rejects with "terminal escape sequences"). If re-auth is ever needed, start the device flow with `setsid` — a session restart kills the waiter and loses the token.
 
-**Standing state (2026-10-04):** local `check_fast.js` 7/7; the offline ZIP is gone (task 179) and `OFFLINE.md` documents the mechanism; 3 local `racing3d`/WebGL failures are this host's missing WebGL, not a regression. **R16 (task 182) and R17 (task 183) are DONE.** R16 added `ASSET_BUDGET.md` (committed `c2a40a2`). R17 made `game/manifest.json` the single version source: pages register `sw.js?v=<version>` and the worker derives `CACHE_NAME = 'petrin-v<version>'`, evicting superseded caches and confirming `Ажурирано` in the parent area. **R18 (task 184), R19 (task 185), R20 (task 186) and R21 (task 187) are also DONE** (see below). **Next roadmap item: R22 — sorting / classification pilot.** The old "stop before R16" instruction is superseded — the user asked to continue through the roadmap.
+**Standing state (2026-10-04):** local `check_fast.js` 7/7; the offline ZIP is gone (task 179) and `OFFLINE.md` documents the mechanism; 3 local `racing3d`/WebGL failures are this host's missing WebGL, not a regression. **R16 (task 182) and R17 (task 183) are DONE.** R16 added `ASSET_BUDGET.md` (committed `c2a40a2`). R17 made `game/manifest.json` the single version source: pages register `sw.js?v=<version>` and the worker derives `CACHE_NAME = 'petrin-v<version>'`, evicting superseded caches and confirming `Ажурирано` in the parent area. **R18 (task 184), R19 (task 185), R20 (task 186), R21 (task 187) and R22 (task 188) are also DONE** (see below). **Next roadmap item: R23 — Serbian phonics pilot.** The old "stop before R16" instruction is superseded — the user asked to continue through the roadmap.
 
 ## Current session — R16 + R17 DONE
 
@@ -33,13 +33,14 @@ This file summarizes the current workspace, conventions, and project state so th
 - **Not yet committed/pushed** — R17 is committed locally (`2a3dba7`, plus the progress-bar follow-up `07e6b9d`); not pushed to `main`.
 
 
-## Current session — R18–R21 DONE (2026-10-04)
+## Current session — R18–R22 DONE (2026-10-04)
 
 - **R18 (task 184) — Documentation and Roadmap Consolidation.** `ROADMAP.md` is now the single roadmap index; the Fresh Elevation Roadmap is the one active queue. `Petrin_svet_Master_Implementation_Plan.md` and `PETRIN_SVET_MASTER_EXECUTION_ROADMAP.md` carry SUPERSEDED banners in `resources/General_reviews/`. `ROADMAP_AUDIT.md`'s scope is clarified. The stale "stop before R16 / do not start it" instructions were neutralised, and this file was split: session history now lives in `resources/General_reviews/HANDOVER_ARCHIVE.md`.
 - **R19 (task 185) — Local Progress, Carefully Constrained.** `shared/main.js` defines `window.PetrinProgress`: one `localStorage` key recording visits, games opened (`played`) and activities completed (`completed`), with an in-memory fallback so play never breaks if storage is unavailable. Completion is attributed by transparently wrapping `window.celebrate`; no per-game edits. The parent area has a `📊 Напредак` panel (`Шта је коришћено` / `Шта је вежбано`) and the existing reset button now also clears it. **No** XP/streak/badge/profile/sync — per the roadmap's "never add" list.
 - **R20 (task 186) — Portfolio-Level Playtesting Protocol.** `PLAYTESTING.md`: four repeatable manual sessions (A first-time toddler flow, B five-game random walk, C offline, D parent handoff) with the exact Serbian labels a reviewer checks, plus `BLOCKER/MAJOR/MINOR/COSMETIC` classification and a log template. The live pass on a real device is the user's.
 - **R21 (task 187) — More / Less / Same pilot.** New learning game: `game/pages/compare.html` + `game/games/compare.js` (`window.startCompare`), entry `compare` in `app-registry.js` (learning, `route: game-compare`, ⚖️ hub button), `compare: 'Више или мање'` in `serbian.js`. Three modes (more rounds 0-2, less 3-5, same 6+) with no written equations; wrong tap only shakes the group (`gentleMiss`) and shows a hint after two, correct plays the shared chime + advances, every third correct fires `window.celebrate()` (recorded by R19). New `tools/compare_smoke.js` (24 checks incl. reachability); `hub_smoke.js` de-hardcoded to `LEARNING_EXPECTED.length` (now 8); `offline_smoke.mjs` spec added (**17 children / 17 specs / 18 hub buttons**); 19 pages scan clean. `screenshot:false` for now — R9 baselines are reviewed and the user should approve the full re-capture.
-- **Next roadmap item: R22 — sorting / classification pilot.**
+- **R22 (task 188) — Sorting / Classification pilot.** New learning game: `game/pages/sorting.html` + `game/games/sorting.js` (`window.startSorting`), entry `sorting` in `app-registry.js` (learning, `route: game-sorting`, 🧺 hub button, `hubOrder: 9`), `sorting: 'Разврставање'` in `serbian.js`. A tray of objects + two large baskets; drag an object in, or tap it then tap a basket (magnetic pull toward a nearby basket). Two categories from reusable data (red/blue swatches, animals/food emoji) with Serbian accessible names; no reading required. Wrong drop softly returns home and shakes the basket (`gentleMiss`, no failure screen); after two misses the right basket is hinted. Every placed object chimes; a completed round plays praise and advances; every second round fires `window.celebrate()` (recorded by R19). New `tools/sorting_smoke.js` (20 checks); `hub_smoke` green with 9 learning buttons; `runtime_error_smoke` 20 pages clean; `offline_smoke.mjs` spec added (**18 children / 18 specs / 19 hub buttons**). `screenshot:false` until the user approves the full R9 re-capture.
+- **Next roadmap item: R23 — Serbian phonics pilot.**
 
 ## History archived
 
@@ -48,7 +49,7 @@ Session logs and historical task write-ups (tasks 156, 176–181, R14/R15, the r
 
 ## Progress Tracker (R0–R27)
 
-**Task numbers below are the real `PROJECT_TASKS.md` numbers, not the roadmap's "suggested task number"** — those drifted (the roadmap proposed 155–178, but 155 became the user-reported-bug fix, 156 the resource-budget task and 163 landed R12 early). Unfiled roadmap items show `—`. **22/29 done (R0–R21).**
+**Task numbers below are the real `PROJECT_TASKS.md` numbers, not the roadmap's "suggested task number"** — those drifted (the roadmap proposed 155–178, but 155 became the user-reported-bug fix, 156 the resource-budget task and 163 landed R12 early). Unfiled roadmap items show `—`. **23/29 done (R0–R22).**
 
 | # | ID | Task | Status |
 |---|---|---|---|
@@ -74,7 +75,7 @@ Session logs and historical task write-ups (tasks 156, 176–181, R14/R15, the r
 | 20 | R19 | 185 | DONE — local progress store (`window.PetrinProgress`); parent-only `📊 Напредак` panel (`Шта је коришћено` / `Шта је вежбано`) + reset. No XP/streak/badge/profile/sync. |
 | 21 | R20 | 186 | DONE — `PLAYTESTING.md`: four manual sessions (toddler flow, five-game walk, offline, parent handoff) + `BLOCKER/MAJOR/MINOR/COSMETIC` classification. Live pass is the user's. |
 | 22 | R21 | 187 | DONE — more/less/same pilot (`compare.html` + `compare.js`); three modes, no equations, gentle miss + hint; `compare_smoke` 24/24, offline E2E green (17 games). `screenshot:false` pending user-approved baseline. |
-| 23 | R22 | — | NEW — learning pilot: sorting |
+| 23 | R22 | 188 | DONE — sorting/classification pilot (`sorting.html` + `sorting.js`); two categories, drag/tap-to-place, magnetic + gentle miss, reusable category data. `sorting_smoke` 20/20, offline E2E green (18 games). `screenshot:false` pending user-approved baseline. |
 | 24 | R23 | — | NEW — learning pilot: Serbian phonics |
 | 25 | R24 | — | NEW — learning pilot: sequencing |
 | 26 | R25 | — | NEW — learning pilot: rhythm |

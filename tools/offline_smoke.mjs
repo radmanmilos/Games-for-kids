@@ -397,6 +397,29 @@ const APPS = [
         { label: 'the correct group to be acknowledged' });
     },
   },
+  {
+    id: 'sorting', back: '#sorting-back',
+    ready: `!!window.__sorting && document.querySelectorAll('#sort-tray .sort-item').length>0`,
+    act: async h => {
+      // tap an object, then tap the basket the game itself says it belongs in
+      const info = await h.evalv(`(()=>{
+        const it=document.querySelector('#sort-tray .sort-item');
+        if(!it) return null;
+        const bin=document.querySelector('#sort-baskets .sort-basket[data-cat="'+it.dataset.cat+'"]');
+        if(!bin) return null;
+        return JSON.stringify({ item: it.dataset.key, bin: bin.id });
+      })()`);
+      if (!info) return { ok: false, why: 'no unplaced object with a matching basket' };
+      const spec = JSON.parse(info);
+      const before = await h.evalv(`document.querySelectorAll('#sort-tray .sort-item').length`);
+      const t1 = await h.tap(`#sort-tray .sort-item[data-key="${spec.item}"]`);
+      if (!t1.ok) return t1;
+      const t2 = await h.tap('#' + spec.bin);
+      if (!t2.ok) return t2;
+      return h.waitFor(`document.querySelectorAll('#sort-tray .sort-item').length < ${before}`,
+        { label: 'the object to move into the basket' });
+    },
+  },
 ];
 
 /* Every registry child must be covered - a new offline game cannot skip this test.

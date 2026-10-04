@@ -584,12 +584,12 @@
     "size": 687458
   },
   "data/app-registry.js": {
-    "sha256": "a4e7edbacc9b221d0f5932fa4582555a79435eaee91ea44939a0a21c1eefa435",
-    "size": 7616
+    "sha256": "61c0736ea93b0bb9e9c3951b2fcb43eca154161371b182d2d8ccf1252f0c2dc5",
+    "size": 7905
   },
   "data/serbian.js": {
-    "sha256": "bbe971ed0c18afadd835513a6b5096cea72e6fb19c1d69cdcedb198ba2288d6e",
-    "size": 6978
+    "sha256": "308ccb5a069f9e98eb77e295746988503225c1583b9cc055441f0916aa3b3c40",
+    "size": 7021
   },
   "games/adventure-modes.js": {
     "sha256": "268e5744538b62040ac3123d4ed2f437907429bcf464ccdc87ced48bf4845ebd",
@@ -675,6 +675,10 @@
     "sha256": "6f43d1373dfb7c7b6bb4c6e0b49bebf9d745cf733fe478d0fdee7f43ba58398b",
     "size": 6278
   },
+  "games/sorting.js": {
+    "sha256": "75663a0f94590a3a4addb088eac55b1c146672b1b7f4c39f3c95af6349f60708",
+    "size": 10628
+  },
   "games/space.js": {
     "sha256": "3903542c53372eb4e90ad56e910d2d204e6707e1cfeecf638e192a3d6efdddd2",
     "size": 43992
@@ -684,8 +688,8 @@
     "size": 17036
   },
   "index.html": {
-    "sha256": "2265fdd364184c298851c52964242cbdbc3fb0dce1ba9d70002b714128dc2d74",
-    "size": 17276
+    "sha256": "a7d42103f2816904683fd345e975355e804edb445ac443e76b0b66acfcf0d446",
+    "size": 17386
   },
   "manifest.json": {
     "sha256": "44cc7ca21e6e183718a4ceb5fd955c0e3b9727671c86c62cb92df3cc218b37d1",
@@ -754,6 +758,10 @@
   "pages/shapes.html": {
     "sha256": "1847abe31febb09f37fe9d4f644e8ae1b11ba8d9acb2ba49a1250c54a9c5801c",
     "size": 11757
+  },
+  "pages/sorting.html": {
+    "sha256": "b3c061c2997de399269fd3cfd5b2292c4481338c953e874b8b2aa8b256785944",
+    "size": 5592
   },
   "pages/space.html": {
     "sha256": "7fd6bc48f18ade66a9efdfb6a79a8f5b8f0de733971cdaff0e7f6f5fa7774b22",
@@ -824,8 +832,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "376a3997b9586661ed4ebd424dca7013b83d1f332a73e484929d95983483902f",
-    "size": 6686
+    "sha256": "04785b87926553a2d0d87296fdd4fbc01a96b3662b84e8ee7dcbc06920bee4ae",
+    "size": 6732
   },
   "sw.js": {
     "sha256": "cb988a394d0d5515fd0966cc745f2f78a6b3e32aac0e4d6a96548ad2f66917b1",

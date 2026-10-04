@@ -168,6 +168,7 @@
       animal_puzzle: 'Слагалице',
       classroom: 'Учионица',
       compare: 'Више или мање',
+      sorting: 'Разврставање',
       coloring: 'Бојење',
       tracing: 'Писање',
       piano: 'Клавир',
