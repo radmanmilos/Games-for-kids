@@ -449,6 +449,19 @@ const APPS = [
         { label: 'the first card to fill its sequence slot while offline' });
     },
   },
+  {
+    id: 'rhythm', back: '#rhythm-back',
+    ready: `!!window.__rhythm && window.__rhythm.state().phase==='repeat' && window.__rhythm.state().round===0`,
+    act: async h => {
+      const first = await h.tap('#drum-area');
+      if (!first.ok) return first;
+      await sleep(250);
+      const second = await h.tap('#drum-area');
+      if (!second.ok) return second;
+      return h.waitFor(`window.__rhythm.state().phase==='success'&&window.__rhythm.state().successes===1`,
+        { label: 'the child to echo tap-tap while offline' });
+    },
+  },
 ];
 
 /* Every registry child must be covered - a new offline game cannot skip this test.

@@ -171,6 +171,7 @@
       sorting: 'Разврставање',
       phonics: 'Слова и звуци',
       sequencing: 'Редослед',
+      rhythm: 'Ритам',
       coloring: 'Бојење',
       tracing: 'Писање',
       piano: 'Клавир',

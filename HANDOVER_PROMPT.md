@@ -6,9 +6,9 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — R24 closeout (task 190) DONE — 2026-10-04
+## Current session — R25 Rhythm Imitation (task 191) DONE — 2026-10-04
 
-R24's sequencing implementation is in `dd5150a`; closeout strengthened its behavioral smoke and offline gesture, corrected celebration cadence, regenerated the offline manifest, mirrored `game/` to `docs/`, and reconciled the trackers. **Validation:** sequencing smoke 14/14; offline E2E 123/123 (20 games); `validate_offline.js` and `check_fast.js` 7/7 passed in an isolated snapshot matching committed R24. Isolation kept the separate uncommitted R25 rhythm scaffolding out of the R24 mirror and gates; preserve those R25 changes.
+R24 is complete in `25f8d1e`. R25 adds a no-score two-tap rhythm echo (`тап–тап`, `тап–пауза–тап`) with one large drum, repeat control, unlimited retries and gentle feedback. **Validation:** `rhythm_smoke` 18/18, `hub_smoke` 15/15, `runtime_error_smoke` 29/29 (23 pages), offline E2E 128/128 (21 games), `validate_pages` 22 pages, offline inventory valid, `check_fast` 7/7. `docs/` synced from `game/`; task 191 complete. `screenshot:false` pending user-approved baseline refresh.
 
 **The proof the fix worked, not just that luck favoured us:** run #41 hit a boot crash *again*, the retry fired, and the gate then completed — `[boot crash, exit 1 — retrying (1/2)]` → `[exit 0, 103 pass / 0 fail, 67.4s]`, `PASS acceptance: every offline game loads, plays and returns (16 games) [all green]`, a11y `critical=0, serious=0, moderate=0, minor=0`. `racing3d` passed offline on the runner too, confirming the 3 local WebGL failures are host-only.
 
@@ -18,7 +18,7 @@ R24's sequencing implementation is in `dd5150a`; closeout strengthened its behav
 
 **`gh` is installed and authed** (official v2.102.0 arm64 tarball at `/usr/local/bin/gh`; Alpine has no `gh` package). Logs: `gh run view <id> --log` (`gh api .../jobs/<id>/logs` rejects with "terminal escape sequences"). If re-auth is ever needed, start the device flow with `setsid` — a session restart kills the waiter and loses the token.
 
-**Standing state (2026-10-04):** R24 (task 190) is DONE; R25 Rhythm Pilot is next. Its initial rhythm files are present as uncommitted worktree changes and are not yet mirrored or validated; keep them out of the R24 commit. The offline ZIP is gone (task 179) and `OFFLINE.md` documents the mechanism; 3 local `racing3d`/WebGL failures are this host's missing WebGL, not a regression. **R16 (task 182) through R24 (task 190) are done.** The old "stop before R16" instruction is superseded — the user asked to continue through the roadmap.
+**Standing state (2026-10-04):** R24 (task 190) and R25 (task 191) are DONE; R26 Spatial Concepts Pilot is next. The offline ZIP is gone (task 179) and `OFFLINE.md` documents the mechanism; 3 local `racing3d`/WebGL failures are this host's missing WebGL, not a regression. **R16 (task 182) through R25 (task 191) are done.** The old "stop before R16" instruction is superseded — the user asked to continue through the roadmap.
 
 ## Current session — R16 + R17 DONE
 
@@ -41,7 +41,8 @@ R24's sequencing implementation is in `dd5150a`; closeout strengthened its behav
 - **R21 (task 187) — More / Less / Same pilot.** New learning game: `game/pages/compare.html` + `game/games/compare.js` (`window.startCompare`), entry `compare` in `app-registry.js` (learning, `route: game-compare`, ⚖️ hub button), `compare: 'Више или мање'` in `serbian.js`. Three modes (more rounds 0-2, less 3-5, same 6+) with no written equations; wrong tap only shakes the group (`gentleMiss`) and shows a hint after two, correct plays the shared chime + advances, every third correct fires `window.celebrate()` (recorded by R19). New `tools/compare_smoke.js` (24 checks incl. reachability); `hub_smoke.js` de-hardcoded to `LEARNING_EXPECTED.length` (now 8); `offline_smoke.mjs` spec added (**17 children / 17 specs / 18 hub buttons**); 19 pages scan clean. `screenshot:false` for now — R9 baselines are reviewed and the user should approve the full re-capture.
 - **R22 (task 188) — Sorting / Classification pilot.** New learning game: `game/pages/sorting.html` + `game/games/sorting.js` (`window.startSorting`), entry `sorting` in `app-registry.js` (learning, `route: game-sorting`, 🧺 hub button, `hubOrder: 9`), `sorting: 'Разврставање'` in `serbian.js`. A tray of objects + two large baskets; drag an object in, or tap it then tap a basket (magnetic pull toward a nearby basket). Two categories from reusable data (red/blue swatches, animals/food emoji) with Serbian accessible names; no reading required. Wrong drop softly returns home and shakes the basket (`gentleMiss`, no failure screen); after two misses the right basket is hinted. Every placed object chimes; a completed round plays praise and advances; every second round fires `window.celebrate()` (recorded by R19). New `tools/sorting_smoke.js` (20 checks); `hub_smoke` green with 9 learning buttons; `runtime_error_smoke` 20 pages clean; `offline_smoke.mjs` spec added (**18 children / 18 specs / 19 hub buttons**). `screenshot:false` until the user approves the full R9 re-capture.
 - **R23 (task 189) — Serbian phonics pilot.** New learning game: `game/pages/phonics.html` + `game/games/phonics.js` (`window.startPhonics`), entry `phonics` in `app-registry.js` (learning, `route: game-phonics`, 🔤 hub button, `hubOrder: 10`), `phonics: 'Слова и звуци'` in `serbian.js`. Audio-first: autoplay sound on round start, big Cyrillic letter, 2 choices. Correct item actually starts with the letter in question (10-letter set). Tiny repeat button. Wrong tap shakes, hint after 2 misses; correct chimes + praise, celebrate every 3 correct answers. No reading question, no score shown. New `tools/phonics_smoke.js` (13 checks), hub shows 10 learning buttons/19 child routes, runtime 21 pages, offline E2E green (19 games).
-- **Next roadmap item: R25 — rhythm pilot.**
+- **R25 (task 191) — Rhythm Imitation Pilot.** `game/pages/rhythm.html` + `game/games/rhythm.js` present alternating ear-and-echo patterns, tap-tap and tap-pause-tap, on one large drum. The child can replay and retry without a timer or score. Serbian prompts, gentle miss feedback, and celebration every three successes. `rhythm_smoke` 18/18; offline E2E 128/128 (21 games); hub 15/15; runtime scan 23 pages clean. `screenshot:false` pending user-approved baseline refresh.
+- **Next roadmap item: R26 — spatial concepts pilot.**
 
 ## History archived
 
@@ -50,7 +51,7 @@ Session logs and historical task write-ups (tasks 156, 176–181, R14/R15, the r
 
 ## Progress Tracker (R0–R27)
 
-**Task numbers below are the real `PROJECT_TASKS.md` numbers, not the roadmap's "suggested task number"** — those drifted (the roadmap proposed 155–178, but 155 became the user-reported-bug fix, 156 the resource-budget task and 163 landed R12 early). Unfiled roadmap items show `—`. **25/29 done (R0–R24).**
+**Task numbers below are the real `PROJECT_TASKS.md` numbers, not the roadmap's "suggested task number"** — those drifted (the roadmap proposed 155–178, but 155 became the user-reported-bug fix, 156 the resource-budget task and 163 landed R12 early). Unfiled roadmap items show `—`. **26/29 done (R0–R25).**
 
 | # | ID | Task | Status |
 |---|---|---|---|
@@ -79,7 +80,7 @@ Session logs and historical task write-ups (tasks 156, 176–181, R14/R15, the r
 | 23 | R22 | 188 | DONE — sorting/classification pilot (`sorting.html` + `sorting.js`); two categories, drag/tap-to-place, magnetic + gentle miss, reusable category data. `sorting_smoke` 20/20, offline E2E green (18 games). `screenshot:false` pending user-approved baseline. |
 | 24 | R23 | 189 | DONE — Serbian phonics pilot (`phonics.html` + `phonics.js`); audio-first (autoplay sound + tiny repeat), big Cyrillic letter, 2 choices with correct-start validation for 10 letters. No reading question, no score pressure. `phonics_smoke` 13/13, offline E2E green (19 games). `screenshot:false` pending user-approved baseline. |
 | 25 | R24 | 190 | DONE 2026-10-04 — sequencing pilot (`sequencing.html` + `sequencing.js`); seed→plant→flower (start 3 cards), drag to slots, gentle feedback; celebration after each three-card sequence. `sequencing_smoke` 14/14; offline E2E 123/123 (20 games). `screenshot:false` pending user-approved baseline. |
-| 26 | R25 | — | NEW — learning pilot: rhythm |
+| 26 | R25 | 191 | DONE 2026-10-04 — rhythm echo pilot; tap-tap and tap-pause-tap, one large drum, replay, gentle retry, no visible score/timer. `rhythm_smoke` 18/18; offline E2E 128/128 (21 games). `screenshot:false` pending user-approved baseline. |
 | 27 | R26 | — | NEW — learning pilot: spatial concepts |
 | 28 | R27 | — | NEW — learning pilot: maze/path |
 | 29 | R27b | — | NEW |

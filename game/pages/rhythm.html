@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#4A3F6B" />
+  <title>Ритам — Петрин свет</title>
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="stylesheet" href="../styles/viewport.css" />
+  <link rel="stylesheet" href="../styles/design-tokens.css" />
+  <link rel="stylesheet" href="../shared/accessibility.css" />
+  <style>
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+    html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--cream);font-family:Fredoka,sans-serif;color:var(--plum)}
+    #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4vmin;padding:4vmin}
+    .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--plum);color:#fff;font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);z-index:20}
+    #rhythm-prompt{font-size:6vmin;font-weight:800;line-height:1.15;text-align:center}
+    #drum-area {
+      width: min(68vmin, 360px);
+      height: min(68vmin, 360px);
+      border-radius: 50%;
+      border: 0;
+      background: radial-gradient(circle at 30% 30%, #ffcf8b, #ff8c42);
+      color: var(--plum);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(72px, 24vmin, 150px);
+      box-shadow: 0 2vmin 0 rgba(0,0,0,.15),inset 0 1vmin 0 rgba(255,255,255,.55);
+      cursor: pointer;
+      touch-action: manipulation;
+      transition:transform .12s ease,box-shadow .12s ease;
+    }
+    #drum-area:disabled{cursor:default}
+    #drum-area.drum-hit{transform:scale(.94);box-shadow:0 1vmin 0 rgba(0,0,0,.15),inset 0 1vmin 0 rgba(255,255,255,.55)}
+    .top-bar{position:absolute;top:2.6vmin;right:2.6vmin}
+    .repeat-btn{width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--sky);color:var(--plum);font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.15);cursor:pointer}
+    .repeat-btn:disabled{opacity:.5;cursor:default}
+    #rhythm-feedback{min-height:7vmin;font-size:4.5vmin;font-weight:700;color:var(--green);text-align:center}
+    @media (min-width:800px){#rhythm-prompt{font-size:42px}#rhythm-feedback{font-size:30px}}
+    @media (prefers-reduced-motion: reduce){#drum-area{transition:none}.drum-hit{transform:none!important}}
+  </style>
+</head>
+<body>
+  <div id="app">
+    <button class="back-btn" id="rhythm-back" aria-label="Назад">←</button>
+    <div class="top-bar">
+      <button class="repeat-btn" id="repeat-btn" aria-label="Понови ритам">🔁</button>
+    </div>
+    <div id="rhythm-prompt">Слушај, па понови</div>
+    <button id="drum-area" aria-label="Бубањ" aria-disabled="true" disabled>🥁</button>
+    <div id="rhythm-feedback" aria-live="polite"></div>
+  </div>
+  <script src="../data/serbian.js"></script>
+  <script src="../shared/navigation.js"></script>
+  <script src="../shared/celebration.js"></script>
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/speech.js"></script>
+  <script src="../shared/utils.js"></script>
+  <script src="../games/rhythm.js"></script>
+  <script src="../shared/audio-buses.js"></script>
+  <script src="../shared/viewport.js"></script>
+  <script src="../shared/input.js"></script>
+  <script src="../shared/feedback.js"></script>
+  <script src="../shared/motion.js"></script>
+  <script src="../data/app-registry.js"></script>
+  <script src="../shared/main.js"></script>
+</body>
+</html>
