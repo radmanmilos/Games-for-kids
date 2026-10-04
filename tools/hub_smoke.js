@@ -1,6 +1,6 @@
 /* Petrin svet hub smoke test — two-level landing (two group tiles → sub-hubs).
    Drives index.html headlessly: the landing shows the title + two tiles (ИГРЕ /
-   УЧЕЊЕ), the games sub-hub shows its 8 buttons, the learning sub-hub its 7, the
+   УЧЕЊЕ), each sub-hub shows its registered buttons in hubOrder, the
    back buttons return to the landing, and the static wiring is in place (every
    game data-go present, with no legacy embedded Kitty/Explorer UI in the hub).
    Run:  node tools/hub_smoke.js     (from the repo root or anywhere)
@@ -106,7 +106,7 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
 
   await h.evalv(`document.querySelector('.hub-tile.tile-learning').click()`);
   await waitForActive('hub-learning', 60,
-    `(() => { const a = document.querySelector('.screen.active'); return !!a && a.id === 'hub-learning' && a.querySelectorAll('.hub-grid [data-go]').length === 7; })()`);
+    `(() => { const a = document.querySelector('.screen.active'); return !!a && a.id === 'hub-learning' && a.querySelectorAll('.hub-grid [data-go]').length === ${LEARNING_EXPECTED.length}; })()`);
   const learning = await h.evalv(`JSON.stringify((() => {
     const act = document.querySelector('.screen.active');
     return {
@@ -116,7 +116,7 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
     };
   })())`);
   const L2 = JSON.parse(learning);
-  check('learning tile opens learning sub-hub (7 buttons)', L2.active === 'hub-learning' && L2.title === '🧠 УЧЕЊЕ' && L2.go.split(',').length === LEARNING_EXPECTED.length && L2.go === LEARNING_EXPECTED.join(','), learning);
+  check(`learning tile opens learning sub-hub (${LEARNING_EXPECTED.length} buttons)`, L2.active === 'hub-learning' && L2.title === '🧠 УЧЕЊЕ' && L2.go.split(',').length === LEARNING_EXPECTED.length && L2.go === LEARNING_EXPECTED.join(','), learning);
 
   await h.evalv(`document.querySelector('#hub-learning .back-btn').click()`);
   await waitForActive('hub');

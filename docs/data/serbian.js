@@ -167,6 +167,7 @@
       animal_memory: 'Памтилица',
       animal_puzzle: 'Слагалице',
       classroom: 'Учионица',
+      compare: 'Више или мање',
       coloring: 'Бојење',
       tracing: 'Писање',
       piano: 'Клавир',

@@ -378,6 +378,25 @@ const APPS = [
         { timeout: 6000, label: 'the kitty to land again' });
     },
   },
+  {
+    id: 'compare', back: '#compare-back',
+    ready: `!!window.__compare && document.querySelectorAll('.cmp-item').length>0`,
+    act: async h => {
+      // round 0 asks "more": tap the group the game itself marks correct
+      const correct = await h.evalv(`(()=>{
+        const a=document.getElementById('cmp-group-a'), b=document.getElementById('cmp-group-b');
+        if(!a||!b) return null;
+        if(a.dataset.correct==='1') return '#cmp-group-a';
+        if(b.dataset.correct==='1') return '#cmp-group-b';
+        return null;
+      })()`);
+      if (!correct) return { ok: false, why: 'no correct group was marked' };
+      const t = await h.tap(correct);
+      if (!t.ok) return t;
+      return h.waitFor(`!!document.querySelector('.cmp-correct')`,
+        { label: 'the correct group to be acknowledged' });
+    },
+  },
 ];
 
 /* Every registry child must be covered - a new offline game cannot skip this test.
