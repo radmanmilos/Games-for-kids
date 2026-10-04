@@ -36,6 +36,13 @@
     .cache-bar[hidden]{display:none;}
     .cache-bar-fill{height:100%;width:0;border-radius:999px;background:var(--plum);transition:width .2s ease;}
     @media (prefers-reduced-motion: reduce){.cache-bar-fill{transition:none;}}
+    /* R19: a plain record of what was used/practiced, in the parent area only.
+       No score, no streak, no comparison. */
+    .parent-progress{margin:0 0 3vmin;padding:3vmin;border-radius:var(--radius-md);background:var(--cream);color:var(--plum);font:600 clamp(11px,1.9vmin,15px) 'Fredoka',sans-serif;}
+    .parent-progress .progress-title{font-size:clamp(13px,2.2vmin,17px);margin-bottom:2vmin;}
+    .progress-row{display:flex;gap:2vmin;margin-top:1.5vmin;line-height:1.5;}
+    .progress-label{flex:0 0 auto;opacity:.75;}
+    .progress-value{flex:1;word-break:break-word;}
     .back-btn{position:absolute;top:4vmin;left:4vmin;width:12vmin;height:12vmin;border-radius:50%;border:none;background:var(--plum);color:white;font-size:6vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);cursor:pointer;}
   </style>
 </head>
@@ -48,6 +55,11 @@
         <span class="meta-item"><span class="meta-dot" id="conn-dot"></span><span id="conn-status">Онлајн</span></span>
         <span class="meta-item" id="version-info">Верзија: …</span>
         <span class="meta-item" id="offline-copy-info">Офлајн копија: …</span>
+      </div>
+      <div class="parent-progress" id="parent-progress">
+        <div class="progress-title">📊 Напредак</div>
+        <div class="progress-row"><span class="progress-label">Шта је коришћено:</span><span class="progress-value" id="progress-used">још ништа</span></div>
+        <div class="progress-row"><span class="progress-label">Шта је вежбано:</span><span class="progress-value" id="progress-practiced">још ништа</span></div>
       </div>
       <button class="parent-btn primary" id="download-offline">📥 Преузми за офлајн рад</button>
       <button class="parent-btn" id="check-updates">🔄 Провери ажурирања</button>
@@ -141,6 +153,27 @@
         offlineCopyInfo.textContent = 'Офлајн копија: ' + (ready ? 'спремна' : 'није преузета');
       };
 
+      // R19: what was used and practiced, read from the shared local store
+      // (window.PetrinProgress, defined by shared/main.js). Titles come from the
+      // app registry so the parent sees names, not ids. Purely a record — no
+      // score or comparison is shown.
+      const progressUsed = document.getElementById('progress-used');
+      const progressPracticed = document.getElementById('progress-practiced');
+      const titleFor = (id) => {
+        const app = (window.APP_REGISTRY || []).find(a => a.id === id);
+        return app ? app.title : id;
+      };
+      const renderProgress = () => {
+        const p = window.PetrinProgress ? window.PetrinProgress.snapshot() : null;
+        const used = p ? Object.keys(p.played) : [];
+        const practiced = p ? Object.keys(p.completed).filter(id => p.completed[id] > 0) : [];
+        progressUsed.textContent = used.length ? used.map(titleFor).join(', ') : 'још ништа';
+        progressPracticed.textContent = practiced.length
+          ? practiced.map(id => titleFor(id) + ' (×' + p.completed[id] + ')').join(', ')
+          : 'још ништа';
+      };
+      renderProgress();
+
       // R17: technical facts live behind a disclosure, never in the parent's face.
       const diagBody = document.getElementById('diag-body');
       const renderDiag = async () => {
@@ -224,7 +257,9 @@
       // Reset progress
       resetBtn.addEventListener('click', () => {
         if (confirm('Обриши сав локални напредак?')) {
+          if (window.PetrinProgress) window.PetrinProgress.reset();
           localStorage.clear();
+          renderProgress();
           status.textContent = 'Напредак обрисан';
         }
       });

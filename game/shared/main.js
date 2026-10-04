@@ -1,6 +1,52 @@
 /* Shared runtime boot */
 document.body.addEventListener('pointerdown', () => { if (window.ctx) window.ctx(); }, {once: true});
 
+/* R19: local progress. Deliberately tiny and local — one namespaced object that
+   records which games were opened and how many activities a child completed.
+   It is NOT a reward system: no XP, streaks, badges, locked content, profiles
+   or sync. Core play must behave exactly the same if storage is missing or
+   cleared, so every access is wrapped and falls back to an in-memory copy.
+   Only the parent area reads it (and can reset it); no child screen shows it. */
+window.PetrinProgress = (function () {
+    const KEY = 'petrinProgress';
+    let mem = null;
+    const blank = () => ({ v: 1, firstSeen: null, lastSeen: null, visits: 0, played: {}, completed: {} });
+    function read() {
+        if (mem) return mem;
+        try {
+            const raw = localStorage.getItem(KEY);
+            mem = raw ? Object.assign(blank(), JSON.parse(raw)) : blank();
+        } catch (e) { mem = blank(); }
+        if (!mem.played) mem.played = {};
+        if (!mem.completed) mem.completed = {};
+        return mem;
+    }
+    function write() { try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch (e) { /* keep memory copy */ } }
+    let current = null;
+    return {
+        setCurrent(id) { current = id || null; },
+        visit() { const d = read(); const day = new Date().toISOString().slice(0, 10); if (!d.firstSeen) d.firstSeen = day; d.lastSeen = day; d.visits = (d.visits || 0) + 1; write(); },
+        play(id) { if (!id) return; const d = read(); d.played[id] = (d.played[id] || 0) + 1; write(); },
+        complete(id) { id = id || current; if (!id) return; const d = read(); d.completed[id] = (d.completed[id] || 0) + 1; write(); },
+        snapshot() { const d = read(); return JSON.parse(JSON.stringify(d)); },
+        reset() { mem = blank(); try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ } }
+    };
+}());
+
+/* Attribute a completed activity when a game celebrates. celebration.js loads
+   before this file on the pages that have it, so window.celebrate exists here;
+   the wrap is idempotent and transparent (it returns the original's result). */
+(function () {
+    if (typeof window.celebrate !== 'function' || window.celebrate.__petrinProgress) return;
+    const original = window.celebrate;
+    const wrapped = function () {
+        try { window.PetrinProgress.complete(); } catch (e) { /* never block the game */ }
+        return original.apply(this, arguments);
+    };
+    wrapped.__petrinProgress = true;
+    window.celebrate = wrapped;
+}());
+
 const standalonePage = location.pathname.split('/').pop().toLowerCase().replace(/\.html$/, '');
 
 /* R7: the per-page boot table comes from data/app-registry.js instead of a
@@ -19,6 +65,14 @@ function entryForPage(page) {
 }
 
 const standaloneGame = entryForPage(standalonePage);
+
+/* R19: record the visit and which game was opened. The parent surface is not a
+   child activity, so it is never counted as "played". */
+if (standaloneGame && standaloneGame.category !== 'parent') {
+    window.PetrinProgress.setCurrent(standaloneGame.id);
+    window.PetrinProgress.play(standaloneGame.id);
+}
+window.PetrinProgress.visit();
 
 /* Where a page's back button returns to: its own sub-hub when the registry
    declares one, the landing screen for the parent area. */

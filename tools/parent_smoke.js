@@ -62,6 +62,34 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('R17: technical details live under a diagnostics disclosure',
     surface.diagnostics === true && surface.diagBody === true, JSON.stringify(surface));
 
+  // R19: the parent area is the only place local progress is shown, and it is a
+  // plain record ("what was used / practiced"), never a score or comparison.
+  const progressPanel = JSON.parse(await h.evalv(`JSON.stringify({
+    panel: !!document.getElementById('parent-progress'),
+    used: (document.getElementById('progress-used') || {}).textContent || '',
+    practiced: (document.getElementById('progress-practiced') || {}).textContent || '',
+    api: !!(window.PetrinProgress && window.PetrinProgress.play && window.PetrinProgress.complete && window.PetrinProgress.reset && window.PetrinProgress.snapshot)
+  })`));
+  check('R19: parent area shows a local progress panel, empty by default',
+    progressPanel.panel && progressPanel.api && progressPanel.used === 'још ништа' && progressPanel.practiced === 'још ништа',
+    JSON.stringify(progressPanel));
+
+  await h.evalv(`window.PetrinProgress.play('animals'); window.PetrinProgress.complete('animals'); window.PetrinProgress.complete('animals'); true`);
+  const snap = JSON.parse(await h.evalv(`JSON.stringify(window.PetrinProgress.snapshot())`));
+  check('R19: the local store records played and completed counts',
+    snap.played.animals === 1 && snap.completed.animals === 2 && snap.visits >= 1,
+    JSON.stringify(snap));
+
+  // Reset clears the store. Confirm is stubbed so the smoke drives the real
+  // click path, not a bypass.
+  await h.evalv(`window.confirm = function(){ return true; }; true`);
+  await h.evalv(`document.getElementById('reset-progress').click(); true`);
+  await sleep(150);
+  const afterReset = JSON.parse(await h.evalv(`JSON.stringify({ snap: window.PetrinProgress.snapshot(), status: (document.getElementById('parent-status')||{}).textContent || '' })`));
+  check('R19: reset empties the local progress store and confirms it',
+    Object.keys(afterReset.snap.played).length === 0 && afterReset.status === 'Напредак обрисан',
+    JSON.stringify(afterReset));
+
   // R17 update flow: drive it deterministically with the exact letters the worker
   // posts. A real deploy would post these; the UI's reaction is what must hold.
   const fake = async (data) => {

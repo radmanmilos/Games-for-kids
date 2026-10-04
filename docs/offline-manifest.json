@@ -732,8 +732,8 @@
     "size": 2938
   },
   "pages/parent.html": {
-    "sha256": "d1dd4066bee0113f395d534bd53194a11ebb372e6942613fd1b1dab486230c10",
-    "size": 15795
+    "sha256": "1206886303df8d7cbdc7fc7fa4225a0beafd2ef4f4931b9fa0678c4a19e5634b",
+    "size": 18125
   },
   "pages/piano.html": {
     "sha256": "4804e38a37be0f8eb281e07aac1075f5d483943a744f36e2f24094a1512bb93b",
@@ -784,8 +784,8 @@
     "size": 2650
   },
   "shared/main.js": {
-    "sha256": "0faf5756cb8de8418becaa1ed97e2953fd799abc916ec38e96e7778a5d4e8325",
-    "size": 3463
+    "sha256": "7639168261404e0d27d0c7be412e0c1092d641c0d945136ca260cf1d7fc113c5",
+    "size": 6295
   },
   "shared/motion.js": {
     "sha256": "9af5d9bf9110b8ff1f4fa6f6bc119558493565e5d5578f56f54f58ed705df381",
