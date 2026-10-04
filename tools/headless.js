@@ -409,16 +409,16 @@ async function start({
   let chromeExitEvent = null;
   let chromeProcess = null;
   for (let attempt = 0; attempt < BOOT_ATTEMPTS && !session; attempt++) {
-    if (attempt) await sleep(BOOT_RETRY_PAUSE_MS);
-    chromeExitEvent = null;
+    let exitEvent = null;
     /* Per-attempt, so the CDP diagnostic can only ever describe the Chrome this
        session actually connected to. It used to read the shared `chromeExitEvent`,
        which any earlier attempt's still-dying child could also write — so
        "Chrome exited code=0" could name a corpse from attempt 1 while the live
        browser was perfectly healthy. That is the one line run #39's failure hinged
        on, and a diagnostic that can silently describe the wrong process is worse
-       than no diagnostic at all. */
-    let exitEvent = null;
+       than no diagnostic at all. */
+    if (attempt) await sleep(BOOT_RETRY_PAUSE_MS);
+    chromeExitEvent = null;
     const child = execFile(chromeBin, CHROME_FLAGS, { stdio: ['ignore', 'ignore', 'pipe'] });
     chromeProcess = child;
     let stderr = '';
