@@ -6,9 +6,9 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — task 181 DONE; CI IS GREEN (#41) and issue #3 is CLOSED
+## Current session — R24 closeout (task 190) DONE — 2026-10-04
 
-**Session is complete.** Tree is clean and pushed (`a3658d5`). **Run #41: 29 succeeded, 1 skipped (`Extended`, manual/weekly by design), 0 failed** — `Release QA` passed for the first time in this repo's history, and **issue #3 is closed** with the root cause documented in its closing comment.
+R24's sequencing implementation is in `dd5150a`; closeout strengthened its behavioral smoke and offline gesture, corrected celebration cadence, regenerated the offline manifest, mirrored `game/` to `docs/`, and reconciled the trackers. **Validation:** sequencing smoke 14/14; offline E2E 123/123 (20 games); `validate_offline.js` and `check_fast.js` 7/7 passed in an isolated snapshot matching committed R24. Isolation kept the separate uncommitted R25 rhythm scaffolding out of the R24 mirror and gates; preserve those R25 changes.
 
 **The proof the fix worked, not just that luck favoured us:** run #41 hit a boot crash *again*, the retry fired, and the gate then completed — `[boot crash, exit 1 — retrying (1/2)]` → `[exit 0, 103 pass / 0 fail, 67.4s]`, `PASS acceptance: every offline game loads, plays and returns (16 games) [all green]`, a11y `critical=0, serious=0, moderate=0, minor=0`. `racing3d` passed offline on the runner too, confirming the 3 local WebGL failures are host-only.
 
@@ -18,7 +18,7 @@ This file summarizes the current workspace, conventions, and project state so th
 
 **`gh` is installed and authed** (official v2.102.0 arm64 tarball at `/usr/local/bin/gh`; Alpine has no `gh` package). Logs: `gh run view <id> --log` (`gh api .../jobs/<id>/logs` rejects with "terminal escape sequences"). If re-auth is ever needed, start the device flow with `setsid` — a session restart kills the waiter and loses the token.
 
-**Standing state (2026-10-04):** local `check_fast.js` 7/7; the offline ZIP is gone (task 179) and `OFFLINE.md` documents the mechanism; 3 local `racing3d`/WebGL failures are this host's missing WebGL, not a regression. **R16 (task 182) and R17 (task 183) are DONE.** R16 added `ASSET_BUDGET.md` (committed `c2a40a2`). R17 made `game/manifest.json` the single version source: pages register `sw.js?v=<version>` and the worker derives `CACHE_NAME = 'petrin-v<version>'`, evicting superseded caches and confirming `Ажурирано` in the parent area. **R18–R23 DONE: R18(184), R19(185), R20(186), R21(187), R22(188), R23(189).** **Next roadmap item: R24 — sequencing pilot.** The old "stop before R16" instruction is superseded — the user asked to continue through the roadmap.
+**Standing state (2026-10-04):** R24 (task 190) is DONE; R25 Rhythm Pilot is next. Its initial rhythm files are present as uncommitted worktree changes and are not yet mirrored or validated; keep them out of the R24 commit. The offline ZIP is gone (task 179) and `OFFLINE.md` documents the mechanism; 3 local `racing3d`/WebGL failures are this host's missing WebGL, not a regression. **R16 (task 182) through R24 (task 190) are done.** The old "stop before R16" instruction is superseded — the user asked to continue through the roadmap.
 
 ## Current session — R16 + R17 DONE
 
@@ -41,7 +41,7 @@ This file summarizes the current workspace, conventions, and project state so th
 - **R21 (task 187) — More / Less / Same pilot.** New learning game: `game/pages/compare.html` + `game/games/compare.js` (`window.startCompare`), entry `compare` in `app-registry.js` (learning, `route: game-compare`, ⚖️ hub button), `compare: 'Више или мање'` in `serbian.js`. Three modes (more rounds 0-2, less 3-5, same 6+) with no written equations; wrong tap only shakes the group (`gentleMiss`) and shows a hint after two, correct plays the shared chime + advances, every third correct fires `window.celebrate()` (recorded by R19). New `tools/compare_smoke.js` (24 checks incl. reachability); `hub_smoke.js` de-hardcoded to `LEARNING_EXPECTED.length` (now 8); `offline_smoke.mjs` spec added (**17 children / 17 specs / 18 hub buttons**); 19 pages scan clean. `screenshot:false` for now — R9 baselines are reviewed and the user should approve the full re-capture.
 - **R22 (task 188) — Sorting / Classification pilot.** New learning game: `game/pages/sorting.html` + `game/games/sorting.js` (`window.startSorting`), entry `sorting` in `app-registry.js` (learning, `route: game-sorting`, 🧺 hub button, `hubOrder: 9`), `sorting: 'Разврставање'` in `serbian.js`. A tray of objects + two large baskets; drag an object in, or tap it then tap a basket (magnetic pull toward a nearby basket). Two categories from reusable data (red/blue swatches, animals/food emoji) with Serbian accessible names; no reading required. Wrong drop softly returns home and shakes the basket (`gentleMiss`, no failure screen); after two misses the right basket is hinted. Every placed object chimes; a completed round plays praise and advances; every second round fires `window.celebrate()` (recorded by R19). New `tools/sorting_smoke.js` (20 checks); `hub_smoke` green with 9 learning buttons; `runtime_error_smoke` 20 pages clean; `offline_smoke.mjs` spec added (**18 children / 18 specs / 19 hub buttons**). `screenshot:false` until the user approves the full R9 re-capture.
 - **R23 (task 189) — Serbian phonics pilot.** New learning game: `game/pages/phonics.html` + `game/games/phonics.js` (`window.startPhonics`), entry `phonics` in `app-registry.js` (learning, `route: game-phonics`, 🔤 hub button, `hubOrder: 10`), `phonics: 'Слова и звуци'` in `serbian.js`. Audio-first: autoplay sound on round start, big Cyrillic letter, 2 choices. Correct item actually starts with the letter in question (10-letter set). Tiny repeat button. Wrong tap shakes, hint after 2 misses; correct chimes + praise, celebrate every 3 correct answers. No reading question, no score shown. New `tools/phonics_smoke.js` (13 checks), hub shows 10 learning buttons/19 child routes, runtime 21 pages, offline E2E green (19 games).
-- **Next roadmap item: R24 — sequencing pilot.**
+- **Next roadmap item: R25 — rhythm pilot.**
 
 ## History archived
 
@@ -78,9 +78,7 @@ Session logs and historical task write-ups (tasks 156, 176–181, R14/R15, the r
 | 22 | R21 | 187 | DONE — more/less/same pilot (`compare.html` + `compare.js`); three modes, no equations, gentle miss + hint; `compare_smoke` 24/24, offline E2E green (17 games). `screenshot:false` pending user-approved baseline. |
 | 23 | R22 | 188 | DONE — sorting/classification pilot (`sorting.html` + `sorting.js`); two categories, drag/tap-to-place, magnetic + gentle miss, reusable category data. `sorting_smoke` 20/20, offline E2E green (18 games). `screenshot:false` pending user-approved baseline. |
 | 24 | R23 | 189 | DONE — Serbian phonics pilot (`phonics.html` + `phonics.js`); audio-first (autoplay sound + tiny repeat), big Cyrillic letter, 2 choices with correct-start validation for 10 letters. No reading question, no score pressure. `phonics_smoke` 13/13, offline E2E green (19 games). `screenshot:false` pending user-approved baseline. |
-| 25 | R24 | — | DONE — sequencing pilot (`sequencing.html` + `sequencing.js`); seed→plant→flower (start 3 cards), drag to slots, visual-only, gentle feedback. `sequencing_smoke` 6/6, offline E2E green (20 games). `screenshot:false` pending user-approved baseline. |
-| 24 | R23 | — | NEW — learning pilot: Serbian phonics |
-| 25 | R24 | — | NEW — learning pilot: sequencing |
+| 25 | R24 | 190 | DONE 2026-10-04 — sequencing pilot (`sequencing.html` + `sequencing.js`); seed→plant→flower (start 3 cards), drag to slots, gentle feedback; celebration after each three-card sequence. `sequencing_smoke` 14/14; offline E2E 123/123 (20 games). `screenshot:false` pending user-approved baseline. |
 | 26 | R25 | — | NEW — learning pilot: rhythm |
 | 27 | R26 | — | NEW — learning pilot: spatial concepts |
 | 28 | R27 | — | NEW — learning pilot: maze/path |
@@ -111,4 +109,3 @@ The Мала тркачица (Little Racer) game is fully built (Stages 1–5, 
 10. **Locked cars announce via ARIA + 🎉 "НОВО: <car>" toast** when a threshold is crossed.
 
 Verified state to give the user: `racing_smoke.js` **39/39 PASS**, `hub_smoke.js` ALL PASS, docs mirrored (offline pack regenerated). **Open work: user commits the 2D racer visual-style adjustment (this session) + push, then play-tests.**
-

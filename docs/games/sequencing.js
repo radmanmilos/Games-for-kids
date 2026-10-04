@@ -52,7 +52,7 @@
 
   function tryDrop(card,slot){ if(slot.filled||card.placed)return; if(Number(card.el.dataset.order)===slot.correctOrder){ card.placed=true; slot.filled=card; card.el.style.position='absolute'; var r=slot.el.getBoundingClientRect(), tr=trayEl.getBoundingClientRect(); card.el.style.left=(r.left-tr.left)+'px'; card.el.style.top=(r.top-tr.top)+'px'; card.el.style.transform=''; placedCount++; if(window.successChime)window.successChime(); if(feedbackEl)feedbackEl.textContent=''; if(placedCount===slots.length) complete(); } else { if(window.gentleMiss)window.gentleMiss(); if(feedbackEl)feedbackEl.textContent='Покушај поново'; misses++; } }
 
-  function complete(){ locked=true; if(window.speakSr)window.speakSr('praise'); if(feedbackEl)feedbackEl.textContent='Браво!'; var doC=round%2===0; setTimeout(function(){ if(doC&&window.celebrate)window.celebrate(); round=(round+1)%SEQ.length; newRound(); },900); }
+  function complete(){ locked=true; if(window.speakSr)window.speakSr('praise'); if(feedbackEl)feedbackEl.textContent='Браво!'; setTimeout(function(){ if(window.celebrate)window.celebrate(); round=(round+1)%SEQ.length; newRound(); },900); }
 
   function newRound(){ locked=false; placedCount=0; misses=0; if(feedbackEl)feedbackEl.textContent=''; data=SEQ[round]; build(); speak('Постави у редослед'); }
 

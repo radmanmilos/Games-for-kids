@@ -17,6 +17,10 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 190. DONE — R24: Sequencing Pilot closeout. (Completed 2026-10-04, Ponytail Lazy Dev.)
+    - Strengthened `tools/sequencing_smoke.js` to exercise reachable drag targets, gentle wrong-drop feedback, both complete three-card sequences, and one celebration per completed sequence. Replaced the `offline_smoke.mjs` no-op with a trusted drag while offline.
+    - R24 closeout validated against an isolated snapshot of committed R24, keeping separate uncommitted R25 rhythm work out of the published mirror: sequencing smoke 14/14; offline E2E 123/123 (20 games); `validate_offline.js`; `check_fast.js` 7/7. Regenerated the offline manifest and mirrored `game/` to `docs/`.
+    - R24 acceptance is complete: visual ordering, three starting cards, drag-to-slot interaction, gentle feedback, and celebration after each three-card sequence. R25 is next.
 - 188. DONE — R22: Sorting / Classification Pilot. (Completed 2026-10-04, Ponytail Lazy Dev.)
 - 189. DONE — R23: Serbian Phonics Pilot. (Completed 2026-10-04, Ponytail Lazy Dev.)
     - **New learning game.** `game/pages/phonics.html` + `game/games/phonics.js` (`window.startPhonics`): big Cyrillic letter, autoplay sound on round start, 2 choices (correct + distractor). Correct item actually starts with the letter in question (10-letter set verified: М/миш vs јабука, А/јабука vs миш, С/змија vs банана, Т/ауто vs жаба, К/мачка vs јагода, Р/зец vs наранџа, Л/лав vs шаргарепа, О/октопод vs крушка, И/сова vs кромпир, П/прасе vs грожђе).

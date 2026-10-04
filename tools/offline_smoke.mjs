@@ -438,8 +438,16 @@ const APPS = [
   },
   {
     id: 'sequencing', back: '#seq-back',
-    ready: `!!window.__sequencing && document.querySelectorAll('.seq-slot').length>=2 && document.querySelectorAll('.seq-card').length>=2`,
-    act: async h => { return { ok: true, why: 'visual-only pilot' }; },
+    ready: `!!window.__sequencing && document.querySelectorAll('.seq-slot').length===3 && document.querySelectorAll('.seq-card').length===3`,
+    act: async h => {
+      const card = await h.boxOf('#seq-tray .seq-card[data-order="0"]');
+      const slot = await h.boxOf('#seq-slots .seq-slot[data-idx="0"]');
+      if (!card.ok) return card;
+      if (!slot.ok) return slot;
+      await h.dragTo(card.x, card.y, slot.x, slot.y);
+      return h.waitFor(`window.__sequencing.state().placed===1`,
+        { label: 'the first card to fill its sequence slot while offline' });
+    },
   },
 ];
 
