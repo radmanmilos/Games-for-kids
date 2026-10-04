@@ -12,7 +12,7 @@ labelled SUPERSEDED there; it is never the queue to work from.
 
 ## Current position (2026-10-04)
 
-- **R0–R22 DONE.** **R23 — Serbian Phonics Pilot is next.**
+- **R0–R23 DONE.** **R24 — Sequencing Pilot is next.**
 - Authoritative task-by-task status and execution log: [`PROJECT_TASKS.md`](PROJECT_TASKS.md).
 - Progress tracker table (R0–R27): [`HANDOVER_PROMPT.md`](HANDOVER_PROMPT.md#progress-tracker-r0-r27).
 

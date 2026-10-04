@@ -52,6 +52,8 @@ window.APP_REGISTRY = [
     route: 'game-compare', hubOrder: 8, hubGroup: 'learning', back: 'compare-back', start: 'startCompare' },
   { id: 'sorting', path: 'pages/sorting.html', category: 'learning', title: window.SERBIAN.titles.sorting, smoke: 'sorting_smoke', screenshot: false, offline: true, toddler: true,
     route: 'game-sorting', hubOrder: 9, hubGroup: 'learning', back: 'sorting-back', start: 'startSorting' },
+  { id: 'phonics', path: 'pages/phonics.html', category: 'learning', title: window.SERBIAN.titles.phonics, smoke: 'phonics_smoke', screenshot: false, offline: true, toddler: true,
+    route: 'game-phonics', hubOrder: 10, hubGroup: 'learning', back: 'phonics-back', start: 'startPhonics' },
   { id: 'coloring', path: 'pages/coloring.html', category: 'create', title: window.SERBIAN.titles.coloring, smoke: 'coloring_smoke', screenshot: true, offline: true, toddler: true,
     route: 'game-coloring', hubOrder: 6, hubGroup: 'learning', back: 'coloring-back', start: 'startColoring' },
   { id: 'tracing', path: 'pages/tracing.html', category: 'learning', title: window.SERBIAN.titles.tracing, smoke: 'tracing_smoke', screenshot: true, offline: true, toddler: true,

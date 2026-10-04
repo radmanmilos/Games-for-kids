@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="../manifest.json">
+<meta name="theme-color" content="#4A3F6B">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Слова и звуци — Петрин свет</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔤</text></svg>">
+<link rel="stylesheet" href="../styles/viewport.css">
+<link rel="stylesheet" href="../styles/design-tokens.css">
+<link rel="stylesheet" href="../shared/accessibility.css">
+<style>
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none;}
+  html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--cream);font-family:Fredoka, sans-serif;color:var(--plum);}
+  #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.6vmin;padding:4vmin;}
+  .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--plum);color:#fff;font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);z-index:20;}
+  .back-btn:active{transform:scale(.92) translateY(3px);}
+  .top-bar{position:absolute;top:2.6vmin;right:2.6vmin;display:flex;gap:2vmin;align-items:center;}
+  .repeat-btn{width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--sky);color:var(--plum);font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.15);z-index:20;}
+  .repeat-btn:active{transform:scale(.92) translateY(3px);}
+  #phonics-letter{font-size:24vmin;font-weight:800;line-height:1;text-align:center;text-shadow:0 .4vmin 0 rgba(255,255,255,.6);}
+  #phonics-objects{display:flex;gap:6vmin;justify-content:center;align-items:center;width:100%;}
+  .phonics-choice{width:24vmin;height:24vmin;border:none;border-radius:50%;background:#fff;box-shadow:0 1.6vmin 0 rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .12s ease, box-shadow .12s ease;}
+  .phonics-choice:active{transform:translateY(3px);}
+  .phonics-choice.phonics-correct{box-shadow:0 0 0 1.2vmin rgba(103,201,113,.6), 0 1.6vmin 0 rgba(0,0,0,.12);}
+  .phonics-choice.phonics-wrong{animation:phon-shake .4s ease;border:3px solid var(--pink);}
+  .phonics-choice.phonics-hint{animation:phon-pulse .8s ease-in-out 2;border:3px solid var(--green);}
+  .phonics-emoji{font-size:12vmin;line-height:1;pointer-events:none;}
+  #phonics-feedback{min-height:6vmin;font-size:4vmin;font-weight:700;color:var(--green);text-align:center;}
+  @keyframes phon-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-1.6vmin)}75%{transform:translateX(1.6vmin)}}
+  @keyframes phon-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  @media (prefers-reduced-motion: reduce){.phonics-wrong,.phonics-hint{animation:none}}
+  @media (min-width:800px){
+    #phonics-letter{font-size:180px}
+    .phonics-choice{width:180px;height:180px}
+    .phonics-emoji{font-size:92px}
+    #phonics-feedback{font-size:30px}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <button class="back-btn" id="phonics-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+  <div class="top-bar">
+    <button class="repeat-btn" id="phonics-repeat" aria-label="Понови звук"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35A7.95 7.95 0 0 0 12 4V1L7 6l5 5V8a5.99 5.99 0 0 1 4.94 9.06l1.42 1.42A8 8 0 0 0 17.65 6.35zM11 18a6 6 0 0 1-4.94-9.06L5.64 7.52A8 8 0 0 0 12 20v3l5-5-5-5v3z"/></svg></button>
+  </div>
+  <div id="phonics-letter">М</div>
+  <div id="phonics-objects"></div>
+  <div id="phonics-feedback" aria-live="polite"></div>
+</div>
+<script src="../data/serbian.js"></script>
+<script src="../shared/navigation.js"></script>
+<script src="../shared/celebration.js"></script>
+<script src="../shared/audio.js"></script>
+<script src="../shared/speech.js"></script>
+<script src="../shared/utils.js"></script>
+<script src="../games/phonics.js"></script>
+<script src="../shared/audio-buses.js"></script>
+<script src="../shared/viewport.js"></script>
+<script src="../shared/input.js"></script>
+<script src="../shared/feedback.js"></script>
+<script src="../shared/motion.js"></script>
+<script src="../data/app-registry.js"></script>
+<script src="../shared/main.js"></script>
+</body>
+</html>

@@ -169,6 +169,7 @@
       classroom: 'Учионица',
       compare: 'Више или мање',
       sorting: 'Разврставање',
+      phonics: 'Слова и звуци',
       coloring: 'Бојење',
       tracing: 'Писање',
       piano: 'Клавир',

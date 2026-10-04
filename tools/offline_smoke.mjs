@@ -420,6 +420,22 @@ const APPS = [
         { label: 'the object to move into the basket' });
     },
   },
+  {
+    id: 'phonics', back: '#phonics-back',
+    ready: `!!window.__phonics && document.querySelectorAll('.phonics-choice').length===2 && !!document.getElementById('phonics-letter')`,
+    act: async h => {
+      const info = await h.evalv(`(()=>{
+        const btn=document.querySelector('.phonics-choice[data-correct="1"]');
+        if(!btn) return null;
+        return btn.dataset.key;
+      })()`);
+      if (!info) return { ok: false, why: 'no correct phonics choice found' };
+      const t = await h.tap(`.phonics-choice[data-key="${info}"]`);
+      if (!t.ok) return t;
+      return h.waitFor(`!document.querySelector('.phonics-choice[data-key="${info}"]').classList.contains('phonics-correct')===false`,
+        { label: 'the correct choice to be acknowledged', timeout: 2000 });
+    },
+  },
 ];
 
 /* Every registry child must be covered - a new offline game cannot skip this test.
