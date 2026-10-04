@@ -50,7 +50,7 @@ Session logs and historical task write-ups (tasks 156, 176–181, R14/R15, the r
 
 ## Progress Tracker (R0–R27)
 
-**Task numbers below are the real `PROJECT_TASKS.md` numbers, not the roadmap's "suggested task number"** — those drifted (the roadmap proposed 155–178, but 155 became the user-reported-bug fix, 156 the resource-budget task and 163 landed R12 early). Unfiled roadmap items show `—`. **24/29 done (R0–R23).**
+**Task numbers below are the real `PROJECT_TASKS.md` numbers, not the roadmap's "suggested task number"** — those drifted (the roadmap proposed 155–178, but 155 became the user-reported-bug fix, 156 the resource-budget task and 163 landed R12 early). Unfiled roadmap items show `—`. **25/29 done (R0–R24).**
 
 | # | ID | Task | Status |
 |---|---|---|---|
@@ -78,6 +78,7 @@ Session logs and historical task write-ups (tasks 156, 176–181, R14/R15, the r
 | 22 | R21 | 187 | DONE — more/less/same pilot (`compare.html` + `compare.js`); three modes, no equations, gentle miss + hint; `compare_smoke` 24/24, offline E2E green (17 games). `screenshot:false` pending user-approved baseline. |
 | 23 | R22 | 188 | DONE — sorting/classification pilot (`sorting.html` + `sorting.js`); two categories, drag/tap-to-place, magnetic + gentle miss, reusable category data. `sorting_smoke` 20/20, offline E2E green (18 games). `screenshot:false` pending user-approved baseline. |
 | 24 | R23 | 189 | DONE — Serbian phonics pilot (`phonics.html` + `phonics.js`); audio-first (autoplay sound + tiny repeat), big Cyrillic letter, 2 choices with correct-start validation for 10 letters. No reading question, no score pressure. `phonics_smoke` 13/13, offline E2E green (19 games). `screenshot:false` pending user-approved baseline. |
+| 25 | R24 | — | DONE — sequencing pilot (`sequencing.html` + `sequencing.js`); seed→plant→flower (start 3 cards), drag to slots, visual-only, gentle feedback. `sequencing_smoke` 6/6, offline E2E green (20 games). `screenshot:false` pending user-approved baseline. |
 | 24 | R23 | — | NEW — learning pilot: Serbian phonics |
 | 25 | R24 | — | NEW — learning pilot: sequencing |
 | 26 | R25 | — | NEW — learning pilot: rhythm |

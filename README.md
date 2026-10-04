@@ -11,7 +11,7 @@
 - **Task 178/180:** the CDP diagnostic could describe the *wrong* Chrome process, and `games_map_negtest` asserted something it could never satisfy (that false red is what broke runs #34/#37). Both fixed and guarded with negative-tested regression guards.
 - **Offline is the service worker; there is no ZIP.** The manual download archive was removed 2026-10-02 (user decision) — it was never published, so the link 404'd. See [`OFFLINE.md`](OFFLINE.md).
 - Local gate: `node tools/check_fast.js` = **7/7 green**. Note: 3 local `racing3d` failures are this host's missing WebGL, not a regression.
-- Roadmap: **24/29 done (R0–R23)**. R16 (asset/performance budget), R17 (PWA install/update/version QA), R18 (documentation/roadmap consolidation), R19 (local progress), R20 (portfolio playtesting protocol), R21 (more/less/same pilot), R22 (sorting/classification pilot) and R23 (Serbian phonics pilot) are DONE; next is R24. See `ROADMAP.md`.
+- Roadmap: **25/29 done (R0–R24)**. R16–R23 DONE; R24 sequencing pilot DONE; next is R25. See `ROADMAP.md`.
 
 ---
 

@@ -132,7 +132,7 @@ const findProfile = () => {
      UNHANDLED rejection, so a .catch() here would swallow the very line we assert. */
   a.evalp('new Promise(r => setTimeout(r, 20000))');
   await wait(300);
-  try { execSync('pkill -f ' + JSON.stringify('user-data-dir=' + profile), { stdio: 'ignore' }); } catch { /* already gone */ }
+  try { execFileSync('pkill', ['-f', 'user-data-dir=' + profile], { stdio: 'ignore' }); } catch { /* already gone */ }
   /* Match ONLY describe()'s own wording. The "[headless] Chrome exited while a
      CDP session was open" line is a different message and would satisfy a looser
      pattern, which is how this test would read the wrong line and pass vacuously. */

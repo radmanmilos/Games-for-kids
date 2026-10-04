@@ -436,6 +436,11 @@ const APPS = [
         { label: 'the correct choice to be acknowledged', timeout: 2000 });
     },
   },
+  {
+    id: 'sequencing', back: '#seq-back',
+    ready: `!!window.__sequencing && document.querySelectorAll('.seq-slot').length>=2 && document.querySelectorAll('.seq-card').length>=2`,
+    act: async h => { return { ok: true, why: 'visual-only pilot' }; },
+  },
 ];
 
 /* Every registry child must be covered - a new offline game cannot skip this test.
