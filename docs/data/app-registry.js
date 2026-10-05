@@ -58,6 +58,8 @@ window.APP_REGISTRY = [
     route: 'game-sequencing', hubOrder: 11, hubGroup: 'learning', back: 'seq-back', start: 'startSequencing' },
   { id: 'rhythm', path: 'pages/rhythm.html', category: 'learning', title: window.SERBIAN.titles.rhythm, smoke: 'rhythm_smoke', screenshot: false, offline: true, toddler: true,
     route: 'game-rhythm', hubOrder: 12, hubGroup: 'learning', back: 'rhythm-back', start: 'startRhythm' },
+  { id: 'spatial', path: 'pages/spatial.html', category: 'learning', title: window.SERBIAN.titles.spatial, smoke: 'spatial_smoke', screenshot: false, offline: true, toddler: true,
+    route: 'game-spatial', hubOrder: 13, hubGroup: 'learning', back: 'spatial-back', start: 'startSpatial' },
   { id: 'coloring', path: 'pages/coloring.html', category: 'create', title: window.SERBIAN.titles.coloring, smoke: 'coloring_smoke', screenshot: true, offline: true, toddler: true,
     route: 'game-coloring', hubOrder: 6, hubGroup: 'learning', back: 'coloring-back', start: 'startColoring' },
   { id: 'tracing', path: 'pages/tracing.html', category: 'learning', title: window.SERBIAN.titles.tracing, smoke: 'tracing_smoke', screenshot: true, offline: true, toddler: true,

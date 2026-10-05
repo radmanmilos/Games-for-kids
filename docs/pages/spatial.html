@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#4A3F6B" />
+  <title>Простор — Петрин свет</title>
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="stylesheet" href="../styles/viewport.css" />
+  <link rel="stylesheet" href="../styles/design-tokens.css" />
+  <link rel="stylesheet" href="../shared/accessibility.css" />
+  <style>
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+    html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--cream);font-family:Fredoka,sans-serif;color:var(--plum)}
+    #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3vmin;padding:3vmin}
+    .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--plum);color:#fff;font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);z-index:20}
+    #spatial-prompt{font-size:6vmin;font-weight:800;line-height:1.15;text-align:center}
+
+    /* The scene is a fixed-ratio stage so a percentage position means the same
+       thing in every viewport - the layout cannot reflow between phone and desktop. */
+    #spatial-scene{
+      position:relative;
+      width:min(86vmin,440px);
+      aspect-ratio:4/3;
+      border-radius:4vmin;
+      background:linear-gradient(#eaf6ff,#dff3e4);
+      border:0.5vmin solid #fff;
+      box-shadow:0 1vmin 0 rgba(0,0,0,.08);
+      overflow:hidden;
+      touch-action:manipulation;
+    }
+    .sp-item{position:absolute;transform:translate(-50%,-50%);line-height:1;user-select:none}
+    .sp-shelf{position:absolute;left:6%;top:50%;width:88%;height:1.6vmin;transform:translateY(-50%);background:#c89a63;border-radius:1vmin}
+    .sp-basket{position:absolute;left:50%;top:50%;width:44%;height:52%;transform:translate(-50%,-50%);border:1vmin dashed #b98a4e;border-radius:3vmin;background:rgba(255,255,255,.35)}
+
+    #spatial-choices{display:flex;gap:4vmin;justify-content:center;flex-wrap:wrap}
+    .spatial-choice{
+      min-width:34vmin;min-height:17vmin;padding:2vmin 4vmin;
+      border:none;border-radius:5vmin;
+      font-family:inherit;font-size:5.4vmin;font-weight:800;
+      background:#fff;color:var(--plum);
+      box-shadow:0 1vmin 0 rgba(0,0,0,.18);
+      cursor:pointer;touch-action:manipulation;
+      transition:transform .12s ease,background .2s ease;
+    }
+    .spatial-choice:active{transform:translateY(.6vmin)}
+    .spatial-choice.spatial-correct{background:var(--green);color:#fff}
+    .spatial-choice.spatial-wrong{animation:spatial-shake .32s ease}
+    .spatial-choice.spatial-hint{box-shadow:0 0 0 .8vmin var(--sky),0 1vmin 0 rgba(0,0,0,.18)}
+    .spatial-choice[disabled]{cursor:default}
+    .spatial-choice[disabled]:active{transform:none}
+    @keyframes spatial-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-1.4vmin)}75%{transform:translateX(1.4vmin)}}
+
+    #spatial-feedback{min-height:6vmin;font-size:4.4vmin;font-weight:700;color:var(--green);text-align:center}
+    @media (min-width:800px){#spatial-prompt{font-size:40px}.spatial-choice{font-size:34px;min-width:230px;min-height:104px}#spatial-feedback{font-size:28px}}
+    @media (prefers-reduced-motion: reduce){.spatial-choice{transition:none}.spatial-choice:active{transform:none}.spatial-choice.spatial-wrong{animation:none}}
+  </style>
+</head>
+<body>
+  <div id="app">
+    <button class="back-btn" id="spatial-back" aria-label="Назад">←</button>
+    <div id="spatial-prompt">Где је лопта?</div>
+    <div id="spatial-scene"></div>
+    <div id="spatial-choices">
+      <button class="spatial-choice" id="spatial-choice-a" aria-disabled="false"></button>
+      <button class="spatial-choice" id="spatial-choice-b" aria-disabled="false"></button>
+    </div>
+    <div id="spatial-feedback" aria-live="polite"></div>
+  </div>
+  <script src="../data/serbian.js"></script>
+  <script src="../shared/navigation.js"></script>
+  <script src="../shared/celebration.js"></script>
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/speech.js"></script>
+  <script src="../shared/utils.js"></script>
+  <script src="../games/spatial.js"></script>
+  <script src="../shared/audio-buses.js"></script>
+  <script src="../shared/viewport.js"></script>
+  <script src="../shared/input.js"></script>
+  <script src="../shared/feedback.js"></script>
+  <script src="../shared/motion.js"></script>
+  <script src="../data/app-registry.js"></script>
+  <script src="../shared/main.js"></script>
+</body>
+</html>

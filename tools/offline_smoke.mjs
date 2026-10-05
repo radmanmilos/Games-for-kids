@@ -462,6 +462,17 @@ const APPS = [
         { label: 'the child to echo tap-tap while offline' });
     },
   },
+  {
+    id: 'spatial', back: '#spatial-back',
+    ready: `!!window.__spatial && window.__spatial.state().phase==='ask' && document.querySelectorAll('#spatial-choices .spatial-choice').length===2`,
+    act: async h => {
+      const key = await h.evalv(`window.__spatial.state().correct`);
+      const t = await h.tap(`#spatial-choice-${key}`);
+      if (!t.ok) return t;
+      return h.waitFor(`window.__spatial.state().phase==='success'&&window.__spatial.state().successes===1`,
+        { label: 'the child to name a position while offline' });
+    },
+  },
 ];
 
 /* Every registry child must be covered - a new offline game cannot skip this test.

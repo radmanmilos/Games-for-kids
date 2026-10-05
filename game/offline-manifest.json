@@ -584,12 +584,12 @@
     "size": 687458
   },
   "data/app-registry.js": {
-    "sha256": "96c7be34375dcddd68d11104a70fdf97bbda09eef15b9a4ebba08ca8c6412870",
-    "size": 8782
+    "sha256": "5700dc9bc44aafc690688dae3f8c82ea5dda5d9091fac2da644f3d9c8b16330a",
+    "size": 9072
   },
   "data/serbian.js": {
-    "sha256": "49fd9f7faf4df19a4d66a3037b24e08b8a6a90c2f37370f01fd0424d90f0cd70",
-    "size": 7130
+    "sha256": "e001acf1e0b41fac55fc2a55e810212695169a9a43262a6aae6fcd1221ef64af",
+    "size": 7163
   },
   "games/adventure-modes.js": {
     "sha256": "268e5744538b62040ac3123d4ed2f437907429bcf464ccdc87ced48bf4845ebd",
@@ -695,13 +695,17 @@
     "sha256": "3903542c53372eb4e90ad56e910d2d204e6707e1cfeecf638e192a3d6efdddd2",
     "size": 43992
   },
+  "games/spatial.js": {
+    "sha256": "99d32e69b9896b1af0e7cdcb6d63c86f116d51b7407a7f0707b6593db1d0be70",
+    "size": 6587
+  },
   "games/tracing.js": {
     "sha256": "8e620d25eccb03e99bc0897eb0e85c9496820036c19b27503089c794252ffc7c",
     "size": 17036
   },
   "index.html": {
-    "sha256": "23e5c6afd02a3b5032f115f0d973360a92c36dacbce05155116cf02d486a7c6d",
-    "size": 17694
+    "sha256": "fd3db6d9845cddf92f3c27c3f2248e98afdaa6b51b52b25c14382e62261b2a35",
+    "size": 17795
   },
   "manifest.json": {
     "sha256": "44cc7ca21e6e183718a4ceb5fd955c0e3b9727671c86c62cb92df3cc218b37d1",
@@ -791,6 +795,10 @@
     "sha256": "7fd6bc48f18ade66a9efdfb6a79a8f5b8f0de733971cdaff0e7f6f5fa7774b22",
     "size": 2940
   },
+  "pages/spatial.html": {
+    "sha256": "52ff9f5e1808e84aba640aaa4f96bee04dd18e965641c5f94ad96e0b862c4afb",
+    "size": 4817
+  },
   "pages/tracing.html": {
     "sha256": "8f4178d38e2ebf8c0ccd7ee7b18068c8010428ef78a9d1b1605976261284b8d5",
     "size": 11236
@@ -856,8 +864,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "ecc67385bebda5b5cfd602da4d2a6f4e47dfbe47d9572fdd35ff2f1044d85328",
-    "size": 6874
+    "sha256": "43a539b3dcb24219dfd88ac4e808d28eb0a9d9dc29a7374852fae1c632496f14",
+    "size": 6920
   },
   "sw.js": {
     "sha256": "cb988a394d0d5515fd0966cc745f2f78a6b3e32aac0e4d6a96548ad2f66917b1",

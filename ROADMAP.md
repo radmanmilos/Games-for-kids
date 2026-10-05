@@ -10,9 +10,9 @@ labelled SUPERSEDED there; it is never the queue to work from.
   — the active implementation queue (R0–R27). Take work from here, in
   dependency order, one item at a time.
 
-## Current position (2026-10-04)
+## Current position (2026-10-05)
 
-- **R0–R25 DONE.** R26 — Spatial Concepts Pilot is next.
+- **R0–R26 DONE.** R27 — Maze / Path Following Pilot is next.
 - Authoritative task-by-task status and execution log: [`PROJECT_TASKS.md`](PROJECT_TASKS.md).
 - Progress tracker table (R0–R27): [`HANDOVER_PROMPT.md`](HANDOVER_PROMPT.md#progress-tracker-r0-r27).
 

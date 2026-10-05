@@ -172,6 +172,7 @@
       phonics: 'Слова и звуци',
       sequencing: 'Редослед',
       rhythm: 'Ритам',
+      spatial: 'Простор',
       coloring: 'Бојење',
       tracing: 'Писање',
       piano: 'Клавир',
