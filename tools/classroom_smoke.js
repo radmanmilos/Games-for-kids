@@ -59,7 +59,25 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
     tiles: document.querySelectorAll('#activityGrid .class-tile').length
   })`);
   const SW = JSON.parse(switched);
-  check('tab switch to Бројевi updates activity', SW.activeTab === 'numbers' && SW.title === 'Бројеви' && SW.tiles === 11, switched);
+  /* The tile count is derived from SERBIAN.numbers, not pinned at 11.
+     This assertion used to hardcode 11, which pinned today's value: adding 11-20
+     to the shared vocabulary (roadmap review Tier A item 2) would have turned it
+     red for a change the assertion was never meant to police, and the lesson is
+     the one R21 already applied to hub_smoke's LEARNING_EXPECTED. The real
+     invariant is "the numbers activity renders exactly the shared vocabulary" —
+     which still fails if classroom stops rendering a number, or renders a stale
+     hardcoded set, so this is a stronger assertion, not a looser one. */
+  const NUMBER_TILES = await h.evalv(`window.SERBIAN.numbers.length`);
+  check('tab switch to Бројевi updates activity', SW.activeTab === 'numbers' && SW.title === 'Бројеви' && SW.tiles === NUMBER_TILES,
+    switched + ` (expected ${NUMBER_TILES} tiles from SERBIAN.numbers)`);
+
+  // Every shared number must actually appear, in order — catches a classroom that
+  // renders the right COUNT of the wrong numbers, which a count alone cannot see.
+  const numberLabels = await h.evalv(`JSON.stringify(
+    [...document.querySelectorAll('#activityGrid .class-tile')].map(t => t.textContent.trim()))`);
+  const expectedLabels = await h.evalv(`JSON.stringify(window.SERBIAN.numbers.map(n => String(n.label)))`);
+  check('the numbers activity shows every shared number, in order',
+    numberLabels === expectedLabels, `rendered ${numberLabels} expected ${expectedLabels}`);
 
   // Tab switching: click Облици tab
   await h.evalv(CLICK('.class-tab[data-tab="shapes"]'));
