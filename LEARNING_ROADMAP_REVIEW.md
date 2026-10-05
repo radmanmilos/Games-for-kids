@@ -117,9 +117,9 @@ Growth is already modelled correctly as a sequence; extending it is data, not ar
 
 **Tier B — reasonable next (needs new content)**
 
-3. **Time** `jutro / dan / veče / noć` (item 3) — four strings, no clock faces.
-4. **Seasons** `Годишња доба` + weather (item 6) — visual scenes.
-5. **Plant growth / habitats** (item 8) — extend `sequencing`'s data.
+3. **Time** `jutro / dan / veče / noć` (item 3) — four strings, no clock faces. **DEFERRED: needs new recorded speech** (see task 198).
+4. **Seasons** `Годишња доба` + weather (item 6) — visual scenes. **DEFERRED: needs new recorded speech** (see task 198).
+5. **Plant growth** via more `sequencing` steps (item 8) — **NOT blocked.** Verified at `sequencing.js:37` that a step's label is only an `aria-label`; the game speaks just a fixed prompt plus the recorded `praise`/`retry` lines, so extra sequences are pure data with no audio work. (Habitats with new nouns would be blocked.)
 
 **Tier C — do not build**
 
