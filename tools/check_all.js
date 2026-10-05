@@ -60,13 +60,13 @@ function findBash() {
   const smokeOk = await runAsync(process.execPath, runnerArgs);
   if (!smokeOk) { console.error('Smoke battery FAILED — fix before docs/offline.'); process.exit(1); }
 
-  if (doDocs) {
-    console.log('\n=== Sync docs (game/ -> docs/) ===');
-    const bash = findBash();
-    const cmd = bash ? bash : 'bash';
-    const ok = await runAsync(cmd, [path.join(TOOLS, 'sync-docs.sh')]);
-    if (!ok) { console.error('docs sync failed'); process.exit(1); }
-  }
+  /* ORDER MATTERS: the offline rebuild runs BEFORE the docs mirror.
+   * build_offline.js rewrites game/offline-manifest.json and game/sw-cache-list.json
+   * and explicitly writes nothing to docs/. Mirroring first therefore leaves docs/
+   * stale by exactly those two files, and the next validate_generated (which is what
+   * CI's `fast` job runs) fails with "2 differ, e.g. offline-manifest.json,
+   * sw-cache-list.json" — a red gate produced by the documented ritual itself.
+   * Rebuild in game/, then mirror game/ -> docs/. */
   if (doOffline) {
     console.log('\n=== Rebuild offline package ===');
     const ok = await runAsync('node', [path.join(TOOLS, 'build_offline.js')]);
@@ -76,6 +76,13 @@ function findBash() {
     console.log('\n=== Validate offline inventory ===');
     const vok = await runAsync('node', [path.join(TOOLS, 'validate_offline.js')]);
     if (!vok) { console.error('offline inventory validation failed'); process.exit(1); }
+  }
+  if (doDocs) {
+    console.log('\n=== Sync docs (game/ -> docs/) ===');
+    const bash = findBash();
+    const cmd = bash ? bash : 'bash';
+    const ok = await runAsync(cmd, [path.join(TOOLS, 'sync-docs.sh')]);
+    if (!ok) { console.error('docs sync failed'); process.exit(1); }
   }
 
   console.log('\ncheck_all complete: syntax + ' + (doDocs ? 'docs + ' : '') + (doOffline ? 'offline + inventory + ' : '') + 'smokes all green.');

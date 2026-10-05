@@ -55,7 +55,15 @@ const check = (name, ok, info) => {
  * so the invariant is pinned here instead — a diagnostic can only be    *
  * trustworthy if it cannot reach the loop-wide variable at all.        *
  * ------------------------------------------------------------------ */
-const src = fs.readFileSync(HEADLESS, 'utf8');
+/* Normalise to LF before any anchor search. `tools/headless.js` is CRLF in a
+   Windows/autocrlf checkout (and .gitattributes deliberately does NOT pin it),
+   so every '\n  }'-style anchor below silently missed, indexOf returned -1, and
+   the per-attempt declaration check reported a false failure with a misleading
+   "declared N chars into the loop" message — when in fact the declaration was
+   the first statement in the loop body and the code was correct. Same CRLF class
+   as the .gitattributes footgun: a gate must not depend on the worktree's line
+   endings. Normalising once here fixes every later anchor. */
+const src = fs.readFileSync(HEADLESS, 'utf8').replace(/\r\n/g, '\n');
 
 const loopStart = src.indexOf('for (let attempt = 0; attempt < BOOT_ATTEMPTS');
 check('the boot loop is present (source anchor found)', loopStart > 0, 'offset ' + loopStart);
