@@ -12,7 +12,7 @@ labelled SUPERSEDED there; it is never the queue to work from.
 
 ## Current position (2026-10-05)
 
-- **R0–R27 DONE.** R27b — reassess the original 9-game learning roadmap is next.
+- **R0–R27b DONE.** The roadmap queue is now complete. Tier A of the reassessment is next: extend `phonics` to the full alphabet, then 11–20 number recognition.
 - Authoritative task-by-task status and execution log: [`PROJECT_TASKS.md`](PROJECT_TASKS.md).
 - Progress tracker table (R0–R27): [`HANDOVER_PROMPT.md`](HANDOVER_PROMPT.md#progress-tracker-r0-r27).
 
@@ -25,6 +25,7 @@ labelled SUPERSEDED there; it is never the queue to work from.
 | `PROJECT_TASKS.md` | Task lifecycle and execution log (authoritative status). |
 | `ROADMAP_AUDIT.md` | Mapping of roadmap concepts to current implementation state. |
 | `README.md` | Product- and contributor-facing overview. |
+| [`LEARNING_ROADMAP_REVIEW.md`](LEARNING_ROADMAP_REVIEW.md) | **R27b** reassessment of the original 9-item learning roadmap: per-item verdicts, evidence, and the do-not-build list. |
 | `PLAYTESTING.md` | Manual portfolio-level playtest protocol (R20). |
 | `HANDOVER_PROMPT.md` | Current-state session handoff (history archived). |
 | `resources/General_reviews/` | Research, external reviews, design studies, historical plans. |
