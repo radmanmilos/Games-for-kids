@@ -6,20 +6,37 @@
 (function () {
   'use strict';
 
-  /* Correct 10-letter set: letter -> sound to speak, correct object, distractor.
-     Each object has Serbian name for aria-label (accessibility only). */
-  var LETTERS = [
-    { letter: 'М', sound: 'Ммм...', correct: { emoji: '🐭', name: 'Миш' }, distractor: { emoji: '🍎', name: 'Јабука' } },
-    { letter: 'А', sound: 'Ааа...', correct: { emoji: '🍎', name: 'Јабука' }, distractor: { emoji: '🐭', name: 'Миш' } },
-    { letter: 'С', sound: 'Ссс...', correct: { emoji: '🐍', name: 'Змија' }, distractor: { emoji: '🍌', name: 'Банана' } },
-    { letter: 'Т', sound: 'Ттт...', correct: { emoji: '🚗', name: 'Ауто' }, distractor: { emoji: '🐸', name: 'Жаба' } },
-    { letter: 'К', sound: 'Ккк...', correct: { emoji: '🐈', name: 'Мачка' }, distractor: { emoji: '🍓', name: 'Јагода' } },
-    { letter: 'Р', sound: 'Ррр...', correct: { emoji: '🐇', name: 'Зец' }, distractor: { emoji: '🍊', name: 'Наранџа' } },
-    { letter: 'Л', sound: 'Ллл...', correct: { emoji: '🦁', name: 'Лав' }, distractor: { emoji: '🥕', name: 'Шаргарепа' } },
-    { letter: 'О', sound: 'Ооо...', correct: { emoji: '🐙', name: 'Октопод' }, distractor: { emoji: '🍐', name: 'Крушка' } },
-    { letter: 'И', sound: 'Иии...', correct: { emoji: '🦉', name: 'Сова' }, distractor: { emoji: '🥔', name: 'Кромпир' } },
-    { letter: 'П', sound: 'Ппп...', correct: { emoji: '🐷', name: 'Прасе' }, distractor: { emoji: '🍇', name: 'Грожђе' } }
-  ];
+  /* DERIVED from SERBIAN.alphabet — the single source of truth that classroom
+     and tracing already read.
+
+     The R23 version hand-wrote its own 10-entry list here, and 6 of those
+     pointed at an item that did NOT start with its own letter (А→Јабука,
+     С→Змија, Т→Ауто, К→Мачка, Р→Зец, И→Сова) — the game taught a false
+     letter/sound association, and PROJECT_TASKS task 189 recorded the set as
+     "verified" when no check ever asserted it. A duplicated list cannot be
+     validated against the alphabet it claims to teach; deriving from it makes
+     every correct item the alphabet's own example word, which is correct-start
+     by construction, and phonics can never drift from classroom/tracing again.
+
+     `sound` is the entry's lowercase letter name, which shared/speech.js has
+     already registered to a real recorded Serbian MP3 (letterFiles — 30 of them,
+     and registerEach throws if the counts ever diverge). Pronunciation therefore
+     comes from the project's existing audio assets instead of an invented
+     "Ммм..." string that had no asset and fell through to speechSynthesis.
+
+     The distractor rotates +7 through the alphabet, so it is always a DIFFERENT
+     letter's word; since every word starts with its own distinct letter, a
+     distractor can never accidentally start with the letter being asked about.
+     Each object keeps its Serbian name for the aria-label (accessibility only). */
+  var LETTERS = window.SERBIAN.alphabet.map(function (a, i, all) {
+    var other = all[(i + 7) % all.length];
+    return {
+      letter: a.label,
+      sound: a.name,
+      correct: { emoji: a.emoji, name: a.word },
+      distractor: { emoji: other.emoji, name: other.word }
+    };
+  });
 
   var round = 0;
   var letterData = LETTERS[0];

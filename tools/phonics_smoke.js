@@ -66,16 +66,60 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
     check('after two mistakes the correct choice is hinted', hint === true);
   }
 
-  // correct advances
+  /* --- Alphabet data integrity (added 2026-10-05, task 196) ---
+     The R23 smoke asserted only `letter.length === 1 && sound.length > 0`, while
+     PROJECT_TASKS task 189 claimed the 10-letter set was "verified" for
+     correct-start. Nothing ever checked it, so 6 of 10 entries shipped pointing
+     at an item that did NOT start with its own letter (А→Јабука, С→Змија,
+     Т→Ауто, К→Мачка, Р→Зец, И→Сова) — a false letter/sound association in a
+     toddler learning game. These checks walk EVERY letter and are the guard the
+     original comment only claimed.
+
+     The letter count is read from SERBIAN.alphabet rather than hardcoded: this
+     file previously computed the next round as `(sc.round + 1) % 10`, which would
+     have started asserting the wrong thing the moment the set grew past ten. */
+  const ALPHABET_LEN = await h.evalv(`window.SERBIAN.alphabet.length`);
+  check('phonics covers every letter in the shared Serbian alphabet',
+    ALPHABET_LEN === 30, `alphabet length ${ALPHABET_LEN}`);
+
+  // Walk all rounds: the letter must be the alphabet's, the correct item must
+  // start with it, the distractor must not, and the spoken sound must be the
+  // alphabet entry's own name (which shared/speech.js registered to an MP3).
+  const drift = await h.evalv(`JSON.stringify((() => {
+    const A = window.SERBIAN.alphabet;
+    const bad = [];
+    const first = n => (n || '').charAt(0).toUpperCase();
+    for (let i = 0; i < A.length; i++) {
+      window.__phonics.goToRound(i);
+      const s = window.__phonics.state();
+      const btn = document.querySelector('.phonics-choice[data-correct="1"]');
+      const other = document.querySelector('.phonics-choice[data-correct="0"]');
+      const name = btn ? btn.getAttribute('aria-label') : '';
+      const otherName = other ? other.getAttribute('aria-label') : '';
+      if (s.letter !== A[i].label) bad.push(A[i].label + ': letter is ' + s.letter);
+      if (first(name) !== s.letter) bad.push(s.letter + ': correct item ' + name + ' starts ' + first(name));
+      if (first(otherName) === s.letter) bad.push(s.letter + ': distractor ' + otherName + ' collides');
+      if (s.sound !== A[i].name) bad.push(s.letter + ': sound ' + s.sound + ' != alphabet name ' + A[i].name);
+    }
+    return bad;
+  })())`);
+  const DRIFT = JSON.parse(drift);
+  check('every letter has a correct item starting with it, a non-colliding distractor, and the recorded sound',
+    DRIFT.length === 0, DRIFT.length ? DRIFT.join(' | ') : 'all ' + ALPHABET_LEN + ' letters consistent with SERBIAN.alphabet');
+
+  // back to round 0 for the interaction checks below
   await h.evalv(`window.__phonics.goToRound(0)`);
   await sleep(50);
+
+  // correct advances
   const sc = await st();
   const correct = sc.choices.find(c => c.correct);
   if (correct) {
     await h.evalv(`document.querySelector('.phonics-choice[data-key="${correct.key}"]').click()`);
     let advanced = false;
     for (let i = 0; i < 30 && !advanced; i++) {
-      advanced = (await st()).round === (sc.round + 1) % 10; // rounds cycle through 10
+      // cycle length comes from the alphabet, not a literal
+      advanced = (await st()).round === (sc.round + 1) % ALPHABET_LEN;
       if (!advanced) await sleep(100);
     }
     check('a correct answer advances to the next round', advanced === true);

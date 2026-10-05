@@ -21,7 +21,7 @@ The original roadmap was written before the R21–R27 pilots existed. Seven new 
 | 1 | Бројеви 1–20 (Numbers) | **Partial — finish it** | data + game both hard-stop at 10 |
 | 2 | Боје (Colors) | **Do not build** | already covered; §41 pre-empts it |
 | 3 | Време (Time) | **Partial — worth doing** | zero vocabulary exists |
-| 4 | Абецеда (Alphabet) | **Largely done — extend, don't build** | 30 letters + 10 with sounds |
+| 4 | Абецеда (Alphabet) | **Done (task 196)** | 30 letters; audit found 6/10 wrong, now derived |
 | 5 | Речи (Words) | **Defer** | §41 warns against the proposed shape |
 | 6 | Seasons | **Partial — worth doing** | zero vocabulary exists |
 | 7 | Математика (Math) | **Partial — defer equations** | quantities done by R21 |
@@ -67,12 +67,13 @@ Nothing exists. A case-insensitive search of `game/data/serbian.js` for `jutro|v
 
 §41 says start with `jutro / dan / veče / noć`, explicitly **before clock faces**. Cheap: four Serbian strings plus one small scene game.
 
-## 4. Абецеда — largely done; extend, don't build
+## 4. Абецеда — done (task 196)
 
-- `SERBIAN.alphabet` — **all 30 Cyrillic letters**, each `{label, name, word, emoji}`, presented in Classroom.
-- R23 `phonics` — **10 letters** with autoplay sound, big Cyrillic letter, 2 choices, and *validated correct-start* items (`phonics.js:12-21`: М/миш, А/јабука, С/змија, Т/ауто, К/мачка, Р/зец, Л/лав, О/октопод, И/сова, П/прасе).
+- `SERBIAN.alphabet` — **all 30 Cyrillic letters**, each `{label, name, word, emoji}`, presented in Classroom and traced in `tracing.js`.
+- R23 `phonics` originally covered **10** letters with a hand-written list — and the audit for task 196 found **6 of those 10 were wrong** (`А→Јабука` starts with Ј, `С→Змија` with З, and so on). `phonics_smoke.js` never asserted correct-start, so the defect survived from R23 unchallenged.
+- **Fixed by deriving instead of duplicating:** `phonics.js` now maps over `SERBIAN.alphabet`, giving all 30 letters, correct items that start with their letter by construction, and pronunciations taken from the 30 letter MP3s `speech.js` already registers. `phonics_smoke.js` walks all 30 rounds and asserts letter alignment, correct-start, distractor non-collision and the recorded sound.
 
-So recognition covers all 30 and letter-sound covers 10. The gap is 20 letters of sound work — and that is **data in an existing list**, not a new app, hub entry, page, or smoke. Highest value per line changed in the whole review.
+**Status: complete.** No standalone alphabet game is warranted.
 
 ## 5. Речи — defer
 
@@ -108,7 +109,7 @@ Growth is already modelled correctly as a sequence; extending it is data, not ar
 
 **Tier A — do next (small, evidence-backed, closes an existing gap)**
 
-1. **Extend `phonics` to the full alphabet** (item 4). Data only; no new app.
+1. ~~**Extend `phonics` to the full alphabet** (item 4). Data only; no new app.~~ **DONE 2026-10-05 (task 196)** — `LETTERS` is now derived from `SERBIAN.alphabet`, so all **30** letters are covered and every correct item is the alphabet's own example word. The audit that preceded it found that **6 of the original 10 entries taught a false association** (`А→Јабука`, `С→Змија`, `Т→Ауто`, `К→Мачка`, `Р→Зец`, `И→Сова`), because the list was hand-written and no check asserted correct-start. Pronunciation now uses the letter recordings `speech.js` already registers for all 30 letters.
 2. **Numbers 11–20 recognition** (item 1): add to `SERBIAN.numbers`, de-hardcode `classroom_smoke.js:62` *first*, then let Classroom show them. Leave `animal_counting`'s 10-cap alone until 11–20 recognition is established.
 
 **Tier B — reasonable next (needs new content)**
