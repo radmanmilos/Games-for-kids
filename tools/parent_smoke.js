@@ -8,6 +8,117 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const h = await start({ page: '/pages/parent.html', tag: 'parent-smoke', width: 1100, height: 800 });
   await sleep(1200);
 
+  /* --- Parent gate (task 201, user-requested) --------------------------------
+     The gate exists so a small child cannot reach «Преузми за офлајн рад» or
+     «Обриши локални напредак». The pre-gate checks below all use .click(),
+     which bypasses hit-testing entirely, so they pass whether or not the gate
+     works — these checks assert the real, reachable state instead. */
+  const gateStart = JSON.parse(await h.evalv(`JSON.stringify({
+    gateVisible: !document.getElementById('parentGate').hidden,
+    actionsHidden: document.getElementById('parentActions').hidden,
+    question: document.getElementById('gateQuestion').textContent,
+    choices: document.querySelectorAll('.gate-choice').length,
+    // Reachability, not presence: an element inside a hidden ancestor has no
+    // box, so it cannot be tapped however present it looks in the DOM.
+    actionsHit: (() => {
+      const el = document.getElementById('reset-progress');
+      if (!el || el.offsetParent === null) return false;
+      const r = el.getBoundingClientRect();
+      const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return hit === el || el.contains(hit);
+    })(),
+  })`));
+  check('gate: the parenting actions are NOT reachable before the question is answered',
+    gateStart.actionsHidden === true && gateStart.actionsHit === false, JSON.stringify(gateStart));
+  check('gate: shown first, with a multiplication question and 4 answers',
+    gateStart.gateVisible === true && /^\d+\s*×\s*\d+\s*=\s*\?$/.test(gateStart.question.trim()) && gateStart.choices === 4,
+    JSON.stringify(gateStart));
+  check('gate: it is multiplication, not addition (a child who knows +/- must not pass)',
+    gateStart.question.includes('×') && !gateStart.question.includes('+') && !gateStart.question.includes('-'),
+    gateStart.question);
+
+  // A wrong answer must not unlock anything.
+  const wrongBtn = await h.evalv(`(()=>{const a=window.__parentGate.answer();
+    const b=[...document.querySelectorAll('.gate-choice')].find(x=>Number(x.dataset.value)!==a);
+    return b?b.dataset.value:null;})()`);
+  await h.tap(`.gate-choice[data-value="${wrongBtn}"]`);
+  await sleep(120);
+  const afterWrong = JSON.parse(await h.evalv(`JSON.stringify({
+    actionsHidden: document.getElementById('parentActions').hidden,
+    note: document.getElementById('gateNote').textContent
+  })`));
+  check('gate: a wrong answer does NOT unlock the actions',
+    afterWrong.actionsHidden === true && afterWrong.note.length > 0, JSON.stringify(afterWrong));
+
+  // The correct answer unlocks them.
+  const rightVal = await h.evalv(`String(window.__parentGate.answer())`);
+  await h.tap(`.gate-choice[data-value="${rightVal}"]`);
+  await sleep(150);
+  const afterRight = JSON.parse(await h.evalv(`JSON.stringify({
+    actionsHidden: document.getElementById('parentActions').hidden,
+    gateHidden: document.getElementById('parentGate').hidden,
+    resetHit: (() => {
+      const el = document.getElementById('reset-progress');
+      const r = el.getBoundingClientRect();
+      const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return hit === el || el.contains(hit);
+    })()
+  })`));
+  check('gate: the correct answer reveals the actions and they become tappable',
+    afterRight.actionsHidden === false && afterRight.gateHidden === true && afterRight.resetHit === true,
+    JSON.stringify(afterRight));
+
+  // The answer must not be learnable from its position.
+  const positions = JSON.parse(await h.evalv(`JSON.stringify((()=>{
+    const out=[]; for(let i=0;i<12;i++){ window.__parentGate.open();
+      const a=window.__parentGate.answer();
+      const b=[...document.querySelectorAll('.gate-choice')].findIndex(x=>Number(x.dataset.value)===a);
+      out.push(b); } return out; })())`));
+  check('gate: the correct answer moves between positions (cannot be learned by position)',
+    new Set(positions).size > 1 && positions.filter(p => p === 0).length < 12, JSON.stringify(positions));
+
+  // Put it back into the solved state for the pre-existing checks below.
+  const solveAgain = await h.evalv(`String(window.__parentGate.answer())`);
+  await h.tap(`.gate-choice[data-value="${solveAgain}"]`);
+  await sleep(120);
+
+  /* --- small viewport (user-reported: "does not show all") -------------------
+     This page used to be `overflow:hidden` with a centred flex child, so on a
+     short screen the bottom of the card was unreachable — and because #app could
+     not scroll, there was no way to reveal it. A second session at phone size is
+     the only honest way to check that: at desktop size everything fits and the
+     bug is invisible. Asserts both halves of the fix: the card's TOP is not
+     clipped (the centred-flex overflow trap) and the last action is reachable
+     after scrolling. */
+  const small = await start({ page: '/pages/parent.html', tag: 'parent-smallvp', width: 390, height: 480 });
+  await sleep(1000);
+  const sSolve = await small.evalv(`String(window.__parentGate.answer())`);
+  await small.tap(`.gate-choice[data-value="${sSolve}"]`);
+  await sleep(200);
+  const smallBefore = JSON.parse(await small.evalv(`JSON.stringify((() => {
+    const app = document.getElementById('app');
+    return {
+      scrollable: app.scrollHeight > app.clientHeight + 1,
+      overflowY: getComputedStyle(app).overflowY,
+      cardTop: Math.round(document.querySelector('.parent-card').getBoundingClientRect().top)
+    };
+  })())`));
+  check('small viewport: the parent page can scroll (it used to be overflow:hidden)',
+    smallBefore.overflowY === 'auto' || smallBefore.overflowY === 'scroll', JSON.stringify(smallBefore));
+  check('small viewport: the top of the card is not clipped off-screen',
+    smallBefore.cardTop >= 0, JSON.stringify(smallBefore));
+  await small.evalv(`document.getElementById('app').scrollTop = 99999`);
+  await sleep(200);
+  const smallAfter = JSON.parse(await small.evalv(`JSON.stringify((() => {
+    const el = document.getElementById('audio-test');
+    const r = el.getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    return { reachable: hit === el || el.contains(hit), bottom: Math.round(r.bottom), vh: innerHeight };
+  })())`));
+  check('small viewport: the last parent action is reachable after scrolling',
+    smallAfter.reachable === true && smallAfter.bottom <= smallAfter.vh + 1, JSON.stringify(smallAfter));
+  await small.close();
+
   // R12 parent surface: offline download, update check, reset progress, audio test,
   // plus the facts the roadmap requires — version and offline status.
   const surface = JSON.parse(await h.evalv(`JSON.stringify({

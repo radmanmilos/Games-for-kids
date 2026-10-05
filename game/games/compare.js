@@ -55,10 +55,20 @@
     [groupA, groupB].forEach(function (g) {
       g.classList.remove('cmp-wrong', 'cmp-hint', 'cmp-correct');
       g.dataset.correct = '0';
+      // Blur as well as unmark. `.cmp-group` is a <button>, and
+      // shared/accessibility.css:10 paints a 4px #FFD23F (yellow) outline on
+      // :focus. Removing the cmp-* classes does not remove that ring, so after a
+      // tap the outline survived newRound and stayed wrapped around the refilled
+      // group — a stale yellow rectangle pointing at the previous answer while
+      // new objects were already on screen. Keyboard focus visibility is
+      // untouched: this only drops focus at the moment the content is replaced,
+      // where retaining focus on a stale target is wrong anyway.
+      if (document.activeElement === g) g.blur();
     });
     answerButtons.forEach(function (b) {
       b.classList.remove('cmp-wrong', 'cmp-hint', 'cmp-correct');
       b.dataset.correct = '0';
+      if (document.activeElement === b) b.blur();
     });
     if (feedback) feedback.textContent = '';
   }

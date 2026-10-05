@@ -132,6 +132,30 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   const groupInert = await h.evalv(`(() => { const g = document.getElementById('cmp-group-a'); return g.classList.contains('cmp-correct') || g.classList.contains('cmp-wrong'); })()`);
   check('group taps are inert in "same" mode', groupInert === false, String(groupInert));
 
+  // ---- stale focus ring (user-reported) --------------------------------------
+  /* A tap leaves focus on the `.cmp-group` button, and
+     shared/accessibility.css:10 paints a 4px #FFD23F (yellow) outline on
+     :focus. clearMarks() removed the cmp-* classes but not the focus, so the
+     yellow rectangle survived newRound and stayed wrapped around a group that
+     had already been refilled with new objects — which read as "that one is
+     still selected". Reproduce by answering correctly (focus lands on the
+     tapped group) and then asserting no group still holds focus once the round
+     has advanced. */
+  await h.evalv(`window.__compare && window.__compare.goToRound(0)`);
+  await sleep(60);
+  const focusBefore = await h.evalv(`(()=>{const g=document.querySelector('.cmp-group[data-correct="1"]')||document.querySelector('.cmp-group');g.focus();return document.activeElement===g;})()`);
+  check('a group can hold focus before the round advances', focusBefore === true);
+  await h.evalv(`window.__compare.goToRound(1)`);
+  await sleep(120);
+  const lingering = await h.evalv(`JSON.stringify({
+    activeTag: document.activeElement ? document.activeElement.tagName : null,
+    activeIsGroup: !!(document.activeElement && document.activeElement.classList.contains('cmp-group')),
+    outlined: document.activeElement ? (getComputedStyle(document.activeElement).outlineStyle !== 'none' && getComputedStyle(document.activeElement).outlineWidth !== '0px') : false
+  })`);
+  const L = JSON.parse(lingering);
+  check('no stale yellow focus ring survives a round change (new objects, old outline)',
+    L.activeIsGroup === false && L.outlined === false, lingering);
+
   // ---- static wiring ---------------------------------------------------------
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');

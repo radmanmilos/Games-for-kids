@@ -632,8 +632,8 @@
     "size": 17594
   },
   "games/compare.js": {
-    "sha256": "e18587e759af2a05e1f2b73e7ab5607e7a0fdd769e9d685d1e2d931e6a1cee3d",
-    "size": 5935
+    "sha256": "4183533077ef7c8df791231e3eeaddde4e847d3cd1384dc04b7e736e4a27910a",
+    "size": 6645
   },
   "games/dino.js": {
     "sha256": "dadb80a73e6ef42642a9ca2de2f048856974ded36edd7f551d911bdc8bf00d22",
@@ -756,8 +756,8 @@
     "size": 8200
   },
   "pages/matching_game.html": {
-    "sha256": "06c448b33b67026037f6512fc06dc9282b19877aa19956ed829cc97d269d1276",
-    "size": 13817
+    "sha256": "df33bcbf7540a9774c4bd163406ff3ed0f0d7ef39a6aac613bef1e4d0a2c9ce9",
+    "size": 14137
   },
   "pages/maze.html": {
     "sha256": "209e3ee18cf27622015f07238c268e808fa96534341a1e54dcb1d9ad65deb8ad",
@@ -768,8 +768,8 @@
     "size": 2938
   },
   "pages/parent.html": {
-    "sha256": "1206886303df8d7cbdc7fc7fa4225a0beafd2ef4f4931b9fa0678c4a19e5634b",
-    "size": 18125
+    "sha256": "64f3c8267f9d763794b38a499c6faabd1c551c931a1bf9c7eca66f51bf6cf2fe",
+    "size": 24866
   },
   "pages/phonics.html": {
     "sha256": "70520834b2e439bfdcb46006afc61606003ee77aadef1ab9e4feecc3a6adca0a",

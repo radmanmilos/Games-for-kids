@@ -12,8 +12,26 @@
   <link rel="stylesheet" href="../shared/accessibility.css">
   <style>
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;}
-    html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:var(--cream);font-family:'Fredoka',sans-serif;}
-    #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4vmin;}
+    html,body{margin:0;padding:0;width:100%;height:100%;background:var(--cream);font-family:'Fredoka',sans-serif;}
+    /* The parent card is taller than a short phone or a landscape tablet, and
+       this page used to be `overflow:hidden` with a centred flex child — so on a
+       small screen the bottom of the card (the buttons, the status line) was
+       simply unreachable with no scrollbar to reveal it. #app now scrolls, and
+       the card uses `margin:auto` rather than `justify-content:center`, because
+       a centred flex child that overflows gets its TOP clipped and stays
+       unreachable even in a scroll container. */
+    #app{position:fixed;inset:0;display:flex;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:4vmin;}
+    .parent-card{margin:auto;}
+    /* Short viewports: tighten the card so the gate and the actions both fit
+       without the parent having to scroll for the common case. */
+    @media (max-height:620px){
+      .parent-card{padding:3.5vmin;}
+      .parent-btn{margin:1.3vmin 0;padding:2.2vmin 3vmin;}
+      .parent-meta{margin:0 0 1.6vmin;}
+      .gate-q{margin:0.6vmin 0 2vmin;}
+      .gate-choices{gap:1.8vmin;}
+      .gate-choice{min-height:11vmin;padding:2.4vmin 1.6vmin;}
+    }
     .parent-card{background:white;border-radius:var(--radius-lg);padding:6vmin;max-width:600px;width:100%;box-shadow:0 8px 0 rgba(0,0,0,.15);}
     .parent-card h1{color:var(--plum);font-size:clamp(20px,4vmin,36px);margin:0 0 4vmin;text-align:center;}
     .parent-btn{display:flex;align-items:center;gap:3vmin;width:100%;padding:3vmin 4vmin;margin:2vmin 0;border:3px solid var(--plum);border-radius:var(--radius-md);background:white;color:var(--plum);font:600 clamp(14px,2.5vmin,20px) 'Fredoka',sans-serif;cursor:pointer;text-align:left;}
@@ -43,7 +61,31 @@
     .progress-row{display:flex;gap:2vmin;margin-top:1.5vmin;line-height:1.5;}
     .progress-label{flex:0 0 auto;opacity:.75;}
     .progress-value{flex:1;word-break:break-word;}
-    .back-btn{position:absolute;top:4vmin;left:4vmin;width:12vmin;height:12vmin;border-radius:50%;border:none;background:var(--plum);color:white;font-size:6vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);cursor:pointer;}
+    /* fixed, not absolute: #app is now a scroll container, so an absolutely
+       positioned back button would scroll away out of reach. */
+    .back-btn{position:fixed;top:4vmin;left:4vmin;width:12vmin;height:12vmin;border-radius:50%;border:none;background:var(--plum);color:white;font-size:6vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);cursor:pointer;z-index:5;}
+
+    /* --- Parent gate (task 201) -------------------------------------------
+       A toddler can reach «За родитеље» and tap «Обриши локални напредак»
+       or «Преузми за офлајн рад». The gate is deliberately a MULTIPLICATION
+       question: the user asked for it on the grounds that a child who already
+       knows addition and subtraction could otherwise walk straight through a
+       sum, while multiplication tables are not something that age has. It is a
+       speed bump for a small child, never a lock — there is no timeout, no
+       penalty, no attempt limit, and a wrong answer just re-asks. */
+    .gate{text-align:center;}
+    .gate-q{font:800 clamp(22px,5vmin,40px) 'Fredoka',sans-serif;color:var(--plum);margin:1vmin 0 3vmin;}
+    .gate-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:2.5vmin;}
+    .gate-choice{padding:3.2vmin 2vmin;border:3px solid var(--plum);border-radius:var(--radius-md);background:white;color:var(--plum);font:800 clamp(18px,3.4vmin,28px) 'Fredoka',sans-serif;cursor:pointer;min-height:13vmin;}
+    .gate-choice:active{transform:scale(.97);}
+    .gate-choice.right{background:var(--green,#67C971);color:white;border-color:var(--green,#67C971);}
+    .gate-choice.wrong{animation:gate-shake .35s ease;border-color:#E2574C;}
+    @keyframes gate-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-1.2vmin)}75%{transform:translateX(1.2vmin)}}
+    .gate-note{margin-top:2.5vmin;font:600 clamp(12px,2.2vmin,16px) 'Fredoka',sans-serif;color:#E2574C;min-height:1.4em;}
+    /* The gate and the actions are mutually exclusive: the actions are removed
+       from the DOM flow, not merely disabled, so there is nothing for a stray
+       tap or a screen reader to reach before the question is answered. */
+    #parentActions[hidden],#parentGate[hidden]{display:none;}
   </style>
 </head>
 <body>
@@ -61,7 +103,14 @@
         <div class="progress-row"><span class="progress-label">Шта је коришћено:</span><span class="progress-value" id="progress-used">још ништа</span></div>
         <div class="progress-row"><span class="progress-label">Шта је вежбано:</span><span class="progress-value" id="progress-practiced">још ништа</span></div>
       </div>
-      <button class="parent-btn primary" id="download-offline">📥 Преузми за офлајн рад</button>
+      <div class="gate" id="parentGate">
+        <div class="gate-q" id="gateQuestion">…</div>
+        <div class="gate-choices" id="gateChoices"></div>
+        <div class="gate-note" id="gateNote" aria-live="polite"></div>
+      </div>
+
+      <div id="parentActions" hidden>
+        <button class="parent-btn primary" id="download-offline">📥 Преузми за офлајн рад</button>
       <button class="parent-btn" id="check-updates">🔄 Провери ажурирања</button>
       <button class="parent-btn" id="reset-progress">🗑 Обриши локални напредак</button>
       <button class="parent-btn" id="audio-test">🔊 Тест звука</button>
@@ -75,6 +124,7 @@
         <summary>Технички детаљи</summary>
         <div class="diag-body" id="diag-body">…</div>
       </details>
+      </div><!-- /#parentActions -->
     </div>
   </div>
   <script src="../data/serbian.js"></script>
@@ -87,6 +137,78 @@
   <script src="../shared/main.js"></script>
   <script>
     (function() {
+      /* --- Parent gate -----------------------------------------------------
+         A one-question speed bump in front of the parenting actions, at the
+         user's request. Deliberately MULTIPLICATION: the reasoning given was that
+         a child who already knows addition and subtraction could walk straight
+         through a sum, and multiplication tables are not something that age has.
+         The correct answer's position is randomised on every page load so it
+         cannot be learned, and it is NOT a lock: no timer, no attempt limit, no
+         penalty — a wrong answer shakes and re-asks.
+
+         Deliberately silent: no speech is triggered, because new Serbian words
+         cannot be recorded in this repo (see PROJECT_TASKS task 198), and the
+         gate must not depend on an asset that does not exist. */
+      const GATE = [
+        { a: 6, b: 7 }, { a: 7, b: 8 }, { a: 8, b: 9 },
+        { a: 9, b: 7 }, { a: 7, b: 9 }, { a: 9, b: 6 },
+      ];
+      const gateEl = document.getElementById('parentGate');
+      const gateQ = document.getElementById('gateQuestion');
+      const gateChoices = document.getElementById('gateChoices');
+      const gateNote = document.getElementById('gateNote');
+      const actionsEl = document.getElementById('parentActions');
+
+      function newGateQuestion() {
+        const pick = GATE[Math.floor(Math.random() * GATE.length)];
+        const answer = pick.a * pick.b;
+        gateQ.textContent = pick.a + ' × ' + pick.b + ' = ?';
+        gateNote.textContent = '';
+        gateChoices.textContent = '';
+        // Plausible near-misses (adjacent tables / digit transposes) rather than
+        // obviously-wrong numbers, so the question is not guessable by shape.
+        const wrong = [answer + pick.a, answer - pick.b, answer + 10];
+        const opts = wrong.concat([answer]);
+        for (let i = opts.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const t = opts[i]; opts[i] = opts[j]; opts[j] = t;
+        }
+        opts.forEach(function (value) {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'gate-choice';
+          b.textContent = String(value);
+          b.dataset.value = String(value);
+          b.addEventListener('click', function () {
+            if (value === answer) {
+              b.classList.add('right');
+              gateNote.textContent = '';
+              // Reveal the actions only after a correct answer. `hidden` (not a
+              // disabled button) so nothing is focusable or tappable before then.
+              gateEl.hidden = true;
+              actionsEl.hidden = false;
+            } else {
+              b.classList.remove('wrong');
+              void b.offsetWidth;
+              b.classList.add('wrong');
+              gateNote.textContent = 'Покушај поново';
+            }
+          });
+          gateChoices.appendChild(b);
+        });
+      }
+
+      if (gateEl && gateQ && gateChoices && actionsEl) newGateQuestion();
+      // Test hook: the smoke needs to answer correctly without guessing.
+      window.__parentGate = {
+        answer: function () {
+          const q = gateQ.textContent.split(' ');
+          return parseInt(q[0], 10) * parseInt(q[2], 10);
+        },
+        solved: function () { return !actionsEl.hidden; },
+        open: newGateQuestion,
+      };
+
       const status = document.getElementById('parent-status');
       const downloadBtn = document.getElementById('download-offline');
       const checkBtn = document.getElementById('check-updates');
