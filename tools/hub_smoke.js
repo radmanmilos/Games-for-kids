@@ -85,8 +85,13 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
   check('learning tile shows 4 emoji cells (2x2)', L.learnEmojis === '🏫,📝,🎹,🎨', landing);
 
   await h.evalv(`document.querySelector('.hub-tile.tile-games').click()`);
+  // The expected count is derived from the registry, never a literal. This wait
+  // hardcoded 10, which happened to be correct only by coincidence (9 live games
+  // routes + 1 retired). Adding one more games-category game — exactly what R21
+  // did for the LEARNING count at line 27 — would have made this readiness wait
+  // never satisfy and turned a correct hub into a red smoke.
   const gamesReady = await waitForActive('hub-games', 60,
-    `(() => { const a = document.querySelector('.screen.active'); return !!a && a.id === 'hub-games' && a.querySelectorAll('.hub-grid [data-go]').length === 10; })()`);
+    `(() => { const a = document.querySelector('.screen.active'); return !!a && a.id === 'hub-games' && a.querySelectorAll('.hub-grid [data-go]').length === ${GAMES_EXPECTED.length}; })()`);
   const games = await h.evalv(`JSON.stringify((() => {
     const act = document.querySelector('.screen.active');
     return {

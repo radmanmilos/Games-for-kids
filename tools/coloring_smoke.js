@@ -34,7 +34,13 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
     nextVisible: !!document.getElementById('coloring-next')
   })`);
   const U = JSON.parse(ui);
-  check('palette renders 11 swatches', U.palette === 11, String(U.palette));
+  // Derived, not a literal. coloring.js:27 builds the palette from
+  // SERBIAN.colors, so pinning 11 froze today's vocabulary size: adding a colour
+  // would have made this red for a change it was never meant to police. Same
+  // lesson as classroom_smoke's number tiles and hub_smoke's games count.
+  const PALETTE_LEN = await h.evalv(`window.SERBIAN.colors.length`);
+  check('palette renders every shared colour as a swatch', U.palette === PALETTE_LEN,
+    `rendered ${U.palette}, SERBIAN.colors has ${PALETTE_LEN}`);
   check('play SVG and ref SVG have the same region count', U.regions > 0 && U.regions === U.refRegions, ui);
   check('scene name is shown (Cyrillic animal name)', U.name.length > 0 && /[А-ЩЪЫЬЭЮЯЂЈЉЊЋЏ]/.test(U.name), U.name);
   check('progress text shows "Животиња N од 12"', U.progress.startsWith('Животиња ') && U.progress.endsWith(' од 12'), U.progress);

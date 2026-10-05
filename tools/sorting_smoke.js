@@ -137,6 +137,31 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   check('round 1 rotates to the second category (animals / food)',
     s1.category === 'kind' && s1.bins.length === 2 && JSON.parse(d1).bins.length === 2, JSON.stringify(s1));
 
+  // ---- touch draggability -----------------------------------------------------
+  /* The drag is implemented with pointer events, and a mouse-driven harness can
+     never reproduce a finger. On a touchscreen, a draggable element that does not
+     declare `touch-action:none` lets the browser claim the gesture for panning or
+     zooming, which fires `pointercancel` and kills the drag part way — so the item
+     silently refuses to move for the child while every mouse smoke stays green.
+     Asserting the COMPUTED style is the only way to pin this without a
+     touch-emulating runner.
+
+     Measured before the fix: `.sort-item` computed `manipulation` (inherited from
+     the page's `html,body` rule) and `.seq-card` computed `auto`. Both are
+     non-`none` and both break a finger drag; after the fix both compute `none`. */
+  const dragStyle = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const el = document.querySelector('.sort-item');
+    if (!el) return { found: false };
+    const cs = getComputedStyle(el);
+    return { found: true, touchAction: cs.touchAction, userSelect: cs.userSelect || cs.webkitUserSelect };
+  })())`));
+  check('sortable items declare touch-action:none so a finger drag is not cancelled by the browser',
+    dragStyle.found === true && dragStyle.touchAction === 'none',
+    `computed touch-action = ${dragStyle.touchAction} (must be 'none')`);
+  check('sortable items are not text-selectable during a drag',
+    dragStyle.userSelect === 'none' || dragStyle.userSelect === undefined || dragStyle.userSelect === '',
+    `computed user-select = ${dragStyle.userSelect}`);
+
   // ---- static wiring ---------------------------------------------------------
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');

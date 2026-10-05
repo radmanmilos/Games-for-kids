@@ -40,6 +40,21 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   for(let i=0;i<3;i++)await drag(i,i);
   let wrapped=false; for(let i=0;i<30&&!wrapped;i++){wrapped=(await st()).round===0&&(await st()).placed===0;if(!wrapped)await sleep(100);}
   check('the next completed three-card sequence also celebrates',wrapped&&await h.evalv(`window.__seqCelebrations===2`),JSON.stringify(await st()));
+  // Touch draggability. The drag uses pointer events and a mouse-driven harness
+  // cannot reproduce a finger: at the default `touch-action:auto` the browser
+  // claims the gesture for panning and fires `pointercancel`, so the card stops
+  // following the child's thumb while mouse smokes stay green. Pin the computed
+  // style instead. Same bug class as the sorting drag fixed in task 200.
+  const dragStyle = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const el = document.querySelector('.seq-card');
+    if (!el) return { found: false };
+    const cs = getComputedStyle(el);
+    return { found: true, touchAction: cs.touchAction };
+  })())`));
+  check('sequence cards declare touch-action:none so a finger drag is not cancelled by the browser',
+    dragStyle.found === true && dragStyle.touchAction === 'none',
+    `computed touch-action = ${dragStyle.touchAction} (must be 'none')`);
+
   const root=path.join(__dirname,'..'); const idx=fs.readFileSync(path.join(root,'game','index.html'),'utf8');
   check('hub wired', idx.includes('data-go="game-sequencing"'));
   checkRouteWired('sequencing','game-sequencing','pages/sequencing.html',{back:'seq-back',start:'startSequencing',check});
