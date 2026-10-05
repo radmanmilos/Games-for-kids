@@ -41,6 +41,25 @@ const BASE = 'http://127.0.0.1';
 /* R7: the parent page is the only place that triggers caching, so its URL comes
  * from the registry's own `role: parent` classification rather than a literal. */
 const PARENT_URL = (parents()[0] || {}).url;
+
+/* The caregiver page sits behind a multiplication question gate (task 201), so its
+   controls are not in the layout until the gate is answered. This helper answers
+   it the way a parent would — by reading the question off the page — rather than
+   deleting the gate or forcing the button visible, so the offline gate still
+   proves the controls are genuinely reachable once the page is unlocked. Needed
+   at BOTH parent visits: the page is navigated to twice (once online to prime the
+   cache, once offline to prove the controls survive), and the gate is per-load. */
+async function unlockParentGate(h, label) {
+  const shown = await h.waitFor(`!!window.__parentGate && document.querySelectorAll('.gate-choice').length > 0`,
+    { label: `${label}: the parent gate question to appear`, timeout: 10000 });
+  if (!shown.ok) return { ok: false, why: shown.why };
+  const answer = await h.evalv(`String(window.__parentGate.answer())`);
+  const tap = await h.tap(`.gate-choice[data-value="${answer}"]`);
+  if (!tap.ok) return { ok: false, why: tap.why };
+  const unlocked = await h.waitFor(`window.__parentGate.solved()`,
+    { label: `${label}: the gate to reveal the parent controls`, timeout: 5000 });
+  return { ok: unlocked.ok, why: unlocked.why };
+}
 if (!PARENT_URL) {
   check('the registry declares exactly one parent surface', false, 'no entry has category "parent"');
   process.exit(1);
@@ -438,7 +457,7 @@ const APPS = [
   },
   {
     id: 'sequencing', back: '#seq-back',
-    ready: `!!window.__sequencing && document.querySelectorAll('.seq-slot').length===3 && document.querySelectorAll('.seq-card').length===3`,
+    ready: `!!window.__sequencing && document.querySelectorAll('.seq-slot').length>0 && document.querySelectorAll('.seq-slot').length===document.querySelectorAll('.seq-card').length`,
     act: async h => {
       const card = await h.boxOf('#seq-tray .seq-card[data-order="0"]');
       const slot = await h.boxOf('#seq-slots .seq-slot[data-idx="0"]');
@@ -546,6 +565,8 @@ const swReady = await h.waitFor(`!!navigator.serviceWorker.controller`,
     { label: 'a service worker to control the page', timeout: 30000 });
   check('P1 service worker takes control', swReady.ok, swReady.why || 'controller present');
 
+  const gate1 = await unlockParentGate(h, 'P1 online');
+  check('P1 the parent gate can be answered', gate1.ok, gate1.why || 'answered');
   const primed = await h.tap('#download-offline');
   check('P1 «Преузми за офлајн» control is reachable by a child', primed.ok, primed.why || 'tapped');
   const done = await h.waitFor(`!!window.__r6cache || !!window.__r6err`,
@@ -702,6 +723,12 @@ await h.c.send('Network.enable');
     const ver = await h.waitFor(`document.getElementById('version-info')?.textContent.trim().length>0`,
       { timeout: 15000, label: 'the version to resolve from cache' });
     check('P4 parent reads the app version from the offline cache', ver.ok, ver.why || 'version resolved');
+    /* This is a SECOND navigation to the parent page, so the gate is fresh again —
+       the controls are gated per page load, not remembered. Missing this one is
+       exactly how «Провери ажурирања» came back reported as "element has zero
+       size" even though the first visit's gate had already been answered. */
+    const gate2 = await unlockParentGate(h, 'P4 offline');
+    check('P4 the parent gate can still be answered offline', gate2.ok, gate2.why || 'answered');
     const ctl = await h.tap('#check-updates');
     check('P4 «Провери ажурирања» control is reachable by a parent offline', ctl.ok, ctl.why || 'tapped');
     const rep = await h.waitFor(`(function(){

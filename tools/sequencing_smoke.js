@@ -37,9 +37,18 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   let nextRound=false; for(let i=0;i<30&&!nextRound;i++){nextRound=(await st()).round===1;if(!nextRound)await sleep(100);}
   check('three correct drops complete the round and celebrate',nextRound&&await h.evalv(`window.__seqCelebrations===1`),JSON.stringify(await st()));
 
+  const roundBefore = (await st()).round;
   for(let i=0;i<3;i++)await drag(i,i);
-  let wrapped=false; for(let i=0;i<30&&!wrapped;i++){wrapped=(await st()).round===0&&(await st()).placed===0;if(!wrapped)await sleep(100);}
-  check('the next completed three-card sequence also celebrates',wrapped&&await h.evalv(`window.__seqCelebrations===2`),JSON.stringify(await st()));
+  /* The invariant is "completing a sequence advances to a DIFFERENT round and
+     resets the placed count" — NOT "the round wraps back to 0". This check
+     previously waited for `round===0`, which was only ever true because there
+     used to be exactly two sequences; adding a third and fourth made the second
+     completion advance to round 2 instead, so the check failed while the game
+     was behaving perfectly. Same stale-literal trap as the old `===3` pin. */
+  let advanced=false; for(let i=0;i<30&&!advanced;i++){const s=await st();advanced=s.placed===0&&s.round!==roundBefore;if(!advanced)await sleep(100);}
+  const celebrationsNow = await h.evalv(`window.__seqCelebrations`);
+  check('the next completed three-card sequence also celebrates', advanced && celebrationsNow === 2,
+    JSON.stringify(await st())+` celebrations=${celebrationsNow}`);
   // Touch draggability. The drag uses pointer events and a mouse-driven harness
   // cannot reproduce a finger: at the default `touch-action:auto` the browser
   // claims the gesture for panning and fires `pointercancel`, so the card stops
@@ -54,6 +63,36 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   check('sequence cards declare touch-action:none so a finger drag is not cancelled by the browser',
     dragStyle.found === true && dragStyle.touchAction === 'none',
     `computed touch-action = ${dragStyle.touchAction} (must be 'none')`);
+
+  /* Every sequence, not just whichever one happens to be on screen. A sequence
+     with duplicate or non-contiguous `order` values would silently break the
+     child-facing logic (a duplicated order means two cards are "correct" and one
+     slot can never be filled), and a duplicate `label` would give two cards the
+     same accessible name. The old offline spec also pinned the step count to 3,
+     which is exactly the stale-literal trap this repo keeps hitting — so the
+     count is asserted against the data instead. */
+  const seqIntegrity = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const out = { seen: [], bad: [] };
+    const ids = ['plant1', 'fruit', 'birds', 'wash'];
+    for (let i = 0; i < ids.length; i++) {
+      window.__sequencing.goToRound(i);
+      const cur = window.__sequencing.state();
+      const slots = document.querySelectorAll('.seq-slot').length;
+      const cards = [...document.querySelectorAll('.seq-card')];
+      out.seen.push({ id: cur.id, slots, cards: cards.length });
+      if (cur.id !== ids[i]) { out.bad.push('round ' + i + ' is ' + cur.id + ', expected ' + ids[i]); continue; }
+      if (slots !== cards.length) out.bad.push(cur.id + ': ' + slots + ' slots vs ' + cards.length + ' cards');
+      if (slots !== 3) out.bad.push(cur.id + ': expected 3 steps, got ' + slots);
+      const orders = cards.map(c => Number(c.dataset.order)).sort((a, b) => a - b);
+      if (orders.join(',') !== '0,1,2') out.bad.push(cur.id + ': orders are ' + orders.join(','));
+      const labels = cards.map(c => c.querySelector('.seq-emoji').getAttribute('aria-label'));
+      if (new Set(labels).size !== labels.length) out.bad.push(cur.id + ': duplicate labels ' + labels.join('/'));
+    }
+    return out;
+  })())`));
+  check('all four sequences build: 3 cards, 3 slots, orders 0-2, unique accessible labels',
+    seqIntegrity.bad.length === 0 && seqIntegrity.seen.length === 4,
+    seqIntegrity.bad.length ? seqIntegrity.bad.join(' | ') : JSON.stringify(seqIntegrity.seen));
 
   const root=path.join(__dirname,'..'); const idx=fs.readFileSync(path.join(root,'game','index.html'),'utf8');
   check('hub wired', idx.includes('data-go="game-sequencing"'));

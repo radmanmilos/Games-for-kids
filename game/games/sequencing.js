@@ -1,6 +1,15 @@
 /* ---------------- РЕДОСЛЕД (Sequencing) ----------------
    R24 pilot: seed → plant → flower. Start with 3 cards; visual-only,
-   drag to numbered slots in the correct order. Gentle feedback, no score. */
+   drag to numbered slots in the correct order. Gentle feedback, no score.
+
+   Each sequence's `label` is used ONLY as an aria-label — the game speaks just
+   the fixed prompt 'Постави у редослед' plus the already-recorded praise/retry
+   lines (verified at the card markup, which sets aria-label and nothing else).
+   That is why more sequences can be added here with no new Serbian speech,
+   while Time/Seasons stay blocked on recordings (see PROJECT_TASKS task 198).
+   Keep every sequence at 3 steps: the layout is sized in vmin for three, and a
+   longer chain risks the small-viewport clipping this project has already been
+   bitten by twice. */
 (function(){
   'use strict';
   var SEQ = [
@@ -8,6 +17,16 @@
       {emoji:'🌱',label:'Семе',order:0},
       {emoji:'🌿',label:'Биљка',order:1},
       {emoji:'🌼',label:'Цвет',order:2}
+    ]},
+    {id:'fruit', steps:[
+      {emoji:'🌸',label:'Цвет',order:0},
+      {emoji:'🍏',label:'Мали плод',order:1},
+      {emoji:'🍎',label:'Зрела јабука',order:2}
+    ]},
+    {id:'birds', steps:[
+      {emoji:'🥚',label:'Јаје',order:0},
+      {emoji:'🐣',label:'Пиле',order:1},
+      {emoji:'🐦',label:'Птица',order:2}
     ]},
     {id:'wash', steps:[
       {emoji:'💧',label:'Прљаво',order:0},
