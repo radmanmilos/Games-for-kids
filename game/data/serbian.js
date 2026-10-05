@@ -173,6 +173,7 @@
       sequencing: 'Редослед',
       rhythm: 'Ритам',
       spatial: 'Простор',
+      maze: 'Путања',
       coloring: 'Бојење',
       tracing: 'Писање',
       piano: 'Клавир',

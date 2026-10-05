@@ -12,7 +12,7 @@ labelled SUPERSEDED there; it is never the queue to work from.
 
 ## Current position (2026-10-05)
 
-- **R0–R26 DONE.** R27 — Maze / Path Following Pilot is next.
+- **R0–R27 DONE.** R27b — reassess the original 9-game learning roadmap is next.
 - Authoritative task-by-task status and execution log: [`PROJECT_TASKS.md`](PROJECT_TASKS.md).
 - Progress tracker table (R0–R27): [`HANDOVER_PROMPT.md`](HANDOVER_PROMPT.md#progress-tracker-r0-r27).
 

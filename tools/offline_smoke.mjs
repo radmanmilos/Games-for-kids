@@ -473,6 +473,23 @@ const APPS = [
         { label: 'the child to name a position while offline' });
     },
   },
+  {
+    id: 'maze', back: '#maze-back',
+    ready: `!!window.__maze && document.querySelectorAll('.maze-stone').length>0`,
+    act: async h => {
+      // Drag the bear one stone along the path with real trusted pointer input,
+      // using the game's own waypoint geometry rather than hard-coded pixels.
+      const read = async expr => JSON.parse(await h.evalv(`JSON.stringify(${expr})`));
+      const stage = await read(`document.getElementById('maze-stage').getBoundingClientRect()`);
+      const from = await read(`window.__maze.cellCentrePct(0)`);
+      const to = await read(`window.__maze.cellCentrePct(1)`);
+      const at = p => ({ x: stage.left + stage.width * p.x / 100, y: stage.top + stage.height * p.y / 100 });
+      const a = at(from), b = at(to);
+      await h.dragTo(a.x, a.y, b.x, b.y);
+      return h.waitFor(`window.__maze.state().reached===1`,
+        { label: 'the child to drag the bear one stone along the path while offline' });
+    },
+  },
 ];
 
 /* Every registry child must be covered - a new offline game cannot skip this test.
