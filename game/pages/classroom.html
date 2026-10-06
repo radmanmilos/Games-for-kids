@@ -25,11 +25,11 @@
     font-family:'Fredoka', sans-serif;
   }
   #app{position:fixed; inset:0; overflow:hidden;}
-  .screen{
-    position:absolute; inset:0; display:none;
+  .screen{ position:absolute; inset:0; display:none;
     flex-direction:column; align-items:center; justify-content:center;
     overflow:auto; -webkit-overflow-scrolling: touch;
   }
+  #game-classroom{ justify-content:flex-start; }
   .screen.active{display:flex;}
 
   /* ---------- BACK BUTTON (shared) ---------- */
@@ -62,7 +62,7 @@
   #classroomHub{
     display:flex; flex-direction:row; flex-wrap:wrap;
     align-items:center; justify-content:center; gap:6vmin;
-    padding:0 4vmin;
+    padding:0 4vmin; margin:auto;
   }
   #classroomHub[hidden]{ display:none; }
 
@@ -148,6 +148,7 @@
   .class-tile.pict{ font-size:7vmin; }
   #activityGrid .class-tile svg{ width:100%; height:100%; display:block; padding:8%; }
   .class-tile:active{ filter:brightness(.87); }
+  .activity-grid .class-tile, #kidsOptions .kids-option{ min-width:0; min-height:0; padding:0; }
 
   .activity-display{
     width:34vmin; min-height:42vmin;
@@ -204,10 +205,11 @@
     box-shadow:0 1.5vmin 0 rgba(0,0,0,.12), 0 2vmin 5vmin rgba(0,0,0,.15);
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5vmin;
     padding:2.5vmin 3vmin;
+    flex-shrink:0;
   }
   .kids-question{ font-size:5vmin; font-weight:700; color:var(--plum); margin:0; }
   .kids-sound{ font-size:9vmin; line-height:1; }
-  .kids-count-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:1vmin; font-size:6vmin; line-height:1.3; max-width:62vmin; }
+  .kids-count-row{ display:grid; grid-template-columns:repeat(10, minmax(0,1fr)); justify-items:center; gap:0.6vmin 0.8vmin; font-size:5vmin; line-height:1.3; max-width:72vmin; }
   #kidsProgress{ margin:0; font-size:3.4vmin; font-weight:600; color:var(--plum-soft); }
   #kidsOptions{ display:grid; grid-template-columns:repeat(2, min(24vmin, 20vh)); gap:3vmin; }
   .kids-option{

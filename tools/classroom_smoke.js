@@ -3,6 +3,13 @@
    4 quiz games, wrong-answer nudge, correct-answer advance, session end + replay.
    Also tests category tabs: 4 tabs visible in activity mode, active state,
    tab switching between categories.
+   PLUS (task 209) small-screen geometry guards: the global accessibility.css
+   64px button min-size used to force .class-tile/.kids-option wider than their
+   grid tracks (crowding + right-edge clip), the #kidsPrompt card flex-shrink
+   let a 20-emoji count row clip, and the overflow hub top started at negative
+   top. A phone session asserts tiles stay disjoint inside the grid, the kids
+   prompt never clips (worst-case count row forced), and a tablet session
+   asserts the hub is reachable (top-anchored) when taller than the viewport.
    Shared audio entry points are recorded so the activity proves it uses semantic
    events and ducked speech; audio-buses_smoke.js covers Web Audio routing itself.
    Run:  node tools/classroom_smoke.js  (from the repo root or anywhere)
@@ -202,6 +209,88 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
   const back = await h.evalv(`JSON.stringify({ kidsHidden: document.getElementById('kidsGame').hidden, hubVisible: !document.getElementById('classroomHub').hidden })`);
   const backj = JSON.parse(back);
   check('back returns to hub', backj.kidsHidden === true && backj.hubVisible === true, back);
+
+  // --- Small-screen geometry guards (task 209) ---
+  // Phone session: grid tiles disjoint inside the grid + kids prompt never clips.
+  const h2 = await start({ page: '/pages/classroom.html', tag: 'kids-smoke-phone', width: 360, height: 640 });
+  let ready2 = false;
+  for (let i = 0; i < 20 && !ready2; i++) {
+    ready2 = await h2.evalv(`typeof window.startClassroom === 'function' && typeof window.kidsGame === 'object'`);
+    if (!ready2) await sleep(200);
+  }
+  check('phone session: classroom + kids engine booted', ready2);
+  await h2.evalv(STUB);
+
+  // (a) activityGrid tiles: pairwise disjoint and each fits inside the grid —
+  //     catches the global 64px button min-size crowding tiles into their tracks.
+  await h2.evalv(CLICK('#classroomHub .activity-btn[data-activity="numbers"]'));
+  await sleep(200);
+  const tiles = JSON.parse(await h2.evalv(`JSON.stringify((function(){
+    const grid = document.getElementById('activityGrid');
+    const gb = grid.getBoundingClientRect();
+    const boxes = [...grid.children].filter(c => c.offsetHeight > 0).map(c => c.getBoundingClientRect());
+    let worst = 0;
+    for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
+      const a = boxes[i], b = boxes[j];
+      const cx = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+      const cy = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+      if (cx > 0 && cy > 0) worst = Math.max(worst, Math.max(cx, cy));
+    }
+    const clip = boxes.filter(b => b.right > gb.right + 0.5 || b.left < gb.left - 0.5).length;
+    let maxW = 0;
+    for (const c of grid.children) if (c.offsetHeight > 0) maxW = Math.max(maxW, c.getBoundingClientRect().width);
+    return { n: boxes.length, worst, clip, maxW };
+  })())`));
+  check('phone: activity tiles disjoint (no grid crowding/overlap)', tiles.n > 0 && tiles.worst === 0 && tiles.clip === 0, JSON.stringify(tiles));
+  check('phone: tile widths come from the grid, not the 64px button floor', tiles.maxW < 64, JSON.stringify(tiles));
+
+  // (b) kids numbers: a worst-case emoji count row must not clip the prompt.
+  await h2.evalv(`window._origNums = window.classroomData.numbers; window.classroomData.numbers = window._origNums.filter(n => n.count >= 10); true`);
+  await h2.evalv(CLICK('#classroomBack'));
+  await sleep(100);
+  await h2.evalv(CLICK('#classroomHub .kids-btn[data-kids="numbers"]'));
+  await sleep(300);
+  const promptGeom = JSON.parse(await h2.evalv(`JSON.stringify((function(){
+    const p = document.getElementById('kidsPrompt');
+    const row = document.querySelector('.kids-count-row');
+    const pb = p.getBoundingClientRect();
+    const rb = row.getBoundingClientRect();
+    let maxOverlap = 0;
+    const spans = [...row.children];
+    for (let i = 0; i < spans.length; i++) for (let j = i + 1; j < spans.length; j++) {
+      const a = spans[i].getBoundingClientRect(), b = spans[j].getBoundingClientRect();
+      const cx = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+      if (cx > 0 && a.top === b.top) maxOverlap = Math.max(maxOverlap, cx);
+    }
+    return {
+      kids: spans.length,
+      scrollW: p.scrollWidth, clientW: p.clientWidth,
+      rowInside: rb.left >= pb.left - 0.5 && rb.right <= pb.right + 0.5,
+      maxSpanOverlap: maxOverlap
+    };
+  })())`));
+  check('phone: big emoji count row does not clip the kids prompt',
+    promptGeom.kids >= 10 && promptGeom.scrollW <= promptGeom.clientW + 0.5 && promptGeom.rowInside, JSON.stringify(promptGeom));
+  // Emoji advance boxes are wider than their minmax(0,1fr) tracks; glyph ink has
+  // side bearings, so a small box overlap is normal. The pre-fix crowding was 6px+
+  // (62vmin row); now it must stay near-cosmetic (< 2px).
+  check('phone: count-row emoji glyphs are not crowded', promptGeom.maxSpanOverlap < 2, JSON.stringify(promptGeom));
+  await h2.close();
+
+  // (c) tablet portrait: hub taller than the viewport must start at top (reachable).
+  const h3 = await start({ page: '/pages/classroom.html', tag: 'kids-smoke-tablet', width: 768, height: 1024 });
+  let ready3 = false;
+  for (let i = 0; i < 20 && !ready3; i++) {
+    ready3 = await h3.evalv(`typeof window.startClassroom === 'function' && typeof window.kidsGame === 'object'`);
+    if (!ready3) await sleep(200);
+  }
+  const hubTop = JSON.parse(await h3.evalv(`JSON.stringify((function(){
+    const b = document.getElementById('classroomHub').getBoundingClientRect();
+    return { top: b.top, bottom: b.bottom, height: b.height, ioh: window.innerHeight };
+  })())`));
+  check('tablet portrait: overflowing hub is top-anchored (reachable), not clipped above',
+    hubTop.top >= -0.5 && hubTop.top < 5 && hubTop.bottom > hubTop.ioh, JSON.stringify(hubTop));
+  await h3.close();
 
   await h.close();
   process.exit(getFails() ? 1 : 0);
