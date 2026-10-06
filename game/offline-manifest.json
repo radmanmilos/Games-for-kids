@@ -828,8 +828,8 @@
     "size": 43992
   },
   "games/spatial.js": {
-    "sha256": "99d32e69b9896b1af0e7cdcb6d63c86f116d51b7407a7f0707b6593db1d0be70",
-    "size": 6587
+    "sha256": "1ec5fb44057cc5ea1af03bc6521227d960ac73683b6396aa32872eab763b5332",
+    "size": 9875
   },
   "games/tracing.js": {
     "sha256": "8e620d25eccb03e99bc0897eb0e85c9496820036c19b27503089c794252ffc7c",
@@ -932,8 +932,8 @@
     "size": 2940
   },
   "pages/spatial.html": {
-    "sha256": "c47af75fa0b1e291f941eed9186bba1c330d40516e2eb93494b9904b0cf30473",
-    "size": 4981
+    "sha256": "3df9dc18e7509d63ab7b40eb14915b5447e576ded50a76f7aa764360b3d788f4",
+    "size": 6494
   },
   "pages/tracing.html": {
     "sha256": "8f4178d38e2ebf8c0ccd7ee7b18068c8010428ef78a9d1b1605976261284b8d5",

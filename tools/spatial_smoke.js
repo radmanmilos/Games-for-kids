@@ -129,6 +129,39 @@ const MODES = [
   check('celebration is the only reward — no points or streak are displayed', await h.evalv(
     `!document.body.textContent.match(/\\d+\s*(поена|бала|x\\s*\d)/i)`));
 
+  /* Task 208 — the game is not five one-scene modes: every concept runs THREE
+     scenes (15 rounds total), so a session gets real new content on the second
+     and third pass instead of repeating the same five pictures. Walk every
+     round: each concept id must appear exactly three times, and each concept
+     must ask at least two *different* questions, so the added rounds are real
+     scenes, not copies. */
+  const total = (await state()).total;
+  const structure = [];
+  for (let r = 0; r < total; r++) {
+    await h.evalv(`window.__spatial.setRound(${r})`);
+    structure.push([(await state()).mode,
+      await h.evalv(`document.getElementById('spatial-prompt').textContent`)]);
+  }
+  const modesSeen = structure.map(([m]) => m);
+  check('spatial has 15 rounds — five concepts x three scenes', total === 15, String(total));
+  for (const m of MODES) {
+    const count = modesSeen.filter(x => x === m.id).length;
+    const prompts = [...new Set(structure.filter(([x]) => x === m.id).map(([, p]) => p))];
+    check(`${m.id}: three real scenes with distinct questions`,
+      count === 3 && prompts.length >= 2,
+      `count=${count} prompts=${prompts.join(' | ')}`);
+  }
+  /* Normal play walks across the variant boundary, not just the first pass:
+     the answer to round 4 (last first-pass scene) advances into round 5, which
+     is the same concept but the SECOND scene. */
+  await h.evalv(`window.__spatial.setRound(4)`);
+  const lastKey = (await state()).correct;
+  await h.tap(`#spatial-choice-${lastKey}`);
+  const pastFirstPass = await h.waitFor(`window.__spatial.state().phase==='ask' && window.__spatial.state().round===5`,
+    { timeout: 4000, label: 'the round after the last first-pass scene' });
+  check('a correct answer advances past the first pass into a new scene', pastFirstPass.ok,
+    pastFirstPass.ok ? JSON.stringify(await state()) : pastFirstPass.why);
+
   const index = fs.readFileSync(path.join(__dirname, '..', 'game', 'index.html'), 'utf8');
   check('hub button wired (data-go="game-spatial")', index.includes('data-go="game-spatial"'));
   checkRouteWired('spatial', 'game-spatial', 'pages/spatial.html',
