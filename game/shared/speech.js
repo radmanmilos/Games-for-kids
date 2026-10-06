@@ -30,8 +30,10 @@
     const shapeFiles = ['krug', 'kvadrat', 'trougao', 'zvezda', 'lopta', 'kocka', 'kvadar', 'valjak', 'kupa', 'piramida'];
     registerEach(vocabulary.shapes, shapeFiles, shape => shape);
 
-    const numberFiles = ['nula', 'jedan', 'dva', 'tri', 'cetiri', 'pet', 'sest', 'sedam', 'osam', 'devet', 'deset'];
-    const sentenceFiles = ['nula', 'jedan_pas', 'dva_psa', 'tri_macke', 'cetiri_krave', 'pet_slonova', 'sest_lavova', 'sedam_pataka', 'osam_konja', 'devet_zaba', 'deset_svinja'];
+    const numberFiles = ['nula', 'jedan', 'dva', 'tri', 'cetiri', 'pet', 'sest', 'sedam', 'osam', 'devet', 'deset',
+        'jedanaest', 'dvanaest', 'trinaest', 'cetrnaest', 'petnaest', 'sesnaest', 'sedamnaest', 'osamnaest', 'devetnaest', 'dvadeset'];
+    const sentenceFiles = ['nula', 'jedan_pas', 'dva_psa', 'tri_macke', 'cetiri_krave', 'pet_slonova', 'sest_lavova', 'sedam_pataka', 'osam_konja', 'devet_zaba', 'deset_svinja',
+        'jedanaest_pasa', 'dvanaest_macaka', 'trinaest_krava', 'cetrnaest_slonova', 'petnaest_lavova', 'sesnaest_pataka', 'sedamnaest_konja', 'osamnaest_zaba', 'devetnaest_svinja', 'dvadeset_pasa'];
     registerEach(vocabulary.numbers, numberFiles, number => number.name);
     registerEach(vocabulary.numbers, sentenceFiles, number => number.sentence);
 

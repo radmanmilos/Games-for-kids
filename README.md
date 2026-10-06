@@ -523,7 +523,7 @@ A learning hub where the child sees a word, hears it, and repeats it.
 Activities:
 
 - 🔤 Азбука — all 30 Serbian Cyrillic letters. Tap a letter to hear its sound and a word that starts with it (with an emoji picture).
-- 🔢 Бројеви — numbers 0–10. Tap a number to hear it and a sentence like "Пет слонова" (Five elephants), shown with that many animal pictures.
+- 🔢 Бројеви — numbers 0–20. Tap a number to hear it and a sentence like "Пет слонова" (Five elephants), shown with that many animal pictures. (11–20 added 2026-10-06, recordings generated with `resources/tts_generate.js`.)
 - 🔷 Облици — Круг, Квадрат, Троугао, Звезда, plus 3D shapes Лопта, Коцка, Квадар, Ваљак, Купа, Пирамида (drawn as inline SVG so the real 3D form is visible). Tap a shape to hear its name.
 - 🎨 Боје — the 11-color palette. Tap a color to hear its name.
 

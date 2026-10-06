@@ -87,6 +87,14 @@
     "sha256": "000aa17331896e02ebd8913e3a1c1fce2e64fd1a685f3d8e1b60dccd214a7ecf",
     "size": 11904
   },
+  "assets/audio/speech/cetrnaest.mp3": {
+    "sha256": "48d7718b3d9734fc31a981ca4752f028edc88718fbe33aa804a0497ae0cae64a",
+    "size": 10176
+  },
+  "assets/audio/speech/cetrnaest_slonova.mp3": {
+    "sha256": "a390def4d92d29759cc112caf33944be5d3f7c5a61529189783b456e1aa9cf5b",
+    "size": 15168
+  },
   "assets/audio/speech/ch.mp3": {
     "sha256": "4feb0b289a85bc7f2bcca56ee0a0874388b24684a5604d2d9dbc1a59142fc2b9",
     "size": 4992
@@ -119,6 +127,10 @@
     "sha256": "176fa34536b43f85979e03a743a9a939f8b3c4842dcf8847c706c76dfe32e2bf",
     "size": 5760
   },
+  "assets/audio/speech/dan.mp3": {
+    "sha256": "e91d800f0513ec14b8782f2f37978126fe85562a0c7bcc99d3dbd921828d5432",
+    "size": 6336
+  },
   "assets/audio/speech/deset.mp3": {
     "sha256": "b9c0f740dee532183c63a53c40de4dc0cbc6a9962e1c498fe5c23d5515dcce9e",
     "size": 8064
@@ -134,6 +146,14 @@
   "assets/audio/speech/devet_zaba.mp3": {
     "sha256": "fd1a25e0a80bea02b6b70c577b5d1afb4861085121e23355d479ca5a6c63f51d",
     "size": 11328
+  },
+  "assets/audio/speech/devetnaest.mp3": {
+    "sha256": "076bca4193f29e8cb537afc8c465979085fd510305f4284b8afeb4b273c700e0",
+    "size": 10944
+  },
+  "assets/audio/speech/devetnaest_svinja.mp3": {
+    "sha256": "08fb30fbcf04716ed045a5837b7d75fc4600c3116d8ddf00e5e16341fc261d1a",
+    "size": 13632
   },
   "assets/audio/speech/dj.mp3": {
     "sha256": "321b3265457920482424f0c31806a7f49cdc967b2418ee1404b647cb075f77fd",
@@ -154,6 +174,22 @@
   "assets/audio/speech/dva_psa.mp3": {
     "sha256": "6290971126f100c10f96d8ca6e023840000d29f6530ef409dfa928c0bb77ae54",
     "size": 8448
+  },
+  "assets/audio/speech/dvadeset.mp3": {
+    "sha256": "605f43808d4dbb1a95d0a41280d82b9c0396d539f8c3cb912bea50a8f98c159d",
+    "size": 10176
+  },
+  "assets/audio/speech/dvadeset_pasa.mp3": {
+    "sha256": "16bfdc7c8bbf1a83bdad4449d94103b288cbe536a91843307a17ed1f1aa5654d",
+    "size": 13632
+  },
+  "assets/audio/speech/dvanaest.mp3": {
+    "sha256": "2169fe9b7e8fa1e4919b11cb4cd360f17e8c42d79927c4f68dbaebda321d6e15",
+    "size": 9984
+  },
+  "assets/audio/speech/dvanaest_macaka.mp3": {
+    "sha256": "244acc1628c4e67c2a474582db575117d4b2acda08445e0b17fd156a6020694b",
+    "size": 15168
   },
   "assets/audio/speech/dz.mp3": {
     "sha256": "f0df23bc66204cdcecd9d4d1651e41f614e91042fa35b2b2dfa21a0a36e8cc7c",
@@ -223,9 +259,29 @@
     "sha256": "ba6ef1dda5dd8dccc76d5755d479fce27c7fe0297d5f8742653f30cd1dd49b6a",
     "size": 9984
   },
+  "assets/audio/speech/jedanaest.mp3": {
+    "sha256": "da33cf47ee7f66ca61eb5171bd368e9ab9b087fda208144d15e386975db2286b",
+    "size": 10176
+  },
+  "assets/audio/speech/jedanaest_pasa.mp3": {
+    "sha256": "2aae0e3aaade0c7f277520dd2af72d361fbb9faae0b9d2917b11141dcdb48758",
+    "size": 14208
+  },
+  "assets/audio/speech/jesen.mp3": {
+    "sha256": "2779250d6ade63d9ae69a3093efc02e3143199d6688548e5c3a54b8fc178d1b4",
+    "size": 8064
+  },
+  "assets/audio/speech/jutro.mp3": {
+    "sha256": "efffedb31a47f24896c355fe5b33063dc0ef97f735a01c062de97e911f3151c3",
+    "size": 6720
+  },
   "assets/audio/speech/k.mp3": {
     "sha256": "9bf6587989e9d2ffdf5b287d4536edd9ea5c6eed241a9c31053bc474d09f64ad",
     "size": 4800
+  },
+  "assets/audio/speech/kisa.mp3": {
+    "sha256": "3e489a594f879e65c5935ac3c07b167825f74802712e9c99aea483b65ea06831",
+    "size": 6528
   },
   "assets/audio/speech/kocka.mp3": {
     "sha256": "35598c3a1e77504399ac48efc0c63c6e6336bde40bcf60feea9a37094bdb1c8f",
@@ -266,6 +322,10 @@
   "assets/audio/speech/lav.mp3": {
     "sha256": "e91713d728ed0e780bb011045ed8f335566f7e9b4c23247b9a6e9c305a5a1ca4",
     "size": 5760
+  },
+  "assets/audio/speech/leto.mp3": {
+    "sha256": "82c42b73feccb97c4eb4eccf9ec509c23d8079aecdc96649ea9eda9a90bffd10",
+    "size": 6912
   },
   "assets/audio/speech/lisica.mp3": {
     "sha256": "5c12c277aa4da7ec960ee3a2dffd5faf1d5a06fa111022fd0914a1e32139cd78",
@@ -311,6 +371,10 @@
     "sha256": "8c3a4ce2d6e1386e70d8adeb839007eadaf978fbd9908df0ddf68c52e5056c70",
     "size": 8064
   },
+  "assets/audio/speech/noc.mp3": {
+    "sha256": "f52d09f46d077f27cd0736a0d0461a9252cfce0c35b6f82b7301f2fd7eba837f",
+    "size": 7104
+  },
   "assets/audio/speech/nos.mp3": {
     "sha256": "e4bd74e6ada9ebc85937e0fab4f3057f1fb668b2414859c9fc1cac490848c9bb",
     "size": 6912
@@ -334,6 +398,14 @@
   "assets/audio/speech/osam_konja.mp3": {
     "sha256": "347b91d41aaa9f30110db063ea7eec1e576c7845a2a88d5c22aca8346dafd6ee",
     "size": 10560
+  },
+  "assets/audio/speech/osamnaest.mp3": {
+    "sha256": "3cb8d58e6d419e43252e8f16e1af2aaa7426ecbb666f1564e94341a04fc5d6b5",
+    "size": 10176
+  },
+  "assets/audio/speech/osamnaest_zaba.mp3": {
+    "sha256": "054c630223a732399ebcc5ad48f7760a54417393ff0de326f92b5ba2edb38586",
+    "size": 14016
   },
   "assets/audio/speech/ovca.mp3": {
     "sha256": "06648b5512eacbd5e8190607348eb3e3cbf2addbb63e5955437787417288b2d9",
@@ -359,6 +431,14 @@
     "sha256": "d6609f0b2ccf9438e91177ee7dd89c4a2607cea30715d890d0ac18f1ff6124cf",
     "size": 10368
   },
+  "assets/audio/speech/petnaest.mp3": {
+    "sha256": "25dc6a710f79debf8b27af6859e6b16245637a8d5902e8662e47c13be62e1b60",
+    "size": 8832
+  },
+  "assets/audio/speech/petnaest_lavova.mp3": {
+    "sha256": "b3166243fe12414396221976560b98679fd648ccd4eaa9f7ac1d0c5d7e9ddc6d",
+    "size": 13056
+  },
   "assets/audio/speech/piramida.mp3": {
     "sha256": "fd22b9d6b2766ba57364595510e65d3196664ff3f46c7e1bd028529e2fa95d5f",
     "size": 8640
@@ -366,6 +446,10 @@
   "assets/audio/speech/plava.mp3": {
     "sha256": "9fbf225c808838ad3358731e81cb9c1106008b174d092b1d70b71658d32d17c3",
     "size": 6720
+  },
+  "assets/audio/speech/prolece.mp3": {
+    "sha256": "208e5efcece5ab01840a97cd904c4c2db0533800bedd24ee97f89d5c433650cd",
+    "size": 7680
   },
   "assets/audio/speech/r.mp3": {
     "sha256": "59ad80116bae179ffdb10c83a03915d87991792d6f481ea881c4e10084a0861c",
@@ -391,9 +475,25 @@
     "sha256": "f0ca0b7608d69e8535fce47db483a29b869cfdd30aadbe0a4b931793ffbc69ca",
     "size": 12480
   },
+  "assets/audio/speech/sedamnaest.mp3": {
+    "sha256": "b32779c7e03cce5307c7ef645eb8ee248cc7e16e41a65f56230a7ef1b770b782",
+    "size": 11328
+  },
+  "assets/audio/speech/sedamnaest_konja.mp3": {
+    "sha256": "c2b22149de405fc18f5fa2cdf54ac4ef88754961dfb37ec84ae4ca9eee250e90",
+    "size": 13824
+  },
   "assets/audio/speech/sesir.mp3": {
     "sha256": "578ecb16e7d81915ae133b24cbd3756da4bcea15379e0168555503ba13436efd",
     "size": 8064
+  },
+  "assets/audio/speech/sesnaest.mp3": {
+    "sha256": "0733f31c21d96c3b11ec963ee39455e7717bd2168aecb3f4c9595fa753d748e2",
+    "size": 9984
+  },
+  "assets/audio/speech/sesnaest_pataka.mp3": {
+    "sha256": "1262d1537022b43ff0bc6eea301eafeaf1c3f25a857e74c4d06b91721cff1723",
+    "size": 14400
   },
   "assets/audio/speech/sest.mp3": {
     "sha256": "cbcf49fb2b07ac5d9adccc9b2510ba37c406b67e58d5e4849aafa1e4ad6ffc65",
@@ -415,6 +515,14 @@
     "sha256": "f34608e25e52728f5ac687342e1bae78db62a63e5890ffc0bb8198596436f729",
     "size": 6912
   },
+  "assets/audio/speech/sneg.mp3": {
+    "sha256": "d4d71597fc16c256671476a72b0b2f9bfa077b4b9e9eb0f2ba9e49d72afa4333",
+    "size": 7296
+  },
+  "assets/audio/speech/sunce.mp3": {
+    "sha256": "658caaa11bc585825238fe3157b08362c5c75b66006441184b0a0bfd67eb6f4d",
+    "size": 8448
+  },
   "assets/audio/speech/svinja.mp3": {
     "sha256": "1fbc33b92f9ab9705edf1b5203c4a2fa48813f5439ce3841bdfa93671c89f85e",
     "size": 8064
@@ -434,6 +542,14 @@
   "assets/audio/speech/tri_macke.mp3": {
     "sha256": "950dad6719542b845807346acb065898198ddfd529cab3f713ff0952745ec0f1",
     "size": 9600
+  },
+  "assets/audio/speech/trinaest.mp3": {
+    "sha256": "867846139cf388f411492ac170ac0dfca683a4f0c951d10466367fff633daf7b",
+    "size": 9600
+  },
+  "assets/audio/speech/trinaest_krava.mp3": {
+    "sha256": "0f412d78503803a81afd692207c6e23ffdf57567414fea8326e2422e40bfbc6a",
+    "size": 13056
   },
   "assets/audio/speech/trougao.mp3": {
     "sha256": "84622fa35d2f3ff72ac7446dca91528cbe3135ffac4784fe8a83ef37b4a387f7",
@@ -455,6 +571,14 @@
     "sha256": "448cad84cd8e47eb63251f7ac5b66ed75ef19c9f51a8fc194b58ddadd92baf04",
     "size": 7296
   },
+  "assets/audio/speech/vece.mp3": {
+    "sha256": "9a072c218f50bf8bd02a1d87a68503b179af37b435ac7ae739756a12442aed1e",
+    "size": 7296
+  },
+  "assets/audio/speech/vetar.mp3": {
+    "sha256": "1371e26418b1ec31167e694e913d6cca4535624f569102749a55b8c023090402",
+    "size": 7488
+  },
   "assets/audio/speech/vuk.mp3": {
     "sha256": "1b0bba13f56b8f82670e0b1253e84f05fc0864f5c86281af6d5467e915ac3e4c",
     "size": 6336
@@ -474,6 +598,10 @@
   "assets/audio/speech/zh.mp3": {
     "sha256": "264c7d2a4a8f90afca275477a84de19b3525554eecbc1bd9608f700b7bb0a7b8",
     "size": 5760
+  },
+  "assets/audio/speech/zima.mp3": {
+    "sha256": "5fcd9a70e6d9612374299169f57a7004d2bd0cc157c5cea2de26d858f6a13da0",
+    "size": 6912
   },
   "assets/audio/speech/zuta.mp3": {
     "sha256": "3a93997f181b8b8e5e8b12a2db89569f2a3e4216653a8119016a65d8e77409ea",
@@ -588,8 +716,8 @@
     "size": 9341
   },
   "data/serbian.js": {
-    "sha256": "785ef32a531719dcd205eb8bd7cd61659e429f9785a56944ce42b215b5156784",
-    "size": 7191
+    "sha256": "73d35bc0e639e56eaf233d2e288472d9b59ad37addb3d174899e47e8f09bcd53",
+    "size": 8381
   },
   "games/adventure-modes.js": {
     "sha256": "268e5744538b62040ac3123d4ed2f437907429bcf464ccdc87ced48bf4845ebd",
@@ -852,8 +980,8 @@
     "size": 8520
   },
   "shared/speech.js": {
-    "sha256": "8b92f13f255e7d610d812085c4f9e3b2728ec9923514300cd967579c768417c6",
-    "size": 5696
+    "sha256": "7c614952f47a074b67ef2c4b97ea8ef29c0100d476704590c7324013da2a3ae1",
+    "size": 6029
   },
   "shared/utils.js": {
     "sha256": "c544f8c213352a6e67ffa503a6a2373f2515c9c26b3d8bfa36ac0fffd0883334",
@@ -872,8 +1000,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "511d31e3ca70f4c238e5f8c4533d6fccb4f4529c339e38b0ae36043dfc952602",
-    "size": 6960
+    "sha256": "8900d91f0d9d6bb44501fdcdea6d78d72d1768599eae9233afe20b8749e7e9b7",
+    "size": 8210
   },
   "sw.js": {
     "sha256": "cb988a394d0d5515fd0966cc745f2f78a6b3e32aac0e4d6a96548ad2f66917b1",

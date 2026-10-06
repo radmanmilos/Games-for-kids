@@ -248,7 +248,8 @@ const CHECK_RESULT = `JSON.stringify({
     await sleep(200);
     const num = await h.evalv(CHECK_ACT);
     let U = JSON.parse(num || '{}');
-    check('numbers loads 0', U.cap === 'Нацртај 0' && U.counter === '1 од 11' && U.refText === '0', num);
+    const NUM_COUNT = await h.evalv(`window.SERBIAN.numbers.length`);
+    check('numbers loads 0', U.cap === 'Нацртај 0' && U.counter === '1 од ' + NUM_COUNT && U.refText === '0', num);
     await h.evalv(CLEAR_OVERLAYS);
     await h.evalv(DRAW_REF('0', null));
     await h.evalv(CLICK('tracingDone'));
@@ -260,7 +261,7 @@ const CHECK_RESULT = `JSON.stringify({
     await sleep(200);
     const adv3 = await h.evalv(CHECK_ACT);
     let AD3 = JSON.parse(adv3 || '{}');
-    check('next advances to 1', AD3.cap === 'Нацртај 1' && AD3.counter === '2 од 11', adv3);
+    check('next advances to 1', AD3.cap === 'Нацртај 1' && AD3.counter === '2 од ' + NUM_COUNT, adv3);
 
     // 14. Blob on 1 -> early attempt (preserved)
     await h.evalv(CLEAR_OVERLAYS);

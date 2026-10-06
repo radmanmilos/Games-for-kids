@@ -33,6 +33,19 @@ const pairs = [
   ['cetiri_krave','Четири краве'],['pet_slonova','Пет слонова'],['sest_lavova','Шест лавова'],
   ['sedam_pataka','Седам патака'],['osam_konja','Осам коња'],['devet_zaba','Девет жаба'],
   ['deset_svinja','Десет свиња'],
+  // numbers 11-20 (task 198 backlog — same engine/voice as the 0-10 set)
+  ['jedanaest','Једанаест'],['dvanaest','Дванаест'],['trinaest','Тринаест'],['cetrnaest','Четрнаест'],
+  ['petnaest','Петнаест'],['sesnaest','Шеснаест'],['sedamnaest','Седамнаест'],
+  ['osamnaest','Осамнаест'],['devetnaest','Деветнаест'],['dvadeset','Двадесет'],
+  ['jedanaest_pasa','Једанаест паса'],['dvanaest_macaka','Дванаест мачака'],['trinaest_krava','Тринаест крава'],
+  ['cetrnaest_slonova','Четрнаест слонова'],['petnaest_lavova','Петнаест лавова'],['sesnaest_pataka','Шеснаест патака'],
+  ['sedamnaest_konja','Седамнаест коња'],['osamnaest_zaba','Осамнаест жаба'],['devetnaest_svinja','Деветнаест свиња'],
+  ['dvadeset_pasa','Двадесет паса'],
+  // time of day (task 198 backlog)
+  ['jutro','Јутро'],['dan','Дан'],['vece','Вече'],['noc','Ноћ'],
+  // seasons + weather (task 198 backlog)
+  ['prolece','Пролеће'],['leto','Лето'],['jesen','Јесен'],['zima','Зима'],
+  ['kisa','Киша'],['sneg','Снег'],['sunce','Сунце'],['vetar','Ветар'],
 ];
 
 if (!fs.existsSync(DIR)) fs.mkdirSync(DIR, { recursive: true });

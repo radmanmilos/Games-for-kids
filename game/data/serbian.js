@@ -49,6 +49,16 @@
       { label: '8', name: 'осам', sentence: 'Осам коња', emoji: '🐴', count: 8 },
       { label: '9', name: 'девет', sentence: 'Девет жаба', emoji: '🐸', count: 9 },
       { label: '10', name: 'десет', sentence: 'Десет свиња', emoji: '🐷', count: 10 },
+      { label: '11', name: 'једанаест', sentence: 'Једанаест паса', emoji: '🐶', count: 11 },
+      { label: '12', name: 'дванаест', sentence: 'Дванаест мачака', emoji: '🐱', count: 12 },
+      { label: '13', name: 'тринаест', sentence: 'Тринаест крава', emoji: '🐮', count: 13 },
+      { label: '14', name: 'четрнаест', sentence: 'Четрнаест слонова', emoji: '🐘', count: 14 },
+      { label: '15', name: 'петнаест', sentence: 'Петнаест лавова', emoji: '🦁', count: 15 },
+      { label: '16', name: 'шеснаест', sentence: 'Шеснаест патака', emoji: '🦆', count: 16 },
+      { label: '17', name: 'седамнаест', sentence: 'Седамнаест коња', emoji: '🐴', count: 17 },
+      { label: '18', name: 'осамнаест', sentence: 'Осамнаест жаба', emoji: '🐸', count: 18 },
+      { label: '19', name: 'деветнаест', sentence: 'Деветнаест свиња', emoji: '🐷', count: 19 },
+      { label: '20', name: 'двадесет', sentence: 'Двадесет паса', emoji: '🐶', count: 20 },
     ],
 
     shapes: [
