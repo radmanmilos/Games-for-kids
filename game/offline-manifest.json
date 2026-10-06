@@ -888,8 +888,8 @@
     "size": 14137
   },
   "pages/maze.html": {
-    "sha256": "209e3ee18cf27622015f07238c268e808fa96534341a1e54dcb1d9ad65deb8ad",
-    "size": 4231
+    "sha256": "66c587e8cec22ba09396fa52691e1d89202d3a86fa245faf3236fa55a8b90c36",
+    "size": 4395
   },
   "pages/ocean.html": {
     "sha256": "94963b5926cd131583bebf4bc436f6f0687a32f517ed1f1ca1688ebdb43fca7d",
@@ -912,8 +912,8 @@
     "size": 13766
   },
   "pages/rhythm.html": {
-    "sha256": "1c25a70837d36c6503d1375ab38cb7d3130a29cf5baad11006a01026268daeae",
-    "size": 6294
+    "sha256": "37904fdf92a86563e77aa117f555ca4736945a759d3ec5cfe569d16b640086fa",
+    "size": 6458
   },
   "pages/sequencing.html": {
     "sha256": "ddbaecf400b10ed0d15cc149782207abaa95c9dcb0862e8b51e12f39033f2505",
@@ -932,8 +932,8 @@
     "size": 2940
   },
   "pages/spatial.html": {
-    "sha256": "52ff9f5e1808e84aba640aaa4f96bee04dd18e965641c5f94ad96e0b862c4afb",
-    "size": 4817
+    "sha256": "c47af75fa0b1e291f941eed9186bba1c330d40516e2eb93494b9904b0cf30473",
+    "size": 4981
   },
   "pages/tracing.html": {
     "sha256": "8f4178d38e2ebf8c0ccd7ee7b18068c8010428ef78a9d1b1605976261284b8d5",

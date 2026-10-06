@@ -42,6 +42,28 @@ for (const page of pages) {
   if (firstScript >= 0 && (languageScript < 0 || languageScript > firstScript)) {
     failures.push(`${page}: data/serbian.js must load before page scripts`);
   }
+
+  /* Back-button arrow convention (task 207): every back control must render the
+     shared Material "arrow_back" SVG path, never a raw text glyph. Three newer
+     pages (maze, rhythm, spatial) shipped a bare "←" that renders inconsistently
+     across fonts and unlike every other page's SVG button. A control counts as a
+     back control when it carries the .back-btn/.adv-back class or a "…-back"/
+     "back-btn" navigation id; coloring-next shares the .back-btn class but is the
+     forward arrow, so the glyph discriminates it. animal_puzzle/animal_counting/
+     animal_memory inject their back button from JS (already the SVG); static HTML
+     is what this scan sees. */
+  const ARROW_BACK = 'M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z';
+  for (const m of html.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/gi)) {
+    const attrs = m[1];
+    const isBack = /\bclass="[^"]*\b(?:back-btn|adv-back)\b[^"]*"/i.test(attrs) ||
+      /id="(?:[a-z0-9_-]+-back|back-btn)"/i.test(attrs);
+    if (!isBack) continue;
+    const textOnly = m[2].replace(/<[^>]*>/g, '').trim();
+    if (/^(➡|→)$/.test(textOnly)) continue;
+    if (textOnly && !m[2].includes(ARROW_BACK)) {
+      failures.push(`${page}: back control uses a text glyph "${textOnly}" instead of the shared SVG arrow (task 207)`);
+    }
+  }
 }
 
 // Validate registry entries exist on disk
