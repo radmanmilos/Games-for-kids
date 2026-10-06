@@ -32,7 +32,7 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
     groups: Array.from(document.querySelectorAll('.hub-group-title')).map(e => e.textContent)
   })`);
   const hubj = JSON.parse(hub);
-  check('hub shows two sets (4+4) + labels', hubj.babies === 4 && hubj.kids === 4 && hubj.groups.join('|') === 'За малишане|За децу', hub);
+  check('hub shows two sets (6+4) + labels', hubj.babies === 6 && hubj.kids === 4 && hubj.groups.join('|') === 'За малишане|За децу', hub);
 
   // --- Category tabs in activity mode ---
   await h.evalv(CLICK('#classroomHub .activity-btn[data-activity="alphabet"]'));
@@ -45,10 +45,41 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
     tabsVisible: !document.getElementById('classroomActivity').hidden
   })`);
   const T = JSON.parse(tabsInfo);
-  check('4 category tabs visible in activity mode', T.tabCount === 4 && T.tabsVisible === true, tabsInfo);
+  check('6 category tabs visible in activity mode', T.tabCount === 6 && T.tabsVisible === true, tabsInfo);
   const tabText = T.tabLabels.map(l => l.replace(/[^\u0400-\u04FF]/g, '')).join('|');
-  check('tabs labeled Азбука/Бројеви/Облици/Боје', tabText === 'Азбука|Бројеви|Облици|Боје', T.tabLabels.join('|'));
+  /* The label filter strips spaces too (only Cyrillic survives), so the expected
+     string has no space in Годишња доба — same normalization as the original
+     four-tab assertion. */
+  check('tabs labeled Азбука/Бројеви/Облици/Боје/Време/Годишња доба', tabText === 'Азбука|Бројеви|Облици|Боје|Време|Годишњадоба', T.tabLabels.join('|'));
   check('active tab matches current activity', T.activeTab === 'alphabet', tabsInfo);
+
+  // The two new activities render every shared word, in order — the same
+  // derived invariant the numbers tab uses, so adding a word stays green while
+  // a classroom that stops rendering a word (or renders stale hardcoded tiles)
+  // goes red. Време shows 4 time words; Годишња доба shows 4 seasons + 4 weather.
+  // The tiles present emoji/time-pastels and SVG scenes, so the word itself is
+  // carried by the tile's aria-label (same channel sequencing_smoke asserts).
+  async function assertActivityWords(tab, title, serbianExpr) {
+    await h.evalv(CLICK('.class-tab[data-tab="' + tab + '"]'));
+    await sleep(150);
+    const words = JSON.parse(await h.evalv(`JSON.stringify({
+      activeTab: document.querySelector('.class-tab.active') ? document.querySelector('.class-tab.active').dataset.tab : null,
+      got: document.getElementById('activityTitle').textContent
+    })`));
+    check('tab switch to ' + title + ' updates activity',
+      words.activeTab === tab && words.got === title, JSON.stringify(words));
+    const labels = await h.evalv(`JSON.stringify([...document.querySelectorAll('#activityGrid .class-tile')].map(t => t.getAttribute('aria-label')).filter(Boolean))`);
+    const expected = await h.evalv(`JSON.stringify(window.SERBIAN.${serbianExpr})`);
+    check(title + ': every shared word appears as a tile label, in order',
+      labels === expected, `rendered ${labels} expected ${expected}`);
+  }
+
+  await assertActivityWords('time', 'Време', 'time.map(t => String(t))');
+  await assertActivityWords('seasons', 'Годишња доба', 'seasons.concat(window.SERBIAN.weather).map(w => String(w))');
+
+  // Back to the numbers tab where the audio-tap check below expects a tile.
+  await h.evalv(CLICK('.class-tab[data-tab="numbers"]'));
+  await sleep(150);
 
   // Tab switching: click Бројеви tab
   await h.evalv(CLICK('.class-tab[data-tab="numbers"]'));

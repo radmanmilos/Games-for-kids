@@ -1,6 +1,6 @@
 # Learning Content Roadmap — Reassessment (R27b)
 
-**Date:** 2026-10-05
+**Date:** 2026-10-05 (last updated 2026-10-06 — tasks 197/198/202/203 closed Tier A items 1–2 and Tier B items 3/4/5)
 **Task:** 193 → 194 (roadmap §41 "Future Candidate Review")
 **Reviews:** `resources/General_reviews/Learning_Content_Roadmap.md` (the original nine-item proposal)
 **Method:** every claim below is checked against the current code, with `file:line`. Nothing here is carried over from the original document's "PLANNED" status column.
@@ -20,12 +20,12 @@ The original roadmap was written before the R21–R27 pilots existed. Seven new 
 |---|---|---|---|
 | 1 | Бројеви 1–20 (Numbers) | **Partial — finish it** | data + game both hard-stop at 10 |
 | 2 | Боје (Colors) | **Do not build** | already covered; §41 pre-empts it |
-| 3 | Време (Time) | **Partial — worth doing** | zero vocabulary exists |
+| 3 | Време (Time) | **Done (task 203)** | `SERBIAN.time` + Classroom activity |
 | 4 | Абецеда (Alphabet) | **Done (task 196)** | 30 letters; audit found 6/10 wrong, now derived |
 | 5 | Речи (Words) | **Defer** | §41 warns against the proposed shape |
-| 6 | Seasons | **Partial — worth doing** | zero vocabulary exists |
+| 6 | Seasons | **Done (task 203)** | `SERBIAN.seasons` + `weather`, SVG scenes |
 | 7 | Математика (Math) | **Partial — defer equations** | quantities done by R21 |
-| 8 | Наука (Science) | **Partial — cheap to extend** | no habitats, growth is 1 of 3 sequences |
+| 8 | Наука (Science) | **Partial — growth extended** | 8 sequences now; habitats still not present |
 | 9 | Свет (World) | **Do not build** | §41 rejects it explicitly |
 
 ---
@@ -61,11 +61,11 @@ R22 `sorting` also uses color as a real category (`sorting.js:16-23`, red/blue w
 
 §41 says to check sufficiency first; it is sufficient. **A standalone colors app would be a duplicate.** The only genuine gap is *recall* — the child names a colour they are shown — which is a small focused addition at most, not a ninth game.
 
-## 3. Време — worth doing
+## 3. Време — DONE (task 203)
 
-Nothing exists. A case-insensitive search of `game/data/serbian.js` for `jutro|veče|noć|dan|jesen|zima|proleće|letnji` returns **zero** matches, and `Object.keys(SERBIAN)` has no time- or season-shaped key at all. `classroom.js:38-43` defines only four activities: `alphabet`, `numbers`, `shapes`, `colors`.
+At the time of this review nothing existed — a case-insensitive search of `game/data/serbian.js` for `jutro|veče|noć|dan|jesen|zima|proleće|letnji` returned **zero** matches, and `Object.keys(SERBIAN)` had no time- or season-shaped key at all. `classroom.js:38-43` defined only four activities: `alphabet`, `numbers`, `shapes`, `colors`.
 
-§41 says start with `jutro / dan / veče / noć`, explicitly **before clock faces**. Cheap: four Serbian strings plus one small scene game.
+§41 says start with `jutro / dan / veče / noć`, explicitly **before clock faces**. **Done 2026-10-06 (task 203):** `SERBIAN.time` (`Јутро/Дан/Вече/Ноћ`) with `speech.js` `timeFiles` registered to the task-198 MP3s, and a Classroom `Време` hub button + tab presenting the four moments as emoji scenes (🌅 ☀️ 🌇 🌙). No clock faces, no new audio, no scene assets.
 
 ## 4. Абецеда — done (task 196)
 
@@ -79,9 +79,9 @@ Nothing exists. A case-insensitive search of `game/data/serbian.js` for `jutro|v
 
 §41: *"Use familiar objects and existing Serbian speech assets first. Avoid a text-building app that assumes strong literacy."* The original roadmap's proposal was "Simple word building / Rhyming", which is precisely the literacy-assuming shape §41 rules out. No existing asset supports it. **Defer.**
 
-## 6. Seasons — worth doing
+## 6. Seasons — DONE (task 203)
 
-Same position as Time: **zero** vocabulary. Note §41 names it `Годишња доба` and asks for visual scenes plus weather concepts.
+At review time, same position as Time: **zero** vocabulary. §41 names it `Годишња доба` and asks for visual scenes plus weather concepts. **Done 2026-10-06 (task 203):** `SERBIAN.seasons` (`Пролеће/Лето/Јесен/Зима`) + `SERBIAN.weather` (`Сунце/Киша/Снег/Ветар`), `speech.js` `seasonFiles`/`weatherFiles` registered to the task-198 MP3s, and a Classroom `Годишња доба` activity presenting **4 SVG season scenes + 4 SVG weather scenes** (spring flowers, summer sea, autumn tree, winter snowman; sun/rain/snow/wind) — the "visual scenes plus weather concepts" §41 asked for, in one activity.
 
 **Doc bug worth fixing:** the original roadmap lists this as **"Сечења"** — which in Serbian means *cutting*, a mistranslation of "Seasons". A future session searching for `Сечења` would find the wrong concept. The correct label is `Годишња доба`.
 
@@ -97,7 +97,7 @@ Same position as Time: **zero** vocabulary. Note §41 names it `Годишња �
 - Habitats: **not present**.
 - Plant growth: R24 `sequencing.js:7-17` has a `plant1` sequence (Семе → Биљка → Цвет) — one of only **two** sequences in the game.
 
-Growth is already modelled correctly as a sequence; extending it is data, not architecture.
+Growth is already modelled correctly as a sequence; extending it is data, not architecture. **Extended 2026-10-05–06 (tasks 202 + 203):** `fruit`, `birds`, `sunflower`, `tree`, `butterfly`, `vegetable` bring the game to **8 three-step sequences** — still all data, no new speech (`label` is `aria-label`-only). Habitats remain the one §41 named concept not present.
 
 ## 9. Свет — do not build
 
@@ -116,9 +116,9 @@ Growth is already modelled correctly as a sequence; extending it is data, not ar
 
 **Tier B — reasonable next (needs new content)**
 
-3. **Time** `jutro / dan / veče / noć` (item 3) — four strings, no clock faces. **Audio generated 2026-10-06** (`jutro/dan/vece/noc` clips on disk, same engine/voice as 0–10); no vocabulary in `serbian.js` yet — wiring the activity is open work.
-4. **Seasons** `Годишња доба` + weather (item 6) — visual scenes. **Audio generated 2026-10-06** (`prolece/leto/jesen/zima` + `kisa/sneg/sunce/vetar` clips on disk); no vocabulary or scene assets yet — wiring the activity is open work.
-5. **Plant growth** via more `sequencing` steps (item 8) — **NOT blocked.** Verified at `sequencing.js:37` that a step's label is only an `aria-label`; the game speaks just a fixed prompt plus the recorded `praise`/`retry` lines, so extra sequences are pure data with no audio work. (Habitats with new nouns would be blocked.)
+3. **Time** `jutro / dan / veče / noć` (item 3) — four strings, no clock faces. **DONE 2026-10-06 (task 203):** `SERBIAN.time`, `speech.js` `timeFiles` (task-198 clips), Classroom `Време` activity with emoji scenes. Closed.
+4. **Seasons** `Годишња доба` + weather (item 6) — visual scenes. **DONE 2026-10-06 (task 203):** `SERBIAN.seasons` + `SERBIAN.weather`, `speech.js` `seasonFiles`/`weatherFiles` (task-198 clips), Classroom `Годишња доба` activity with 4 SVG season + 4 SVG weather scenes. Closed.
+5. **Plant growth** via more `sequencing` steps (item 8) — **PARTIALLY DONE (tasks 202 + 203).** Verified at `sequencing.js:37` that a step's label is only an `aria-label`; the game speaks just a fixed prompt plus the recorded `praise`/`retry` lines, so extra sequences are pure data with no audio work. Game now has **8** three-step sequences (was 2). The remaining §41 concept from item 8 — **habitats** — would need new nouns and recordings, so it stays open (blocked on new speech).
 
 **Tier C — do not build**
 

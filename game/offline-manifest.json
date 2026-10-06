@@ -716,8 +716,8 @@
     "size": 9341
   },
   "data/serbian.js": {
-    "sha256": "73d35bc0e639e56eaf233d2e288472d9b59ad37addb3d174899e47e8f09bcd53",
-    "size": 8381
+    "sha256": "2aa51a045f5b9033eaabdaf986baf0eb0afb8f064d3fb2b9aca4df0003db3214",
+    "size": 8745
   },
   "games/adventure-modes.js": {
     "sha256": "268e5744538b62040ac3123d4ed2f437907429bcf464ccdc87ced48bf4845ebd",
@@ -752,8 +752,8 @@
     "size": 19118
   },
   "games/classroom.js": {
-    "sha256": "413f549224a44650bf7fbcf71e8d50b986ee574d202d4540604c4443a24202f3",
-    "size": 9676
+    "sha256": "7a3e2f0f6b08b97725daaea67a1e50fb9eb80eda028fd8538f3a01be2c47d440",
+    "size": 14560
   },
   "games/coloring.js": {
     "sha256": "589413098970b0d6a57a4be30100908b584170553e84ecd4a4259f732072a957",
@@ -812,8 +812,8 @@
     "size": 3716
   },
   "games/sequencing.js": {
-    "sha256": "5a0b0c4f00931455844a4b095c974ca4ad96bc43b84a0993572a5ed2b1c7fce8",
-    "size": 6090
+    "sha256": "e2ce7c2e24b643fdcbc02618a708f6ff3bc0eb1c7a29598a453ce4f78a85b5fd",
+    "size": 6812
   },
   "games/shapes.js": {
     "sha256": "6f43d1373dfb7c7b6bb4c6e0b49bebf9d745cf733fe478d0fdee7f43ba58398b",
@@ -860,8 +860,8 @@
     "size": 13289
   },
   "pages/classroom.html": {
-    "sha256": "2b34122264e02355fb35607e2caac6d35ac8b9abb2bdda008dcf794bdf338a81",
-    "size": 16166
+    "sha256": "41f5370ad8bee5c2ba40e7f6114f29c9907b2c97e88568fa7c56dbb3fab0b355",
+    "size": 16938
   },
   "pages/coloring.html": {
     "sha256": "500fabd1037641b446635d900d81e5122d8307ad7d6276e506d9d19788323f79",
@@ -980,8 +980,8 @@
     "size": 8520
   },
   "shared/speech.js": {
-    "sha256": "7c614952f47a074b67ef2c4b97ea8ef29c0100d476704590c7324013da2a3ae1",
-    "size": 6029
+    "sha256": "2c40eee8e20449f9cbec2f0a77e08f6952a83e5e35eac2d9be9ae2dade24351c",
+    "size": 6383
   },
   "shared/utils.js": {
     "sha256": "c544f8c213352a6e67ffa503a6a2373f2515c9c26b3d8bfa36ac0fffd0883334",

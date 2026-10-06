@@ -30,6 +30,15 @@
     const shapeFiles = ['krug', 'kvadrat', 'trougao', 'zvezda', 'lopta', 'kocka', 'kvadar', 'valjak', 'kupa', 'piramida'];
     registerEach(vocabulary.shapes, shapeFiles, shape => shape);
 
+    const timeFiles = ['jutro', 'dan', 'vece', 'noc'];
+    registerEach(vocabulary.time, timeFiles, t => t);
+
+    const seasonFiles = ['prolece', 'leto', 'jesen', 'zima'];
+    registerEach(vocabulary.seasons, seasonFiles, s => s);
+
+    const weatherFiles = ['kisa', 'sneg', 'sunce', 'vetar'];
+    registerEach(vocabulary.weather, weatherFiles, w => w);
+
     const numberFiles = ['nula', 'jedan', 'dva', 'tri', 'cetiri', 'pet', 'sest', 'sedam', 'osam', 'devet', 'deset',
         'jedanaest', 'dvanaest', 'trinaest', 'cetrnaest', 'petnaest', 'sesnaest', 'sedamnaest', 'osamnaest', 'devetnaest', 'dvadeset'];
     const sentenceFiles = ['nula', 'jedan_pas', 'dva_psa', 'tri_macke', 'cetiri_krave', 'pet_slonova', 'sest_lavova', 'sedam_pataka', 'osam_konja', 'devet_zaba', 'deset_svinja',

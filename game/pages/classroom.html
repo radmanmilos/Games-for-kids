@@ -84,6 +84,8 @@
   .activity-btn:nth-child(2){ background:radial-gradient(circle at 35% 30%, #FF9FB6, var(--pink)); }
   .activity-btn:nth-child(3){ background:radial-gradient(circle at 35% 30%, #7FDBFF, var(--sky)); }
   .activity-btn:nth-child(4){ background:radial-gradient(circle at 35% 30%, #A5E5A0, var(--green)); }
+  .activity-btn:nth-child(5){ background:radial-gradient(circle at 35% 30%, #FFD875, var(--yellow)); }
+  .activity-btn:nth-child(6){ background:radial-gradient(circle at 35% 30%, #9BD0FF, #5AA7E8); }
   .activity-btn:active{ transform:scale(.92) translateY(4px); }
   .activity-btn .a-emoji{ font-size:11vmin; line-height:1; }
   .activity-btn .a-label{ font-size:3.4vmin; font-weight:700; color:#fff; text-shadow:0 1vmin 1vmin rgba(0,0,0,.2); }
@@ -172,7 +174,7 @@
   /* ---------- KIDS TIER (за децу) ---------- */
   .hub-group{ display:flex; flex-direction:column; align-items:center; gap:2.5vmin; }
   .hub-group-title{ margin:0; font-size:3.2vmin; font-weight:700; color:var(--plum-soft); letter-spacing:.12em; }
-  .hub-group-btns{ display:flex; flex-direction:row; gap:4vmin; }
+  .hub-group-btns{ display:flex; flex-direction:row; flex-wrap:wrap; justify-content:center; gap:4vmin; }
   .kids-btn{
     width:min(28vmin, 24vh); height:min(28vmin, 24vh); border-radius:50%; border:none;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1vmin;
@@ -267,6 +269,8 @@
           <button class="activity-btn" data-activity="numbers"><span class="a-emoji">🔢</span><span class="a-label">Бројеви</span></button>
           <button class="activity-btn" data-activity="shapes"><span class="a-emoji">🔷</span><span class="a-label">Облици</span></button>
           <button class="activity-btn" data-activity="colors"><span class="a-emoji">🎨</span><span class="a-label">Боје</span></button>
+          <button class="activity-btn" data-activity="time"><span class="a-emoji">🕰️</span><span class="a-label">Време</span></button>
+          <button class="activity-btn" data-activity="seasons"><span class="a-emoji">🍂</span><span class="a-label">Годишња доба</span></button>
         </div>
       </div>
       <div class="hub-group">
@@ -288,6 +292,8 @@
         <button class="class-tab" data-tab="numbers"><span class="tab-emoji">🔢</span>Бројеви</button>
         <button class="class-tab" data-tab="shapes"><span class="tab-emoji">🔷</span>Облици</button>
         <button class="class-tab" data-tab="colors"><span class="tab-emoji">🎨</span>Боје</button>
+        <button class="class-tab" data-tab="time"><span class="tab-emoji">🕰️</span>Време</button>
+        <button class="class-tab" data-tab="seasons"><span class="tab-emoji">🍂</span>Годишња доба</button>
       </div>
       <div id="activityGrid" class="activity-grid"></div>
       <div id="activityDisplay" class="activity-display">

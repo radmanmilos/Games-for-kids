@@ -73,7 +73,8 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
      count is asserted against the data instead. */
   const seqIntegrity = JSON.parse(await h.evalv(`JSON.stringify((() => {
     const out = { seen: [], bad: [] };
-    const ids = ['plant1', 'fruit', 'birds', 'wash'];
+    const ids = window.__sequencing.ids();
+    out.count = ids.length;
     for (let i = 0; i < ids.length; i++) {
       window.__sequencing.goToRound(i);
       const cur = window.__sequencing.state();
@@ -90,8 +91,8 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
     }
     return out;
   })())`));
-  check('all four sequences build: 3 cards, 3 slots, orders 0-2, unique accessible labels',
-    seqIntegrity.bad.length === 0 && seqIntegrity.seen.length === 4,
+  check('every sequence builds: 3 cards, 3 slots, orders 0-2, unique accessible labels',
+    seqIntegrity.bad.length === 0 && seqIntegrity.seen.length === seqIntegrity.count,
     seqIntegrity.bad.length ? seqIntegrity.bad.join(' | ') : JSON.stringify(seqIntegrity.seen));
 
   const root=path.join(__dirname,'..'); const idx=fs.readFileSync(path.join(root,'game','index.html'),'utf8');

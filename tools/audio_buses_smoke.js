@@ -136,8 +136,11 @@ window.SERBIAN = {
   animals: Object.fromEntries(['Dog', 'Cat', 'Cow', 'Lion', 'Elephant', 'Frog', 'Pig', 'Duck', 'Fox', 'Sheep', 'Horse', 'Chicken'].map(name => [name, name])),
   alphabet: Array.from({ length: 30 }, (_, index) => ({ name: `letter${index}`, word: `word${index}` })),
   shapes: Array.from({ length: 10 }, (_, index) => `shape${index}`),
-  numbers: Array.from({ length: 11 }, (_, index) => ({ name: `number${index}`, sentence: `sentence${index}` })),
+  numbers: Array.from({ length: 21 }, (_, index) => ({ name: `number${index}`, sentence: `sentence${index}` })),
   colors: Array.from({ length: 11 }, (_, index) => ({ name: `color${index}` })),
+  time: Array.from({ length: 4 }, (_, index) => `time${index}`),
+  seasons: Array.from({ length: 4 }, (_, index) => `season${index}`),
+  weather: Array.from({ length: 4 }, (_, index) => `weather${index}`),
   reactions: { ouch: 'Јао!', ouchPlain: 'Јао!' },
 };
 const speechSource = fs.readFileSync(path.join(__dirname, '..', 'game', 'shared', 'speech.js'), 'utf8');

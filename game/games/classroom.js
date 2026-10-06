@@ -1,8 +1,9 @@
 /* ---------------- УЧИОНИЦА (CLASSROOM) ---------------- */
-/* Hub with 4 learning activities: Азбука, Бројеви, Облици, Боје.
-   Tap a tile to speak it (and show a picture); autoplay button walks through
-   tiles one by one, slowly, so the child can repeat the words. No celebrate —
-   the goal is learn + repeat. All text is Serbian Cyrillic. */
+/* Hub with 6 learning activities: Азбука, Бројеви, Облици, Боје,
+   Време, Годишња доба. Tap a tile to speak it (and show a picture); autoplay
+   button walks through tiles one by one, slowly, so the child can repeat the
+   words. No celebrate — the goal is learn + repeat. All text is Serbian
+   Cyrillic. */
 (function () {
   const AUTOPLAY_PAUSE = 1500;
 
@@ -27,10 +28,37 @@
     { svg: SHAPE_SVGS.kupa },
     { svg: SHAPE_SVGS.piramida },
   ];
+
+  const TIME_SCENES = [
+    { emoji: '🌅' },
+    { emoji: '☀️' },
+    { emoji: '🌇' },
+    { emoji: '🌙' },
+  ];
+
+  const SEASON_SCENES = [
+    { svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#BFE9FF"/><circle cx="85" cy="15" r="10" fill="#FFD23F"/><path d="M0 65 Q25 45 50 65 T100 65 L100 100 L0 100 Z" fill="#67C971"/><circle cx="30" cy="75" r="5" fill="#FF6F91"/><circle cx="42" cy="82" r="5" fill="#FFD23F"/><circle cx="60" cy="76" r="5" fill="#FF6F91"/><circle cx="70" cy="83" r="5" fill="#FFD23F"/></svg>' },
+    { svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#7FDBFF"/><circle cx="20" cy="20" r="12" fill="#FFD23F"/><path d="M0 60 Q25 50 50 60 T100 60 L100 100 L0 100 Z" fill="#4FC3F7"/><rect x="0" y="62" width="100" height="8" fill="#7FD7FF"/><path d="M0 75 Q25 67 50 75 T100 75 L100 100 L0 100 Z" fill="#2FA6DA"/></svg>' },
+    { svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#FFF4D6"/><rect x="45" y="40" width="10" height="35" fill="#8B5E3C"/><circle cx="50" cy="25" r="22" fill="#FF8C42"/><circle cx="37" cy="38" r="14" fill="#FF6F91"/><circle cx="63" cy="38" r="14" fill="#FFD23F"/><circle cx="30" cy="78" r="4" fill="#FF8C42"/><circle cx="70" cy="82" r="4" fill="#FF6F91"/></svg>' },
+    { svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#E4F7FB"/><circle cx="50" cy="35" r="16" fill="#fff"/><circle cx="50" cy="60" r="13" fill="#fff"/><circle cx="50" cy="82" r="10" fill="#fff"/><circle cx="44" cy="33" r="2.5" fill="#3A3A3A"/><circle cx="56" cy="33" r="2.5" fill="#3A3A3A"/><path d="M42 42 L58 48 M42 48 L58 42" stroke="#FF8C42" stroke-width="3"/><circle cx="15" cy="20" r="5" fill="#9AA5B1"/><circle cx="85" cy="15" r="5" fill="#9AA5B1"/><circle cx="78" cy="40" r="4" fill="#9AA5B1"/></svg>' },
+  ];
+
+  const WEATHER_SCENES = [
+    { svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#7FDBFF"/><circle cx="50" cy="50" r="20" fill="#FFD23F"/><path d="M50 12 L56 26 L44 26 Z" fill="#FFD23F"/><path d="M50 88 L56 74 L44 74 Z" fill="#FFD23F"/><path d="M12 50 L26 56 L26 44 Z" fill="#FFD23F"/><path d="M88 50 L74 56 L74 44 Z" fill="#FFD23F"/><path d="M23 23 L33 33 L29 37 L19 27 Z" fill="#FFD23F"/><path d="M77 77 L67 67 L71 63 L81 73 Z" fill="#FFD23F"/><path d="M77 23 L67 33 L71 37 L81 27 Z" fill="#FFD23F"/><path d="M23 77 L33 67 L29 63 L19 73 Z" fill="#FFD23F"/></svg>' },
+    { svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#E9F4FF"/><path d="M25 45 Q15 45 15 35 Q15 25 28 25 Q32 12 50 14 Q66 12 70 25 Q85 22 85 35 Q85 45 75 45 Z" fill="#9AA5B1"/><line x1="35" y1="55" x2="27" y2="70" stroke="#4FC3F7" stroke-width="4" stroke-linecap="round"/><line x1="52" y1="55" x2="44" y2="70" stroke="#4FC3F7" stroke-width="4" stroke-linecap="round"/><line x1="69" y1="55" x2="61" y2="70" stroke="#4FC3F7" stroke-width="4" stroke-linecap="round"/></svg>' },
+    { svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#E4F7FB"/><path d="M25 45 Q15 45 15 35 Q15 25 28 25 Q32 12 50 14 Q66 12 70 25 Q85 22 85 35 Q85 45 75 45 Z" fill="#9AA5B1"/><circle cx="38" cy="66" r="5" fill="#fff" stroke="#9AA5B1" stroke-width="1"/><circle cx="62" cy="66" r="5" fill="#fff" stroke="#9AA5B1" stroke-width="1"/><circle cx="50" cy="80" r="5" fill="#fff" stroke="#9AA5B1" stroke-width="1"/></svg>' },
+    { svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#BFE9FF"/><path d="M20 30 Q55 10 80 28 Q92 36 84 42" stroke="#67C971" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M15 52 Q50 40 75 54 Q88 60 82 66" stroke="#9B6DFF" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M25 76 Q55 66 72 76" stroke="#FF8C42" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="22" cy="40" r="4" fill="#FF6F91"/><circle cx="82" cy="30" r="4" fill="#FFD23F"/></svg>' },
+  ];
+
   const ALPHABET = SERBIAN.alphabet;
   const NUMBERS = SERBIAN.numbers;
   const SHAPES = SERBIAN.shapes.map((name, index) => ({ name, ...SHAPE_PRESENTATION[index] }));
   const COLORS = SERBIAN.colors;
+  const TIME = SERBIAN.time.map((name, index) => ({ name, ...TIME_SCENES[index] }));
+  /* Годишња доба is one activity: the four seasons, then the four weather
+     concepts (Сунце/Киша/Снег/Ветар), all feeding the same shared speech. */
+  const SEASONS = SERBIAN.seasons.map((name, index) => ({ name, ...SEASON_SCENES[index] }))
+    .concat(SERBIAN.weather.map((name, index) => ({ name, ...WEATHER_SCENES[index] })));
 
   const TILE_PASTELS = ['#FFE9EF', '#E9F4FF', '#FFF4D6', '#E8F7E6', '#F1EBFF', '#FFEFE0', '#E4F7FB', '#FBEAF6'];
 
@@ -39,6 +67,8 @@
     numbers: { title: SERBIAN.classroom.activities.numbers, items: NUMBERS },
     shapes: { title: SERBIAN.classroom.activities.shapes, items: SHAPES },
     colors: { title: SERBIAN.classroom.activities.colors, items: COLORS },
+    time: { title: SERBIAN.classroom.activities.time, items: TIME },
+    seasons: { title: SERBIAN.classroom.activities.seasons, items: SEASONS },
   };
 
   let currentActivity = null;
@@ -109,7 +139,7 @@
       }
       d.innerHTML = row;
       c.textContent = item.sentence;
-    } else if (currentActivity === 'shapes') {
+    } else if (currentActivity === 'shapes' || currentActivity === 'time' || currentActivity === 'seasons') {
       d.innerHTML = item.svg ? '<div class="show-svg">' + item.svg + '</div>' : '<div class="show-emoji">' + item.emoji + '</div>';
       c.textContent = item.name;
     } else if (currentActivity === 'colors') {
@@ -239,6 +269,6 @@
     });
   }
 
-  window.classroomData = { alphabet: ALPHABET, numbers: NUMBERS, shapes: SHAPES, colors: COLORS };
+  window.classroomData = { alphabet: ALPHABET, numbers: NUMBERS, shapes: SHAPES, colors: COLORS, time: TIME, seasons: SEASONS };
   window.startClassroom = startClassroom;
 }());

@@ -5,8 +5,7 @@
    Each sequence's `label` is used ONLY as an aria-label — the game speaks just
    the fixed prompt 'Постави у редослед' plus the already-recorded praise/retry
    lines (verified at the card markup, which sets aria-label and nothing else).
-   That is why more sequences can be added here with no new Serbian speech,
-   while Time/Seasons stay blocked on recordings (see PROJECT_TASKS task 198).
+   That is why more sequences can be added here with no new Serbian speech.
    Keep every sequence at 3 steps: the layout is sized in vmin for three, and a
    longer chain risks the small-viewport clipping this project has already been
    bitten by twice. */
@@ -32,6 +31,26 @@
       {emoji:'💧',label:'Прљаво',order:0},
       {emoji:'🧼',label:'Перу',order:1},
       {emoji:'✨',label:'Чисто',order:2}
+    ]},
+    {id:'sunflower', steps:[
+      {emoji:'🌱',label:'Семе',order:0},
+      {emoji:'🌿',label:'Биљка',order:1},
+      {emoji:'🌻',label:'Сунцокрет',order:2}
+    ]},
+    {id:'tree', steps:[
+      {emoji:'🌰',label:'Жир',order:0},
+      {emoji:'🌱',label:'Клица',order:1},
+      {emoji:'🌳',label:'Дрво',order:2}
+    ]},
+    {id:'butterfly', steps:[
+      {emoji:'🥚',label:'Јаје',order:0},
+      {emoji:'🐛',label:'Гусеница',order:1},
+      {emoji:'🦋',label:'Лептир',order:2}
+    ]},
+    {id:'vegetable', steps:[
+      {emoji:'🌱',label:'Семе',order:0},
+      {emoji:'💧',label:'Заливам',order:1},
+      {emoji:'🥕',label:'Шаргарепа',order:2}
     ]}
   ];
   var round=0, data=null, tray=[], slots=[], placedCount=0, misses=0, locked=false, started=false;
@@ -76,7 +95,7 @@
   function newRound(){ locked=false; placedCount=0; misses=0; if(feedbackEl)feedbackEl.textContent=''; data=SEQ[round]; build(); speak('Постави у редослед'); }
 
   function startSequencing(){ if(started)return; started=true; promptEl=document.getElementById('seq-prompt'); trayEl=document.getElementById('seq-tray'); slotsEl=document.getElementById('seq-slots'); feedbackEl=document.getElementById('seq-feedback'); round=0; newRound();
-    window.__sequencing={state:function(){return{round:round,id:data.id,slots:slots.length,placed:placedCount,misses:misses}},goToRound:function(n){round=n%SEQ.length;newRound();}};
+    window.__sequencing={state:function(){return{round:round,id:data.id,slots:slots.length,placed:placedCount,misses:misses}},ids:function(){return SEQ.map(function(s){return s.id;})},goToRound:function(n){round=n%SEQ.length;newRound();}};
   }
   window.startSequencing=startSequencing;
 })();
