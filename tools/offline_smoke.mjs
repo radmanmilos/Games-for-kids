@@ -470,15 +470,19 @@ const APPS = [
   },
   {
     id: 'rhythm', back: '#rhythm-back',
-    ready: `!!window.__rhythm && window.__rhythm.state().phase==='repeat' && window.__rhythm.state().round===0`,
+    ready: `!!window.__rhythm && window.__rhythm.state().phase==='repeat' && window.__rhythm.state().length>=2`,
     act: async h => {
-      const first = await h.tap('#drum-area');
-      if (!first.ok) return first;
-      await sleep(250);
-      const second = await h.tap('#drum-area');
-      if (!second.ok) return second;
+      const s = JSON.parse(await h.evalv(`JSON.stringify(window.__rhythm.state())`));
+      if (s.phase !== 'repeat' || !Array.isArray(s.pattern) || s.pattern.length === 0) {
+        return { ok: false, why: 'rhythm not in repeat with a melody: ' + JSON.stringify(s) };
+      }
+      for (const idx of s.pattern) {
+        const t = await h.tap(`#rhythm-pads .rhythm-pad[data-idx="${idx}"]`);
+        if (!t.ok) return t;
+        await sleep(70);
+      }
       return h.waitFor(`window.__rhythm.state().phase==='success'&&window.__rhythm.state().successes===1`,
-        { label: 'the child to echo tap-tap while offline' });
+        { label: 'the child to echo the drum melody while offline' });
     },
   },
   {

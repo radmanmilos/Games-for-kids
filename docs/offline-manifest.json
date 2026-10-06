@@ -808,12 +808,12 @@
     "size": 97419
   },
   "games/rhythm.js": {
-    "sha256": "155e7966a7a20fe71a0258c19bfe7e8ed8138f0083549c5544fec9712d0669ec",
-    "size": 3716
+    "sha256": "1b320513451c3093589f76b2a24b0bab2ebcdfda47cf2cf721bb77b6833b404e",
+    "size": 6694
   },
   "games/sequencing.js": {
-    "sha256": "e2ce7c2e24b643fdcbc02618a708f6ff3bc0eb1c7a29598a453ce4f78a85b5fd",
-    "size": 6812
+    "sha256": "0755f33a1f28b744eb9ae3398c1ab8f0935f49ded75700ffe34c5f75f59b537a",
+    "size": 6764
   },
   "games/shapes.js": {
     "sha256": "6f43d1373dfb7c7b6bb4c6e0b49bebf9d745cf733fe478d0fdee7f43ba58398b",
@@ -912,8 +912,8 @@
     "size": 13766
   },
   "pages/rhythm.html": {
-    "sha256": "5e3a8f5a5f6267441c12eca35382ebc64f89672fc92c03448db3d628aee59203",
-    "size": 3838
+    "sha256": "1c25a70837d36c6503d1375ab38cb7d3130a29cf5baad11006a01026268daeae",
+    "size": 6294
   },
   "pages/sequencing.html": {
     "sha256": "ddbaecf400b10ed0d15cc149782207abaa95c9dcb0862e8b51e12f39033f2505",

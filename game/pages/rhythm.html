@@ -12,43 +12,64 @@
   <style>
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
     html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--cream);font-family:Fredoka,sans-serif;color:var(--plum)}
-    #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4vmin;padding:4vmin}
+    #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3vmin;padding:4vmin}
     .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--plum);color:#fff;font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);z-index:20}
-    #rhythm-prompt{font-size:6vmin;font-weight:800;line-height:1.15;text-align:center}
-    #drum-area {
-      width: min(68vmin, 360px);
-      height: min(68vmin, 360px);
-      border-radius: 50%;
-      border: 0;
-      background: radial-gradient(circle at 30% 30%, #ffcf8b, #ff8c42);
-      color: var(--plum);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: clamp(72px, 24vmin, 150px);
-      box-shadow: 0 2vmin 0 rgba(0,0,0,.15),inset 0 1vmin 0 rgba(255,255,255,.55);
-      cursor: pointer;
-      touch-action: manipulation;
-      transition:transform .12s ease,box-shadow .12s ease;
-    }
-    #drum-area:disabled{cursor:default}
-    #drum-area.drum-hit{transform:scale(.94);box-shadow:0 1vmin 0 rgba(0,0,0,.15),inset 0 1vmin 0 rgba(255,255,255,.55)}
+    .back-btn:active{transform:scale(.92) translateY(3px)}
     .top-bar{position:absolute;top:2.6vmin;right:2.6vmin}
     .repeat-btn{width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--sky);color:var(--plum);font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.15);cursor:pointer}
     .repeat-btn:disabled{opacity:.5;cursor:default}
-    #rhythm-feedback{min-height:7vmin;font-size:4.5vmin;font-weight:700;color:var(--green);text-align:center}
-    @media (min-width:800px){#rhythm-prompt{font-size:42px}#rhythm-feedback{font-size:30px}}
-    @media (prefers-reduced-motion: reduce){#drum-area{transition:none}.drum-hit{transform:none!important}}
+    #rhythm-prompt{font-size:5.6vmin;font-weight:800;text-align:center;min-height:7vmin;line-height:1.15}
+    .mode-bar{display:flex;gap:2vmin}
+    .mode-btn{border:none;border-radius:999px;padding:2vmin 4vmin;font-size:3.6vmin;font-weight:700;background:#fff;color:var(--plum);box-shadow:0 1vmin 0 rgba(0,0,0,.1);cursor:pointer;touch-action:manipulation}
+    .mode-btn.active{background:var(--green);color:#fff}
+    .drum-set{display:grid;grid-template-columns:1fr 1fr;gap:3vmin;justify-items:center;align-items:center}
+    .rhythm-pad{border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;transition:transform .12s ease,filter .12s ease;box-shadow:0 1.6vmin 0 rgba(0,0,0,.14),inset 0 1vmin 0 rgba(255,255,255,.5)}
+    .rhythm-pad:disabled{opacity:.75;cursor:default}
+    .rhythm-pad.hit{transform:scale(.92);filter:brightness(1.08)}
+    .rhythm-pad.miss{transform:scale(.92);filter:brightness(.82)}
+    .rhythm-pad[data-idx="0"]{width:32vmin;height:32vmin;font-size:12vmin;background:radial-gradient(circle at 30% 30%,#ffdcb0,#d2603a)}
+    .rhythm-pad[data-idx="1"]{width:29vmin;height:29vmin;font-size:11vmin;background:radial-gradient(circle at 30% 30%,#ffca80,#e0861f)}
+    .rhythm-pad[data-idx="2"]{width:26vmin;height:26vmin;font-size:10vmin;background:radial-gradient(circle at 30% 30%,#9fd6ff,#3a86cf)}
+    .rhythm-pad[data-idx="3"]{width:23vmin;height:23vmin;font-size:9vmin;background:radial-gradient(circle at 30% 30%,#ffe9a8,#f2af1f)}
+    #rhythm-feedback{min-height:6vmin;font-size:4.5vmin;font-weight:700;color:var(--green);text-align:center}
+    @media (min-width:800px){
+      #rhythm-prompt{font-size:40px}
+      .mode-btn{font-size:24px;padding:14px 28px}
+      .rhythm-pad[data-idx="0"]{width:170px;height:170px;font-size:64px}
+      .rhythm-pad[data-idx="1"]{width:154px;height:154px;font-size:58px}
+      .rhythm-pad[data-idx="2"]{width:138px;height:138px;font-size:52px}
+      .rhythm-pad[data-idx="3"]{width:122px;height:122px;font-size:46px}
+      #rhythm-feedback{font-size:30px}
+    }
+    @media (max-height:700px){
+      #app{gap:2vmin;padding:2vmin}
+      #rhythm-prompt{font-size:4.6vmin;min-height:5.6vmin}
+      .mode-btn{padding:1.5vmin 3vmin;font-size:3.2vmin}
+      .rhythm-pad[data-idx="0"]{width:27vmin;height:27vmin;font-size:10vmin}
+      .rhythm-pad[data-idx="1"]{width:25vmin;height:25vmin;font-size:9.5vmin}
+      .rhythm-pad[data-idx="2"]{width:22vmin;height:22vmin;font-size:9vmin}
+      .rhythm-pad[data-idx="3"]{width:20vmin;height:20vmin;font-size:8vmin}
+    }
+    @media (prefers-reduced-motion:reduce){.rhythm-pad{transition:none}.rhythm-pad.hit,.rhythm-pad.miss{transform:none!important}}
   </style>
 </head>
 <body>
   <div id="app">
     <button class="back-btn" id="rhythm-back" aria-label="Назад">←</button>
     <div class="top-bar">
-      <button class="repeat-btn" id="repeat-btn" aria-label="Понови ритам">🔁</button>
+      <button class="repeat-btn" id="repeat-btn" aria-label="Понови мелодију">🔁</button>
     </div>
     <div id="rhythm-prompt">Слушај, па понови</div>
-    <button id="drum-area" aria-label="Бубањ" aria-disabled="true" disabled>🥁</button>
+    <div class="mode-bar" role="group" aria-label="Изабери начин играња">
+      <button type="button" class="mode-btn active" id="echo-btn" aria-pressed="true">🎵 Понови мелодију</button>
+      <button type="button" class="mode-btn" id="free-btn" aria-pressed="false">🥁 Слободно свирање</button>
+    </div>
+    <div class="drum-set" id="rhythm-pads">
+      <button type="button" class="rhythm-pad" data-idx="0" aria-label="Велики бубањ" disabled>🥁</button>
+      <button type="button" class="rhythm-pad" data-idx="1" aria-label="Средњи бубањ" disabled>🥁</button>
+      <button type="button" class="rhythm-pad" data-idx="2" aria-label="Мали добош" disabled>🥁</button>
+      <button type="button" class="rhythm-pad" data-idx="3" aria-label="Високи звук" disabled>🔔</button>
+    </div>
     <div id="rhythm-feedback" aria-live="polite"></div>
   </div>
   <script src="../data/serbian.js"></script>
