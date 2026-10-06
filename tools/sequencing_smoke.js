@@ -33,6 +33,13 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
     if(!moved.ok){check(`card ${i+1} can be dragged into its slot`,false,moved.why);break;}
     const placed=await h.waitFor(`window.__sequencing.state().placed===${i+1}`,{label:`card ${i+1} to fill its matching slot`});
     check(`card ${i+1} fills its matching slot`,placed.ok,placed.why);
+    // A placed card must stay VISIBLE inside its slot. This is the task-205
+    // regression: the old code absolute-positioned the card at (slotTrayOffset)
+    // inside a tray without position:relative, so the card rendered above the
+    // viewport and "disappeared" while the placed counter was perfectly happy.
+    // Assert the DOM move AND the geometry so a future invisible-drop stays red.
+    const vis=JSON.parse(await h.evalv(`JSON.stringify((()=>{const s=document.querySelector('#seq-slots .seq-slot[data-idx="${i}"]');if(!s)return{found:false};const c=s.querySelector('.seq-card');if(!c)return{found:false};const sr=s.getBoundingClientRect(),cr=c.getBoundingClientRect(),hit=document.elementFromPoint(cr.left+cr.width/2,cr.top+cr.height/2);return{found:true,parentIsSlot:s===c.parentNode,inside:cr.left>=sr.left&&cr.top>=sr.top&&cr.right<=sr.right&&cr.bottom<=sr.bottom,hitCard:hit===c||c.contains(hit)};})())`));
+    check(`card ${i+1} stays visible inside its slot`,vis.found&&vis.parentIsSlot&&vis.inside&&vis.hitCard,JSON.stringify(vis));
   }
   let nextRound=false; for(let i=0;i<30&&!nextRound;i++){nextRound=(await st()).round===1;if(!nextRound)await sleep(100);}
   check('three correct drops complete the round and celebrate',nextRound&&await h.evalv(`window.__seqCelebrations===1`),JSON.stringify(await st()));

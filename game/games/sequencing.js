@@ -88,7 +88,7 @@
 
   function slotAt(x,y){ for(var i=0;i<slots.length;i++){ var r=slots[i].el.getBoundingClientRect(); if(x>=r.left-10&&x<=r.right+10&&y>=r.top-10&&y<=r.bottom+10)return slots[i]; } return null; }
 
-  function tryDrop(card,slot){ if(slot.filled||card.placed)return; if(Number(card.el.dataset.order)===slot.correctOrder){ card.placed=true; slot.filled=card; card.el.style.position='absolute'; var r=slot.el.getBoundingClientRect(), tr=trayEl.getBoundingClientRect(); card.el.style.left=(r.left-tr.left)+'px'; card.el.style.top=(r.top-tr.top)+'px'; card.el.style.transform=''; placedCount++; if(window.successChime)window.successChime(); if(feedbackEl)feedbackEl.textContent=''; if(placedCount===slots.length) complete(); } else { if(window.gentleMiss)window.gentleMiss(); if(feedbackEl)feedbackEl.textContent='Покушај поново'; misses++; } }
+  function tryDrop(card,slot){ if(slot.filled||card.placed)return; if(Number(card.el.dataset.order)===slot.correctOrder){ card.placed=true; slot.filled=card; var num=slot.el.querySelector('span'); if(num)num.style.display='none'; slot.el.appendChild(card.el); card.el.classList.remove('seq-dragging'); card.el.style.cssText=''; placedCount++; if(window.successChime)window.successChime(); if(feedbackEl)feedbackEl.textContent=''; if(placedCount===slots.length) complete(); } else { if(window.gentleMiss)window.gentleMiss(); if(feedbackEl)feedbackEl.textContent='Покушај поново'; misses++; } }
 
   function complete(){ locked=true; if(window.speakSr)window.speakSr('praise'); if(feedbackEl)feedbackEl.textContent='Браво!'; setTimeout(function(){ if(window.celebrate)window.celebrate(); round=(round+1)%SEQ.length; newRound(); },900); }
 

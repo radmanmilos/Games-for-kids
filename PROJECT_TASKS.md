@@ -17,6 +17,22 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 212. NEW — Racing 3D: steering still wrong — the car "drif egz" the rear tosses out instead of turning to a side. Multiple prior iterations failed; rework the steer/turn model this round.
+- 211. NEW — Candy: make the hint button smaller overall but the lightbulb icon inside it bigger.
+- 210. NEW — Explorer: the jump button should be the same style as the other controls — a triangle pointing up.
+- 209. NEW — Classroom (mališane) activities: the items sitting in grid containers are crowded / overlapping / clipped by the container edges on small screens. Fix the container grid so it is comfortable on phones.
+- 208. NEW — Spatial («Простор», compass 🧭): too short; add more content/rounds.
+- 207. NEW — Back-button arrows are inconsistent across the newer games; unify them to one convention.
+- 206. NEW — Rhythm: becomes a real mini drum set — several drums with distinct deep and high sounds, and two modes: free play and repeat-melody, where the melody to repeat grows in complexity slowly.
+- 205. NEW — Sequencing: once an item is dragged to its correct square it disappears; it should stay visible inside the correct square. Acceptance: assertion in the smoke that a placed card remains a visible child of its slot.
+
+- 205. DONE — Sequencing: a correctly placed card now stays visible inside its square. (Completed 2026-10-06, Ponytail Lazy Dev.)
+    - **User report:** "постави у редослед, once I drag an item to correct square it disappears, it should be visible in the correct square". Confirmed as a real rendering bug, not an invariant failure: the `placed` counter was correct, only the DOM made the card invisible.
+    - **Root cause:** `tryDrop` absolute-positioned the card at `(slot.left - tray.left, slot.top - tray.top)` and relied on the tray as the containing block, but `.seq-tray` has **no `position:relative`**, so the positioned card resolved against the fixed `#app`. The slots sit *above* the tray, so `top` went **negative** and the card rendered off the top of the viewport inside `overflow:hidden` — invisible. Task 200's sorting game never had this bug because it appends the placed item into the basket slot (`sorting.js:236`); sequencing predates that pattern.
+    - **Fix:** on a correct drop move the card into the slot itself (`slot.el.appendChild(card.el)`) and hide the slot's number span — the same `appendChild` pattern as sorting — instead of pixel-positioning it. All drag/placement logic is unchanged.
+    - **The smoke could not have caught it:** it asserted only the `placed` counter, which was correct all along. New per-drop assertions verify the card is (a) a child of its slot, (b) geometrically inside the slot's rect, and (c) the topmost hit at the card's centre (`elementFromPoint`) — so an "invisible drop" regression stays red.
+    - **Validation:** `sequencing_smoke` **21/21** (3 new visibility checks); `node --check` clean on `sequencing.js` and `sequencing_smoke.js`; `docs/` synced (254 files).
+
 - 197. DONE (part A + part B) — Tier A item 2: numbers 11–20 recognition. (2026-10-05, Ponytail Lazy Dev.)
     - **Part A DONE — the stale assertion is fixed.** `tools/classroom_smoke.js:62` pinned `SW.tiles === 11`, a hardcoded copy of today's vocabulary length: adding 11–20 would have turned it red for a change it was never meant to police. It now reads `SERBIAN.numbers.length`, and a **new** check asserts the numbers activity renders **every shared number, in order** — the invariant a bare count cannot see.
     - **Both new assertions proved non-vacuous.** With the reverse-order mutation injected into `classroom.js` (committed and unmodified beforehand, so `git checkout` restored it exactly), the smoke went red with `rendered ["10","9",…,"0"] expected ["0","1",…,"10"]` — **while the count check still passed**, which is precisely the gap the new check closes: a classroom rendering the right *number* of the *wrong* numbers. Restored, `classroom_smoke` **20/20**.
