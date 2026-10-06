@@ -199,6 +199,32 @@ process.on('unhandledRejection', (reason) => {
   throw reason;
 });
 
+/* The same absorber must cover the EXCEPTION path, because that is how this
+   actually escapes on the tools that matter. The rejection handler above only
+   sees a promise that was left UN-awaited; every offline_smoke interaction
+   `await`s its in-flight command, so when the socket dies the rejected await
+   THROWS at the tool's top level — for a `.mjs` tool that top-level await is
+   module evaluation, and the process dies with the raw
+   `Error: CDP websocket closed unexpectedly ...` stack and a `Node.js vXX`
+   footer, with no `[headless]` diagnostic anywhere. That is exactly Release QA
+   run #40 (3 PASS lines, then a crash; every matrix leg on the same host
+   passed). Net the same error object here, named once and counted, so a
+   dropped socket can never again end a run without a report. Anything WITHOUT
+   the CDP_FATAL symbol still crashes: an uncaught exception that is not socket
+   death is a real harness bug. */
+process.on('uncaughtException', (err) => {
+  if (err && err[CDP_FATAL]) {
+    if (!reportedCdpFailures.has(err)) {
+      reportedCdpFailures.add(err);
+      console.error(`[headless] Unhandled CDP failure: ${err.message}`);
+      fails++;
+      process.exitCode = 1;
+    }
+    return;
+  }
+  throw err;
+});
+
 function cdp(wsUrl, diagnose) {
   let id = 0;
   const pending = new Map();

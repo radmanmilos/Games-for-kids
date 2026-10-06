@@ -259,13 +259,25 @@ async function runBatch(smokes, label) {
         //   - non-zero exit with zero checks at all (the usual case), or
         //   - headless.js's own explicit marker in the throw message. A tool that
         //     prints disk/registry PASS lines BEFORE it boots a browser still has
-        //     a boot crash, and the pass===0 rule alone would miss it. CI run #40
+        //     a boot crash, and the pass===0 rule above alone would miss it. CI run #40
         //     proved this: 13 of 27 matrix legs hit a boot crash and recovered on
         //     retry, while Release QA — which ran offline_smoke.mjs raw, with no
         //     retry — reported 3 passes and a hard failure for the same event.
-        const bootCrash = code !== 0 && ((pass === 0 && fail === 0) || /no assertions ran/.test(out));
-        if (bootCrash && attempt < LAUNCH_RETRIES) {
-          console.log(`\n----- ${name} [boot crash, exit ${code} — retrying (${attempt + 1}/${LAUNCH_RETRIES})]`);
+        // A MID-SESSION CDP death is the same environmental class one stage later:
+        // Chrome booted, then the browser process itself exited or the DevTools
+        // websocket dropped, all before any assertion FAILED. Release QA run #40
+        // died exactly like that — 3 disk/registry passes, then a raw
+        // `CDP websocket closed unexpectedly ... browser=Chrome exited code=0`
+        // crash — with not one FAIL line and all 27 matrix legs on the same host
+        // green. A tool that printed even one FAIL is never retried, so a
+        // deterministic regression still goes red on all three attempts.
+        const envDeath = code !== 0 &&
+          ((pass === 0 && fail === 0) || /no assertions ran/.test(out) ||
+           (fail === 0 && (/CDP websocket (closed unexpectedly|error)/.test(out) ||
+                           /Chrome exited while a CDP session was open/.test(out))));
+        const midSession = pass > 0 && fail === 0 && !/no assertions ran/.test(out);
+        if (envDeath && attempt < LAUNCH_RETRIES) {
+          console.log(`\n----- ${name} [${midSession ? 'mid-session browser death' : 'boot crash'}, exit ${code} — retrying (${attempt + 1}/${LAUNCH_RETRIES})]`);
           launch(name, attempt + 1);
           return;
         }

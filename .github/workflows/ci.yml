@@ -29,13 +29,13 @@ jobs:
   # ---------------------------------------------------------------------------
   setup:
     name: Setup
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       smokes: ${{ steps.matrix.outputs.smokes }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
 
@@ -50,11 +50,11 @@ jobs:
   fast:
     name: Fast (syntax, registry, metadata, hub, offline inventory)
     needs: setup
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
 
@@ -73,16 +73,16 @@ jobs:
     # as `fast`'s dependency. With `needs: fast` alone, needs.setup is empty,
     # fromJSON('') throws and the entire smoke layer silently never runs.
     needs: [setup, fast]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       max-parallel: 6
       matrix:
         smoke: ${{ fromJSON(needs.setup.outputs.smokes) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
 
@@ -112,11 +112,11 @@ jobs:
   release:
     name: Release QA (offline E2E, a11y report)
     needs: [fast, smoke]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
 
@@ -174,11 +174,11 @@ jobs:
   extended:
     name: Extended (Chromium + WebKit device matrix)
     if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
 

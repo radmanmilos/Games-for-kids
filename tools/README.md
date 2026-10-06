@@ -7,20 +7,29 @@ Run any tool from anywhere with `node` (Node >= 22 — uses global `fetch` +
 `WebSocket`). No npm install needed. `CHROME_PATH` env overrides the Chrome
 binary.
 
-On a fatal CDP websocket disconnect, `headless.js` now reports one socket/browser
-diagnostic and sets a nonzero exit code instead of letting Node terminate during
-the unhandled-rejection storm. See `guards/cdp_fail_negtest.js` for the real
-disconnect regression test.
+On a fatal CDP websocket disconnect, `headless.js` reports one socket/browser
+diagnostic and sets a nonzero exit code instead of letting Node terminate — both
+for a promise left un-awaited (the unhandled-rejection absorber) and for an
+awaited command whose rejection escaped as an exception through a `.mjs` tool's
+top-level await (task 204's second path). See `guards/cdp_fail_negtest.js` for the
+real disconnect regression test.
 
 **Chrome boot crashes are routine on GitHub runners, and `run_all.js` is the retry
 that absorbs them (task 181).** In run #40, 13 of 27 matrix legs hit
 `Chrome did not start (debug port N) after 4 attempts ... no assertions ran` with
 the browser process still **alive** and the port simply silent; all 13 passed on
 `run_all.js`'s retry. Two details make that retry usable by a release gate: the
-boot-crash test is `code !== 0 && ((pass === 0 && fail === 0) || /no assertions ran/
-.test(out))` — the marker clause matters because `offline_smoke.mjs` prints three
-PASS lines *before* it boots a browser, so the old zero-check rule missed it — and
-positional names ending in `.mjs` are accepted, so a gate that is deliberately not
+environmental-death test is `code !== 0 && ((pass === 0 && fail === 0) || /no
+assertions ran/.test(out) || (fail === 0 && (/CDP websocket (closed unexpectedly|
+error)/.test(out) || /Chrome exited while a CDP session was open/.test(out))))` —
+the marker clauses matter because `offline_smoke.mjs` prints three PASS lines
+*before* it boots a browser, so the old zero-check rule missed it. Task 204 added
+the last clause: a MID-SESSION death is the same flake one stage later — Chrome
+exited / the DevTools websocket dropped after boot with zero FAIL checks, the
+shape that made Release QA red on run #40 (raw `CDP websocket closed unexpectedly`
+crash, 3 passes, no retry). A tool that printed even one FAIL is never retried, so
+a deterministic regression still goes red on all three attempts. Positional names
+ending in `.mjs` are accepted, so a gate that is deliberately not
 in the battery can be run explicitly (`node tools/run_all.js offline_smoke.mjs`)
 without joining it (the battery is still 27 tools). **Never run a `*_smoke` tool raw
 in CI**: that was the last asymmetry in the repo and it made `Release QA` red on every
