@@ -140,17 +140,22 @@ check('every dangerous-scheme filter excludes every dangerous scheme', schemeBad
 // ---------------------------------------------------------------------------
 // Rule 2 — HTML element strippers must not be bypassable
 // ---------------------------------------------------------------------------
-// A `.replace()` whose first argument is a regex literal that mentions a closing
-// <script> or <style> tag: that is the "filter HTML out" shape CodeQL flags.
-// The captured text is a regex SOURCE, so the tag name is `<\/script`, never
-// `</script` — hence the optional backslash in the test below.
+// A `.replace()` whose first argument is a regex literal that opens with `<`
+// ("strip the HTML out" shape). That covers both the named-element strippers
+// CodeQL's bad-pattern search knows (`</script>`/`</style>`, alert 8) and the
+// GENERIC `<[^>]*>`-style stripper that CodeQL flags separately as incomplete
+// multi-character sanitization (tasks 176 + 210): stripping `<scr<script>ipt>`
+// with a single global replace removes the inner `<script>` and re-fabricates
+// `<script>` from what is left, so a generic span stripper is exactly as
+// dangerous as a careless closing-tag stripper — it must consume whole elements.
+// The tag name is `\</script` in a regex SOURCE, hence the optional backslash
+// handled inside `stripsElement`, and the body may or may not name a tag at all.
 const REPLACE_LITERAL = /\.replace\(\s*\/((?:[^\/\\]|\\.)*)\/[a-z]*/g;
-const CLOSING_TAG = /<\\?\/(?:script|style)\b/i;
 
 function findFilterPatterns(source) {
   return [...source.matchAll(REPLACE_LITERAL)]
     .map(m => ({ index: m.index, body: m[1] }))
-    .filter(site => CLOSING_TAG.test(site.body));
+    .filter(site => site.body.startsWith('<'));
 }
 
 /**
@@ -218,6 +223,15 @@ const BAD_FILTER_SAMPLE = `
 const GOOD_FILTER_SAMPLE = `
   visible.replace(/<script\\b[^>]*>[\\s\\S]*?<\\/script(?:\\s+[^>]*)?>/gi, tag => tag);
 `;
+const BAD_GENERIC_FILTER_SAMPLE = `
+  const textOnly = m[2].replace(/<[^>]*>/g, '').trim();
+`;
+const GOOD_GENERIC_FILTER_SAMPLE = `
+  let textOnly = '';
+  let inTag = false;
+  for (const ch of m[2]) { if (ch === '<') inTag = true; else if (ch === '>') inTag = false; else if (!inTag) textOnly += ch; }
+  textOnly = textOnly.trim();
+`;
 
 const badSchemeSites = findSchemeSites(BAD_SCHEME_SAMPLE);
 const badFilterSites = findFilterPatterns(BAD_FILTER_SAMPLE);
@@ -228,6 +242,12 @@ check('the scheme checker rejects an incomplete scheme filter',
 check('the stripper checker rejects a bypassable closing tag',
   badFilterSites.length === 1 && !stripsElement(badFilterSites[0].body) && stripsElement(findFilterPatterns(GOOD_FILTER_SAMPLE)[0].body),
   `sample: ${badFilterSites.length} site(s) found, bypassable one rejected`);
+
+const badGenericSites = findFilterPatterns(BAD_GENERIC_FILTER_SAMPLE);
+const goodGenericSites = findFilterPatterns(GOOD_GENERIC_FILTER_SAMPLE);
+check('the generic <[^>]*> stripper shape is rejected (incomplete multi-char sanitization)',
+  badGenericSites.length === 1 && !stripsElement(badGenericSites[0].body) && goodGenericSites.length === 0,
+  `bad: ${badGenericSites.length} site(s), good: ${goodGenericSites.length} site(s)`);
 
 // ---------------------------------------------------------------------------
 // Rule 4 — the scans must not be vacuous

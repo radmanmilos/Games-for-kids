@@ -58,7 +58,19 @@ for (const page of pages) {
     const isBack = /\bclass="[^"]*\b(?:back-btn|adv-back)\b[^"]*"/i.test(attrs) ||
       /id="(?:[a-z0-9_-]+-back|back-btn)"/i.test(attrs);
     if (!isBack) continue;
-    const textOnly = m[2].replace(/<[^>]*>/g, '').trim();
+    /* Visible text = characters outside tags, skipped by a char scan. A tag
+       stripper like /<[^>]*>/ is the shape CodeQL flags (js/incomplete-multi-
+       character-sanitization): a single global replace can reconstruct
+       "<scr<script>ipt>" back into "<script>", so the "text" we report could
+       still hide markup. A char scan needs no regex and cannot be fooled. */
+    let textOnly = '';
+    let inTag = false;
+    for (const ch of m[2]) {
+      if (ch === '<') inTag = true;
+      else if (ch === '>') inTag = false;
+      else if (!inTag) textOnly += ch;
+    }
+    textOnly = textOnly.trim();
     if (/^(➡|→)$/.test(textOnly)) continue;
     if (textOnly && !m[2].includes(ARROW_BACK)) {
       failures.push(`${page}: back control uses a text glyph "${textOnly}" instead of the shared SVG arrow (task 207)`);
