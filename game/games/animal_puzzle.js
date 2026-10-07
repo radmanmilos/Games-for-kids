@@ -349,8 +349,13 @@
     }
 
     function updateLabels(scene){
-      title.textContent = scene.title;
-      levelLabel.textContent = 'Слагалица ' + (level + 1) + '  ·  ' + rows + '×' + columns;
+      /* V1.2 (Visual/UX plan §19): the title owns the activity name and the status
+         shows the scene position. The old label was 'Слагалица 1 · 1×2' — the
+         '1×2' is implementation-level grid internals, which the spec forbids
+         exposing to a child unless they provide child value. Now: title
+         'Слагалица', status '1/8' (or '1. сцена' on narrow screens via CSS). */
+      title.textContent = 'Слагалица';
+      levelLabel.textContent = (level + 1) + '/' + scenes.length;
     }
 
     function setPiecePosition(piece,left,top){

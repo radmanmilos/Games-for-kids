@@ -740,8 +740,8 @@
     "size": 6506
   },
   "games/animal_puzzle.js": {
-    "sha256": "93a5d97b614345caf7bda0a7fa9e804a8321239ab879ee8bf08c955b4195e61a",
-    "size": 31314
+    "sha256": "cc8a447a8e010a7650f2b5ec758d68651cfb072bc2ca2b281eb3d0ac2ed0ce3d",
+    "size": 31710
   },
   "games/animals.js": {
     "sha256": "79a7aad7dcb6e04e8271e595a583fafbdf82b4842f0cfd293cc55795849f2aee",
@@ -852,8 +852,8 @@
     "size": 4998
   },
   "pages/animal_puzzle.html": {
-    "sha256": "0554e7d9701c37017b4e36ec624b4fbf07781049fea6f6d7d3cf19502cd3ef8d",
-    "size": 4576
+    "sha256": "962cb02681c5ae057a65bbf3f31acea308f92aa550dea214e7b8793dbc3bc0e5",
+    "size": 4894
   },
   "pages/animals.html": {
     "sha256": "0dd9be7d05bd568a45caa081e84eaa782702840d57da2da3824e73a763f2f1db",
