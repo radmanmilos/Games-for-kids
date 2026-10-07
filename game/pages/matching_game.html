@@ -171,16 +171,17 @@
     transition:width .35s ease;
   }
   #candyBarTip{ position:absolute; right:-1.9vmin; top:50%; transform:translateY(-50%); font-size:3.6vmin; filter:drop-shadow(0 .3vmin .3vmin rgba(0,0,0,.25)); }
-  /* 30% smaller at the user's request (was 7.6vmin / 4.4vmin font). Every
-     dimension is scaled together so the bulb and its hit area stay in proportion
-     — shrinking only the glyph would have left the tap target looking large while
-     the button was not. Still comfortably above the ~44px minimum target. */
+  /* Smaller circle, bigger bulb (task 211). The global accessibility.css
+     button{min-width:64px} floor previously pinned this to 64px on every screen,
+     so the old shrink never rendered; this control overrides it to a 44px target
+     and grows the bulb while the dot shrinks. */
   #candyHintBtn{
-    width:5.3vmin; height:5.3vmin; border-radius:50%; border:none; cursor:pointer; flex:none;
+    width:4.4vmin; height:4.4vmin; min-width:44px; min-height:44px;
+    border-radius:50%; border:none; cursor:pointer; flex:none;
     background:linear-gradient(135deg,#FFF3B0,#FFD23F);
-    font-size:3.1vmin;
+    font-size:max(3.6vmin, 22px);
     display:flex; align-items:center; justify-content:center;
-    box-shadow:0 .6vmin 0 rgba(0,0,0,.18);
+    box-shadow:0 .5vmin 0 rgba(0,0,0,.18);
   }
   #candyHintBtn:active{ transform:scale(.9) translateY(3px); box-shadow:0 .4vmin 0 rgba(0,0,0,.18); }
   .candy-grid .candy.hint{ animation:hintGlow .6s ease-in-out 3; z-index:12; }
