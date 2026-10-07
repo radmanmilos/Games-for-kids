@@ -225,7 +225,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     // 54/18/24), so the assertion thresholds are unchanged.
     const steerCheck = await h.evalv(`(function(){
         const r3d = window.__r3d;
-        const snap = () => ({ yaw: r3d.steerState().steerYaw, lat: r3d.lateral(), sp: r3d.speed() });
+        const snap = () => {
+            const s = r3d.steerState();
+            return { yaw: s.steerYaw, wheelYaw: s.wheelYaw, byaw: s.yaw, lat: r3d.lateral(), sp: r3d.speed() };
+        };
         const run = (n) => { for (let i = 0; i < n; i++) r3d.step(1 / 60); };
         r3d.haltLoop(true);
         window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }));
@@ -252,9 +255,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const stj = JSON.parse(steerCheck);
     check('steering: wheels turn in + car drifts, car stops while wheels still return slowly, no side-drift, reverses',
         stj.stA.sp > 10 && stj.stA.yaw > 0.1 && stj.stA.lat > 0.3 &&
+        stj.stA.wheelYaw < -0.1 && stj.stA.byaw < -0.02 &&
         stj.stE1.yaw > 0.1 && stj.stE2.yaw > 0.07 && Math.abs(stj.stE2.lat - stj.stE1.lat) < 0.4 &&
         Math.abs(stj.stB.yaw) < 0.05 && Math.abs(stj.stC.lat - stj.stB.lat) < 0.15 &&
-        stj.stLeft.lat < stj.stC.lat - 0.5, steerCheck);
+        stj.stLeft.lat < stj.stC.lat - 0.5 && stj.stLeft.wheelYaw > 0.1 && stj.stLeft.byaw > 0.02, steerCheck);
 
     const pads = await h.evalv(`JSON.stringify(window.__r3d.boostPads())`);
     const pj = JSON.parse(pads);

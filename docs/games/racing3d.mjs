@@ -11,6 +11,12 @@ const ROAD_WIDTH = 20;
 const ROAD_SEGMENTS = 360;
 const MAX_LATERAL = 9.6;
 const STEER_YAW_MAX = 0.45; // front-wheel steering angle at full lock
+// Body yaw at full lock, pivoted about the rear axle (task 212): the nose
+// sweeps into the turn while the rear stays planted, so holding a button reads
+// as TURNING to the side instead of the old pure-slide crab ("drifts, rear
+// tosses out"). Deliberately smaller than the wheel angle — the front wheels
+// visibly lead, the body follows.
+const BODY_YAW_MAX = 0.18;
 const LATERAL_GAIN = 26; // lateral speed per radian of front-wheel yaw
 const MAX_SPEED = 35;
 // Speed eases toward its target exponentially at this rate (per second). There
@@ -992,74 +998,84 @@ function main() {
 
   const kart = new THREE.Group();
   const kartBounce = new THREE.Group(); // suspension bounce
-  const kartLean = new THREE.Group(); // turn roll + slip yaw
+  const kartLean = new THREE.Group(); // turn roll (bank) about the forward axis
+  // task 212: the body pivots about the REAR AXLE (a real kart turns at the
+  // rear), so the nose leads into the corner while the rear stays planted.
+  // kartYaw's origin sits at the rear axle (z=-1.45); kartBody counter-offsets
+  // so every child keeps its existing local coords. yaw=0 renders identically.
+  const kartYaw = new THREE.Group(); // origin at the rear axle
+  kartYaw.position.z = -1.45;
+  const kartBody = new THREE.Group(); // keeps children at their kart-local coords
+  kartBody.position.z = 1.45;
   kart.add(kartBounce);
   kartBounce.add(kartLean);
+  kartLean.add(kartYaw);
+  kartYaw.add(kartBody);
 
   const hull = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.6, 3.4), kartMat);
   hull.position.y = 0.92;
-  kartLean.add(hull);
+  kartBody.add(hull);
   // hot-rim sheen strip along the hull ridge (cartoon plastic highlight)
   const sheen = new THREE.Mesh(
     new THREE.BoxGeometry(1.84, 0.05, 3.26),
     sheenMat,
   );
   sheen.position.y = 1.24;
-  kartLean.add(sheen);
+  kartBody.add(sheen);
   const nose = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.45, 1.0), kartMat);
   nose.position.set(0, 0.8, 2.2);
-  kartLean.add(nose);
+  kartBody.add(nose);
   const bumper = new THREE.Mesh(
     new THREE.SphereGeometry(0.55, 12, 8),
     accentMat,
   );
   bumper.position.set(0, 0.82, 2.72);
   bumper.scale.set(1.5, 0.9, 0.85);
-  kartLean.add(bumper);
+  kartBody.add(bumper);
   const wing = new THREE.Mesh(new THREE.BoxGeometry(2.15, 0.16, 0.75), kartMat);
   wing.position.set(0, 1.42, -1.9);
-  kartLean.add(wing);
+  kartBody.add(wing);
   const stripe1 = new THREE.Mesh(
     new THREE.BoxGeometry(2.04, 0.13, 0.95),
     accentMat,
   );
   stripe1.position.set(0, 0.94, 0.8);
-  kartLean.add(stripe1);
+  kartBody.add(stripe1);
   const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.55, 1.6), kartMat);
   cabin.position.set(0, 1.4, -0.6);
-  kartLean.add(cabin);
+  kartBody.add(cabin);
   const windshield = new THREE.Mesh(
     new THREE.PlaneGeometry(0.9, 0.36),
     glassMat,
   );
   windshield.position.set(0, 1.56, 0.22);
   windshield.rotation.x = -0.25;
-  kartLean.add(windshield);
+  kartBody.add(windshield);
   const head = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 10), skinMat);
   head.position.set(0, 1.78, -0.6);
-  kartLean.add(head);
+  kartBody.add(head);
   const helmet = new THREE.Mesh(
     new THREE.SphereGeometry(0.34, 12, 10),
     helmMat,
   );
   helmet.position.set(0, 1.78, -0.62);
   helmet.scale.set(1, 0.94, 1.03);
-  kartLean.add(helmet);
+  kartBody.add(helmet);
   const visor = new THREE.Mesh(
     new THREE.BoxGeometry(0.42, 0.18, 0.08),
     new THREE.MeshPhongMaterial({ color: 0x222222, shininess: 120 }),
   );
   visor.position.set(0, 1.8, -0.34);
-  kartLean.add(visor);
+  kartBody.add(visor);
   // exhaust pipes (boost-flame anchors)
   const exGeo = new THREE.CylinderGeometry(0.1, 0.17, 0.5, 8);
   exGeo.rotateX(Math.PI / 2);
   const exL = new THREE.Mesh(exGeo, darkMat);
   exL.position.set(-0.7, 1.02, -2.0);
-  kartLean.add(exL);
+  kartBody.add(exL);
   const exR = new THREE.Mesh(exGeo, darkMat);
   exR.position.set(0.7, 1.02, -2.0);
-  kartLean.add(exR);
+  kartBody.add(exR);
 
   const wheelGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.38, 16);
   wheelGeo.rotateZ(Math.PI / 2);
@@ -1089,7 +1105,7 @@ function main() {
     // per-wheel joint: carries tyre/ring/hub/studs and yaws (front wheels) to point where steering
     const wg = new THREE.Group();
     wg.position.set(p[0], p[1], p[2]);
-    kartLean.add(wg);
+    kartBody.add(wg);
     const w = new THREE.Mesh(wheelGeo, wheelMat);
     wg.add(w);
     const ring = new THREE.Mesh(ringGeo, rimMat);
@@ -2323,11 +2339,15 @@ function main() {
     kartShadow.position.y = kart.position.y + 0.06;
     kartShadow.scale.set(2.7, 2.7, 1);
 
-    // The body does NOT yaw into the turn. A yaw on the whole kart (rotation.y)
-    // read as "the car spins sideways" in play-testing, so the only body rotation
-    // left is the bank below; the front wheels still turn visibly and the kart
-    // travels where they point.
-    kartLean.rotation.y = 0;
+    // Body yaw (task 212): the nose leads INTO the turn, pivoted about the
+    // rear axle so the rear stays planted — holding a button now reads as
+    // TURNING, not the old pure-slide crab. Sign: the kart's local +X is its
+    // LEFT, so a positive rotation.y would swing the nose away from the turn;
+    // negative yaw turns the nose toward the kart's right = the turn side on
+    // ArrowRight. Derived straight from the eased steerDrive (no extra state:
+    // inherits the 8-in/10-out easing and dies on release), so reset paths and
+    // the frame-timing test need no change.
+    kartYaw.rotation.y = -(steerDrive / STEER_YAW_MAX) * BODY_YAW_MAX;
     // front wheels turn in quickly; on release they slowly return to the middle
     if (steer !== 0) {
       steerYawValue +=
@@ -2339,7 +2359,7 @@ function main() {
       steerDrive += (0 - steerDrive) * (1 - Math.exp(-10 * dt));
     }
     steerWheels.forEach((g) => {
-      g.rotation.y = steerYawValue;
+      g.rotation.y = -steerYawValue;
     });
     // bank the body with the drive (straightens up fast with the car; the
     // kart stays where it is — no auto-center)
@@ -2869,7 +2889,8 @@ function main() {
     spokes: () => studCount,
     steerState: () => ({
       roll: leanValue,
-      yaw: kartLean.rotation.y,
+      yaw: kartYaw.rotation.y,
+      wheelYaw: steerWheels[0] ? steerWheels[0].rotation.y : 0,
       steerYaw: steerYawValue,
       spokes: studCount,
     }),
