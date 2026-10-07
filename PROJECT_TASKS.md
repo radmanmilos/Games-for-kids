@@ -17,6 +17,14 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
+- 216. DONE — V1.1: fix Animal Puzzle `[object Object]` (Visual/UX plan, P0). (Completed 2026-10-07, Ponytail Lazy Dev.)
+    - Source: `resources/General_reviews/Petrin_svet_Master_Visual_UX_Implementation_Plan_2026-10-07.md` §19; execution list `VISUAL_UX_IMPLEMENTATION_PLAN.md` V1.1.
+    - **Root cause confirmed with line numbers.** `game/games/animal_puzzle.js:340` initialises `rows`/`columns` to `GRIDS[0]`, which is the **object** `{rows:1, cols:2}`. `setGrid()` (line 344) is the only thing that converts them to numbers — but the initial-load path at line **598** calls `updateLabels(scenes[0])` with **no preceding `setGrid()`**, so line 353 renders `'Слагалица ' + (level+1) + ' · ' + rows + '×' + columns` as `Слагалица 1 · [object Object]×[object Object]`.
+    - The other two call sites (lines 420/422 and 560/563) *do* call `setGrid()` first, which is why the defect only appears on first load.
+    - **Fix (two lines):** initialise to `GRIDS[0].rows` / `GRIDS[0].cols`, and call `setGrid()` before `updateLabels(scenes[0])` on the initial-load path.
+    - **Why the existing smoke missed it — a test blind spot worth recording.** `puzzle_smoke.js` already asserted the exact label string, but it read the label *after* clicking `#sceneButton`, whose handler `startPuzzle()` calls `setGrid()` → `updateLabels()`. By then the values were already numbers, so the defect — which exists only in the window between page load and that first click — was invisible. **A check that reads state after an interaction cannot see a bug that the interaction itself fixes.**
+    - **New check reads the label in that window** (before any interaction): `puzzle_smoke` 22 → **23**. Proved non-vacuous by reverting the fix — the check went red with the exact string `Слагалица 1 · [object Object]×[object Object]`. Restored: **23/23**.
+    - **Validation:** `puzzle_smoke` 23/23; `node --check` clean on both files.
 - 215. DONE — CI: run only the smoke jobs affected by each push/PR instead of always running the full battery. (Completed 2026-10-07, Ponytail Lazy Dev.)
     - `run_all.js --affected <base>` maps changed game files to smokes, reruns edited smokes, escalates shared/harness/selector/workflow/release-gate changes to the full battery, and safely handles removed smoke scripts. `ci_affected_matrix.js` gets push/PR bases from event metadata, filters the hub smoke already run in `fast`, and defaults to the full battery for manual/weekly events or an unusable base.
     - Docs-only changes select no smoke legs. Since GitHub Actions cannot expand an empty matrix, the helper emits a placeholder plus `has_smokes=false`, and the smoke job is gated off so the placeholder cannot run; dependent Release QA skips while the unconditional fast gate still runs.

@@ -23,6 +23,18 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     if (!ready) await sleep(200);
   }
   check('puzzle page boots with scene preview + start button', ready);
+
+  /* Read the level label in the window between page load and the first
+     sceneButton click. The pre-existing label check ran AFTER the click, by which
+     point startPuzzle() had already called setGrid() and converted rows/columns to
+     numbers — so a label rendered from the un-converted GRIDS[0] object
+     ([object Object]×[object Object]) was invisible to it. This reads before any
+     interaction, which is the only moment the defect exists. */
+  const bootLabel = await h.evalv(`document.getElementById('puzzleLevel').textContent`);
+  check('the level label renders real dimensions on first load, not "[object Object]"',
+    /Слагалица\s+\d+\s+·\s+\d+×\d+/.test(bootLabel) && !bootLabel.includes('object Object'),
+    bootLabel);
+
   await h.evalv(`window.audioBuses.play=function(){}; true`);
 
   const introPeek = await h.evalv(`document.getElementById('puzzlePeek').hidden && document.getElementById('puzzlePreviewOverlay').hidden`);

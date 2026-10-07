@@ -337,7 +337,7 @@
     const previewImg = screen.querySelector('#puzzlePreviewImg');
     let level = 0;
     let score = 0;
-    let rows = GRIDS[0], columns = GRIDS[0];
+    let rows = GRIDS[0].rows, columns = GRIDS[0].cols;
     let sceneImage = '';
     let placedCount = 0;
 
@@ -595,6 +595,7 @@
       },90);
     });
     drawScene(scenes[0]);
+    setGrid();
     updateLabels(scenes[0]);
   }
   window.startAnimalPuzzle = startAnimalPuzzle;
