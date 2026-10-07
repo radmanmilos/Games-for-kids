@@ -880,8 +880,8 @@
     "size": 2712
   },
   "pages/explorer.html": {
-    "sha256": "84055c6c08951a6ae3d64045887a5715f9fb3cb15466ae9abea4a97fcd031534",
-    "size": 8200
+    "sha256": "a6dff57648b1189d0e45d062d6e7fc525f12a66388e5ca42a1e01e9ec52ff3b6",
+    "size": 8159
   },
   "pages/matching_game.html": {
     "sha256": "df33bcbf7540a9774c4bd163406ff3ed0f0d7ef39a6aac613bef1e4d0a2c9ce9",
@@ -912,8 +912,8 @@
     "size": 13766
   },
   "pages/rhythm.html": {
-    "sha256": "37904fdf92a86563e77aa117f555ca4736945a759d3ec5cfe569d16b640086fa",
-    "size": 6458
+    "sha256": "2f56617290a0367de160655e61fae2a51931d4298430378f66bfa5534945f80e",
+    "size": 6453
   },
   "pages/sequencing.html": {
     "sha256": "ddbaecf400b10ed0d15cc149782207abaa95c9dcb0862e8b51e12f39033f2505",

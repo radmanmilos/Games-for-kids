@@ -21,8 +21,8 @@
     #coin-count{top:2vmin;right:2vmin;}
     .hud-btn{position:absolute;z-index:10;width:10vmin;height:10vmin;border-radius:50%;border:3px solid white;background:rgba(0,0,0,.45);color:white;font-size:5vmin;display:flex;align-items:center;justify-content:center;cursor:pointer;}
     .hud-btn:active{transform:scale(.92);}
-    #worlds-btn{bottom:calc(2vmin + 120px + 15vmin);right:2vmin;}
-    #music-btn{bottom:calc(2vmin + 120px + 3vmin);right:2vmin;}
+    #worlds-btn{bottom:calc(2vmin + 100px + 15vmin);right:2vmin;}
+    #music-btn{bottom:calc(2vmin + 100px + 3vmin);right:2vmin;}
     #win-modal{display:none;position:absolute;inset:0;z-index:20;align-items:center;justify-content:center;flex-direction:column;background:rgba(0,0,0,.7);color:#FFD23F;text-align:center;padding:5vmin;}
     #win-modal.show{display:flex;}
     #win-modal h2{font-size:clamp(22px,5vmin,48px);margin:0 0 4vmin;}
@@ -53,7 +53,7 @@
     .btn:active{transform:translateY(4px);box-shadow:0 4px 0 rgba(0,0,0,.3);}
     .btn-left{left:2vmin;background-color:#e52521;}
     .btn-right{left:calc(4vmin + 100px);background-color:#fbd000;color:#4A3F6B;text-shadow:none;}
-    .btn-jump{right:2vmin;width:120px;height:120px;background-color:#43b047;border-color:#fff;font-size:50px;animation:pulse 2s infinite ease-in-out;}
+    .btn-jump{right:2vmin;background-color:#43b047;border-color:#fff;animation:pulse 2s infinite ease-in-out;}
     @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
   </style>
 </head>
@@ -69,7 +69,7 @@
     <button id="back-btn" class="back-btn" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <div class="btn btn-left" id="btn-left">◀</div>
     <div class="btn btn-right" id="btn-right">▶</div>
-    <div class="btn btn-jump" id="btn-jump">🐾</div>
+    <div class="btn btn-jump" id="btn-jump">▲</div>
     <div id="win-modal" role="dialog" aria-label="Победа">
       <h2 id="win-title">СВЕТ ПРЕЂЕН!</h2>
       <p id="win-sub"></p>
