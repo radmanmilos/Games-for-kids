@@ -149,12 +149,15 @@ function writeReviewToc({ review, generatedAt }) {
       const size = Object.keys(SIZES).find(s => file.endsWith('_' + s + '.png'));
       if (!size) return null;
       const page = file.slice(0, -(size.length + 5));
+      /* V0.1: extract state from filename `<page>__<size>__<state>.png` */
+      const stateMatch = file.match(/^(.+)__(.+)__(.+)\.png$/);
+      const state = stateMatch ? stateMatch[3] : '—';
       const width = SIZES[size].width;
       const height = SIZES[size].height;
       const orientation = height > width ? 'портрет' : 'пејзаж';
       const app = known(page);
       const prov = provenance[file] || {};
-      return `| \`${file}\` | ${app.title} | \`${app.url}\` | ${width}×${height} | ${orientation} | ${formatWhen(prov.updatedAt)} | ${prov.task || '—'} |`;
+      return `| \`${file}\` | ${app.title} | \`${app.url}\` | ${width}×${height} | ${orientation} | ${state} | ${formatWhen(prov.updatedAt)} | ${prov.task || '—'} |`;
     })
     .filter(Boolean);
   const md = [
@@ -166,8 +169,8 @@ function writeReviewToc({ review, generatedAt }) {
     '',
     'Свака колона „Последња слика“ показује датум и време последњег снимка тог файла и задатак који га је направио.',
     '',
-    '| Слика (PNG) | Игра / Game | Страна / Page | Формат | Оријентација | Последња слика (датум · време) | Задатак |',
-    '|---|---|---|---|---|---|---|',
+    '| Слика (PNG) | Игра / Game | Страна / Page | Формат | Оријентација | Стање | Последња слика (датум · време) | Задатак |',
+    '|---|---|---|---|---|---|---|---|',
     ...rows,
     '',
   ].join('\n');
@@ -268,7 +271,31 @@ function writeReviewToc({ review, generatedAt }) {
         const frames = await h.evalv('window.__visualAdvance(60)');
         if (frames !== 60) throw new Error(`${page} advanced ${frames} visual frames, expected 60`);
 
-        const file = `${page}_${size}.png`;
+        /* V0.1: optional gameplay-state capture. `--state=<id>` drives the page into a
+   named, deterministic state before the shot, and the filename becomes
+   `<page>__<viewport>__<state>.png` per the spec's naming convention. The state
+   map is per-game and lives beside this tool so a new game never needs a change
+   here. Without --state the behaviour is byte-identical to before. */
+  const stateArg = selectedArg('state', null);
+  const stateMap = stateArg ? require('./visual-states.json') : null;
+  const stateHook = stateMap && stateMap[page] ? stateMap[page][stateArg] : null;
+  if (stateArg && !stateHook) {
+    throw new Error(`Unknown state "${stateArg}" for "${page}". Known: ${Object.keys(stateMap[page] || {}).join(', ') || '(none)'}`);
+  }
+  const file = stateArg ? `${page}__${size}__${stateArg}.png` : `${page}_${size}.png`;
+
+        /* V0.1: drive the page into the requested state before capturing. The
+           state hook is a JavaScript expression evaluated in the page context.
+           It must be deterministic — no reliance on random timing. */
+        if (stateHook) {
+          const stateResult = await h.evalv(stateHook);
+          if (stateResult !== true) {
+            throw new Error(`State "${stateArg}" for "${page}" did not apply: ${JSON.stringify(stateResult)}`);
+          }
+          /* Let the state settle visually before capturing. */
+          await h.evalv('window.__visualAdvance(30)');
+          await h.sleep(100);
+        }
         const target = path.join(outDir, file);
         let bytes;
         let image;
@@ -292,7 +319,7 @@ function writeReviewToc({ review, generatedAt }) {
         }
         const { width, height } = image;
         fs.writeFileSync(target, bytes);
-        outputs.push({ file, page, size, width, height, bytes: bytes.length });
+        outputs.push({ file, page, size, state: stateArg || null, width, height, bytes: bytes.length });
         console.log(`CAPTURE ${file}  ${width}x${height}  ${Math.round(bytes.length / 1024)}KB`);
       }
     }

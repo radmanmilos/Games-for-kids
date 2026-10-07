@@ -36,6 +36,17 @@ If you genuinely cannot proceed after 2 attempts:
 ### 6. One tool call per step
 Make ONE tool call, get the result, then decide the next step. Do not chain multiple investigations in a single response.
 
+### 7. Edit failures are a loop signal — never retry the same edit
+If an `edit` call fails with "Could not find oldString", the file has changed since you last read it. **Do NOT re-read the same region and retry the identical edit.** Instead:
+1. Run ONE `grep -n` to locate the current line numbers.
+2. Read ONLY the lines around the new location (≤10 lines).
+3. Make the edit against the current text.
+
+Re-reading the same 10-line window after a failed edit is the most common loop in this project. The file changed; your cached copy is stale.
+
+### 8. Three identical tool calls = stop
+If you have issued the same tool call (same command or same file read) three times without new information, you are looping. Stop, commit any progress, and report state.
+
 ## Enforcement
 If you catch yourself looping:
 1. STOP immediately

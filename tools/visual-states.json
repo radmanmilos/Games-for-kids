@@ -1,0 +1,102 @@
+{
+  "_comment": "Per-game deterministic state hooks for tools/screenshot.js --state=<id>. Each hook is a JavaScript expression evaluated in the page context that drives the page into a named state and returns true on success. Hooks must be deterministic — no reliance on random timing. Add new games here; screenshot.js needs no change.",
+  "hub": {
+    "INIT": "true"
+  },
+  "animals": {
+    "INIT": "true",
+    "PLAY": "document.querySelector('.animal-card').click(); true"
+  },
+  "animal_counting": {
+    "INIT": "true",
+    "PLAY": "document.querySelector('.counting-choice')?.click(); true"
+  },
+  "animal_memory": {
+    "INIT": "true",
+    "PLAY": "document.querySelectorAll('.memory-card')[0].click(); true",
+    "SUCCESS": "document.querySelectorAll('.memory-card')[0].click(); document.querySelectorAll('.memory-card')[1].click(); true"
+  },
+  "animal_puzzle": {
+    "INIT": "true",
+    "PLAY": "document.getElementById('sceneButton').click(); true"
+  },
+  "classroom": {
+    "INIT": "true",
+    "PLAY": "document.querySelector('.class-tab[data-tab=\"shapes\"]')?.click(); true"
+  },
+  "compare": {
+    "INIT": "true",
+    "PLAY": "document.querySelector('.cmp-group').click(); true"
+  },
+  "sorting": {
+    "INIT": "true",
+    "PLAY": "document.querySelector('.sort-item')?.click(); true"
+  },
+  "phonics": {
+    "INIT": "true",
+    "PLAY": "document.querySelector('.phonics-choice')?.click(); true"
+  },
+  "sequencing": {
+    "INIT": "true",
+    "PLAY": "document.querySelector('.seq-card')?.click(); true"
+  },
+  "shapes": {
+    "INIT": "true",
+    "PLAY": "document.querySelector('.shape-choice')?.click(); true"
+  },
+  "spatial": {
+    "INIT": "true",
+    "PLAY": "document.querySelector('.spatial-choice')?.click(); true"
+  },
+  "maze": {
+    "INIT": "true",
+    "PLAY": "document.querySelector('.maze-token')?.click(); true"
+  },
+  "dino": {
+    "INIT": "true",
+    "PLAY": "true"
+  },
+  "driving": {
+    "INIT": "true",
+    "PLAY": "true"
+  },
+  "ocean": {
+    "INIT": "true",
+    "PLAY": "true"
+  },
+  "space": {
+    "INIT": "true",
+    "PLAY": "true"
+  },
+  "explorer": {
+    "INIT": "true",
+    "PLAY": "true"
+  },
+  "matching_game": {
+    "INIT": "true",
+    "PLAY": "document.querySelector('.candy')?.click(); true"
+  },
+  "piano": {
+    "INIT": "true",
+    "PLAY": "document.querySelector('.piano-key')?.click(); true"
+  },
+  "rhythm": {
+    "INIT": "true",
+    "PLAY": "document.querySelector('.rhythm-pad')?.click(); true"
+  },
+  "coloring": {
+    "INIT": "true",
+    "PLAY": "document.querySelector('.coloring-swatch')?.click(); true"
+  },
+  "tracing": {
+    "INIT": "true",
+    "PLAY": "true"
+  },
+  "racing3d": {
+    "INIT": "true",
+    "PLAY": "true"
+  },
+  "parent": {
+    "INIT": "true"
+  }
+}
