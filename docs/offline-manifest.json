@@ -740,8 +740,8 @@
     "size": 6506
   },
   "games/animal_puzzle.js": {
-    "sha256": "cc8a447a8e010a7650f2b5ec758d68651cfb072bc2ca2b281eb3d0ac2ed0ce3d",
-    "size": 31710
+    "sha256": "bda3e3a872b34abd45e857472139570c38d71cd1d89d083f64f9b5549c24e8fb",
+    "size": 31728
   },
   "games/animals.js": {
     "sha256": "79a7aad7dcb6e04e8271e595a583fafbdf82b4842f0cfd293cc55795849f2aee",
@@ -852,8 +852,8 @@
     "size": 4998
   },
   "pages/animal_puzzle.html": {
-    "sha256": "962cb02681c5ae057a65bbf3f31acea308f92aa550dea214e7b8793dbc3bc0e5",
-    "size": 4894
+    "sha256": "755794545c01899b910d38c82b345368198f9bbba108d211e5512d5ae508cb2a",
+    "size": 4949
   },
   "pages/animals.html": {
     "sha256": "0dd9be7d05bd568a45caa081e84eaa782702840d57da2da3824e73a763f2f1db",
@@ -995,13 +995,17 @@
     "sha256": "d0fa344bb121beba42fd538500f826dcdd93621c659a3e58abf15737f5096fe9",
     "size": 1150
   },
+  "styles/shell.css": {
+    "sha256": "4021b84d33b6d19e350e03c01e307df86daa2e519080406da4f8df78d3cd5a15",
+    "size": 2055
+  },
   "styles/viewport.css": {
     "sha256": "8cd58ab0e0b90d516e6f496040111f0827d18d864fd7a86c399cab2e270fbbb2",
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "8900d91f0d9d6bb44501fdcdea6d78d72d1768599eae9233afe20b8749e7e9b7",
-    "size": 8210
+    "sha256": "0aff3ee971b61bf39502a58b37c79fa748c4b65fd4f5bf832d41200a7e7c0c78",
+    "size": 8232
   },
   "sw.js": {
     "sha256": "cb988a394d0d5515fd0966cc745f2f78a6b3e32aac0e4d6a96548ad2f66917b1",
