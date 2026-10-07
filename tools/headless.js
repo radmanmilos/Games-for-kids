@@ -487,7 +487,20 @@ async function start({
         ));
         const target = await dbg.send('Target.createTarget', { url: 'about:blank' });
         const { sessionId } = await dbg.send('Target.attachToTarget', { targetId: target.targetId, flatten: true });
-        session = { dbg, sessionId, version };
+        /* The target is only usable once its session answers the enable commands.
+           These used to sit AFTER the boot loop, so a Chrome whose browser process
+           responded to Target.* but whose renderer never enabled Page/Runtime/
+           Network threw a bare 30 s CDP timeout straight out of start() with zero
+           checks — and every run_all.js retry re-created Chrome and re-hit the same
+           wall (the parent_smoke CI leg of 2026-10-07: "CDP Page.enable (id 3)
+           got no response"). A renderer that never enables is a failed boot by the
+           loop's own definition, so it belongs inside it: the attempt counts as a
+           failure, Chrome is killed, and the next attempt starts fresh. */
+        const c = { send: (m, p) => dbg.send(m, p, sessionId), on: (m, fn) => dbg.on(m, fn) };
+        await c.send('Page.enable');
+        await c.send('Runtime.enable');
+        await c.send('Network.enable');
+        session = { dbg, sessionId, c, version };
       } catch (e) {
         lastBootError = String((e && e.message) || e);
         session = null;
@@ -510,11 +523,7 @@ async function start({
     throw new Error(msg);
   }
 
-  const { dbg, sessionId } = session;
-  const c = { send: (m, p) => dbg.send(m, p, sessionId), on: (m, fn) => dbg.on(m, fn) };
-  await c.send('Page.enable');
-  await c.send('Runtime.enable');
-  await c.send('Network.enable');
+  const { dbg, sessionId, c } = session;
 
   const runtimeErrors = [];
   const requestUrls = new Map();
