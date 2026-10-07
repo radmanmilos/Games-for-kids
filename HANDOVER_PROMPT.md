@@ -6,7 +6,11 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — Tasks 213 + 214 DONE — Screenshot review battery + CI boot-crash fix — 2026-10-07
+## Current session — Task 215 DONE — Affected-only CI smoke matrix — 2026-10-07
+
+CI now runs affected smoke legs for pushes/PRs using `run_all.js --affected <base>` and `tools/ci_affected_matrix.js`; selector/workflow/release-gate changes escalate to the full battery. Docs-only changes skip smoke and Release QA while `fast` still runs. A guarded placeholder prevents GitHub's empty-matrix failure. Manual/weekly/no-base runs retain all 33 matrix legs (hub remains in `fast`). Guards cover file mappings, removed smoke files, escalation, and empty-matrix wiring. Validation: `validate_workflow.js` 17/17; `games_map_negtest.js` passed; `check_fast.js` 7/7. The interrupted-session transcript was removed after completion.
+
+## Earlier in this session — Tasks 213 + 214 DONE — Screenshot review battery + CI boot-crash fix — 2026-10-07
 
 **Task 213 (full screenshot review battery).** `tools/screenshot.js` gained a `--review` mode: captures EVERY registry page (hub + all 24 apps incl. the parent area) at the 4 viewport/orientation combos (phone/tablet × portrait/landscape) into `resources/General_reviews/<name>/`, writing validated PNGs + `TABLE_OF_CONTENT.md` + `screenshot-provenance.json` (per-file `updatedAt` + task). `--pages=<subset>` refreshes only those files, provenance updates per file so untouched pages keep their history. The TOC carries Serbian game title / page / format / orientation / **date·time of last screenshot** / **task that did the change**. **The full 100-PNG battery was captured (25 pages × 4 viewports) into `resources/General_reviews/Screenshot_Review/`.** Per user decision the folder name is a **stable generic `Screenshot_Review`**, NOT dated — later tasks re-shoot the same folder (`--review=Screenshot_Review --pages=… --task=…`), never a new one. The "screenshots are part of story-done" rule is in AGENTS.md (Working rhythm) + CONTRIBUTING.md (Task lifecycle). **Awaiting the user's UI review of these 100 PNGs (review with MiMo — Big Pickle cannot view images).**
 

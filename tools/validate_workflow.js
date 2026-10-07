@@ -138,10 +138,29 @@ const matrixGenerated = /fromJSON\(needs\.setup\.outputs\.\w+\)/.test(y);
 check('smoke matrix is generated from the setup job output', matrixGenerated, matrixGenerated ? 'fromJSON(needs.setup.outputs...)' : 'hand-listed or missing');
 check('matrix uses fail-fast: false (one failure must not hide the others)', /fail-fast:\s*false/.test(y), /fail-fast:\s*false/.test(y) ? 'present' : 'missing');
 
-// The setup job passes the flags as an argv array, so the literal text is
-// `'--list','--json'` — match the quoted form too, or this check is a false alarm.
-const setupGenerates = /--list['"]?\s*,\s*['"]?--json/.test(y);
-check('setup job derives the battery from run_all --list --json', setupGenerates, setupGenerates ? 'present' : 'missing');
+// The battery is no longer derived inline in the workflow: the setup job calls
+// tools/ci_affected_matrix.js, and the helper must still derive the battery
+// from `run_all --list --json` rather than hand-listing it. --affected needs
+// the diff base SHA on disk, so full history must be checked out.
+const setupBody = jobs && jobs.setup ? jobs.setup.join('\n') : '';
+const matrixHelper = /ci_affected_matrix\.js/.test(setupBody);
+check('setup job computes the matrix via tools/ci_affected_matrix.js', matrixHelper, matrixHelper ? 'present' : 'missing');
+const fullHistory = /fetch-depth:\s*0/.test(setupBody);
+check('setup job checks out full history (fetch-depth: 0) so the diff base SHA exists', fullHistory, fullHistory ? 'present' : 'missing');
+const helperSrc = fs.readFileSync(path.join(ROOT, 'tools', 'ci_affected_matrix.js'), 'utf8');
+const helperDerives = /run_all\.js/.test(helperSrc) && /'--list'/.test(helperSrc) && /'--json'/.test(helperSrc);
+check('ci_affected_matrix.js derives the battery from run_all --list --json', helperDerives, helperDerives ? '--list --json argv present' : 'missing --list/--json argv');
+const helperFiltersHub = /'hub_smoke\.js'/.test(helperSrc);
+check('ci_affected_matrix.js excludes hub_smoke (the fast job runs it)', helperFiltersHub, helperFiltersHub ? 'filter present' : 'missing hub_smoke filter');
+const hasSmokesOutput = /has_smokes:\s*\$\{\{\s*steps\.matrix\.outputs\.has_smokes\s*\}\}/.test(setupBody);
+check('setup exports whether the affected matrix has smoke legs', hasSmokesOutput, hasSmokesOutput ? 'has_smokes output wired' : 'missing output');
+const smokeJob = jobs && jobs.smoke ? jobs.smoke.join('\n') : '';
+const smokeJobGated = /if:\s*needs\.setup\.outputs\.has_smokes\s*==\s*'true'/.test(smokeJob);
+check('smoke job gates off the placeholder for an empty selection', smokeJobGated, smokeJobGated ? 'gated on has_smokes' : 'missing empty-selection guard');
+const emptySelectionHandled = /__no_affected_smokes__/.test(helperSrc) &&
+  /has_smokes=' \+ String\(matrix\.length > 0\)/.test(helperSrc);
+check('matrix helper uses a guarded placeholder for an empty selection', emptySelectionHandled,
+  emptySelectionHandled ? 'non-empty matrix + false gate' : 'missing placeholder or false gate');
 
 // 5. The expensive browser matrix must not run on every push.
 const extendedJob = jobs && jobs.extended ? jobs.extended.join('\n') : '';

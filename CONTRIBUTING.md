@@ -43,20 +43,20 @@ If a smoke does not exist for the game you changed, run the page manually in Liv
 
 | Job | What it runs | When |
 | --- | --- | --- |
-| `setup` | derives the smoke list from `node tools/run_all.js --list --json` | every push/PR |
+| `setup` | selects affected smokes via `tools/ci_affected_matrix.js` and `run_all.js --affected`; no usable event base falls back to the full battery | every push/PR; manual/weekly use the full battery |
 | `fast` | `check_fast.js` — syntax, registry/metadata, CI-workflow topology, code-scanning-alert guards, generated-artifact freshness, offline inventory, hub smoke (**no** game battery; read-only) | every push/PR |
-| `smoke` | one leg per smoke via `run_all.js`, `fail-fast: false`, `max-parallel: 6` | every push/PR |
-| `release` | blocking offline E2E + serious/critical accessibility scan | every push/PR |
+| `smoke` | one leg per selected smoke via `run_all.js`, `fail-fast: false`, `max-parallel: 6` | affected smoke changes; no legs for docs-only changes |
+| `release` | blocking offline E2E + serious/critical accessibility scan | when smoke legs run |
 | `extended` | blocking `play_matrix.mjs` (Chromium + WebKit × 5 viewports; missing-engine skips fail coverage) | manual run or weekly |
 
 Consequences for contributors:
 
-- **A new smoke needs no workflow edit** — the matrix is generated from the battery. If you add `tools/*_smoke.js`, it is picked up automatically.
+- **A new smoke needs no workflow edit** — the selector derives the battery from `run_all.js`; changes to the selector, workflow, or release-only gates escalate to the full battery. Docs-only changes run the fast gate without smoke/release legs. Manual and weekly runs always use the full battery.
 - **Automated gates first, then a manual portfolio pass.** See `PLAYTESTING.md` (R20) for the four-session protocol (toddler flow, five-game random walk, offline, parent handoff) and the `BLOCKER / MAJOR / MINOR / COSMETIC` classification. Run it before a release and after any new pilot.
 - `axe_check.js --report` is blocking for incomplete scans and serious/critical violations. Its pinned axe-core 4.10.2 tool asset is vendored under `tools/vendor/`; `game/` never depends on it. Moderate/minor findings remain visible in the page-by-page report without failing CI.
 - **No CI step or validator may regenerate what it inspects** (R5). If you edit `game/`, run `node tools/sync-docs.sh` (or `check_all.js --docs`) and commit the result; `check_fast.js` and `check_release.js` will *fail* on an unsynced `docs/` rather than fixing it, which is deliberate — a check that repairs what it inspects can never report a stale artifact.
 - `tools/check_release.js` is deliberately **not** a CI job: it re-runs the entire battery, which the `smoke` matrix already ran in parallel, one leg per job. Run it locally before a release.
-- The CI workflow's own shape is guarded by `tools/validate_workflow.js` (11 checks, runs inside `check_fast`), so the R4 fixes — a deleted tool reference, a matrix generated from the battery, `fail-fast: false`, a direct `needs` for every `needs.*.outputs` read — cannot silently regress.
+- The CI workflow's own shape is guarded by `tools/validate_workflow.js` (17 checks, runs inside `check_fast`), so the R4 fixes — a deleted tool reference, a matrix generated from the battery, `fail-fast: false`, a direct `needs` for every `needs.*.outputs` read — cannot silently regress.
 - The two GitHub code-scanning alerts are guarded by `tools/check_scan_alerts.js` (5 checks, also inside `check_fast`): a dangerous-scheme filter must test `javascript:` **and** `vbscript:`, and an HTML stripper must consume the whole closing tag. Both rules are checked behaviourally and self-tested against the pre-autofix shapes, so the guard cannot report green by matching nothing. Known residual: the `</script/>` closing form is deliberately not covered.
 - A red `fast` job means a syntax/registry/inventory/generated-artifact/workflow/scan-alert/hub problem — not a game. Read the failing leg's own matrix cell before suspecting a game.
 

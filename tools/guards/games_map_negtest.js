@@ -153,6 +153,75 @@ for (const table of ['SHARED_MODULE_SMOKE', 'ENGINE_SMOKE']) {
   }
 }
 
+/* --- affected-selection floor (CI runs `run_all.js --affected <base>`) ----
+   The function that turns a git diff into the CI smoke matrix. Each assertion
+   pins a behavior the pipeline depends on, so removing one (say the harness
+   escalation) fails this guard as well as slowing CI down silently. The floor
+   is tested with a mock git + mapping layer; SMOKE_DIR is the real tools/ dir
+   so the existsSync filter in normalizeSmokes() runs on real files. */
+function loadAffectedMapper(env) {
+  const src = fs.readFileSync(RUN_ALL, 'utf8').replace(/\r\n/g, '\n');
+  const grab = (needle) => {
+    const start = src.indexOf(needle);
+    if (start < 0) throw new Error(needle + ' not found in run_all.js');
+    return src.slice(start, src.indexOf('\n}\n', start) + 3);
+  };
+  const esc = src.match(/const CI_ESCALATION = new Set\(\[[\s\S]*?\n\]\);/);
+  if (!esc) throw new Error('CI_ESCALATION not found in run_all.js');
+  return new Function('execFileSync', 'mapFileToSmokes', 'allSmokes', 'fs', 'path', 'SMOKE_DIR', 'ROOT',
+    "const newliney = f => f.replace(/\\\\/g, '/');\n" +
+    esc[0] + '\n' + grab('function withExt') + '\n' + grab('function smokesForChangedFiles') +
+    '\nreturn smokesForChangedFiles;')(env.execFileSync, env.mapFileToSmokes, env.allSmokes, fs, path, env.SMOKE_DIR, ROOT);
+}
+
+const ALL3 = ['animals_smoke.js', 'racing3d_smoke.js', 'sw_update_smoke.js'];
+const mapStub = (f) => {
+  if (f.startsWith('game/shared/')) return ALL3.slice();
+  if (f === 'game/games/animals.js') return ['animals_smoke'];
+  if (f === 'game/sw.js' || f === 'game/offline-manifest.json') return ['hub_smoke'];
+  return [];
+};
+const affected = (changed, throwGit) => loadAffectedMapper({
+  execFileSync: () => { if (throwGit) throw new Error('git boom'); return changed.join('\n'); },
+  mapFileToSmokes: mapStub,
+  allSmokes: () => ALL3.slice(),
+  SMOKE_DIR: path.join(ROOT, 'tools'),
+});
+const same = (got, want) => JSON.stringify(got) === JSON.stringify(want);
+
+say(same(affected(['PROJECT_TASKS.md', 'docs/index.html'])(), []),
+  'affected: docs-only push selects no smokes (fast gate only)');
+say(same(affected([])(), []),
+  'affected: a genuinely empty diff selects nothing');
+say(same(affected(['game/games/animals.js', 'PROJECT_TASKS.md'])(), ['animals_smoke.js']),
+  'affected: a game edit maps to exactly its smoke (docs files never leak in)');
+say(same(affected(['tools/racing3d_smoke.js'])(), ['racing3d_smoke.js']),
+  'affected: a smoke-script edit re-runs that smoke');
+say(same(affected(['tools/removed_smoke.js'])(), ALL3),
+  'affected: removing a smoke script runs the remaining battery and release gates');
+say(same(affected(['game/shared/input.js'])(), ALL3),
+  'affected: a shared/ edit reaches every smoke through BROAD');
+say(same(affected(['game/offline-manifest.json'])(), ['hub_smoke.js', 'sw_update_smoke.js']),
+  'affected: an offline-inventory edit covers the update flow (hub + sw_update)');
+for (const harness of [
+  'tools/headless.js',
+  'tools/run_all.js',
+  'tools/ci_affected_matrix.js',
+  'tools/registry.js',
+  'tools/offline_smoke.mjs',
+  'tools/axe_check.js',
+  'tools/check_release.js',
+  'tools/guards/registry_guards_negtest.js',
+  'tools/guards/route_contract_negtest.js',
+  'tools/guards/games_map_negtest.js',
+  '.github/workflows/ci.yml',
+]) {
+  say(same(affected([harness])(), ALL3),
+    `affected: a ${path.basename(harness)} edit escalates to the whole battery`);
+}
+say(same(affected([], true)(), ALL3),
+  'affected: a git failure falls back to the whole battery');
+
 console.log(bad === 0 ? '\nthe derived game-file mapping is complete and every check can fail'
   : '\n' + bad + ' problem(s) with the derived mapping');
 process.exit(bad === 0 ? 0 : 1);

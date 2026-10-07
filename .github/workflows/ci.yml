@@ -26,23 +26,32 @@ jobs:
   # battery; CI reads it from there, so a newly added smoke can never be
   # silently left out of CI (the failure mode that left 6 tools unrun here).
   # hub_smoke is excluded because the fast job already runs it.
+  #
+  # Task "run only the affected jobs": the matrix is the DIFF — run_all.js's
+  # --affected <base> maps the files changed since this push/PR's base to their
+  # smokes and escalates harness/pipeline/release-gate changes to the whole
+  # battery. A docs-only push gives smoke a guarded placeholder plus
+  # has_smokes=false, so the smoke and release jobs are skipped; manual/weekly
+  # runs use the full battery. --affected needs the base SHA, hence fetch-depth: 0.
   # ---------------------------------------------------------------------------
   setup:
     name: Setup
     runs-on: ubuntu-24.04
     outputs:
       smokes: ${{ steps.matrix.outputs.smokes }}
+      has_smokes: ${{ steps.matrix.outputs.has_smokes }}
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
 
-      - name: Build the smoke matrix from the battery
+      - name: Build the smoke matrix from the changed files
         id: matrix
-        run: |
-          node -e "const fs=require('fs'),cp=require('child_process');const b=JSON.parse(cp.execFileSync(process.execPath,['tools/run_all.js','--list','--json'],{encoding:'utf8'}));const m=b.filter(n=>n!=='hub_smoke.js');fs.appendFileSync(process.env.GITHUB_OUTPUT,'smokes='+JSON.stringify(m)+'\n');console.log('battery: '+b.length+' tools -> '+m.length+' smoke legs (hub runs in the fast job)')"
+        run: node tools/ci_affected_matrix.js
 
   # ---------------------------------------------------------------------------
   # Job A — fast. Read-only. No game battery here.
@@ -68,6 +77,7 @@ jobs:
   # ---------------------------------------------------------------------------
   smoke:
     name: Smoke ${{ matrix.smoke }}
+    if: needs.setup.outputs.has_smokes == 'true'
     # `needs` only exposes DIRECT dependencies, and the matrix below reads
     # `needs.setup.outputs.smokes` — so `setup` must be listed here, not just
     # as `fast`'s dependency. With `needs: fast` alone, needs.setup is empty,

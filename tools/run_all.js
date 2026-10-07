@@ -9,6 +9,8 @@
      node tools/run_all.js racing3d_smoke.js   # positional: run only those
      node tools/run_all.js --game racing3d     # filter by mapped game/page name
      node tools/run_all.js --since <sha>       # only smokes for files changed since <sha>
+     node tools/run_all.js --affected <base>   # CI mode: smokes for files changed vs <base>,
+                                               #   whole battery on harness changes, [] on none
      node tools/run_all.js --watch             # re-run affected smokes on game/ change
      node tools/run_all.js --concurrency 6     # workers (default 4, or $RUN_ALL_CONCURRENCY)
      node tools/run_all.js --sequential        # same as --concurrency 1
@@ -23,7 +25,7 @@
    Mapping: game-file pattern -> smoke script(s). Broad/unknown changes (shared/*,
    audio, sw.js) default to the WHOLE battery (safe; it is parallel, so cheap).
 */
-const { execFile, spawn } = require('child_process');
+const { execFileSync, spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const { all: registryAll, byId } = require('./registry.js');
@@ -44,7 +46,7 @@ const LAUNCH_RETRIES = 2;
 
 const args = process.argv.slice(2);
 const positional = [];
-const opts = { concurrency: CONCURRENCY_DEFAULT, watch: false, list: false, json: false, resume: null };
+const opts = { concurrency: CONCURRENCY_DEFAULT, watch: false, list: false, json: false, resume: null, since: null, affected: null };
 for (let i = 0; i < args.length; i++) {
   const a = args[i];
   if (a === '--watch') opts.watch = true;
@@ -58,6 +60,8 @@ for (let i = 0; i < args.length; i++) {
   else if (a === '--game') { opts.game = args[i + 1]; i++; }
   else if (a.startsWith('--since=')) opts.since = a.split('=')[1];
   else if (a === '--since') { opts.since = args[i + 1]; i++; }
+  else if (a.startsWith('--affected=')) opts.affected = a.split('=')[1];
+  else if (a === '--affected') { opts.affected = args[i + 1]; i++; }
   else positional.push(a);
 }
 if (!(opts.concurrency >= 1)) opts.concurrency = CONCURRENCY_DEFAULT;
@@ -178,6 +182,8 @@ function resolveSmokes() {
     if (!list.length) { console.error('No matching smoke files given; see node tools/run_all.js --list'); process.exit(1); }
   } else if (opts.since) {
     list = smokesForGitDiff(opts.since);
+  } else if (opts.affected) {
+    list = smokesForChangedFiles(opts.affected);
   } else if (opts.game) {
     list = allSmokes().filter(n => n.includes(opts.game));
   } else {
@@ -210,15 +216,81 @@ function recordResume(name, rec) {
 function smokesForGitDiff(since) {
   let changed;
   try {
-    changed = execFile('git', ['-C', ROOT, 'diff', '--name-only', since, '--', 'game'],
-      { timeout: 10000 }).stdout.split(/\r?\n/).filter(Boolean);
+    changed = execFileSync('git', ['-C', ROOT, 'diff', '--name-only', since, '--', 'game'],
+      { encoding: 'utf8', timeout: 10000 }).split(/\r?\n/).filter(Boolean);
   } catch (e) {
     console.error('git diff unavailable (' + e.message + ') — running the whole battery.');
     return allSmokes();
   }
   const set = new Set();
   for (const f of changed) for (const s of mapFileToSmokes(f)) set.add(s);
-  return set.size ? [...set].sort() : allSmokes();
+  return set.size ? normalizeSmokes(set) : allSmokes();
+}
+
+/* The mapping layer produces extension-less names (`animals_smoke`, from the
+   registry's `app.smoke`), while smokes from tools/ edits and the battery carry
+   `.js`. The list that feeds a runner and CI's matrix must be the real file
+   names, so every mapped name is normalised and dropped if no such file exists
+   (withExt + existsSync). */
+function withExt(n) { return /\.(js|mjs)$/.test(n) ? n : n + '.js'; }
+function normalizeSmokes(set) {
+  return [...set]
+    .map(withExt)
+    .filter(n => fs.existsSync(path.join(SMOKE_DIR, n)))
+    .sort();
+}
+
+/* Changes to the harness, matrix selector, pipeline, or release-only checks
+   must still run the release job. Escalate them to the whole battery rather
+   than letting an empty/partial matrix skip the checks they modify. */
+const CI_ESCALATION = new Set([
+  'tools/headless.js',        // every smoke boots Chrome through it (task 214)
+  'tools/run_all.js',         // owns the battery + boot-crash retry
+  'tools/ci_affected_matrix.js', // selects CI's smoke coverage
+  'tools/registry.js',        // registry is read by nearly every tool
+  'tools/offline_smoke.mjs',  // the Release QA gate itself
+  'tools/axe_check.js',       // the Release QA a11y step
+  'tools/check_release.js',   // release gate logic
+  'tools/guards/registry_guards_negtest.js',
+  'tools/guards/route_contract_negtest.js',
+  'tools/guards/games_map_negtest.js',
+  '.github/workflows/ci.yml', // a new pipeline must exercise itself
+]);
+
+function smokesForChangedFiles(base) {
+  let changed;
+  try {
+    changed = execFileSync('git', ['-C', ROOT, 'diff', '--name-only', base],
+      { encoding: 'utf8', timeout: 15000 }).split(/\r?\n/).filter(Boolean);
+  } catch (e) {
+    console.error('git diff unavailable (' + e.message + ') — running the whole battery.');
+    return allSmokes();
+  }
+  if (changed.some(f => CI_ESCALATION.has(newliney(f)))) return allSmokes();
+  const removedSmoke = changed.some(raw => {
+    const f = newliney(raw);
+    return /^tools\/[\w.-]+_smoke\.js$/.test(f) &&
+      !fs.existsSync(path.join(SMOKE_DIR, path.basename(f)));
+  });
+  if (removedSmoke) return allSmokes();
+  if (!changed.length) return [];
+  const set = new Set();
+  const OFFLINE = new Set(['sw.js', 'manifest.json', 'offline-manifest.json', 'sw-cache-list.json']);
+  for (const raw of changed) {
+    const f = newliney(raw);
+    if (f.startsWith('game/')) {
+      const p = f.slice(5);
+      for (const s of mapFileToSmokes(f)) set.add(s);
+      // The offline inventory feeds hub_smoke's update check; an inventory or
+      // service-worker change also needs sw_update_smoke's subpath derivation.
+      if (OFFLINE.has(p)) set.add('sw_update_smoke');
+    } else if (/^tools\/[\w.-]+_smoke\.js$/.test(f)) {
+      // An edit to a smoke script re-runs that smoke. (offline_smoke.mjs is not
+      // in the battery; editing it hits CI_ESCALATION instead.)
+      set.add(path.basename(f));
+    }
+  }
+  return normalizeSmokes(set);
 }
 
 /* Run a worker pool over smokes; print block output, collect results. */
@@ -358,9 +430,14 @@ async function watchLoop() {
 (async () => {
   if (opts.list) {
     // --json feeds CI's matrix job: the workflow never hard-codes the battery,
-    // so a newly added smoke can never be silently left out of CI.
-    if (opts.json) console.log(JSON.stringify(allSmokes()));
-    else for (const n of allSmokes()) console.log('  ' + n);
+    // so a newly added smoke can never be silently left out of CI. With
+    // --affected (or --since), the list is the changed-files selection instead
+    // of the whole battery — this is what makes a docs-only push run zero legs.
+    const list = opts.affected ? smokesForChangedFiles(opts.affected)
+      : opts.since ? smokesForGitDiff(opts.since)
+      : allSmokes();
+    if (opts.json) console.log(JSON.stringify(list));
+    else for (const n of list) console.log('  ' + n);
     process.exit(0);
   }
   if (opts.watch) { await watchLoop(); return; }
