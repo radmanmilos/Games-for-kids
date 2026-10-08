@@ -76,11 +76,12 @@
 - **Scope note:** §42.9 also asks for a road-trip scenery pass (soft sky / 2–4 trees / clouds / road markers / fence-sign-landmark). That is **content**, not header — the V2.9 plan row is header-only — so it is **flagged for a future driving-content task**, not done here.
 - **Validation:** `axe_check driving --report` clean; `build_offline.js` → `sync-docs.sh` → `check_fast` 7/7; `run_all --since HEAD` hub 15/0 + driving 24/0; 4 driving screenshots refreshed (`--review=Screenshot_Review --pages=driving --task=216`); docs updated.
 
-### V2.10 - Memory migration (DONE 2026-10-08, pending push)
+### V2.10 - Memory migration (DONE 2026-10-08, pushed CI-green)
 - Per spec §42.3 ("header overlap"): the memory page is body-flow (board + difficulty + controls), not the adventure shell, so the shell.css canonical contract applied directly — the full-width centred `<h1>` sat under a `position:fixed` back button, so the title BOX ran under it at **every** viewport (measured after `document.fonts.ready`: 2201px² at 390×844, 2057 at 844×390, 3411 at both tablet sizes). Title + back are now flex siblings in `.ps-header`, so they cannot overlap; `#controls` keeps only restart.
 - **Smoke:** `memory_smoke` **17 → 21 checks**, four §42.3 checks in a new 390×844 session (title in `.ps-header`, back in normal flow not `position:fixed`, back+title never overlap, chrome inside viewport). Non-vacuous: stashing `animal_memory.html` failed 3 (inHeader:false, backPos:fixed, overlap 2201px²); viewport check is a forward guard.
 - **Scope:** §42.3's other Fix items (card proportions, back symbol scale, short-landscape difficulty controls) are not header work — deferred (short-landscape controls belong with V3).
 - **Validation:** `axe_check animal_memory --report` clean; `build_offline.js` → `sync-docs.sh` → `check_fast` 7/7; `run_all --since HEAD` hub 15/0 + memory 21/0; 4 memory screenshots refreshed (`--review=Screenshot_Review --pages=animal_memory --task=216`); docs updated.
+- **CI red, then fixed (`552f2b6` → `3b40289`):** Release QA's offline E2E failed `P6 animal_memory back button returns to the hub [element not found]` because `offline_smoke.mjs:148` still selected `#controls .back-btn` — the container V2.10 moved the button out of. **Stale selector, not a product bug.** Local `memory_smoke` and `run_all` never caught it because they select `.back-btn` generically; the offline gate is the only tool that pins the *container path*. Fixed to `.ps-header .back-btn`, offline E2E re-run locally 140/140, CI run 37794119618 green. **Lesson: moving a control out of its old container breaks any smoke selecting it by the container path — grep `tools/` for the old selector.**
 
 ### Anti-looping rules (commit `af80862`)
 - Rules 7 and 8 added to `ANTI_LOOP_RULES.md` after this session looped on repeated file reads.
@@ -104,7 +105,8 @@
 13. `d8bede6` — docs: session rule — standing commit+push approval (session-scoped)
 14. `59e8a6c` — V2.8: Space shared-header migration (spec §42.11) + smoke checks + screenshots + docs (CI run 37777284943 green on first pass; CodeQL + Pages green)
 15. `5ffe53b` — V2.9: Driving shared-header migration (spec §42.9) + smoke checks + screenshots + docs (CI run 37779877861 green on first pass; CodeQL + Pages green)
-16. `<hash>` — V2.10: Memory shared-header migration (spec §42.3) + smoke checks + screenshots + docs (V2.9: Driving shared-header migration (spec §42.9) + smoke checks + screenshots + docs)
+16. `552f2b6` — V2.10: Memory shared-header migration (spec §42.3) + smoke checks + screenshots + docs (CI run 37783213660 **red** on Release QA — offline E2E memory back selector, fixed by 17)
+17. `3b40289` — fix(offline_smoke): memory back selector follows V2.10 header move (`#controls .back-btn` → `.ps-header .back-btn`) (CI run 37794119618 green — full matrix + Release QA) (V2.9: Driving shared-header migration (spec §42.9) + smoke checks + screenshots + docs)
 
 ## Next session
 1. *(done)* V2.6 pushed as `a6dde46` — CI run 37759919627 green after one environmental re-run (Release QA's classroom start exceeded the 8s default tile wait under matrix contention; local 153/153 green, re-run green).
