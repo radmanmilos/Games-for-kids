@@ -17,7 +17,15 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
-- 216. DONE — V1.1 + V1.2: Animal Puzzle `[object Object]` fix and header rule (Visual/UX plan, P0). (Completed 2026-10-07, Ponytail Lazy Dev.)
+- 216. IN PROGRESS — V1.1 + V1.2 DONE; V0.1 + V0.2 DONE; V2.1–V2.3 DONE; V2.4 in progress. (Updated 2026-10-08, Ponytail Lazy Dev.)
+    - **DONE and pushed:**
+      - V1.1: Animal Puzzle `[object Object]` fix (commit `9023b6f`).
+      - V1.2: Animal Puzzle header rule — title `Слагалица`, status `1/8`, phone-portrait stacking (commit `6753226`).
+      - V0.1/V0.2: deterministic gameplay-state capture — `tools/visual-states.json` + `--state=<id>` in `tools/screenshot.js` (commit `af80862`).
+      - V2.1/V2.2: `game/styles/shell.css` — canonical header contract + safe-area foundation.
+      - V2.3: Animal Puzzle migrated to shared header.
+    - **V2.4 IN PROGRESS — Classroom migration.** Removed `#classroomTitle { position: absolute; top: 4vmin; }` per spec §31. Added `shell.css` link. Wrapped back button + title + autoplay in a `ps-header` div. **Remaining:** the title is now in normal flow, pushing `#classroomHub` down ~75px at tablet portrait; the hub must fill the remaining space via flexbox (`.screen.active { display:flex; flex-direction:column; }` + `#classroomHub { flex:1; overflow:auto; }`). One smoke failure remains: `tablet portrait: overflowing hub is top-anchored (reachable), not clipped above`.
+    - **Anti-looping rules 7 and 8 added to `ANTI_LOOP_RULES.md`** after this session looped on repeated file reads.
     - Source: `resources/General_reviews/Petrin_svet_Master_Visual_UX_Implementation_Plan_2026-10-07.md` §19; execution list `VISUAL_UX_IMPLEMENTATION_PLAN.md` V1.1/V1.2.
     - **V1.1 root cause confirmed with line numbers.** `game/games/animal_puzzle.js:340` initialises `rows`/`columns` to `GRIDS[0]`, which is the **object** `{rows:1, cols:2}`. `setGrid()` (line 344) is the only thing that converts them to numbers — but the initial-load path at line **598** calls `updateLabels(scenes[0])` with **no preceding `setGrid()`**, so line 353 renders `'Слагалица ' + (level+1) + ' · ' + rows + '×' + columns` as `Слагалица 1 · [object Object]×[object Object]`.
     - **V1.1 fix (two lines):** initialise to `GRIDS[0].rows` / `GRIDS[0].cols`, and call `setGrid()` before `updateLabels(scenes[0])` on the initial-load path.
