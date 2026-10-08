@@ -69,7 +69,7 @@
 - **Smoke:** `space_smoke` **28 checks**, four §42.11 geometry checks in a new 390×844 session. Non-vacuous: stashing `space.html` failed exactly the 3 real geometry checks (exit 1). `ocean_smoke` 27 green (hardened identically).
 - **Validation:** throwaway 4-viewport probe (deleted); `axe_check space --report` clean; `build_offline.js` → `sync-docs.sh` → `check_fast` 7/7; `run_all --since HEAD` hub 15/0 + space 28/0; 4 Space screenshots refreshed (`--task=216`); docs updated (PROJECT_TASKS, VISUAL plan, tools/README, HANDOVER).
 
-### V2.9 - Driving migration (DONE 2026-10-08, pending push)
+### V2.9 - Driving migration (DONE 2026-10-08, pushed CI-green)
 - Per spec §42.9 ("top cluster must be fixed for portrait"): Driving is the same adventure shell as Ocean/Space, so the V2.7/V2.8 absolute-`.ps-header`-overlay pattern applied unchanged — `#adv-title` left `position:absolute; top:2vmin` and joined the `.ps-header` flow row (band `max(12vmin, 64px)`, `pointer-events:none` with `.adv-back` re-enabled), HUD trio drops below the band in portrait; `adventure.css` untouched, no new controls.
 - Pre-fix 4-viewport probe (deleted): 390×844 **back∩music 1305px², title∩worlds 664px²**; 768×1024 **title∩music 896px²**; landscapes clean. Post-fix: 0 overlaps at all 4 viewports.
 - **Smoke:** `driving_smoke` **15 → 24 checks**, four §42.9 checks in a new 390×844 session (title in `.ps-header` + centred, **title + back clear of every other chrome item** after `document.fonts.ready`, HUD trio below the band, all chrome inside the viewport). Non-vacuous: stashing `driving.html` failed exactly the 3 real geometry checks (exit 1).
@@ -97,7 +97,7 @@
 12. `6c14299` — docs: record V2.7 CI result (docs-only CI run green)
 13. `d8bede6` — docs: session rule — standing commit+push approval (session-scoped)
 14. `59e8a6c` — V2.8: Space shared-header migration (spec §42.11) + smoke checks + screenshots + docs (CI run 37777284943 green on first pass; CodeQL + Pages green)
-15. `eb477`? — see below (V2.9: Driving shared-header migration (spec §42.9) + smoke checks + screenshots + docs)
+15. `5ffe53b` — V2.9: Driving shared-header migration (spec §42.9) + smoke checks + screenshots + docs (CI run 37779877861 green on first pass; CodeQL + Pages green) (V2.9: Driving shared-header migration (spec §42.9) + smoke checks + screenshots + docs)
 
 ## Next session
 1. *(done)* V2.6 pushed as `a6dde46` — CI run 37759919627 green after one environmental re-run (Release QA's classroom start exceeded the 8s default tile wait under matrix contention; local 153/153 green, re-run green).
