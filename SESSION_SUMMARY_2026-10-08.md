@@ -65,6 +65,9 @@
 ### Anti-looping rules (commit `af80862`)
 - Rules 7 and 8 added to `ANTI_LOOP_RULES.md` after this session looped on repeated file reads.
 
+## Session rule (2026-10-08, user decision)
+- The user granted **standing approval for commit + push for the rest of this session** — no per-commit approval needed. This is session-scoped and does **not** carry into future sessions; the normal "never push without explicit approval" rule resumes next session. CI is still watched after each push and results recorded here.
+
 ## Commits
 1. `9023b6f` — V1.1: fix Animal Puzzle `[object Object]`
 2. `6753226` — V1.2: Animal Puzzle header rule
