@@ -42,9 +42,27 @@
   }
   .back-btn:active{ transform:scale(.9) translateY(3px); }
 
+  /* ---------- SHARED HEADER (V2.6, spec §32) ---------- */
+  /* The title used to be position:absolute; top:4vmin — it ignored
+     --ps-safe-top (notch) and relied on hand-tuned distances to stay clear of
+     the corner back button (whose bottom sits at exactly 16vmin, the same
+     16vmin the controls' margin-top started at: zero gap in portrait). It now
+     sits in the .ps-header flow row: the row reserves 16vmin on each side
+     (4vmin corner offset + 12vmin control) so a centred title can never reach
+     the corner control, and the title's top margin carries the safe-area inset
+     the absolute rule ignored. The title is the row's ONLY in-flow child (back
+     stays absolute on its corner anchor); §32 says repair shell geometry only —
+     keys, press feedback and the studio stay untouched. */
+  .ps-header{ padding:0 16vmin; justify-content:center; }
   #pianoTitle{
-    position:absolute; top:4vmin; left:50%; transform:translateX(-50%);
-    margin:0; font-size:6.5vmin; color:var(--plum);
+    margin:calc(var(--ps-safe-top) + 4vmin) 0 1vmin;
+    /* The band must be as tall as the corner control ACTUALLY is:
+       accessibility.css floors .back-btn at 56px, which beats 12vmin on any
+       phone (390px: 12vmin=46.8 < 56), so a plain 12vmin line box left the
+       header 5.3px short of the back button's bottom and the primary mode
+       button tucked 294px^2 under its corner (spec 32's portrait complaint). */
+    min-height:max(12vmin, 56px); line-height:max(12vmin, 56px);
+    font-size:6.5vmin; color:var(--plum);
     text-shadow:0 3px 0 rgba(255,255,255,.6);
     pointer-events:none;
   }
@@ -52,7 +70,9 @@
   /* ---------- CONTROLS ---------- */
   #pianoControls{
     display:flex; flex-direction:column; align-items:center; gap:2.4vmin;
-    margin-top:16vmin;
+    /* V2.6: was 16vmin to clear the old ABSOLUTE title; the header is in flow
+       now, so the controls start right below its bottom edge (margin-top 0). */
+    margin-top:0;
   }
   #pianoModes{ display:flex; align-items:center; gap:2.5vmin; }
   .mode-btn{
@@ -170,14 +190,17 @@
 </style>
 <link rel="stylesheet" href="../styles/viewport.css">
     <link rel="stylesheet" href="../styles/design-tokens.css">
+    <link rel="stylesheet" href="../styles/shell.css">
     <link rel="stylesheet" href="../shared/accessibility.css">
 </head>
 <body>
 <div id="app">
 
   <div class="screen active" id="game-piano">
-    <button class="back-btn" id="piano-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
-    <h1 id="pianoTitle">Клавир</h1>
+    <div class="ps-header">
+      <button class="back-btn" id="piano-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+      <h1 id="pianoTitle">Клавир</h1>
+    </div>
 
     <div id="pianoControls">
       <div id="pianoModes">

@@ -49,6 +49,12 @@
 - **Known, owned by V3.1:** at 844x390 the canvas touches the tools row by a 0.6px sliver (112px2) - pre-existing palette/canvas squeeze, improved not introduced; the palette grid format is a no-rework zone.
 - **CI red on push (`d1abefc`, run 37746441324) - fixed:** Release QA's axe gate failed on `#coloringProgress` (serious color-contrast). Root cause: `shell.css .ps-status{opacity:0.7}` blended `--plum-soft` to ~3.1:1 on cream - a latent flaw, since coloring is the first page to render `.ps-status` at all. Fix: removed the opacity from the shared rule (hierarchy via size/weight/colour, never opacity); `axe_check coloring --report` clean, smoke 28/28, `check_fast` 7/7, screenshots re-shot. **Lesson: colour/opacity changes in shared styles need a local `axe_check` run - `check_fast` does not cover contrast.** Fix pushed as `ffca55c` (+`138f628`); CI run `37747960047` green (Release QA + full 27-leg matrix), CodeQL green, Pages deployed.
 
+### V2.6 - Piano migration (DONE 2026-10-08, awaiting commit approval)
+- Per spec 32 ("only repair shell geometry"): `#pianoTitle` left `position:absolute; top:4vmin` (ignored `--ps-safe-top`, and the controls' 16vmin margin-top started at exactly the back button's 16vmin bottom - zero gap) and now sits in the `.ps-header` flow row with `.ps-header{padding:0 16vmin}` corner zones (the V2.4 rule); `#pianoControls` margin-top 16vmin -> 0 because the header is in flow now. Keys, press feedback and the studio are untouched (32: preserve).
+- **The real 32 bug, found by the 4-viewport probe:** `accessibility.css:9` floors `.back-btn` at 56px, which beats 12vmin (46.8) on any phone, so the back button dipped 5.3px below a plain 12vmin header band and the portrait primary mode button tucked **294px2** under its corner (510.8px2 on the pre-migration layout). Fix: title band `min/max-height: max(12vmin, 56px)` - the band is as tall as the corner control ACTUALLY is. Classroom/coloring share the same 12vmin-band assumption and will hit this when their controls reach into the corner (recorded, not changed - out of V2.6 scope).
+- **Smoke:** `piano_smoke` -> 30 checks, five new V2.6/spec-32 geometry checks in the 390x844 session (title rendered/in-row/centred, title intersect back == 0, **mode button intersect back == 0**, header->controls flow gap 0-1px, mode below band). The block is deliberately on the phone-portrait session: at wider viewports the mode row clears the corner horizontally, which is why the bug hid there. Non-vacuous: stashing `piano.html` failed exactly the 4 geometry checks that can see the old layout (exit 1; the title-vs-back check passes on old markup too - the short centred title never reached the button, so it is a forward guard only).
+- **Validation:** throwaway 4-viewport probe (deleted) - clean 4/4 after the band fix; `axe_check piano --report` clean (the V2.5 contrast lesson); `piano_smoke` 30/30 + `hub_smoke` 15/15 via `run_all --since HEAD`; `check_fast` 7/7 after `build_offline.js` -> `sync-docs.sh`; 4 piano screenshots refreshed (`--task=216`); docs updated.
+
 ### Anti-looping rules (commit `af80862`)
 - Rules 7 and 8 added to `ANTI_LOOP_RULES.md` after this session looped on repeated file reads.
 
@@ -61,8 +67,9 @@
 6. `6d66b15` — V2.4: Classroom shared-header migration + smoke checks + screenshots (pushed; CI run 37741581608 green)
 7. `d1abefc` — V2.5: Coloring shared-header migration + smoke checks + screenshots + docs (CI run 37746441324 red on a11y — fixed by 8)
 8. `ffca55c` — V2.5 follow-up: remove `.ps-status` opacity (contrast fix) + docs + re-shot screenshots
+9. *(pending approval)* — V2.6: Piano shared-header migration + smoke checks + screenshots + docs
 
 ## Next session
-1. Commit/push V2.5 if approved by the user.
-2. Continue V2.6–V2.11: migrate Piano, Ocean, Space, Driving, Memory to shared header.
+1. Commit/push V2.6 if approved by the user; watch CI (axe gate runs on Release QA).
+2. Continue V2.7–V2.11: migrate Ocean, Space, Driving, Memory to shared header (then identify remaining top-cluster collisions from screenshots).
 3. Then V3 (short-landscape audit), V4 (adventure HUD), V5 (learning stage), V6 (Petrin Glow), V7 (tactile system).

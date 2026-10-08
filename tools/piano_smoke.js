@@ -2,8 +2,11 @@
    Drives the REAL page headlessly: 8 keys render, free play taps, "Прати светло"
    song mode (soft light on the expected key, no punishment on a wrong key, correct
    press -> positive highlight + advance), finish + replay, free-play prominence,
-   the roadmap song-data shape, plus static wiring checks (hub, navigation, boot).
-   Run:  node tools/piano_smoke.js     (from the repo root or anywhere)
+    the roadmap song-data shape, plus static wiring checks (hub, navigation, boot).
+    V2.6 (task 216): pins the shared-header geometry in a 390x844 session -
+    title inside .ps-header and centred, title and the portrait primary button
+    clear of the back corner control, header flowing into the controls.
+    Run:  node tools/piano_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
 const { checkRouteWired } = require('./route_contract.js');
@@ -244,6 +247,39 @@ const LIT_IDX = `Array.from(document.querySelectorAll('.piano-key')).indexOf(doc
     const ks = [...document.querySelectorAll('.piano-key')].map(k => k.getBoundingClientRect());
     return { vw: innerWidth, n: ks.length, allIn: ks.every(b => b.left >= 0 && b.right <= innerWidth), w: Math.round(ks[0].width), h: Math.round(ks[0].height) };
   })())`);
+  // --- V2.6 shared-header geometry (spec §32) — measured at 390x844, the
+  // viewport where the pre-fix layout actually failed: the back button is
+  // floored to 56px (accessibility.css) so it dipped 5.3px below a plain
+  // 12vmin header band and the primary mode button tucked 294px² under its
+  // corner. At wider viewports the mode row clears the corner horizontally,
+  // which is exactly why the bug hid there — so this block must stay on the
+  // phone-portrait session to keep modeVsBack non-vacuous.
+  const hdrGeom = JSON.parse(await narrow.evalv(`JSON.stringify((function(){
+    function g(s){ var e=document.querySelector(s); if(!e) return null; var b=e.getBoundingClientRect();
+      return {x:b.x,y:b.y,r:b.right,b:b.bottom}; }
+    function ov(a,b){ if(!a||!b) return -1;
+      return Math.max(0,Math.min(a.r,b.r)-Math.max(a.x,b.x)) * Math.max(0,Math.min(a.b,b.b)-Math.max(a.y,b.y)); }
+    var hd=g('.ps-header'), title=g('#pianoTitle'), back=g('#piano-back'),
+        controls=g('#pianoControls'), mode=g('#modeFree');
+    return { header:!!hd,
+      titleVisible: !!(title && title.r>title.x && title.b>title.y),
+      titleInHeader: !!(hd&&title&&title.y>=hd.y-0.5&&title.b<=hd.b+0.5),
+      titleCentred: !!(hd&&title) && Math.abs((title.x+title.r)/2-(hd.x+hd.r)/2) <= 2,
+      titleVsBack: ov(title,back),
+      modeVsBack: ov(mode,back),
+      flowGap: (hd&&controls)?Math.abs(hd.b-controls.y):-1,
+      modeVsHeader: (hd&&mode)?+(mode.y-hd.b).toFixed(1):-1 };
+  })())`));
+  check('V2.6: title owns the shared header centre (rendered, in-row, centred)',
+    hdrGeom.header && hdrGeom.titleVisible && hdrGeom.titleInHeader && hdrGeom.titleCentred, JSON.stringify(hdrGeom));
+  check('V2.6: title never overlaps the back corner control',
+    hdrGeom.titleVsBack === 0, JSON.stringify(hdrGeom));
+  check('V2.6: portrait primary button never tucks under the back control (spec §32)',
+    hdrGeom.modeVsBack === 0, JSON.stringify(hdrGeom));
+  check('V2.6: header flows directly into the controls (gap 0-1px)',
+    hdrGeom.flowGap >= 0 && hdrGeom.flowGap <= 1, JSON.stringify(hdrGeom));
+  check('V2.6: mode row sits below the header band (controls secondary)',
+    hdrGeom.modeVsHeader >= 0, JSON.stringify(hdrGeom));
   await narrow.close();
   const fitj = JSON.parse(fit);
   check('all 8 keys fit a 390px phone (no clipped, unreachable key)',
