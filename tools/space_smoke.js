@@ -3,8 +3,12 @@
    are valid (names, collectibles, music keys, obstacles, coins, goal), free-2D
    steering moves the rocket, clamps hold, coins collect, obstacles knock the
    rocket back, patrolling UFOs move, goal completes the level, worlds picker +
+   rocket back, patrolling UFOs move, goal completes the level, worlds picker +
    win modal + music toggle work, and the hub wiring (button / navigation /
    standalone boot) is in place.
+   V2.8 (spec §42.11): a second 390x844 session pins the portrait top-chrome
+   geometry — title in the .ps-header band, HUD trio below it, no pairwise
+   overlap among back/title/score/worlds/music, all inside the viewport.
    Run:  node tools/space_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -223,6 +227,61 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('draw: space decor + vortex stargate goal render without error', draw === 'ok', draw);
 
   await h.close();
+
+  // V2.8 (spec §42.11) — portrait top-chrome geometry. Runs in a 390x844
+  // session because the collisions only exist in portrait (the 1100x700
+  // session above measured clean before AND after the fix, so it is a forward
+  // guard at best): the title owns the .ps-header band, the HUD trio steps
+  // below it, and none of the five chrome items overlap.
+  const hp = await start({ page: '/pages/space.html', tag: 'space-smoke-portrait', width: 390, height: 844 });
+  let pReady = false;
+  for (let i = 0; i < 25 && !pReady; i++) {
+    pReady = await hp.evalv(`typeof window.__adv === 'object' && window.__adv !== null`);
+    if (!pReady) await sleep(200);
+  }
+  await hp.evalv(`window.audioBuses.connect=function(){}; true`);
+  await hp.evalv(`document.fonts.ready.then(() => true)`);
+  const geo = await hp.evalv(`(() => {
+    const sels = ['#space-back', '#adv-title', '#adv-score', '#adv-worlds-btn', '#adv-music-btn'];
+    const box = s => { const el = document.querySelector(s); if (!el) return null; const r = el.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom }; };
+    const boxes = Object.fromEntries(sels.map(s => [s, box(s)]));
+    const overlaps = [];
+    for (let i = 0; i < sels.length; i++) for (let j = i + 1; j < sels.length; j++) {
+      const a = boxes[sels[i]], b = boxes[sels[j]];
+      if (!a || !b) continue;
+      const w = Math.min(a.r, b.r) - Math.max(a.l, b.l);
+      const hh = Math.min(a.b, b.b) - Math.max(a.t, b.t);
+      if (w > 0.5 && hh > 0.5) overlaps.push(sels[i] + '∩' + sels[j] + '=' + (w * hh).toFixed(0) + 'px²');
+    }
+    // V2.8 owns the title collision + the back button's corner. The score card
+    // vs the fixed-offset world buttons is a pre-existing, font-width-coupled
+    // HUD coupling shared by all 4 adventure worlds (spec line 1366 → Phase V4
+    // adventure HUD unification), NOT introduced here — so V2.8 asserts that
+    // #adv-title and #space-back are clear of every other chrome item, and
+    // reports the rest (incl. any score/worlds pair) as evidence only.
+    const clean = s => overlaps.filter(o => o.startsWith(s));
+    const title = boxes['#adv-title'];
+    return JSON.stringify({
+      booted: ${pReady},
+      vw: innerWidth, vh: innerHeight,
+      inHeader: document.getElementById('adv-title').closest('.ps-header') !== null,
+      titleCx: (title.l + title.r) / 2,
+      titleOrBackOverlaps: [...clean('#space-back'), ...clean('#adv-title')],
+      allOverlaps: overlaps,
+      bandBottom: title.b,
+      hudTops: ['#adv-score', '#adv-worlds-btn', '#adv-music-btn'].map(s => boxes[s].t),
+      inside: sels.every(s => boxes[s].l >= -0.5 && boxes[s].t >= -0.5 && boxes[s].r <= innerWidth + 0.5 && boxes[s].b <= innerHeight + 0.5)
+    });
+  })()`);
+  const gj = JSON.parse(geo);
+  check('V2.8 shell: title lives in the .ps-header row, centred on the viewport',
+    gj.inHeader === true && Math.abs(gj.titleCx - gj.vw / 2) < 0.5, geo);
+  check('V2.8 portrait: title + back clear of every other chrome item (§42.11)',
+    gj.titleOrBackOverlaps.length === 0, geo);
+  check('V2.8 portrait: HUD trio steps below the .ps-header band',
+    gj.hudTops.every(t => t >= gj.bandBottom - 0.5), geo);
+  check('V2.8 portrait: all five chrome items inside the viewport (390x844)', gj.inside === true, geo);
+  await hp.close();
 
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');

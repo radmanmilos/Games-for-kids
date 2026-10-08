@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-08T11:10:14.639Z
+- Генерисано / Generated: 2026-10-08T12:24:09.190Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -96,10 +96,10 @@
 | `sorting_phone-portrait.png` | Разврставање | `/pages/sorting.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
 | `sorting_tablet-landscape.png` | Разврставање | `/pages/sorting.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
 | `sorting_tablet-portrait.png` | Разврставање | `/pages/sorting.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `space_phone-landscape.png` | Свемир | `/pages/space.html` | 844×390 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `space_phone-portrait.png` | Свемир | `/pages/space.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `space_tablet-landscape.png` | Свемир | `/pages/space.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `space_tablet-portrait.png` | Свемир | `/pages/space.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
+| `space_phone-landscape.png` | Свемир | `/pages/space.html` | 844×390 | пејзаж | — | 08.10.2026. 14:24:09 | 216 |
+| `space_phone-portrait.png` | Свемир | `/pages/space.html` | 390×844 | портрет | — | 08.10.2026. 14:24:09 | 216 |
+| `space_tablet-landscape.png` | Свемир | `/pages/space.html` | 1180×820 | пејзаж | — | 08.10.2026. 14:24:09 | 216 |
+| `space_tablet-portrait.png` | Свемир | `/pages/space.html` | 820×1180 | портрет | — | 08.10.2026. 14:24:09 | 216 |
 | `spatial_phone-landscape.png` | Простор | `/pages/spatial.html` | 844×390 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
 | `spatial_phone-portrait.png` | Простор | `/pages/spatial.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
 | `spatial_tablet-landscape.png` | Простор | `/pages/spatial.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
