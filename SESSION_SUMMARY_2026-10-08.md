@@ -83,6 +83,9 @@
 - **Validation:** `axe_check animal_memory --report` clean; `build_offline.js` → `sync-docs.sh` → `check_fast` 7/7; `run_all --since HEAD` hub 15/0 + memory 21/0; 4 memory screenshots refreshed (`--review=Screenshot_Review --pages=animal_memory --task=216`); docs updated.
 - **CI red, then fixed (`552f2b6` → `3b40289`):** Release QA's offline E2E failed `P6 animal_memory back button returns to the hub [element not found]` because `offline_smoke.mjs:148` still selected `#controls .back-btn` — the container V2.10 moved the button out of. **Stale selector, not a product bug.** Local `memory_smoke` and `run_all` never caught it because they select `.back-btn` generically; the offline gate is the only tool that pins the *container path*. Fixed to `.ps-header .back-btn`, offline E2E re-run locally 140/140, CI run 37794119618 green. **Lesson: moving a control out of its old container breaks any smoke selecting it by the container path — grep `tools/` for the old selector.**
 
+### V2.11 - VERIFY sweep (DONE 2026-10-08)
+- Swept all 16 non-migrated pages with back buttons (animal_counting, animals, compare, dino, explorer, matching_game, maze, phonics, rhythm, sequencing, shapes, sorting, spatial, tracing, parent, racing3d) at 390×844: **zero top-band collisions**. All spec-named collision pages (§42.3/5/6/9/10/11) were already migrated in V2.4–V2.10. No further migration needed.
+
 ### Anti-looping rules (commit `af80862`)
 - Rules 7 and 8 added to `ANTI_LOOP_RULES.md` after this session looped on repeated file reads.
 
