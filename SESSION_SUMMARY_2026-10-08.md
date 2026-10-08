@@ -60,7 +60,7 @@
 5. `cf3a787` — regenerate offline inventories + sync docs (fix CI on `9489443`)
 6. `6d66b15` — V2.4: Classroom shared-header migration + smoke checks + screenshots (pushed; CI run 37741581608 green)
 7. `d1abefc` — V2.5: Coloring shared-header migration + smoke checks + screenshots + docs (CI run 37746441324 red on a11y — fixed by 8)
-8. *(pending approval)* — V2.5 follow-up: remove `.ps-status` opacity (contrast fix) + docs + re-shot screenshots
+8. `ffca55c` — V2.5 follow-up: remove `.ps-status` opacity (contrast fix) + docs + re-shot screenshots
 
 ## Next session
 1. Commit/push V2.5 if approved by the user.
