@@ -39,6 +39,15 @@
 - **Smoke:** the stale `hub top < 5` assertion replaced by `hub fills the screen under the pinned header and top-anchors its overflow` (hub top == header bottom, `scrollHeight > clientHeight`, first group `top >= 0`), plus new `spec §31: hub title never overlaps the back button` (non-vacuous via `titleVisible`). Both proved non-vacuous by restoring the old absolute title → red, overlap 5661px², exit 1. Final **33/33**.
 - **Validation:** `check_fast` 7/7 (after `build_offline.js` → `sync-docs.sh`); 4 classroom screenshots refreshed (`--review=Screenshot_Review --pages=classroom --task=216`); throwaway `tools/probe_classroom_header.js` deleted.
 
+### V2.5 - Coloring migration (DONE 2026-10-08, awaiting commit approval)
+- Per spec 32/42.6: the animal name + progress (previously `<p>`s inside the wrap under a 14vmin top padding, competing with back/mode/next for the top band) now own the `.ps-header` centre as `.ps-title`/`.ps-status`, with `.ps-header{padding:calc(var(--ps-safe-top) + 4vmin) 16vmin 0}` reserving the corner-control zones (16vmin rule as Classroom).
+- The mode toggle left the top band and sits in a new in-flow `.coloring-tools` row with the palette (secondary by placement).
+- The clear button left its absolute bottom-right spot - which overlapped the palette **pre-change** (stashed baseline measured: 1613px2 phone-portrait, 877px2 tablet-portrait) - and joined the tools row, flex-wrapping to its own line on narrow screens.
+- Wrap became the screen's flex child (`flex:1 1 auto; min-height:0; overflow:auto`), top padding 14vmin -> 1vmin so the canvas keeps its space.
+- **Smoke:** `coloring_smoke` 23 -> 28, five new V2.5/spec-32 geometry checks (title in header, title intersect back/next == 0, header bottom == wrap top, mode below band, clear in tools row). Non-vacuous: stashing `coloring.html` failed exactly those 5 (exit 1) with the other 23 green.
+- **Validation:** throwaway 4-viewport probe (deleted) - all overlaps 0, mode out of band, palette in viewport, free-mode clear clear of the palette at all 4 viewports; `check_fast` 7/7 after `build_offline.js` -> `sync-docs.sh`; 4 coloring screenshots refreshed (`--task=216`); docs updated (PROJECT_TASKS, VISUAL plan, tools/README new coloring row, HANDOVER).
+- **Known, owned by V3.1:** at 844x390 the canvas touches the tools row by a 0.6px sliver (112px2) - pre-existing palette/canvas squeeze, improved not introduced; the palette grid format is a no-rework zone.
+
 ### Anti-looping rules (commit `af80862`)
 - Rules 7 and 8 added to `ANTI_LOOP_RULES.md` after this session looped on repeated file reads.
 
@@ -48,9 +57,10 @@
 3. `af80862` — V0.1/V0.2: deterministic state capture + anti-looping rules
 4. `0031890` — V2.1–V2.3: shared shell CSS + Animal Puzzle migration
 5. `cf3a787` — regenerate offline inventories + sync docs (fix CI on `9489443`)
-6. *(pending this session)* — V2.4: Classroom shared-header migration + smoke
+6. `6d66b15` — V2.4: Classroom shared-header migration + smoke checks + screenshots (pushed; CI run 37741581608 green)
+7. *(pending approval)* — V2.5: Coloring shared-header migration + smoke checks + screenshots + docs
 
 ## Next session
-1. Commit/push V2.4 if not yet approved by the user.
-2. Continue V2.5–V2.11: migrate Coloring, Piano, Ocean, Space, Driving, Memory to shared header.
+1. Commit/push V2.5 if approved by the user.
+2. Continue V2.6–V2.11: migrate Piano, Ocean, Space, Driving, Memory to shared header.
 3. Then V3 (short-landscape audit), V4 (adventure HUD), V5 (learning stage), V6 (Petrin Glow), V7 (tactile system).

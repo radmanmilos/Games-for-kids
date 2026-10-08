@@ -45,9 +45,25 @@
   .back-btn:active{ transform:scale(.9) translateY(3px); }
 
   /* ---------- COLORING GAME ---------- */
+  /* V2.5 — shared header (spec §32). The animal name and progress used to sit
+     inside the wrap under a 14vmin top padding, competing with back/mode/next
+     for the top band. They now own the .ps-header centre as title + status
+     (title zone reserved by 16vmin padding, same as Classroom), and the mode
+     toggle left the band entirely — it sits with the painting tools (secondary
+     by placement). The wrap is the screen's flex child so the header stays
+     pinned; its top padding drops 14vmin -> 1vmin, which more than pays for
+     the header row (canvas keeps its space). */
+  .ps-header{ padding:calc(var(--ps-safe-top) + 4vmin) 16vmin 0; justify-content:center; }
+  #game-coloring .ps-title{ color:var(--plum); }
+  #game-coloring .ps-status{ margin:0; color:var(--plum-soft); }
   #game-coloring .coloring-wrap{
     display:flex; flex-direction:column; align-items:center; gap:1.5vmin;
-    width:100%; height:100%; padding:14vmin 4vmin 1vmin; overflow:auto;
+    width:100%; flex:1 1 auto; min-height:0; overflow:auto;
+    padding:1vmin 4vmin 1vmin;
+  }
+  .coloring-tools{
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+    gap:1.5vmin 4vmin; width:100%; flex-shrink:0;
   }
   .coloring-stage{
     display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -82,14 +98,6 @@
   }
   .coloring-region:active{ opacity:.85; }
   .coloring-region.ok{ pointer-events:none; }
-  .coloring-name{
-    font-size:4.2vmin; font-weight:600; color:var(--plum);
-    margin:0;
-  }
-  .coloring-progress{
-    font-size:2.8vmin; font-weight:500; color:var(--plum-soft);
-    margin:0;
-  }
   .coloring-palette{
     display:grid;
     grid-template-columns:repeat(6, 9vmin);
@@ -108,8 +116,9 @@
   .coloring-swatch:active{ transform: scale(.9) translateY(3px); }
 
   /* ---------- COLORING MODE TOGGLE ---------- */
+  /* V2.5: in-flow with the palette (was absolute in the top band — spec §32
+     "mode is secondary"). */
   .coloring-mode-toggle{
-    position:absolute; top:4vmin; right:calc(4vmin + 12vmin + 4vmin); z-index:20;
     border:none; border-radius:999px; cursor:pointer;
     background:var(--plum); color:#fff;
     font:600 clamp(11px,2vmin,18px)/1 'Fredoka',sans-serif;
@@ -120,8 +129,10 @@
   }
   .coloring-mode-toggle:active{ transform:scale(.94) translateY(2px); }
   .coloring-mode-toggle.free{ background:var(--pink); }
+  /* V2.5: clear left its absolute bottom-right spot (which overlapped the
+     palette — 1613 px² on phone) and joined the tools row; on narrow screens
+     flex-wrap drops it to its own centred line below the palette. */
   .coloring-clear-btn{
-    position:absolute; bottom:12vmin; right:4vmin; z-index:20;
     border:none; border-radius:999px; cursor:pointer;
     background:var(--sky); color:#fff;
     font:600 clamp(11px,2vmin,18px)/1 'Fredoka',sans-serif;
@@ -163,20 +174,23 @@
 </style>
 <link rel="stylesheet" href="../styles/viewport.css">
     <link rel="stylesheet" href="../styles/design-tokens.css">
+    <link rel="stylesheet" href="../styles/shell.css">
     <link rel="stylesheet" href="../shared/accessibility.css">
 </head>
 <body>
 <div id="app">
 
   <div class="screen active" id="game-coloring">
-    <button class="back-btn" id="coloring-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
-    <button class="back-btn" id="coloring-next" style="left:auto;right:4vmin;" aria-label="Следеће">➡</button>
-    <button class="coloring-mode-toggle" id="coloringModeToggle" aria-label="Слободно бојење">🎨 Слободно</button>
-    <button class="coloring-clear-btn" id="coloringClear" aria-label="Обриши">🗑️ Обриши</button>
+    <div class="ps-header">
+      <button class="back-btn" id="coloring-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+      <div class="ps-header-center">
+        <h1 class="ps-title" id="coloringName"></h1>
+        <p class="ps-status" id="coloringProgress"></p>
+      </div>
+      <button class="back-btn" id="coloring-next" style="left:auto;right:4vmin;" aria-label="Следеће">➡</button>
+    </div>
     <div class="coloring-wrap">
       <div class="coloring-stage">
-        <p class="coloring-name" id="coloringName"></p>
-        <p class="coloring-progress" id="coloringProgress"></p>
         <div class="coloring-stage-row">
           <div class="coloring-ref-wrap">
             <svg class="coloring-ref" id="coloringRef" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"></svg>
@@ -185,7 +199,11 @@
           <svg class="coloring-svg" id="coloringSvg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"></svg>
         </div>
       </div>
-      <div class="coloring-palette" id="coloringPalette"></div>
+      <div class="coloring-tools">
+        <button class="coloring-mode-toggle" id="coloringModeToggle" aria-label="Слободно бојење">🎨 Слободно</button>
+        <div class="coloring-palette" id="coloringPalette"></div>
+        <button class="coloring-clear-btn" id="coloringClear" aria-label="Обриши">🗑️ Обриши</button>
+      </div>
     </div>
     <div class="coloring-reward" id="coloringReward" hidden>
       <div class="coloring-reward-box">

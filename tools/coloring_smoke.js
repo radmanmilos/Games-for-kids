@@ -3,6 +3,9 @@
    + ref render, scene name + progress shown, tapping regions fills them, completing
    a scene auto-advances, next button works, all 12 scenes cycle.
    Also tests FREE coloring mode: toggle, no correctness, clear button.
+   V2.5 (task 216): pins the shared-header geometry — title inside .ps-header
+   without touching the corner controls, header flowing into the wrap, mode
+   below the band, clear inside the tools row.
    Run:  node tools/coloring_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -45,6 +48,29 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
   check('scene name is shown (Cyrillic animal name)', U.name.length > 0 && /[А-ЩЪЫЬЭЮЯЂЈЉЊЋЏ]/.test(U.name), U.name);
   check('progress text shows "Животиња N од 12"', U.progress.startsWith('Животиња ') && U.progress.endsWith(' од 12'), U.progress);
   check('next button is present', U.nextVisible === true);
+
+  // --- V2.5 shared-header geometry (spec §32 / §42.6) ---
+  const hdrGeom = JSON.parse(await h.evalv(`JSON.stringify((function(){
+    function g(s){ var e=document.querySelector(s); if(!e) return null; var b=e.getBoundingClientRect();
+      return {x:b.x,y:b.y,r:b.right,b:b.bottom}; }
+    function ov(a,b){ if(!a||!b) return -1;
+      return Math.max(0,Math.min(a.r,b.r)-Math.max(a.x,b.x)) * Math.max(0,Math.min(a.b,b.b)-Math.max(a.y,b.y)); }
+    var hd=g('.ps-header'), title=g('.ps-header .ps-title'), back=g('#coloring-back'),
+        next=g('#coloring-next'), wrap=g('.coloring-wrap'), mode=g('#coloringModeToggle');
+    return { header:!!hd,
+      titleInHeader: !!(hd&&title&&title.y>=hd.y-0.5&&title.b<=hd.b+0.5),
+      titleVsBack: ov(title,back), titleVsNext: ov(title,next),
+      flowGap: (hd&&wrap)?Math.abs(hd.b-wrap.y):-1,
+      modeVsHeader: (hd&&mode)?+(mode.y-hd.b).toFixed(1):-1 };
+  })())`));
+  check('V2.5: animal name + progress own the shared header centre',
+    hdrGeom.header && hdrGeom.titleInHeader, JSON.stringify(hdrGeom));
+  check('V2.5: title never overlaps the back or next corner controls',
+    hdrGeom.titleVsBack === 0 && hdrGeom.titleVsNext === 0, JSON.stringify(hdrGeom));
+  check('V2.5: header flows directly into the wrap (bottom == wrap top)',
+    hdrGeom.flowGap >= 0 && hdrGeom.flowGap <= 1, JSON.stringify(hdrGeom));
+  check('V2.5: mode toggle sits below the header band (mode is secondary)',
+    hdrGeom.modeVsHeader >= 0, JSON.stringify(hdrGeom));
 
   const targetColor = await h.evalv(`document.querySelector('#coloringSvg .coloring-region:not(.ok)').dataset.target`);
   check('first region has a target color', !!targetColor, targetColor);
@@ -91,6 +117,19 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
 
   const clearBtnVisible = await h.evalv(`document.getElementById('coloringClear').classList.contains('visible')`);
   check('clear button appears in free mode', clearBtnVisible === true);
+
+  const clearGeom = JSON.parse(await h.evalv(`JSON.stringify((function(){
+    var e=document.getElementById('coloringClear'), p=document.getElementById('coloringPalette');
+    if(!e||!p) return null;
+    var a=e.getBoundingClientRect(), b=p.getBoundingClientRect();
+    return { inTools: !!(e.parentElement && e.parentElement.classList.contains('coloring-tools')),
+      ov: Math.max(0,Math.min(a.right,b.right)-Math.max(a.left,b.left))
+        * Math.max(0,Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)),
+      inViewport: a.top>=-0.5 && a.bottom<=innerHeight+0.5 && a.left>=-0.5 && a.right<=innerWidth+0.5 };
+  })())`));
+  check('V2.5: clear button lives in the tools row, clear of the palette and on-screen',
+    clearGeom && clearGeom.inTools && clearGeom.ov === 0 && clearGeom.inViewport,
+    JSON.stringify(clearGeom));
 
   const toggleLabel = await h.evalv(`document.getElementById('coloringModeToggle').textContent`);
   check('toggle label switches to "По слици"', /по слици/i.test(toggleLabel), toggleLabel);

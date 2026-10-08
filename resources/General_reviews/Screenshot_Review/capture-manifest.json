@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "cf3a7879d0749bbf54f8bc6fe9680fe3cc7d3490",
+  "commitSha": "6d66b15ccf2623cb926a0646257588af14a9318d",
   "browser": {
     "product": "Chrome/155.0.8059.39",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-08T07:01:11.931Z",
+  "generatedAt": "2026-10-08T07:41:38.956Z",
   "pageSet": [
-    "classroom"
+    "coloring"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,40 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "classroom_phone-portrait.png",
-      "page": "classroom",
+      "file": "coloring_phone-portrait.png",
+      "page": "coloring",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 94656
+      "bytes": 51434
     },
     {
-      "file": "classroom_phone-landscape.png",
-      "page": "classroom",
+      "file": "coloring_phone-landscape.png",
+      "page": "coloring",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 77582
+      "bytes": 45336
     },
     {
-      "file": "classroom_tablet-portrait.png",
-      "page": "classroom",
+      "file": "coloring_tablet-portrait.png",
+      "page": "coloring",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 250077
+      "bytes": 101134
     },
     {
-      "file": "classroom_tablet-landscape.png",
-      "page": "classroom",
+      "file": "coloring_tablet-landscape.png",
+      "page": "coloring",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 207077
+      "bytes": 89357
     }
   ]
 }
