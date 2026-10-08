@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "6d66b15ccf2623cb926a0646257588af14a9318d",
+  "commitSha": "d1abefc069416e4b8d5437800259a18b49f264df",
   "browser": {
     "product": "Chrome/155.0.8059.39",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-08T07:41:38.956Z",
+  "generatedAt": "2026-10-08T08:05:48.933Z",
   "pageSet": [
     "coloring"
   ],
@@ -46,7 +46,7 @@
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 51434
+      "bytes": 51459
     },
     {
       "file": "coloring_phone-landscape.png",
@@ -55,7 +55,7 @@
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 45336
+      "bytes": 45350
     },
     {
       "file": "coloring_tablet-portrait.png",
@@ -64,7 +64,7 @@
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 101134
+      "bytes": 101171
     },
     {
       "file": "coloring_tablet-landscape.png",
@@ -73,7 +73,7 @@
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 89357
+      "bytes": 89405
     }
   ]
 }

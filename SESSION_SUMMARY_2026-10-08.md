@@ -47,6 +47,7 @@
 - **Smoke:** `coloring_smoke` 23 -> 28, five new V2.5/spec-32 geometry checks (title in header, title intersect back/next == 0, header bottom == wrap top, mode below band, clear in tools row). Non-vacuous: stashing `coloring.html` failed exactly those 5 (exit 1) with the other 23 green.
 - **Validation:** throwaway 4-viewport probe (deleted) - all overlaps 0, mode out of band, palette in viewport, free-mode clear clear of the palette at all 4 viewports; `check_fast` 7/7 after `build_offline.js` -> `sync-docs.sh`; 4 coloring screenshots refreshed (`--task=216`); docs updated (PROJECT_TASKS, VISUAL plan, tools/README new coloring row, HANDOVER).
 - **Known, owned by V3.1:** at 844x390 the canvas touches the tools row by a 0.6px sliver (112px2) - pre-existing palette/canvas squeeze, improved not introduced; the palette grid format is a no-rework zone.
+- **CI red on push (`d1abefc`, run 37746441324) - fixed:** Release QA's axe gate failed on `#coloringProgress` (serious color-contrast). Root cause: `shell.css .ps-status{opacity:0.7}` blended `--plum-soft` to ~3.1:1 on cream - a latent flaw, since coloring is the first page to render `.ps-status` at all. Fix: removed the opacity from the shared rule (hierarchy via size/weight/colour, never opacity); `axe_check coloring --report` clean, smoke 28/28, `check_fast` 7/7, screenshots re-shot. **Lesson: colour/opacity changes in shared styles need a local `axe_check` run - `check_fast` does not cover contrast.**
 
 ### Anti-looping rules (commit `af80862`)
 - Rules 7 and 8 added to `ANTI_LOOP_RULES.md` after this session looped on repeated file reads.
@@ -58,7 +59,8 @@
 4. `0031890` — V2.1–V2.3: shared shell CSS + Animal Puzzle migration
 5. `cf3a787` — regenerate offline inventories + sync docs (fix CI on `9489443`)
 6. `6d66b15` — V2.4: Classroom shared-header migration + smoke checks + screenshots (pushed; CI run 37741581608 green)
-7. *(pending approval)* — V2.5: Coloring shared-header migration + smoke checks + screenshots + docs
+7. `d1abefc` — V2.5: Coloring shared-header migration + smoke checks + screenshots + docs (CI run 37746441324 red on a11y — fixed by 8)
+8. *(pending approval)* — V2.5 follow-up: remove `.ps-status` opacity (contrast fix) + docs + re-shot screenshots
 
 ## Next session
 1. Commit/push V2.5 if approved by the user.

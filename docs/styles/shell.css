@@ -70,7 +70,9 @@
 .ps-status {
   font-size: clamp(12px, 2vmin, 18px);
   font-weight: 600;
-  opacity: 0.7;
+  /* No opacity demotion: 0.7 blended --plum-soft toward the cream background to
+     ~3.1:1 (axe serious fail on coloring). Hierarchy comes from size/weight/
+     colour (--plum-soft status vs --plum title); opacity breaks contrast. */
 }
 
 /* Phone portrait: stack title above status so the back button never collides. */
