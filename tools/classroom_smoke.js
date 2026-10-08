@@ -7,9 +7,11 @@
    64px button min-size used to force .class-tile/.kids-option wider than their
    grid tracks (crowding + right-edge clip), the #kidsPrompt card flex-shrink
    let a 20-emoji count row clip, and the overflow hub top started at negative
-   top. A phone session asserts tiles stay disjoint inside the grid, the kids
-   prompt never clips (worst-case count row forced), and a tablet session
-   asserts the hub is reachable (top-anchored) when taller than the viewport.
+   top. A phone session asserts tiles stay disjoint inside the grid and the kids
+   prompt never clips (worst-case count row forced). V2.4 (spec §31): a tablet
+   session asserts the shared-header title never overlaps the back button, and
+   that the hub fills the space under the pinned header with its overflow
+   top-anchored (reachable) inside the hub's own scroller.
    Shared audio entry points are recorded so the activity proves it uses semantic
    events and ducked speech; audio-buses_smoke.js covers Web Audio routing itself.
    Run:  node tools/classroom_smoke.js  (from the repo root or anywhere)
@@ -284,12 +286,28 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
     ready3 = await h3.evalv(`typeof window.startClassroom === 'function' && typeof window.kidsGame === 'object'`);
     if (!ready3) await sleep(200);
   }
-  const hubTop = JSON.parse(await h3.evalv(`JSON.stringify((function(){
-    const b = document.getElementById('classroomHub').getBoundingClientRect();
-    return { top: b.top, bottom: b.bottom, height: b.height, ioh: window.innerHeight };
+  const hubGeom = JSON.parse(await h3.evalv(`JSON.stringify((function(){
+    const t = document.getElementById('classroomTitle').getBoundingClientRect();
+    const b = document.getElementById('classroom-back').getBoundingClientRect();
+    const hd = document.querySelector('#game-classroom .ps-header').getBoundingClientRect();
+    const hub = document.getElementById('classroomHub');
+    const hb = hub.getBoundingClientRect();
+    const g = hub.querySelector('.hub-group').getBoundingClientRect();
+    const ox = Math.max(0, Math.min(t.right, b.right) - Math.max(t.left, b.left));
+    const oy = Math.max(0, Math.min(t.bottom, b.bottom) - Math.max(t.top, b.top));
+    return { top: hb.top, bottom: hb.bottom, ioh: window.innerHeight,
+      headerBottom: hd.bottom, sh: hub.scrollHeight, ch: hub.clientHeight,
+      groupTop: g.top - hb.top, titleVisible: t.width > 0 && t.height > 0,
+      titleBackOverlap: ox * oy };
   })())`));
-  check('tablet portrait: overflowing hub is top-anchored (reachable), not clipped above',
-    hubTop.top >= -0.5 && hubTop.top < 5 && hubTop.bottom > hubTop.ioh, JSON.stringify(hubTop));
+  check('tablet portrait: hub fills the screen under the pinned header and top-anchors its overflow',
+    hubGeom.top >= hubGeom.headerBottom - 0.5 && hubGeom.top > 0 &&
+    hubGeom.bottom > hubGeom.ioh - 2 && hubGeom.sh > hubGeom.ch &&
+    hubGeom.groupTop >= -0.5, JSON.stringify(hubGeom));
+  // Spec §31: the title used to run under the back button (2517px² at this
+  // viewport). titleVisible keeps the check non-vacuous.
+  check('spec §31: hub title never overlaps the back button (and is actually rendered)',
+    hubGeom.titleVisible && hubGeom.titleBackOverlap === 0, JSON.stringify(hubGeom));
   await h3.close();
 
   await h.close();

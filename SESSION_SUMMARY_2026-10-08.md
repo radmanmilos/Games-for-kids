@@ -27,10 +27,17 @@
 ### V2.3 — Animal Puzzle migrated to shared header (commit `0031890`)
 - h1 carries `Слагалица` directly; page links `shell.css`.
 
-### V2.4 — Classroom migration (IN PROGRESS)
-- Removed `#classroomTitle { position: absolute; top: 4vmin; }` per spec §31.
-- Added `shell.css` link; wrapped back button + title + autoplay in `ps-header` div.
-- **Remaining:** title is now in normal flow, pushing `#classroomHub` down ~75px at tablet portrait. Need flexbox layout (`.screen.active { display:flex; flex-direction:column; }` + `#classroomHub { flex:1; overflow:auto; }`). One smoke failure remains.
+### CI red run fixed (commit `cf3a787`)
+- Run `37735239677` (commit `9489443`) went red on `generated artifacts` + `offline inventory` for `pages/animal_puzzle.html` and `pages/classroom.html` — the session had committed `game/` changes without regenerating.
+- Fix: `node tools/build_offline.js` then `bash tools/sync-docs.sh` (that order), `check_fast` 7/7, committed and pushed.
+
+### V2.4 — Classroom migration (DONE 2026-10-08)
+- Per spec §31: `#classroomTitle` no longer `position:absolute; top:4vmin` — it ran under the back button (measured overlap 2517px² at 768×1024, 3348 desktop, 750 phone).
+- Title is now the `.ps-header` row's only in-flow child: `.ps-header{padding:0 16vmin}` reserves the corner-control zones, a `12vmin` line band matches the controls, and the title's top margin carries `--ps-safe-top`. Corner controls stay absolutely anchored (V2.3 `animal_puzzle` precedent).
+- Hub became the screen's flex child (`flex:1 1 auto; min-height:0; overflow:auto; margin:0`) so the header stays pinned while the hub scrolls. Centre alignment moved from `align-items:center` to `margin:auto` on `.hub-group` — a centred item that overflows a scroll container is clipped at the top and unreachable; auto margins collapse to 0 so content top-anchors.
+- Title hidden in activity/kids → `.ps-header` collapses to 0 height, so `#classroomActivity`/`#kidsGame` keep their full-height stage.
+- **Smoke:** the stale `hub top < 5` assertion replaced by `hub fills the screen under the pinned header and top-anchors its overflow` (hub top == header bottom, `scrollHeight > clientHeight`, first group `top >= 0`), plus new `spec §31: hub title never overlaps the back button` (non-vacuous via `titleVisible`). Both proved non-vacuous by restoring the old absolute title → red, overlap 5661px², exit 1. Final **33/33**.
+- **Validation:** `check_fast` 7/7 (after `build_offline.js` → `sync-docs.sh`); 4 classroom screenshots refreshed (`--review=Screenshot_Review --pages=classroom --task=216`); throwaway `tools/probe_classroom_header.js` deleted.
 
 ### Anti-looping rules (commit `af80862`)
 - Rules 7 and 8 added to `ANTI_LOOP_RULES.md` after this session looped on repeated file reads.
@@ -40,8 +47,10 @@
 2. `6753226` — V1.2: Animal Puzzle header rule
 3. `af80862` — V0.1/V0.2: deterministic state capture + anti-looping rules
 4. `0031890` — V2.1–V2.3: shared shell CSS + Animal Puzzle migration
+5. `cf3a787` — regenerate offline inventories + sync docs (fix CI on `9489443`)
+6. *(pending this session)* — V2.4: Classroom shared-header migration + smoke
 
 ## Next session
-1. Finish V2.4: add flexbox layout to Classroom so `#classroomHub` fills remaining space.
+1. Commit/push V2.4 if not yet approved by the user.
 2. Continue V2.5–V2.11: migrate Coloring, Piano, Ocean, Space, Driving, Memory to shared header.
 3. Then V3 (short-landscape audit), V4 (adventure HUD), V5 (learning stage), V6 (Petrin Glow), V7 (tactile system).

@@ -98,7 +98,7 @@ Ordered by the spec's own priority matrix (§55) and Appendix E. Each item is ta
 | **V2.1** | Create `game/styles/shell.css` with the spec's §8.1 canonical header contract: `.ps-shell`, `.ps-header`, `.ps-header-left/-center/-right`, `.ps-title`, `.ps-subtitle`, `.ps-status`. | **BUILD** — no shared shell CSS exists. |
 | **V2.2** | Safe-area foundation: `--ps-safe-{top,right,bottom,left}` from `env(safe-area-inset-*)`, composed spacing (spec §9). One system only. | **BUILD** |
 | **V2.3** | Migrate Animal Puzzle → shared header. | **BUILD** |
-| **V2.4** | Migrate Classroom → shared header. | **BUILD** |
+| **V2.4** | Migrate Classroom → shared header. | **DONE** (2026-10-08) — title in `.ps-header` flow row with 16vmin corner zones, hub is the pinned-header scroller; smoke §31 overlap check added. |
 | **V2.5** | Migrate Coloring → shared header. | **BUILD** |
 | **V2.6** | Migrate Piano → shared header. | **BUILD** |
 | **V2.7** | Migrate Ocean → shared header. | **BUILD** |

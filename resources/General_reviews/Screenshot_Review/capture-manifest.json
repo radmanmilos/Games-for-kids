@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "675322653cf88d6020602cfca4ff0226b81080f9",
+  "commitSha": "cf3a7879d0749bbf54f8bc6fe9680fe3cc7d3490",
   "browser": {
-    "product": "Chrome/136.0.7103.113",
-    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/136.0.0.0 Safari/537.36",
+    "product": "Chrome/155.0.8059.39",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-07T17:58:37.530Z",
+  "generatedAt": "2026-10-08T07:01:11.931Z",
   "pageSet": [
-    "animals"
+    "classroom"
   ],
   "viewports": {
     "phone-portrait": {
@@ -18,19 +18,62 @@
       "height": 844,
       "deviceScaleFactor": 1,
       "mobile": true
+    },
+    "phone-landscape": {
+      "width": 844,
+      "height": 390,
+      "deviceScaleFactor": 1,
+      "mobile": true
+    },
+    "tablet-portrait": {
+      "width": 820,
+      "height": 1180,
+      "deviceScaleFactor": 1,
+      "mobile": true
+    },
+    "tablet-landscape": {
+      "width": 1180,
+      "height": 820,
+      "deviceScaleFactor": 1,
+      "mobile": true
     }
   },
   "screenshots": [
     {
-      "file": "animals__phone-portrait__PLAY.png",
-      "page": "animals",
+      "file": "classroom_phone-portrait.png",
+      "page": "classroom",
       "size": "phone-portrait",
-      "state": [
-        "PLAY"
-      ],
+      "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 12495
+      "bytes": 94656
+    },
+    {
+      "file": "classroom_phone-landscape.png",
+      "page": "classroom",
+      "size": "phone-landscape",
+      "state": null,
+      "width": 844,
+      "height": 390,
+      "bytes": 77582
+    },
+    {
+      "file": "classroom_tablet-portrait.png",
+      "page": "classroom",
+      "size": "tablet-portrait",
+      "state": null,
+      "width": 820,
+      "height": 1180,
+      "bytes": 250077
+    },
+    {
+      "file": "classroom_tablet-landscape.png",
+      "page": "classroom",
+      "size": "tablet-landscape",
+      "state": null,
+      "width": 1180,
+      "height": 820,
+      "bytes": 207077
     }
   ]
 }

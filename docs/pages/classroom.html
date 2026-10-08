@@ -44,8 +44,21 @@
   .back-btn:active{ transform:scale(.9) translateY(3px); }
 
   /* ---------- CLASSROOM ---------- */
+  /* V2.4 — shared header geometry (spec §31). The title used to be
+     position:absolute; top:4vmin and ran under the back button (measured
+     2517px² of overlap at 768×1024). It now sits in the .ps-header flow row:
+     the row reserves 16vmin on each side (4vmin corner offset + 12vmin
+     control) so a centred title can never reach the corner controls, and the
+     title's top margin carries the safe-area inset the absolute rule ignored.
+     The 12vmin line box matches the corner controls' 12vmin, so title and
+     buttons share one band. The controls stay on their anchors and the title
+     is the row's ONLY in-flow child — when JS hides it the row collapses to
+     0 height, so activity and kids keep their full-height stage. */
+  .ps-header{ padding:0 16vmin; justify-content:center; }
   #classroomTitle{
-    margin:0 0 1vmin; font-size:6.5vmin; color:var(--plum);
+    margin:calc(var(--ps-safe-top) + 4vmin) 0 1vmin;
+    min-height:12vmin; line-height:12vmin;
+    font-size:6.5vmin; color:var(--plum);
     text-shadow:0 3px 0 rgba(255,255,255,.6);
     pointer-events:none;
   }
@@ -58,11 +71,19 @@
   #classroomAutoplay.running{ background:var(--pink); color:#fff; }
   #classroomAutoplay[hidden]{ display:none; }
 
+  /* V2.4 — the hub is the screen's flex child: it fills the space the header
+     leaves and is the scroller, so the header row and corner controls stay
+     pinned. Centre alignment comes from margin:auto on .hub-group, NOT from
+     align-items:center: a centred item that overflows a scroll container is
+     clipped at the top and unreachable, while auto margins collapse to 0 when
+     there is no free space (content anchors to the top instead). */
   #classroomHub{
     display:flex; flex-direction:row; flex-wrap:wrap;
-    align-items:center; justify-content:center; gap:6vmin;
-    padding:0 4vmin; margin:auto;
+    justify-content:center; gap:6vmin;
+    flex:1 1 auto; min-height:0; overflow:auto;
+    padding:0 4vmin; margin:0;
   }
+  #classroomHub .hub-group{ margin:auto; }
   #classroomHub[hidden]{ display:none; }
 
   @media (orientation:portrait){
