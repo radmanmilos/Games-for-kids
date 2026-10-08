@@ -9,6 +9,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🃏</text></svg>">
   <link rel="stylesheet" href="../styles/viewport.css">
     <link rel="stylesheet" href="../styles/design-tokens.css">
+    <link rel="stylesheet" href="../styles/shell.css">
     <link rel="stylesheet" href="../shared/accessibility.css">
   <style>
     body { font-family: sans-serif; padding: 1rem; margin:0; min-height:100vh; background:#FFF8ED; color:#4A3F6B; }
@@ -33,16 +34,28 @@
     /* Override / enhanced memory styles (matching visual language) */
     :root{ --cream:#FFF8ED; --plum:#4A3F6B; }
     body { font-family: 'Fredoka', sans-serif; }
-    .back-btn { position:fixed; top:4vmin; left:4vmin; z-index:2; width:12vmin; height:12vmin; border:0; border-radius:50%; background:#4A3F6B; color:#fff; font-size:6vmin; display:flex; align-items:center; justify-content:center; }
+    .back-btn { flex:0 0 auto; width:12vmin; height:12vmin; border:0; border-radius:50%; background:#4A3F6B; color:#fff; font-size:6vmin; display:flex; align-items:center; justify-content:center; }
+    /* V2.10 — shared header (spec §42.3 "header overlap"). The title was a
+       full-width centred <h1> sitting under a position:fixed back button, so
+       the title BOX ran under the button at every viewport (measured after
+       document.fonts.ready: 2201px² at 390×844, 2057 at 844×390, 3411 at both
+       tablet sizes). The shell.css contract — back + flexible centre title as
+       flex siblings — replaces the fixed button, so they cannot overlap at any
+       width. §42.3's other items (card proportions, back symbol scale,
+       short-landscape difficulty controls) are not header work and stay out. */
+    .memory-header{ padding: calc(var(--ps-safe-top) + 1rem) 1rem 0; gap:2vmin; }
+    .memory-header .ps-title{ flex:1 1 auto; margin:0; }
   </style>
 </head>
 <body>
-  <h1>Памтилица животиња</h1>
+  <header class="ps-header memory-header">
+    <button class="back-btn" aria-label="Назад на игре"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <h1 class="ps-title">Памтилица животиња</h1>
+  </header>
   <div id="memoryStatus" aria-live="polite"></div>
   <div id="board" aria-live="polite"></div>
   <div id="controls">
     <button id="restart" class="next-btn" aria-label="Почни поново" title="Почни поново">↻</button>
-    <button class="back-btn" aria-label="Назад на игре"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
   </div>
   <div id="difficulty-controls" style="display:flex;justify-content:center;gap:8px;margin-top:1rem">
     <button class="diff-btn" data-diff="easy" style="padding:1vmin 3vmin;border-radius:999px;border:0;background:#67C971;color:#302741;font-weight:700;font-size:3.5vmin;cursor:pointer">Лако</button>

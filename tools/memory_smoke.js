@@ -5,6 +5,10 @@
    in older modes, the card back uses the game icon (🃏), a floating "Пронађен пар!"
    popup appears on each matched pair, mismatches only advance the move counter,
    and all pairs can be completed.
+   V2.10 (spec §42.3 "header overlap"): a second 390x844 session pins the
+   portrait header geometry - title in the .ps-header row, back button in normal
+   flow (not position:fixed), back + title never overlap, both inside the
+   viewport (measured after `document.fonts.ready`).
    Run:  node tools/memory_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -144,6 +148,42 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     return { cards: cards.length, board: !!document.getElementById('board') };
   })()`);
   check('resize does not break game', resizeOk.cards >= 4 && resizeOk.board === true, JSON.stringify(resizeOk));
+
+  // V2.10 (spec §42.3 "header overlap") — portrait top-chrome geometry. The
+  // title was a full-width centred <h1> under a position:fixed back button, so
+  // the title BOX ran under the button at EVERY viewport; the fix puts both in
+  // the shell.css `.ps-header` row as flex siblings so they cannot overlap.
+  // Measured after `document.fonts.ready` so font-swap transients cannot flake
+  // it. §42.3's other items (card proportions, back symbol scale, short-
+  // landscape difficulty controls) are not header work and stay out.
+  const hp = await start({ page: '/pages/animal_memory.html', tag: 'memory-smoke-portrait', width: 390, height: 844 });
+  let pReady = false;
+  for (let i = 0; i < 25 && !pReady; i++) {
+    pReady = await hp.evalv(`document.querySelectorAll('#board .card').length >= 4`);
+    if (!pReady) await sleep(200);
+  }
+  await hp.evalv(`window.audioBuses.play=function(){}; true`);
+  await hp.evalv(`document.fonts.ready.then(() => true)`);
+  const geo = await hp.evalv(`(() => {
+    const back = document.querySelector('.back-btn');
+    const title = document.querySelector('.ps-header .ps-title') || document.querySelector('h1');
+    const rb = back.getBoundingClientRect(), rt = title.getBoundingClientRect();
+    const w = Math.min(rb.right, rt.right) - Math.max(rb.left, rt.left);
+    const hh = Math.min(rb.bottom, rt.bottom) - Math.max(rb.top, rt.top);
+    return JSON.stringify({
+      booted: ${pReady},
+      inHeader: !!(title && title.closest('.ps-header')),
+      backPos: getComputedStyle(back).position,
+      overlap: (w > 0.5 && hh > 0.5) ? (w * hh) : 0,
+      inside: [back, title].every(el => { const r = el.getBoundingClientRect(); return r.left >= -0.5 && r.top >= -0.5 && r.right <= innerWidth + 0.5 && r.bottom <= innerHeight + 0.5; })
+    });
+  })()`);
+  const rj = JSON.parse(geo);
+  check('V2.10 shell: memory title lives in the .ps-header row', rj.booted === true && rj.inHeader === true, geo);
+  check('V2.10: back button is in normal flow (not position:fixed)', rj.backPos === 'static', geo);
+  check('V2.10 portrait: back button + title never overlap (§42.3)', rj.overlap === 0, geo);
+  check('V2.10 portrait: header chrome inside the viewport (390x844)', rj.inside === true, geo);
+  await hp.close();
 
   // Back button returns to hub (last — navigates away).
   // The handler waits 90ms then sets location.href to '../index.html#hub-games',

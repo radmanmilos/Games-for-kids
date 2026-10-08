@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-08T12:48:58.973Z
+- Генерисано / Generated: 2026-10-08T13:14:51.041Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -12,10 +12,10 @@
 | `animal_counting_phone-portrait.png` | Бројање | `/pages/animal_counting.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
 | `animal_counting_tablet-landscape.png` | Бројање | `/pages/animal_counting.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
 | `animal_counting_tablet-portrait.png` | Бројање | `/pages/animal_counting.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `animal_memory_phone-landscape.png` | Памтилица | `/pages/animal_memory.html` | 844×390 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `animal_memory_phone-portrait.png` | Памтилица | `/pages/animal_memory.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `animal_memory_tablet-landscape.png` | Памтилица | `/pages/animal_memory.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `animal_memory_tablet-portrait.png` | Памтилица | `/pages/animal_memory.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
+| `animal_memory_phone-landscape.png` | Памтилица | `/pages/animal_memory.html` | 844×390 | пејзаж | — | 08.10.2026. 15:14:51 | 216 |
+| `animal_memory_phone-portrait.png` | Памтилица | `/pages/animal_memory.html` | 390×844 | портрет | — | 08.10.2026. 15:14:51 | 216 |
+| `animal_memory_tablet-landscape.png` | Памтилица | `/pages/animal_memory.html` | 1180×820 | пејзаж | — | 08.10.2026. 15:14:51 | 216 |
+| `animal_memory_tablet-portrait.png` | Памтилица | `/pages/animal_memory.html` | 820×1180 | портрет | — | 08.10.2026. 15:14:51 | 216 |
 | `animal_puzzle_phone-landscape.png` | Слагалице | `/pages/animal_puzzle.html` | 844×390 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
 | `animal_puzzle_phone-portrait.png` | Слагалице | `/pages/animal_puzzle.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
 | `animal_puzzle_tablet-landscape.png` | Слагалице | `/pages/animal_puzzle.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |

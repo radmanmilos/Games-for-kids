@@ -104,7 +104,7 @@ Ordered by the spec's own priority matrix (§55) and Appendix E. Each item is ta
 | **V2.7** | Migrate Ocean → shared header. | **DONE** (2026-10-08) — title in an absolute `.ps-header` overlay (canvas keeps full-bleed), band `max(12vmin, 64px)` (generic button floor); HUD trio drops below the band in portrait where five items can't fit 390px. Cleared title∩worlds 545px², title∩score 244px², back∩music 1305px² (phone) and title∩music 260px² (tablet). 4 §42.10 checks in `ocean_smoke` (23→27). |
 | **V2.8** | Migrate Space → shared header. | **DONE** (2026-10-08) — title in an absolute `.ps-header` overlay (full-bleed canvas preserved), band `max(12vmin, 64px)` (generic button floor); HUD trio drops below the band in portrait. Fixes title∩worlds 684px², title∩score 689px², back∩music 1305px² (390×844) and title∩music 896px² (768×1024). 4 §42.11 geometry checks in `space_smoke` (24→28), measured after `document.fonts.ready` so font-swap transients can't flake. Related: `ocean_smoke`'s V2.7 pairwise check hardened the same way (scoped to title+back clear, deterministic). **Deferred to V4 (adventure HUD unification, spec line 1366):** the score card vs the fixed-offset 🌍/🔊 buttons is a font-width-coupled HUD coupling shared by all 4 adventure worlds — not introduced here. |
 | **V2.9** | Migrate Driving → shared header. | **DONE** (2026-10-08; §42.9's road-trip scenery is separate content, not this header row) |
-| **V2.10** | Migrate Memory → shared header. | **BUILD** |
+| **V2.10** | Migrate Memory → shared header. | **DONE** (2026-10-08) |
 | **V2.11** | Migrate remaining pages with top-cluster collisions. | **VERIFY** — identify from screenshots first. |
 
 > **Spec constraint (§20):** *"Do not perform a mechanical 'replace all headers' edit."*
