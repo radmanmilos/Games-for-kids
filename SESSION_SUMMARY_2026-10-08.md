@@ -69,6 +69,13 @@
 - **Smoke:** `space_smoke` **28 checks**, four §42.11 geometry checks in a new 390×844 session. Non-vacuous: stashing `space.html` failed exactly the 3 real geometry checks (exit 1). `ocean_smoke` 27 green (hardened identically).
 - **Validation:** throwaway 4-viewport probe (deleted); `axe_check space --report` clean; `build_offline.js` → `sync-docs.sh` → `check_fast` 7/7; `run_all --since HEAD` hub 15/0 + space 28/0; 4 Space screenshots refreshed (`--task=216`); docs updated (PROJECT_TASKS, VISUAL plan, tools/README, HANDOVER).
 
+### V2.9 - Driving migration (DONE 2026-10-08, pending push)
+- Per spec §42.9 ("top cluster must be fixed for portrait"): Driving is the same adventure shell as Ocean/Space, so the V2.7/V2.8 absolute-`.ps-header`-overlay pattern applied unchanged — `#adv-title` left `position:absolute; top:2vmin` and joined the `.ps-header` flow row (band `max(12vmin, 64px)`, `pointer-events:none` with `.adv-back` re-enabled), HUD trio drops below the band in portrait; `adventure.css` untouched, no new controls.
+- Pre-fix 4-viewport probe (deleted): 390×844 **back∩music 1305px², title∩worlds 664px²**; 768×1024 **title∩music 896px²**; landscapes clean. Post-fix: 0 overlaps at all 4 viewports.
+- **Smoke:** `driving_smoke` **15 → 24 checks**, four §42.9 checks in a new 390×844 session (title in `.ps-header` + centred, **title + back clear of every other chrome item** after `document.fonts.ready`, HUD trio below the band, all chrome inside the viewport). Non-vacuous: stashing `driving.html` failed exactly the 3 real geometry checks (exit 1).
+- **Scope note:** §42.9 also asks for a road-trip scenery pass (soft sky / 2–4 trees / clouds / road markers / fence-sign-landmark). That is **content**, not header — the V2.9 plan row is header-only — so it is **flagged for a future driving-content task**, not done here.
+- **Validation:** `axe_check driving --report` clean; `build_offline.js` → `sync-docs.sh` → `check_fast` 7/7; `run_all --since HEAD` hub 15/0 + driving 24/0; 4 driving screenshots refreshed (`--review=Screenshot_Review --pages=driving --task=216`); docs updated.
+
 ### Anti-looping rules (commit `af80862`)
 - Rules 7 and 8 added to `ANTI_LOOP_RULES.md` after this session looped on repeated file reads.
 
@@ -90,9 +97,10 @@
 12. `6c14299` — docs: record V2.7 CI result (docs-only CI run green)
 13. `d8bede6` — docs: session rule — standing commit+push approval (session-scoped)
 14. `59e8a6c` — V2.8: Space shared-header migration (spec §42.11) + smoke checks + screenshots + docs (CI run 37777284943 green on first pass; CodeQL + Pages green)
+15. `eb477`? — see below (V2.9: Driving shared-header migration (spec §42.9) + smoke checks + screenshots + docs)
 
 ## Next session
 1. *(done)* V2.6 pushed as `a6dde46` — CI run 37759919627 green after one environmental re-run (Release QA's classroom start exceeded the 8s default tile wait under matrix contention; local 153/153 green, re-run green).
 2. *(done)* V2.7 pushed as `2aaa374` — CI run 37768823297 green first pass.
-3. *(done)* V2.8 (Space) pushed as `59e8a6c` — CI run 37777284943 green first pass (CodeQL + Pages green). Then continue **V2.9–V2.11**: Driving, Memory, then remaining top-cluster collisions identified from screenshots. Driving is the same adventure family as Ocean/Space (dino too) — the Ocean/Space absolute-overlay header pattern and the `accessibility.css` 64px button floor apply.
+3. *(V2.8 done)* V2.8 (Space) pushed as `59e8a6c` — CI run 37777284943 green first pass (CodeQL + Pages green). *(V2.9 done)* V2.9 (Driving) migrated — see V2.9 section; pending push. Then continue **V2.10–V2.11**: Memory, then remaining top-cluster collisions identified from screenshots. Driving/Memory are the same shell family — the Ocean/Space/Driving absolute-overlay header pattern applies.
 4. Then V3 (short-landscape audit), V4 (adventure HUD unification — includes the deferred score↔worlds HUD width coupling), V5 (learning stage), V6 (Petrin Glow), V7 (tactile system).

@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-08T12:24:09.190Z
+- Генерисано / Generated: 2026-10-08T12:48:58.973Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -40,10 +40,10 @@
 | `dino_phone-portrait.png` | Дино | `/pages/dino.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
 | `dino_tablet-landscape.png` | Дино | `/pages/dino.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
 | `dino_tablet-portrait.png` | Дино | `/pages/dino.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `driving_phone-landscape.png` | Возила | `/pages/driving.html` | 844×390 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `driving_phone-portrait.png` | Возила | `/pages/driving.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `driving_tablet-landscape.png` | Возила | `/pages/driving.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `driving_tablet-portrait.png` | Возила | `/pages/driving.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
+| `driving_phone-landscape.png` | Возила | `/pages/driving.html` | 844×390 | пејзаж | — | 08.10.2026. 14:48:58 | 216 |
+| `driving_phone-portrait.png` | Возила | `/pages/driving.html` | 390×844 | портрет | — | 08.10.2026. 14:48:58 | 216 |
+| `driving_tablet-landscape.png` | Возила | `/pages/driving.html` | 1180×820 | пејзаж | — | 08.10.2026. 14:48:58 | 216 |
+| `driving_tablet-portrait.png` | Возила | `/pages/driving.html` | 820×1180 | портрет | — | 08.10.2026. 14:48:58 | 216 |
 | `explorer_phone-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 844×390 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
 | `explorer_phone-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
 | `explorer_tablet-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |

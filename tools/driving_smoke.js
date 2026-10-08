@@ -4,6 +4,10 @@
    moves the car, clamps hold, coins collect, obstacles knock the car back, goal
    completes the level, worlds picker + win modal + music toggle work, and the
    hub wiring (button / navigation / standalone boot) is in place.
+   V2.9 (spec §42.9: "top cluster must be fixed for portrait"): a second 390x844
+   session pins the portrait top-chrome geometry - title in the .ps-header band,
+   HUD trio below it, title + back clear of every other chrome item, all inside
+   the viewport (measured after `document.fonts.ready`).
    Run:  node tools/driving_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -189,6 +193,56 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('music toggle: 🔊 -> 🔇 -> 🔊', mus0 === '🔊' && mus1 === '🔇' && mus2 === '🔊', mus0 + '/' + mus1 + '/' + mus2);
 
   await h.close();
+
+  // V2.9 (spec §42.9) — portrait top-chrome geometry. Runs in a 390x844 session
+  // because the collisions only exist in portrait; measured after
+  // `document.fonts.ready` so font-swap transients cannot flake it. V2.9 owns
+  // the title collision + the back button's corner; the font-width-coupled
+  // score↔worlds HUD coupling (shared by all 4 adventure worlds, spec line
+  // 1366 → Phase V4) is reported as evidence only.
+  const hp = await start({ page: '/pages/driving.html', tag: 'driving-smoke-portrait', width: 390, height: 844 });
+  let pReady = false;
+  for (let i = 0; i < 25 && !pReady; i++) {
+    pReady = await hp.evalv(`typeof window.__adv === 'object' && window.__adv !== null`);
+    if (!pReady) await sleep(200);
+  }
+  await hp.evalv(`window.audioBuses.connect=function(){}; true`);
+  await hp.evalv(`document.fonts.ready.then(() => true)`);
+  const geo = await hp.evalv(`(() => {
+    const sels = ['#driving-back', '#adv-title', '#adv-score', '#adv-worlds-btn', '#adv-music-btn'];
+    const box = s => { const el = document.querySelector(s); if (!el) return null; const r = el.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom }; };
+    const boxes = Object.fromEntries(sels.map(s => [s, box(s)]));
+    const overlaps = [];
+    for (let i = 0; i < sels.length; i++) for (let j = i + 1; j < sels.length; j++) {
+      const a = boxes[sels[i]], b = boxes[sels[j]];
+      if (!a || !b) continue;
+      const w = Math.min(a.r, b.r) - Math.max(a.l, b.l);
+      const hh = Math.min(a.b, b.b) - Math.max(a.t, b.t);
+      if (w > 0.5 && hh > 0.5) overlaps.push(sels[i] + '∩' + sels[j] + '=' + (w * hh).toFixed(0) + 'px²');
+    }
+    const clean = s => overlaps.filter(o => o.startsWith(s));
+    const title = boxes['#adv-title'];
+    return JSON.stringify({
+      booted: ${pReady},
+      vw: innerWidth, vh: innerHeight,
+      inHeader: document.getElementById('adv-title').closest('.ps-header') !== null,
+      titleCx: (title.l + title.r) / 2,
+      titleOrBackOverlaps: [...clean('#driving-back'), ...clean('#adv-title')],
+      allOverlaps: overlaps,
+      bandBottom: title.b,
+      hudTops: ['#adv-score', '#adv-worlds-btn', '#adv-music-btn'].map(s => boxes[s].t),
+      inside: sels.every(s => boxes[s].l >= -0.5 && boxes[s].t >= -0.5 && boxes[s].r <= innerWidth + 0.5 && boxes[s].b <= innerHeight + 0.5)
+    });
+  })()`);
+  const gj = JSON.parse(geo);
+  check('V2.9 shell: title lives in the .ps-header row, centred on the viewport',
+    gj.inHeader === true && Math.abs(gj.titleCx - gj.vw / 2) < 0.5, geo);
+  check('V2.9 portrait: title + back clear of every other chrome item (§42.9)',
+    gj.titleOrBackOverlaps.length === 0, geo);
+  check('V2.9 portrait: HUD trio steps below the .ps-header band',
+    gj.hudTops.every(t => t >= gj.bandBottom - 0.5), geo);
+  check('V2.9 portrait: all five chrome items inside the viewport (390x844)', gj.inside === true, geo);
+  await hp.close();
 
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
