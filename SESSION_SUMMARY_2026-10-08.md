@@ -67,9 +67,9 @@
 6. `6d66b15` — V2.4: Classroom shared-header migration + smoke checks + screenshots (pushed; CI run 37741581608 green)
 7. `d1abefc` — V2.5: Coloring shared-header migration + smoke checks + screenshots + docs (CI run 37746441324 red on a11y — fixed by 8)
 8. `ffca55c` — V2.5 follow-up: remove `.ps-status` opacity (contrast fix) + docs + re-shot screenshots
-9. *(pending approval)* — V2.6: Piano shared-header migration + smoke checks + screenshots + docs
+9. `a6dde46` — V2.6: Piano shared-header migration + smoke checks + screenshots + docs (CI run 37759919627: first pass red only on Release QA's `offline_smoke` — environmental classroom tile wait, re-run green; CodeQL + Pages green)
 
 ## Next session
-1. Commit/push V2.6 if approved by the user; watch CI (axe gate runs on Release QA).
+1. *(done)* V2.6 pushed as `a6dde46` — CI run 37759919627 green after one environmental re-run (Release QA's classroom start exceeded the 8s default tile wait under matrix contention; local 153/153 green, re-run green).
 2. Continue V2.7–V2.11: migrate Ocean, Space, Driving, Memory to shared header (then identify remaining top-cluster collisions from screenshots).
 3. Then V3 (short-landscape audit), V4 (adventure HUD), V5 (learning stage), V6 (Petrin Glow), V7 (tactile system).
