@@ -17,7 +17,7 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
-- 216. IN PROGRESS — V1.1 + V1.2 DONE; V0.1 + V0.2 DONE; V2.1–V2.8 DONE (V2.7 pushed, CI green; **V2.8 done, awaiting push**). (Updated 2026-10-08, Ponytail Lazy Dev.)
+- 216. IN PROGRESS — V1.1 + V1.2 DONE; V0.1 + V0.2 DONE; V2.1–V2.8 DONE (V2.7 + V2.8 pushed, CI green). (Updated 2026-10-08, Ponytail Lazy Dev.)
     - **DONE and pushed:**
       - V1.1: Animal Puzzle `[object Object]` fix (commit `9023b6f`).
       - V1.2: Animal Puzzle header rule — title `Слагалица`, status `1/8`, phone-portrait stacking (commit `6753226`).

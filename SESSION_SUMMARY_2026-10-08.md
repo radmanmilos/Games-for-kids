@@ -89,9 +89,10 @@
 11. `2aaa374` — V2.7: Ocean shared-header migration (spec §42.10) + smoke checks + screenshots + docs (CI run 37768823297 green on first pass; CodeQL + Pages green)
 12. `6c14299` — docs: record V2.7 CI result (docs-only CI run green)
 13. `d8bede6` — docs: session rule — standing commit+push approval (session-scoped)
+14. `59e8a6c` — V2.8: Space shared-header migration (spec §42.11) + smoke checks + screenshots + docs (CI run 37777284943 green on first pass; CodeQL + Pages green)
 
 ## Next session
 1. *(done)* V2.6 pushed as `a6dde46` — CI run 37759919627 green after one environmental re-run (Release QA's classroom start exceeded the 8s default tile wait under matrix contention; local 153/153 green, re-run green).
 2. *(done)* V2.7 pushed as `2aaa374` — CI run 37768823297 green first pass.
-3. Continue **V2.8–V2.11**: V2.8 (Space) done/pending push → then Driving, Memory, then remaining top-cluster collisions identified from screenshots. Driving is the same adventure family as Ocean/Space (dino too) — the Ocean/Space absolute-overlay header pattern and the `accessibility.css` 64px button floor apply.
+3. *(done)* V2.8 (Space) pushed as `59e8a6c` — CI run 37777284943 green first pass (CodeQL + Pages green). Then continue **V2.9–V2.11**: Driving, Memory, then remaining top-cluster collisions identified from screenshots. Driving is the same adventure family as Ocean/Space (dino too) — the Ocean/Space absolute-overlay header pattern and the `accessibility.css` 64px button floor apply.
 4. Then V3 (short-landscape audit), V4 (adventure HUD unification — includes the deferred score↔worlds HUD width coupling), V5 (learning stage), V6 (Petrin Glow), V7 (tactile system).
