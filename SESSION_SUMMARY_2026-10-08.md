@@ -76,10 +76,10 @@
 8. `ffca55c` — V2.5 follow-up: remove `.ps-status` opacity (contrast fix) + docs + re-shot screenshots
 9. `a6dde46` — V2.6: Piano shared-header migration + smoke checks + screenshots + docs (CI run 37759919627: first pass red only on Release QA's `offline_smoke` — environmental classroom tile wait, re-run green; CodeQL + Pages green)
 10. `4e51d60` — docs: record V2.6 CI result (CI run 37762760272 green)
-11. *(pending approval)* — V2.7: Ocean shared-header migration + smoke checks + screenshots + docs
+11. `2aaa374` — V2.7: Ocean shared-header migration (spec §42.10) + smoke checks + screenshots + docs (CI run 37768823297 green on first pass; CodeQL + Pages green)
 
 ## Next session
 1. *(done)* V2.6 pushed as `a6dde46` — CI run 37759919627 green after one environmental re-run (Release QA's classroom start exceeded the 8s default tile wait under matrix contention; local 153/153 green, re-run green).
-2. Commit/push V2.7 if approved by the user; watch CI (axe gate runs on Release QA).
-3. Continue V2.8–V2.11: migrate Space, Driving, Memory to shared header, then remaining top-cluster collisions identified from screenshots. Space/Driving are the same adventure family as Ocean (dino too) — the Ocean overlay-header pattern and the `accessibility.css` 64px button floor apply to them.
+2. *(done)* V2.7 pushed as `2aaa374` — CI run 37768823297 green first pass.
+3. Continue V2.8–V2.11: migrate Space, Driving, Memory to shared header, then remaining top-cluster collisions identified from screenshots. Space/Driving are the same adventure family as Ocean (dino too) — the Ocean absolute-overlay header pattern and the `accessibility.css` 64px button floor apply to them.
 3. Then V3 (short-landscape audit), V4 (adventure HUD), V5 (learning stage), V6 (Petrin Glow), V7 (tactile system).
