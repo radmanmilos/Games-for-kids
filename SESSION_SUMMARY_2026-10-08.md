@@ -55,6 +55,13 @@
 - **Smoke:** `piano_smoke` -> 30 checks, five new V2.6/spec-32 geometry checks in the 390x844 session (title rendered/in-row/centred, title intersect back == 0, **mode button intersect back == 0**, header->controls flow gap 0-1px, mode below band). The block is deliberately on the phone-portrait session: at wider viewports the mode row clears the corner horizontally, which is why the bug hid there. Non-vacuous: stashing `piano.html` failed exactly the 4 geometry checks that can see the old layout (exit 1; the title-vs-back check passes on old markup too - the short centred title never reached the button, so it is a forward guard only).
 - **Validation:** throwaway 4-viewport probe (deleted) - clean 4/4 after the band fix; `axe_check piano --report` clean (the V2.5 contrast lesson); `piano_smoke` 30/30 + `hub_smoke` 15/15 via `run_all --since HEAD`; `check_fast` 7/7 after `build_offline.js` -> `sync-docs.sh`; 4 piano screenshots refreshed (`--task=216`); docs updated.
 
+### V2.7 - Ocean migration (DONE 2026-10-08, awaiting commit approval)
+- Per spec §42.10 ("fix only the portrait top chrome/title overlap + shell hierarchy; keep the water and the exploration feel"): `#adv-title` was `position:absolute; top:2vmin` (ignoring `--ps-safe-top`) and the game HUD competed with it in **every portrait orientation** — the pre-fix 4-viewport probe measured phone 390×844 **title∩worlds 545px², title∩score 244px², back∩music 1305px²** and tablet 768×1024 **title∩music 260px²**; both landscapes were clean. The title now sits in the `.ps-header` flow row (V2.4 rule: back on its corner anchor, 16vmin side zones) but as an **absolute overlay**, because `#adv-canvas` is the lone in-flow flex child of the full-bleed `#adv-game` and moving the header into flow would shrink the water — this world's depth is the point.
+- Band is `max(12vmin, 64px)`: `accessibility.css:2` floors **every** `button` at 64px (the `.adv-back` is not a `.back-btn`, so it gets the 64px rule, not piano's 56px one); a plain 12vmin band (46.8) would sit 17px above the back button's 64px bottom. The band is `pointer-events:none` with `.adv-back` re-enabled, so the overlay never swallows canvas taps (adventure.js binds buttons only — no canvas pointer handlers).
+- **The five-item row does not fit a phone**: back+music+worlds+score+title = 64+64+64+58+161px > 390, so the HUD trio (score/worlds/music) **drops below the shell band in portrait** (`@media (orientation:portrait)`, top = safe + 4vmin + max(12vmin,64px) + 4px) while keeping its offsets and z-order; landscape is untouched. `adventure.css` was **not** changed, so dino/space/driving are unaffected (they get their own V2.x/V4 passes).
+- **Smoke:** `ocean_smoke` 23 → 27, four §42.10 checks in a new 390×844 session — title in `.ps-header` + viewport-centred, **no pairwise overlap among back/title/score/worlds/music**, HUD trio below the band, all chrome inside the viewport. Non-vacuous: stashing `ocean.html` failed exactly the 3 real geometry checks (exit 1); the viewport check is a forward guard only.
+- **Validation:** throwaway 4-viewport probe (deleted) 0 overlaps; `axe_check ocean --report` clean; `run_all --since HEAD` ocean 27/27 + hub 15/15; `check_fast` 7/7 after `build_offline.js` → `sync-docs.sh`; 4 ocean screenshots refreshed (`--task=216`); docs updated (PROJECT_TASKS, VISUAL plan, tools/README, HANDOVER).
+
 ### Anti-looping rules (commit `af80862`)
 - Rules 7 and 8 added to `ANTI_LOOP_RULES.md` after this session looped on repeated file reads.
 
@@ -68,8 +75,11 @@
 7. `d1abefc` — V2.5: Coloring shared-header migration + smoke checks + screenshots + docs (CI run 37746441324 red on a11y — fixed by 8)
 8. `ffca55c` — V2.5 follow-up: remove `.ps-status` opacity (contrast fix) + docs + re-shot screenshots
 9. `a6dde46` — V2.6: Piano shared-header migration + smoke checks + screenshots + docs (CI run 37759919627: first pass red only on Release QA's `offline_smoke` — environmental classroom tile wait, re-run green; CodeQL + Pages green)
+10. `4e51d60` — docs: record V2.6 CI result (CI run 37762760272 green)
+11. *(pending approval)* — V2.7: Ocean shared-header migration + smoke checks + screenshots + docs
 
 ## Next session
 1. *(done)* V2.6 pushed as `a6dde46` — CI run 37759919627 green after one environmental re-run (Release QA's classroom start exceeded the 8s default tile wait under matrix contention; local 153/153 green, re-run green).
-2. Continue V2.7–V2.11: migrate Ocean, Space, Driving, Memory to shared header (then identify remaining top-cluster collisions from screenshots).
+2. Commit/push V2.7 if approved by the user; watch CI (axe gate runs on Release QA).
+3. Continue V2.8–V2.11: migrate Space, Driving, Memory to shared header, then remaining top-cluster collisions identified from screenshots. Space/Driving are the same adventure family as Ocean (dino too) — the Ocean overlay-header pattern and the `accessibility.css` 64px button floor apply to them.
 3. Then V3 (short-landscape audit), V4 (adventure HUD), V5 (learning stage), V6 (Petrin Glow), V7 (tactile system).

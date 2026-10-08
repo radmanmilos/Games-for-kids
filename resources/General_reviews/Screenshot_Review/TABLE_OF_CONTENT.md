@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-08T09:08:18.556Z
+- Генерисано / Generated: 2026-10-08T11:10:14.639Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -60,10 +60,10 @@
 | `maze_phone-portrait.png` | Путања | `/pages/maze.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
 | `maze_tablet-landscape.png` | Путања | `/pages/maze.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
 | `maze_tablet-portrait.png` | Путања | `/pages/maze.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `ocean_phone-landscape.png` | Океан | `/pages/ocean.html` | 844×390 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `ocean_phone-portrait.png` | Океан | `/pages/ocean.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `ocean_tablet-landscape.png` | Океан | `/pages/ocean.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `ocean_tablet-portrait.png` | Океан | `/pages/ocean.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
+| `ocean_phone-landscape.png` | Океан | `/pages/ocean.html` | 844×390 | пејзаж | — | 08.10.2026. 13:10:14 | 216 |
+| `ocean_phone-portrait.png` | Океан | `/pages/ocean.html` | 390×844 | портрет | — | 08.10.2026. 13:10:14 | 216 |
+| `ocean_tablet-landscape.png` | Океан | `/pages/ocean.html` | 1180×820 | пејзаж | — | 08.10.2026. 13:10:14 | 216 |
+| `ocean_tablet-portrait.png` | Океан | `/pages/ocean.html` | 820×1180 | портрет | — | 08.10.2026. 13:10:14 | 216 |
 | `parent_phone-landscape.png` | За родитеље | `/pages/parent.html` | 844×390 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
 | `parent_phone-portrait.png` | За родитеље | `/pages/parent.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
 | `parent_tablet-landscape.png` | За родитеље | `/pages/parent.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |

@@ -101,7 +101,7 @@ Ordered by the spec's own priority matrix (§55) and Appendix E. Each item is ta
 | **V2.4** | Migrate Classroom → shared header. | **DONE** (2026-10-08) — title in `.ps-header` flow row with 16vmin corner zones, hub is the pinned-header scroller; smoke §31 overlap check added. |
 | **V2.5** | Migrate Coloring → shared header. | **DONE** (2026-10-08) — name/status own the `.ps-header` centre; mode + palette + clear in an in-flow `.coloring-tools` row below the band; 5 §32 geometry checks in `coloring_smoke` (23→28). |
 | **V2.6** | Migrate Piano → shared header. | **DONE** (2026-10-08) — title in `.ps-header` flow row, `max(12vmin, 56px)` band (back button's 56px a11y floor beat 12vmin and tucked the portrait primary button 294px² under its corner); 5 §32 geometry checks in `piano_smoke` (25→30). |
-| **V2.7** | Migrate Ocean → shared header. | **BUILD** |
+| **V2.7** | Migrate Ocean → shared header. | **DONE** (2026-10-08) — title in an absolute `.ps-header` overlay (canvas keeps full-bleed), band `max(12vmin, 64px)` (generic button floor); HUD trio drops below the band in portrait where five items can't fit 390px. Cleared title∩worlds 545px², title∩score 244px², back∩music 1305px² (phone) and title∩music 260px² (tablet). 4 §42.10 checks in `ocean_smoke` (23→27). |
 | **V2.8** | Migrate Space → shared header. | **BUILD** |
 | **V2.9** | Migrate Driving → shared header. | **BUILD** |
 | **V2.10** | Migrate Memory → shared header. | **BUILD** |
