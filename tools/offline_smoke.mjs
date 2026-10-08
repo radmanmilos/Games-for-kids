@@ -145,7 +145,7 @@ const APPS = [
     },
   },
   {
-    id: 'animal_memory', back: '#controls .back-btn',
+    id: 'animal_memory', back: '.ps-header .back-btn',
     ready: `document.querySelectorAll('#board .card').length>0`,
     act: async h => {
       const n = await h.evalv(`(()=>{const c=[...document.querySelectorAll('#board .card')];
