@@ -45,6 +45,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   })()`);
   await h.evalv(`document.querySelectorAll('#board .card')[${P.a}].click()`);
   await sleep(50);
+  const flipGlow = await h.evalv(`(() => { const el = document.querySelector('#board .card.flipped:not(.matched)'); return el ? getComputedStyle(el).boxShadow : ''; })()`);
+  check('V6.2: the current (flipped) card carries the Petrin Glow', /155,\s*109,\s*255/.test(flipGlow), flipGlow);
   await h.evalv(`document.querySelectorAll('#board .card')[${P.b}].click()`);
   await sleep(150);
   const M1 = await h.evalv(`(() => ({

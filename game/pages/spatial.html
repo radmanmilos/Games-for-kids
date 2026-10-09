@@ -59,7 +59,8 @@
     .spatial-choice:active{transform:translateY(.6vmin)}
     .spatial-choice.spatial-correct{background:var(--green);color:#fff}
     .spatial-choice.spatial-wrong{animation:spatial-shake .32s ease}
-    .spatial-choice.spatial-hint{box-shadow:0 0 0 .8vmin var(--sky),0 1vmin 0 rgba(0,0,0,.18)}
+    /* V6.2: hint target carries the Petrin Glow on top of its semantic sky ring. */
+    .spatial-choice.spatial-hint{box-shadow:var(--ps-glow),0 0 0 .8vmin var(--sky),0 1vmin 0 rgba(0,0,0,.18)}
     .spatial-choice[disabled]{cursor:default}
     .spatial-choice[disabled]:active{transform:none}
     @keyframes spatial-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-1.4vmin)}75%{transform:translateX(1.4vmin)}}

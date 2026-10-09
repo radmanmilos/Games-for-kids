@@ -856,12 +856,12 @@
     "size": 5066
   },
   "pages/animals.html": {
-    "sha256": "7d66fc0bc1610a36fae2b99bbe5da664ca9fb2d97596cd33d55974463dd23f8c",
-    "size": 13351
+    "sha256": "19d32e93ce43ea4d04fc87561ea9e07339c366a61c9132b64465c2feb07fb239",
+    "size": 13454
   },
   "pages/classroom.html": {
-    "sha256": "0d16d4175d5742ebd6fe9ea91c7658262d64959122801d6c14592dfd15705603",
-    "size": 18668
+    "sha256": "3f5558f751eac1a102bb71b4b7b57ed9a329123af988c6e667c4c67b0f1a1cc9",
+    "size": 18768
   },
   "pages/coloring.html": {
     "sha256": "ac02288fb8c33fa4b15a9e66fe153cced3603b868ba873e6efdf2d5364ab278d",
@@ -884,8 +884,8 @@
     "size": 8210
   },
   "pages/matching_game.html": {
-    "sha256": "b414a2d75b399b53d8c5f73eecf43c7280ce2d71fe266680dbf59ad872064a3d",
-    "size": 14858
+    "sha256": "96ab2124f9d5b3fcde8c159127a19ec12968c00c3b29f25247b55bcac9e8ba34",
+    "size": 14977
   },
   "pages/maze.html": {
     "sha256": "66c587e8cec22ba09396fa52691e1d89202d3a86fa245faf3236fa55a8b90c36",
@@ -904,8 +904,8 @@
     "size": 4914
   },
   "pages/piano.html": {
-    "sha256": "d08b5b0a206f0fce0c0ade13f818c49d6b134a807d5c177442b9e629f10b33af",
-    "size": 12114
+    "sha256": "23aaad01361089dec64894b3dac89a409b18fcc7b72a68816e41fcd1a5f2114d",
+    "size": 12314
   },
   "pages/racing3d.html": {
     "sha256": "869132a30dcd88f4c727694945d98d13407aabf23b64ae16df12d16332421e59",
@@ -920,28 +920,28 @@
     "size": 3853
   },
   "pages/shapes.html": {
-    "sha256": "6b9be3f9205cf8a8dde19577d272617e156919338db193ecdfb0b950e2f5a857",
-    "size": 11819
+    "sha256": "7cf892a58aa04faffd73d3e6ce736a8f2b0da42017a6dc63fae8ddf181c82da6",
+    "size": 11938
   },
   "pages/sorting.html": {
-    "sha256": "ee29a64be4d79cf52b1bf50afddca3bf6a4e7dbc9c18bb5baf8587a4f6c44dc5",
-    "size": 6043
+    "sha256": "4aceb131473fe0871789be41ca771965b9cf68702ce397d00e4ded332509dd48",
+    "size": 6148
   },
   "pages/space.html": {
     "sha256": "b1ca73d5311f77395275ed65152cf58a0e8bacc8408c206e5acd66d86b4d4a66",
     "size": 3203
   },
   "pages/spatial.html": {
-    "sha256": "b2a552a3cbef1c211b22fb2e59b4109356e2033efaeaee82abdcbbca79bb584b",
-    "size": 6654
+    "sha256": "ef358ec285378b748c6c9496d4098f7cd85ec301966855e02cd8a00b360e7144",
+    "size": 6754
   },
   "pages/tracing.html": {
     "sha256": "076cadcb3a2987fce078335b39e85b0a84f8638d8764bf70609d37dc41fe44ff",
     "size": 11298
   },
   "shared/accessibility.css": {
-    "sha256": "28fef5da8b423ed2f0ff360cde7dbae90e1b9911e45333b13a2b49090d830e81",
-    "size": 2055
+    "sha256": "0f4003e8e36802f811ab60049f0c6aef483795a723424f16fef649a5c34183ca",
+    "size": 3580
   },
   "shared/adventure.css": {
     "sha256": "56b06860795aeae1dc5083b840a62dbc9be3b8687bae2f0e44d7d609e2600fec",

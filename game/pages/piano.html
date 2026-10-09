@@ -80,11 +80,13 @@
     font-family:inherit; font-weight:700; font-size:3.6vmin;
     color:var(--plum-soft); background:#fff; box-shadow:0 .8vmin 0 rgba(0,0,0,.12);
   }
-  .mode-btn.on{ background:var(--plum); border-color:var(--plum); color:#fff; box-shadow:0 .8vmin 0 rgba(0,0,0,.25); }
+  .mode-btn.on{ background:var(--plum); border-color:var(--plum); color:#fff; box-shadow:var(--ps-glow), 0 .8vmin 0 rgba(0,0,0,.25); }
   .mode-btn:active{ transform:scale(.92) translateY(3px); }
   /* Free play is the loud, obvious choice; "Прати светло" stays the quiet one
      (roadmap acceptance criterion: free play more prominent than challenge mode). */
   #modeFree{ padding:3.4vmin 7vmin; font-size:5.4vmin; box-shadow:0 1.4vmin 0 rgba(0,0,0,.25); }
+  /* V6.2: the #modeFree id outranks .mode-btn.on, so the active glow must be merged here. */
+  #modeFree.on{ box-shadow:var(--ps-glow), 0 1.4vmin 0 rgba(0,0,0,.25); }
   #modeSong{ padding:1.8vmin 3.4vmin; font-size:3.2vmin; }
 
   #songInfo{ display:none; flex-direction:column; align-items:center; gap:1.8vmin; }
@@ -95,7 +97,7 @@
     font-family:inherit; font-weight:700; font-size:4.6vmin; line-height:1;
     color:var(--plum-soft); background:#fff; box-shadow:0 1vmin 0 rgba(0,0,0,.12);
   }
-  .song-chip.on{ background:var(--plum); color:#fff; box-shadow:0 1vmin 0 rgba(0,0,0,.25); }
+  .song-chip.on{ background:var(--plum); color:#fff; box-shadow:var(--ps-glow), 0 1vmin 0 rgba(0,0,0,.25); }
   .song-chip:active{ transform:scale(.92) translateY(3px); }
   #songRow{ display:flex; align-items:center; gap:3vmin; }
   #pianoPreview{

@@ -61,6 +61,8 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
      four-tab assertion. */
   check('tabs labeled Азбука/Бројеви/Облици/Боје/Време/Годишња доба', tabText === 'Азбука|Бројеви|Облици|Боје|Време|Годишњадоба', T.tabLabels.join('|'));
   check('active tab matches current activity', T.activeTab === 'alphabet', tabsInfo);
+  const tabGlow = await h.evalv(`(() => { const el = document.querySelector('.class-tab.active'); return el ? getComputedStyle(el).boxShadow : ''; })()`);
+  check('V6.2: the active classroom tab carries the Petrin Glow', /155,\s*109,\s*255/.test(tabGlow), tabGlow);
 
   // The two new activities render every shared word, in order — the same
   // derived invariant the numbers tab uses, so adding a word stays green while

@@ -34,6 +34,8 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   const B = JSON.parse(boot);
   check('tier 1 (default): 2 slots + 2 pieces', B.slots === 2 && B.pieces === 2, boot);
   check('tier selector: 3 buttons, tier 1 active', B.tierBtns === 3 && B.activeTier === '1', boot);
+  const tierGlow = await h.evalv(`(() => { const el = document.querySelector('#shapesTier button.active'); return el ? getComputedStyle(el).boxShadow : ''; })()`);
+  check('V6.2: the active tier button carries the Petrin Glow', /155,\s*109,\s*255/.test(tierGlow), tierGlow);
 
   // Switch to tier 2: 3 slots + 3 pieces
   await h.evalv(`document.querySelector('#shapesTier button[data-tier="2"]').click()`);
@@ -67,6 +69,8 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   await h.evalv(`(function(){ const p = document.querySelector('#shapesStage .piece'); p.dispatchEvent(new KeyboardEvent('keydown', {key:'Enter', bubbles:true})); return true; })()`);
   const selected = await h.evalv(`document.querySelector('#shapesStage .piece.kb-selected') !== null`);
   check('Enter on piece selects it (kb-selected class)', selected === true);
+  const kbGlow = await h.evalv(`(() => { const el = document.querySelector('#shapesStage .piece.kb-selected'); return el ? getComputedStyle(el).boxShadow : ''; })()`);
+  check('V6.2: the keyboard-selected piece carries the Petrin Glow', /155,\s*109,\s*255/.test(kbGlow), kbGlow);
 
   await h.evalv(`(function(){ const s = document.querySelector('#shapesStage .slot[data-type="' + document.querySelector('#shapesStage .piece.kb-selected').dataset.type + '"]:not([data-filled])'); s.dispatchEvent(new KeyboardEvent('keydown', {key:'Enter', bubbles:true})); return true; })()`);
   const placed = await h.evalv(`document.querySelector('#shapesStage .piece[data-done="1"]') !== null`);

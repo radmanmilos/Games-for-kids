@@ -32,7 +32,8 @@
   .sort-tray{display:flex;flex-wrap:wrap;gap:2.4vmin;justify-content:center;align-items:center;min-height:16vmin;width:100%;padding:1.2vmin;border-radius:20px;background:rgba(74,63,107,.05);}
   .sort-item{width:15vmin;height:15vmin;border:none;border-radius:50%;background:#fff;box-shadow:0 1vmin 0 rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;cursor:grab;transition:transform .18s ease, box-shadow .12s ease;touch-action:none;user-select:none;-webkit-user-select:none}
   .sort-item:active{cursor:grabbing;}
-  .sort-item.sort-selected{box-shadow:0 0 0 .8vmin rgba(103,201,113,.6), 0 1vmin 0 rgba(0,0,0,.12);transform:translateY(-1vmin);}
+  /* V6.2: selected object carries the Petrin Glow on top of its semantic green ring. */
+  .sort-item.sort-selected{box-shadow:var(--ps-glow), 0 0 0 .8vmin rgba(103,201,113,.6), 0 1vmin 0 rgba(0,0,0,.12);transform:translateY(-1vmin);}
   .sort-item.sort-dragging{transition:none;z-index:50;box-shadow:0 2vmin 2vmin rgba(0,0,0,.25);}
   .sort-over{border-color:var(--green)!important;background:#f1fff1;}
   .sort-good{animation:sort-pop .4s ease;border-color:var(--green)!important;}

@@ -191,8 +191,9 @@
   #candyHintBtn:active{ transform:translateY(calc(-50% + 3px)) scale(.9); box-shadow:0 .4vmin 0 rgba(0,0,0,.18); }
   .candy-grid .candy.hint{ animation:hintGlow .6s ease-in-out 3; z-index:12; }
   @keyframes hintGlow{
-    0%,100%{ box-shadow:0 0 0 0 rgba(255,210,63,0); transform:scale(1); }
-    50%{ box-shadow:0 0 2.4vmin 1.2vmin rgba(255,210,63,.9); transform:scale(1.15); }
+    /* V6.2: the pulse animates box-shadow, so the Petrin Glow lives in every stop. */
+    0%,100%{ box-shadow:var(--ps-glow), 0 0 0 0 rgba(255,210,63,0); transform:scale(1); }
+    50%{ box-shadow:var(--ps-glow), 0 0 2.4vmin 1.2vmin rgba(255,210,63,.9); transform:scale(1.15); }
   }
   #levelUpMsg{
     position:absolute; inset:0; z-index:50; display:none;

@@ -27,15 +27,41 @@ button:focus, .hub-btn:focus, .back-btn:focus, .kitty-control:focus { outline: 4
   }
 }
 
-/* Petrin Glow — one reusable focus/attention treatment (Visual/UX plan V6.1, spec §24).
+/* Petrin Glow — one reusable focus/attention treatment (Visual/UX plan V6.1/V6.2, spec §24).
    Subtle, brief, never continuous; works on light and world surfaces; never replaces a
    semantic green/yellow. Apply transiently to the current card / expected placement /
-   selected object / active control / hint target / keyboard focus — never to errors. */
-.ps-focus-glow {
-  box-shadow:
-    0 0 0 3px rgb(155 109 255 / 0.16),
-    0 8px 22px rgb(74 63 107 / 0.12);
+   selected object / active control / hint target / keyboard focus — never to errors.
+   One definition (--ps-glow); the .ps-focus-glow class and every V6.2 application below
+   consume it, so the contract can never drift between the class and the applications. */
+:root {
+  --ps-glow: 0 0 0 3px rgb(155 109 255 / 0.16), 0 8px 22px rgb(74 63 107 / 0.12);
 }
+.ps-focus-glow { box-shadow: var(--ps-glow); }
+
+/* V6.2 — the six attention states carry the glow (spec §5.3). This rule only ever marks a
+   state: no error/success class appears in it, and it is a box-shadow, never an animation
+   (it does not pulse). The yellow outline stays the focus ring — the glow is added to it,
+   never a replacement. Game states whose own rule already sets a box-shadow are merged in
+   that page instead (sorting/.sort-selected, spatial/.spatial-hint, animals/.recog-hint,
+   classroom/.class-tab.active, piano mode toggles), or in their keyframes where the pulse
+   animates box-shadow (shapes hintPulse, matching_game hintGlow). */
+.cmp-answer.cmp-hint,
+.phonics-choice.phonics-hint,
+.sort-basket.sort-hint,
+.candy-grid .candy.hint,
+.slot.hint,
+.seq-slot.seq-over,
+.sort-basket.sort-over,
+.piece.kb-selected,
+.card.flipped:not(.matched),
+.mode-btn.active,
+.recog-toggle.active,
+#shapesTier button.active,
+.coloring-mode-toggle.free { box-shadow: var(--ps-glow); }
+/* Focus (the sixth state). Keyboard focus must win over a control's own resting box-shadow
+   (pages load after this file), so the ring is the one place the treatment asserts itself;
+   it companions the yellow outline, which is untouched. */
+:focus-visible { box-shadow: var(--ps-glow) !important; }
 
 /* Shared feedback animations */
 @keyframes ps-pop {
@@ -46,7 +72,7 @@ button:focus, .hub-btn:focus, .back-btn:focus, .kitty-control:focus { outline: 4
 .ps-pop { animation: ps-pop 0.3s ease; }
 
 @keyframes ps-hint {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 210, 63, 0); }
-  50% { box-shadow: 0 0 0 8px rgba(255, 210, 63, 0.6); }
+  0%, 100% { box-shadow: var(--ps-glow), 0 0 0 0 rgba(255, 210, 63, 0); }
+  50% { box-shadow: var(--ps-glow), 0 0 0 8px rgba(255, 210, 63, 0.6); }
 }
-.ps-hint { animation: ps-hint 0.8s ease-in-out 2; }
+.ps-hint { animation: ps-hint 0.8s ease-in-out 2; box-shadow: var(--ps-glow); }

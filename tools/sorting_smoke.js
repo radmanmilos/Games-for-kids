@@ -81,6 +81,8 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   await h.evalv(`document.querySelector('#sort-tray .sort-item[data-key="${item0.key}"]').click()`);
   const selected = (await st()).selected === item0.key;
   check('tapping an object selects it', selected === true, String(selected));
+  const selGlow = await h.evalv(`(() => { const el = document.querySelector('.sort-item.sort-selected'); return el ? getComputedStyle(el).boxShadow : ''; })()`);
+  check('V6.2: the selected object carries the Petrin Glow', /155,\s*109,\s*255/.test(selGlow), selGlow);
   await h.evalv(`document.getElementById('${wrongBin.id}').click()`);
   const afterWrong = await trayCount();
   const wrongState = await st();
@@ -93,6 +95,8 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   await h.evalv(`document.getElementById('${wrongBin.id}').click()`);
   const hintShown = await h.evalv(`!!document.querySelector('.sort-basket.sort-hint')`);
   check('after two misses the correct basket is hinted', hintShown === true, String(hintShown));
+  const hintGlow = await h.evalv(`(() => { const el = document.querySelector('.sort-basket.sort-hint'); return el ? getComputedStyle(el).boxShadow : ''; })()`);
+  check('V6.2: the hinted basket carries the Petrin Glow', /155,\s*109,\s*255/.test(hintGlow), hintGlow);
 
   // ---- correct drop: the object moves into the basket ------------------------
   await h.evalv(`window.__sorting.goToRound(0)`);

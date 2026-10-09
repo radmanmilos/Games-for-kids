@@ -2,15 +2,18 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "bae1bfb22ce492e350e9b3e78f951de85f699415",
+  "commitSha": "bad1bcb64ec4ed4e5b5eb868485792bd7ceb4e00",
   "browser": {
     "product": "Chrome/155.0.8059.39",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-09T13:49:30.308Z",
+  "generatedAt": "2026-10-09T14:53:58.871Z",
   "pageSet": [
-    "sequencing"
+    "classroom",
+    "rhythm",
+    "shapes",
+    "piano"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,40 +43,148 @@
   },
   "screenshots": [
     {
-      "file": "sequencing_phone-portrait.png",
-      "page": "sequencing",
+      "file": "classroom_phone-portrait.png",
+      "page": "classroom",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 16792
+      "bytes": 94656
     },
     {
-      "file": "sequencing_phone-landscape.png",
-      "page": "sequencing",
+      "file": "classroom_phone-landscape.png",
+      "page": "classroom",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 29404
+      "bytes": 77582
     },
     {
-      "file": "sequencing_tablet-portrait.png",
-      "page": "sequencing",
+      "file": "classroom_tablet-portrait.png",
+      "page": "classroom",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 36585
+      "bytes": 250077
     },
     {
-      "file": "sequencing_tablet-landscape.png",
-      "page": "sequencing",
+      "file": "classroom_tablet-landscape.png",
+      "page": "classroom",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 35712
+      "bytes": 207077
+    },
+    {
+      "file": "rhythm_phone-portrait.png",
+      "page": "rhythm",
+      "size": "phone-portrait",
+      "state": null,
+      "width": 390,
+      "height": 844,
+      "bytes": 58345
+    },
+    {
+      "file": "rhythm_phone-landscape.png",
+      "page": "rhythm",
+      "size": "phone-landscape",
+      "state": null,
+      "width": 844,
+      "height": 390,
+      "bytes": 49036
+    },
+    {
+      "file": "rhythm_tablet-portrait.png",
+      "page": "rhythm",
+      "size": "tablet-portrait",
+      "state": null,
+      "width": 820,
+      "height": 1180,
+      "bytes": 97203
+    },
+    {
+      "file": "rhythm_tablet-landscape.png",
+      "page": "rhythm",
+      "size": "tablet-landscape",
+      "state": null,
+      "width": 1180,
+      "height": 820,
+      "bytes": 97648
+    },
+    {
+      "file": "shapes_phone-portrait.png",
+      "page": "shapes",
+      "size": "phone-portrait",
+      "state": null,
+      "width": 390,
+      "height": 844,
+      "bytes": 15778
+    },
+    {
+      "file": "shapes_phone-landscape.png",
+      "page": "shapes",
+      "size": "phone-landscape",
+      "state": null,
+      "width": 844,
+      "height": 390,
+      "bytes": 15030
+    },
+    {
+      "file": "shapes_tablet-portrait.png",
+      "page": "shapes",
+      "size": "tablet-portrait",
+      "state": null,
+      "width": 820,
+      "height": 1180,
+      "bytes": 26854
+    },
+    {
+      "file": "shapes_tablet-landscape.png",
+      "page": "shapes",
+      "size": "tablet-landscape",
+      "state": null,
+      "width": 1180,
+      "height": 820,
+      "bytes": 25848
+    },
+    {
+      "file": "piano_phone-portrait.png",
+      "page": "piano",
+      "size": "phone-portrait",
+      "state": null,
+      "width": 390,
+      "height": 844,
+      "bytes": 20697
+    },
+    {
+      "file": "piano_phone-landscape.png",
+      "page": "piano",
+      "size": "phone-landscape",
+      "state": null,
+      "width": 844,
+      "height": 390,
+      "bytes": 20059
+    },
+    {
+      "file": "piano_tablet-portrait.png",
+      "page": "piano",
+      "size": "tablet-portrait",
+      "state": null,
+      "width": 820,
+      "height": 1180,
+      "bytes": 42312
+    },
+    {
+      "file": "piano_tablet-landscape.png",
+      "page": "piano",
+      "size": "tablet-landscape",
+      "state": null,
+      "width": 1180,
+      "height": 820,
+      "bytes": 41682
     }
   ]
 }

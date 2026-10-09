@@ -36,6 +36,8 @@ const STUB = `window.__rhythmSounds=0;window.audioBuses.playTone=function(){wind
   const visible = await h.evalv(`document.getElementById('rhythm-prompt').textContent==='Сад ти понови!' &&
     !document.querySelector('[data-score],#score,[data-timer],#timer')`);
   check('Cyrillic repeat prompt with no score or timer', visible === true);
+  const modeGlow = await h.evalv(`(() => { const el = document.querySelector('.mode-btn.active'); return el ? getComputedStyle(el).boxShadow : ''; })()`);
+  check('V6.2: the active rhythm mode button carries the Petrin Glow', /155,\s*109,\s*255/.test(modeGlow), modeGlow);
 
   const st0 = await state();
   check('first melody length is 2 (the slowest start)', st0.length === 2 && st0.pattern.length === 2, JSON.stringify(st0));

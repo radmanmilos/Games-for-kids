@@ -39,6 +39,8 @@ const LIT_IDX = `Array.from(document.querySelectorAll('.piano-key')).indexOf(doc
   })`);
   const freej = JSON.parse(free);
   check('free mode default: 8 keys + Свирај active + song hidden', freej.keys === 8 && freej.freeOn === true && freej.songHidden === true, free);
+  const pianoGlow = await h.evalv(`getComputedStyle(document.getElementById('modeFree')).boxShadow`);
+  check('V6.2: the active piano mode button carries the Petrin Glow (id rule merged)', /155,\s*109,\s*255/.test(pianoGlow), pianoGlow);
 
   await h.evalv(CLICK('.piano-key:nth-child(1)'));
   const popped = await h.evalv(`!!document.querySelector('.piano-key.hit')`);

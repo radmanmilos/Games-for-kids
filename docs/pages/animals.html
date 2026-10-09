@@ -166,7 +166,8 @@
     animation:recogShake .35s ease;
   }
   .recog-choice.recog-hint{
-    box-shadow:0 0 0 .8vmin var(--yellow),0 1.5vmin 0 rgba(0,0,0,.12);
+    /* V6.2: hint target carries the Petrin Glow on top of its semantic yellow ring. */
+    box-shadow:var(--ps-glow),0 0 0 .8vmin var(--yellow),0 1.5vmin 0 rgba(0,0,0,.12);
     animation:recogPulse .6s ease-in-out infinite alternate;
   }
   .recog-choice.recog-dim{ opacity:.35; }

@@ -147,7 +147,8 @@
   .class-tab:active{ transform:scale(.94) translateY(2px); }
   .class-tab.active{
     background:var(--plum); color:#fff;
-    box-shadow:0 .6vmin 0 rgba(0,0,0,.2);
+    /* V6.2: active control carries the Petrin Glow on top of its resting depth. */
+    box-shadow:var(--ps-glow), 0 .6vmin 0 rgba(0,0,0,.2);
   }
   .class-tab .tab-emoji{ font-size:1.1em; }
 

@@ -186,6 +186,45 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
     .filter(f => !fs.readFileSync(path.join(pagesDir, f), 'utf8').includes('shared/accessibility.css'));
   check('V6.1: every child page links the shared accessibility.css', noA11y.length === 0, noA11y.join(','));
 
+  // V6.2 (spec §5.3/§24): the glow is APPLIED to the six attention states. Static wiring:
+  // one source of truth (--ps-glow), every category has a selector, the treatment is a
+  // box-shadow and never an animation, no error/success state can carry it, and each page
+  // whose state rule already sets a box-shadow merges --ps-glow — otherwise the page rule
+  // (loaded after this file) wins the cascade and the glow silently renders nowhere.
+  check('V6.2: --ps-glow is the single source and .ps-focus-glow consumes it',
+    /:root\s*\{[^}]*--ps-glow:\s*0 0 0 3px rgb\(155 109 255/.test(a11yCss) &&
+    /\.ps-focus-glow\s*\{\s*box-shadow:\s*var\(--ps-glow\)/.test(a11yCss), 'glow not sourced from --ps-glow');
+  const glowBlock = a11yCss
+    .slice(a11yCss.indexOf('/* V6.2'), a11yCss.indexOf('/* Shared feedback animations */'))
+    .replace(/\/\*[\s\S]*?\*\//g, '');
+  check('V6.2: all six attention states carry the glow (focus/current card/expected/selected/active/hint)',
+    [':focus-visible', '.card.flipped:not(.matched)', '.seq-slot.seq-over', '.sort-basket.sort-over',
+     '.piece.kb-selected', '.class-tab.active', '.mode-btn.active', '.recog-toggle.active',
+     '#shapesTier button.active', '.coloring-mode-toggle.free', '.cmp-answer.cmp-hint',
+     '.phonics-choice.phonics-hint', '.sort-basket.sort-hint', '.candy-grid .candy.hint',
+     '.slot.hint'].every(s => a11yCss.includes(s)), 'a state selector is missing');
+  check('V6.2: the glow never touches an error/success state and is never animated',
+    !/\b(wrong|error|miss|correct|good|hit)\b/i.test(glowBlock) && !/animation\s*:/.test(glowBlock),
+    'glow leaked into a non-state or animates');
+  const GLOW_MERGES = {
+    'sorting.html': ['.sort-item.sort-selected'],
+    'spatial.html': ['.spatial-choice.spatial-hint'],
+    'animals.html': ['.recog-choice.recog-hint'],
+    'classroom.html': ['.class-tab.active'],
+    'piano.html': ['.mode-btn.on', '.song-chip.on', '#modeFree.on'],
+    'shapes.html': ['@keyframes hintPulse'],
+    'matching_game.html': ['@keyframes hintGlow'],
+  };
+  const noMerge = Object.entries(GLOW_MERGES).filter(([f, sels]) => {
+    const src = fs.readFileSync(path.join(pagesDir, f), 'utf8');
+    return sels.some(sel => {
+      const i = src.indexOf(sel);
+      return i === -1 || !src.slice(i, i + 400).includes('var(--ps-glow)');
+    });
+  });
+  check('V6.2: every page whose state rule owns a box-shadow merges --ps-glow (cascade)',
+    noMerge.length === 0, noMerge.map(x => x[0]).join(','));
+
   // Regression guard (task 105): on a short landscape viewport the 24vh grid
   // margin + 2 columns put the last row below the fold, so the racing3d button
   // was only reachable after navigating into and back out of a game.
