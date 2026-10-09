@@ -171,6 +171,21 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
     !fs.readFileSync(path.join(pagesDir, p + '.html'), 'utf8').includes('styles/learning-stage.css'));
   check('V5.1: every learning page links the shared learning-stage.css', notLinked.length === 0, notLinked.join(','));
 
+  // V6.1 (spec §24): the Petrin Glow is the ONE reusable focus/attention treatment —
+  // defined once in the shared accessibility.css as a static box-shadow contract
+  // (subtle, never a semantic colour). V6.2 applies it; this pins that it exists.
+  const a11yCss = fs.readFileSync(path.join(__dirname, '..', 'game', 'shared', 'accessibility.css'), 'utf8');
+  check('V6.1: accessibility.css defines .ps-focus-glow (the §24 reusable treatment)',
+    a11yCss.includes('.ps-focus-glow') &&
+    /0 0 0 3px rgb\(155 109 255/.test(a11yCss) &&
+    /0 8px 22px rgb\(74 63 107/.test(a11yCss), 'glow contract missing');
+  // The glow + reduced-motion live in the shared base stack, so every child page must
+  // link accessibility.css — a malformed/missing link silently drops both (task 221
+  // found exactly that on sequencing.html).
+  const noA11y = fs.readdirSync(pagesDir).filter(f => f.endsWith('.html'))
+    .filter(f => !fs.readFileSync(path.join(pagesDir, f), 'utf8').includes('shared/accessibility.css'));
+  check('V6.1: every child page links the shared accessibility.css', noA11y.length === 0, noA11y.join(','));
+
   // Regression guard (task 105): on a short landscape viewport the 24vh grid
   // margin + 2 columns put the last row below the fold, so the racing3d button
   // was only reachable after navigating into and back out of a game.

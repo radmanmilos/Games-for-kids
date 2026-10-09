@@ -135,7 +135,7 @@ Ordered by the spec's own priority matrix (§55) and Appendix E. Each item is ta
 
 | ID | Work | Verdict |
 |---|---|---|
-| **V6.1** | One reusable focus treatment. Spec's reference contract: `box-shadow: 0 0 0 3px rgb(155 109 255 / .16), 0 8px 22px rgb(74 63 107 / .12)`. | **BUILD** — does not exist. |
+| **V6.1** | One reusable focus treatment. Spec's reference contract: `box-shadow: 0 0 0 3px rgb(155 109 255 / .16), 0 8px 22px rgb(74 63 107 / .12)`. | **DONE** (2026-10-09, task 222) — `.ps-focus-glow` added once to the shared `game/shared/accessibility.css` (global, zero page edits), exact §24 contract, static (no reduced-motion variant needed). Not applied yet — that is V6.2. Guards: `hub_smoke` pins the class + the exact shadows and that every child page links `accessibility.css` (negative-tested; would have caught the task-221 sequencing link bug). `check_fast` 7/7, `hub_smoke` 17→19. |
 | **V6.2** | Apply to: current card, expected placement, selected object, active control, hint target, focus. Never to errors; never continuous; never a replacement for semantic green/yellow. | **BUILD** |
 
 ### Phase 7 — Tactile system (P1, greenfield)

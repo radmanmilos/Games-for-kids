@@ -27,6 +27,16 @@ button:focus, .hub-btn:focus, .back-btn:focus, .kitty-control:focus { outline: 4
   }
 }
 
+/* Petrin Glow — one reusable focus/attention treatment (Visual/UX plan V6.1, spec §24).
+   Subtle, brief, never continuous; works on light and world surfaces; never replaces a
+   semantic green/yellow. Apply transiently to the current card / expected placement /
+   selected object / active control / hint target / keyboard focus — never to errors. */
+.ps-focus-glow {
+  box-shadow:
+    0 0 0 3px rgb(155 109 255 / 0.16),
+    0 8px 22px rgb(74 63 107 / 0.12);
+}
+
 /* Shared feedback animations */
 @keyframes ps-pop {
   0% { transform: scale(1); }
