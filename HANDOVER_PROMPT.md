@@ -6,11 +6,13 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — Task 218: terminal plan-status line — 2026-10-09
+## Current session — Tasks 217–218: V3.1 audit + plan status line — 2026-10-09
+
+**Task 218 CLOSED (2026-10-09): terminal plan-status line DONE** — `node tools/plan_progress.js` (new) parses `VISUAL_UX_IMPLEMENTATION_PLAN.md`'s execution table and prints `[████████░░░░░░░░░░░░░░░░] 16/38 (42%) · current: V3.2 (Phase 3 — Short landscape (P0/P1)) — Fix every failure …`. Derived from the plan file, so marking a row DONE moves the bar — no second status file. It immediately exposed **6 stale plan rows** (V0.1/V0.2/V1.1/V1.2/V2.1/V2.2/V2.3 still `BUILD` though task 216 closed them) — repaired, count now honest. Constraint rows excluded; ANSI colour on TTY; `tools/README` Files+Commands entries; `check_fast` 7/7.
 
 **Task 217 CLOSED (2026-10-09): V3.1 844×390 short-landscape audit DONE** — `node tools/short_landscape_audit.js` → `resources/General_reviews/SHORT_LANDSCAPE_AUDIT.md`, 25 surfaces · 9 OK · 13 WARN · **4 FAIL** (the V3.2 worklist): `sorting` tray item 23px below fold, `matching_game` candy bottom row below fold, `dino` back covered by the boot hero-picker, `space` score∩worlds 254px² (long world name only). Determinism fixes: seeded `Math.random` (screenshot.js pattern) + `getAnimations().cancel()` instead of `pause()` — both were run-to-run verdict flip-flops. WARN adjudications are in the plan's V3.1 row. Exits 1 while any FAIL remains — deliberately NOT in `check_fast`/CI.
 
-**Standing approval this session: commit + push, check CI after every push (user-granted).** Working the visual/UX plan one task at a time: **task 218 = this status-line tool**, then **task 219 = V3.2** (fix the 4 FAILs in §11 order: remove decoration → collapse secondary text → move secondary controls → resize stage → only then reduce typography).
+**Standing approval this session: commit + push, check CI after every push (user-granted).** Next: **task 219 = V3.2** (fix the 4 FAILs in §11 order: remove decoration → collapse secondary text → move secondary controls → resize stage → only then reduce typography; worklist also has the adjudicated `racing3d` picker fit). Run `node tools/plan_progress.js` after each task for the status line.
 
 ## Earlier — Task 216: V2.1–V2.11 ALL DONE — 2026-10-08
 

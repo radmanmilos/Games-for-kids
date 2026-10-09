@@ -81,23 +81,23 @@ Ordered by the spec's own priority matrix (§55) and Appendix E. Each item is ta
 
 | ID | Work | Verdict |
 |---|---|---|
-| **V0.1** | Deterministic gameplay-state capture: stable state ids, seeded state, capture helper, per-game state map, `<game>__<viewport>__<state>.png` naming, state metadata. | **BUILD** — review folder exists, state support does not. |
-| **V0.2** | Wire state capture into `tools/screenshot.js --review=<name>` and the `Screenshot_Review` TOC/provenance. | **BUILD** |
+| **V0.1** | Deterministic gameplay-state capture: stable state ids, seeded state, capture helper, per-game state map, `<game>__<viewport>__<state>.png` naming, state metadata. | **DONE** (2026-10-08, task 216 — `tools/visual-states.json` + state support, commit `af80862`) |
+| **V0.2** | Wire state capture into `tools/screenshot.js --review=<name>` and the `Screenshot_Review` TOC/provenance. | **DONE** (2026-10-08, task 216 — `--state=<id>`, commit `af80862`) |
 
 ### Phase 1 — P0 blockers
 
 | ID | Work | Verdict |
 |---|---|---|
-| **V1.1** | **Animal Puzzle `[object Object]`.** Root cause confirmed: `game/games/animal_puzzle.js:340` initialises `rows`/`columns` to `GRIDS[0]` — an **object** `{rows:1,cols:2}`. `setGrid()` (line 344) converts them to numbers, but line **598** calls `updateLabels()` with **no preceding `setGrid()`**, so line 353 renders `[object Object]×[object Object]`. Fix: initialise to numbers (`GRIDS[0].rows`, `GRIDS[0].cols`) **and** make `setGrid()` run before any `updateLabels()`. | **BUILD** — smallest P0, root cause pinned. |
-| **V1.2** | Header rule for Animal Puzzle phone portrait: `[back] Слагалица / 1. сцена` or `[back] Слагалица 1/5`; no grid internals unless child-valuable. | **BUILD** (follows V1.1) |
+| **V1.1** | **Animal Puzzle `[object Object]`.** Root cause confirmed: `game/games/animal_puzzle.js:340` initialises `rows`/`columns` to `GRIDS[0]` — an **object** `{rows:1,cols:2}`. `setGrid()` (line 344) converts them to numbers, but line **598** calls `updateLabels()` with **no preceding `setGrid()`**, so line 353 renders `[object Object]×[object Object]`. Fix: initialise to numbers (`GRIDS[0].rows`, `GRIDS[0].cols`) **and** make `setGrid()` run before any `updateLabels()`. | **DONE** (2026-10-08, task 216, commit `9023b6f`) |
+| **V1.2** | Header rule for Animal Puzzle phone portrait: `[back] Слагалица / 1. сцена` or `[back] Слагалица 1/5`; no grid internals unless child-valuable. | **DONE** (2026-10-08, task 216, commit `6753226`) |
 
 ### Phase 2 — Shared shell (P0, greenfield)
 
 | ID | Work | Verdict |
 |---|---|---|
-| **V2.1** | Create `game/styles/shell.css` with the spec's §8.1 canonical header contract: `.ps-shell`, `.ps-header`, `.ps-header-left/-center/-right`, `.ps-title`, `.ps-subtitle`, `.ps-status`. | **BUILD** — no shared shell CSS exists. |
-| **V2.2** | Safe-area foundation: `--ps-safe-{top,right,bottom,left}` from `env(safe-area-inset-*)`, composed spacing (spec §9). One system only. | **BUILD** |
-| **V2.3** | Migrate Animal Puzzle → shared header. | **BUILD** |
+| **V2.1** | Create `game/styles/shell.css` with the spec's §8.1 canonical header contract: `.ps-shell`, `.ps-header`, `.ps-header-left/-center/-right`, `.ps-title`, `.ps-subtitle`, `.ps-status`. | **DONE** (2026-10-08, task 216) |
+| **V2.2** | Safe-area foundation: `--ps-safe-{top,right,bottom,left}` from `env(safe-area-inset-*)`, composed spacing (spec §9). One system only. | **DONE** (2026-10-08, task 216) |
+| **V2.3** | Migrate Animal Puzzle → shared header. | **DONE** (2026-10-08, task 216 — `shell.css` linked, header/title rule landed with V1.2) |
 | **V2.4** | Migrate Classroom → shared header. | **DONE** (2026-10-08) — title in `.ps-header` flow row with 16vmin corner zones, hub is the pinned-header scroller; smoke §31 overlap check added. |
 | **V2.5** | Migrate Coloring → shared header. | **DONE** (2026-10-08) — name/status own the `.ps-header` centre; mode + palette + clear in an in-flow `.coloring-tools` row below the band; 5 §32 geometry checks in `coloring_smoke` (23→28). |
 | **V2.6** | Migrate Piano → shared header. | **DONE** (2026-10-08) — title in `.ps-header` flow row, `max(12vmin, 56px)` band (back button's 56px a11y floor beat 12vmin and tucked the portrait primary button 294px² under its corner); 5 §32 geometry checks in `piano_smoke` (25→30). |
