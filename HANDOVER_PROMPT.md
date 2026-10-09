@@ -6,7 +6,13 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — Task 216: V2.1–V2.11 ALL DONE — 2026-10-08
+## Current session — Task 218: terminal plan-status line — 2026-10-09
+
+**Task 217 CLOSED (2026-10-09): V3.1 844×390 short-landscape audit DONE** — `node tools/short_landscape_audit.js` → `resources/General_reviews/SHORT_LANDSCAPE_AUDIT.md`, 25 surfaces · 9 OK · 13 WARN · **4 FAIL** (the V3.2 worklist): `sorting` tray item 23px below fold, `matching_game` candy bottom row below fold, `dino` back covered by the boot hero-picker, `space` score∩worlds 254px² (long world name only). Determinism fixes: seeded `Math.random` (screenshot.js pattern) + `getAnimations().cancel()` instead of `pause()` — both were run-to-run verdict flip-flops. WARN adjudications are in the plan's V3.1 row. Exits 1 while any FAIL remains — deliberately NOT in `check_fast`/CI.
+
+**Standing approval this session: commit + push, check CI after every push (user-granted).** Working the visual/UX plan one task at a time: **task 218 = this status-line tool**, then **task 219 = V3.2** (fix the 4 FAILs in §11 order: remove decoration → collapse secondary text → move secondary controls → resize stage → only then reduce typography).
+
+## Earlier — Task 216: V2.1–V2.11 ALL DONE — 2026-10-08
 
 **Session rule (2026-10-08, user decision): standing approval for commit + push for the rest of this session — session-scoped and does NOT carry into the next session (the normal "never push without explicit approval" rule resumes next session).**
 

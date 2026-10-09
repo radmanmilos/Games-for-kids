@@ -17,7 +17,9 @@ Important: The AI assistant and any contributor must read this file first when s
 
 ## Active tasks (NEW / IN PROGRESS)
 
-- 216. IN PROGRESS — V1.1 + V1.2 DONE; V0.1 + V0.2 DONE; V2.1–V2.11 ALL DONE (V2.5–V2.10 pushed/CI-green; **V2.11 VERIFY sweep clean — no remaining collisions**); task 216 complete. (Updated 2026-10-08, Ponytail Lazy Dev.)
+- 217. DONE — Visual/UX plan Phase 3 **V3.1 short-landscape (844×390) audit** of all 25 surfaces against the spec §11 checklist. (Completed 2026-10-09, Ponytail Lazy Dev.)
+    - **DONE and pushed:** new `tools/short_landscape_audit.js` → `resources/General_reviews/SHORT_LANDSCAPE_AUDIT.md`. **Result 25 surfaces · 9 OK · 13 WARN · 4 FAIL** — `sorting` tray item 23px below fold, `matching_game` candy bottom row 16px below fold, `dino` back covered by the boot hero-picker, `space` `#adv-score`∩`#adv-worlds-btn` 254px² (long world name only — intermittent in real play). Determinism: seeded `Math.random` + `getAnimations().cancel()` (was `pause()`, which froze WAAPI at arbitrary progress and flipped verdicts run-to-run). WARN adjudications recorded in `VISUAL_UX_IMPLEMENTATION_PLAN.md` V3.1 row (header-budget WARNs → V4/V9/V12 advisory; stage-led titleless pages accepted; `animal_memory` scroll → V12; `parent` gate by design; `racing3d` picker WARN pulled into V3.2). Exits 1 while any FAIL remains — worklist only, not in `check_fast`/CI. **V3.2 (the fixes) is renumbered to task 219.**
+- 216. DONE — Visual/UX plan Phases 0–2 (V1.1, V1.2, V0.1, V0.2, V2.1–V2.11) all complete; task 216 closed. (Completed 2026-10-08, Ponytail Lazy Dev.)
     - **DONE and pushed:**
       - V1.1: Animal Puzzle `[object Object]` fix (commit `9023b6f`).
       - V1.2: Animal Puzzle header rule — title `Слагалица`, status `1/8`, phone-portrait stacking (commit `6753226`).

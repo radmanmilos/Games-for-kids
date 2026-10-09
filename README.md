@@ -4,7 +4,10 @@
 
 ---
 
-## Current status (2026-10-04)
+## Current status (2026-10-09)
+
+- **Task 216 DONE (2026-10-08):** the visual/UX plan's Phases 0–2 are complete — V1.1/V1.2 puzzle fixes, V0.1/V0.2 deterministic state capture, and V2.1–V2.11 (the shared `.ps-header` shell in `game/styles/shell.css` plus per-page migrations of Puzzle, Classroom, Coloring, Piano, Ocean, Space, Driving, Memory, and a VERIFY sweep of the remaining 16 pages) — all pushed with green CI (run 37801686226).
+- **Task 217 DONE (2026-10-09):** Phase 3 — V3.1, the 844×390 short-landscape audit — `node tools/short_landscape_audit.js` → `resources/General_reviews/SHORT_LANDSCAPE_AUDIT.md`, 4 FAILs on the V3.2 worklist (sorting tray, matching candy row, dino back-under-picker, space score∩worlds). Next: task 218 (terminal plan-status line), then task 219 = V3.2 fixes.
 
 - **Task 215 done:** CI runs only affected smoke legs on pushes/PRs, keeps full manual/weekly coverage, and skips release work safely when no smoke legs are needed.
 - **CI is green — for the first time in the repo's history.** Run **#41**: **29 jobs succeeded, 1 skipped** (`Extended`, manual/weekly by design), **0 failed**, including `Release QA`. `Release QA` had failed on *every* run since #31; issue **#3 is closed**. `gh` is installed and authed, so CI step logs are readable.
