@@ -9,6 +9,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧺</text></svg>">
 <link rel="stylesheet" href="../styles/viewport.css">
 <link rel="stylesheet" href="../styles/design-tokens.css">
+<link rel="stylesheet" href="../styles/learning-stage.css">
 <link rel="stylesheet" href="../shared/accessibility.css">
 <style>
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none;}
@@ -61,10 +62,10 @@
 <body>
 <div id="app">
   <button class="back-btn" id="sorting-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
-  <div id="sort-prompt">Разврстај!</div>
-  <div class="sort-baskets" id="sort-baskets"></div>
-  <div class="sort-tray" id="sort-tray"></div>
-  <div id="sort-feedback" aria-live="polite"></div>
+  <div id="sort-prompt" class="learn-instruction">Разврстај!</div>
+  <div class="sort-baskets learn-stage-mat" id="sort-baskets"></div>
+  <div class="sort-tray learn-answers" id="sort-tray"></div>
+  <div id="sort-feedback" class="learn-feedback" aria-live="polite"></div>
 </div>
 <script src="../data/serbian.js"></script>
 <script src="../shared/navigation.js"></script>
@@ -82,3 +83,5 @@
 <script src="../shared/main.js"></script>
 </body>
 </html>
+
+

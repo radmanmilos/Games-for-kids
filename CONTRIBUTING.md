@@ -62,7 +62,7 @@ Consequences for contributors:
 
 ## Task lifecycle
 
-- **Task 220 (Visual/UX V4.1 — Adventure HUD unification) is DONE (2026-10-09); task 219 (Visual/UX V3.2 — 4 short-landscape FAIL fixes, audit at 0 FAIL) is DONE (2026-10-09); task 218 (terminal plan-status line `tools/plan_progress.js`) is DONE (2026-10-09); task 217 (Visual/UX V3.1 — 844×390 short-landscape audit) is DONE (2026-10-09); task 216 (V0–V2) is DONE (2026-10-08).**
+- **Task 221 (Visual/UX V5.1 — learning-stage grammar) is DONE (2026-10-09); task 220 (Visual/UX V4.1 — Adventure HUD unification) is DONE (2026-10-09); task 219 (Visual/UX V3.2 — 4 short-landscape FAIL fixes, audit at 0 FAIL) is DONE (2026-10-09); task 218 (terminal plan-status line `tools/plan_progress.js`) is DONE (2026-10-09); task 217 (Visual/UX V3.1 — 844×390 short-landscape audit) is DONE (2026-10-09); task 216 (V0–V2) is DONE (2026-10-08).**
 
 - **Before starting any new task, check git/CI status** (`git status --short`, `gh run list`). If anything is failing or the tree is dirty in a way you did not create, report it and propose fixing it first — never start a new task on a red pipeline or a stale tree (task 214).
 - Mark the task **IN PROGRESS** in `PROJECT_TASKS.md` when starting and **DONE** with a dated note (who, what, why) when finished.

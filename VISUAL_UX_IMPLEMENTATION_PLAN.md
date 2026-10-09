@@ -129,7 +129,7 @@ Ordered by the spec's own priority matrix (§55) and Appendix E. Each item is ta
 
 | ID | Work | Verdict |
 |---|---|---|
-| **V5.1** | Introduce the §23 learning-stage grammar: instruction zone / stage-play mat / answer-object zone / feedback layer. A layout grammar, **not** a skin; no forced rectangular container. | **BUILD** |
+| **V5.1** | Introduce the §23 learning-stage grammar: instruction zone / stage-play mat / answer-object zone / feedback layer. A layout grammar, **not** a skin; no forced rectangular container. | **DONE** (2026-10-09, task 221) — new `game/styles/learning-stage.css` names the four regions (`.learn-instruction`/`.learn-stage-mat`/.`learn-answers`/`.learn-feedback`) + opt-in `.learn-stage` container; pure hooks (overflow-safety only), no skin, no forced box. Linked from all 14 learning pages; region-tagged reference set = compare/phonics/sequencing/sorting/spatial (static zones); JS-injected-zone pages adopt next learning task. Fixed `sequencing.html`'s malformed `accessibility.css` link en route. Guards: `hub_smoke` static + per-page runtime region checks in the 5 smokes, negative-tested. `check_fast` 7/7, 15 learning smokes green. |
 
 ### Phase 6 — Petrin Glow (P1, greenfield)
 

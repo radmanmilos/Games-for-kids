@@ -105,5 +105,16 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   const root=path.join(__dirname,'..'); const idx=fs.readFileSync(path.join(root,'game','index.html'),'utf8');
   check('hub wired', idx.includes('data-go="game-sequencing"'));
   checkRouteWired('sequencing','game-sequencing','pages/sequencing.html',{back:'seq-back',start:'startSequencing',check});
+
+  // V5.1 (spec §23): learning-stage grammar regions tagged on sequencing.
+  const lsj = JSON.parse(await h.evalv(`JSON.stringify({
+    found: ['.learn-instruction','.learn-stage-mat','.learn-answers','.learn-feedback'].map(s => !!document.querySelector(s)),
+    visible: ['.learn-instruction','.learn-stage-mat'].every(s => { const el = document.querySelector(s); if (!el) return false; const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; }),
+    bogus: !!document.querySelector('.learn-does-not-exist'),
+    overflow: document.documentElement.scrollWidth <= innerWidth + 1
+  })`));
+  check('V5.1 grammar: all four §23 regions present on sequencing', lsj.found.every(Boolean), JSON.stringify(lsj));
+  check('V5.1 grammar: instruction + stage-mat render a real box; no h-overflow; non-vacuous', lsj.visible && lsj.overflow && lsj.bogus === false, JSON.stringify(lsj));
+
   await h.close(); const f=getFails(); console.log(f===0?'ALL PASS':'SOME FAIL ('+f+')'); process.exit(f?1:0);
 })().catch(e=>{console.error(e);process.exit(1);});

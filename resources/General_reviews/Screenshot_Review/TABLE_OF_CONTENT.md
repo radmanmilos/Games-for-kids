@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-09T12:32:06.667Z
+- Генерисано / Generated: 2026-10-09T13:49:30.308Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -84,10 +84,10 @@
 | `rhythm_phone-portrait.png` | Ритам | `/pages/rhythm.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
 | `rhythm_tablet-landscape.png` | Ритам | `/pages/rhythm.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
 | `rhythm_tablet-portrait.png` | Ритам | `/pages/rhythm.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `sequencing_phone-landscape.png` | Редослед | `/pages/sequencing.html` | 844×390 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `sequencing_phone-portrait.png` | Редослед | `/pages/sequencing.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `sequencing_tablet-landscape.png` | Редослед | `/pages/sequencing.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `sequencing_tablet-portrait.png` | Редослед | `/pages/sequencing.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
+| `sequencing_phone-landscape.png` | Редослед | `/pages/sequencing.html` | 844×390 | пејзаж | — | 09.10.2026. 15:49:30 | 221 |
+| `sequencing_phone-portrait.png` | Редослед | `/pages/sequencing.html` | 390×844 | портрет | — | 09.10.2026. 15:49:30 | 221 |
+| `sequencing_tablet-landscape.png` | Редослед | `/pages/sequencing.html` | 1180×820 | пејзаж | — | 09.10.2026. 15:49:30 | 221 |
+| `sequencing_tablet-portrait.png` | Редослед | `/pages/sequencing.html` | 820×1180 | портрет | — | 09.10.2026. 15:49:30 | 221 |
 | `shapes_phone-landscape.png` | Облици | `/pages/shapes.html` | 844×390 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
 | `shapes_phone-portrait.png` | Облици | `/pages/shapes.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
 | `shapes_tablet-landscape.png` | Облици | `/pages/shapes.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |

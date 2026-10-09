@@ -8,6 +8,7 @@
   <link rel="manifest" href="../manifest.json" />
   <link rel="stylesheet" href="../styles/viewport.css" />
   <link rel="stylesheet" href="../styles/design-tokens.css" />
+  <link rel="stylesheet" href="../styles/learning-stage.css">
   <link rel="stylesheet" href="../shared/accessibility.css" />
   <style>
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
@@ -71,13 +72,13 @@
 <body>
   <div id="app">
     <button class="back-btn" id="spatial-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
-    <div id="spatial-prompt">Где је лопта?</div>
-    <div id="spatial-scene"></div>
-    <div id="spatial-choices">
+    <div id="spatial-prompt" class="learn-instruction">Где је лопта?</div>
+    <div id="spatial-scene" class="learn-stage-mat"></div>
+    <div id="spatial-choices" class="learn-answers">
       <button class="spatial-choice" id="spatial-choice-a" aria-disabled="false"></button>
       <button class="spatial-choice" id="spatial-choice-b" aria-disabled="false"></button>
     </div>
-    <div id="spatial-feedback" aria-live="polite"></div>
+    <div id="spatial-feedback" class="learn-feedback" aria-live="polite"></div>
   </div>
   <script src="../data/serbian.js"></script>
   <script src="../shared/navigation.js"></script>
@@ -95,3 +96,5 @@
   <script src="../shared/main.js"></script>
 </body>
 </html>
+
+

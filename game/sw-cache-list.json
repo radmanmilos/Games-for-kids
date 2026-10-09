@@ -249,6 +249,7 @@
   "shared/utils.js",
   "shared/viewport.js",
   "styles/design-tokens.css",
+  "styles/learning-stage.css",
   "styles/shell.css",
   "styles/viewport.css",
   "sw-cache-list.json",

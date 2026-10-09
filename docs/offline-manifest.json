@@ -844,32 +844,32 @@
     "size": 577
   },
   "pages/animal_counting.html": {
-    "sha256": "8fea1cc72fdf8eef60e3813bbffbef1ad13a9a86a8db611c33d2113c4680fa24",
-    "size": 5622
+    "sha256": "1a36b6611178c0481d18baeb069dae8277fd31fe9dad9da4fc87401afdd6dbbe",
+    "size": 5685
   },
   "pages/animal_memory.html": {
-    "sha256": "01f8a747b14fa046507127d2bdf5113ce6f019dd25245e0bc3d98bdb58705fa2",
-    "size": 5863
+    "sha256": "79a832bf0a708afc96504411c47836759c7750fabf7bbec0c13762cc9768bec2",
+    "size": 5925
   },
   "pages/animal_puzzle.html": {
-    "sha256": "a86e2b322d53fe54b9381b6b15909d80d0d5a5a5d65b41299e85afee69bd1878",
-    "size": 5004
+    "sha256": "4741f7f6ea9da7b8408685c732ac76cf5eaa78075211fe7c189c79eaaa883542",
+    "size": 5066
   },
   "pages/animals.html": {
-    "sha256": "0dd9be7d05bd568a45caa081e84eaa782702840d57da2da3824e73a763f2f1db",
-    "size": 13289
+    "sha256": "7d66fc0bc1610a36fae2b99bbe5da664ca9fb2d97596cd33d55974463dd23f8c",
+    "size": 13351
   },
   "pages/classroom.html": {
-    "sha256": "f96284a67a9e8d05e14c15896844c5253b85a5ec166db7ec738652fa95c619eb",
-    "size": 18606
+    "sha256": "0d16d4175d5742ebd6fe9ea91c7658262d64959122801d6c14592dfd15705603",
+    "size": 18668
   },
   "pages/coloring.html": {
-    "sha256": "b88a8361c1899e64ef8213af1820f2494daefd632aaa84960441041452053054",
-    "size": 10246
+    "sha256": "ac02288fb8c33fa4b15a9e66fe153cced3603b868ba873e6efdf2d5364ab278d",
+    "size": 10308
   },
   "pages/compare.html": {
-    "sha256": "7d93f822fd58d05fba8adbcb3de3abc5c519310cbdb947fb65b90207a3319c20",
-    "size": 4845
+    "sha256": "e03b1a7e15a0de814fed87948c279ac54e503e1d8c63e8ad497492b4dcc0857b",
+    "size": 4992
   },
   "pages/dino.html": {
     "sha256": "c6867c03d60eb5df4026380666a27537be8462a7209dee1420c0b36590605051",
@@ -884,8 +884,8 @@
     "size": 8210
   },
   "pages/matching_game.html": {
-    "sha256": "1959c1ada83ebd9df4979d735271cda73ed500876d1b68d7756808e112bb9493",
-    "size": 14796
+    "sha256": "b414a2d75b399b53d8c5f73eecf43c7280ce2d71fe266680dbf59ad872064a3d",
+    "size": 14858
   },
   "pages/maze.html": {
     "sha256": "66c587e8cec22ba09396fa52691e1d89202d3a86fa245faf3236fa55a8b90c36",
@@ -900,8 +900,8 @@
     "size": 24866
   },
   "pages/phonics.html": {
-    "sha256": "70520834b2e439bfdcb46006afc61606003ee77aadef1ab9e4feecc3a6adca0a",
-    "size": 4771
+    "sha256": "46ec41d9afed44cd38188ffb1317cc61cb8a39019b8d12849771be619be25e1c",
+    "size": 4914
   },
   "pages/piano.html": {
     "sha256": "d08b5b0a206f0fce0c0ade13f818c49d6b134a807d5c177442b9e629f10b33af",
@@ -916,28 +916,28 @@
     "size": 6453
   },
   "pages/sequencing.html": {
-    "sha256": "ddbaecf400b10ed0d15cc149782207abaa95c9dcb0862e8b51e12f39033f2505",
-    "size": 3691
+    "sha256": "32e0d7c51211ce33aee0cf30581f8b67910179512a221f159acaef5723e33e7d",
+    "size": 3853
   },
   "pages/shapes.html": {
-    "sha256": "1847abe31febb09f37fe9d4f644e8ae1b11ba8d9acb2ba49a1250c54a9c5801c",
-    "size": 11757
+    "sha256": "6b9be3f9205cf8a8dde19577d272617e156919338db193ecdfb0b950e2f5a857",
+    "size": 11819
   },
   "pages/sorting.html": {
-    "sha256": "139f5152250f6cf0f3590fc653f731e6f72dab7672ab28dc521e9ae009e492ca",
-    "size": 5902
+    "sha256": "ee29a64be4d79cf52b1bf50afddca3bf6a4e7dbc9c18bb5baf8587a4f6c44dc5",
+    "size": 6043
   },
   "pages/space.html": {
     "sha256": "b1ca73d5311f77395275ed65152cf58a0e8bacc8408c206e5acd66d86b4d4a66",
     "size": 3203
   },
   "pages/spatial.html": {
-    "sha256": "3df9dc18e7509d63ab7b40eb14915b5447e576ded50a76f7aa764360b3d788f4",
-    "size": 6494
+    "sha256": "b2a552a3cbef1c211b22fb2e59b4109356e2033efaeaee82abdcbbca79bb584b",
+    "size": 6654
   },
   "pages/tracing.html": {
-    "sha256": "8f4178d38e2ebf8c0ccd7ee7b18068c8010428ef78a9d1b1605976261284b8d5",
-    "size": 11236
+    "sha256": "076cadcb3a2987fce078335b39e85b0a84f8638d8764bf70609d37dc41fe44ff",
+    "size": 11298
   },
   "shared/accessibility.css": {
     "sha256": "8822734489b536c885c376b77a352b7954ed536279effdfcd3738510e5e5f010",
@@ -995,6 +995,10 @@
     "sha256": "d0fa344bb121beba42fd538500f826dcdd93621c659a3e58abf15737f5096fe9",
     "size": 1150
   },
+  "styles/learning-stage.css": {
+    "sha256": "bec74ce468fbf7a91667735d5d477ec7fe6e8c0ad14e6835a5f78a0a0b63e416",
+    "size": 1748
+  },
   "styles/shell.css": {
     "sha256": "4e65a8b2ec6fc45fcc0ce79d9b18d48d669cc6fa1635e608f14713443ba92ef0",
     "size": 2276
@@ -1004,8 +1008,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "0aff3ee971b61bf39502a58b37c79fa748c4b65fd4f5bf832d41200a7e7c0c78",
-    "size": 8232
+    "sha256": "80df8f3af94fb0033672fc992f7e84e5a1f13fb8c139990954f237d20be3a63a",
+    "size": 8263
   },
   "sw.js": {
     "sha256": "cb988a394d0d5515fd0966cc745f2f78a6b3e32aac0e4d6a96548ad2f66917b1",

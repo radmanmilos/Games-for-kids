@@ -156,6 +156,21 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
     (html.match(/data-go="game-parent"/g) || []).length === 1, 'game-parent links=' +
     (html.match(/data-go="game-parent"/g) || []).length);
 
+  // V5.1 (spec §23): the shared learning-stage grammar is the ONE vocabulary for
+  // the learning family. Static wiring, so a re-layout cannot defeat it: the file
+  // defines the four regions + the opt-in container, and every learning page links
+  // it. (The tagged regions themselves are asserted per page in their own smokes.)
+  const lsCss = fs.readFileSync(path.join(__dirname, '..', 'game', 'styles', 'learning-stage.css'), 'utf8');
+  check('V5.1: learning-stage.css defines the §23 regions + container',
+    ['.learn-instruction', '.learn-stage-mat', '.learn-answers', '.learn-feedback', '.learn-stage']
+      .every(s => lsCss.includes(s)), 'missing a region');
+  const LEARNING_PAGES = ['animal_counting', 'animal_memory', 'animal_puzzle', 'animals', 'classroom',
+    'coloring', 'compare', 'matching_game', 'phonics', 'sequencing', 'shapes', 'sorting', 'spatial', 'tracing'];
+  const pagesDir = path.join(__dirname, '..', 'game', 'pages');
+  const notLinked = LEARNING_PAGES.filter(p =>
+    !fs.readFileSync(path.join(pagesDir, p + '.html'), 'utf8').includes('styles/learning-stage.css'));
+  check('V5.1: every learning page links the shared learning-stage.css', notLinked.length === 0, notLinked.join(','));
+
   // Regression guard (task 105): on a short landscape viewport the 24vh grid
   // margin + 2 columns put the last row below the fold, so the racing3d button
   // was only reachable after navigating into and back out of a game.

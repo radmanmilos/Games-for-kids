@@ -9,6 +9,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔤</text></svg>">
 <link rel="stylesheet" href="../styles/viewport.css">
 <link rel="stylesheet" href="../styles/design-tokens.css">
+<link rel="stylesheet" href="../styles/learning-stage.css">
 <link rel="stylesheet" href="../shared/accessibility.css">
 <style>
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none;}
@@ -45,9 +46,9 @@
   <div class="top-bar">
     <button class="repeat-btn" id="phonics-repeat" aria-label="Понови звук"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35A7.95 7.95 0 0 0 12 4V1L7 6l5 5V8a5.99 5.99 0 0 1 4.94 9.06l1.42 1.42A8 8 0 0 0 17.65 6.35zM11 18a6 6 0 0 1-4.94-9.06L5.64 7.52A8 8 0 0 0 12 20v3l5-5-5-5v3z"/></svg></button>
   </div>
-  <div id="phonics-letter">М</div>
-  <div id="phonics-objects"></div>
-  <div id="phonics-feedback" aria-live="polite"></div>
+      <div id="phonics-letter" class="learn-stage-mat">М</div>
+      <div id="phonics-objects" class="learn-answers"></div>
+      <div id="phonics-feedback" class="learn-feedback" aria-live="polite"></div>
 </div>
 <script src="../data/serbian.js"></script>
 <script src="../shared/navigation.js"></script>
@@ -65,3 +66,5 @@
 <script src="../shared/main.js"></script>
 </body>
 </html>
+
+

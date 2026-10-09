@@ -1,0 +1,44 @@
+/* Shared learning-stage grammar — Visual/UX plan V5.1 (spec section 23).
+   A light shared VOCABULARY for the learning family, not a skin and not a
+   forced rectangular container. It names the four regions every learning
+   activity already has, so later passes (skins, feedback, composition) can
+   target regions uniformly instead of inventing per-page class names:
+
+     .learn-stage       optional flexible container (opt-in; no box/width/border)
+     .learn-instruction the child-facing prompt / instruction
+     .learn-stage-mat   the play mat: the visual area the task happens on
+     .learn-answers     the child's tappable / draggable answer objects
+     .learn-feedback    correct/incorrect, hint, or celebration feedback layer
+
+   Adoption is ADDITIVE: a page keeps its own classes and look and simply tags
+   its existing zone elements with the region class beside them. Region classes
+   carry no visual properties (only overflow-safety), so tagging cannot change
+   what a child sees. A page opts into the container only by adding .learn-stage
+   to an element that is already a vertical stack. */
+
+.learn-instruction,
+.learn-stage-mat,
+.learn-answers,
+.learn-feedback {
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Opt-in container: orders the four regions top-to-bottom and lets the mat
+   flex-grow. Deliberately minimal — no width, no background, no border, no
+   padding — so it composes with the page's own layout instead of replacing it.
+   Extra vertical rhythm stays with the page (set --ls-gap to opt in). */
+.learn-stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ls-gap, 0px);
+  min-height: 0;
+}
+
+.learn-stage > .learn-stage-mat {
+  flex: 1 1 auto;
+}
+
+.learn-stage > .learn-feedback {
+  flex: 0 0 auto;
+}

@@ -163,6 +163,16 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   checkRouteWired('compare', 'game-compare', 'pages/compare.html',
     { back: 'compare-back', start: 'startCompare', check });
 
+  // V5.1 (spec §23): the shared learning-stage regions are tagged on compare.
+  const lsj = JSON.parse(await h.evalv(`JSON.stringify({
+    found: ['.learn-instruction','.learn-stage-mat','.learn-answers','.learn-feedback'].map(s => !!document.querySelector(s)),
+    visible: ['.learn-instruction','.learn-stage-mat'].every(s => { const el = document.querySelector(s); if (!el) return false; const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; }),
+    bogus: !!document.querySelector('.learn-does-not-exist'),
+    overflow: document.documentElement.scrollWidth <= innerWidth + 1
+  })`));
+  check('V5.1 grammar: all four §23 regions present on compare', lsj.found.every(Boolean), JSON.stringify(lsj));
+  check('V5.1 grammar: instruction + stage-mat render a real box, no h-overflow, non-vacuous', lsj.visible && lsj.overflow && lsj.bogus === false, JSON.stringify(lsj));
+
   await h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);
   process.exit(getFails() ? 1 : 0);

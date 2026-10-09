@@ -136,6 +136,17 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   checkRouteWired('phonics', 'game-phonics', 'pages/phonics.html',
     { back: 'phonics-back', start: 'startPhonics', check });
 
+  // V5.1 (spec §23): learning-stage grammar regions tagged on phonics
+  // (instruction is spoken here, so no .learn-instruction region).
+  const lsj = JSON.parse(await h.evalv(`JSON.stringify({
+    found: ['.learn-stage-mat','.learn-answers','.learn-feedback'].map(s => !!document.querySelector(s)),
+    visible: (() => { const el = document.querySelector('.learn-stage-mat'); if (!el) return false; const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; })(),
+    bogus: !!document.querySelector('.learn-does-not-exist'),
+    overflow: document.documentElement.scrollWidth <= innerWidth + 1
+  })`));
+  check('V5.1 grammar: §23 regions present on phonics (stage-mat/answers/feedback)', lsj.found.every(Boolean), JSON.stringify(lsj));
+  check('V5.1 grammar: stage-mat renders a real box; no h-overflow; non-vacuous', lsj.visible && lsj.overflow && lsj.bogus === false, JSON.stringify(lsj));
+
   await h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);
   process.exit(getFails() ? 1 : 0);
