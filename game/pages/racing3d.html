@@ -178,6 +178,22 @@
         }
         .r3d-kart-swatch.sel { border-color: #4A3F6B; transform: scale(1.12); }
         .r3d-win-actions { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+        /* Short landscape (V3.2): the start box overflowed its 92% cap by 123px
+           at 844x390, so «Крени!» sat below the fold behind a scroll. Compact
+           the chrome and collapse the secondary kart-colour label (§11 order:
+           decoration → secondary text → controls → stage → typography). */
+        @media (max-height: 520px) {
+            .r3d-start-box { padding: 8px; }
+            .r3d-start-box h1 { font-size: 18px; margin: 0 0 4px; }
+            #r3d-world-grid { gap: 6px; margin-bottom: 8px; }
+            .r3d-world-card { padding: 4px 2px; }
+            .r3d-world-card .wc-emoji { font-size: 20px; }
+            .r3d-world-card .wc-name { font-size: 11px; }
+            .r3d-kart-label { display: none; }
+            #r3d-kart-row { gap: 8px; margin-bottom: 4px; }
+            .r3d-kart-swatch { width: 40px; height: 40px; }
+            .r3d-restart-btn { padding: 10px 30px; font-size: 16px; line-height: 1.1; }
+        }
     </style>
 </head>
 <body>

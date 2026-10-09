@@ -42,7 +42,10 @@
   @keyframes sort-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-1.4vmin)}75%{transform:translateX(1.4vmin)}}
   @keyframes sort-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
   @media (prefers-reduced-motion: reduce){.sort-good,.sort-wrong,.sort-hint{animation:none}}
-  @media (min-width:800px){
+  /* Desktop sizes need desktop HEIGHT too: an 844x390 short-landscape window
+     is 800px+ wide but only 390 tall, and the 112px items + 230px baskets
+     overflowed the fold (V3.1 audit FAIL: sort-item bottom 413 > 390). */
+  @media (min-width:800px) and (min-height:600px){
     #sort-prompt{font-size:42px}
     .sort-basket{max-width:340px;min-height:230px}
     .sort-bin-head{font-size:32px}

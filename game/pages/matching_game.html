@@ -157,7 +157,7 @@
     display:flex; flex-direction:column; align-items:center; gap:1vmin;
     width:min(68vmin, 62%); margin:2vmin auto 2.5vmin; z-index:15;
   }
-  .candy-level-row{ display:flex; align-items:center; gap:1.6vmin; width:100%; }
+  .candy-level-row{ display:flex; align-items:center; gap:1.6vmin; width:100%; position:relative; }
   #candyLevelLabel{ font-size:3.4vmin; font-weight:700; color:var(--plum); text-shadow:0 1px 0 rgba(255,255,255,.6); }
   .candy-bar-track{
     flex:1; height:4.2vmin; border-radius:999px; position:relative;
@@ -175,7 +175,12 @@
      button{min-width:64px} floor previously pinned this to 64px on every screen,
      so the old shrink never rendered; this control overrides it to a 44px target
      and grows the bulb while the dot shrinks. */
+  /* Secondary control moved OUT of the row flow (V3.2, §11 order): its 44px
+     floor made the row 44px tall, the bar block outgrew candy.js's 14vmin top
+     budget and the flex column squeezed the grid. Sits just right of the bar
+     block (plenty of free space there at every viewport). */
   #candyHintBtn{
+    position:absolute; left:calc(100% + 2.5vmin); top:0; transform:translateY(-50%);
     width:4.4vmin; height:4.4vmin; min-width:44px; min-height:44px;
     border-radius:50%; border:none; cursor:pointer; flex:none;
     background:linear-gradient(135deg,#FFF3B0,#FFD23F);
@@ -183,7 +188,7 @@
     display:flex; align-items:center; justify-content:center;
     box-shadow:0 .5vmin 0 rgba(0,0,0,.18);
   }
-  #candyHintBtn:active{ transform:scale(.9) translateY(3px); box-shadow:0 .4vmin 0 rgba(0,0,0,.18); }
+  #candyHintBtn:active{ transform:translateY(calc(-50% + 3px)) scale(.9); box-shadow:0 .4vmin 0 rgba(0,0,0,.18); }
   .candy-grid .candy.hint{ animation:hintGlow .6s ease-in-out 3; z-index:12; }
   @keyframes hintGlow{
     0%,100%{ box-shadow:0 0 0 0 rgba(255,210,63,0); transform:scale(1); }
@@ -204,6 +209,10 @@
   }
   .candy-grid{
     position:relative;
+    /* the stage is never a shrink target: as a flex child it silently lost
+       16px at 844x390 while its absolutely-positioned tiles did not, so the
+       bottom row spilled past the fold (V3.1 audit FAIL) */
+    flex:none;
     width: calc(4*17vmin + 3*2.2vmin);
     height: calc(4*17vmin + 3*2.2vmin);
   }

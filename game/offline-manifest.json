@@ -884,8 +884,8 @@
     "size": 8159
   },
   "pages/matching_game.html": {
-    "sha256": "8c37bb957160492764251f8186298ac6ef4e48c19b1831babbb8167a43e26114",
-    "size": 14153
+    "sha256": "1959c1ada83ebd9df4979d735271cda73ed500876d1b68d7756808e112bb9493",
+    "size": 14796
   },
   "pages/maze.html": {
     "sha256": "66c587e8cec22ba09396fa52691e1d89202d3a86fa245faf3236fa55a8b90c36",
@@ -908,8 +908,8 @@
     "size": 12114
   },
   "pages/racing3d.html": {
-    "sha256": "99ff1671f84e5f7bb4c8c1096fc80159dd58e494ca3980edb2755e587c694bf4",
-    "size": 13766
+    "sha256": "869132a30dcd88f4c727694945d98d13407aabf23b64ae16df12d16332421e59",
+    "size": 14741
   },
   "pages/rhythm.html": {
     "sha256": "2f56617290a0367de160655e61fae2a51931d4298430378f66bfa5534945f80e",
@@ -924,8 +924,8 @@
     "size": 11757
   },
   "pages/sorting.html": {
-    "sha256": "95e1db294f7a111736140cfbb471e30675da0be0410339ab67d2e61cbb7ae546",
-    "size": 5651
+    "sha256": "139f5152250f6cf0f3590fc653f731e6f72dab7672ab28dc521e9ae009e492ca",
+    "size": 5902
   },
   "pages/space.html": {
     "sha256": "3e3de04d5bf4564d8a7c7691851e0cd48abce01c3aa73bc22179e2bc9af7e438",
@@ -944,8 +944,8 @@
     "size": 1586
   },
   "shared/adventure.css": {
-    "sha256": "7abfdec5eedf52560d967c8f00380b64b1ffc6300b06ae9d14e08bb75bae0021",
-    "size": 10969
+    "sha256": "f02a8ebf81281b130d9db56a6a8d4a17caecfd3baeba5bd2b6210a88757a9181",
+    "size": 11855
   },
   "shared/audio-buses.js": {
     "sha256": "4eac8f8e712df655871b5a64193cb38fa2b84d30dc3bf90e93f4a9910a8db900",

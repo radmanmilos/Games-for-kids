@@ -1,6 +1,6 @@
 # Short-landscape audit — 844×390 (spec §11)
 
-Generated: 2026-10-09 10:41 UTC · task 217 (V3.1) · `node tools/short_landscape_audit.js`
+Generated: 2026-10-09 11:38 UTC · task 217 (V3.1) · `node tools/short_landscape_audit.js`
 
 Every surface (hub + 24 registry apps) measured at **844×390** against the
 Master Visual/UX plan §11 checklist: header budget 56–72 px, board-first,
@@ -22,7 +22,7 @@ adjudication. The tool exits 1 while any FAIL remains.**
 | `animal_puzzle` | Слагалица | 72 | OK | 0 | 0 |
 | `classroom` | Учионица | 72 | OK | 0 | 0 |
 | `compare` | Где има више? | 83 | WARN | 0 | 1 |
-| `sorting` | Разврстај! | 66 | FAIL | 1 | 0 |
+| `sorting` | Разврстај! | 88 | WARN | 0 | 1 |
 | `phonics` | (none) | 66 | WARN | 0 | 1 |
 | `sequencing` | Постави у редослед! | 72 | OK | 0 | 0 |
 | `rhythm` | Слушај, па понови | 66 | OK | 0 | 0 |
@@ -32,37 +32,16 @@ adjudication. The tool exits 1 while any FAIL remains.**
 | `tracing` | Писање | 72 | OK | 0 | 0 |
 | `piano` | Клавир | 75 | WARN | 0 | 1 |
 | `shapes` | (none) | 72 | WARN | 0 | 1 |
-| `matching_game` | (none) | 72 | FAIL | 1 | 1 |
+| `matching_game` | (none) | 72 | WARN | 0 | 1 |
 | `driving` | Возила | 83 | WARN | 0 | 1 |
 | `ocean` | Океан | 83 | WARN | 0 | 1 |
-| `dino` | Дино | 80 | FAIL | 1 | 1 |
-| `space` | Свемир | 83 | FAIL | 1 | 1 |
-| `racing3d` | 🏎️ Мала тркачица 3Д | 32 | WARN | 0 | 1 |
+| `dino` | Дино | 80 | WARN | 0 | 1 |
+| `space` | Свемир | 83 | WARN | 0 | 1 |
+| `racing3d` | 🏎️ Мала тркачица 3Д | 32 | OK | 0 | 0 |
 | `explorer` | Свет | 64 | OK | 0 | 0 |
 | `parent` | 🔒 За родитеље | 72 | WARN | 0 | 1 |
 
-**Summary:** 25 surfaces · 9 OK · 12 WARN · 4 FAIL · 0 error · 4 individual failures.
-
-## Failures — V3.2 worklist
-
-### `sorting`
-
-- FAIL: control unreachable (no scroll can reveal it): button.sort-item {"l":184,"t":301,"r":296,"b":413}
-
-### `matching_game`
-
-- FAIL: control unreachable (no scroll can reveal it): div.candy {"l":259,"t":332,"r":333,"b":406}
-- WARN: no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate
-
-### `dino`
-
-- FAIL: back not topmost at its centre (hit div#adv-dino-picker.show)
-- WARN: header budget: top chrome reaches 80px (spec §11.1: 56–72px)
-
-### `space`
-
-- FAIL: chrome overlap: div#adv-score ∩ button#adv-worlds-btn = 254px²
-- WARN: header budget: top chrome reaches 83px (spec §11.1: 56–72px)
+**Summary:** 25 surfaces · 10 OK · 15 WARN · 0 FAIL · 0 error · 0 individual failures.
 
 ## Warnings — adjudicate
 
@@ -84,6 +63,10 @@ adjudication. The tool exits 1 while any FAIL remains.**
 
 - WARN: header budget: top chrome reaches 83px (spec §11.1: 56–72px)
 
+### `sorting`
+
+- WARN: header budget: top chrome reaches 88px (spec §11.1: 56–72px)
+
 ### `phonics`
 
 - WARN: no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate
@@ -100,6 +83,10 @@ adjudication. The tool exits 1 while any FAIL remains.**
 
 - WARN: no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate
 
+### `matching_game`
+
+- WARN: no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate
+
 ### `driving`
 
 - WARN: header budget: top chrome reaches 83px (spec §11.1: 56–72px)
@@ -108,9 +95,13 @@ adjudication. The tool exits 1 while any FAIL remains.**
 
 - WARN: header budget: top chrome reaches 83px (spec §11.1: 56–72px)
 
-### `racing3d`
+### `dino`
 
-- WARN: control needs scrolling to reach: button#r3d-start-btn.r3d-restart-btn
+- WARN: header budget: top chrome reaches 80px (spec §11.1: 56–72px)
+
+### `space`
+
+- WARN: header budget: top chrome reaches 83px (spec §11.1: 56–72px)
 
 ### `parent`
 

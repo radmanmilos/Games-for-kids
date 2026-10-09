@@ -73,11 +73,22 @@ body, html {
     box-shadow: 0 5px 0 rgba(0,0,0,0.25);
     pointer-events: none;
     min-width: 130px;
+    /* Cap the box so a long world name can never reach #adv-worlds-btn
+       (right:200px): outer width ≤ 200-16-8 gap = 176px (V3.1 audit FAIL:
+       «Сатурнови прстенови» widened the card 188px → score∩worlds 254px²).
+       Content-box maths is irrelevant — * is border-box above. */
+    max-width: 176px;
 }
 #adv-score .sb-small {
     font-size: 14px;
     font-weight: 600;
     color: #655A8C;
+    /* collapse the secondary world-name line instead of letting it push the
+       card wider (§11 order step 2) */
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 #adv-worlds-btn {
     position: absolute;
@@ -121,6 +132,7 @@ body, html {
 @media (max-width: 329px) {
     #adv-music-btn { right: 256px; }
     #adv-worlds-btn { right: 188px; }
+    #adv-score { max-width: 164px; } /* worlds anchor moves in: 188-16-8 */
 }
 
 /* --- Worlds picker overlay --- */
@@ -372,12 +384,16 @@ body, html {
 }
 .adv-play-again-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
 
-/* --- Dino hero picker (shown at the start of every level) --- */
+/* --- Dino hero picker (shown at the start of every level) ---
+   z15, not 25: it must cover the HUD/buttons (z10-12) but let the back button
+   (z20) through — at boot the child had no way to leave (V3.1 audit FAIL:
+   back's centre hit by #adv-dino-picker.show). Win/worlds modals (20/30)
+   still stack above it. */
 #adv-dino-picker {
     display: none;
     position: absolute;
     inset: 0;
-    z-index: 25;
+    z-index: 15;
     background: rgba(74, 63, 107, 0.85);
     flex-direction: column;
     justify-content: center;
