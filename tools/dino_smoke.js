@@ -329,6 +329,58 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   await h.close();
 
+  // V4.1 (spec §22) — the shared adventure header contract. Before V4.1 dino was
+  // the last world still running the old absolute title (top:2vmin, ignoring
+  // --ps-safe-top); it now shares the .ps-header row Driving/Ocean/Space use,
+  // defined ONCE in shared/adventure.css. Portrait is where the collisions
+  // lived; measured after `document.fonts.ready` so font-swap transients cannot
+  // flake it. (The dino hero-picker overlay is up at boot and does not move any
+  // of these boxes — it sits below the back button after the V3.2 z-index fix.)
+  const hp = await start({ page: '/pages/dino.html', tag: 'dino-smoke-portrait', width: 390, height: 844 });
+  let pReady = false;
+  for (let i = 0; i < 25 && !pReady; i++) {
+    pReady = await hp.evalv(`typeof window.__adv === 'object' && window.__adv !== null`);
+    if (!pReady) await sleep(200);
+  }
+  await hp.evalv(`window.audioBuses.connect=function(){}; true`);
+  await hp.evalv(`document.fonts.ready.then(() => true)`);
+  const geo = await hp.evalv(`(() => {
+    const sels = ['#dino-back', '#adv-title', '#adv-score', '#adv-worlds-btn', '#adv-music-btn'];
+    const box = s => { const el = document.querySelector(s); if (!el) return null; const r = el.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom }; };
+    const boxes = Object.fromEntries(sels.map(s => [s, box(s)]));
+    const overlaps = [];
+    for (let i = 0; i < sels.length; i++) for (let j = i + 1; j < sels.length; j++) {
+      const a = boxes[sels[i]], b = boxes[sels[j]];
+      if (!a || !b) continue;
+      const w = Math.min(a.r, b.r) - Math.max(a.l, b.l);
+      const hh = Math.min(a.b, b.b) - Math.max(a.t, b.t);
+      if (w > 0.5 && hh > 0.5) overlaps.push(sels[i] + '∩' + sels[j] + '=' + (w * hh).toFixed(0) + 'px²');
+    }
+    const clean = s => overlaps.filter(o => o.startsWith(s));
+    const title = boxes['#adv-title'];
+    return JSON.stringify({
+      booted: ${pReady},
+      vw: innerWidth, vh: innerHeight,
+      inHeader: document.getElementById('adv-title').closest('.ps-header') !== null,
+      titleCx: (title.l + title.r) / 2,
+      titleOrBackOverlaps: [...clean('#dino-back'), ...clean('#adv-title')],
+      allOverlaps: overlaps,
+      bandBottom: title.b,
+      hudTops: ['#adv-score', '#adv-worlds-btn', '#adv-music-btn'].map(s => boxes[s].t),
+      inside: sels.every(s => boxes[s].l >= -0.5 && boxes[s].t >= -0.5 && boxes[s].r <= innerWidth + 0.5 && boxes[s].b <= innerHeight + 0.5)
+    });
+  })()`);
+  const gj = JSON.parse(geo);
+  check('V4.1 shell: title lives in the .ps-header row, centred on the viewport',
+    gj.inHeader === true && Math.abs(gj.titleCx - gj.vw / 2) < 0.5, geo);
+  check('V4.1 portrait: title + back clear of every other chrome item (§22)',
+    gj.titleOrBackOverlaps.length === 0, geo);
+  check('V4.1 portrait: HUD trio steps below the .ps-header band',
+    gj.hudTops.every(t => t >= gj.bandBottom - 0.5), geo);
+  check('V4.1 portrait: all five chrome items inside the viewport (390x844)',
+    gj.inside === true, geo);
+  await hp.close();
+
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
   check('hub button wired (data-go="game-dino")', indexHtml.includes('data-go="game-dino"'));
@@ -346,6 +398,23 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('dino page: hero picker overlay present', page.includes('adv-dino-picker'));
   const css = fs.readFileSync(path.join(root, 'game', 'shared', 'adventure.css'), 'utf8');
   check('adventure css: overlay controls + dino picker styles', css.includes('adv-dino-btn') && css.includes('pointer-events: none') && css.includes('z-index: 12'));
+  // V4.1 (spec §22/§64 "never five copies of the same header CSS"): the header
+  // contract is defined ONCE in adventure.css, the per-page inline copies are
+  // gone, and all four worlds use the shared .ps-header row via shell.css.
+  check('V4.1: header contract defined once in adventure.css',
+    css.includes('.ps-header{ position:absolute') && css.includes('@media (orientation:portrait)'));
+  check('V4.1: dino page links shell.css and uses the shared .ps-header row',
+    page.includes('styles/shell.css') && page.includes('class="ps-header"'));
+  const worlds = { driving: 'driving.html', ocean: 'ocean.html', space: 'space.html' };
+  const inlineLeft = [], noShell = [], noHeader = [];
+  for (const [name, file] of Object.entries(worlds)) {
+    const p = fs.readFileSync(path.join(root, 'game', 'pages', file), 'utf8');
+    if (p.includes('<style>')) inlineLeft.push(name);
+    if (!p.includes('styles/shell.css')) noShell.push(name);
+    if (!p.includes('class="ps-header"')) noHeader.push(name);
+  }
+  check('V4.1: no inline <style> header duplicates left in driving/ocean/space', inlineLeft.length === 0, inlineLeft.join(','));
+  check('V4.1: driving/ocean/space all use the shared .ps-header row + shell.css', noShell.length === 0 && noHeader.length === 0, 'noShell=' + noShell.join(',') + ' noHeader=' + noHeader.join(','));
 
   process.exit(getFails() ? 1 : 0);
 })();

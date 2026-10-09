@@ -872,16 +872,16 @@
     "size": 4845
   },
   "pages/dino.html": {
-    "sha256": "c0c682e768d977f8def70b1e8862b5001fb1a815de36e158120c6bbdf155c679",
-    "size": 2905
+    "sha256": "c6867c03d60eb5df4026380666a27537be8462a7209dee1420c0b36590605051",
+    "size": 3007
   },
   "pages/driving.html": {
-    "sha256": "2d1bcbf41f667fd01d8ef08618ff908f197b34d2589ab279d2153d3dd84bfd03",
-    "size": 4474
+    "sha256": "2b056d93373610fcbb8677e8476dcab324fdf208f5345817af5d83d0c589de69",
+    "size": 2975
   },
   "pages/explorer.html": {
-    "sha256": "a6dff57648b1189d0e45d062d6e7fc525f12a66388e5ca42a1e01e9ec52ff3b6",
-    "size": 8159
+    "sha256": "ce6281335ed00fb19dd03817ae6b3462b48ea44262b681c45088b545e7b3a30c",
+    "size": 8210
   },
   "pages/matching_game.html": {
     "sha256": "1959c1ada83ebd9df4979d735271cda73ed500876d1b68d7756808e112bb9493",
@@ -892,8 +892,8 @@
     "size": 4395
   },
   "pages/ocean.html": {
-    "sha256": "64d1cd1fed83408c350a7e7765cb88e5dba024b87cc4bb056345b6ca8b7cf6cf",
-    "size": 4896
+    "sha256": "df933b4c3f0c7a0a97d67635599f536d88f87182f3fbd487fd85f199fda74855",
+    "size": 3201
   },
   "pages/parent.html": {
     "sha256": "64f3c8267f9d763794b38a499c6faabd1c551c931a1bf9c7eca66f51bf6cf2fe",
@@ -928,8 +928,8 @@
     "size": 5902
   },
   "pages/space.html": {
-    "sha256": "3e3de04d5bf4564d8a7c7691851e0cd48abce01c3aa73bc22179e2bc9af7e438",
-    "size": 4833
+    "sha256": "b1ca73d5311f77395275ed65152cf58a0e8bacc8408c206e5acd66d86b4d4a66",
+    "size": 3203
   },
   "pages/spatial.html": {
     "sha256": "3df9dc18e7509d63ab7b40eb14915b5447e576ded50a76f7aa764360b3d788f4",
@@ -944,8 +944,8 @@
     "size": 1586
   },
   "shared/adventure.css": {
-    "sha256": "f02a8ebf81281b130d9db56a6a8d4a17caecfd3baeba5bd2b6210a88757a9181",
-    "size": 11855
+    "sha256": "56b06860795aeae1dc5083b840a62dbc9be3b8687bae2f0e44d7d609e2600fec",
+    "size": 13194
   },
   "shared/audio-buses.js": {
     "sha256": "4eac8f8e712df655871b5a64193cb38fa2b84d30dc3bf90e93f4a9910a8db900",

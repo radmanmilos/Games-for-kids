@@ -12,35 +12,8 @@
     <link rel="stylesheet" href="../styles/design-tokens.css">
     <link rel="stylesheet" href="../styles/shell.css">
     <link rel="stylesheet" href="../shared/accessibility.css">
-    <style>
-        /* V2.8 — shared header geometry (spec §42.11: preserve this strongest
-           world almost unchanged; fix only top chrome, the title collision and
-           small-screen hierarchy — add no controls). The title was
-           position:absolute; top:2vmin (ignoring --ps-safe-top) and collided
-           with the HUD in every portrait orientation (measured: 390×844
-           title∩worlds 684px², title∩score 307px², back∩music 1305px²; 768×1024
-           title∩music 896px²; both landscapes were clean). It now sits in the
-           .ps-header flow row — back stays on its corner anchor, the row
-           reserves 16vmin per side — and the band is as tall as the corner
-           control ACTUALLY is: accessibility.css floors every button at 64px,
-           which beats 12vmin on phones (46.8 < 64). The header is an absolute
-           overlay so the full-bleed canvas keeps its space. The HUD trio keeps
-           its offsets and z-order but drops below the shell band in portrait.
-           Same pattern as V2.7 (Ocean); adventure.css is untouched, so
-           dino/driving are unaffected. */
-        .ps-header{ position:absolute; top:0; left:0; right:0; width:auto; padding:0 16vmin; justify-content:center; pointer-events:none; }
-        .ps-header .adv-back{ pointer-events:auto; }
-        #adv-title{
-            position:static; top:auto; left:auto; transform:none;
-            margin:calc(var(--ps-safe-top) + 4vmin) 0 1vmin;
-            min-height:max(12vmin, 64px); line-height:max(12vmin, 64px);
-        }
-        @media (orientation:portrait){
-            #adv-score, #adv-worlds-btn, #adv-music-btn{
-                top:calc(var(--ps-safe-top) + 4vmin + max(12vmin, 64px) + 4px);
-            }
-        }
-    </style>
+    <!-- V4.1 (spec §22): the shared adventure header/HUD contract lives in
+         shared/adventure.css now; this block was pasted here verbatim in V2.8. -->
 </head>
 <body>
 <div id="adv-game">

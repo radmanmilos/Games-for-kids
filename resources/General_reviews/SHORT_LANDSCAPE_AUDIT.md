@@ -1,6 +1,6 @@
 # Short-landscape audit — 844×390 (spec §11)
 
-Generated: 2026-10-09 11:38 UTC · task 217 (V3.1) · `node tools/short_landscape_audit.js`
+Generated: 2026-10-09 12:28 UTC · task 217 (V3.1) · `node tools/short_landscape_audit.js`
 
 Every surface (hub + 24 registry apps) measured at **844×390** against the
 Master Visual/UX plan §11 checklist: header budget 56–72 px, board-first,
@@ -35,7 +35,7 @@ adjudication. The tool exits 1 while any FAIL remains.**
 | `matching_game` | (none) | 72 | WARN | 0 | 1 |
 | `driving` | Возила | 83 | WARN | 0 | 1 |
 | `ocean` | Океан | 83 | WARN | 0 | 1 |
-| `dino` | Дино | 80 | WARN | 0 | 1 |
+| `dino` | Дино | 83 | WARN | 0 | 1 |
 | `space` | Свемир | 83 | WARN | 0 | 1 |
 | `racing3d` | 🏎️ Мала тркачица 3Д | 32 | OK | 0 | 0 |
 | `explorer` | Свет | 64 | OK | 0 | 0 |
@@ -97,7 +97,7 @@ adjudication. The tool exits 1 while any FAIL remains.**
 
 ### `dino`
 
-- WARN: header budget: top chrome reaches 80px (spec §11.1: 56–72px)
+- WARN: header budget: top chrome reaches 83px (spec §11.1: 56–72px)
 
 ### `space`
 

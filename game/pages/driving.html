@@ -12,33 +12,8 @@
     <link rel="stylesheet" href="../styles/design-tokens.css">
     <link rel="stylesheet" href="../styles/shell.css">
     <link rel="stylesheet" href="../shared/accessibility.css">
-    <style>
-        /* V2.9 — shared header geometry (spec §42.9: "top cluster must be fixed
-           for portrait"). The title was position:absolute; top:2vmin (ignoring
-           --ps-safe-top) and collided with the HUD in portrait (measured after
-           document.fonts.ready: 390×844 title∩worlds 664px², back∩music 1305px²;
-           768×1024 title∩music 806px²; landscapes clean). Same pattern as V2.7
-           (Ocean) / V2.8 (Space): the title joins the .ps-header flow row
-           (back on its corner anchor, 16vmin side zones) as an absolute overlay
-           so the full-bleed canvas keeps its space, band is max(12vmin, 64px)
-           (accessibility.css's 64px button floor beats 12vmin on phones), and
-           the HUD trio drops below the band in portrait. adventure.css is
-           untouched → dino/ocean/space unaffected. NOTE: spec §42.9's road-trip
-           scenery (sky/trees/clouds/markers/fence) is a separate content scope,
-           not this header migration. */
-        .ps-header{ position:absolute; top:0; left:0; right:0; width:auto; padding:0 16vmin; justify-content:center; pointer-events:none; }
-        .ps-header .adv-back{ pointer-events:auto; }
-        #adv-title{
-            position:static; top:auto; left:auto; transform:none;
-            margin:calc(var(--ps-safe-top) + 4vmin) 0 1vmin;
-            min-height:max(12vmin, 64px); line-height:max(12vmin, 64px);
-        }
-        @media (orientation:portrait){
-            #adv-score, #adv-worlds-btn, #adv-music-btn{
-                top:calc(var(--ps-safe-top) + 4vmin + max(12vmin, 64px) + 4px);
-            }
-        }
-    </style>
+    <!-- V4.1 (spec §22): the shared adventure header/HUD contract lives in
+         shared/adventure.css now; this block was pasted here verbatim in V2.9. -->
 </head>
 <body>
 <div id="adv-game">

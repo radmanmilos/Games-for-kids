@@ -122,7 +122,7 @@ Ordered by the spec's own priority matrix (§55) and Appendix E. Each item is ta
 
 | ID | Work | Verdict |
 |---|---|---|
-| **V4.1** | Unify Dino / Driving / Ocean / Space / Explorer / Maze / Racing3D: back, title treatment, modal backdrop, control shadow, semantic feedback, orientation behaviour. | **BUILD** |
+| **V4.1** | Unify Dino / Driving / Ocean / Space / Explorer / Maze / Racing3D: back, title treatment, modal backdrop, control shadow, semantic feedback, orientation behaviour. | **DONE** (2026-10-09, task 220) — header defined **once** in `shared/adventure.css` (`.ps-header` overlay band + `#adv-title` in flow at `--ps-safe-top` + portrait HUD-drop rule), 3 verbatim inline `.ps-header` copies removed (`driving`/`ocean`/`space`), **dino** migrated to the shared row (last world on the old absolute title), **explorer** back-shadow + plum scrims. `maze`/`racing3d` already conformant → untouched (V4.2). `dino_smoke` gained the portrait geometry + defined-once checks, negative-tested. `check_fast` 7/7, affected smokes green, audit 0 FAIL, screenshots `--task=220`. |
 | **V4.2** | Keep worlds distinct — Ocean ≠ Space, Driving ≠ card UI, Explorer ≠ Racing3D HUD. | constraint on V4.1 |
 
 ### Phase 5 — Learning stage (P1)

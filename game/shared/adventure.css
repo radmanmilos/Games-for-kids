@@ -437,3 +437,27 @@ body, html {
 @media (max-width: 560px) {
     #adv-dino-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* --- Adventure HUD header contract (V4.1, spec §22) ---
+   Shared by Dino / Driving / Ocean / Space. Defined ONCE here — spec §64:
+   "never five copies of the same header CSS". Before V4.1 this block was
+   pasted verbatim into driving.html / ocean.html / space.html, and dino.html
+   still ran the old absolute title (top:2vmin, ignoring --ps-safe-top).
+   The title joins the .ps-header flow row (shell.css owns display:flex) so it
+   can never sit under the back button or the HUD; the header is an absolute
+   overlay so the full-bleed canvas keeps its space; the band is as tall as the
+   corner control actually is (accessibility.css floors every button at 64px,
+   which beats 12vmin on phones). The HUD trio drops below the band in portrait,
+   where the five chrome items cannot fit one phone-width row. */
+.ps-header{ position:absolute; top:0; left:0; right:0; padding:0 16vmin; justify-content:center; pointer-events:none; }
+.ps-header .adv-back{ pointer-events:auto; }
+#adv-title{
+    position:static; top:auto; left:auto; transform:none;
+    margin:calc(var(--ps-safe-top) + 4vmin) 0 1vmin;
+    min-height:max(12vmin, 64px); line-height:max(12vmin, 64px);
+}
+@media (orientation:portrait){
+    #adv-score, #adv-worlds-btn, #adv-music-btn{
+        top:calc(var(--ps-safe-top) + 4vmin + max(12vmin, 64px) + 4px);
+    }
+}
