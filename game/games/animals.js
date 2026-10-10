@@ -15,11 +15,14 @@ const animals = [
 ];
 let animalIdx = 0;
 const animalCard = document.getElementById('animalCard');
+const animalEmoji = document.getElementById('animalEmoji');
+const animalName = document.getElementById('animalName');
 const animalNames = SERBIAN.animals;
 
 function showAnimal(){
   const a = animals[animalIdx];
-  animalCard.textContent = a.emoji;
+  animalEmoji.textContent = a.emoji;
+  animalName.textContent = animalNames[a.name] || a.name;
   animalCard.style.background = a.bg;
 }
 function startAnimals(){
@@ -49,6 +52,7 @@ document.getElementById('animalNext').addEventListener('click', ()=>{
   showAnimal();
   popSound();
 });
+document.getElementById('animalSpeak').addEventListener('click', playAnimal);
 
 /* ---------------- ПРОНАЂИ ЖИВОТИЊУ (recognition mode) ---------------- */
 let recogMode = false;

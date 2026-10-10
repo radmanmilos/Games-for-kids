@@ -148,7 +148,7 @@ Ordered by the spec's own priority matrix (§55) and Appendix E. Each item is ta
 
 | ID | Work | Verdict |
 |---|---|---|
-| **V8.1** | Keep native emoji. Improve composition only: larger readable card, clear name, speaker affordance, subtle idle cue, consistent spacing, consistent selection feedback. | **VERIFY** — spec §26 forbids a new illustration dependency without a coherent full set, better demonstrated quality, local bundling, documented licensing and a simultaneous all-animal update. |
+| **V8.1** | Keep native emoji. Improve composition only: larger readable card, clear name, speaker affordance, subtle idle cue, consistent spacing, consistent selection feedback. | **DONE** (2026-10-10, task 225) — composition-only pass on `animals.html` keeping native emoji (spec §26 allows a custom-art pass only with a coherent full set + local bundling + documented licensing; none attempted). Flashcard is now a larger 56vmin lockup (emoji + Serbian name from `SERBIAN.animals`), with a visible speaker button, a subtle reduced-motion-safe emoji idle bob, one `--animal-gap`/`--animal-radius`/`--animal-shadow` rhythm shared with `.recog-choice`, and matching press feedback. `animals_smoke` 27→36 (+9 guards: name/emoji pairing, speaker, idle, spacing, shared radius/shadow), all negative-tested; `check_fast` 7/7; axe clean; audit 0 FAIL; offline E2E green; 4 screenshots refreshed. |
 
 ### Phases 9–20 — Page-specific (P2)
 

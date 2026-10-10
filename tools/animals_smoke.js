@@ -2,6 +2,9 @@
    Drives pages/animals.html headlessly: flashcard mode (card shows animal,
    next cycles, tap triggers bounce + speech) AND recognition mode (toggle,
    prompt "Где је X?", 2→3 adaptive choices, correct/wrong/hint feedback).
+   V8.1 (task 225) adds the spec §26 composition checks: clear Serbian name,
+   speaker affordance, subtle idle cue, one spacing rhythm, consistent
+   selection feedback.
    Run:  node tools/animals_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -16,6 +19,14 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
 const CLICK = sel => `document.querySelector('${sel}').click(); true`;
 
 const ANIMALS = ['🐶','🐱','🐮','🦁','🐘','🐸','🐷','🦆','🦊','🐑','🐴','🐔'];
+
+// V8.1: emoji → the Serbian name the flashcard must show (mirrors game/games/animals.js
+// keys + SERBIAN.animals). Kept in the test so a wrong pairing (e.g. 🦁 shown as "Коњ")
+// fails, not just a missing name.
+const NAME_BY_EMOJI = {
+  '🐶':'Пас', '🐱':'Мачка', '🐮':'Крава', '🦁':'Лав', '🐘':'Слон', '🐸':'Жаба',
+  '🐷':'Свиња', '🦆':'Патка', '🦊':'Лисица', '🐑':'Овца', '🐴':'Коњ', '🐔':'Кока',
+};
 
 (async () => {
   const h = await start({ page: '/pages/animals.html', tag: 'animals-smoke', width: 1024, height: 800 });
@@ -44,11 +55,40 @@ const ANIMALS = ['🐶','🐱','🐮','🦁','🐘','🐸','🐷','🦆','🦊',
   check('card is keyboard accessible (role=button, tabIndex=0)', I.cardRole === 'button' && I.cardTab === 0);
   check('card has aria-label', !!I.cardAria, I.cardAria);
 
+  // --- V8.1 composition (spec §26) ---
+  const comp = await h.evalv(`JSON.stringify((function(){
+    const card = document.getElementById('animalCard');
+    const emoji = document.getElementById('animalEmoji').textContent.trim();
+    const name = document.getElementById('animalName').textContent.trim();
+    const speak = document.getElementById('animalSpeak');
+    const cs = el => getComputedStyle(el);
+    const sb = speak ? speak.getBoundingClientRect() : null;
+    return {
+      emoji, name,
+      speakTag: speak ? speak.tagName : '',
+      speakW: sb ? Math.round(sb.width) : 0,
+      speakH: sb ? Math.round(sb.height) : 0,
+      idle: cs(document.getElementById('animalEmoji')).animationName,
+      wrapGap: cs(document.getElementById('flashcardWrap')).gap,
+      recogGap: cs(document.getElementById('recogWrap')).gap
+    };
+  })())`);
+  const C = JSON.parse(comp);
+  check('flashcard shows the animal name', C.name.length > 0, C.name);
+  check('animal name matches the shown emoji', NAME_BY_EMOJI[C.emoji] === C.name, C.emoji + ' -> ' + C.name);
+  check('speaker control is a real button >= 44px', C.speakTag === 'BUTTON' && C.speakW >= 44 && C.speakH >= 44, C.speakTag + ' ' + C.speakW + 'x' + C.speakH);
+  check('card has a subtle idle cue (animation)', /animalIdle/.test(C.idle), C.idle);
+  check('flashcard and recognition share one spacing rhythm', C.wrapGap !== 'normal' && C.wrapGap === C.recogGap, C.wrapGap + ' vs ' + C.recogGap);
+
   const first = await h.evalv(`document.getElementById('animalCard').innerHTML`);
   await h.evalv(CLICK('#animalNext'));
   await sleep(80);
   const second = await h.evalv(`document.getElementById('animalCard').innerHTML`);
   check('next button changes the animal', first !== second, 'changed');
+
+  const pair2 = await h.evalv(`JSON.stringify({e:document.getElementById('animalEmoji').textContent.trim(), n:document.getElementById('animalName').textContent.trim()})`);
+  const P2 = JSON.parse(pair2);
+  check('name tracks the animal after next', NAME_BY_EMOJI[P2.e] === P2.n, P2.e + ' -> ' + P2.n);
 
   await h.evalv(`document.getElementById('animalCard').classList.add('bounce')`);
   const bounced = await h.evalv(`document.getElementById('animalCard').classList.contains('bounce')`);
@@ -63,6 +103,14 @@ const ANIMALS = ['🐶','🐱','🐮','🦁','🐘','🐸','🐷','🦆','🦊',
   })()`);
   const AK = JSON.parse(afterKey);
   check('Enter key on card triggers play (bounce class toggled)', AK.bounce === true);
+
+  const speakBounce = await h.evalv(`(function(){
+    const card = document.getElementById('animalCard');
+    card.classList.remove('bounce');
+    document.getElementById('animalSpeak').click();
+    return card.classList.contains('bounce');
+  })()`);
+  check('speaker button replays the card cue (bounce)', speakBounce === true);
 
   await h.evalv(CLICK('#animalNext'));
   await sleep(80);
@@ -84,6 +132,16 @@ const ANIMALS = ['🐶','🐱','🐮','🦁','🐘','🐸','🐷','🦆','🦊',
 
   const choiceCount = await h.evalv(`document.querySelectorAll('.recog-choice').length`);
   check('first round has 2 choices (adaptive difficulty)', choiceCount === 2, 'count=' + choiceCount);
+
+  const selection = await h.evalv(`JSON.stringify((function(){
+    const cs = el => getComputedStyle(el);
+    const card = document.getElementById('animalCard');
+    const choice = document.querySelector('.recog-choice');
+    return { cr: cs(card).borderRadius, cc: cs(choice).borderRadius, sr: cs(card).boxShadow, sc: cs(choice).boxShadow };
+  })())`);
+  const S = JSON.parse(selection);
+  check('card and choices share radius (consistent selection feedback)', S.cr === S.cc, S.cr + ' vs ' + S.cc);
+  check('card and choices share resting shadow (consistent selection feedback)', S.sr === S.sc, S.sr + ' vs ' + S.sc);
 
   const choiceAria = await h.evalv(`Array.from(document.querySelectorAll('.recog-choice')).map(c=>c.getAttribute('aria-label')).join(',')`);
   const serbianRegex = /^[\u0400-\u04FF]+,[\u0400-\u04FF]+$/;

@@ -744,8 +744,8 @@
     "size": 31728
   },
   "games/animals.js": {
-    "sha256": "79a7aad7dcb6e04e8271e595a583fafbdf82b4842f0cfd293cc55795849f2aee",
-    "size": 5665
+    "sha256": "c821fc7e615b17a77ab5c935c7b3f6dbc860ba5c8e4840ce5feb010f80512e15",
+    "size": 5920
   },
   "games/candy.js": {
     "sha256": "8dd299c27253582bf84682ace725fb16b69145c094464a90658018b0afb6edf6",
@@ -856,8 +856,8 @@
     "size": 5126
   },
   "pages/animals.html": {
-    "sha256": "d7ec5840e04f7e7f828229719cadd294c1a682b1451a917f054107c81e346b84",
-    "size": 13361
+    "sha256": "ab03f1ffeed425da999753d1879bd2da05fb64736858555633db9fc53d1d7ac7",
+    "size": 14511
   },
   "pages/classroom.html": {
     "sha256": "fdc0aa13ff0e36fc6707fdb6ed6a4a0e2ef14ef479ccd3e88e38085ca362513f",
