@@ -154,7 +154,7 @@ Ordered by the spec's own priority matrix (§55) and Appendix E. Each item is ta
 
 | ID | Work | Verdict |
 |---|---|---|
-| **V9** | Maze elevation → cozy garden journey (green ground, 2–4 motifs, house landmark, path contrast, clear walls). No enemies/timer/punishment. | **BUILD** |
+| **V9** | Maze elevation → cozy garden journey (green ground, 2–4 motifs, house landmark, path contrast, clear walls). No enemies/timer/punishment. | **DONE** (2026-10-10, task 226) — every off-path cell is now a hedge wall (`.maze-hedge`) over a soft green lawn (`.maze-ground`); the warm sand path (`.maze-stone`) reads as a clear corridor; 2–4 garden motifs (`🌼🌷🦋🐞`) decorate the hedges only (never the path); the destination is a distinct `.maze-goal` house landmark with a dominant bear. Logic, forgiving snap and the no-enemies/timer/punishment rule unchanged. `maze_smoke` 19→24 (+5 guards, negative-tested); `check_fast` 7/7; axe clean; audit 0 FAIL; offline E2E green; 4 screenshots refreshed. |
 | **V10** | Rhythm: four pads read as **drums** — icon contrast, tactile surface, clear active state, depth, percussion symbolism. Mode distinction clear without a complex menu. No extra pads. | **BUILD** |
 | **V11** | Counting: enlarge stage, move instruction closer, reduce dead space, comfortable choices, immediate feedback, full mechanic at 844×390. **No quantity 11–20** (curriculum decision, not visual). | **BUILD** |
 | **V12** | Memory: near-square cards, strong central back symbol, inner padding, clear flip state, matched state settles. Fix portrait title/back collision and short-landscape difficulty controls. Do not shrink cards to fit. | **BUILD** |

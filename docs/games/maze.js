@@ -71,15 +71,50 @@
     ground.className = 'maze-ground';
     stage.appendChild(ground);
 
+    var onPath = {};
+    cells.forEach(function (cell) { onPath[cell.col + ',' + cell.row] = true; });
+    var cellW = (100 / cols) + '%';
+    var cellH = (100 / rows) + '%';
+
+    // V9: every off-path cell becomes a hedge block, so the sand path reads as a
+    // corridor through a garden instead of loose squares on grass (clear walls,
+    // and the walls make the path obvious without hiding it).
+    var hedges = [];
+    for (var r = 0; r < rows; r++) {
+      for (var c = 0; c < cols; c++) {
+        if (onPath[c + ',' + r]) continue;
+        var hedge = document.createElement('div');
+        hedge.className = 'maze-hedge';
+        hedge.style.left = (c * (100 / cols)) + '%';
+        hedge.style.top = (r * (100 / rows)) + '%';
+        hedge.style.width = cellW;
+        hedge.style.height = cellH;
+        stage.appendChild(hedge);
+        hedges.push(hedge);
+      }
+    }
+
+    // A restrained garden layer: up to four motifs spread evenly across the
+    // hedges, never on the path, so they decorate without cluttering the way.
+    var MOTIFS = ['🌼', '🌷', '🦋', '🐞'];
+    var wanted = Math.min(MOTIFS.length, hedges.length);
+    for (var m = 0; m < wanted; m++) {
+      var hedgeEl = hedges[Math.floor(m * hedges.length / wanted)];
+      var motif = document.createElement('span');
+      motif.className = 'maze-motif';
+      motif.setAttribute('aria-hidden', 'true');
+      motif.textContent = MOTIFS[m];
+      hedgeEl.appendChild(motif);
+    }
+
     cells.forEach(function (cell, i) {
       var stone = document.createElement('div');
       stone.className = 'maze-stone';
       stone.dataset.idx = String(i);
       stone.style.left = (cell.col * (100 / cols)) + '%';
       stone.style.top = (cell.row * (100 / rows)) + '%';
-      stone.style.width = (100 / cols) + '%';
-      stone.style.height = (100 / rows) + '%';
-      stage.appendChild(stone);
+      stone.style.width = cellW;
+      stone.style.height = cellH;
       if (i === 0) {
         var startMark = document.createElement('span');
         startMark.className = 'maze-mark';
@@ -88,12 +123,14 @@
         stone.appendChild(startMark);
       }
       if (i === cells.length - 1) {
+        stone.classList.add('maze-goal');
         var goalMark = document.createElement('span');
         goalMark.className = 'maze-mark';
         goalMark.setAttribute('aria-hidden', 'true');
         goalMark.textContent = GOAL.emoji;
         stone.appendChild(goalMark);
       }
+      stage.appendChild(stone);
     });
 
     tokenEl = document.createElement('button');
@@ -255,6 +292,8 @@
         return {
           round: round,
           id: MAZES[round].id,
+          cols: cols,
+          rows: rows,
           cells: cells.length,
           reached: reached,
           misses: misses,

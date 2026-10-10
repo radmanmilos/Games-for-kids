@@ -780,8 +780,8 @@
     "size": 100855
   },
   "games/maze.js": {
-    "sha256": "72c4d14aea6d49f84e19c469a86ba197f04fe6a7e4f84f4941bd963fbb9f218e",
-    "size": 9576
+    "sha256": "99e1ccd0b6d0c5681e31a079e450034675f53d80cfeff874190b6ce892c07272",
+    "size": 11108
   },
   "games/ocean.js": {
     "sha256": "9916c368cb6eed03e34ba1bfd535938fb5f51aae49fd96212db6f96af5665c52",
@@ -888,8 +888,8 @@
     "size": 14884
   },
   "pages/maze.html": {
-    "sha256": "5db63453399a09e2cc77419c5db489e7dee34fcb1f3e1c71d06e4cc086d8e703",
-    "size": 4453
+    "sha256": "d0136867df611d6611291ab45b4290caef953647b9b41f42c81d0931fb6cb9c1",
+    "size": 6113
   },
   "pages/ocean.html": {
     "sha256": "a52679874ce5da2ae9ec23cd58434f8961ce2b1f417e9e1986c2f9d0c7a3fa47",

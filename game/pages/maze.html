@@ -11,6 +11,16 @@
   <link rel="stylesheet" href="../shared/accessibility.css" />
   <link rel="stylesheet" href="../styles/components.css">
   <style>
+    /* V9 (spec §27): a restrained cozy-garden layer over the same maze logic —
+       soft green ground, deep hedge walls, a warm sand path, a house landmark
+       and a few garden motifs on the walls. No enemies, timer or punishment. */
+    :root{
+      --maze-grass:#d9efcf;
+      --maze-hedge:#3f8a4f;
+      --maze-path:#f3e2b0;
+      --maze-path-done:#c3e6c8;
+      --maze-goal:#ffe6a6;
+    }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
     html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--cream);font-family:Fredoka,sans-serif;color:var(--plum)}
     #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.5vmin;padding:3vmin}
@@ -24,15 +34,34 @@
       width:min(88vmin,460px);
       aspect-ratio:6/4;
       border-radius:4vmin;
-      border:0.5vmin solid #fff;
+      border:0.6vmin solid var(--maze-hedge);
       box-shadow:0 1vmin 0 rgba(0,0,0,.08);
       overflow:hidden;
       touch-action:none;
     }
-    .maze-ground{position:absolute;inset:0;background:#e6f4e2}
-    .maze-stone{position:absolute;display:flex;align-items:center;justify-content:center;background:#f6e2b4;border-radius:28%;transition:background .2s ease}
-    .maze-stone.maze-done{background:#cdead2}
+    /* Soft grass with a couple of faint tufts, so the ground reads as a lawn
+       without competing with the path. */
+    .maze-ground{position:absolute;inset:0;background:
+      radial-gradient(circle at 24% 32%, rgba(255,255,255,.5) 0 1.1%, transparent 1.6%),
+      radial-gradient(circle at 74% 68%, rgba(255,255,255,.45) 0 .9%, transparent 1.4%),
+      var(--maze-grass);
+      background-size:24% 24%,30% 30%,auto}
+    /* Walls: one hedge block per off-path cell. Scaled just inside its cell so
+       the seams read as clipped hedges and the sand path stays a clear corridor. */
+    .maze-hedge{position:absolute;display:flex;align-items:center;justify-content:center;
+      background:var(--maze-hedge);border-radius:24%;
+      transform:scale(.9);
+      box-shadow:inset 0 -0.6vmin 0 rgba(0,0,0,.14), inset 0 0.5vmin 0 rgba(255,255,255,.14)}
+    .maze-motif{font-size:min(4.6vmin,24px);line-height:1;opacity:.95}
+    .maze-stone{position:absolute;display:flex;align-items:center;justify-content:center;
+      background:var(--maze-path);border-radius:26%;
+      box-shadow:inset 0 -0.7vmin 0 rgba(0,0,0,.07);
+      transition:background .2s ease}
+    .maze-stone.maze-done{background:var(--maze-path-done)}
+    /* The destination is the landmark and stays visually dominant. */
+    .maze-goal{background:var(--maze-goal)}
     .maze-mark{font-size:min(9vmin,46px);line-height:1}
+    .maze-goal .maze-mark{font-size:min(11vmin,54px)}
     .maze-token{
       position:absolute;
       transform:translate(-50%,-50%);
@@ -40,6 +69,7 @@
       padding:0;margin:0;border:none;background:transparent;
       font-size:min(11vmin,58px);line-height:1;
       cursor:grab;touch-action:none;
+      filter:drop-shadow(0 0.6vmin 0.5vmin rgba(0,0,0,.28));
       transition:left .22s ease,top .22s ease;
       z-index:3;
     }
@@ -48,7 +78,7 @@
 
     .retry-btn{position:absolute;top:2.6vmin;right:2.6vmin;width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--sky);color:var(--plum);font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.15);cursor:pointer}
     #maze-feedback{min-height:6vmin;font-size:4.4vmin;font-weight:700;color:var(--green);text-align:center}
-    @media (min-width:800px){#maze-prompt{font-size:36px}.maze-mark{font-size:34px}.maze-token{font-size:44px}#maze-feedback{font-size:28px}}
+    @media (min-width:800px){#maze-prompt{font-size:36px}.maze-mark{font-size:34px}.maze-goal .maze-mark{font-size:40px}.maze-motif{font-size:20px}.maze-token{font-size:44px}#maze-feedback{font-size:28px}}
   </style>
 </head>
 <body>

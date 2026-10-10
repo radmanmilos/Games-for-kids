@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "6ba643559e856c7fc381ed2e39d9d0374b874b1b",
+  "commitSha": "b91a356d14e028f5da2513245ca0256f39f540c3",
   "browser": {
     "product": "Chrome/155.0.8059.39",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-10T10:06:23.832Z",
+  "generatedAt": "2026-10-10T10:17:58.586Z",
   "pageSet": [
-    "animals"
+    "maze"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,40 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "animals_phone-portrait.png",
-      "page": "animals",
+      "file": "maze_phone-portrait.png",
+      "page": "maze",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 27654
+      "bytes": 26507
     },
     {
-      "file": "animals_phone-landscape.png",
-      "page": "animals",
+      "file": "maze_phone-landscape.png",
+      "page": "maze",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 27229
+      "bytes": 28441
     },
     {
-      "file": "animals_tablet-portrait.png",
-      "page": "animals",
+      "file": "maze_tablet-portrait.png",
+      "page": "maze",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 70410
+      "bytes": 41415
     },
     {
-      "file": "animals_tablet-landscape.png",
-      "page": "animals",
+      "file": "maze_tablet-landscape.png",
+      "page": "maze",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 69881
+      "bytes": 39905
     }
   ]
 }

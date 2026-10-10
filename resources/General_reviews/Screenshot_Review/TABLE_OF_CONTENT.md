@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-10T10:06:23.832Z
+- Генерисано / Generated: 2026-10-10T10:17:58.586Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -56,10 +56,10 @@
 | `matching_game_phone-portrait.png` | Слагалица бомбона | `/pages/matching_game.html` | 390×844 | портрет | — | 09.10.2026. 13:41:25 | 219 |
 | `matching_game_tablet-landscape.png` | Слагалица бомбона | `/pages/matching_game.html` | 1180×820 | пејзаж | — | 09.10.2026. 13:41:25 | 219 |
 | `matching_game_tablet-portrait.png` | Слагалица бомбона | `/pages/matching_game.html` | 820×1180 | портрет | — | 09.10.2026. 13:41:25 | 219 |
-| `maze_phone-landscape.png` | Путања | `/pages/maze.html` | 844×390 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `maze_phone-portrait.png` | Путања | `/pages/maze.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `maze_tablet-landscape.png` | Путања | `/pages/maze.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `maze_tablet-portrait.png` | Путања | `/pages/maze.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
+| `maze_phone-landscape.png` | Путања | `/pages/maze.html` | 844×390 | пејзаж | — | 10.10.2026. 12:17:58 | 226 |
+| `maze_phone-portrait.png` | Путања | `/pages/maze.html` | 390×844 | портрет | — | 10.10.2026. 12:17:58 | 226 |
+| `maze_tablet-landscape.png` | Путања | `/pages/maze.html` | 1180×820 | пејзаж | — | 10.10.2026. 12:17:58 | 226 |
+| `maze_tablet-portrait.png` | Путања | `/pages/maze.html` | 820×1180 | портрет | — | 10.10.2026. 12:17:58 | 226 |
 | `ocean_phone-landscape.png` | Океан | `/pages/ocean.html` | 844×390 | пејзаж | — | 09.10.2026. 14:32:06 | 220 |
 | `ocean_phone-portrait.png` | Океан | `/pages/ocean.html` | 390×844 | портрет | — | 09.10.2026. 14:32:06 | 220 |
 | `ocean_tablet-landscape.png` | Океан | `/pages/ocean.html` | 1180×820 | пејзаж | — | 09.10.2026. 14:32:06 | 220 |
