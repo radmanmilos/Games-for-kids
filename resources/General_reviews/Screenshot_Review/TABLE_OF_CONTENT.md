@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-10T10:28:46.873Z
+- Генерисано / Generated: 2026-10-10T10:51:53.341Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -8,10 +8,10 @@
 
 | Слика (PNG) | Игра / Game | Страна / Page | Формат | Оријентација | Стање | Последња слика (датум · време) | Задатак |
 |---|---|---|---|---|---|---|---|
-| `animal_counting_phone-landscape.png` | Бројање | `/pages/animal_counting.html` | 844×390 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `animal_counting_phone-portrait.png` | Бројање | `/pages/animal_counting.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `animal_counting_tablet-landscape.png` | Бројање | `/pages/animal_counting.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `animal_counting_tablet-portrait.png` | Бројање | `/pages/animal_counting.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
+| `animal_counting_phone-landscape.png` | Бројање | `/pages/animal_counting.html` | 844×390 | пејзаж | — | 10.10.2026. 12:51:53 | 228 |
+| `animal_counting_phone-portrait.png` | Бројање | `/pages/animal_counting.html` | 390×844 | портрет | — | 10.10.2026. 12:51:53 | 228 |
+| `animal_counting_tablet-landscape.png` | Бројање | `/pages/animal_counting.html` | 1180×820 | пејзаж | — | 10.10.2026. 12:51:53 | 228 |
+| `animal_counting_tablet-portrait.png` | Бројање | `/pages/animal_counting.html` | 820×1180 | портрет | — | 10.10.2026. 12:51:53 | 228 |
 | `animal_memory_phone-landscape.png` | Памтилица | `/pages/animal_memory.html` | 844×390 | пејзаж | — | 08.10.2026. 15:14:51 | 216 |
 | `animal_memory_phone-portrait.png` | Памтилица | `/pages/animal_memory.html` | 390×844 | портрет | — | 08.10.2026. 15:14:51 | 216 |
 | `animal_memory_tablet-landscape.png` | Памтилица | `/pages/animal_memory.html` | 1180×820 | пејзаж | — | 08.10.2026. 15:14:51 | 216 |

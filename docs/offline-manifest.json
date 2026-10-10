@@ -732,8 +732,8 @@
     "size": 57346
   },
   "games/animal_counting.js": {
-    "sha256": "376f295f578cc6809b7544ca2d2892764c1add8e8abbca3a792395e39d7473bc",
-    "size": 10490
+    "sha256": "819fa97f2d064db22cedcc21ec77eecfb49ef4c9829e24215ee4f1f06137529f",
+    "size": 10186
   },
   "games/animal_memory.js": {
     "sha256": "884ccefaf9933a7194cdf64095d40f3d07e7b1513a6b6e4db903b2a8f0a6e993",
@@ -844,8 +844,8 @@
     "size": 577
   },
   "pages/animal_counting.html": {
-    "sha256": "a2c7a467bbb95539544e2f2beeb85f7619edaab111eb13cff5733b810d58c512",
-    "size": 5745
+    "sha256": "c8b875298f57e7890213d8c52eb2345b413753403c5ad8722421a02a0b354dd9",
+    "size": 7181
   },
   "pages/animal_memory.html": {
     "sha256": "f57133932ed980d30e5a4858e3e5b4982fce3fd262dc49940357a98b52143ee6",

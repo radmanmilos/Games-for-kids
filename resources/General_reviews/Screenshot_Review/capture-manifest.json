@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "a508d00ad0ae748e3539636674fbd17e099ad885",
+  "commitSha": "691dc59f461d6628452f860493b31b54d0e4c46f",
   "browser": {
     "product": "Chrome/155.0.8059.39",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-10T10:28:46.873Z",
+  "generatedAt": "2026-10-10T10:51:53.341Z",
   "pageSet": [
-    "rhythm"
+    "animal_counting"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,40 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "rhythm_phone-portrait.png",
-      "page": "rhythm",
+      "file": "animal_counting_phone-portrait.png",
+      "page": "animal_counting",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 66370
+      "bytes": 21335
     },
     {
-      "file": "rhythm_phone-landscape.png",
-      "page": "rhythm",
+      "file": "animal_counting_phone-landscape.png",
+      "page": "animal_counting",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 55751
+      "bytes": 15799
     },
     {
-      "file": "rhythm_tablet-portrait.png",
-      "page": "rhythm",
+      "file": "animal_counting_tablet-portrait.png",
+      "page": "animal_counting",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 111572
+      "bytes": 38560
     },
     {
-      "file": "rhythm_tablet-landscape.png",
-      "page": "rhythm",
+      "file": "animal_counting_tablet-landscape.png",
+      "page": "animal_counting",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 112159
+      "bytes": 38164
     }
   ]
 }

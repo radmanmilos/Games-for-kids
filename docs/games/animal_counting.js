@@ -5,16 +5,16 @@
     if(!screen){
       screen = document.createElement('div'); screen.id='game-counting'; screen.className='screen';
       screen.innerHTML = `<button class="back-btn" aria-label="${SERBIAN.nav.back}"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:8vh">
-          <div style="display:flex;gap:12px;align-items:center;">
-            <h2 style="margin:0 8px 0 0">Изброј животиње</h2>
-                  <div class="candy-score" id="countScore"><span class="matching-icon">🔢</span> <span id="countScoreValue">0</span></div>
+        <div class="count-stage-wrap learn-stage">
+          <div class="count-head">
+            <h2 class="count-title learn-instruction">Изброј животиње</h2>
+            <div class="candy-score" id="countScore"><span class="matching-icon">🔢</span> <span id="countScoreValue">0</span></div>
           </div>
-          <div id="countInfo" style="color:var(--plum-soft);font-weight:600">Ниво <span id="countLevel">1</span></div>
-          <div id="countScene" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;min-height:160px;padding:18px;border-radius:12px;background:rgba(255,255,255,0.8);box-shadow:0 8px 24px rgba(0,0,0,.08)"></div>
-          <div id="countButtons" style="display:flex;gap:8px;margin-top:12px"></div>
-          <div id="countResult" style="margin-top:8px;font-weight:800;min-height:36px"></div>
-                <button id="countNext" class="next-btn" style="display:none;margin-top:12px">➜</button>
+          <div id="countInfo" class="count-info">Ниво <span id="countLevel">1</span></div>
+          <div id="countScene" class="count-scene learn-stage-mat"></div>
+          <div id="countResult" class="count-result learn-feedback"></div>
+          <div id="countButtons" class="count-buttons learn-answers"></div>
+          <button id="countNext" class="next-btn" style="display:none">➜</button>
         </div>`;
       app.appendChild(screen);
     }

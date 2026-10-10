@@ -135,6 +135,48 @@ const COUNT_ALL = `(function(){
   check('page boots via inline DOMContentLoaded (counting.html)',
     fs.readFileSync(path.join(root, 'game', 'pages', 'animal_counting.html'), 'utf8').includes('startAnimalCounting'));
 
+  // --- V11 composition guards: the FULL mechanic (10 tiles + 10 choices +
+  // prompt + Next + celebration overlay) must fit without scrolling at both
+  // the 390x844 and the 844x390 acceptance viewports (spec section 42.2). ---
+  const FILL_WORST = `(function(){
+    const scene=document.getElementById('countScene');
+    scene.innerHTML='';
+    for(let i=0;i<10;i++){const t=document.createElement('div');t.className='count-tile counted';t.setAttribute('data-animal','Dog');t.textContent='🐶';scene.appendChild(t);}
+    const btns=document.getElementById('countButtons');
+    btns.innerHTML='';
+    for(let i=1;i<=10;i++){const b=document.createElement('button');b.className='count-choice'+(i===5?' correct':'');b.dataset.val=String(i);b.textContent=String(i);if(i!==5)b.style.visibility='hidden';btns.appendChild(b);}
+    document.getElementById('countResult').textContent='';
+    const nx=document.getElementById('countNext'); if(nx) nx.style.display='inline-block';
+    const cel=document.getElementById('countCelebrate'); if(cel){cel.style.display='flex';cel.classList.add('show');}
+    return true;
+  })()`;
+  const GEO = `JSON.stringify((()=>{
+    const box = el => el.getBoundingClientRect();
+    const scene=document.getElementById('countScene');
+    const result=document.getElementById('countResult');
+    const buttons=document.getElementById('countButtons');
+    const next=document.getElementById('countNext');
+    const els=[scene,result,buttons,next,scene.parentElement];
+    const overflow=els.filter(el=>{const b=box(el);return b.top<-1||b.bottom>innerHeight+1||b.left<-1||b.right>innerWidth+1;}).map(el=>el.id||el.className);
+    const sc=box(scene), rs=box(result), bs=box(buttons);
+    const choices=[...buttons.querySelectorAll('.count-choice')];
+    const minChoice=choices.length?Math.min(...choices.map(b=>Math.min(box(b).width,box(b).height))):0;
+    return {vw:innerWidth,vh:innerHeight,overflow,between:rs.top>=sc.bottom-2&&rs.bottom<=bs.top+2,
+      minChoice:Math.round(minChoice),tiles:scene.querySelectorAll('.count-tile').length,choices:choices.length};
+  })())`;
+  for (const v of [{name:'phone-portrait',width:390,height:844},{name:'phone-landscape',width:844,height:390}]) {
+    await h.c.send('Emulation.setDeviceMetricsOverride', { width:v.width, height:v.height, deviceScaleFactor:1, mobile:true });
+    await sleep(150);
+    await h.evalv(FILL_WORST);
+    await sleep(120);
+    const geo = await h.evalv(GEO);
+    const G = JSON.parse(geo);
+    check(`V11 ${v.name}: worst case (10 tiles + 10 choices) fits with no overflow`,
+      G.tiles === 10 && G.choices === 10 && G.overflow.length === 0, geo);
+    check(`V11 ${v.name}: prompt sits between the stage and the answer choices`, G.between === true, geo);
+    check(`V11 ${v.name}: answer choices meet the 64px touch floor`, G.minChoice >= 64, geo);
+  }
+
   await h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);
   process.exit(getFails() ? 1 : 0);
