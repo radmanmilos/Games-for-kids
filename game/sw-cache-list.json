@@ -248,6 +248,7 @@
   "shared/speech.js",
   "shared/utils.js",
   "shared/viewport.js",
+  "styles/components.css",
   "styles/design-tokens.css",
   "styles/learning-stage.css",
   "styles/shell.css",

@@ -4,8 +4,9 @@
 
 ---
 
-## Current status (2026-10-09)
+## Current status (2026-10-10)
 
+- **Task 224 DONE (2026-10-10):** Phase 7 — V7.1, the **tactile component layer** `game/styles/components.css` now defines the ten control families once (`.ps-btn`/`--secondary`/`--icon`, `.ps-back`, `.ps-card`, `.ps-drag`, `.ps-modal`, `.ps-chip`, `.ps-instruction`, `.ps-complete`) with all states, linked on all 24 child pages. Sliced per user decision: only `.ps-back` (spec §44.1) is adopted now (7 pages, rendering byte-identical → no screenshot refresh); the rest adopt in V9–V19. 4 static `hub_smoke` guards (negative-tested); `check_fast` 7/7.
 - **Task 223 DONE (2026-10-09):** Phase 6 — V6.2, the **Petrin Glow** is now applied to the six attention states (current card / expected placement / selected object / active control / hint target / focus — never on errors, never continuous, never replacing semantic green/yellow). One source `--ps-glow`, a shared six-state rule + `:focus-visible`, and per-page merges where the page rule owns a box-shadow. 4 static `hub_smoke` guards + 6 runtime computed-boxShadow smoke checks (all negative-tested); 12 review screenshots refreshed (rhythm/shapes/piano).
 - **Task 216 DONE (2026-10-08):** the visual/UX plan's Phases 0–2 are complete — V1.1/V1.2 puzzle fixes, V0.1/V0.2 deterministic state capture, and V2.1–V2.11 (the shared `.ps-header` shell in `game/styles/shell.css` plus per-page migrations of Puzzle, Classroom, Coloring, Piano, Ocean, Space, Driving, Memory, and a VERIFY sweep of the remaining 16 pages) — all pushed with green CI (run 37801686226).
 - **Task 222 DONE (2026-10-09):** Phase 6 — V6.1, the **Petrin Glow** introduced as one reusable treatment (spec §24): `.ps-focus-glow` (exact `box-shadow: 0 0 0 3px rgb(155 109 255 / .16), 0 8px 22px rgb(74 63 107 / .12)`) added once to the shared `game/shared/accessibility.css` — global, zero page edits, static (no reduced-motion variant). Not applied yet (that is V6.2). Guards in `hub_smoke` (+2, negative-tested): the class+shadows exist, and every child page links `accessibility.css` (would have caught the task-221 sequencing link bug). `check_fast` 7/7.

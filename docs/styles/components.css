@@ -1,0 +1,182 @@
+/* Shared tactile component layer — Visual/UX plan V7.1 (spec sections 25 + 44).
+   A single canonical VOCABULARY for the controls every child page already
+   repeats by hand (spec 22: "never five copies of the same header CSS"). It
+   defines each component family once, with its interaction states, consuming
+   the shared tokens (design-tokens.css) and the Petrin Glow (--ps-glow,
+   accessibility.css) instead of inventing new colours or shadows.
+
+     .ps-btn            primary action                .ps-btn--secondary  secondary
+     .ps-btn--icon      circular icon control         .ps-back            back control (spec 44.1)
+     .ps-card           selectable / correct card     .ps-drag            draggable object
+     .ps-modal          modal scrim + panel           .ps-chip            status chip
+     .ps-instruction    instruction strip             .ps-complete        completion state
+
+   States use real CSS state (:hover / :active / :disabled) where the browser
+   exposes one, and attribute or class hooks (aria-pressed / aria-selected /
+   aria-disabled, .is-selected / .is-correct) where the state is app-driven, so
+   a page never needs a bespoke class. Adoption is ADDITIVE and opt-in: a page
+   keeps its own classes and layout and simply adds the component class; no page
+   is forced onto this layer, and nothing here changes rendering until a page
+   opts in. Components own chrome and interaction only — size, position and
+   layout stay with the page (override via the --ps-* variables when needed). */
+
+/* ------------------------------------------------------------------ buttons */
+.ps-btn {
+  --ps-btn-bg: var(--sky);
+  --ps-btn-fg: var(--plum);
+  --ps-btn-lift: 0 1vmin 0 rgba(0, 0, 0, .18);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2, 10px);
+  min-width: var(--touch-comfort, 56px);
+  min-height: var(--touch-comfort, 56px);
+  padding: var(--space-2, 10px) var(--space-4, 18px);
+  border: 0;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--ps-btn-bg);
+  color: var(--ps-btn-fg);
+  font: inherit;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--ps-btn-lift);
+  transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.ps-btn:hover { filter: brightness(1.03); }
+.ps-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0, 0, 0, .18); }
+.ps-btn:disabled,
+.ps-btn[aria-disabled="true"] { opacity: .5; cursor: default; transform: none; box-shadow: 0 1vmin 0 rgba(0, 0, 0, .10); }
+.ps-btn.is-selected,
+.ps-btn[aria-pressed="true"],
+.ps-btn[aria-selected="true"] { box-shadow: var(--ps-glow); }
+.ps-btn.is-correct { --ps-btn-bg: var(--green); --ps-btn-fg: #fff; }
+.ps-btn.is-hint,
+.ps-btn.ps-hint { box-shadow: var(--ps-glow); }
+
+.ps-btn--secondary {
+  --ps-btn-bg: #fff;
+  --ps-btn-fg: var(--plum);
+  --ps-btn-lift: 0 1vmin 0 rgba(0, 0, 0, .10);
+}
+
+.ps-btn--icon {
+  --ps-btn-bg: var(--plum);
+  --ps-btn-fg: #fff;
+  min-width: var(--touch-min, 48px);
+  min-height: var(--touch-min, 48px);
+  padding: 0;
+  border-radius: 50%;
+}
+
+/* Misc/V6.2: a selected icon control also carries the glow, like the glow rule in
+   accessibility.css, but scoped to this component so it can be adopted per page. */
+
+/* -------------------------------------------------------------- back control */
+/* Spec 44.1: canonical arrow, large hit area, stable in every orientation, never
+   moved by title length, with pressed feedback. Size is a token so the 11vmin /
+   10vmin variants this repo already ships can adopt it without a visual change. */
+.ps-back {
+  --ps-back-size: 12vmin;
+  --ps-back-bg: var(--plum);
+  --ps-back-fg: #fff;
+  width: var(--ps-back-size);
+  height: var(--ps-back-size);
+  border: 0;
+  border-radius: 50%;
+  background: var(--ps-back-bg);
+  color: var(--ps-back-fg);
+  font-size: calc(var(--ps-back-size) * .5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1vmin 0 rgba(0, 0, 0, .2);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.ps-back:active { transform: scale(.9) translateY(3px); }
+
+/* ---------------------------------------------------------------- card */
+.ps-card {
+  --ps-card-bg: #fff;
+  --ps-card-lift: 0 1.4vmin 0 rgba(0, 0, 0, .08);
+  position: relative;
+  background: var(--ps-card-bg);
+  border-radius: var(--radius-md, 22px);
+  box-shadow: var(--ps-card-lift);
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+  touch-action: manipulation;
+}
+.ps-card:hover { transform: translateY(-2px); }
+.ps-card:active { transform: translateY(2px); }
+.ps-card.is-selected,
+.ps-card[aria-selected="true"] { box-shadow: var(--ps-glow), var(--ps-card-lift); }
+.ps-card.is-correct { box-shadow: 0 0 0 3px var(--green), var(--ps-card-lift); }
+.ps-card:disabled,
+.ps-card[aria-disabled="true"] { opacity: .5; cursor: default; transform: none; }
+
+/* ------------------------------------------------------------ draggable */
+.ps-drag {
+  cursor: grab;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.ps-drag.is-dragging { cursor: grabbing; transform: scale(1.06); box-shadow: var(--shadow-card, 0 12px 28px rgba(74, 63, 107, .14)); }
+.ps-drag.is-over-target { box-shadow: var(--ps-glow); }
+
+/* ------------------------------------------------------------------ modal */
+.ps-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4, 18px);
+}
+.ps-modal.is-open { display: flex; }
+.ps-modal__scrim { position: absolute; inset: 0; background: rgba(74, 63, 107, .55); }
+.ps-modal__panel {
+  position: relative;
+  max-width: min(90vw, 480px);
+  max-height: 90svh;
+  overflow: auto;
+  background: var(--cream, #FFF8ED);
+  border-radius: var(--radius-lg, 30px);
+  box-shadow: var(--shadow-card, 0 12px 28px rgba(74, 63, 107, .14));
+  padding: var(--space-5, 24px);
+}
+
+/* -------------------------------------------------------------- status chip */
+.ps-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1, 6px);
+  padding: .4em .9em;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--plum);
+  color: #fff;
+  font-weight: 700;
+  line-height: 1;
+}
+.ps-chip.is-correct { background: var(--green); }
+.ps-chip.is-hint { box-shadow: var(--ps-glow); }
+
+/* -------------------------------------------------------- instruction strip */
+.ps-instruction {
+  display: block;
+  text-align: center;
+  font-weight: 700;
+  color: var(--plum);
+}
+
+/* ----------------------------------------------------------- completion state */
+.ps-complete { text-align: center; }
+.ps-complete__title { font-weight: 800; color: var(--green); }

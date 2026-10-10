@@ -225,6 +225,28 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
   check('V6.2: every page whose state rule owns a box-shadow merges --ps-glow (cascade)',
     noMerge.length === 0, noMerge.map(x => x[0]).join(','));
 
+  // V7.1 (spec §25/§44): one tactile component layer defines the ten control families
+  // ONCE, so a page stops copy-pasting chrome (spec §22 "never five copies of the same
+  // header CSS"). Static wiring, so a re-layout cannot defeat it: the file defines every
+  // family, every child page links it, the back control has a canonical chrome rule, and
+  // the pages that adopted .ps-back actually carry the class.
+  const compCss = fs.readFileSync(path.join(__dirname, '..', 'game', 'styles', 'components.css'), 'utf8');
+  const COMPONENTS = ['.ps-btn', '.ps-btn--secondary', '.ps-btn--icon', '.ps-back', '.ps-card',
+    '.ps-drag', '.ps-modal', '.ps-chip', '.ps-instruction', '.ps-complete'];
+  check('V7.1: components.css defines all ten tactile families',
+    COMPONENTS.every(s => compCss.includes(s + ' {')), 'missing a family');
+  const noComp = fs.readdirSync(pagesDir).filter(f => f.endsWith('.html'))
+    .filter(f => !fs.readFileSync(path.join(pagesDir, f), 'utf8').includes('styles/components.css'));
+  check('V7.1: every child page links the shared components.css', noComp.length === 0, noComp.join(','));
+  check('V7.1: .ps-back carries the canonical back-control chrome (spec §44.1)',
+    /\.ps-back\s*\{[^}]*width:\s*var\(--ps-back-size/.test(compCss) &&
+    /\.ps-back\s*\{[^}]*box-shadow:/.test(compCss) &&
+    /\.ps-back:active\s*\{\s*transform:/.test(compCss), 'back control contract missing');
+  const BACK_ADOPTED = ['classroom', 'animals', 'coloring', 'matching_game', 'piano', 'shapes', 'tracing'];
+  const notAdopted = BACK_ADOPTED.filter(p =>
+    !fs.readFileSync(path.join(pagesDir, p + '.html'), 'utf8').includes('class="back-btn ps-back"'));
+  check('V7.1: adopted pages carry .ps-back on their back controls', notAdopted.length === 0, notAdopted.join(','));
+
   // Regression guard (task 105): on a short landscape viewport the 24vh grid
   // margin + 2 columns put the last row below the fold, so the racing3d button
   // was only reachable after navigating into and back out of a game.
