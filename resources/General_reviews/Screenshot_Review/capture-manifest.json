@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "b91a356d14e028f5da2513245ca0256f39f540c3",
+  "commitSha": "a508d00ad0ae748e3539636674fbd17e099ad885",
   "browser": {
     "product": "Chrome/155.0.8059.39",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-10T10:17:58.586Z",
+  "generatedAt": "2026-10-10T10:28:46.873Z",
   "pageSet": [
-    "maze"
+    "rhythm"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,40 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "maze_phone-portrait.png",
-      "page": "maze",
+      "file": "rhythm_phone-portrait.png",
+      "page": "rhythm",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 26507
+      "bytes": 66370
     },
     {
-      "file": "maze_phone-landscape.png",
-      "page": "maze",
+      "file": "rhythm_phone-landscape.png",
+      "page": "rhythm",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 28441
+      "bytes": 55751
     },
     {
-      "file": "maze_tablet-portrait.png",
-      "page": "maze",
+      "file": "rhythm_tablet-portrait.png",
+      "page": "rhythm",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 41415
+      "bytes": 111572
     },
     {
-      "file": "maze_tablet-landscape.png",
-      "page": "maze",
+      "file": "rhythm_tablet-landscape.png",
+      "page": "rhythm",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 39905
+      "bytes": 112159
     }
   ]
 }

@@ -24,14 +24,32 @@
     .mode-btn{border:none;border-radius:999px;padding:2vmin 4vmin;font-size:3.6vmin;font-weight:700;background:#fff;color:var(--plum);box-shadow:0 1vmin 0 rgba(0,0,0,.1);cursor:pointer;touch-action:manipulation}
     .mode-btn.active{background:#2E7D32;color:#fff}
     .drum-set{display:grid;grid-template-columns:1fr 1fr;gap:3vmin;justify-items:center;align-items:center}
-    .rhythm-pad{border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;transition:transform .12s ease,filter .12s ease;box-shadow:0 1.6vmin 0 rgba(0,0,0,.14),inset 0 1vmin 0 rgba(255,255,255,.5)}
+    /* V10 (spec §28): each pad must read as a drum, not a flat coloured circle.
+       A cast shadow gives depth, an inset rim + skin gives a tactile surface, and
+       a light drumhead behind the icon gives the symbol strong contrast. All four
+       are skins, sized low→high like a drum kit, so every pad reads as a drum. */
+    .rhythm-pad{border:none;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;
+      text-shadow:0 .3vmin .6vmin rgba(0,0,0,.3);
+      box-shadow:0 1.6vmin 0 rgba(0,0,0,.22),inset 0 0 0 1vmin rgba(255,255,255,.42),inset 0 -1vmin 1.4vmin rgba(0,0,0,.22),inset 0 1vmin 1.3vmin rgba(255,255,255,.55);
+      transition:transform .12s ease,filter .12s ease,box-shadow .12s ease}
     .rhythm-pad:disabled{opacity:.75;cursor:default}
-    .rhythm-pad.hit{transform:scale(.92);filter:brightness(1.08)}
-    .rhythm-pad.miss{transform:scale(.92);filter:brightness(.82)}
-    .rhythm-pad[data-idx="0"]{width:32vmin;height:32vmin;font-size:12vmin;background:radial-gradient(circle at 30% 30%,#ffdcb0,#d2603a)}
-    .rhythm-pad[data-idx="1"]{width:29vmin;height:29vmin;font-size:11vmin;background:radial-gradient(circle at 30% 30%,#ffca80,#e0861f)}
-    .rhythm-pad[data-idx="2"]{width:26vmin;height:26vmin;font-size:10vmin;background:radial-gradient(circle at 30% 30%,#9fd6ff,#3a86cf)}
-    .rhythm-pad[data-idx="3"]{width:23vmin;height:23vmin;font-size:9vmin;background:radial-gradient(circle at 30% 30%,#ffe9a8,#f2af1f)}
+    /* V10 (spec §42.17): a clearly different look while listening vs while it is
+       the child's turn, plus a completion cue when a melody is repeated right.
+       Placed before .hit so a struck pad still shows its bright ring. */
+    [data-phase="listen"] .rhythm-pad{filter:saturate(.78) brightness(.94)}
+    [data-phase="repeat"] .rhythm-pad{filter:none}
+    @keyframes drumCheer{0%{transform:scale(1)}40%{transform:scale(1.08) rotate(-2deg)}100%{transform:scale(1)}}
+    [data-phase="success"] .rhythm-pad{animation:drumCheer .6s ease}
+    /* clear active state: a bright struck ring, and a real press */
+    .rhythm-pad.hit{transform:scale(.9) translateY(2px);filter:brightness(1.12) saturate(1.05);
+      box-shadow:0 0 0 .9vmin rgba(255,255,255,.9),0 0 3vmin rgba(255,255,255,.75),inset 0 0 0 1.1vmin rgba(255,255,255,.75)}
+    .rhythm-pad.miss{transform:scale(.95);filter:brightness(.78) saturate(.7)}
+    .rhythm-pad:active:not(:disabled){transform:scale(.95) translateY(2px)}
+    .rhythm-pad[data-idx="0"]{width:32vmin;height:32vmin;font-size:12vmin;background:radial-gradient(circle at 50% 47%,#fff7e8 0 39%,rgba(255,247,232,0) 43%),radial-gradient(circle at 30% 30%,#ffdcb0,#c9562f)}
+    .rhythm-pad[data-idx="1"]{width:29vmin;height:29vmin;font-size:11vmin;background:radial-gradient(circle at 50% 47%,#fff4de 0 39%,rgba(255,244,222,0) 43%),radial-gradient(circle at 30% 30%,#ffca80,#d97b16)}
+    .rhythm-pad[data-idx="2"]{width:26vmin;height:26vmin;font-size:10vmin;background:radial-gradient(circle at 50% 47%,#eef7ff 0 39%,rgba(238,247,255,0) 43%),radial-gradient(circle at 30% 30%,#9fd6ff,#3179c4)}
+    /* the smallest, highest drum — same skin treatment, warm skin */
+    .rhythm-pad[data-idx="3"]{width:23vmin;height:23vmin;font-size:9vmin;background:radial-gradient(circle at 50% 47%,#fffbe6 0 39%,rgba(255,251,230,0) 43%),radial-gradient(circle at 30% 30%,#ffe9a8,#e0a012)}
     #rhythm-feedback{min-height:6vmin;font-size:4.5vmin;font-weight:700;color:var(--green);text-align:center}
     @media (min-width:800px){
       #rhythm-prompt{font-size:40px}
@@ -51,7 +69,7 @@
       .rhythm-pad[data-idx="2"]{width:22vmin;height:22vmin;font-size:9vmin}
       .rhythm-pad[data-idx="3"]{width:20vmin;height:20vmin;font-size:8vmin}
     }
-    @media (prefers-reduced-motion:reduce){.rhythm-pad{transition:none}.rhythm-pad.hit,.rhythm-pad.miss{transform:none!important}}
+    @media (prefers-reduced-motion:reduce){.rhythm-pad{transition:none}.rhythm-pad.hit,.rhythm-pad.miss{transform:none!important}[data-phase="success"] .rhythm-pad{animation:none}}
   </style>
 </head>
 <body>
@@ -69,7 +87,7 @@
       <button type="button" class="rhythm-pad" data-idx="0" aria-label="Велики бубањ" disabled>🥁</button>
       <button type="button" class="rhythm-pad" data-idx="1" aria-label="Средњи бубањ" disabled>🥁</button>
       <button type="button" class="rhythm-pad" data-idx="2" aria-label="Мали добош" disabled>🥁</button>
-      <button type="button" class="rhythm-pad" data-idx="3" aria-label="Високи звук" disabled>🔔</button>
+      <button type="button" class="rhythm-pad" data-idx="3" aria-label="Високи бубањ" disabled>🥁</button>
     </div>
     <div id="rhythm-feedback" aria-live="polite"></div>
   </div>

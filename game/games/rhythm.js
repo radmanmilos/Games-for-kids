@@ -14,7 +14,7 @@
     { id: 'pad-boom', emoji: '🥁', name: 'Велики бубањ', freq: 130 },
     { id: 'pad-tam', emoji: '🥁', name: 'Средњи бубањ', freq: 220 },
     { id: 'pad-tim', emoji: '🥁', name: 'Мали добош', freq: 340 },
-    { id: 'pad-ting', emoji: '🔔', name: 'Високи звук', freq: 540 }
+    { id: 'pad-ting', emoji: '🥁', name: 'Високи бубањ', freq: 540 }
   ];
   var MAX_LEN = 6;      /* melody length never grows past this */
   var ECHO_STEP_MS = 430;
@@ -65,6 +65,9 @@
     function setPhase(next, message) {
       phase = next;
       prompt.textContent = message;
+      /* V10 (spec §42.17): expose the phase on the drum set so the look can
+         differ while listening, while it is the child's turn, and on success. */
+      if (set) set.dataset.phase = next;
     }
 
     function patternLength() { return Math.min(2 + round, MAX_LEN); }

@@ -1,7 +1,10 @@
 /* Rhythm smoke test — task 206 mini drum set.
    Exercises both echo modes, growing melody complexity (2 → 6), forgiving
    replay on a wrong pad, free play, large reachable controls, and the
-   registry/hub wiring. Determined only by state waits, never by sleep()-and-pray. */
+   registry/hub wiring. Determined only by state waits, never by sleep()-and-pray.
+   V10 (spec §28 / §42.17): also asserts each pad reads as a drum (drumhead + skin
+   + rim), the icon contrast, the struck-pad active ring, the listen/repeat state
+   and the completion cue. */
 const { start, check, getFails, sleep } = require('./headless.js');
 const { checkRouteWired } = require('./route_contract.js');
 const fs = require('fs');
@@ -39,6 +42,58 @@ const STUB = `window.__rhythmSounds=0;window.audioBuses.playTone=function(){wind
   const modeGlow = await h.evalv(`(() => { const el = document.querySelector('.mode-btn.active'); return el ? getComputedStyle(el).boxShadow : ''; })()`);
   check('V6.2: the active rhythm mode button carries the Petrin Glow', /155,\s*109,\s*255/.test(modeGlow), modeGlow);
 
+  /* V10 (spec §28): four pads must read as drums, not flat coloured circles.
+     Assert the surface is real (a drumhead + skin + rim + a clear struck ring). */
+  const padLook = JSON.parse(await h.evalv(`JSON.stringify([...document.querySelectorAll('.rhythm-pad')].map(el=>{
+    const cs=getComputedStyle(el);
+    return {bg:cs.backgroundImage, shadow:cs.boxShadow, text:cs.textShadow, emoji:el.textContent.trim(), label:el.getAttribute('aria-label')};
+  }))`));
+  const layers = s => (s.match(/radial-gradient/g) || []).length;
+  check('every pad reads as a drum: a light drumhead over a coloured skin',
+    padLook.length === 4 && padLook.every(p => layers(p.bg) >= 2), JSON.stringify(padLook.map(p => layers(p.bg))));
+  check('every pad has a tactile surface (an inset rim + skin shading)',
+    padLook.every(p => p.shadow.includes('inset')), JSON.stringify(padLook.map(p => p.shadow.includes('inset'))));
+  check('every pad icon carries a contrasting shadow so the drum symbol reads',
+    padLook.every(p => p.text !== 'none' && /rgba?\(0,\s*0,\s*0/.test(p.text)), JSON.stringify(padLook.map(p => p.text)));
+  check('all four pads carry drum symbolism (🥁) and a drum name',
+    padLook.every(p => p.emoji === '🥁') && padLook.every(p => /бубањ|добош/.test(p.label)),
+    JSON.stringify(padLook.map(p => p.emoji + ' ' + p.label)));
+
+  const hitState = JSON.parse(await h.evalv(`JSON.stringify((()=>{
+    const el=document.querySelector('.rhythm-pad');
+    el.classList.add('hit');
+    const hit=getComputedStyle(el).boxShadow;
+    el.classList.remove('hit');
+    const rest=getComputedStyle(el).boxShadow;
+    const ring=/255,\\s*255,\\s*255,\\s*0\\.9/;
+    return {hit:ring.test(hit), rest:ring.test(rest)};
+  })())`));
+  check('a struck pad shows a clear bright ring that a resting pad does not',
+    hitState.hit === true && hitState.rest === false, JSON.stringify(hitState));
+
+  /* V10 (spec §42.17): the drum set carries the live phase, and a success cues it.
+     The completion rule is proved by toggling the phase on the real element, so the
+     check does not depend on catching the ~0.9 s success window under load, and it
+     is conditional on the motion preference (the O/S may reduce, not the code). */
+  const repeatLook = JSON.parse(await h.evalv(`JSON.stringify((()=>{
+    const set=document.getElementById('rhythm-pads');
+    return {attr:set.dataset.phase, live:window.__rhythm.state().phase,
+      filter:getComputedStyle(document.querySelector('.rhythm-pad')).filter};
+  })())`));
+  check('V10 listen/repeat state: the drum set tracks the live phase',
+    repeatLook.attr === 'repeat' && repeatLook.attr === repeatLook.live, JSON.stringify(repeatLook));
+  const cheerState = JSON.parse(await h.evalv(`JSON.stringify((()=>{
+    const set=document.getElementById('rhythm-pads'), el=document.querySelector('.rhythm-pad');
+    const prev=set.dataset.phase; set.dataset.phase='success';
+    const anim=getComputedStyle(el).animationName; set.dataset.phase=prev;
+    return {anim, rm:matchMedia('(prefers-reduced-motion: reduce)').matches};
+  })())`));
+  const rhythmPage = fs.readFileSync(path.join(__dirname, '..', 'game', 'pages', 'rhythm.html'), 'utf8');
+  const hasCheerRule = /\[data-phase="success"\]\s*\.rhythm-pad\s*\{[^}]*animation\s*:\s*drumCheer/.test(rhythmPage);
+  check('V10 completion cue: repeating a melody right cues the drum set to cheer',
+    hasCheerRule && (cheerState.anim === 'drumCheer' || cheerState.rm),
+    JSON.stringify({hasCheerRule, ...cheerState}));
+
   const st0 = await state();
   check('first melody length is 2 (the slowest start)', st0.length === 2 && st0.pattern.length === 2, JSON.stringify(st0));
 
@@ -63,6 +118,14 @@ const STUB = `window.__rhythmSounds=0;window.audioBuses.playTone=function(){wind
     JSON.stringify(afterWrong));
   /* The game auto-replays the melody after a short pause: listen then repeat. */
   await h.waitFor(`window.__rhythm.state().phase==='listen'`, { timeout: 3000, label: 'the melody replay to begin' });
+  const listenLook = JSON.parse(await h.evalv(`JSON.stringify((()=>{
+    const set=document.getElementById('rhythm-pads');
+    const pad=[...document.querySelectorAll('.rhythm-pad')].find(el=>!el.classList.contains('hit'))||document.querySelector('.rhythm-pad');
+    return {attr:set.dataset.phase, filter:getComputedStyle(pad).filter};
+  })())`));
+  check('V10 listen/repeat state: the pads look dimmed while listening, full on the repeat turn',
+    listenLook.attr === 'listen' && listenLook.filter !== repeatLook.filter,
+    JSON.stringify({listen:listenLook, repeat:repeatLook.filter}));
   await h.waitFor(`window.__rhythm.state().phase==='repeat'`, { timeout: 6000, label: 'the replayed melody to finish' });
   const missCounter = await h.evalv(`window.__rhythmMisses`);
   check('the wrong pad fired the gentlest miss feedback', missCounter === 1);
