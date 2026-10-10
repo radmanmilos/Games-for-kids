@@ -40,7 +40,10 @@
     boardEl.innerHTML = '';
     const diff = DIFFS[difficulty];
     const pairList = shuffle(animals.slice(0, diff.pairs).concat(animals.slice(0, diff.pairs)));
-    boardEl.style.gridTemplateColumns = `repeat(${diff.cols}, minmax(0, 1fr))`;
+    // V12: the grid geometry is CSS-driven (near-square cards that fit both the
+    // available width and height); JS only publishes the grid shape.
+    boardEl.style.setProperty('--cols', String(diff.cols));
+    boardEl.style.setProperty('--rows', String(Math.ceil(pairList.length / diff.cols)));
     pairList.forEach((name, idx) => {
       const card = document.createElement('button');
       card.className = 'card';
@@ -140,8 +143,7 @@
     btn.addEventListener('click', () => {
       if(window.popSound) window.popSound();
       difficulty = btn.dataset.diff;
-      diffBtns.forEach(b => b.style.outline = '');
-      btn.style.outline = '3px solid #4A3F6B';
+      diffBtns.forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
       document.body.classList.toggle('toddler', difficulty === 'easy');
       buildBoard();
     });

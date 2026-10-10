@@ -1,6 +1,6 @@
 # Short-landscape audit — 844×390 (spec §11)
 
-Generated: 2026-10-10 10:17 UTC · task 217 (V3.1) · `node tools/short_landscape_audit.js`
+Generated: 2026-10-10 12:29 UTC · task 217 (V3.1) · `node tools/short_landscape_audit.js`
 
 Every surface (hub + 24 registry apps) measured at **844×390** against the
 Master Visual/UX plan §11 checklist: header budget 56–72 px, board-first,
@@ -18,7 +18,7 @@ adjudication. The tool exits 1 while any FAIL remains.**
 | `hub` | 🌈 Петрин свет | 65 | OK | 0 | 0 |
 | `animals` | (none) | 72 | WARN | 0 | 1 |
 | `animal_counting` | (none) | 72 | WARN | 0 | 1 |
-| `animal_memory` | Памтилица животиња | 88 | WARN | 0 | 3 |
+| `animal_memory` | Памтилица животиња | 62 | OK | 0 | 0 |
 | `animal_puzzle` | Слагалица | 72 | OK | 0 | 0 |
 | `classroom` | Учионица | 72 | OK | 0 | 0 |
 | `compare` | Где има више? | 83 | WARN | 0 | 1 |
@@ -41,7 +41,7 @@ adjudication. The tool exits 1 while any FAIL remains.**
 | `explorer` | Свет | 64 | OK | 0 | 0 |
 | `parent` | 🔒 За родитеље | 72 | WARN | 0 | 1 |
 
-**Summary:** 25 surfaces · 10 OK · 15 WARN · 0 FAIL · 0 error · 0 individual failures.
+**Summary:** 25 surfaces · 11 OK · 14 WARN · 0 FAIL · 0 error · 0 individual failures.
 
 ## Warnings — adjudicate
 
@@ -52,12 +52,6 @@ adjudication. The tool exits 1 while any FAIL remains.**
 ### `animal_counting`
 
 - WARN: no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate
-
-### `animal_memory`
-
-- WARN: v-scroll: document is 432px tall in a 390px viewport (essential content must fit without scrolling)
-- WARN: header budget: top chrome reaches 88px (spec §11.1: 56–72px)
-- WARN: control needs scrolling to reach: button.diff-btn
 
 ### `compare`
 

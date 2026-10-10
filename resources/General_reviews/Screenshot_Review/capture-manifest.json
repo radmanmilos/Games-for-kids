@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "691dc59f461d6628452f860493b31b54d0e4c46f",
+  "commitSha": "6d09de958f2058a8b922b22962c3cd385692ecce",
   "browser": {
     "product": "Chrome/155.0.8059.39",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-10T10:51:53.341Z",
+  "generatedAt": "2026-10-10T12:30:52.454Z",
   "pageSet": [
-    "animal_counting"
+    "animal_memory"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,40 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "animal_counting_phone-portrait.png",
-      "page": "animal_counting",
+      "file": "animal_memory_phone-portrait.png",
+      "page": "animal_memory",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 21335
+      "bytes": 64655
     },
     {
-      "file": "animal_counting_phone-landscape.png",
-      "page": "animal_counting",
+      "file": "animal_memory_phone-landscape.png",
+      "page": "animal_memory",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 15799
+      "bytes": 42508
     },
     {
-      "file": "animal_counting_tablet-portrait.png",
-      "page": "animal_counting",
+      "file": "animal_memory_tablet-portrait.png",
+      "page": "animal_memory",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 38560
+      "bytes": 74815
     },
     {
-      "file": "animal_counting_tablet-landscape.png",
-      "page": "animal_counting",
+      "file": "animal_memory_tablet-landscape.png",
+      "page": "animal_memory",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 38164
+      "bytes": 73815
     }
   ]
 }

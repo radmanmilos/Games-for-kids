@@ -14,39 +14,87 @@
     <link rel="stylesheet" href="../shared/accessibility.css">
     <link rel="stylesheet" href="../styles/components.css">
   <style>
-    body { font-family: sans-serif; padding: 1rem; margin:0; min-height:100vh; background:#FFF8ED; color:#4A3F6B; }
-    h1 { text-align:center; margin:1rem 0; }
-    #memoryStatus { text-align:center; font-size:clamp(16px,3.2vmin,28px); font-weight:600; color:#7A6FA0; margin:.3rem 0 .9rem; display:none; }
-    #board { position: relative; display: grid; gap: clamp(8px, 2vmin, 16px); grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 640px; margin: 0 auto; }
-    .card { min-height:clamp(64px, 16vmin, 130px); border:0; border-radius:12px; padding:0; background:#9B6DFF; color:#fff; font-size:clamp(28px, 7vmin, 64px); cursor:pointer; user-select:none; perspective:600px; }
-    body.toddler .card { min-height:clamp(80px, 20vmin, 160px); font-size:clamp(36px, 9vmin, 80px); }
-    .card-inner { position:relative; width:100%; height:100%; min-height:inherit; transform-style:preserve-3d; transition:transform .25s ease; }
-    .card.flipped .card-inner, .card.matched .card-inner { transform:rotateY(180deg); }
-    .card-face { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; border-radius:inherit; backface-visibility:hidden; }
-    .card-back { background:radial-gradient(circle at 30% 25%, #C9A6FF, #9B6DFF 68%, #7B4FD8); box-shadow: inset 0 0 0 clamp(2px,0.6vmin,4px) rgba(255,255,255,.4), inset 0 0 0 clamp(5px,1.6vmin,10px) rgba(255,255,255,.18); }
-    .card-back::before { content:'🃏'; font-size:clamp(26px, 7vmin, 52px); filter:drop-shadow(0 3px 3px rgba(0,0,0,.25)); }
-    .card-front { background:#fff; transform:rotateY(180deg); }
-    .card.matched { opacity: 0.6; transform: scale(0.98); pointer-events: none; }
-    .match-pop { position:absolute; z-index:5; font:700 clamp(22px,5vmin,44px) 'Fredoka',sans-serif; color:#FF6F91; text-shadow:0 2px 0 #fff, 0 4px 8px rgba(0,0,0,.2); pointer-events:none; }
-    .next-btn { width:14vmin; height:14vmin; border-radius:50%; border:none; background:#FFD23F; color:#4A3F6B; font-size:7vmin; display:flex; align-items:center; justify-content:center; box-shadow:0 1vmin 0 rgba(0,0,0,.15); cursor:pointer; }
-    .next-btn:active { transform:scale(.9) translateY(3px); }
-    #controls { display:flex; justify-content:center; gap:8px; margin-top:1rem }
-  </style>
-  <style>
-    /* Override / enhanced memory styles (matching visual language) */
-    :root{ --cream:#FFF8ED; --plum:#4A3F6B; }
-    body { font-family: 'Fredoka', sans-serif; }
-    .back-btn { flex:0 0 auto; width:12vmin; height:12vmin; border:0; border-radius:50%; background:#4A3F6B; color:#fff; font-size:6vmin; display:flex; align-items:center; justify-content:center; }
-    /* V2.10 — shared header (spec §42.3 "header overlap"). The title was a
-       full-width centred <h1> sitting under a position:fixed back button, so
-       the title BOX ran under the button at every viewport (measured after
-       document.fonts.ready: 2201px² at 390×844, 2057 at 844×390, 3411 at both
-       tablet sizes). The shell.css contract — back + flexible centre title as
-       flex siblings — replaces the fixed button, so they cannot overlap at any
-       width. §42.3's other items (card proportions, back symbol scale,
-       short-landscape difficulty controls) are not header work and stay out. */
-    .memory-header{ padding: calc(var(--ps-safe-top) + 1rem) 1rem 0; gap:2vmin; }
-    .memory-header .ps-title{ flex:1 1 auto; margin:0; }
+    /* V12 (spec §30 / §42.3) — Memory card refinement.
+       Keep the purple identity and the matching mechanic; make the cards read as
+       actual cards (near-square, strong central back symbol, inner padding, clear
+       flip, matched settles) and stop the short-landscape difficulty controls
+       falling below the fold — without shrinking the cards to fit. */
+    :root{ --cream:#FFF8ED; --plum:#4A3F6B; --plum-soft:#655A8C; --green:#67C971; --yellow:#FFD23F; }
+    html, body{ height:100%; }
+    body{
+      font-family:'Fredoka', sans-serif; margin:0; background:var(--cream); color:var(--plum);
+      display:flex; flex-direction:column; height:100vh; height:100dvh; overflow:hidden;
+    }
+
+    /* Header (spec §8.1 / §42.3): back + title are flex siblings of the shared
+       `.ps-header` row (V2.10), so the title can never run under the back button. */
+    .memory-header{ flex:0 0 auto; box-sizing:border-box; padding: calc(var(--ps-safe-top) + 1rem) 1rem 0; gap:2vmin; }
+    .memory-header .ps-title{ flex:1 1 auto; min-width:0; margin:0; text-align:center; }
+    .back-btn{ flex:0 0 auto; width:clamp(44px,11vmin,64px); height:clamp(44px,11vmin,64px); border:0; border-radius:50%; background:var(--plum); color:#fff; font-size:clamp(20px,5vmin,30px); display:flex; align-items:center; justify-content:center; }
+    #memoryStatus{ flex:0 0 auto; text-align:center; font-size:clamp(14px,2.6vmin,22px); font-weight:600; color:var(--plum-soft); margin:.25rem 0 .5rem; display:none; }
+
+    /* Board area: takes the remaining height and centres a grid of near-square
+       cards. `container-type:size` lets the grid derive its cell size from BOTH the
+       available width and height, so cards stay square instead of stretching into
+       broad slabs. A 64px floor keeps them tappable; when the board cannot fit
+       (e.g. 16 cards in short landscape) the area scrolls rather than shrinking the
+       cards into unreadable squares — "do not make cards tiny to fit all of them". */
+    #board-wrap{ flex:1 1 auto; min-height:0; display:flex; align-items:center; justify-content:center; overflow:auto; container-type:size; padding:clamp(4px,1.2vmin,12px) 1rem; }
+    #board{
+      --gap:clamp(6px,1.6vmin,14px); --cols:4; --rows:4; --max-cell:150px;
+      --cell:clamp(64px,
+        min(
+          calc((100cqw - (var(--cols) - 1) * var(--gap)) / var(--cols)),
+          calc((100cqh - (var(--rows) - 1) * var(--gap)) / var(--rows))
+        ), var(--max-cell));
+      width:calc(var(--cols) * var(--cell) + (var(--cols) - 1) * var(--gap));
+      display:grid; grid-template-columns:repeat(var(--cols), minmax(0, 1fr)); grid-auto-rows:var(--cell); gap:var(--gap);
+    }
+    .card{
+      position:relative; border:0; border-radius:clamp(10px,2.4vmin,18px); padding:0; background:#9B6DFF;
+      color:#fff; cursor:pointer; user-select:none; perspective:600px; aspect-ratio:1; container-type:size;
+      box-shadow:0 2px 0 rgba(74,63,107,.18), 0 4px 10px rgba(74,63,107,.14);
+      transition:transform .12s ease;
+    }
+    .card:active{ transform:scale(.97); }
+    .card-inner{ position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .3s ease; }
+    .card.flipped .card-inner, .card.matched .card-inner{ transform:rotateY(180deg); }
+    /* Inner padding so the symbol never touches the card edge. */
+    .card-face{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; border-radius:inherit; backface-visibility:hidden; padding:10%; box-sizing:border-box; }
+    .card-back{ background:radial-gradient(circle at 30% 25%, #C9A6FF, #9B6DFF 68%, #7B4FD8); box-shadow: inset 0 0 0 clamp(2px,0.6vmin,4px) rgba(255,255,255,.4), inset 0 0 0 clamp(5px,1.6vmin,10px) rgba(255,255,255,.18); }
+    /* Strong central back symbol — sized from the card (cqmin), not a fixed px. */
+    .card-back::before{ content:'🃏'; font-size:46cqmin; line-height:1; filter:drop-shadow(0 3px 3px rgba(0,0,0,.3)); }
+    .card-front{ background:#fff; transform:rotateY(180deg); font-size:52cqmin; line-height:1; }
+    /* Clear flip state: a face-up, not-yet-matched card gets a violet inner ring
+       on top of the V6.2 Petrin Glow (accessibility.css). */
+    .card.flipped:not(.matched) .card-front{ box-shadow: inset 0 0 0 clamp(2px,.5vmin,4px) rgba(155,109,255,.5); }
+    /* Matched settles: dim + green front + a one-shot settle animation, and it can
+       never be tapped again. */
+    .card.matched{ opacity:.55; pointer-events:none; animation:matchedSettle .3s ease-out; }
+    .card.matched .card-front{ background:#EAF7EC; box-shadow: inset 0 0 0 clamp(3px,.8vmin,5px) var(--green); }
+    @keyframes matchedSettle{ from{ transform:scale(1.06); } to{ transform:scale(1); } }
+    .match-pop{ position:absolute; z-index:5; font:700 clamp(20px,4.4vmin,40px) 'Fredoka',sans-serif; color:#FF6F91; text-shadow:0 2px 0 #fff, 0 4px 8px rgba(0,0,0,.2); pointer-events:none; }
+
+    /* Bottom bar: restart + difficulty live in ONE row so the difficulty controls
+       can never fall below the fold in short landscape (spec §30/§42.3). */
+    #controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:clamp(8px,2vmin,18px); padding:clamp(6px,1.2vmin,12px) 1rem calc(var(--ps-safe-bottom) + clamp(8px,1.6vmin,16px)); }
+    .diff-group{ display:flex; gap:clamp(6px,1.6vmin,12px); }
+    .next-btn{ width:clamp(44px,10vmin,60px); height:clamp(44px,10vmin,60px); border-radius:50%; border:none; background:var(--yellow); color:var(--plum); font-size:clamp(22px,5vmin,30px); display:flex; align-items:center; justify-content:center; box-shadow:0 .5vmin 0 rgba(0,0,0,.15); cursor:pointer; }
+    .next-btn:active{ transform:scale(.9) translateY(2px); }
+    .diff-btn{ padding:.55em 1.1em; border-radius:999px; border:0; font-weight:700; font-size:clamp(14px,3.4vmin,20px); cursor:pointer; color:#302741; background:#E7E0F5; box-shadow:0 .5vmin 0 rgba(0,0,0,.12); }
+    .diff-btn[data-diff="easy"]{ background:var(--green); }
+    .diff-btn[data-diff="medium"]{ background:var(--yellow); color:var(--plum); }
+    .diff-btn[data-diff="standard"]{ background:#FF6F91; }
+    .diff-btn[aria-pressed="true"]{ outline:4px solid var(--plum); outline-offset:2px; }
+    .diff-btn:active{ transform:translateY(3px); }
+
+    /* Short landscape (844x390): compress the chrome so the whole board + the
+       difficulty controls fit without scrolling. */
+    @media (max-height:520px){
+      .memory-header{ padding-top: calc(var(--ps-safe-top) + .35rem); }
+      #board-wrap{ padding-top:2px; padding-bottom:2px; }
+      #controls{ padding-top:.3rem; padding-bottom: calc(var(--ps-safe-bottom) + .4rem); gap:clamp(6px,1.4vmin,12px); }
+    }
   </style>
 </head>
 <body>
@@ -55,14 +103,14 @@
     <h1 class="ps-title">Памтилица животиња</h1>
   </header>
   <div id="memoryStatus" aria-live="polite"></div>
-  <div id="board" aria-live="polite"></div>
+  <div id="board-wrap"><div id="board" aria-live="polite"></div></div>
   <div id="controls">
     <button id="restart" class="next-btn" aria-label="Почни поново" title="Почни поново">↻</button>
-  </div>
-  <div id="difficulty-controls" style="display:flex;justify-content:center;gap:8px;margin-top:1rem">
-    <button class="diff-btn" data-diff="easy" style="padding:1vmin 3vmin;border-radius:999px;border:0;background:#67C971;color:#302741;font-weight:700;font-size:3.5vmin;cursor:pointer">Лако</button>
-    <button class="diff-btn" data-diff="medium" style="padding:1vmin 3vmin;border-radius:999px;border:0;background:#FFD23F;color:#4A3F6B;font-weight:700;font-size:3.5vmin;cursor:pointer">Средње</button>
-    <button class="diff-btn" data-diff="standard" style="padding:1vmin 3vmin;border-radius:999px;border:0;background:#FF6F91;color:#302741;font-weight:700;font-size:3.5vmin;cursor:pointer">Тешко</button>
+    <div class="diff-group" role="group" aria-label="Тежина">
+      <button class="diff-btn" data-diff="easy" aria-pressed="true">Лако</button>
+      <button class="diff-btn" data-diff="medium" aria-pressed="false">Средње</button>
+      <button class="diff-btn" data-diff="standard" aria-pressed="false">Тешко</button>
+    </div>
   </div>
 
   <script src="../data/serbian.js"></script>

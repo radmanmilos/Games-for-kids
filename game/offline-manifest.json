@@ -736,8 +736,8 @@
     "size": 10186
   },
   "games/animal_memory.js": {
-    "sha256": "884ccefaf9933a7194cdf64095d40f3d07e7b1513a6b6e4db903b2a8f0a6e993",
-    "size": 6506
+    "sha256": "5f75a666f150b893bd3caf9d2ce658e5b8cad5f1741194d1fb27c5fd4762f8f0",
+    "size": 6708
   },
   "games/animal_puzzle.js": {
     "sha256": "bda3e3a872b34abd45e857472139570c38d71cd1d89d083f64f9b5549c24e8fb",
@@ -848,8 +848,8 @@
     "size": 7181
   },
   "pages/animal_memory.html": {
-    "sha256": "f57133932ed980d30e5a4858e3e5b4982fce3fd262dc49940357a98b52143ee6",
-    "size": 5985
+    "sha256": "92c3c8d4e19393cb5c98a0a31a9f358112f23c1b131efa1ab6b31d748859e338",
+    "size": 8961
   },
   "pages/animal_puzzle.html": {
     "sha256": "e8743b457d2e445f0f8a0bdd51638c836ad1668c034c080543eb52fada6c00d3",

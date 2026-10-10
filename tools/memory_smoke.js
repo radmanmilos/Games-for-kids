@@ -92,10 +92,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await sleep(200);
   const S = await h.evalv(`({
     cards: document.querySelectorAll('#board .card').length,
-    cols: document.getElementById('board').style.gridTemplateColumns,
+    cols: (getComputedStyle(document.getElementById('board')).gridTemplateColumns.match(/[^ ]+/g) || []).length,
     status: document.getElementById('memoryStatus').textContent
   })`);
-  check('standard mode: 16 cards, 4 columns, 0/8 pairs', S.cards === 16 && S.cols.includes('4') && S.status === 'Парова: 0 од 8 · Потези: 0', JSON.stringify(S));
+  check('standard mode: 16 cards, 4 columns, 0/8 pairs', S.cards === 16 && S.cols === 4 && S.status === 'Парова: 0 од 8 · Потези: 0', JSON.stringify(S));
 
   // Mismatch: pick two cards with different names
   const X = await h.evalv(`(() => {
@@ -164,7 +164,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     pReady = await hp.evalv(`document.querySelectorAll('#board .card').length >= 4`);
     if (!pReady) await sleep(200);
   }
-  await hp.evalv(`window.audioBuses.play=function(){}; true`);
+  await hp.evalv(`window.audioBuses.play=function(){};window.audioBuses.speakWithDuck=function(t,cb){if(cb)cb();}; true`);
   await hp.evalv(`document.fonts.ready.then(() => true)`);
   const geo = await hp.evalv(`(() => {
     const back = document.querySelector('.back-btn');
@@ -185,7 +185,83 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('V2.10: back button is in normal flow (not position:fixed)', rj.backPos === 'static', geo);
   check('V2.10 portrait: back button + title never overlap (§42.3)', rj.overlap === 0, geo);
   check('V2.10 portrait: header chrome inside the viewport (390x844)', rj.inside === true, geo);
+
+  // V12 (spec §30 / §42.3) — card refinement. The VERIFY probe measured the old
+  // default card at ratio 2.19 (390x844) / 3.95 (844x390) — broad slabs — with a
+  // fixed 27.3px 🃏 and zero front padding. These guards pin the fix: near-square
+  // cards, a back symbol that scales with the card (so it is NOT a fixed px value),
+  // real inner padding, a flip that actually turns the face, and a match that
+  // settles. Read after fonts settle so a font swap cannot flake them.
+  const CARD_PROBE = `JSON.stringify((()=>{
+    const R=el=>el.getBoundingClientRect();
+    const card=document.querySelector('#board .card');
+    const back=card.querySelector('.card-back');
+    const front=card.querySelector('.card-front');
+    const inner=card.querySelector('.card-inner');
+    const cr=R(card);
+    const before=getComputedStyle(back,'::before');
+    const m=new DOMMatrix(getComputedStyle(inner).transform);
+    return { w:Math.round(cr.width), h:Math.round(cr.height),
+      ratio:+(cr.width/cr.height).toFixed(3),
+      symbol:parseFloat(before.fontSize),
+      symbolRatio:+(parseFloat(before.fontSize)/cr.height).toFixed(3),
+      pad:parseFloat(getComputedStyle(front).paddingTop),
+      flipY:+m.m11.toFixed(3) };
+  })())`;
+  const pc = JSON.parse(await hp.evalv(CARD_PROBE));
+  check('V12 portrait: card is near-square (spec §30)', Math.abs(pc.ratio - 1) <= 0.06, JSON.stringify(pc));
+  check('V12 portrait: back symbol is strong (>=35% of the card, was 27px fixed)', pc.symbolRatio >= 0.35, JSON.stringify(pc));
+  check('V12 portrait: card face has inner padding', pc.pad >= 4, JSON.stringify(pc));
+
+  // Clear flip state: the face must actually rotate 180° (poll through the .3s ease).
+  await hp.evalv(`document.querySelectorAll('#board .card')[0].click()`);
+  let flipY = 1;
+  for (let i = 0; i < 30; i++) {
+    flipY = await hp.evalv(`(()=>{ const m=new DOMMatrix(getComputedStyle(document.querySelector('#board .card .card-inner')).transform); return m.m11; })()`);
+    if (flipY <= -0.9) break;
+    await sleep(50);
+  }
+  check('V12: flipping a card turns its face 180° (clear flip state)', flipY <= -0.9, flipY);
+
+  // Matched settles: dim + green face + no longer tappable.
+  await hp.evalv(`(()=>{ const cards=[...document.querySelectorAll('#board .card')]; const a=cards[0]; const b=cards.find(c=>c!==a&&c.dataset.name===a.dataset.name); a.click(); b.click(); return true; })()`);
+  await sleep(150);
+  const ms = JSON.parse(await hp.evalv(`JSON.stringify((()=>{ const c=document.querySelector('#board .card.matched'); if(!c) return {matched:false}; const f=c.querySelector('.card-front'); return { matched:true, op:+getComputedStyle(c).opacity, pe:getComputedStyle(c).pointerEvents, shadow:getComputedStyle(f).boxShadow }; })())`));
+  check('V12: matched cards settle (dim + green face + not tappable)', ms.matched === true && ms.op < 1 && ms.pe === 'none' && /103,\s*201,\s*113/.test(ms.shadow), JSON.stringify(ms));
   await hp.close();
+
+  // V12 short landscape (844x390): the difficulty controls must not fall below the
+  // fold, and cards must keep the 64px floor instead of being shrunk to fit all.
+  const hl = await start({ page: '/pages/animal_memory.html', tag: 'memory-smoke-landscape', width: 844, height: 390 });
+  let lReady = false;
+  for (let i = 0; i < 25 && !lReady; i++) { lReady = await hl.evalv(`document.querySelectorAll('#board .card').length >= 4`); if (!lReady) await sleep(200); }
+  await hl.evalv(`window.audioBuses.play=function(){};window.audioBuses.speakWithDuck=function(t,cb){if(cb)cb();}; true`);
+  await hl.evalv(`document.fonts.ready.then(()=>true)`);
+  const LPROBE = `JSON.stringify((()=>{
+    const R=el=>el.getBoundingClientRect();
+    const de=document.documentElement;
+    const btns=[...document.querySelectorAll('.diff-btn')];
+    const inside=el=>{const r=R(el);return r.top>=-1&&r.bottom<=innerHeight+1&&r.left>=-1&&r.right<=innerWidth+1;};
+    const c=R(document.querySelector('#board .card'));
+    return { scrollH:de.scrollHeight, vh:innerHeight,
+      btnsInside:btns.length===3&&btns.every(inside),
+      cardMin:Math.round(Math.min(c.width,c.height)),
+      ratio:+(c.width/c.height).toFixed(3),
+      symbol:Math.round(parseFloat(getComputedStyle(document.querySelector('#board .card-back'),'::before').fontSize)) };
+  })())`;
+  const l1 = JSON.parse(await hl.evalv(LPROBE));
+  check('V12 844x390: difficulty controls do not fall below the fold', l1.btnsInside && l1.scrollH <= l1.vh + 1, JSON.stringify(l1));
+  check('V12 844x390: default cards near-square and not below the 64px floor', l1.ratio >= 0.94 && l1.cardMin >= 64, JSON.stringify(l1));
+  // Hardest mode: keep the 64px floor (the board scrolls rather than shrinking).
+  await hl.evalv(`document.querySelector('.diff-btn[data-diff="standard"]').click()`);
+  await sleep(250);
+  const l2 = JSON.parse(await hl.evalv(LPROBE));
+  check('V12 844x390 standard: 16 cards keep the 64px floor (never shrunk to fit)', l2.cardMin >= 64 && l2.ratio >= 0.94, JSON.stringify(l2));
+  // The two sizes prove the symbol scales with the card: 0.46 of a 150px card at
+  // portrait (>=50px) but <=42px on the 64px standard card — impossible for a
+  // fixed px value, so the check cannot pass vacuously.
+  check('V12: back symbol scales with the card (not a fixed size)', pc.symbol >= 50 && l2.symbol > 0 && l2.symbol <= 42, JSON.stringify({ portrait: pc.symbol, standard: l2.symbol }));
+  await hl.close();
 
   // Back button returns to hub (last — navigates away).
   // The handler waits 90ms then sets location.href to '../index.html#hub-games',
