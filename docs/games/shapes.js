@@ -46,7 +46,7 @@ function startShapesRound(){
     el.dataset.type = s.type;
     el.dataset.name = s.name;
     el.style.left = xPositions[i] + '%';
-    el.style.background = s.color;
+    el.style.backgroundColor = s.color;
     if(tier === 3 && i % 2 === 1) el.style.transform = 'translate(-50%,-50%) rotate(15deg)';
     el.tabIndex = 0;
     el.setAttribute('role', 'button');

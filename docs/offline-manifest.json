@@ -816,8 +816,8 @@
     "size": 7138
   },
   "games/shapes.js": {
-    "sha256": "6f43d1373dfb7c7b6bb4c6e0b49bebf9d745cf733fe478d0fdee7f43ba58398b",
-    "size": 6278
+    "sha256": "08101561c5699726718133db6fb0206bd86c048c18881c084fd415aec667e2c5",
+    "size": 6283
   },
   "games/sorting.js": {
     "sha256": "75663a0f94590a3a4addb088eac55b1c146672b1b7f4c39f3c95af6349f60708",
@@ -920,8 +920,8 @@
     "size": 6404
   },
   "pages/shapes.html": {
-    "sha256": "0aa89853af555a51c4a98a9c1e649a3954316c88341b01b7fc52d254cdeb3f03",
-    "size": 11845
+    "sha256": "9c55a49206039c52b86aa7c8b002adfaa20cc7ceec99f121822ae7ac6db92237",
+    "size": 12826
   },
   "pages/sorting.html": {
     "sha256": "c7b728fee3a91f7a6205bb8c2317815bd37a6d0a8c5081dae6ee23e551f2ad4d",

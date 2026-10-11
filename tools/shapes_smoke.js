@@ -153,6 +153,53 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   checkRouteWired('shapes', 'game-shapes', 'pages/shapes.html',
     { back: 'shapes-back', start: 'startShapesRound', check });
 
+  // V17 (spec §35/§42.19): "subtle play mat; selection feedback; subtle
+  // material; spatial relationship stays the hero". VERIFY-first found no mat,
+  // pieces with `background-image:none` (flat) and no picked-up state.
+  const mat = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const m = document.querySelector('#shapesStage .mat');
+    if (!m) return { found: false };
+    const cs = getComputedStyle(m);
+    return { found: true, pe: cs.pointerEvents, grad: /gradient/.test(cs.backgroundImage), r: parseFloat(cs.borderRadius),
+      matIn: (()=>{const b=m.getBoundingClientRect();return b.top>=0&&b.left>=0&&b.bottom<=innerHeight+1&&b.right<=innerWidth+1})() };
+  })())`));
+  check('V17: subtle play mat present (visual only, behind, rounded, on-screen)',
+    mat.found && mat.pe === 'none' && mat.grad && mat.r >= 24 && mat.matIn, JSON.stringify(mat));
+
+  const matHosts = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const m = document.querySelector('#shapesStage .mat'); if (!m) return { found: false };
+    const mb = m.getBoundingClientRect();
+    const inside = el => { const r = el.getBoundingClientRect(); return r.left >= mb.left && r.top >= mb.top && r.right <= mb.right && r.bottom <= mb.bottom + 1; };
+    const parts = [...document.querySelectorAll('#shapesStage .slot, #shapesStage .piece')];
+    return { found: true, allOnMat: parts.length >= 2 && parts.every(inside) };
+  })())`));
+  check('V17: every slot and piece sits ON the mat (spatial question stays the hero, nothing floats)',
+    matHosts.found && matHosts.allOnMat, JSON.stringify(matHosts));
+
+  const pieceMat = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const piece = document.querySelector('#shapesStage .piece'); if (!piece) return { found: false };
+    const cs = getComputedStyle(piece);
+    const known = ['255, 111, 145', '79, 195, 247', '103, 201, 113', '255, 210, 63'];
+    return { found: true, bgi: cs.backgroundImage, color: cs.backgroundColor,
+      isShapeColor: known.some(k => cs.backgroundColor.includes(k)),
+      inset: /inset/.test(cs.boxShadow) };
+  })())`));
+  check('V17: pieces are subtle tactile tiles (sheen gradient over the unchanged shape colour + inset shading)',
+    pieceMat.found && /linear-gradient/.test(pieceMat.bgi) && pieceMat.isShapeColor && pieceMat.inset, JSON.stringify(pieceMat));
+
+  const dragSel = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const piece = document.querySelector('#shapesStage .piece'); if (!piece) return { ok: false, why: 'no piece' };
+    const cap = piece.setPointerCapture; piece.setPointerCapture = () => {};
+    try { piece.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 1, clientX: 100, clientY: 100 })); }
+    finally { piece.setPointerCapture = cap; }
+    const dragging = piece.classList.contains('dragging');
+    const glow = getComputedStyle(piece).boxShadow;
+    piece.classList.remove('dragging');
+    return { ok: true, dragging, glow };
+  })())`));
+  check('V17: a picked-up piece has a clear selected state (dragging class + Petrin Glow lift)',
+    dragSel.ok && dragSel.dragging === true && /155,\s*109,\s*255/.test(dragSel.glow), JSON.stringify(dragSel));
+
   await h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);
   process.exit(getFails() ? 1 : 0);

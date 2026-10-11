@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-11T11:03:29.869Z
+- Генерисано / Generated: 2026-10-11T11:17:08.740Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -88,10 +88,10 @@
 | `sequencing_phone-portrait.png` | Редослед | `/pages/sequencing.html` | 390×844 | портрет | — | 11.10.2026. 13:03:29 | 233 |
 | `sequencing_tablet-landscape.png` | Редослед | `/pages/sequencing.html` | 1180×820 | пејзаж | — | 11.10.2026. 13:03:29 | 233 |
 | `sequencing_tablet-portrait.png` | Редослед | `/pages/sequencing.html` | 820×1180 | портрет | — | 11.10.2026. 13:03:29 | 233 |
-| `shapes_phone-landscape.png` | Облици | `/pages/shapes.html` | 844×390 | пејзаж | — | 09.10.2026. 16:53:58 | 223 |
-| `shapes_phone-portrait.png` | Облици | `/pages/shapes.html` | 390×844 | портрет | — | 09.10.2026. 16:53:58 | 223 |
-| `shapes_tablet-landscape.png` | Облици | `/pages/shapes.html` | 1180×820 | пејзаж | — | 09.10.2026. 16:53:58 | 223 |
-| `shapes_tablet-portrait.png` | Облици | `/pages/shapes.html` | 820×1180 | портрет | — | 09.10.2026. 16:53:58 | 223 |
+| `shapes_phone-landscape.png` | Облици | `/pages/shapes.html` | 844×390 | пејзаж | — | 11.10.2026. 13:17:08 | 234 |
+| `shapes_phone-portrait.png` | Облици | `/pages/shapes.html` | 390×844 | портрет | — | 11.10.2026. 13:17:08 | 234 |
+| `shapes_tablet-landscape.png` | Облици | `/pages/shapes.html` | 1180×820 | пејзаж | — | 11.10.2026. 13:17:08 | 234 |
+| `shapes_tablet-portrait.png` | Облици | `/pages/shapes.html` | 820×1180 | портрет | — | 11.10.2026. 13:17:08 | 234 |
 | `sorting_phone-landscape.png` | Разврставање | `/pages/sorting.html` | 844×390 | пејзаж | — | 11.10.2026. 10:55:34 | 232 |
 | `sorting_phone-portrait.png` | Разврставање | `/pages/sorting.html` | 390×844 | портрет | — | 11.10.2026. 10:55:34 | 232 |
 | `sorting_tablet-landscape.png` | Разврставање | `/pages/sorting.html` | 1180×820 | пејзаж | — | 11.10.2026. 10:55:34 | 232 |
