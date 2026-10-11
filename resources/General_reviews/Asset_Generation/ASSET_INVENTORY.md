@@ -1,6 +1,6 @@
 # Petra's World — Emoticon Replacement Inventory
 
-**Status:** Source-audit draft v0.4 — literal emoji scan completed across the canonical `game/` JavaScript modules, page HTML, shared modules, CSS, manifests, and runtime configs (excluding the third-party minified Three.js bundle). Candidate rows have been expanded and two duplicate asset IDs are being consolidated. This is a source-backed inventory draft, not yet approved for generation: semantic use-site verification and a final review of dynamic rendering remain.  
+**Status:** Source-audit draft v0.4 — literal emoji scan completed across the canonical `game/` JavaScript modules, page HTML, shared modules, CSS, manifests, and runtime configs (excluding the third-party minified Three.js bundle). Candidate rows have been expanded and duplicate asset IDs have been consolidated. This is a source-backed inventory draft, not yet approved for generation: semantic use-site verification and a final review of dynamic rendering remain.  
 **Scope:** Replace existing emoji/emoticon pictographs used as game artwork. Do not redesign games or replace proper illustrations, character sprites, 3D models, CSS/SVG controls, or ordinary text.
 
 ## Fixed reference images
