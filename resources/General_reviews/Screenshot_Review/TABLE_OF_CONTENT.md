@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-11T08:31:15.022Z
+- Генерисано / Generated: 2026-10-11T08:43:48.073Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -72,10 +72,10 @@
 | `phonics_phone-portrait.png` | Слова и звуци | `/pages/phonics.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
 | `phonics_tablet-landscape.png` | Слова и звуци | `/pages/phonics.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
 | `phonics_tablet-portrait.png` | Слова и звуци | `/pages/phonics.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `piano_phone-landscape.png` | Клавир | `/pages/piano.html` | 844×390 | пејзаж | — | 09.10.2026. 16:53:58 | 223 |
-| `piano_phone-portrait.png` | Клавир | `/pages/piano.html` | 390×844 | портрет | — | 09.10.2026. 16:53:58 | 223 |
-| `piano_tablet-landscape.png` | Клавир | `/pages/piano.html` | 1180×820 | пејзаж | — | 09.10.2026. 16:53:58 | 223 |
-| `piano_tablet-portrait.png` | Клавир | `/pages/piano.html` | 820×1180 | портрет | — | 09.10.2026. 16:53:58 | 223 |
+| `piano_phone-landscape.png` | Клавир | `/pages/piano.html` | 844×390 | пејзаж | — | 11.10.2026. 10:43:48 | 231 |
+| `piano_phone-portrait.png` | Клавир | `/pages/piano.html` | 390×844 | портрет | — | 11.10.2026. 10:43:48 | 231 |
+| `piano_tablet-landscape.png` | Клавир | `/pages/piano.html` | 1180×820 | пејзаж | — | 11.10.2026. 10:43:48 | 231 |
+| `piano_tablet-portrait.png` | Клавир | `/pages/piano.html` | 820×1180 | портрет | — | 11.10.2026. 10:43:48 | 231 |
 | `racing3d_phone-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 844×390 | пејзаж | — | 09.10.2026. 13:41:25 | 219 |
 | `racing3d_phone-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 390×844 | портрет | — | 09.10.2026. 13:41:25 | 219 |
 | `racing3d_tablet-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 1180×820 | пејзаж | — | 09.10.2026. 13:41:25 | 219 |

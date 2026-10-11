@@ -6,6 +6,8 @@
    V2.5 (task 216): pins the shared-header geometry — title inside .ps-header
    without touching the corner controls, header flowing into the wrap, mode
    below the band, clear inside the tools row.
+   V14 (task 231): canvas stays dominant (larger than the reference) + next is
+   a clear action in its own corner (right half, on-screen).
    Run:  node tools/coloring_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -56,12 +58,18 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
     function ov(a,b){ if(!a||!b) return -1;
       return Math.max(0,Math.min(a.r,b.r)-Math.max(a.x,b.x)) * Math.max(0,Math.min(a.b,b.b)-Math.max(a.y,b.y)); }
     var hd=g('.ps-header'), title=g('.ps-header .ps-title'), back=g('#coloring-back'),
-        next=g('#coloring-next'), wrap=g('.coloring-wrap'), mode=g('#coloringModeToggle');
+        next=g('#coloring-next'), wrap=g('.coloring-wrap'), mode=g('#coloringModeToggle'),
+        svg=g('#coloringSvg'), ref=g('#coloringRef');
+    function box(a){ return a?Math.round((a.r-a.x)*(a.b-a.y)):0; }
+    function inV(a){ return !!a && a.y>=-0.5 && a.b<=innerHeight+0.5 && a.x>=-0.5 && a.r<=innerWidth+0.5; }
     return { header:!!hd,
       titleInHeader: !!(hd&&title&&title.y>=hd.y-0.5&&title.b<=hd.b+0.5),
       titleVsBack: ov(title,back), titleVsNext: ov(title,next),
       flowGap: (hd&&wrap)?Math.abs(hd.b-wrap.y):-1,
-      modeVsHeader: (hd&&mode)?+(mode.y-hd.b).toFixed(1):-1 };
+      modeVsHeader: (hd&&mode)?+(mode.y-hd.b).toFixed(1):-1,
+      nextVsBack: ov(next,back), nextInViewport: inV(next),
+      nextRightHalf: !!next && (next.x+next.r)/2 > innerWidth/2,
+      canvasArea: box(svg), refArea: box(ref), canvasInViewport: inV(svg), refInViewport: inV(ref) };
   })())`));
   check('V2.5: animal name + progress own the shared header centre',
     hdrGeom.header && hdrGeom.titleInHeader, JSON.stringify(hdrGeom));
@@ -71,6 +79,15 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
     hdrGeom.flowGap >= 0 && hdrGeom.flowGap <= 1, JSON.stringify(hdrGeom));
   check('V2.5: mode toggle sits below the header band (mode is secondary)',
     hdrGeom.modeVsHeader >= 0, JSON.stringify(hdrGeom));
+  // V14 (spec §32 / §42.6): the canvas must stay the dominant surface (bigger
+  // than the reference thumbnail) and on-screen — never squeezed by the header.
+  check('V14: canvas stays dominant (larger than the reference) and on-screen',
+    hdrGeom.canvasArea > hdrGeom.refArea && hdrGeom.canvasInViewport && hdrGeom.refInViewport,
+    JSON.stringify(hdrGeom));
+  // V14: "next" is a clear action in its own corner — on-screen, in the right
+  // half (distinct from the back control), and never overlapping it.
+  check('V14: next is a clear action in its own corner (right half, on-screen, clear of back)',
+    hdrGeom.nextInViewport && hdrGeom.nextRightHalf && hdrGeom.nextVsBack === 0, JSON.stringify(hdrGeom));
 
   const targetColor = await h.evalv(`document.querySelector('#coloringSvg .coloring-region:not(.ok)').dataset.target`);
   check('first region has a target color', !!targetColor, targetColor);

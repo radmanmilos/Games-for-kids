@@ -51,12 +51,16 @@
      keys, press feedback and the studio stay untouched. */
   .ps-header{ padding:0 16vmin; justify-content:center; }
   #pianoTitle{
-    margin:calc(var(--ps-safe-top) + 4vmin) 0 1vmin;
-    /* The band must be as tall as the corner control ACTUALLY is:
-       accessibility.css floors .back-btn at 56px, which beats 12vmin on any
-       phone (390px: 12vmin=46.8 < 56), so a plain 12vmin line box left the
-       header 5.3px short of the back button's bottom and the primary mode
-       button tucked 294px^2 under its corner (spec 32's portrait complaint). */
+    /* V14 (spec §11.1 top-chrome budget): no bottom margin. The band must be as
+       tall as the corner control ACTUALLY is — accessibility.css floors
+       .back-btn at 56px, which beats 12vmin on any phone (390px: 12vmin=46.8 <
+       56), so the line box matches that 56px. A 1vmin bottom margin then pushed
+       the header (and the controls flowing from it) 3.9px below the back
+       button's bottom, reaching 75px and tripping the 56-72px budget that the
+       title's own top margin (4vmin, level with the corner control) already
+       occupies. Dropping it lands the header exactly on the back button's band
+       (71.6px) and lets the controls start at its edge. */
+    margin:calc(var(--ps-safe-top) + 4vmin) 0 0;
     min-height:max(12vmin, 56px); line-height:max(12vmin, 56px);
     font-size:6.5vmin; color:var(--plum);
     text-shadow:0 3px 0 rgba(255,255,255,.6);

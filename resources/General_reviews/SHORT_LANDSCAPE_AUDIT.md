@@ -1,6 +1,6 @@
 # Short-landscape audit — 844×390 (spec §11)
 
-Generated: 2026-10-11 08:30 UTC · task 217 (V3.1) · `node tools/short_landscape_audit.js`
+Generated: 2026-10-11 08:43 UTC · task 217 (V3.1) · `node tools/short_landscape_audit.js`
 
 Every surface (hub + 24 registry apps) measured at **844×390** against the
 Master Visual/UX plan §11 checklist: header budget 56–72 px, board-first,
@@ -30,7 +30,7 @@ adjudication. The tool exits 1 while any FAIL remains.**
 | `maze` | Пронађи пут до куће | 90 | WARN | 0 | 1 |
 | `coloring` | Жаба | 72 | OK | 0 | 0 |
 | `tracing` | Писање | 72 | OK | 0 | 0 |
-| `piano` | Клавир | 75 | WARN | 0 | 1 |
+| `piano` | Клавир | 72 | OK | 0 | 0 |
 | `shapes` | (none) | 72 | WARN | 0 | 1 |
 | `matching_game` | (none) | 72 | WARN | 0 | 1 |
 | `driving` | Возила | 83 | WARN | 0 | 1 |
@@ -41,7 +41,7 @@ adjudication. The tool exits 1 while any FAIL remains.**
 | `explorer` | Свет | 64 | OK | 0 | 0 |
 | `parent` | 🔒 За родитеље | 72 | WARN | 0 | 1 |
 
-**Summary:** 25 surfaces · 11 OK · 14 WARN · 0 FAIL · 0 error · 0 individual failures.
+**Summary:** 25 surfaces · 12 OK · 13 WARN · 0 FAIL · 0 error · 0 individual failures.
 
 ## Warnings — adjudicate
 
@@ -68,10 +68,6 @@ adjudication. The tool exits 1 while any FAIL remains.**
 ### `maze`
 
 - WARN: header budget: top chrome reaches 90px (spec §11.1: 56–72px)
-
-### `piano`
-
-- WARN: header budget: top chrome reaches 75px (spec §11.1: 56–72px)
 
 ### `shapes`
 

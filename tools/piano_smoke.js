@@ -6,6 +6,7 @@
     V2.6 (task 216): pins the shared-header geometry in a 390x844 session -
     title inside .ps-header and centred, title and the portrait primary button
     clear of the back corner control, header flowing into the controls.
+    V14 (task 231): the header stays within the 56-72px §11.1 budget.
     Run:  node tools/piano_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -270,7 +271,8 @@ const LIT_IDX = `Array.from(document.querySelectorAll('.piano-key')).indexOf(doc
       titleVsBack: ov(title,back),
       modeVsBack: ov(mode,back),
       flowGap: (hd&&controls)?Math.abs(hd.b-controls.y):-1,
-      modeVsHeader: (hd&&mode)?+(mode.y-hd.b).toFixed(1):-1 };
+      modeVsHeader: (hd&&mode)?+(mode.y-hd.b).toFixed(1):-1,
+      headerH: hd?+hd.b.toFixed(1):-1 };
   })())`));
   check('V2.6: title owns the shared header centre (rendered, in-row, centred)',
     hdrGeom.header && hdrGeom.titleVisible && hdrGeom.titleInHeader && hdrGeom.titleCentred, JSON.stringify(hdrGeom));
@@ -282,6 +284,14 @@ const LIT_IDX = `Array.from(document.querySelectorAll('.piano-key')).indexOf(doc
     hdrGeom.flowGap >= 0 && hdrGeom.flowGap <= 1, JSON.stringify(hdrGeom));
   check('V2.6: mode row sits below the header band (controls secondary)',
     hdrGeom.modeVsHeader >= 0, JSON.stringify(hdrGeom));
+  // V14 (spec §11.1): the top chrome must stay in the 56-72px budget. .ps-header
+  // is the screen's first child (top 0), so its bottom == its height. Pre-fix a
+  // 1vmin title bottom margin pushed it to 75.5px; the title's 4vmin top margin
+  // (level with the corner back button) plus the 56px line box already fill the
+  // band, so nothing may add to it. Measured here at 390x844 where vmin == the
+  // 844x390 audit viewport, so the number matches the audit exactly.
+  check('V14: header stays within the 56-72px top-chrome budget (spec §11.1)',
+    hdrGeom.headerH > 0 && hdrGeom.headerH <= 72.5, JSON.stringify(hdrGeom));
   await narrow.close();
   const fitj = JSON.parse(fit);
   check('all 8 keys fit a 390px phone (no clipped, unreachable key)',
