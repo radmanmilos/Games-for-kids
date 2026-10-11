@@ -60,11 +60,12 @@
   function speak(text){ if(!text)return; if(window.audioBuses&&window.audioBuses.speakWithDuck)window.audioBuses.speakWithDuck(text); else if(window.speech&&window.speech.speak)window.speech.speak(text); }
 
   function build(){
+    slotsEl.classList.remove('seq-complete');
     slotsEl.innerHTML=''; slots=[];
     data.steps.forEach(function(s,i){
       var slot={index:i, correctOrder:s.order, el:null, filled:null};
       var btn=document.createElement('div'); btn.className='seq-slot'; btn.dataset.idx=String(i);
-      btn.innerHTML='<span style="font-size:4vmin;font-weight:700">'+(i+1)+'</span>';
+      btn.innerHTML='<span class="seq-slot-num">'+(i+1)+'</span>';
       slotsEl.appendChild(btn); slot.el=btn; slots.push(slot);
     });
     trayEl.innerHTML=''; tray=[];
@@ -88,9 +89,29 @@
 
   function slotAt(x,y){ for(var i=0;i<slots.length;i++){ var r=slots[i].el.getBoundingClientRect(); if(x>=r.left-10&&x<=r.right+10&&y>=r.top-10&&y<=r.bottom+10)return slots[i]; } return null; }
 
-  function tryDrop(card,slot){ if(slot.filled||card.placed)return; if(Number(card.el.dataset.order)===slot.correctOrder){ card.placed=true; slot.filled=card; var num=slot.el.querySelector('span'); if(num)num.style.display='none'; slot.el.appendChild(card.el); card.el.classList.remove('seq-dragging'); card.el.style.cssText=''; placedCount++; if(window.successChime)window.successChime(); if(feedbackEl)feedbackEl.textContent=''; if(placedCount===slots.length) complete(); } else { if(window.gentleMiss)window.gentleMiss(); if(feedbackEl)feedbackEl.textContent='Покушај поново'; misses++; } }
+  function tryDrop(card,slot){
+    if(slot.filled||card.placed)return;
+    if(Number(card.el.dataset.order)===slot.correctOrder){
+      card.placed=true; slot.filled=card;
+      var num=slot.el.querySelector('.seq-slot-num'); if(num)num.style.display='none';
+      slot.el.appendChild(card.el);
+      card.el.classList.remove('seq-dragging'); card.el.classList.add('seq-placed');
+      card.el.style.cssText='';
+      slot.el.classList.add('seq-filled');
+      placedCount++;
+      if(window.successChime)window.successChime();
+      if(feedbackEl)feedbackEl.textContent='';
+      if(placedCount===slots.length) complete();
+    } else {
+      if(window.gentleMiss)window.gentleMiss();
+      if(feedbackEl)feedbackEl.textContent='Покушај поново';
+      card.el.classList.add('seq-wrong');
+      setTimeout(function(){ card.el.classList.remove('seq-wrong'); },450);
+      misses++;
+    }
+  }
 
-  function complete(){ locked=true; if(window.speakSr)window.speakSr('praise'); if(feedbackEl)feedbackEl.textContent='Браво!'; setTimeout(function(){ if(window.celebrate)window.celebrate(); round=(round+1)%SEQ.length; newRound(); },900); }
+  function complete(){ locked=true; if(window.speakSr)window.speakSr('praise'); if(feedbackEl)feedbackEl.textContent='Браво!'; if(slotsEl)slotsEl.classList.add('seq-complete'); setTimeout(function(){ if(window.celebrate)window.celebrate(); round=(round+1)%SEQ.length; newRound(); },900); }
 
   function newRound(){ locked=false; placedCount=0; misses=0; if(feedbackEl)feedbackEl.textContent=''; data=SEQ[round]; build(); speak('Постави у редослед'); }
 

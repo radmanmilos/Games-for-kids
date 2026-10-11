@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "e970a2ccd6833b6eb8edcbe1002ab2c6876f30bd",
+  "commitSha": "96de0674cf4a274be9493ae1c984d7a59929cf6b",
   "browser": {
     "product": "Chrome/155.0.8059.39",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-11T08:55:34.319Z",
+  "generatedAt": "2026-10-11T11:03:29.869Z",
   "pageSet": [
-    "sorting"
+    "sequencing"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,40 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "sorting_phone-portrait.png",
-      "page": "sorting",
+      "file": "sequencing_phone-portrait.png",
+      "page": "sequencing",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 22527
+      "bytes": 26729
     },
     {
-      "file": "sorting_phone-landscape.png",
-      "page": "sorting",
+      "file": "sequencing_phone-landscape.png",
+      "page": "sequencing",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 21727
+      "bytes": 35431
     },
     {
-      "file": "sorting_tablet-portrait.png",
-      "page": "sorting",
+      "file": "sequencing_tablet-portrait.png",
+      "page": "sequencing",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 43018
+      "bytes": 59266
     },
     {
-      "file": "sorting_tablet-landscape.png",
-      "page": "sorting",
+      "file": "sequencing_tablet-landscape.png",
+      "page": "sequencing",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 43560
+      "bytes": 58495
     }
   ]
 }

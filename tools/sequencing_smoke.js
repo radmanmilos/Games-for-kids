@@ -116,5 +116,71 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   check('V5.1 grammar: all four §23 regions present on sequencing', lsj.found.every(Boolean), JSON.stringify(lsj));
   check('V5.1 grammar: instruction + stage-mat render a real box; no h-overflow; non-vacuous', lsj.visible && lsj.overflow && lsj.bogus === false, JSON.stringify(lsj));
 
+  // V16 (spec §34/§42.18): "worksheet -> gentle story tray". VERIFY-first found
+  // the live defects: a flat 5% tray wash (not a material) and a plain white
+  // 3px DASHED slot (the same placeholder V15 removed from sorting). The pieces
+  // were also small. Pin the material, the sizes and the placement feedback.
+  const mat16 = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const cs = el => el && getComputedStyle(el);
+    const tray = document.querySelector('.seq-tray'), slot = document.querySelector('.seq-slot'), card = document.querySelector('.seq-card');
+    if (!tray || !slot || !card) return { found: false };
+    const t = cs(tray), s = cs(slot), c = cs(card);
+    const r = el => el.getBoundingClientRect();
+    return { found: true,
+      trayGrad: /gradient/.test(t.backgroundImage), trayBorder: parseFloat(t.borderTopWidth),
+      trayBS: t.borderTopStyle, trayR: parseFloat(t.borderRadius), trayInset: /inset/.test(t.boxShadow),
+      slotBS: s.borderTopStyle, slotBW: parseFloat(s.borderTopWidth), slotR: parseFloat(s.borderRadius),
+      slotGrad: /gradient/.test(s.backgroundImage), slotInset: /inset/.test(s.boxShadow),
+      slotW: r(slot).width, cardW: r(card).width };
+  })())`));
+  check('V16: tray reads as soft paper material (gradient + solid border + inset shadow + rounded)',
+    mat16.found && mat16.trayGrad && mat16.trayBS === 'solid' && mat16.trayBorder >= 1 && mat16.trayR >= 20 && mat16.trayInset, JSON.stringify(mat16));
+  check('V16: slots are clear solid destination surfaces (no white dashed placeholder)',
+    mat16.found && mat16.slotBS === 'solid' && mat16.slotBW >= 1 && mat16.slotR >= 16 && mat16.slotGrad && mat16.slotInset, JSON.stringify(mat16));
+  check('V16: pieces are slightly larger and nest inside the slot',
+    mat16.found && mat16.cardW >= 124 && mat16.slotW >= 146 && mat16.slotW >= mat16.cardW * 1.1, JSON.stringify(mat16));
+
+  // V16 placement feedback: a correct drop fills the slot (settled state, number
+  // hidden) and the piece settles; completing all three shows the small moment.
+  const drop16 = await drag(0, 0);
+  const fill16 = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const slot = document.querySelector('.seq-slot[data-idx="0"]');
+    const card = slot && slot.querySelector('.seq-card');
+    const num = slot && slot.querySelector('.seq-slot-num');
+    return { found: !!slot && !!card,
+      filled: !!slot && slot.classList.contains('seq-filled'),
+      placed: !!card && card.classList.contains('seq-placed'),
+      numHidden: !!num && num.style.display === 'none' };
+  })())`));
+  check('V16: a correct drop settles into the slot (filled slot + settled piece + number hidden)',
+    drop16.ok && fill16.found && fill16.filled && fill16.placed && fill16.numHidden, JSON.stringify(fill16));
+
+  for (let i = 1; i < 3; i++) await drag(i, i);
+  let complete16 = false;
+  for (let i = 0; i < 20 && !complete16; i++) { complete16 = await h.evalv(`document.querySelector('.seq-slots').classList.contains('seq-complete')`); if (!complete16) await sleep(50); }
+  check('V16: finishing the sequence shows a small completion moment', complete16 === true, 'seq-complete class on .seq-slots = ' + complete16);
+
+  // V16 + §62 device: the WHOLE composition (pieces, slots, tray, feedback) must
+  // sit inside a 844x390 short-landscape fold with no vertical scroll, and the
+  // pieces must still be LARGER (>=108/128) than the vmin base. This pins the
+  // height-aware media block: the historical bug was a `min-width:800px`-only
+  // desktop query that ignored height; deleting the block silently reverts to
+  // small vmin sizes (<108) and trips the size clause.
+  const land16 = await start({ page: '/pages/sequencing.html', tag: 'seq-smoke-landscape', width: 844, height: 390 });
+  let land16Ready = false;
+  for (let i = 0; i < 20 && !land16Ready; i++) { land16Ready = await land16.evalv(`typeof window.startSequencing === 'function' && document.querySelectorAll('.seq-card').length >= 3`); if (!land16Ready) await sleep(200); }
+  const geom16 = JSON.parse(await land16.evalv(`JSON.stringify((() => {
+    const inV = el => { if (!el) return false; const r = el.getBoundingClientRect(); return r.top >= -1 && r.left >= -1 && r.bottom <= innerHeight + 1 && r.right <= innerWidth + 1; };
+    const cards = [...document.querySelectorAll('.seq-card')], slots = [...document.querySelectorAll('.seq-slot')];
+    return { scrollH: document.documentElement.scrollHeight, vh: innerHeight,
+      trayIn: inV(document.querySelector('.seq-tray')), fbIn: inV(document.querySelector('#seq-feedback')),
+      cardsIn: cards.length >= 3 && cards.every(inV), slotsIn: slots.length >= 3 && slots.every(inV),
+      cardW: cards[0] ? cards[0].getBoundingClientRect().width : 0, slotW: slots[0] ? slots[0].getBoundingClientRect().width : 0 };
+  })())`));
+  check('V16: full composition visible in 844x390 short landscape (pieces + slots + tray + feedback, no v-scroll)',
+    land16Ready && geom16.trayIn && geom16.fbIn && geom16.cardsIn && geom16.slotsIn && geom16.scrollH <= geom16.vh + 1 && geom16.cardW >= 108 && geom16.slotW >= 128,
+    JSON.stringify(geom16));
+  await land16.close();
+
   await h.close(); const f=getFails(); console.log(f===0?'ALL PASS':'SOME FAIL ('+f+')'); process.exit(f?1:0);
 })().catch(e=>{console.error(e);process.exit(1);});

@@ -812,8 +812,8 @@
     "size": 6897
   },
   "games/sequencing.js": {
-    "sha256": "0755f33a1f28b744eb9ae3398c1ab8f0935f49ded75700ffe34c5f75f59b537a",
-    "size": 6764
+    "sha256": "a9e18c6f22a964c6ad249d700249f3c85a9009954dbb89be5c49769a4878f9ce",
+    "size": 7138
   },
   "games/shapes.js": {
     "sha256": "6f43d1373dfb7c7b6bb4c6e0b49bebf9d745cf733fe478d0fdee7f43ba58398b",
@@ -916,8 +916,8 @@
     "size": 8309
   },
   "pages/sequencing.html": {
-    "sha256": "c34ebff36b900838b1ea03f9041aeb78db909d275d20c4f863ad7c05808661f9",
-    "size": 3909
+    "sha256": "35e3e110fd200af9537308c194b3a4719499912cf8246d9967543b06c87f7906",
+    "size": 6404
   },
   "pages/shapes.html": {
     "sha256": "0aa89853af555a51c4a98a9c1e649a3954316c88341b01b7fc52d254cdeb3f03",
