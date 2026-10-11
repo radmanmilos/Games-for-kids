@@ -1,6 +1,6 @@
 # Petra's World — Emoticon Replacement Inventory
 
-**Status:** Source-audit draft v0.2 — findings below are confirmed from current `game/` source/search results, but this is **not yet certified exhaustive**. Review before generation.  
+**Status:** Source-audit draft v0.3 — canonical `game/` JavaScript modules, data, page HTML, shared modules, and major runtime configs have been inspected for literal emoji. This is substantially broader, but dynamic/runtime construction and any missed files still require a final automated repo-wide check. Review before generation.  
 **Scope:** Replace existing emoji/emoticon pictographs used as game artwork. Do not redesign games or replace proper illustrations, character sprites, 3D models, CSS/SVG controls, or ordinary text.
 
 ## Fixed reference images
@@ -69,6 +69,118 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | r3d-favicon-car | 🏎️ | `game/pages/racing3d.html` | Inline SVG favicon containing emoji text | Replace with a real SVG/project icon if desired; outside illustration batch | APP ICON |
 | maze-start-bear | 🐻 | `game/games/maze.js` | Start marker | Same exact bear reference as animal-bear; avoid duplicate file | REVIEW |
 | maze-goal-house | 🏠 | `game/games/maze.js` | Goal marker | Same house asset as object-house | REVIEW |
+
+## Additional source-confirmed candidates from the expanded all-pages audit
+
+| ID | Current glyph / visual | Confirmed source location(s) | Current purpose | Proposed treatment | Status |
+|---|---|---|---|---|---|
+| object-car | 🚗 | `game/data/serbian.js`, `game/index.html`, driving favicon | Serbian phonics object and hub tile/icon | Reuse existing driving-car illustration if visually appropriate; favicon/UI may remain icon | REVIEW |
+| food-banana | 🍌 | `game/data/serbian.js`, Kitty collectible themes | Phonics vocabulary and collectible theme | One shared banana asset | REVIEW |
+| animal-wolf | 🐺 | `game/data/serbian.js` | Serbian phonics picture | Simple wolf asset | REVIEW |
+| animal-caterpillar | 🐛 | `game/data/serbian.js`, `sequencing.js` | Phonics and life-cycle sequence | One shared caterpillar asset | REVIEW |
+| object-tree | 🌳 | `game/data/serbian.js`, `sequencing.js`, racing decor | Phonics, tree-growth sequence, scenery | One tree illustration if scale/use match | REVIEW |
+| object-student | 🧑‍🎓 | `game/data/serbian.js` | Serbian phonics picture | Simple child/student illustration; not an existing game character | REVIEW |
+| object-screen | 🖥️ | `game/data/serbian.js` | Serbian phonics picture | Simple computer monitor illustration | REVIEW |
+| object-needle | 🪡 | `game/data/serbian.js` | Serbian phonics picture | Simple needle/thread illustration | REVIEW |
+| object-heart | ❤️ | `game/data/serbian.js` | Word/picture for love | Simple heart shape; SVG is likely sufficient | SVG/CSS |
+| object-nose | 👃 | `game/data/serbian.js` | Body-part phonics picture | Simple nose illustration if the phonics picture card needs it | REVIEW |
+| object-pig-nose | 🐽 | `game/data/serbian.js` | Word for snout | Reuse pig asset only if the teaching meaning remains clear; otherwise distinct snout icon | REVIEW |
+| object-eye | 👁️ | `game/data/serbian.js` | Body-part phonics picture | Simple eye illustration | REVIEW |
+| animal-turkey | 🦃 | `game/data/serbian.js` | Serbian phonics picture | Simple turkey illustration | REVIEW |
+| object-ear | 👂 | `game/data/serbian.js` | Body-part phonics picture | Simple ear illustration | REVIEW |
+| animal-flamingo | 🦩 | `game/data/serbian.js` | Serbian phonics picture | Simple flamingo illustration | REVIEW |
+| object-helicopter | 🚁 | `game/data/serbian.js` | Serbian phonics picture | Simple helicopter illustration | REVIEW |
+| object-flower | 🌼 | `game/data/serbian.js`, `sequencing.js`, maze/racing decor | Phonics picture, sequence and decor | One shared flower where the meaning and scale fit | REVIEW |
+| object-sailboat | ⛵ | `game/data/serbian.js` | Serbian phonics picture | Simple sailboat illustration | REVIEW |
+| object-sweater | 🧥 | `game/data/serbian.js` | Serbian phonics picture | Simple sweater illustration | REVIEW |
+| object-hat | 🎩 | `game/data/serbian.js` | Serbian phonics picture | Simple hat illustration | REVIEW |
+| food-strawberry | 🍓 | `game/games/sorting.js`, `kitty-standalone.js` | Sorting item and Kitty collectible | One shared strawberry illustration | REVIEW |
+| food-grapes | 🍇 | `compare.js`/Kitty collectible themes | Comparison object and Kitty collectible | One shared grape bunch | REVIEW |
+| food-orange | 🍊 | `compare.js` | Comparison object | Simple orange illustration | REVIEW |
+| food-pear | 🍐 | `compare.js` | Comparison object | Simple pear illustration | REVIEW |
+| food-watermelon | 🍉 | `kitty-standalone.js` | Kitty collectible | Simple watermelon slice | REVIEW |
+| food-carrot | 🥕 | `sequencing.js`, `kitty-standalone.js` | Growth sequence result and Kitty collectible | One shared carrot illustration | REVIEW |
+| food-apple-green | 🍏 | `sequencing.js` | Unripe fruit sequence step | Separate from red apple because color conveys sequence stage | REVIEW |
+| object-egg | 🥚 | `sequencing.js` | Egg-to-bird sequence | Simple egg illustration | REVIEW |
+| animal-chick | 🐣 | `sequencing.js` | Egg-to-bird sequence | Simple chick illustration | REVIEW |
+| animal-bird | 🐦 | `sequencing.js` | Egg-to-bird sequence | Simple bird illustration | REVIEW |
+| object-soap | 🧼 | `sequencing.js` | Washing sequence | Simple soap illustration | REVIEW |
+| object-water-drop | 💧 | `sequencing.js`, dino collectible | Washing/growing sequence and collectible | One shared water drop if visually appropriate | REVIEW |
+| object-acorn | 🌰 | `sequencing.js` | Tree-growth sequence | Simple acorn illustration | REVIEW |
+| object-sunflower | 🌻 | `sequencing.js`, racing decor | Plant sequence and scenery | One shared sunflower | REVIEW |
+| object-mushroom | 🍄 | `animal_puzzle.js`, Kitty collectible | Forest puzzle and Kitty collectible | One shared mushroom | REVIEW |
+| animal-zebra | 🦓 | `animal_puzzle.js` | Savanna puzzle | Simple zebra illustration | REVIEW |
+| animal-giraffe | 🦒 | `animal_puzzle.js` | Savanna puzzle | Simple giraffe illustration | REVIEW |
+| animal-deer | 🦌 | `animal_puzzle.js`, racing decor | Forest puzzle and winter scenery | One shared deer illustration if appropriate | REVIEW |
+| animal-squirrel | 🐿️ | `animal_puzzle.js` | Forest puzzle | Simple squirrel illustration | REVIEW |
+| animal-cow | 🐄 | `animal_puzzle.js`, racing decor | Farm puzzle and scenery | Consolidate with `animal-cow` using one approved cow asset | REVIEW |
+| animal-rooster | 🐓 | `animal_puzzle.js`, racing decor | Farm puzzle and scenery | Consolidate with `animal-chicken` only if one image reads correctly as rooster/chicken | REVIEW |
+| object-tractor | 🚜 | `animal_puzzle.js`, racing decor | Farm puzzle and scenery | One shared tractor illustration | REVIEW |
+| object-rocket | 🚀 | `animal_puzzle.js`, space game/hub | Space puzzle, page decoration, hub tile | Reuse one rocket illustration for large game artwork; UI may use SVG | REVIEW |
+| object-planet | 🪐 | `animal_puzzle.js`, driving/space/racing decor | Puzzle and game-world object | One shared planet illustration where meaning matches | REVIEW |
+| object-astronaut | 👨‍🚀 | `animal_puzzle.js` | Space puzzle | Simple astronaut illustration | REVIEW |
+| object-snowman | ⛄ | `animal_puzzle.js`, driving/racing decor | Winter puzzle and collectible scenery | One shared snowman illustration | REVIEW |
+| object-sled | 🛷 | `animal_puzzle.js` | Winter puzzle | Simple sled illustration | REVIEW |
+| animal-penguin | 🐧 | `animal_puzzle.js` | Winter puzzle | Simple penguin illustration | REVIEW |
+| object-birthday-cake | 🎂 | `game/data/serbian.js`, `piano.js` | Phonics picture and song label | One shared cake illustration; piano UI may use smaller icon | REVIEW |
+| object-bell | 🔔 | `piano.js` | Song label | Simple bell or SVG icon | REVIEW |
+| object-balloons | 🎈 | `compare.js` | Comparison object | Simple balloon illustration | REVIEW |
+| object-rainbow | 🌈 | `game/index.html` | Main hub title and favicon | Small brand illustration/logo; treat as hub branding rather than game object | REVIEW |
+| object-school | 🏫 | `game/index.html`, `classroom.html` | Hub/classroom icon | Prefer consistent small UI icon or reuse a simple school illustration | REVIEW |
+| object-notebook | 📝 | `game/index.html` | Learning hub tile | UI icon or small illustration depending on tile style | REVIEW |
+| object-gamepad | 🎮 | `game/index.html` | Game hub label | UI icon, not watercolor object by default | UI ICON |
+| object-playing-cards | 🃏 | `game/index.html`, `animal_memory.html` | Memory hub/card-back symbol | Replace card-back with a designed card pattern; hub icon can remain UI | REVIEW |
+| object-puzzle-piece | 🧩 | `game/index.html` | Puzzle hub icon | SVG/UI icon or reuse designed puzzle-piece asset if used as a game object | REVIEW |
+| object-scale | ⚖️ | `game/index.html` | Compare-game hub icon | SVG/UI icon | UI ICON |
+| object-basket | 🧺 | `game/index.html` | Sorting-game hub icon | SVG/UI icon or small basket illustration if prominent | REVIEW |
+| object-calendar | 📆 | `game/index.html` | Sequencing hub icon | UI icon | UI ICON |
+| object-compass | 🧭 | `game/index.html` | Spatial-game hub icon | UI icon or small illustration depending on visual redesign scope | REVIEW |
+| object-pencil | ✏️ | `game/index.html`, `tracing.html`, tracing celebration | Hub, tracing intro/activity and celebration | Reuse simple pencil illustration for prominent objects; controls may use SVG | REVIEW |
+| object-paint-palette | 🎨 | hub/classroom/coloring | Game hub and coloring controls | UI icon for controls; no need for multiple generated assets | UI ICON |
+| object-medal | 🏅 | `coloring.js`, `kids_games.js`, `piano.html` | Reward/celebration | Prefer consistent reward illustration; consider reusing the golden star for generic reward moments if semantically suitable | REVIEW |
+| object-lightbulb | 💡 | `matching_game.html` | Hint button | SVG/CSS UI icon | UI ICON |
+| object-search | 🔍 | `animals.html` | Find-animal control | SVG/CSS UI icon | UI ICON |
+| object-trash | 🗑️ | `coloring.html`, parent page | Clear/reset controls | SVG/CSS UI icon | UI ICON |
+| object-progress-chart | 📊 | `parent.html` | Parent dashboard heading | SVG/CSS UI icon | UI ICON |
+| object-download | 📥 | `parent.html` | Download/offline button | SVG/CSS UI icon | UI ICON |
+| object-lock | 🔒 | `parent.html` | Parent area icon/title | SVG/CSS UI icon | UI ICON |
+| object-sound | 🔊 / 🔇 | Many pages and shared/game scripts | Sound/music toggle or sound action | One consistent SVG icon pair; not generated illustrations | UI ICON |
+| object-world-globe | 🌍 | Shared adventure pages and 3D Racing page | World-selection button/title/hint | One consistent SVG globe icon; no generated image needed by default | UI ICON |
+| object-finish-flag | 🏁 | `racing3d.html` | Start/win UI | SVG flag or remove decorative glyph | UI ICON |
+| object-retry | 🔄 / 🔁 | adventure, maze, parent, racing3d, rhythm | Restart/update/repeat controls | One consistent SVG icon family | UI ICON |
+| object-next-arrow | ➜ / ➡️ | animal counting, puzzle, animals, coloring, tracing | Next/navigation controls | SVG arrow | UI ICON |
+| object-celebration | 🎉 / ✨ / 🌟 | shared celebration, counting, matching, adventure, sequencing | Success/feedback and small effects | Use restrained CSS/SVG particles and the approved star where appropriate | REVIEW |
+| object-book-picture | 🖼️ | `coloring.js` | Coloring mode toggle | UI icon | UI ICON |
+| object-music-note | 🎵 | `piano.js`, `rhythm.js` | Music prompt/label | SVG icon or retain text symbol | UI ICON |
+| object-drum | 🥁 | `rhythm.js`, `rhythm.html`, hub | Rhythm pads and activity icon | One canonical drum illustration for prominent pads; hub/control may use icon | REVIEW |
+| object-season-leaf | 🍂 | `classroom.html`, `racing-config.js` | Seasons activity and racing scenery | One shared leaf illustration if it is a gameplay visual; UI tile may use icon | REVIEW |
+| object-snowflake | ❄️ | `animal_puzzle.js`, driving/racing config | Winter decoration/collectible | SVG snowflake for tiny effects; illustration only if a large collectible | REVIEW |
+| object-shell | 🐚 | ocean/driving/Kitty/adventure collectible themes | Shared collectible across games | One shared shell asset; consolidate adventure-fish/kitty-fish similarly | REVIEW |
+| object-fish | 🐟 | `adventure-modes.js`, `kitty-standalone.js`, Serbian phonics, ocean | Shared underwater decor, phonics and ocean visual | **One canonical fish asset** reused wherever suitable; no separate adventure-fish/kitty-fish files | REVIEW |
+| object-pickaxe | ⛏ | `kitty-standalone.js` | Cave gameplay glyph | SVG or simple illustrated pickaxe if visibly used as a game object | REVIEW |
+| object-sparkles | ✨ | `kitty-standalone.js`, `sequencing.js` | Cave/effect glyph and clean-sequence result | Prefer CSS/SVG effect; no unique PNG needed | SVG/CSS |
+| object-shell | 🐚 | `kitty-standalone.js`, `ocean.js`, `racing-config.js` | Collectible and scenery | Single shared shell asset; consolidate repeated use | REVIEW |
+| object-gem | 💎 | dino/ocean collectible themes | Collectible | One shared gem asset | REVIEW |
+| object-moon | 🌙 | classroom, driving/dino/ocean/space worlds | Moon/time/collectible motif | One shared moon illustration for gameplay objects; classroom time icon may remain UI | REVIEW |
+| object-candy-lollipop | 🍭 | `driving.js`, `racing-config.js` | Collectible and candy scenery | One shared lollipop asset | REVIEW |
+| object-candy-wrapped | 🍬 | `racing-config.js` | Candy-world scenery | One simple wrapped candy asset | REVIEW |
+| object-cupcake | 🧁 | `racing-config.js` | Candy-world scenery | One cupcake asset | REVIEW |
+| object-donut | 🍩 | `racing-config.js` | Candy-world scenery | One donut asset | REVIEW |
+| object-candy-rice | 🍡 | `racing-config.js` | Candy-world scenery | Simple dango/skewer asset if retained in scenery | REVIEW |
+| object-palm-tree | 🌴 | driving/Kitty/racing config | Island/tropical scenery and collectible context | One shared palm tree asset | REVIEW |
+| object-island | 🏝️ | `dino.js` | Island collectible/theme glyph | Could be a simple island illustration if this glyph is visibly rendered as an object | REVIEW |
+| object-volcano | 🌋 | `dino.js` | Volcano collectible/theme glyph | Simple volcano asset only if visibly rendered as collectible | REVIEW |
+| object-cactus | 🌵 | driving/dino theme collectibles | Desert theme | One shared cactus asset | REVIEW |
+| object-parrot | 🦜 | `dino.js`, racing decor | Tropical collectible/scenery | One shared parrot asset | REVIEW |
+| object-butterfly | 🦋 | maze/racing decor | Garden/forest scenery | One shared butterfly asset | REVIEW |
+| object-puddle | 💧 | `racing-config.js` | Racing obstacle | Use a simple shape/SVG if it is a small gameplay hazard | REVIEW |
+| object-rock | 🪨 | `racing-config.js` | Racing obstacle | Use simple SVG/geometry if small; no generated illustration by default | REVIEW |
+| object-road-barrier | 🚧 | `racing-config.js` | Racing obstacle | Small barrier illustration only if emoji is actually rendered in-game | REVIEW |
+| object-satellite | 🛰️ | `space.js` | Space collectible/theme glyph | Simple satellite illustration if visibly rendered | REVIEW |
+| object-telescope | 🔭 | `space.js` | Space collectible/theme glyph | Simple telescope illustration if visibly rendered | REVIEW |
+| object-ice-cube | 🧊 | `space.js` | Space collectible/theme glyph | Simple ice cube asset if visibly rendered | REVIEW |
+| object-spiral | 🌀 | `space.js` | Space collectible/theme glyph | Prefer vector effect if used as a swirl, not a physical object | SVG/CSS |
+| object-comet | 💫 / 🌠 | `space.js`, racing decor | Space effect/decoration | Vector effect or simple image depending on actual rendering size | REVIEW |
 
 ## Source-backed data and rendering systems requiring a full pass
 
