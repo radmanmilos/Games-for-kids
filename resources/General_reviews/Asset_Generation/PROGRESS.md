@@ -4,7 +4,7 @@ This file is the single progress tracker for the emoticon replacement project. U
 
 ## Current phase
 
-**Phase 1 — Source audit and inventory.** No production assets have been generated or approved yet.
+**Phase 1 — Source audit and inventory.** Initial canonical-source findings have been added to `ASSET_INVENTORY.md`; exhaustive enumeration remains in progress. No production assets have been generated or approved yet.
 
 ## Fixed decisions
 
@@ -17,6 +17,9 @@ This file is the single progress tracker for the emoticon replacement project. U
 - [x] Keep standard interface controls as SVG/CSS icons or text where appropriate.
 - [x] Store project documentation and prompts in `resources/`; approved runtime assets only in `game/`.
 - [ ] Complete source-backed inventory of every emoji used as a game visual.
+- [x] Add initial source-confirmed candidates from animals, animal counting, candy, sorting, spatial, classroom, sequencing, rhythm, piano, maze, animal puzzle, adventure-mode fish, shared celebration, and 3D Racing page UI.
+- [ ] Enumerate the complete emoji-backed Serbian phonics data and dynamic compare/adventure theme pools.
+- [ ] Audit every remaining canonical `game/` page/source/shared module for visible emoji; exclude docs duplicates and tests.
 - [ ] User approves final asset inventory.
 - [ ] Generate and review first small test batch.
 - [ ] User approves the test batch against the fixed references.
@@ -43,7 +46,7 @@ This file is the single progress tracker for the emoticon replacement project. U
 
 | Batch | Scope | Status | Notes |
 |---|---|---|---|
-| B0 | Source audit and inventory | IN PROGRESS | Current inventory has initial confirmed examples; other game files still need a complete scan. |
+| B0 | Source audit and inventory | IN PROGRESS | Inventory v0.2 contains confirmed candidate rows and explicit remaining audit targets. It is not yet exhaustive; see ASSET_INVENTORY.md. |
 | B1 | 1–3 test objects selected from approved inventory | NOT STARTED | Wait for user approval of final inventory. |
 | B2+ | Small generation batches | NOT STARTED | Avoid wasting free-tier image generations; do not regenerate approved assets. |
 | QA | Transparency, dimensions, consistency, runtime/offline checks | NOT STARTED | Use approved assets only. |
