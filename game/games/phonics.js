@@ -47,7 +47,7 @@
   var locked = false;
   var started = false;
 
-  var elLetter, elObjects, elFeedback, elRepeat;
+  var elLetter, elObjects, elFeedback, elRepeat, elSpeaker;
 
   function shuffle(a) {
     for (var i = a.length - 1; i > 0; i--) {
@@ -65,12 +65,34 @@
 
   function autoplaySound() {
     if (letterData && letterData.sound) speak(letterData.sound);
+    // V18 (spec §36/§42.15): the letter blooms while its sound plays and the
+    // speaker cue pulses, so "this letter can be heard" is visual, not assumed.
+    pulseLetter('phonics-letter-live');
+    pulseSpeaker();
+  }
+
+  function pulseLetter(klass) {
+    if (!elLetter) return;
+    elLetter.classList.add(klass);
+    setTimeout(function () { elLetter.classList.remove(klass); }, 850);
+  }
+
+  function pulseSpeaker() {
+    if (!elSpeaker) return;
+    elSpeaker.classList.add('phonics-speaker-live');
+    setTimeout(function () { elSpeaker.classList.remove('phonics-speaker-live'); }, 500);
+  }
+
+  function replaySound() {
+    if (letterData && letterData.sound) speak(letterData.sound);
+    pulseLetter('phonics-letter-live');
+    pulseSpeaker();
   }
 
   function clearMarks() {
     var btns = elObjects.querySelectorAll('.phonics-choice');
     btns.forEach(function (b) {
-      b.classList.remove('phonics-wrong', 'phonics-hint', 'phonics-correct');
+      b.classList.remove('phonics-wrong', 'phonics-hint', 'phonics-correct', 'phonics-glow-all');
     });
     if (elFeedback) elFeedback.textContent = '';
   }
@@ -120,6 +142,13 @@
     if (elLetter) elLetter.textContent = letterData.letter;
     buildChoices();
     autoplaySound();
+    // V18: a one-shot subtle attention cue on the two objects while the letter
+    // plays, so the child sees "these are your two choices" (never continuous).
+    var glow = 750;
+    choices.forEach(function (b) { b.classList.add('phonics-glow-all'); });
+    setTimeout(function () {
+      choices.forEach(function (b) { b.classList.remove('phonics-glow-all'); });
+    }, glow);
   }
 
   function onChoose(isCorrect, btn) {
@@ -127,6 +156,7 @@
     if (isCorrect) {
       locked = true;
       btn.classList.add('phonics-correct');
+      pulseLetter('phonics-good');
       if (window.successChime) window.successChime();
       if (window.speakSr) window.speakSr('praise');
       if (elFeedback) elFeedback.textContent = 'Браво!';
@@ -160,7 +190,17 @@
     elObjects = document.getElementById('phonics-objects');
     elFeedback = document.getElementById('phonics-feedback');
     elRepeat = document.getElementById('phonics-repeat');
-    if (elRepeat) elRepeat.addEventListener('click', function (e) { e.preventDefault(); autoplaySound(); });
+    elSpeaker = document.getElementById('phonics-speaker');
+    if (elRepeat) elRepeat.addEventListener('click', function (e) { e.preventDefault(); replaySound(); });
+    if (elSpeaker) elSpeaker.addEventListener('click', function (e) { e.preventDefault(); replaySound(); });
+    if (elLetter) {
+      // The huge letter is the speaker cue: tapping (or Enter/Space on) it
+      // replays the letter's sound, so a small child can re-hear it anywhere.
+      elLetter.addEventListener('click', function (e) { e.preventDefault(); replaySound(); });
+      elLetter.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); replaySound(); }
+      });
+    }
     round = 0;
     correctStreak = 0;
     newRound();

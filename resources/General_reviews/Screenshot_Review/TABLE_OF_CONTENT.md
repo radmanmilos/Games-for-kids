@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-11T11:17:08.740Z
+- Генерисано / Generated: 2026-10-11T11:41:42.624Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -68,10 +68,10 @@
 | `parent_phone-portrait.png` | За родитеље | `/pages/parent.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
 | `parent_tablet-landscape.png` | За родитеље | `/pages/parent.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
 | `parent_tablet-portrait.png` | За родитеље | `/pages/parent.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `phonics_phone-landscape.png` | Слова и звуци | `/pages/phonics.html` | 844×390 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `phonics_phone-portrait.png` | Слова и звуци | `/pages/phonics.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `phonics_tablet-landscape.png` | Слова и звуци | `/pages/phonics.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `phonics_tablet-portrait.png` | Слова и звуци | `/pages/phonics.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
+| `phonics_phone-landscape.png` | Слова и звуци | `/pages/phonics.html` | 844×390 | пејзаж | — | 11.10.2026. 13:41:42 | 235 |
+| `phonics_phone-portrait.png` | Слова и звуци | `/pages/phonics.html` | 390×844 | портрет | — | 11.10.2026. 13:41:42 | 235 |
+| `phonics_tablet-landscape.png` | Слова и звуци | `/pages/phonics.html` | 1180×820 | пејзаж | — | 11.10.2026. 13:41:42 | 235 |
+| `phonics_tablet-portrait.png` | Слова и звуци | `/pages/phonics.html` | 820×1180 | портрет | — | 11.10.2026. 13:41:42 | 235 |
 | `piano_phone-landscape.png` | Клавир | `/pages/piano.html` | 844×390 | пејзаж | — | 11.10.2026. 10:43:48 | 231 |
 | `piano_phone-portrait.png` | Клавир | `/pages/piano.html` | 390×844 | портрет | — | 11.10.2026. 10:43:48 | 231 |
 | `piano_tablet-landscape.png` | Клавир | `/pages/piano.html` | 1180×820 | пејзаж | — | 11.10.2026. 10:43:48 | 231 |

@@ -147,7 +147,112 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   check('V5.1 grammar: §23 regions present on phonics (stage-mat/answers/feedback)', lsj.found.every(Boolean), JSON.stringify(lsj));
   check('V5.1 grammar: stage-mat renders a real box; no h-overflow; non-vacuous', lsj.visible && lsj.overflow && lsj.bogus === false, JSON.stringify(lsj));
 
+  // V18 (spec §36/§42.15): "letter glow; speaker cue; subtle object highlight;
+  // immediate success feedback; never text-heavy; no alphabet wall".
+  // VERIFY-first found a bare floating letter (no bg/glow), a tiny top-right
+  // repeat icon far from the letter, flat #fff choice buttons, and no reaction
+  // on the stage when a round succeeds. The letter is now the active element.
+  const stanza = await h.evalv(`(() => {
+    const css = [...document.querySelectorAll('style')].map(s => s.textContent).join('\\n');
+    const letter = document.getElementById('phonics-letter');
+    return {
+      css,
+      letterBg: getComputedStyle(letter).backgroundImage,
+      hasLiveRule: /\.phonics-letter-live\s*\{[^}]*box-shadow/.test(css),
+      hasGoodRule: /\#phonics-letter\.phonics-good\s*\{[^}]*box-shadow/.test(css),
+      hasGlowAllRule: /\.phonics-glow-all/.test(css) && /--ps-glow/.test(css),
+      hasCorrectRule: /\.phonics-correct/.test(css)
+    };
+  })()`);
+  check('V18: the letter sits on a tile (active letter, not a floating glyph)',
+    /gradient/.test(stanza.letterBg), stanza.letterBg);
+  check('V18: a bloom rule exists for the letter while its sound plays',
+    stanza.hasLiveRule, stanza.hasLiveRule ? 'live rule present' : 'no live rule');
+
+  // runtime bloom: a fresh round immediately blooms the letter (no wake needed —
+  // the class is applied synchronously by autoplaySound)
+  const bloom = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    window.__phonics.goToRound(6);
+    const letter = document.getElementById('phonics-letter');
+    const live = letter.classList.contains('phonics-letter-live');
+    return { live, boxes: [...document.querySelectorAll('.phonics-choice')].map(b => b.classList.contains('phonics-glow-all')) };
+  })())`));
+  check('V18: a new round blooms the letter and lights both object choices once',
+    bloom.live === true && bloom.boxes.every(Boolean) && bloom.boxes.length === 2, JSON.stringify(bloom));
+
+  // speaker cue: a real button next to the letter, wired to replay the sound
+  const spoke = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const cue = document.getElementById('phonics-speaker');
+    if (!cue) return { ok: false, why: 'no cue' };
+    const r = cue.getBoundingClientRect();
+    const stub = window.audioBuses.speakWithDuck;
+    window.audioBuses.speakWithDuck = function () { window.__spkCount = (window.__spkCount || 0) + 1; if (arguments[1]) arguments[1](); };
+    const before = window.__spkCount || 0;
+    cue.click();
+    const after = window.__spkCount || 0;
+    window.audioBuses.speakWithDuck = stub;
+    return { ok: true, wired: after > before, btn: cue.tagName === 'BUTTON', min44: Math.min(r.width, r.height) >= 44 };
+  })())`));
+  check('V18: the speaker cue is a real button (≥44px) next to the letter and replays the sound',
+    spoke.ok && spoke.btn && spoke.min44 && spoke.wired, JSON.stringify(spoke));
+
+  // object material: subtle highlighted tiles, not plain white circles
+  const obj = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const c = document.querySelector('.phonics-choice');
+    const cs = getComputedStyle(c);
+    return { grad: /gradient/.test(cs.backgroundImage), white: cs.backgroundColor === 'rgb(255, 255, 255)' };
+  })())`));
+  check('V18: object choices are softly highlighted tiles (gradient sheen, not flat #fff)',
+    obj.grad === true && obj.white === false, JSON.stringify(obj));
+
+  // immediate success feedback: green ring on the choice AND the letter settles
+  // green, with «Браво!» — verified via the live classes (applied synchronously).
+  const suc = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const correct = document.querySelector('.phonics-choice[data-correct="1"]');
+    if (!correct) return { ok: false, why: 'no correct choice' };
+    correct.click();
+    const letter = document.getElementById('phonics-letter');
+    return {
+      ok: true,
+      ring: correct.classList.contains('phonics-correct'),
+      good: letter.classList.contains('phonics-good'),
+      fb: document.getElementById('phonics-feedback').textContent
+    };
+  })())`));
+  check('V18: a correct tap gives immediate success feedback (choice ring + letter settles green + Браво!)',
+    suc.ok && suc.ring && suc.good && stanza.hasGoodRule && String(suc.fb).includes('Браво'), JSON.stringify(suc));
+
   await h.close();
+
+  // V18: the whole composition — letter, its speaker cue, the choices and the
+  // feedback — must stay inside the 844x390 short-landscape fold (the desktop
+  // block is now height-guarded; the short block keeps 128px letter + 64px cue +
+  // 128px choices below the fold).
+  const land = await start({ page: '/pages/phonics.html', tag: 'phonics-smoke-landscape', width: 844, height: 390 });
+  let landReady = false;
+  for (let i = 0; i < 20 && !landReady; i++) {
+    landReady = await land.evalv(`!!window.__phonics && document.querySelectorAll('.phonics-choice').length === 2`);
+    if (!landReady) await sleep(200);
+  }
+  await land.evalv(STUB);
+  await sleep(250);
+  const fold = JSON.parse(await land.evalv(`JSON.stringify((() => {
+    const inV = el => { const r = el.getBoundingClientRect(); return r.top >= -1 && r.left >= -1 && r.bottom <= innerHeight + 1 && r.right <= innerWidth + 1; };
+    const ids = ['phonics-letter', 'phonics-speaker', 'phonics-objects', 'phonics-feedback'];
+    const letter = document.getElementById('phonics-letter');
+    const choice = document.querySelector('.phonics-choice');
+    return {
+      all: ids.every(id => inV(document.getElementById(id))),
+      choices: [...document.querySelectorAll('.phonics-choice')].every(inV),
+      letterFs: parseFloat(getComputedStyle(letter).fontSize),
+      choiceW: parseFloat(getComputedStyle(choice).width),
+      scrollH: document.documentElement.scrollHeight, vh: innerHeight
+    };
+  })())`));
+  check('V18: full composition visible in 844x390 short landscape (letter + speaker cue + objects + feedback, no v-scroll)',
+    fold.all && fold.choices && fold.scrollH <= fold.vh && fold.letterFs <= 132 && fold.choiceW <= 132, JSON.stringify(fold));
+  await land.close();
+
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);
   process.exit(getFails() ? 1 : 0);
 })().catch(e => { console.error('phonics_smoke crashed:', e); process.exit(1); });

@@ -788,8 +788,8 @@
     "size": 40414
   },
   "games/phonics.js": {
-    "sha256": "81dcb5d383444ed42813488e94668cf0c40719cab9526da1f2937506788f9502",
-    "size": 6893
+    "sha256": "a0447dcefb9a0512d701bd589f7ee73cb623768d9d57609dbd7f8534e9be045d",
+    "size": 8691
   },
   "games/piano.js": {
     "sha256": "0129fc81dbb18dcdcb095437df52e41ed116647cb9c89772abebb1eba1ec3bdf",
@@ -900,8 +900,8 @@
     "size": 24924
   },
   "pages/phonics.html": {
-    "sha256": "fddda39187a38077915920f0d7da522a33c12c45590ae373db52b79763f2ec83",
-    "size": 4970
+    "sha256": "76bffa27232d588b54d4bb9d9e0ace35dbcd7d830e5c8bf7784c54b2b4812f8e",
+    "size": 7345
   },
   "pages/piano.html": {
     "sha256": "2fefe4fa7fd27903148291410cd151476752657629dcad15a7da527c2d072781",
