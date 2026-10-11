@@ -6,7 +6,13 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — Task 231 (V14 Coloring + Piano shell) DONE — 2026-10-11
+## Current session — Task 232 (V15 Sorting) DONE — 2026-10-11
+
+**User instruction (2026-10-11):** continue the visual/UX plan tasks one by one; at the end of each task update all project docs, sync `game/`→`docs/`, refresh the affected review screenshots, and commit+push with a CI check. Do not stop between tasks — only stop for a genuine decision with no recommendation. (Standing approval carries; make recommended decisions without asking.)
+
+- **Task 232 DONE:** Phase 9–20 — V15 (spec §33/§42.20). **Sorting material upgrade.** VERIFY-first: the tray was already fully visible in short landscape (V3.2), so the live defects were the look — `.sort-basket` was a plain white **3px dashed** box ("plain white baskets") and `.sort-bin-label` computed **rgb(0,0,0), weight 800** ("strong black labels"). Fix: rounded **bucket** material — solid plum-tinted border, cream gradient fill, radius 28px, soft base lip, and an inset slot (`rgba(74,63,107,.06)`, radius 16px) as the clear destination surface. Labels plum `var(--plum)` weight 700; prompt 800→700 and feedback 700→600 (softer typography). Chips/objects unchanged (white circles, strong shadows), so the object↔destination relation stays primary. No geometry moved on any viewport (probe + guard). `sorting_smoke` → **30** checks (+4: bucket material; plum labels; softened weights; full tray+objects+feedback+baskets inside the 844×390 fold, no v-scroll), **each negative-tested** by CSS mutation (dashed/white/black/800 → 3 red; `translateY(100px)` → tray out of fold red — a 60px push did NOT clip, so the mutation was escalated to genuinely break the claim) and restored from a hash-checked copy. `run_all --game sorting` 30/30; axe clean; audit 0 FAIL (sorting keeps only the pre-existing advisory 88px prompt-centering WARN); offline E2E green; `check_fast` 7/7 after `build_offline`+`sync-docs`; 4 screenshots refreshed (`--task=232`). **Visual self-review pending (model can't read images — recommend MiMo V2.5 Free on the refreshed `sorting_*.png`). Next down the list: V16 (Sequencing gentle story tray).**
+
+## Earlier session — Task 231 (V14 Coloring + Piano shell) DONE — 2026-10-11
 
 **User instruction (2026-10-11):** continue the visual/UX plan tasks one by one; at the end of each task update all project docs, sync `game/`→`docs/`, refresh the affected review screenshots, and commit+push with a CI check. Do not stop between tasks — only stop for a genuine decision with no recommendation. (Standing approval carries; make recommended decisions without asking.)
 

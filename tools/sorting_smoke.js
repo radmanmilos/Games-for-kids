@@ -4,6 +4,10 @@
    soft-return on a wrong drop with a hint after two misses, full-round
    completion, and the reachability of every basket and object (inside the
    viewport AND hit-testable, not merely clickable).
+   V15 (task 232, spec §33): pins the material upgrade — rounded solid bucket
+   material (no plain white dashed box), plum labels (never black), softened
+   typography (no 800 weight), and full tray visibility in 844x390 short
+   landscape.
    Run:  node tools/sorting_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -190,6 +194,51 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   })`));
   check('V5.1 grammar: all four §23 regions present on sorting', lsj.found.every(Boolean), JSON.stringify(lsj));
   check('V5.1 grammar: instruction + stage-mat render a real box; no h-overflow; non-vacuous', lsj.visible && lsj.overflow && lsj.bogus === false, JSON.stringify(lsj));
+
+  // V15 (spec §33): material upgrade. VERIFY-first found the live defects were
+  // "plain white basket" (dashed 3px box on #fff) and "strong black labels"
+  // (rgb(0,0,0), weight 800); the tray was already fully visible (V3.2).
+  const mat = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const cs = el => el && getComputedStyle(el);
+    const bin = document.querySelector('.sort-basket');
+    const lbl = document.querySelector('.sort-bin-label');
+    const prompt = document.querySelector('#sort-prompt');
+    if (!bin || !lbl || !prompt) return { found: false };
+    const b = cs(bin), l = cs(lbl);
+    return { found: true,
+      bg: b.backgroundColor, bs: b.borderStyle, br: parseFloat(b.borderRadius),
+      labelColor: l.color, labelW: parseInt(l.fontWeight, 10), promptW: parseInt(cs(prompt).fontWeight, 10) };
+  })())`));
+  check('V15: baskets are rounded solid bucket material (no plain white dashed box)',
+    mat.found && mat.bg !== 'rgb(255, 255, 255)' && mat.bs === 'solid' && mat.br >= 20, JSON.stringify(mat));
+  check('V15: basket labels are plum, never black',
+    mat.found && mat.labelColor === 'rgb(74, 63, 107)', JSON.stringify(mat));
+  check('V15: typography softened (prompt + label no longer weight 800)',
+    mat.found && mat.promptW <= 700 && mat.labelW <= 700, JSON.stringify(mat));
+
+  // V15: "full tray visibility" — the whole tray, every object, the feedback line
+  // AND both basket surfaces must sit inside a 844x390 short-landscape fold with
+  // no vertical scroll. (A mouse click can "pass" while the tray is clipped.)
+  const land = await start({ page: '/pages/sorting.html', tag: 'sorting-smoke-landscape', width: 844, height: 390 });
+  let landReady = false;
+  for (let i = 0; i < 20 && !landReady; i++) {
+    landReady = await land.evalv(`typeof window.startSorting === 'function' && document.querySelectorAll('#sort-tray .sort-item').length > 0`);
+    if (!landReady) await sleep(200);
+  }
+  const trayGeom = JSON.parse(await land.evalv(`JSON.stringify((() => {
+    const inV = el => { const r = el.getBoundingClientRect();
+      return r.top >= -1 && r.left >= -1 && r.bottom <= innerHeight + 1 && r.right <= innerWidth + 1; };
+    const tray = document.querySelector('#sort-tray'), fb = document.querySelector('#sort-feedback');
+    const items = [...document.querySelectorAll('#sort-tray .sort-item')];
+    const bins = [...document.querySelectorAll('#sort-baskets .sort-basket')];
+    return { scrollH: document.documentElement.scrollHeight, vh: innerHeight,
+      trayIn: tray ? inV(tray) : false, fbIn: fb ? inV(fb) : false,
+      itemsIn: items.length > 0 && items.every(inV), binsIn: bins.length > 0 && bins.every(inV) };
+  })())`));
+  check('V15: full tray visibility in short landscape (tray + objects + feedback + baskets on-screen, no v-scroll)',
+    landReady && trayGeom.trayIn && trayGeom.itemsIn && trayGeom.fbIn && trayGeom.binsIn && trayGeom.scrollH <= trayGeom.vh + 1,
+    JSON.stringify(trayGeom));
+  await land.close();
 
   await h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);

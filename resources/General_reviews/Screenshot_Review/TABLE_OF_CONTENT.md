@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-11T08:43:48.073Z
+- Генерисано / Generated: 2026-10-11T08:55:34.319Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -92,10 +92,10 @@
 | `shapes_phone-portrait.png` | Облици | `/pages/shapes.html` | 390×844 | портрет | — | 09.10.2026. 16:53:58 | 223 |
 | `shapes_tablet-landscape.png` | Облици | `/pages/shapes.html` | 1180×820 | пејзаж | — | 09.10.2026. 16:53:58 | 223 |
 | `shapes_tablet-portrait.png` | Облици | `/pages/shapes.html` | 820×1180 | портрет | — | 09.10.2026. 16:53:58 | 223 |
-| `sorting_phone-landscape.png` | Разврставање | `/pages/sorting.html` | 844×390 | пејзаж | — | 09.10.2026. 13:41:25 | 219 |
-| `sorting_phone-portrait.png` | Разврставање | `/pages/sorting.html` | 390×844 | портрет | — | 09.10.2026. 13:41:25 | 219 |
-| `sorting_tablet-landscape.png` | Разврставање | `/pages/sorting.html` | 1180×820 | пејзаж | — | 09.10.2026. 13:41:25 | 219 |
-| `sorting_tablet-portrait.png` | Разврставање | `/pages/sorting.html` | 820×1180 | портрет | — | 09.10.2026. 13:41:25 | 219 |
+| `sorting_phone-landscape.png` | Разврставање | `/pages/sorting.html` | 844×390 | пејзаж | — | 11.10.2026. 10:55:34 | 232 |
+| `sorting_phone-portrait.png` | Разврставање | `/pages/sorting.html` | 390×844 | портрет | — | 11.10.2026. 10:55:34 | 232 |
+| `sorting_tablet-landscape.png` | Разврставање | `/pages/sorting.html` | 1180×820 | пејзаж | — | 11.10.2026. 10:55:34 | 232 |
+| `sorting_tablet-portrait.png` | Разврставање | `/pages/sorting.html` | 820×1180 | портрет | — | 11.10.2026. 10:55:34 | 232 |
 | `space_phone-landscape.png` | Свемир | `/pages/space.html` | 844×390 | пејзаж | — | 09.10.2026. 14:32:06 | 220 |
 | `space_phone-portrait.png` | Свемир | `/pages/space.html` | 390×844 | портрет | — | 09.10.2026. 14:32:06 | 220 |
 | `space_tablet-landscape.png` | Свемир | `/pages/space.html` | 1180×820 | пејзаж | — | 09.10.2026. 14:32:06 | 220 |

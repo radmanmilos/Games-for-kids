@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "a6254ab11323a37e26fd3e647572f46388ede173",
+  "commitSha": "e970a2ccd6833b6eb8edcbe1002ab2c6876f30bd",
   "browser": {
     "product": "Chrome/155.0.8059.39",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-11T08:43:48.073Z",
+  "generatedAt": "2026-10-11T08:55:34.319Z",
   "pageSet": [
-    "piano"
+    "sorting"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,40 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "piano_phone-portrait.png",
-      "page": "piano",
+      "file": "sorting_phone-portrait.png",
+      "page": "sorting",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 20638
+      "bytes": 22527
     },
     {
-      "file": "piano_phone-landscape.png",
-      "page": "piano",
+      "file": "sorting_phone-landscape.png",
+      "page": "sorting",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 20068
+      "bytes": 21727
     },
     {
-      "file": "piano_tablet-portrait.png",
-      "page": "piano",
+      "file": "sorting_tablet-portrait.png",
+      "page": "sorting",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 42150
+      "bytes": 43018
     },
     {
-      "file": "piano_tablet-landscape.png",
-      "page": "piano",
+      "file": "sorting_tablet-landscape.png",
+      "page": "sorting",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 41714
+      "bytes": 43560
     }
   ]
 }
