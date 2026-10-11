@@ -6,7 +6,13 @@ Purpose
 
 This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
 
-## Current session — Task 229 (V12 Memory) DONE — 2026-10-10
+## Current session — Task 230 (V13 Classroom) DONE — 2026-10-11
+
+**User instruction (2026-10-11):** continue the visual/UX plan tasks one by one; at the end of each task update all project docs, sync `game/`→`docs/`, refresh the affected review screenshots, and commit+push with a CI check. Do not stop between tasks — only stop for a genuine decision with no recommendation. (Standing approval carries; make recommended decisions without asking.)
+
+- **Task 230 DONE:** Phase 9–20 — V13 (spec §31/§42.5). **Classroom hierarchy.** The absolute `#classroomTitle{position:absolute;top:4vmin}` and its 2517px² tablet-portrait overlap were already removed by **V2.4** (plan row V2.4, task 216), so the live defect was **hierarchy**: at 390×844 / 768×1024 / 820×1180 / 1024×768 the title↔back overlap is 0 and the title is in the `.ps-header` flow row, but once the hub OVERFLOWS its `.hub-group{margin:auto}` centring collapses and «За малишане» sat only **8 px** under «Учионица». Fix: the separation now lives on `#classroomHub`'s top padding (`padding:3vmin 4vmin 0`) — it belongs to the content band, so it does **not** grow the header (the §11.1 ≤72 px top-chrome budget is measured on `.ps-header`, unchanged): the gap goes **8 → 31 px** at 768×1024 / 1024×768 (33 px at 820×1180, 35 px phone), header heights unchanged. Activity grid, tabs and kids tier untouched. `classroom_smoke` 34→**37** (3 tablet-portrait guards: §42.5 spacing ≥20 px, §31 corner safe zones `padL/padR ≥ 11vmin` + title in the content box, and `titleFont ≥ 1.8 × groupFont`; **each negative-tested by runtime CSS mutation** — no file at risk); `check_fast` 7/7 after `build_offline`+`sync-docs`; axe clean; `short_landscape_audit` **classroom OK** (0 FAIL); offline E2E 23 games green; 4 screenshots refreshed (`--task=230`). **Visual self-review pending (model can't read images — recommend MiMo V2.5 Free on the refreshed `classroom_*.png`). Next down the list: V14 (Coloring header + Piano shell geometry).**
+
+## Earlier session — Task 229 (V12 Memory) DONE — 2026-10-10
 
 **User instruction (2026-10-10):** continue the visual/UX plan tasks one by one; at the end of each task update all project docs, sync `game/`→`docs/`, refresh the affected review screenshots, and commit+push with a CI check (approval granted this session). Do not stop between tasks — only stop for a genuine decision with no recommendation.
 

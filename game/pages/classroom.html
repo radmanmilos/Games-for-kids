@@ -72,12 +72,18 @@
      pinned. Centre alignment comes from margin:auto on .hub-group, NOT from
      align-items:center: a centred item that overflows a scroll container is
      clipped at the top and unreachable, while auto margins collapse to 0 when
-     there is no free space (content anchors to the top instead). */
+     there is no free space (content anchors to the top instead).
+     V13 (spec §31/§42.5) — hierarchy: when the hub OVERFLOWS, the auto margins
+     collapse and the section labels used to sit only ~8px (1vmin of title
+     margin) under the page title, so «Учионица» crowded «За малишане». The gap
+     now lives on the hub's top padding, so it belongs to the content band and
+     does NOT grow the header (the §11.1 ~72px top-chrome budget is measured on
+     .ps-header, which is unchanged). */
   #classroomHub{
     display:flex; flex-direction:row; flex-wrap:wrap;
     justify-content:center; gap:6vmin;
     flex:1 1 auto; min-height:0; overflow:auto;
-    padding:0 4vmin; margin:0;
+    padding:3vmin 4vmin 0; margin:0;
   }
   #classroomHub .hub-group{ margin:auto; }
   #classroomHub[hidden]{ display:none; }

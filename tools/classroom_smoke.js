@@ -310,6 +310,38 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
   // viewport). titleVisible keeps the check non-vacuous.
   check('spec §31: hub title never overlaps the back button (and is actually rendered)',
     hubGeom.titleVisible && hubGeom.titleBackOverlap === 0, JSON.stringify(hubGeom));
+
+  // V13 (spec §31/§42.5) — hierarchy + title safe zone. VERIFY-first measured the
+  // page title crowding the first section label: when the hub OVERFLOWS the auto
+  // margins collapse, so «За малишане» sat only 1vmin (~8px) under «Учионица».
+  // The gap now lives on the hub's top padding; these guards pin it (removing that
+  // padding drops the gap back to ~8px, so the check is non-vacuous) and pin the
+  // reserved corner zones the centred title must never enter.
+  const v13 = JSON.parse(await h3.evalv(`JSON.stringify((function(){
+    const r = el => el.getBoundingClientRect();
+    const title = document.getElementById('classroomTitle');
+    const hd = document.querySelector('#game-classroom .ps-header');
+    const first = document.querySelector('#classroomHub .hub-group-title');
+    const tb = r(title), hb = r(hd), fb = r(first);
+    const cs = getComputedStyle(hd);
+    const padL = parseFloat(cs.paddingLeft), padR = parseFloat(cs.paddingRight);
+    const vmin = Math.min(innerWidth, innerHeight) / 100;
+    const contentLeft = hb.left + padL, contentRight = hb.right - padR;
+    return {
+      gap: Math.round(fb.top - tb.bottom),
+      padL: Math.round(padL), padR: Math.round(padR),
+      titleFont: parseFloat(getComputedStyle(title).fontSize),
+      groupFont: parseFloat(getComputedStyle(first).fontSize),
+      inContentBox: tb.left >= contentLeft - 0.5 && tb.right <= contentRight + 0.5,
+      vmin: +vmin.toFixed(3)
+    };
+  })())`));
+  check('V13 tablet portrait: page title is separated from the section label (§42.5 spacing)',
+    v13.gap >= 20, JSON.stringify(v13));
+  check('V13 tablet portrait: title stays inside the reserved corner safe zones (§31)',
+    v13.inContentBox && v13.padL >= 11 * v13.vmin && v13.padR >= 11 * v13.vmin, JSON.stringify(v13));
+  check('V13 tablet portrait: page title keeps hierarchy over the section label',
+    v13.titleFont >= 1.8 * v13.groupFont, JSON.stringify(v13));
   await h3.close();
 
   await h.close();
