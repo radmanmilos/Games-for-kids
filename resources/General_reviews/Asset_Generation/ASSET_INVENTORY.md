@@ -1,6 +1,6 @@
 # Petra's World — Emoticon Replacement Inventory
 
-**Status:** Source-audit draft v0.3 — canonical `game/` JavaScript modules, data, page HTML, shared modules, and major runtime configs have been inspected for literal emoji. This is substantially broader, but dynamic/runtime construction and any missed files still require a final automated repo-wide check. Review before generation.  
+**Status:** Source-audit draft v0.4 — literal emoji scan completed across the canonical `game/` JavaScript modules, page HTML, shared modules, CSS, manifests, and runtime configs (excluding the third-party minified Three.js bundle). Candidate rows have been expanded and two duplicate asset IDs are being consolidated. This is a source-backed inventory draft, not yet approved for generation: semantic use-site verification and a final review of dynamic rendering remain.  
 **Scope:** Replace existing emoji/emoticon pictographs used as game artwork. Do not redesign games or replace proper illustrations, character sprites, 3D models, CSS/SVG controls, or ordinary text.
 
 ## Fixed reference images
@@ -28,7 +28,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 |---|---|---|---|---|---|
 | animal-dog | 🐶 | `game/games/animals.js`, `animal_counting.js`, `candy.js`, `spatial.js`, `sorting.js` | Animal flashcard/counting, candy game's animal set, spatial scene, sorting item | One shared simple dog PNG for all object/animal-card uses | REVIEW |
 | animal-cat | 🐱 | `game/games/animals.js`, `animal_counting.js`, `sorting.js` | Animal flashcard/counting and sorting item | One shared simple cat PNG | REVIEW |
-| animal-cow | 🐮 | `game/games/animals.js`, `animal_counting.js`, `candy.js` | Animal flashcard/counting and candy-game set | One shared simple cow PNG | REVIEW |
+| animal-cow | 🐮 / 🐄 | `game/games/animals.js`, `animal_counting.js`, `candy.js`, `animal_puzzle.js`, `racing-config.js`, `game/data/serbian.js` | Animal flashcard/counting, candy set, farm puzzle/scenery, Serbian phonics | One canonical cow illustration; confirm it reads clearly at card and scenery sizes | REVIEW |
 | animal-lion | 🦁 | `game/games/animals.js` | Animal flashcard | Simple lion PNG | REVIEW |
 | animal-elephant | 🐘 | `game/games/animals.js` | Animal flashcard | Simple elephant PNG | REVIEW |
 | animal-frog | 🐸 | Mentioned in the animals smoke-test mapping; verify runtime list in full source | Animal flashcard/name mapping | Generate only if runtime list uses it | AUDIT |
@@ -155,11 +155,10 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-drum | 🥁 | `rhythm.js`, `rhythm.html`, hub | Rhythm pads and activity icon | One canonical drum illustration for prominent pads; hub/control may use icon | REVIEW |
 | object-season-leaf | 🍂 | `classroom.html`, `racing-config.js` | Seasons activity and racing scenery | One shared leaf illustration if it is a gameplay visual; UI tile may use icon | REVIEW |
 | object-snowflake | ❄️ | `animal_puzzle.js`, driving/racing config | Winter decoration/collectible | SVG snowflake for tiny effects; illustration only if a large collectible | REVIEW |
-| object-shell | 🐚 | ocean/driving/Kitty/adventure collectible themes | Shared collectible across games | One shared shell asset; consolidate adventure-fish/kitty-fish similarly | REVIEW |
+| object-shell | 🐚 | `game/games/ocean.js`, `driving.js`, `kitty-standalone.js`, `racing-config.js` | Shared collectible and scenery | One shared shell asset across all listed uses | REVIEW |
 | object-fish | 🐟 | `adventure-modes.js`, `kitty-standalone.js`, Serbian phonics, ocean | Shared underwater decor, phonics and ocean visual | **One canonical fish asset** reused wherever suitable; no separate adventure-fish/kitty-fish files | REVIEW |
 | object-pickaxe | ⛏ | `kitty-standalone.js` | Cave gameplay glyph | SVG or simple illustrated pickaxe if visibly used as a game object | REVIEW |
 | object-sparkles | ✨ | `kitty-standalone.js`, `sequencing.js` | Cave/effect glyph and clean-sequence result | Prefer CSS/SVG effect; no unique PNG needed | SVG/CSS |
-| object-shell | 🐚 | `kitty-standalone.js`, `ocean.js`, `racing-config.js` | Collectible and scenery | Single shared shell asset; consolidate repeated use | REVIEW |
 | object-gem | 💎 | dino/ocean collectible themes | Collectible | One shared gem asset | REVIEW |
 | object-moon | 🌙 | classroom, driving/dino/ocean/space worlds | Moon/time/collectible motif | One shared moon illustration for gameplay objects; classroom time icon may remain UI | REVIEW |
 | object-candy-lollipop | 🍭 | `driving.js`, `racing-config.js` | Collectible and candy scenery | One shared lollipop asset | REVIEW |
@@ -182,19 +181,90 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-spiral | 🌀 | `space.js` | Space collectible/theme glyph | Prefer vector effect if used as a swirl, not a physical object | SVG/CSS |
 | object-comet | 💫 / 🌠 | `space.js`, racing decor | Space effect/decoration | Vector effect or simple image depending on actual rendering size | REVIEW |
 
-## Source-backed data and rendering systems requiring a full pass
+## Source-audit coverage and findings
 
-The following sources contain or likely render emoji-backed content. Their exact full glyph inventories still need to be enumerated from source data before this document can be marked exhaustive:
+A literal Unicode pictograph scan was completed against the canonical runtime files under `game/`: all first-party `.js`, `.mjs`, `.html`, `.css`, and `.json` files returned by the repository tree, including `game/index.html`, all game pages, all game modules, shared modules, CSS, manifests, and service-worker files. The third-party minified Three.js library was excluded. Comments and explanatory prose may contain emoji too; the scan is a candidate-finding pass, not proof that every glyph is actually rendered.
 
-- `game/data/serbian.js` — alphabet/phonics picture vocabulary includes emoji fields (confirmed examples include 🍌 banana, 🐺 wolf, 🐛 caterpillar, 👂 ear, 🦩 flamingo, 🚁 helicopter). Must inventory the complete data array and consolidate with game objects.
-- `game/games/adventure.js` and `game/games/adventure-modes.js` — theme hero/collectible fields and canvas glyph rendering. Preserve existing character sprites where used; only non-character emoji objects are in scope. Identify exact collectible glyphs per theme.
-- `game/games/animal_memory.js`, `game/games/animal_puzzle.js`, `game/games/ocean.js`, `space.js`, `dino.js`, `driving.js` — search their actual draw/render paths for emoji fields/glyphs; do not assume every concept is an emoji.
-- `game/games/compare.js` — dynamic emoji selected at runtime; exact candidate pool must be captured from `pickEmoji()`.
-- `game/games/kitty-standalone.js` — Kitty character/sprite and animation frames are explicitly out of scope; only other emoji objects/effects can be listed.
-- `game/games/racing3d.mjs` — inspect actual render path separately. Do not treat configured 3D pickups/obstacles as emoji if they are already mesh geometry.
-- `game/pages/*.html` and `game/shared/*.js` — scan for visible emoji in headings, buttons, feedback, page decorations, and shared celebration.
-- `game/index.html` — landing/learning tiles include emoji pictographs; decide whether these count as artwork replacements or should remain UI glyphs.
-- `game/games/animals.js`, `animal_counting.js`, `candy.js`, `sorting.js`, `spatial.js`, `classroom.js`, `sequencing.js`, `rhythm.js`, `piano.js`, `maze.js`, `animal_puzzle.js` — confirmed candidate rows above, but each full array/scene should be checked to capture any additional glyphs.
+Important source-specific findings that need careful treatment:
+- `game/data/serbian.js` has 28 alphabet picture records plus counting records for 1–20. Reuse the canonical animal/object art for repeated concepts; do not generate a separate image for every letter or number.
+- `game/games/compare.js` has a dynamic object pool containing animal faces, rabbit, chick variants, fruits, star variants, and a balloon. Any generated object must work at the actual comparison scale.
+- `game/games/adventure.js`, `adventure-modes.js`, `dino.js`, `driving.js`, `ocean.js`, `space.js`, `kitty-standalone.js`, and `racing-config.js` contain per-world collectible/decor glyphs. Keep character sprites and existing engine/rendering behavior intact; only replace non-character glyphs that are actually rendered.
+- `game/games/racing3d.mjs` has emoji in UI text/fallbacks (sound state and finish flag), while world objects and pickups are rendered as 3D meshes. Do not replace those meshes with 2D art.
+- Page-level emoji include favicons, hub tiles, labels, card backs, rewards, and controls. Controls and favicons should generally be handled as SVG/CSS or app-icon work rather than watercolor assets.
+- No literal emoji were found in the scanned shared input/audio/navigation utilities or primary design-token/component CSS files; shared celebration does have an emoji fallback.
+
+
+## Additional canonical concepts found in the literal scan
+
+These are source-confirmed concepts/use sites that were not fully represented in the earlier rows. Merge each with an existing row above when the same semantic asset already exists; IDs are canonical suggestions, not a requirement to create one image per glyph occurrence.
+
+| ID | Current glyph | Confirmed source location(s) | Current purpose | Proposed treatment | Status |
+|---|---|---|---|---|---|
+| animal-rabbit | 🐰 | `game/games/compare.js`, `spatial.js` | Comparison pool and spatial scene | One simple rabbit illustration | REVIEW |
+| animal-chick | 🐣 | `sequencing.js`, `compare.js` | Egg-to-bird sequence and comparison pool | One canonical chick asset | REVIEW |
+| animal-baby-chick | 🐤 | `game/games/compare.js`, `spatial.js` | Comparison pool and spatial scene | Reuse chick only if visual distinction is not pedagogically needed; otherwise keep a separate canonical variant | REVIEW |
+| animal-mouse | 🐭 | `game/games/spatial.js` | Spatial scene / position task | Simple mouse illustration | REVIEW |
+| food-cheese | 🧀 | `game/games/spatial.js` | Spatial scene / position task | Simple cheese illustration | REVIEW |
+| object-ball | ⚽ | `game/games/spatial.js` | Spatial scene / position task | Keep a clear, simple ball illustration; SVG may be sufficient | REVIEW |
+| object-pine-tree | 🌲 | `game/games/racing-config.js` | Winter/forest scenery | Reuse tree family only if evergreen silhouette is distinct enough | REVIEW |
+| object-mountain | ⛰️ | `game/games/racing-config.js` | Racing scenery | SVG/CSS scenery shape or one simple illustration | REVIEW |
+| object-beach-umbrella | ⛱️ | `game/games/racing-config.js` | Beach scenery | Simple illustration only if the glyph is actually visible at meaningful size | REVIEW |
+| object-surfboard | 🏄 | `game/games/racing-config.js` | Beach scenery | Usually remove/replace with a simple vector; avoid unnecessary tiny art | REVIEW |
+| object-wave | 🌊 | `game/games/racing-config.js` | Ocean scenery | CSS/SVG wave or one simple image, depending on render scale | REVIEW |
+| object-skis | 🎿 | `game/games/racing-config.js` | Winter scenery/collectible | Small SVG or illustration if prominent | REVIEW |
+| object-skier | ⛷️ | `game/games/racing-config.js` | Winter scenery | Likely remove if tiny decorative clutter; otherwise simple vector | REVIEW |
+| object-evergreen-lantern | 🏮 | `game/games/racing-config.js` | Night scenery | Simple vector/illustration only if retained | REVIEW |
+| animal-owl | 🦉 | `game/games/racing-config.js` | Night scenery | One simple owl illustration if retained as a visible object | REVIEW |
+| animal-bat | 🦇 | `game/games/racing-config.js` | Night scenery | One simple bat illustration if retained as a visible object | REVIEW |
+| animal-monkey | 🐒 | `game/games/racing-config.js` | Tropical scenery | One simple monkey illustration if retained | REVIEW |
+| object-grass | 🌾 | `game/games/racing-config.js` | Farm scenery | Simple vector or shared grass/plant art | REVIEW |
+| object-spaceship | 🛸 | `game/games/racing-config.js` | Space scenery | Reuse a spaceship illustration only if visually distinct from the rocket | REVIEW |
+| object-galaxy | 🌌 | `game/games/space.js`, `racing-config.js` | Space world theme/scenery | Prefer background treatment, not a standalone object asset | REVIEW |
+| object-meteor | 🌠 | `game/games/space.js`, `racing-config.js` | Space collectible/effect | SVG/canvas effect likely better than watercolor art | REVIEW |
+| object-lightning | ⚡ | `game/games/racing3d.mjs` | Speed-boost comment/effect label | SVG/CSS effect; not an illustration candidate unless actually rendered as a glyph | SVG/CSS |
+| object-arrow-right | ➜ / ➡ / ➡️ | multiple game pages/modules | Next/navigation controls | One consistent SVG/CSS arrow; never generate image assets for it | UI ICON |
+| object-eye-button | 👁 / 👁️ | `game/games/animal_puzzle.js` | Peek/reveal picture control | SVG/CSS icon | UI ICON |
+| object-calendar-clock | 🕰️ | `game/games/classroom.js`, `classroom.html` | Time activity icon | SVG/CSS icon or a designed clock face | UI ICON |
+| object-seasons-leaf | 🍂 | `game/pages/classroom.html`, `game/games/racing-config.js` | Seasons tile and scenery | One leaf illustration if used as scenery; tile may remain icon | REVIEW |
+| object-sun | ☀️ | `game/games/classroom.js` | Time-of-day teaching scene | SVG/canvas sun or simple illustration depending on display size | REVIEW |
+| object-sunrise | 🌅 | `game/games/classroom.js` | Time-of-day teaching scene | Reuse a sunrise scene only if it is a prominent teaching image | REVIEW |
+| object-sunset | 🌇 | `game/games/classroom.js` | Time-of-day teaching scene | Reuse a sunset scene only if it is a prominent teaching image | REVIEW |
+| object-night-sky | 🌙 | `game/games/classroom.js` and several world configs | Time-of-day teaching and world motif | Reuse canonical moon; avoid separate duplicates | REVIEW |
+| object-cards-pattern | 🃏 | `game/pages/animal_memory.html`, `matching_game.html`, hub | Memory card-back and game tile | Design a proper card-back pattern; do not use a playing-card emoji as a large card face | REVIEW |
+| object-heart-shape | ❤️ | `game/data/serbian.js` | Serbian phonics vocabulary | SVG shape is preferable to a generated raster image | SVG/CSS |
+| object-nose | 👃 | `game/data/serbian.js` | Serbian phonics vocabulary | Simple, child-friendly body-part illustration; check educational appropriateness | REVIEW |
+| object-pig-snout | 🐽 | `game/data/serbian.js` | Serbian phonics vocabulary | Pig image may not clearly teach “snout”; use a distinct crop/icon if required | REVIEW |
+| object-eye | 👁️ | `game/data/serbian.js` | Serbian phonics vocabulary | Simple eye illustration; do not reuse the peek-button icon treatment automatically | REVIEW |
+| object-ear | 👂 | `game/data/serbian.js` | Serbian phonics vocabulary | Simple ear illustration | REVIEW |
+| animal-turkey | 🦃 | `game/data/serbian.js` | Serbian phonics vocabulary | One turkey illustration | REVIEW |
+| object-monitor | 🖥️ | `game/data/serbian.js` | Serbian phonics vocabulary | Simple monitor illustration | REVIEW |
+| object-needle-thread | 🪡 | `game/data/serbian.js` | Serbian phonics vocabulary | Simple needle/thread illustration | REVIEW |
+| object-helicopter | 🚁 | `game/data/serbian.js` | Serbian phonics vocabulary | One helicopter illustration | REVIEW |
+| object-sailboat | ⛵ | `game/data/serbian.js` | Serbian phonics vocabulary | One sailboat illustration | REVIEW |
+| object-sweater | 🧥 | `game/data/serbian.js` | Serbian phonics vocabulary | Confirm the intended Serbian word and garment before making the art | REVIEW |
+| object-hat | 🎩 | `game/data/serbian.js` | Serbian phonics vocabulary | Simple hat illustration | REVIEW |
+| object-clock | 🕰️ | `game/games/classroom.js`, `classroom.html` | Time activity and day/night scene | Use a clear clock face; consider SVG at UI size | REVIEW |
+| object-music-bell | 🔔 | `game/games/piano.js` | Song label | SVG or small bell illustration depending on prominence | REVIEW |
+| object-hint-bulb | 💡 | `game/pages/matching_game.html` | Hint control | SVG/CSS UI icon | UI ICON |
+| object-search-glass | 🔍 | `game/pages/animals.html` | Find-animal control | SVG/CSS UI icon | UI ICON |
+| object-trash-bin | 🗑 / 🗑️ | `game/pages/coloring.html`, `parent.html` | Clear/reset controls | SVG/CSS UI icon | UI ICON |
+| object-lock | 🔒 | `game/pages/parent.html` | Parent area | SVG/CSS UI icon | UI ICON |
+| object-download | 📥 | `game/pages/parent.html` | Offline download action | SVG/CSS UI icon | UI ICON |
+| object-progress-chart | 📊 | `game/pages/parent.html` | Progress dashboard | SVG/CSS UI icon | UI ICON |
+| object-rainbow | 🌈 | `game/index.html` | Main hub brand/title/favicon | Treat as a deliberate logo/brand element, not a generic object batch | REVIEW |
+| object-medal | 🏅 | shared celebration, coloring, kids game, piano | Reward/celebration | Prefer consistent reward system; use supplied star only where semantics fit | REVIEW |
+| object-card-stack | 🃏 | `game/index.html`, `animal_memory.html` | Memory game icon/card back | Replace card-back with a designed pattern; tile may use UI icon | REVIEW |
+| object-celebration-sparkle | ✨ / 🌟 | sequencing, Kitty, adventure and success states | Success/effect | CSS/SVG particles and approved star; no duplicate sparkle PNGs | SVG/CSS |
+| object-volcano | 🌋 | `game/games/dino.js` | World collectible/theme glyph | Confirm actual render scale before deciding on image | REVIEW |
+| object-island | 🏝️ | `game/games/dino.js` | World collectible/theme glyph | Confirm actual render scale before deciding on image | REVIEW |
+| object-satellite | 🛰️ | `game/games/space.js` | World collectible/theme glyph | Confirm actual render scale before deciding on image | REVIEW |
+| object-telescope | 🔭 | `game/games/space.js` | World collectible/theme glyph | Confirm actual render scale before deciding on image | REVIEW |
+| object-ice-cube | 🧊 | `game/games/space.js` | World collectible/theme glyph | Confirm actual render scale before deciding on image | REVIEW |
+| object-spiral | 🌀 | `game/games/space.js` | World collectible/theme glyph | Vector effect if it is an effect rather than an object | SVG/CSS |
+| object-candy-rice | 🍡 | `game/games/racing-config.js` | Candy world decor | One canonical dango image only if visible enough | REVIEW |
+| object-wrapped-candy | 🍬 | `game/games/racing-config.js` | Candy world decor | One canonical wrapped candy image only if visible enough | REVIEW |
+| object-cupcake | 🧁 | `game/games/racing-config.js` | Candy world decor | One canonical cupcake image only if visible enough | REVIEW |
+| object-donut | 🍩 | `game/games/racing-config.js` | Candy world decor | One canonical donut image only if visible enough | REVIEW |
 
 ## Explicit exclusions
 
@@ -220,9 +290,9 @@ Every final row must include:
 ## Completion gate
 
 This inventory is **not final for generation** until:
-- all canonical `game/` runtime source and data files have been searched for emoji/pictograph literals and emoji-valued data fields;
-- dynamic emoji pools and per-world themes have been enumerated;
+- canonical `game/` first-party JS/MJS/HTML/CSS/JSON files have been scanned for literal emoji/pictograph characters;
+- dynamic emoji pools and per-world themes have been semantically checked against their actual render paths;
 - shared/page-level emoji have been reviewed;
-- duplicate concepts have been consolidated;
+- duplicate concepts have been consolidated (including cow glyph variants and the repeated shell row);
 - existing image assets and the excluded Explorer/Kitty/3D Racing areas have been checked;
 - the user has approved which rows are to be illustrated, handled as SVG/CSS, or left unchanged.
