@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "706a880263dd33dbf30ea5f2ecec56b25868b149",
+  "commitSha": "81ed2c3e95c345045f70bbf8c91d5431751ec5e1",
   "browser": {
     "product": "Chrome/155.0.8059.39",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-11T11:41:42.624Z",
+  "generatedAt": "2026-10-11T12:12:23.829Z",
   "pageSet": [
-    "phonics"
+    "parent"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,40 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "phonics_phone-portrait.png",
-      "page": "phonics",
+      "file": "parent_phone-portrait.png",
+      "page": "parent",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 40355
+      "bytes": 32122
     },
     {
-      "file": "phonics_phone-landscape.png",
-      "page": "phonics",
+      "file": "parent_phone-landscape.png",
+      "page": "parent",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 47269
+      "bytes": 23443
     },
     {
-      "file": "phonics_tablet-portrait.png",
-      "page": "phonics",
+      "file": "parent_tablet-portrait.png",
+      "page": "parent",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 76907
+      "bytes": 47361
     },
     {
-      "file": "phonics_tablet-landscape.png",
-      "page": "phonics",
+      "file": "parent_tablet-landscape.png",
+      "page": "parent",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 77111
+      "bytes": 39326
     }
   ]
 }

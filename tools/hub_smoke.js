@@ -242,7 +242,7 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
     /\.ps-back\s*\{[^}]*width:\s*var\(--ps-back-size/.test(compCss) &&
     /\.ps-back\s*\{[^}]*box-shadow:/.test(compCss) &&
     /\.ps-back:active\s*\{\s*transform:/.test(compCss), 'back control contract missing');
-  const BACK_ADOPTED = ['classroom', 'animals', 'coloring', 'matching_game', 'piano', 'shapes', 'tracing'];
+  const BACK_ADOPTED = ['classroom', 'animals', 'coloring', 'matching_game', 'piano', 'shapes', 'tracing', 'parent'];
   const notAdopted = BACK_ADOPTED.filter(p =>
     !fs.readFileSync(path.join(pagesDir, p + '.html'), 'utf8').includes('class="back-btn ps-back"'));
   check('V7.1: adopted pages carry .ps-back on their back controls', notAdopted.length === 0, notAdopted.join(','));

@@ -97,6 +97,11 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await sleep(200);
   const smallBefore = JSON.parse(await small.evalv(`JSON.stringify((() => {
     const app = document.getElementById('app');
+    // Normalise to the top first: tapping the gate choice focuses it, and the
+    // browser scrolls #app to reveal the focused button, so the card top would
+    // read negative for a reason unrelated to clipping. The invariant is that at
+    // the TOP of the scroll range the card top is on-screen.
+    app.scrollTop = 0;
     return {
       scrollable: app.scrollHeight > app.clientHeight + 1,
       overflowY: getComputedStyle(app).overflowY,
@@ -149,7 +154,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   // Version is fetched from manifest.json, so wait for it to actually land rather
   // than assuming a fixed delay (readiness wait, not a sleep). NB: evalv already
-  // returns the raw string — do NOT JSON.parse it.
+  // returns the raw string — do NOT JSON.parse it. V19 (spec §37): the value cell
+  // holds only the number now; the «Верзија» label is a separate status row (see
+  // the V19 guards below), so the word is no longer baked into this text.
   let version = '';
   for (let i = 0; i < 30; i++) {
     version = String(await h.evalv(`(document.getElementById('version-info')||{}).textContent || ''`));
@@ -157,16 +164,72 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     await sleep(150);
   }
   check('R12: parent surface shows the app version (resolved from manifest.json)',
-    /^Верзија: \d+\.\d+\.\d+$/.test(version.trim()), JSON.stringify(version));
+    /^\d+\.\d+\.\d+$/.test(version.trim()), JSON.stringify(version));
 
   check('R12: parent surface shows a live connection status',
     surface.conn === 'Онлајн' || surface.conn === 'Офлајн', JSON.stringify(surface));
 
   check('parent page has a working back button', surface.back === true);
 
+  /* --- V19 (spec §37/§43): the parent surface is grouped and calm -------------
+     §37 asks the parent area to read as calm and grouped — grouped cards,
+     readable labels, progress summaries, expandable details, restrained colour —
+     and never as a developer dashboard (dense tables, tiny metadata, raw
+     technical ids in the parent's face, child-facing toy shadows). These guards
+     pin each half of that contract. */
+  const v19 = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const px = v => Math.round(parseFloat(v) * 10) / 10;
+    const cs = el => getComputedStyle(el);
+    const card = document.querySelector('.parent-card');
+    const cardShadow = cs(card).boxShadow;
+    const lens = (cardShadow.match(/\\d+(?:\\.\\d+)?px/g) || []).map(parseFloat);
+    const sections = [...document.querySelectorAll('.parent-section')];
+    const fuzzy = ['status-key','status-value','progress-key','progress-value','parent-status','diagnostics']
+      .map(c => document.querySelector('.' + c)).filter(Boolean)
+      .map(el => ({ cls: el.className, size: px(cs(el).fontSize), opacity: cs(el).opacity }));
+    // Visible text with every disclosure removed: a raw technical fact may live
+    // inside a <details>, never in the parent's face.
+    const clone = card.cloneNode(true);
+    clone.querySelectorAll('details').forEach(d => d.remove());
+    const faceText = clone.textContent.replace(/\\s+/g, ' ');
+    const rawTokens = ['offline-manifest.json','manifest.json','sw-cache','.js','.css','http://','https://','/game/'];
+    const back = document.getElementById('back-btn');
+    return {
+      sectionCount: sections.length,
+      sectionTitles: sections.map(s => ((s.querySelector('.section-title') || {}).textContent || '').trim()),
+      sectionShadows: sections.map(s => cs(s).boxShadow),
+      cardShadow,
+      // A toy shadow is a hard offset with no blur: "0px 8px 0px".
+      cardHardShadow: /0px \\d+(?:\\.\\d+)?px 0px/.test(cardShadow),
+      cardBlur: lens.length >= 3 ? lens[2] : 0,
+      fuzzy,
+      tables: card.querySelectorAll('table').length,
+      rawInFace: rawTokens.filter(t => faceText.includes(t)),
+      backClasses: back ? back.className : '',
+    };
+  })())`));
+  check('V19: the card is split into labelled groups, not one undifferentiated wall',
+    v19.sectionCount >= 3 && v19.sectionTitles.length >= 3 && v19.sectionTitles.every(t => t.length > 0),
+    JSON.stringify({ count: v19.sectionCount, titles: v19.sectionTitles }));
+  check('V19: the card uses a soft shadow, never the child-facing toy offset shadow',
+    v19.cardHardShadow === false && v19.cardBlur > 0, JSON.stringify({ shadow: v19.cardShadow, blur: v19.cardBlur }));
+  check('V19: the groups are flat panels (restrained colour), not stacked toy cards',
+    v19.sectionShadows.every(s => s === 'none'), JSON.stringify(v19.sectionShadows));
+  check('V19: every label/value reads at >=13px and none is dimmed with opacity',
+    v19.fuzzy.length >= 6 && v19.fuzzy.every(f => f.size >= 13 && f.opacity === '1'),
+    JSON.stringify(v19.fuzzy));
+  check('V19: no dense tables — the parent surface is prose rows, not a grid',
+    v19.tables === 0, 'tables=' + v19.tables);
+  check('V19: raw technical ids stay out of the parent face (disclosures only)',
+    v19.rawInFace.length === 0, JSON.stringify(v19.rawInFace));
+  check('V19: the back control adopts the shared .ps-back component chrome (§43)',
+    v19.backClasses.includes('ps-back') && v19.backClasses.includes('back-btn'),
+    JSON.stringify(v19.backClasses));
+
   // R17: the offline-copy state must be a real, current fact, not a stale label.
+  // V19: the value cell holds only the state; «Офлајн копија» is a status row label.
   check('R17: parent surface states the offline-copy status',
-    /^Офлајн копија: (спремна|није преузета)$/.test(surface.offlineCopy.trim()),
+    /^(спремна|није преузета)$/.test(surface.offlineCopy.trim()),
     JSON.stringify(surface.offlineCopy));
 
   // R17: technical facts live behind a disclosure, not in the parent's face.
@@ -190,6 +253,33 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('R19: the local store records played and completed counts',
     snap.played.animals === 1 && snap.completed.animals === 2 && snap.visits >= 1,
     JSON.stringify(snap));
+
+  // V19 (spec §37): progress leads with a readable count summary, and the game
+  // names live behind a CLOSED disclosure — never a run-on comma list in the
+  // parent's face. Record a second game and render the summary through the page's
+  // own hook (the panel only renders on load/reset otherwise).
+  await h.evalv(`window.PetrinProgress.play('piano'); window.PetrinProgress.complete('piano'); window.__parentProgress(); true`);
+  const summary = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const used = document.getElementById('progress-used');
+    const det = document.querySelector('details.progress-details');
+    const games = document.getElementById('progress-games');
+    // A closed <details> hides its content via content-visibility, so a stale
+    // getBoundingClientRect() still reports a size — checkVisibility() is the
+    // honest test. Prove BOTH states so the probe cannot pass vacuously.
+    const painted = () => games.checkVisibility ? games.checkVisibility() : games.offsetParent !== null;
+    const closedHidden = det.open === false && painted() === false;
+    det.open = true;
+    const openShown = painted() === true;
+    det.open = false;
+    return { used: used.textContent.trim(), usedHasComma: used.textContent.includes(','), closedHidden, openShown, text: games.textContent.trim() };
+  })())`));
+  check('V19: progress leads with a count summary ("N од M"), not a run-on name list',
+    /^\d+ од \d+$/.test(summary.used) && summary.usedHasComma === false,
+    JSON.stringify(summary));
+  check('V19: the game names sit behind a disclosure, hidden until the parent opens it',
+    summary.closedHidden === true && summary.openShown === true &&
+      /Животиње/.test(summary.text) && /Клавир/.test(summary.text),
+    JSON.stringify(summary));
 
   // Reset clears the store. Confirm is stubbed so the smoke drives the real
   // click path, not a bypass.

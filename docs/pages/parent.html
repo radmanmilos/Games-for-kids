@@ -14,57 +14,62 @@
   <style>
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;}
     html,body{margin:0;padding:0;width:100%;height:100%;background:var(--cream);font-family:'Fredoka',sans-serif;}
-    /* The parent card is taller than a short phone or a landscape tablet, and
-       this page used to be `overflow:hidden` with a centred flex child — so on a
-       small screen the bottom of the card (the buttons, the status line) was
-       simply unreachable with no scrollbar to reveal it. #app now scrolls, and
-       the card uses `margin:auto` rather than `justify-content:center`, because
-       a centred flex child that overflows gets its TOP clipped and stays
-       unreachable even in a scroll container. */
-    #app{position:fixed;inset:0;display:flex;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:4vmin;}
+    /* The parent card is often taller than a short phone or a landscape tablet,
+       and this page used to be `overflow:hidden` with a centred flex child — so
+       on a small screen the bottom of the card (the buttons, the status line)
+       was simply unreachable with no scrollbar to reveal it. #app now scrolls,
+       and the card is a COLUMN flex item with `margin:auto`: it centres when it
+       fits, and because the auto margins are on the MAIN axis they resolve to
+       zero when the card overflows (unlike row/cross-axis centring, which clips
+       the top and leaves it unreachable even in a scroll container). */
+    #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:4vmin;}
     .parent-card{margin:auto;}
-    /* Short viewports: tighten the card so the gate and the actions both fit
-       without the parent having to scroll for the common case. */
-    @media (max-height:620px){
-      .parent-card{padding:3.5vmin;}
-      .parent-btn{margin:1.3vmin 0;padding:2.2vmin 3vmin;}
-      .parent-meta{margin:0 0 1.6vmin;}
-      .gate-q{margin:0.6vmin 0 2vmin;}
-      .gate-choices{gap:1.8vmin;}
-      .gate-choice{min-height:11vmin;padding:2.4vmin 1.6vmin;}
-    }
-    .parent-card{background:white;border-radius:var(--radius-lg);padding:6vmin;max-width:600px;width:100%;box-shadow:0 8px 0 rgba(0,0,0,.15);}
-    .parent-card h1{color:var(--plum);font-size:clamp(20px,4vmin,36px);margin:0 0 4vmin;text-align:center;}
-    .parent-btn{display:flex;align-items:center;gap:3vmin;width:100%;padding:3vmin 4vmin;margin:2vmin 0;border:3px solid var(--plum);border-radius:var(--radius-md);background:white;color:var(--plum);font:600 clamp(14px,2.5vmin,20px) 'Fredoka',sans-serif;cursor:pointer;text-align:left;}
-    .parent-btn:active{transform:scale(.97);}
-    .parent-btn.primary{background:var(--plum);color:white;}
+    /* V19 (spec §37/§43): the parent surface is calm and grouped, never a
+       developer dashboard. One soft-shadow card (no toy offset shadow) holds
+       labelled sections; each section is a restrained cream panel with a clear
+       boundary and no shadow. Labels and values are readable (≥13px), progress
+       is summarised, and the raw detail lives behind disclosures. Colours come
+       from the shared tokens (plum / cream / green / red) — nothing invented. */
+    .parent-card{background:#fff;border-radius:var(--radius-lg);padding:5vmin;max-width:640px;width:100%;box-shadow:var(--shadow-card);}
+    .parent-card h1{color:var(--plum);font-size:clamp(20px,4vmin,34px);margin:0 0 4vmin;text-align:center;}
+    .parent-section{background:var(--cream);border:1px solid rgba(74,63,107,.10);border-radius:var(--radius-md);padding:3.4vmin 4vmin;margin:0 0 3vmin;}
+    .section-title{color:var(--plum);font-weight:700;font-size:clamp(14px,2.4vmin,18px);letter-spacing:.01em;margin:0 0 2.2vmin;}
+    /* R12: the parent surface is where every technical fact lives — connection,
+       version, offline copy — as readable label → value rows, never tiny pills. */
+    .status-list{margin:0;display:flex;flex-direction:column;gap:1.6vmin;}
+    .status-row{display:flex;justify-content:space-between;align-items:center;gap:3vmin;}
+    .status-key{margin:0;color:var(--plum-soft);font-weight:600;font-size:clamp(13px,2.1vmin,16px);}
+    .status-value{margin:0;color:var(--plum);font-weight:700;font-size:clamp(13px,2.1vmin,16px);display:inline-flex;align-items:center;gap:1.2vmin;text-align:right;}
+    .meta-dot{flex:0 0 auto;width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(103,201,113,.25);}
+    .meta-dot.offline{background:#E2574C;box-shadow:0 0 0 3px rgba(226,87,76,.25);}
+    /* R19: a plain record of what was used/practiced, in the parent area only —
+       a count summary up front, the names behind a disclosure. No score, no
+       streak, no comparison, no dense table. */
+    .progress-list{margin:0;display:flex;flex-direction:column;gap:1.8vmin;}
+    .progress-row{display:flex;justify-content:space-between;align-items:baseline;gap:3vmin;}
+    .progress-key{margin:0;color:var(--plum-soft);font-weight:600;font-size:clamp(13px,2.1vmin,16px);}
+    .progress-value{margin:0;color:var(--plum);font-weight:800;font-size:clamp(15px,2.5vmin,19px);}
+    .progress-details{margin-top:2.4vmin;}
+    .progress-details>summary{cursor:pointer;color:var(--plum-soft);font-weight:600;font-size:clamp(13px,2.1vmin,16px);padding:1vmin 0;}
+    .progress-games{margin-top:1.4vmin;color:var(--plum);font-weight:600;font-size:clamp(13px,2.1vmin,16px);line-height:1.7;word-break:break-word;user-select:text;-webkit-user-select:text;}
+    .parent-btn{display:flex;align-items:center;gap:3vmin;width:100%;padding:3vmin 4vmin;margin:0 0 2vmin;border:2px solid rgba(74,63,107,.35);border-radius:var(--radius-md);background:#fff;color:var(--plum);font:600 clamp(14px,2.5vmin,20px) 'Fredoka',sans-serif;cursor:pointer;text-align:left;}
+    .parent-btn:last-of-type{margin-bottom:0;}
+    .parent-btn:active{transform:scale(.98);}
+    .parent-btn.primary{background:var(--plum);color:#fff;border-color:var(--plum);}
     .parent-btn:disabled{opacity:.5;cursor:default;}
-    .parent-status{margin-top:3vmin;padding:2vmin 3vmin;border-radius:var(--radius-sm);background:var(--cream);color:var(--plum);font:600 clamp(12px,2vmin,16px) 'Fredoka',sans-serif;text-align:center;}
-    /* R12: the parent surface is where every technical fact lives — connection
-       status and version — so none of it has to sit on the child launcher. */
-    .parent-meta{display:flex;flex-wrap:wrap;gap:2vmin;justify-content:center;align-items:center;margin:0 0 3vmin;}
-    .meta-item{display:flex;align-items:center;gap:1vmin;padding:1vmin 2.5vmin;border-radius:999px;background:var(--cream);color:var(--plum);font:600 clamp(11px,1.8vmin,15px) 'Fredoka',sans-serif;}
-    .meta-dot{width:1.4vmin;height:1.4vmin;border-radius:50%;background:#67C971;box-shadow:0 0 0 .4vmin rgba(103,201,113,.25);}
-    .meta-dot.offline{background:#E2574C;box-shadow:0 0 0 .4vmin rgba(226,87,76,.25);}
-    /* R17: technical facts stay available but out of the way. */
-    .diagnostics{margin-top:3vmin;color:var(--plum);font:600 clamp(11px,1.8vmin,14px) 'Fredoka',sans-serif;}
-    .diagnostics summary{cursor:pointer;padding:1vmin 0;color:var(--plum);}
-    .diag-body{margin-top:1.5vmin;padding:2vmin 3vmin;border-radius:var(--radius-sm);background:var(--cream);line-height:1.7;word-break:break-word;user-select:text;-webkit-user-select:text;}
+    .parent-status{margin-top:2.6vmin;padding:2vmin 3vmin;border-radius:var(--radius-sm);background:#fff;color:var(--plum);font:600 clamp(13px,2.1vmin,16px) 'Fredoka',sans-serif;text-align:center;}
+    /* R17: technical facts stay available but out of the way, and readable. */
+    .diagnostics{margin-top:2.6vmin;color:var(--plum);font:600 clamp(13px,2vmin,15px) 'Fredoka',sans-serif;}
+    .diagnostics>summary{cursor:pointer;padding:1vmin 0;color:var(--plum-soft);}
+    .diag-body{margin-top:1.5vmin;padding:2vmin 3vmin;border-radius:var(--radius-sm);background:#fff;line-height:1.7;word-break:break-word;user-select:text;-webkit-user-select:text;}
     /* R17: a parent must see that the offline download is moving, not just guess. */
-    .cache-bar{margin-top:2vmin;width:100%;height:2.6vmin;min-height:10px;border-radius:999px;background:var(--cream);overflow:hidden;box-shadow:inset 0 0 0 1px rgba(74,63,107,.15);}
+    .cache-bar{margin-top:2vmin;width:100%;height:2.6vmin;min-height:10px;border-radius:999px;background:#fff;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(74,63,107,.15);}
     .cache-bar[hidden]{display:none;}
     .cache-bar-fill{height:100%;width:0;border-radius:999px;background:var(--plum);transition:width .2s ease;}
     @media (prefers-reduced-motion: reduce){.cache-bar-fill{transition:none;}}
-    /* R19: a plain record of what was used/practiced, in the parent area only.
-       No score, no streak, no comparison. */
-    .parent-progress{margin:0 0 3vmin;padding:3vmin;border-radius:var(--radius-md);background:var(--cream);color:var(--plum);font:600 clamp(11px,1.9vmin,15px) 'Fredoka',sans-serif;}
-    .parent-progress .progress-title{font-size:clamp(13px,2.2vmin,17px);margin-bottom:2vmin;}
-    .progress-row{display:flex;gap:2vmin;margin-top:1.5vmin;line-height:1.5;}
-    .progress-label{flex:0 0 auto;opacity:.75;}
-    .progress-value{flex:1;word-break:break-word;}
-    /* fixed, not absolute: #app is now a scroll container, so an absolutely
-       positioned back button would scroll away out of reach. */
-    .back-btn{position:fixed;top:4vmin;left:4vmin;width:12vmin;height:12vmin;border-radius:50%;border:none;background:var(--plum);color:white;font-size:6vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);cursor:pointer;z-index:5;}
+    /* V7.1: back-control chrome comes from the shared .ps-back component
+       (styles/components.css); this rule keeps only the page layout. */
+    .back-btn{position:fixed;top:4vmin;left:4vmin;z-index:5;}
 
     /* --- Parent gate (task 201) -------------------------------------------
        A toddler can reach «За родитеље» and tap «Обриши локални напредак»
@@ -74,43 +79,83 @@
        sum, while multiplication tables are not something that age has. It is a
        speed bump for a small child, never a lock — there is no timeout, no
        penalty, no attempt limit, and a wrong answer just re-asks. */
-    .gate{text-align:center;}
+    .gate{text-align:center;background:var(--cream);border:1px solid rgba(74,63,107,.10);border-radius:var(--radius-md);padding:3.4vmin 4vmin;margin:0 0 3vmin;}
     .gate-q{font:800 clamp(22px,5vmin,40px) 'Fredoka',sans-serif;color:var(--plum);margin:1vmin 0 3vmin;}
     .gate-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:2.5vmin;}
-    .gate-choice{padding:3.2vmin 2vmin;border:3px solid var(--plum);border-radius:var(--radius-md);background:white;color:var(--plum);font:800 clamp(18px,3.4vmin,28px) 'Fredoka',sans-serif;cursor:pointer;min-height:13vmin;}
-    .gate-choice:active{transform:scale(.97);}
+    .gate-choice{padding:3.2vmin 2vmin;border:3px solid var(--plum);border-radius:var(--radius-md);background:#fff;color:var(--plum);font:800 clamp(18px,3.4vmin,28px) 'Fredoka',sans-serif;cursor:pointer;min-height:13vmin;}
+    .gate-choice:active{transform:scale(.98);}
     .gate-choice.right{background:var(--green,#67C971);color:white;border-color:var(--green,#67C971);}
     .gate-choice.wrong{animation:gate-shake .35s ease;border-color:#E2574C;}
     @keyframes gate-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-1.2vmin)}75%{transform:translateX(1.2vmin)}}
-    .gate-note{margin-top:2.5vmin;font:600 clamp(12px,2.2vmin,16px) 'Fredoka',sans-serif;color:#E2574C;min-height:1.4em;}
+    .gate-note{margin-top:2.5vmin;font:600 clamp(13px,2.2vmin,16px) 'Fredoka',sans-serif;color:#E2574C;min-height:1.4em;}
     /* The gate and the actions are mutually exclusive: the actions are removed
        from the DOM flow, not merely disabled, so there is nothing for a stray
        tap or a screen reader to reach before the question is answered. */
     #parentActions[hidden],#parentGate[hidden]{display:none;}
+    /* Short viewports: tighten the grouped sections so more of the card fits
+       without the parent having to scroll for the common case. */
+    @media (max-height:620px){
+      .parent-card{padding:3.5vmin;}
+      .parent-section{padding:2.6vmin 3vmin;margin:0 0 2.2vmin;}
+      .section-title{margin:0 0 1.6vmin;}
+      .parent-btn{margin:0 0 1.4vmin;padding:2.2vmin 3vmin;}
+      .gate{padding:2.6vmin 3vmin;margin:0 0 2.2vmin;}
+      .gate-q{margin:0.6vmin 0 2vmin;}
+      .gate-choices{gap:1.8vmin;}
+      .gate-choice{min-height:11vmin;padding:2.4vmin 1.6vmin;}
+    }
   </style>
 </head>
 <body>
   <div id="app">
-    <button id="back-btn" class="back-btn" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <button id="back-btn" class="back-btn ps-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <div class="parent-card">
       <h1>🔒 За родитеље</h1>
-      <div class="parent-meta">
-        <span class="meta-item"><span class="meta-dot" id="conn-dot"></span><span id="conn-status">Онлајн</span></span>
-        <span class="meta-item" id="version-info">Верзија: …</span>
-        <span class="meta-item" id="offline-copy-info">Офлајн копија: …</span>
-      </div>
-      <div class="parent-progress" id="parent-progress">
-        <div class="progress-title">📊 Напредак</div>
-        <div class="progress-row"><span class="progress-label">Шта је коришћено:</span><span class="progress-value" id="progress-used">још ништа</span></div>
-        <div class="progress-row"><span class="progress-label">Шта је вежбано:</span><span class="progress-value" id="progress-practiced">још ништа</span></div>
-      </div>
+
+      <section class="parent-section" aria-labelledby="statusTitle">
+        <h2 class="section-title" id="statusTitle">Статус</h2>
+        <dl class="status-list">
+          <div class="status-row">
+            <dt class="status-key">Веза</dt>
+            <dd class="status-value"><span class="meta-dot" id="conn-dot"></span><span id="conn-status">Онлајн</span></dd>
+          </div>
+          <div class="status-row">
+            <dt class="status-key">Верзија</dt>
+            <dd class="status-value" id="version-info">…</dd>
+          </div>
+          <div class="status-row">
+            <dt class="status-key">Офлајн копија</dt>
+            <dd class="status-value" id="offline-copy-info">…</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="parent-section" id="parent-progress" aria-labelledby="progressTitle">
+        <h2 class="section-title" id="progressTitle">📊 Напредак</h2>
+        <dl class="progress-list">
+          <div class="progress-row">
+            <dt class="progress-key">Коришћено</dt>
+            <dd class="progress-value" id="progress-used">још ништа</dd>
+          </div>
+          <div class="progress-row">
+            <dt class="progress-key">Вежбано</dt>
+            <dd class="progress-value" id="progress-practiced">још ништа</dd>
+          </div>
+        </dl>
+        <details class="progress-details">
+          <summary>Које игре</summary>
+          <div class="progress-games" id="progress-games">још ништа</div>
+        </details>
+      </section>
+
       <div class="gate" id="parentGate">
         <div class="gate-q" id="gateQuestion">…</div>
         <div class="gate-choices" id="gateChoices"></div>
         <div class="gate-note" id="gateNote" aria-live="polite"></div>
       </div>
 
-      <div id="parentActions" hidden>
+      <section class="parent-section" id="parentActions" hidden aria-labelledby="actionsTitle">
+        <h2 class="section-title" id="actionsTitle">Радње</h2>
         <button class="parent-btn primary" id="download-offline">📥 Преузми за офлајн рад</button>
       <button class="parent-btn" id="check-updates">🔄 Провери ажурирања</button>
       <button class="parent-btn" id="reset-progress">🗑 Обриши локални напредак</button>
@@ -125,7 +170,7 @@
         <summary>Технички детаљи</summary>
         <div class="diag-body" id="diag-body">…</div>
       </details>
-      </div><!-- /#parentActions -->
+      </section><!-- /#parentActions -->
     </div>
   </div>
   <script src="../data/serbian.js"></script>
@@ -273,29 +318,39 @@
       };
       const renderOfflineCopy = async () => {
         const ready = await cacheHasOfflineManifest();
-        offlineCopyInfo.textContent = 'Офлајн копија: ' + (ready ? 'спремна' : 'није преузета');
+        offlineCopyInfo.textContent = ready ? 'спремна' : 'није преузета';
       };
 
       // R19: what was used and practiced, read from the shared local store
-      // (window.PetrinProgress, defined by shared/main.js). Titles come from the
-      // app registry so the parent sees names, not ids. Purely a record — no
-      // score or comparison is shown.
+      // (window.PetrinProgress, defined by shared/main.js). V19 (spec §37): the
+      // panel leads with a readable COUNT summary ("N од M") and the game names
+      // live behind a disclosure, so the record never becomes a dense wall.
+      // Names come from the app registry, so the parent sees titles, not ids.
+      // Purely a record — no score, no streak, no comparison.
       const progressUsed = document.getElementById('progress-used');
       const progressPracticed = document.getElementById('progress-practiced');
+      const progressGames = document.getElementById('progress-games');
       const titleFor = (id) => {
         const app = (window.APP_REGISTRY || []).find(a => a.id === id);
         return app ? app.title : id;
       };
+      const totalGames = () => (window.APP_REGISTRY || []).filter(a => a.category !== 'parent').length;
       const renderProgress = () => {
         const p = window.PetrinProgress ? window.PetrinProgress.snapshot() : null;
         const used = p ? Object.keys(p.played) : [];
         const practiced = p ? Object.keys(p.completed).filter(id => p.completed[id] > 0) : [];
-        progressUsed.textContent = used.length ? used.map(titleFor).join(', ') : 'још ништа';
-        progressPracticed.textContent = practiced.length
-          ? practiced.map(id => titleFor(id) + ' (×' + p.completed[id] + ')').join(', ')
-          : 'још ништа';
+        const total = totalGames();
+        progressUsed.textContent = used.length ? used.length + ' од ' + total : 'још ништа';
+        progressPracticed.textContent = practiced.length ? practiced.length + ' од ' + total : 'још ништа';
+        const lines = [];
+        if (used.length) lines.push('Коришћено: ' + used.map(titleFor).join(', ') + '.');
+        if (practiced.length) lines.push('Вежбано: ' + practiced.map(id => titleFor(id) + ' (×' + p.completed[id] + ')').join(', ') + '.');
+        progressGames.textContent = lines.length ? lines.join(' ') : 'још ништа';
       };
       renderProgress();
+      // Test hook (mirrors window.__parentGate): the smoke needs to render the
+      // summary for recorded data without a full page reload.
+      window.__parentProgress = renderProgress;
 
       // R17: technical facts live behind a disclosure, never in the parent's face.
       const diagBody = document.getElementById('diag-body');
@@ -319,9 +374,9 @@
         .then(r => r.json())
         .then(m => {
           appVersion = m.version || null;
-          versionInfo.textContent = 'Верзија: ' + (appVersion || 'нема');
+          versionInfo.textContent = appVersion || 'нема';
         })
-        .catch(() => { versionInfo.textContent = 'Верзија: непозната'; })
+        .catch(() => { versionInfo.textContent = 'непозната'; })
         .then(renderDiag);
       renderOfflineCopy();
 
