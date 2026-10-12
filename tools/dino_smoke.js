@@ -305,12 +305,12 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await h.evalv(`document.querySelector('#adv-dino-grid .adv-dino-btn[data-dino="t_rex"]').click(); true`);
   await sleep(80);
 
-  const mus0 = await h.evalv(`document.getElementById('adv-music-btn').textContent`);
+  const mus0 = await h.evalv(`document.getElementById('adv-music-btn').classList.contains('off')`);
   await h.evalv(`document.getElementById('adv-music-btn').click(); true`);
-  const mus1 = await h.evalv(`document.getElementById('adv-music-btn').textContent`);
+  const mus1 = await h.evalv(`document.getElementById('adv-music-btn').classList.contains('off')`);
   await h.evalv(`document.getElementById('adv-music-btn').click(); true`);
-  const mus2 = await h.evalv(`document.getElementById('adv-music-btn').textContent`);
-  check('music toggle: 🔊 -> 🔇 -> 🔊', mus0 === '🔊' && mus1 === '🔇' && mus2 === '🔊', mus0 + '/' + mus1 + '/' + mus2);
+  const mus2 = await h.evalv(`document.getElementById('adv-music-btn').classList.contains('off')`);
+  check('music toggle: on -> off -> on (icon state class)', mus0 === false && mus1 === true && mus2 === false, mus0 + '/' + mus1 + '/' + mus2);
 
   // Regression: a viewport resize after load (URL bar / orientation) must keep
   // the ground anchored to the bottom so the player never "drops through the

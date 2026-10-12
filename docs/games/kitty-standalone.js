@@ -259,7 +259,6 @@ function setMusicOn(on) {
     localStorage.setItem('pkMusic', on ? 'on' : 'off');
     const btn = document.getElementById('music-btn');
     if (btn) {
-        btn.textContent = on ? '🔊' : '🔇';
         btn.classList.toggle('off', !on);
     }
     if (on) startMusic(musicTheme);
@@ -1362,10 +1361,10 @@ function update() {
 
         if (worldPos < worldOrder.length - 1) {
             title.innerText = theme.name + "\nПРЕЂЕН!";
-            btn.innerText = "СЛЕДЕЋИ СВЕТ! 🚀";
+            btn.innerHTML = '<svg class="ps-icon" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg> СЛЕДЕЋИ СВЕТ!';
         } else {
             title.innerText = "🌟 СВИ СВЕТОВИ ПРЕЂЕНИ! 🌟";
-            btn.innerText = "ИГРАЈ ПОНОВО! 🔄";
+            btn.innerHTML = '<svg class="ps-icon" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-8 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg> ИГРАЈ ПОНОВО!';
         }
         modal.classList.add('show');
     }

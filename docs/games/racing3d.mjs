@@ -2063,11 +2063,11 @@ function main() {
 
   const musicBtnEl = document.getElementById("r3d-music-btn");
   if (musicBtnEl) {
-    musicBtnEl.textContent = musicOn ? "🔊" : "🔇";
+    musicBtnEl.classList.toggle("off", !musicOn);
     musicBtnEl.addEventListener("click", () => {
       musicOn = !musicOn;
       localStorage.setItem("racing3dMusic", musicOn ? "on" : "off");
-      musicBtnEl.textContent = musicOn ? "🔊" : "🔇";
+      musicBtnEl.classList.toggle("off", !musicOn);
       if (musicOn) startMusic();
       else stopMusic();
     });

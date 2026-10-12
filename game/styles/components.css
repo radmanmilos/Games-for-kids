@@ -101,6 +101,23 @@
 }
 .ps-back:active { transform: scale(.9) translateY(3px); }
 
+/* ------------------------------------------------------------- icon family */
+/* V22 (spec 40) — the shell uses ONE icon family: the Material 24x24 *filled*
+   set the canonical `.ps-back` arrow already belongs to. Icons ship as inline
+   SVG (no sprite, no runtime fetch, works offline) with `fill="currentColor"`
+   and `width/height="1em"`, so each control's own `font-size` sizes the icon
+   and its own `color` drives contrast — exactly how `.ps-back` already works.
+   A control that swaps between two states (sound on/off, play/pause) carries
+   BOTH icons and toggles a state class (`.off` / `.running`); this layer shows
+   the matching one. `.ps-icon` is for the rare icon+label button so the glyph
+   sits on the text baseline. */
+.ps-icon { vertical-align: -0.15em; }
+.ps-icon-toggle .ic-alt { display: none; }
+.ps-icon-toggle.off > .ic-main,
+.ps-icon-toggle.running > .ic-main { display: none; }
+.ps-icon-toggle.off > .ic-alt,
+.ps-icon-toggle.running > .ic-alt { display: inline; }
+
 /* ---------------------------------------------------------------- card */
 .ps-card {
   --ps-card-bg: #fff;

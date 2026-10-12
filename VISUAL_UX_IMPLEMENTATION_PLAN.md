@@ -172,7 +172,7 @@ Ordered by the spec's own priority matrix (§55) and Appendix E. Each item is ta
 | ID | Work | Verdict |
 |---|---|---|
 | **V21** | Semantic motion pass: classify every animation (idle/press/hint/success/transition/celebration); delete decorative motion that fails the §39 tests. | **DONE** (task 238, 2026-10-12) — removed 6 decorative infinite loops (`drift`/`bob`/`pulse`/`advPulse`/`starGlow`) and capped `recogPulse`; the only `infinite` animations left are the 4 justified cues (`animalIdle`/`softLight`/`introDraw`/`introBob`), pinned by a static `hub_smoke` guard. |
-| **V22** | Icon system: canonical `arrow_back` for back; consistent stroke/weight/scale/contrast elsewhere. Do not replace game-world icons for consistency's sake. | **VERIFY** |
+| **V22** | Icon system: canonical `arrow_back` for back; consistent stroke/weight/scale/contrast elsewhere. Do not replace game-world icons for consistency's sake. | **DONE** (task 239, 2026-10-12) — back was already canonical (30 sites, guarded by `validate_pages.js`); moved every *other* shell control on 16 pages + 2 JS-injected icons from emoji/Unicode to the shared Material inline-SVG family (`.ps-icon` in `components.css`); game-world icons untouched; per-page control map + `UI_GLYPHS` denylist guard. |
 | **V23** | Final visual QA baseline: regenerate deterministic screenshots, inspect all four viewports and all states, update TOC + provenance, review drift, full smoke, accessibility, offline. | **BUILD** — only after V1–V22. |
 
 ---

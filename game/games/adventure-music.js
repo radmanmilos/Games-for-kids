@@ -139,7 +139,6 @@
         musicOn = on;
         const btn = document.getElementById('adv-music-btn');
         if (btn) {
-            btn.textContent = on ? '🔊' : '🔇';
             btn.classList.toggle('off', !on);
         }
         if (on) startTheme(musicTheme, musicMap, pausedFn);

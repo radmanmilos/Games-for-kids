@@ -185,12 +185,12 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const wjj = JSON.parse(wj);
   check('worlds picker: jump to world 6, modal closes, HUD updated', wjj.level === '6' && wjj.modalHidden === true && wjj.name === wjj.themeName, wj);
 
-  const mus0 = await h.evalv(`document.getElementById('adv-music-btn').textContent`);
+  const mus0 = await h.evalv(`document.getElementById('adv-music-btn').classList.contains('off')`);
   await h.evalv(`document.getElementById('adv-music-btn').click(); true`);
-  const mus1 = await h.evalv(`document.getElementById('adv-music-btn').textContent`);
+  const mus1 = await h.evalv(`document.getElementById('adv-music-btn').classList.contains('off')`);
   await h.evalv(`document.getElementById('adv-music-btn').click(); true`);
-  const mus2 = await h.evalv(`document.getElementById('adv-music-btn').textContent`);
-  check('music toggle: 🔊 -> 🔇 -> 🔊', mus0 === '🔊' && mus1 === '🔇' && mus2 === '🔊', mus0 + '/' + mus1 + '/' + mus2);
+  const mus2 = await h.evalv(`document.getElementById('adv-music-btn').classList.contains('off')`);
+  check('music toggle: on -> off -> on (icon state class)', mus0 === false && mus1 === true && mus2 === false, mus0 + '/' + mus1 + '/' + mus2);
 
   await h.close();
 

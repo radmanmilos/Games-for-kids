@@ -197,7 +197,6 @@
 
   function setAutoplayBtn(running) {
     const btn = $('classroomAutoplay');
-    btn.textContent = running ? '⏸' : '▶';
     btn.classList.toggle('running', running);
     btn.setAttribute('aria-label', running ? 'Заустави' : 'Аутоматски приказ');
   }

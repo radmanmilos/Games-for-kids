@@ -48,10 +48,10 @@ for (const page of pages) {
      pages (maze, rhythm, spatial) shipped a bare "←" that renders inconsistently
      across fonts and unlike every other page's SVG button. A control counts as a
      back control when it carries the .back-btn/.adv-back class or a "…-back"/
-     "back-btn" navigation id; coloring-next shares the .back-btn class but is the
-     forward arrow, so the glyph discriminates it. animal_puzzle/animal_counting/
-     animal_memory inject their back button from JS (already the SVG); static HTML
-     is what this scan sees. */
+     "back-btn" navigation id. animal_puzzle/animal_counting/animal_memory inject
+     their back button from JS (already the SVG); static HTML is what this scan
+     sees. (Pre-V22 the forward arrow was exempted by its "➡" glyph; it now also
+     carries the shared SVG, so no glyph exemption is needed.) */
   const ARROW_BACK = 'M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z';
   for (const m of html.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/gi)) {
     const attrs = m[1];
@@ -71,12 +71,73 @@ for (const page of pages) {
       else if (!inTag) textOnly += ch;
     }
     textOnly = textOnly.trim();
-    if (/^(➡|→)$/.test(textOnly)) continue;
     if (textOnly && !m[2].includes(ARROW_BACK)) {
       failures.push(`${page}: back control uses a text glyph "${textOnly}" instead of the shared SVG arrow (task 207)`);
     }
   }
 }
+
+/* ---- V22 icon family (spec 40, task 239) ----
+   Every shell control in the standard icon set must render ONE inline SVG from
+   the shared Material 24x24 *filled* family (the `.ps-back` arrow's family),
+   never a bare emoji/dingbat text glyph that renders differently per font. The
+   list below is the controls that were converted; each must exist and contain an
+   <svg>. This is a per-control rule on purpose: the same glyphs still appear
+   LEGITIMATELY elsewhere (e.g. "🔄 Провери ажурирања" on the parent screen, the
+   letter "👁️" in data/serbian.js, game-world picker emoji), so a blanket
+   "no emoji in game/" scan would red a healthy tree. The count guard makes the
+   scan non-vacuous, and the negative test flips one control back to a glyph. */
+const V22_CONTROLS = {
+  'animals.html': ['recogToggle', 'animalSpeak', 'animalNext'],
+  'phonics.html': ['phonics-repeat', 'phonics-speaker'],
+  'coloring.html': ['coloring-next', 'coloringModeToggle', 'coloringClear'],
+  'tracing.html': ['tracingNext'],
+  'animal_memory.html': ['restart'],
+  'maze.html': ['maze-retry'],
+  'rhythm.html': ['repeat-btn'],
+  'matching_game.html': ['candyHintBtn'],
+  'classroom.html': ['classroomAutoplay'],
+  'dino.html': ['adv-worlds-btn', 'adv-music-btn', 'adv-modal-btn'],
+  'driving.html': ['adv-worlds-btn', 'adv-music-btn', 'adv-modal-btn'],
+  'ocean.html': ['adv-worlds-btn', 'adv-music-btn', 'adv-modal-btn'],
+  'space.html': ['adv-worlds-btn', 'adv-music-btn', 'adv-modal-btn'],
+  'explorer.html': ['worlds-btn', 'music-btn', 'modal-btn'],
+  'racing3d.html': ['r3d-world-btn', 'r3d-music-btn', 'r3d-next-world', 'r3d-restart', 'r3d-pick-world']
+};
+const UI_GLYPHS = /[🔊🔇🌍🔄🔁➡➜↻▶⏸💡🔍👁🗑]/u;
+let v22Checked = 0;
+for (const [page, ids] of Object.entries(V22_CONTROLS)) {
+  const filePath = path.join(PAGES_DIR, page);
+  if (!fs.existsSync(filePath)) { failures.push(`V22: listed page ${page} is missing`); continue; }
+  const html = fs.readFileSync(filePath, 'utf8');
+  const buttons = new Map();
+  for (const m of html.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/gi)) {
+    const idm = /id="([^"]+)"/i.exec(m[1]);
+    if (idm) buttons.set(idm[1], m[2]);
+  }
+  for (const id of ids) {
+    if (!buttons.has(id)) {
+      failures.push(`V22: ${page} has no control #${id} (icon control missing)`);
+      continue;
+    }
+    const inner = buttons.get(id);
+    if (!/<svg\b/i.test(inner)) {
+      failures.push(`V22: ${page} control #${id} lacks the shared SVG icon family (task 239)`);
+    }
+    if (UI_GLYPHS.test(inner)) {
+      failures.push(`V22: ${page} control #${id} still uses a text glyph instead of a shared SVG icon`);
+    }
+    v22Checked++;
+  }
+}
+/* JS-injected icon controls (animal_puzzle/animal_counting) can't be seen by the
+   static button scan; assert their injected markup dropped the raw glyphs. */
+for (const js of ['games/animal_puzzle.js', 'games/animal_counting.js']) {
+  const src = fs.readFileSync(path.join(ROOT, 'game', js), 'utf8');
+  if (/[➜👁]/u.test(src)) failures.push(`V22: ${js} still injects a text-glyph icon (task 239)`);
+  if (!/<svg\b/i.test(src)) failures.push(`V22: ${js} injects no SVG icon (task 239)`);
+}
+if (v22Checked === 0) failures.push('V22: icon-family scan checked no controls (vacuity guard)');
 
 // Validate registry entries exist on disk
 if (fs.existsSync(REGISTRY)) {

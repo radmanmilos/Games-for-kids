@@ -14,7 +14,7 @@
           <div id="countScene" class="count-scene learn-stage-mat"></div>
           <div id="countResult" class="count-result learn-feedback"></div>
           <div id="countButtons" class="count-buttons learn-answers"></div>
-          <button id="countNext" class="next-btn" style="display:none">➜</button>
+          <button id="countNext" class="next-btn" style="display:none"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
         </div>`;
       app.appendChild(screen);
     }
