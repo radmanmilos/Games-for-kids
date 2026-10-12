@@ -267,18 +267,26 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
     for (let i = 0; i < 25 && stable < 2; i++) {
       const now = await h.evalv(`(function(){
         var t = document.querySelector('.hub-tile'); if (!t) return '';
-        var r = t.getBoundingClientRect();
-        return (document.querySelector('.screen.active')||{}).id + ':' + Math.round(r.top) + ':' + Math.round(r.height);
+        return (document.querySelector('.screen.active')||{}).id + ':' + t.offsetTop + ':' + t.offsetHeight;
       })()`);
-      const m = /^hub:-?\d+:(\d+)$/.exec(now);
+      const m = /^hub:\d+:(\d+)$/.exec(now);
       stable = (m && +m[1] > 0 && now === prev) ? stable + 1 : 0;
       prev = now;
       if (stable < 2) await sleep(50);
     }
+    /* Layout boxes, never getBoundingClientRect(): the tiles (and the parent lock)
+     * carry the infinite `bob` animation, and a rotated square's RECT grows and
+     * shifts with the phase — CI measured two identical 186px tiles as 186 and
+     * 192 (2deg peak) and side-by-side tops as 151 vs 149. offsetTop/offsetWidth
+     * are the untransformed layout truth, so the measurement cannot race motion.
+     * Every element here has the `.screen` (position:absolute) as offsetParent,
+     * and that screen is inset:0 in the fixed #app, so offsetTop IS the viewport
+     * top. */
     return JSON.parse(await h.evalv(`JSON.stringify((function(){
       var R = function(s){ var e = document.querySelector(s); if (!e) return null;
-        var r = e.getBoundingClientRect();
-        return { t: r.top, b: r.bottom, l: r.left, r: r.right, w: r.width, h: r.height }; };
+        return { t: e.offsetTop, b: e.offsetTop + e.offsetHeight,
+                 l: e.offsetLeft, r: e.offsetLeft + e.offsetWidth,
+                 w: e.offsetWidth, h: e.offsetHeight }; };
       var title = R('#hub-title'), tiles = R('.hub-tiles'), learn = R('.tile-learning'),
           games = R('.tile-games'), lock = R('[data-go="game-parent"]');
       var vh = innerHeight;
@@ -333,11 +341,12 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
       })()`);
       if (!ready2) await sleep(50);
     }
+    /* Layout offsets, same reason as measureLanding: never race a transformed rect. */
     const gap = await h.evalv(`(function(){
       var a = document.querySelector('.screen.active');
-      var g = a.querySelector('.hub-grid').getBoundingClientRect();
-      var t = a.querySelector('.hub-sub-title').getBoundingClientRect();
-      return Math.round(g.top - t.bottom);
+      var g = a.querySelector('.hub-grid');
+      var t = a.querySelector('.hub-sub-title');
+      return g.offsetTop - (t.offsetTop + t.offsetHeight);
     })()`);
     subGaps.push(vw + 'x' + vh + '=' + gap);
   }
