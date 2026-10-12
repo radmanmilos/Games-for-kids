@@ -37,14 +37,9 @@
   }
   .screen.active{display:flex;}
 
-  /* ambient floating blobs, used on every screen for a calm consistent world */
+  /* V21 (§39): ambient blobs are static decoration; the forever drift loop was removed. */
   .blob{
     position:absolute; border-radius:50%; opacity:.35; filter:blur(2px);
-    animation: drift 8s ease-in-out infinite;
-  }
-  @keyframes drift{
-    0%,100%{ transform: translateY(0) scale(1); }
-    50%{ transform: translateY(-18px) scale(1.05); }
   }
 
   /* ---------- HUB ---------- */
@@ -61,22 +56,17 @@
     display:flex; align-items:center; justify-content:center;
     font-size:15vmin; cursor:pointer;
     box-shadow: 0 1.5vmin 0 rgba(0,0,0,.15), 0 2vmin 4vmin rgba(0,0,0,.12);
-    animation: bob 3.2s ease-in-out infinite;
     transition: transform .12s ease;
   }
   .hub-btn:active{ transform: scale(.92) translateY(4px); }
-  .hub-btn.sky{ background: radial-gradient(circle at 35% 30%, #7FDBFF, var(--sky)); animation-delay:0s;}
-  .hub-btn.pink{ background: radial-gradient(circle at 35% 30%, #FF9FB6, var(--pink)); animation-delay:.4s;}
-  .hub-btn.matching{ background: radial-gradient(circle at 35% 30%, #C9A6FF, #9B6DFF); animation-delay:.8s;}
+  .hub-btn.sky{ background: radial-gradient(circle at 35% 30%, #7FDBFF, var(--sky)); }
+  .hub-btn.pink{ background: radial-gradient(circle at 35% 30%, #FF9FB6, var(--pink)); }
+  .hub-btn.matching{ background: radial-gradient(circle at 35% 30%, #C9A6FF, #9B6DFF); }
   .matching-icon{display:inline-flex;flex-direction:column;align-items:center;font-size:.58em;line-height:.72;}
-  .hub-btn.kitty{ background: radial-gradient(circle at 35% 30%, #FFB6D0, #FF7FA8); animation-delay:1.2s;}
-  @keyframes bob{
-    0%,100%{ transform: translateY(0) rotate(-2deg); }
-    50%{ transform: translateY(-14px) rotate(2deg); }
-  }
+  .hub-btn.kitty{ background: radial-gradient(circle at 35% 30%, #FFB6D0, #FF7FA8); }
   .hub-btn.ghost{
     background:transparent; border:.8vmin dashed var(--plum-soft); opacity:.55;
-    box-shadow:none; animation:none; cursor:default;
+    box-shadow:none; cursor:default;
   }
   .hub-btn.ghost:active{ transform:none; }
 
@@ -189,7 +179,7 @@
   .recog-choice.recog-hint{
     /* V6.2: hint target carries the Petrin Glow on top of its semantic yellow ring. */
     box-shadow:var(--ps-glow),0 0 0 .8vmin var(--yellow),0 1.5vmin 0 rgba(0,0,0,.12);
-    animation:recogPulse .6s ease-in-out infinite alternate;
+    animation:recogPulse .6s ease-in-out 3 alternate;
   }
   .recog-choice.recog-dim{ opacity:.35; }
   @keyframes recogShake{
@@ -250,13 +240,10 @@
   .candy-grid .candy.dragging{ z-index:10; transition:none; }
   .candy-grid .candy.swapped{ animation: pulse .3s ease; }
   .candy-grid .candy.star{
+    /* V21 (§39): keep the one-shot dropIn entrance + static glow; drop the forever starGlow pulse. */
     background: radial-gradient(circle at 35% 30%, #FFF3B0, #FFD23F 55%, #FFB800);
     box-shadow: 0 0 3.2vmin 1vmin rgba(255,210,63,.65), inset 0 -1.4vmin 0 rgba(0,0,0,.12);
-    animation: starGlow .5s ease-in-out infinite alternate, dropIn .35s cubic-bezier(.34,1.56,.64,1);
-  }
-  @keyframes starGlow{
-    0%{ transform:scale(1); filter:brightness(1); }
-    100%{ transform:scale(1.12); filter:brightness(1.25); }
+    animation: dropIn .35s cubic-bezier(.34,1.56,.64,1);
   }
   .candy-score{
     position:absolute; top:4vmin; right:4vmin; z-index:20;

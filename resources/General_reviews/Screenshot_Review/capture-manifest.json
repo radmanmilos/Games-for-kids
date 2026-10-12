@@ -2,15 +2,19 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "d0d4b048d83d45c253d53ca49f503ed540ad4922",
+  "commitSha": "726102e39a2e45f5b0e7b2c2675a978ccfdc0940",
   "browser": {
     "product": "Chrome/155.0.8059.39",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-12T00:15:39.723Z",
+  "generatedAt": "2026-10-12T05:58:19.264Z",
   "pageSet": [
-    "hub"
+    "hub",
+    "animals",
+    "matching_game",
+    "explorer",
+    "dino"
   ],
   "viewports": {
     "phone-portrait": {
@@ -74,6 +78,150 @@
       "width": 1180,
       "height": 820,
       "bytes": 139305
+    },
+    {
+      "file": "animals_phone-portrait.png",
+      "page": "animals",
+      "size": "phone-portrait",
+      "state": null,
+      "width": 390,
+      "height": 844,
+      "bytes": 27654
+    },
+    {
+      "file": "animals_phone-landscape.png",
+      "page": "animals",
+      "size": "phone-landscape",
+      "state": null,
+      "width": 844,
+      "height": 390,
+      "bytes": 27213
+    },
+    {
+      "file": "animals_tablet-portrait.png",
+      "page": "animals",
+      "size": "tablet-portrait",
+      "state": null,
+      "width": 820,
+      "height": 1180,
+      "bytes": 70410
+    },
+    {
+      "file": "animals_tablet-landscape.png",
+      "page": "animals",
+      "size": "tablet-landscape",
+      "state": null,
+      "width": 1180,
+      "height": 820,
+      "bytes": 69881
+    },
+    {
+      "file": "matching_game_phone-portrait.png",
+      "page": "matching_game",
+      "size": "phone-portrait",
+      "state": null,
+      "width": 390,
+      "height": 844,
+      "bytes": 74088
+    },
+    {
+      "file": "matching_game_phone-landscape.png",
+      "page": "matching_game",
+      "size": "phone-landscape",
+      "state": null,
+      "width": 844,
+      "height": 390,
+      "bytes": 73466
+    },
+    {
+      "file": "matching_game_tablet-portrait.png",
+      "page": "matching_game",
+      "size": "tablet-portrait",
+      "state": null,
+      "width": 820,
+      "height": 1180,
+      "bytes": 206038
+    },
+    {
+      "file": "matching_game_tablet-landscape.png",
+      "page": "matching_game",
+      "size": "tablet-landscape",
+      "state": null,
+      "width": 1180,
+      "height": 820,
+      "bytes": 208028
+    },
+    {
+      "file": "explorer_phone-portrait.png",
+      "page": "explorer",
+      "size": "phone-portrait",
+      "state": null,
+      "width": 390,
+      "height": 844,
+      "bytes": 31929
+    },
+    {
+      "file": "explorer_phone-landscape.png",
+      "page": "explorer",
+      "size": "phone-landscape",
+      "state": null,
+      "width": 844,
+      "height": 390,
+      "bytes": 31755
+    },
+    {
+      "file": "explorer_tablet-portrait.png",
+      "page": "explorer",
+      "size": "tablet-portrait",
+      "state": null,
+      "width": 820,
+      "height": 1180,
+      "bytes": 62359
+    },
+    {
+      "file": "explorer_tablet-landscape.png",
+      "page": "explorer",
+      "size": "tablet-landscape",
+      "state": null,
+      "width": 1180,
+      "height": 820,
+      "bytes": 60866
+    },
+    {
+      "file": "dino_phone-portrait.png",
+      "page": "dino",
+      "size": "phone-portrait",
+      "state": null,
+      "width": 390,
+      "height": 844,
+      "bytes": 45746
+    },
+    {
+      "file": "dino_phone-landscape.png",
+      "page": "dino",
+      "size": "phone-landscape",
+      "state": null,
+      "width": 844,
+      "height": 390,
+      "bytes": 45133
+    },
+    {
+      "file": "dino_tablet-portrait.png",
+      "page": "dino",
+      "size": "tablet-portrait",
+      "state": null,
+      "width": 820,
+      "height": 1180,
+      "bytes": 54971
+    },
+    {
+      "file": "dino_tablet-landscape.png",
+      "page": "dino",
+      "size": "tablet-landscape",
+      "state": null,
+      "width": 1180,
+      "height": 820,
+      "bytes": 53868
     }
   ]
 }

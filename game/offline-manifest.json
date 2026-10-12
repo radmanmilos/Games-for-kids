@@ -836,8 +836,8 @@
     "size": 17036
   },
   "index.html": {
-    "sha256": "54d5fd8f081b711d135f6e716178446904257903fa4699cf5fdc22be730678e6",
-    "size": 19041
+    "sha256": "7d39621ca40a417b5dd80d6ffaa40d188b54a09f42d36b577517203537fe8ffc",
+    "size": 16627
   },
   "manifest.json": {
     "sha256": "44cc7ca21e6e183718a4ceb5fd955c0e3b9727671c86c62cb92df3cc218b37d1",
@@ -856,8 +856,8 @@
     "size": 5126
   },
   "pages/animals.html": {
-    "sha256": "ab03f1ffeed425da999753d1879bd2da05fb64736858555633db9fc53d1d7ac7",
-    "size": 14511
+    "sha256": "328dda2c1955095c1fd8b14961d7d6301ef25a5d40cc08a984864290a0eb1f19",
+    "size": 13990
   },
   "pages/classroom.html": {
     "sha256": "9776057585bada70c8085ea0fccf999e6c879bb5ed833b8de0f15683c64cd644",
@@ -880,12 +880,12 @@
     "size": 3035
   },
   "pages/explorer.html": {
-    "sha256": "f397deace5a5e919963ce4daba37b5428d99743932f85ddb507d062c12555569",
-    "size": 8268
+    "sha256": "6e234c85bc3c450bd8a79798dcb3262e3641144458912a3bd25df30ba55e2c04",
+    "size": 8150
   },
   "pages/matching_game.html": {
-    "sha256": "a57de1c31d9db5e1c92ceba602d4101372c75cc3a25990c1607fc5f5ac230491",
-    "size": 14884
+    "sha256": "a7d541a42f287028ca6b3e7f8e45bde2b9ca278e735741b8e20d5676d16d3bd2",
+    "size": 14422
   },
   "pages/maze.html": {
     "sha256": "d0136867df611d6611291ab45b4290caef953647b9b41f42c81d0931fb6cb9c1",
@@ -920,8 +920,8 @@
     "size": 6404
   },
   "pages/shapes.html": {
-    "sha256": "9c55a49206039c52b86aa7c8b002adfaa20cc7ceec99f121822ae7ac6db92237",
-    "size": 12826
+    "sha256": "42f2d8ee96bf31cc3ff3f33845dc738609eb780482fcf6903a15f248eceed084",
+    "size": 12312
   },
   "pages/sorting.html": {
     "sha256": "c7b728fee3a91f7a6205bb8c2317815bd37a6d0a8c5081dae6ee23e551f2ad4d",
@@ -944,8 +944,8 @@
     "size": 3580
   },
   "shared/adventure.css": {
-    "sha256": "56b06860795aeae1dc5083b840a62dbc9be3b8687bae2f0e44d7d609e2600fec",
-    "size": 13194
+    "sha256": "51c2c38bfd8e3b4bf9fa651ebcbaa9dbc01d58c92b71eb9132198bffe4f60e3a",
+    "size": 13046
   },
   "shared/audio-buses.js": {
     "sha256": "4eac8f8e712df655871b5a64193cb38fa2b84d30dc3bf90e93f4a9910a8db900",

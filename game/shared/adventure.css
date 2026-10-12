@@ -303,12 +303,6 @@ body, html {
     background-color: #43b047;
     border-color: #fff;
     font-size: 50px;
-    animation: advPulse 2s infinite ease-in-out;
-}
-
-@keyframes advPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.06); }
 }
 
 /* --- Back button + page title (shared across adventure pages) --- */

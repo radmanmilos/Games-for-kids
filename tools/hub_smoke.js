@@ -274,11 +274,12 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
       prev = now;
       if (stable < 2) await sleep(50);
     }
-    /* Layout boxes, never getBoundingClientRect(): the tiles (and the parent lock)
-     * carry the infinite `bob` animation, and a rotated square's RECT grows and
-     * shifts with the phase — CI measured two identical 186px tiles as 186 and
-     * 192 (2deg peak) and side-by-side tops as 151 vs 149. offsetTop/offsetWidth
-     * are the untransformed layout truth, so the measurement cannot race motion.
+    /* Layout boxes, always offset*, never getBoundingClientRect(): the tiles used
+     * to carry the infinite `bob` animation (removed in V21, §39), and a rotated
+     * square's RECT grows and shifts with the phase — CI measured two identical
+     * 186px tiles as 186 and 192 (2deg peak) and side-by-side tops as 151 vs 149.
+     * offsetTop/offsetWidth are the untransformed layout truth, so the measurement
+     * cannot race transform motion (:active press, transition, any animation).
      * Every element here has the `.screen` (position:absolute) as offsetParent,
      * and that screen is inset:0 in the fixed #app, so offsetTop IS the viewport
      * top. */
@@ -392,6 +393,43 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
   })())`);
   const S = JSON.parse(shortVp);
   check('short landscape (844x390): every visible games button is inside the viewport, racing3d included', S.bad.length === 0 && S.racing3dBottom <= S.vh + 1, shortVp);
+
+  // V21 (§39) — semantic-motion gate. Decorative infinite motion (hub bob/drift,
+  // explorer jump pulse, dino advPulse, candy starGlow) failed the spec's tests
+  // 1/5/6 (communicates nothing, runs indefinitely, costs battery/CPU) and was
+  // removed. The ONLY remaining indefinite animations in game/ are the four
+  // justified cues, each a gameplay/instructional loop that prefers-reduced-motion
+  // freezes: animalIdle (animals — "alive" idle), softLight (piano "Прати светло"
+  // target-key cue), introDraw/introBob (tracing — teaches how to trace).
+  // Set equality is non-vacuous both ways: an unjustified `infinite` (even a dead
+  // one hidden in a hidden section) OR a deleted justified loop turns this red.
+  const V21_ALLOWED = ['animalIdle', 'softLight', 'introDraw', 'introBob'].sort().join(',');
+  const V21_KEYWORDS = new Set(['infinite','none','alternate','alternate-reverse','reverse',
+    'forwards','backwards','both','running','paused','normal','ease','linear','ease-in',
+    'ease-out','ease-in-out','step-start','step-end']);
+  const V21_DUR = /^\d*\.?\d+(ms|s)$/;
+  const walkGame = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap(e =>
+    e.isDirectory() ? walkGame(path.join(dir, e.name))
+                    : (/\.(html|css|js)$/.test(e.name) ? [path.join(dir, e.name)] : []));
+  const foundInf = new Set();
+  for (const f of walkGame(path.join(__dirname, '..', 'game'))) {
+    const src = fs.readFileSync(f, 'utf8');
+    for (const m of src.matchAll(/animation(?:-name)?\s*:\s*([^;}]+)/gi)) {
+      if (!/\binfinite\b/.test(m[1])) continue;
+      for (const piece of m[1].split(',')) {
+        if (!/\binfinite\b/.test(piece)) continue;
+        const name = piece.trim().split(/\s+/)
+          .find(t => !V21_KEYWORDS.has(t) && !t.includes('(') && !V21_DUR.test(t));
+        if (name) foundInf.add(name);
+      }
+    }
+  }
+  const infFound = [...foundInf].sort().join(',');
+  check('V21: the only indefinite animations are the four justified cues (animalIdle, softLight, introDraw, introBob)',
+    infFound === V21_ALLOWED,
+    infFound === V21_ALLOWED ? 'allowlist intact: ' + infFound
+      : (infFound ? 'found: ' + infFound + ' | allowlist: ' + V21_ALLOWED
+                  : 'no indefinite animations at all (a justified cue was deleted)'));
 
   await h.close();
   const fails = getFails();

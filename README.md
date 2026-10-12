@@ -4,7 +4,9 @@
 
 ---
 
-## Current status (2026-10-11)
+## Current status (2026-10-12)
+
+- **Task 238 DONE (2026-10-12):** Phase 21-23 - V21 (Semantic motion pass, spec 39) - classified every animation and deleted the decorative infinite motion that fails the spec 39 tests; kept the four justified loops (`animalIdle`, `softLight`, `introDraw`/`introBob`); capped the animals hint; added a static `hub_smoke` guard asserting the only indefinite animations are those four. CSS-only. (Ponytail Lazy Dev)
 
 - **Task 237 DONE (2026-10-12):** Phase 9-20 - V20 (Hub vertical rhythm + activity-cluster size, spec 38) - "Do not fill space with decorative noise." VERIFY-first probed 390x844 / 844x390 / 820x1180 / 1024x800: **phone portrait was the only bad screen** - a 335px (39.7%) empty band between the title and the two group tiles, which sat at their **150px clamp floor** (`clamp(150px,34vmin,320px)` -> 34vmin=132.6<150) under a `22vh` offset that fought the centring flex; sub-hubs wasted a 116-136px title->grid band on a fixed `margin:24vh` while the learning grid scrolled. R12 already kept every parent/technical utility out of the child hub (no fix needed). Fix in `game/index.html` (CSS only): **one portrait-only media block** stacks the two group tiles and sizes them from the phone's height (`clamp(150px,22vh,240px)` - the 22vh cap is the clearance guarantee against the title and the 96px parent lock) with the emoji/label fonts scaled to match; the sub-hub top margin became **`calc(6vh + 10vmin + 40px)`**, which tracks the title's own box instead of guessing with vh. Result at 390x844: tile 150->186px, cluster 166->418px tall, biggest void 335->116px (13.8%); sub-hub title->grid gaps 116/136/70 -> 43/46/46px; landscape and tablet untouched (the refreshed landscape/tablet screenshots are byte-identical). `hub_smoke` 24->30 checks (+6, each negative-tested by mutation from a temp copy = exactly the targeted red(s), hash-verified restores); `check_fast` 7/7; axe clean; `short_landscape_audit` 0 FAIL (hub OK); offline E2E 23 games green; `hub_phone-portrait.png` refreshed. (Ponytail Lazy Dev)
 
