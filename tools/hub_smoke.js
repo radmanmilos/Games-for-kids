@@ -247,6 +247,112 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
     !fs.readFileSync(path.join(pagesDir, p + '.html'), 'utf8').includes('class="back-btn ps-back"'));
   check('V7.1: adopted pages carry .ps-back on their back controls', notAdopted.length === 0, notAdopted.join(','));
 
+  /* V20 (spec §38): phone portrait is the hub screen with the dead space — the two
+   * group tiles used to sit at their 150px clamp floor (34vmin = 132.6 < 150) under
+   * a 22vh offset that fought the centring flex, so the child's entire navigation
+   * occupied 166 of 844px with a 335px (40%) void above it. These checks assert the
+   * LIVE geometry at real viewports (readiness-wait on the reflow, never a sleep):
+   * the cluster is stacked and enlarged on a phone, the void is small, the pair
+   * still clears the title and the parent lock on a SHORT phone (the 22vh cap is
+   * what buys that clearance — drop it and a 40vh cluster collides), the rule does
+   * not leak into landscape, and the sub-hub grids clear their titles by a real
+   * gap instead of the old flat 24vh (which left 116–136px of dead band while the
+   * learning grid scrolled off the bottom). */
+  const measureLanding = async (width, height) => {
+    await h.c.send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
+    await waitForActive('hub');
+    /* Readiness = the reflow settled (two identical reads of a sized tile with the
+     * landing active), never a fixed sleep and never the assertion itself. */
+    let prev = '', stable = 0;
+    for (let i = 0; i < 25 && stable < 2; i++) {
+      const now = await h.evalv(`(function(){
+        var t = document.querySelector('.hub-tile'); if (!t) return '';
+        var r = t.getBoundingClientRect();
+        return (document.querySelector('.screen.active')||{}).id + ':' + Math.round(r.top) + ':' + Math.round(r.height);
+      })()`);
+      const m = /^hub:-?\d+:(\d+)$/.exec(now);
+      stable = (m && +m[1] > 0 && now === prev) ? stable + 1 : 0;
+      prev = now;
+      if (stable < 2) await sleep(50);
+    }
+    return JSON.parse(await h.evalv(`JSON.stringify((function(){
+      var R = function(s){ var e = document.querySelector(s); if (!e) return null;
+        var r = e.getBoundingClientRect();
+        return { t: r.top, b: r.bottom, l: r.left, r: r.right, w: r.width, h: r.height }; };
+      var title = R('#hub-title'), tiles = R('.hub-tiles'), learn = R('.tile-learning'),
+          games = R('.tile-games'), lock = R('[data-go="game-parent"]');
+      var vh = innerHeight;
+      var bands = [tiles.t - title.b,
+                   lock ? lock.t - tiles.b : vh - tiles.b,
+                   lock ? vh - lock.b : 0];
+      return { vw: innerWidth, vh: vh, title: title, tiles: tiles, learn: learn,
+               games: games, lock: lock, biggestBand: Math.max.apply(null, bands) };
+    })())`));
+  };
+  const hits2 = (a, b) => Math.max(0, Math.min(a.r, b.r) - Math.max(a.l, b.l)) *
+                          Math.max(0, Math.min(a.b, b.b) - Math.max(a.t, b.t));
+
+  const V20P = await measureLanding(390, 844);
+  check('V20: phone portrait stacks the two group tiles into one tall cluster',
+    V20P.tiles.h >= 2 * V20P.learn.h - 8 && V20P.games.t > V20P.learn.b,
+    JSON.stringify({ tiles: Math.round(V20P.tiles.h), tile: Math.round(V20P.learn.h), gamesTop: Math.round(V20P.games.t) }));
+  check('V20: phone portrait tiles are enlarged past the old 150px clamp floor',
+    V20P.learn.w >= 180 && Math.abs(V20P.learn.w - V20P.games.w) < 1,
+    JSON.stringify({ learn: Math.round(V20P.learn.w), games: Math.round(V20P.games.w) }));
+  check('V20: phone portrait keeps a calm rhythm (no empty band above 30% of the screen)',
+    V20P.biggestBand <= 0.3 * V20P.vh,
+    'biggestBand=' + Math.round(V20P.biggestBand) + '/' + V20P.vh + ' (' + Math.round(1000 * V20P.biggestBand / V20P.vh) / 10 + '%)');
+
+  // The 22vh cap is a clearance guarantee, not a size preference: on a short phone
+  // the stacked pair must still fit between the title box and the 96px parent lock.
+  const V20S = await measureLanding(360, 640);
+  const clearOf = m => hits2(m.tiles, m.title) === 0 && hits2(m.tiles, m.lock) === 0 &&
+    m.tiles.t - m.title.b >= 8 && m.lock.t - m.tiles.b >= 8;
+  check('V20: the enlarged portrait cluster clears the title and the parent lock (390x844 and 360x640)',
+    clearOf(V20P) && clearOf(V20S),
+    JSON.stringify({ p390: [Math.round(V20P.tiles.t - V20P.title.b), Math.round(V20P.lock.t - V20P.tiles.b)],
+                     s360: [Math.round(V20S.tiles.t - V20S.title.b), Math.round(V20S.lock.t - V20S.tiles.b)],
+                     hit360: hits2(V20S.tiles, V20S.title) + '/' + hits2(V20S.tiles, V20S.lock) }));
+
+  // Sub-hub rhythm: the old flat `margin:24vh` left 116px (390x844) / 136px
+  // (820x1180) / 70px (1024x800) of dead band between the sub-hub title and the
+  // first row while the learning grid scrolled. The replacement tracks the title's
+  // own box, so the gap is a constant ~45px on every tall viewport.
+  const subGaps = [];
+  for (const [vw, vh] of [[390, 844], [820, 1180], [1024, 800]]) {
+    await h.c.send('Emulation.setDeviceMetricsOverride', { width: vw, height: vh, deviceScaleFactor: 1, mobile: false });
+    await waitForActive('hub');
+    await h.evalv(`window.goTo('hub-games')`);
+    let ready2 = false;
+    for (let i = 0; i < 25 && !ready2; i++) {
+      ready2 = await h.evalv(`(function(){
+        var a = document.querySelector('.screen.active'); if (!a || a.id !== 'hub-games') return false;
+        var g = a.querySelector('.hub-grid'); if (!g) return false;
+        var r = g.getBoundingClientRect();
+        return r.height > 0 && r.top > 0;
+      })()`);
+      if (!ready2) await sleep(50);
+    }
+    const gap = await h.evalv(`(function(){
+      var a = document.querySelector('.screen.active');
+      var g = a.querySelector('.hub-grid').getBoundingClientRect();
+      var t = a.querySelector('.hub-sub-title').getBoundingClientRect();
+      return Math.round(g.top - t.bottom);
+    })()`);
+    subGaps.push(vw + 'x' + vh + '=' + gap);
+  }
+  const gapsOk = subGaps.every(s => { const g = +s.split('=')[1]; return g >= 24 && g <= 64; });
+  check('V20: sub-hub grids clear their titles by a real gap at every tall viewport (24-64px)', gapsOk, subGaps.join(' '));
+  await h.evalv(`window.goTo('hub')`);
+  await waitForActive('hub');
+
+  // Scoping: the portrait block must not reach landscape. 844x390 keeps the
+  // side-by-side pair (and the task-105 games guard below keeps pinning the grid).
+  const V20L = await measureLanding(844, 390);
+  check('V20: the portrait rule does not leak into landscape (tiles stay side-by-side)',
+    Math.abs(V20L.learn.t - V20L.games.t) < 2 && V20L.learn.h <= 1.3 * V20L.learn.w && V20L.learn.w >= 96,
+    JSON.stringify({ learnTop: Math.round(V20L.learn.t), gamesTop: Math.round(V20L.games.t), w: Math.round(V20L.learn.w), h: Math.round(V20L.learn.h) }));
+
   // Regression guard (task 105): on a short landscape viewport the 24vh grid
   // margin + 2 columns put the last row below the fold, so the racing3d button
   // was only reachable after navigating into and back out of a game.

@@ -116,7 +116,23 @@
   }
   /* sub-hub screens: grid scrolls from the top, clears the title + back button */
   #hub-games, #hub-learning{ justify-content:flex-start; }
-  #hub-games .hub-grid, #hub-learning .hub-grid{ margin: 24vh auto 0; }
+  /* V20 (§38): a flat 24vh left a 116px dead band under the sub-hub title on a
+     phone (136px on a tablet) while the learning grid scrolled off the bottom.
+     The title sits at top:6% but its box is vmin-sized, so the offset tracks
+     BOTH (6vh + the ~10vmin line box + a constant gap) instead of guessing. */
+  #hub-games .hub-grid, #hub-learning .hub-grid{ margin: calc(6vh + 10vmin + 40px) auto 0; }
+  /* V20 (§38) phone portrait: the two group tiles sat at their 150px clamp floor
+     (34vmin = 132.6 < 150) under a 22vh offset, leaving a 335px - 40% - void
+     between the title and the only two controls on the screen. Stack the pair and
+     size it from the height the phone has; 22vh is the cap that keeps short phones
+     clear of the title and the parent lock. Landscape/tablet keep the row. */
+  @media (orientation:portrait) and (max-width:600px){
+    .hub-tiles{ flex-direction:column; margin:0 auto; }
+    .hub-tile{ width:clamp(150px, 22vh, 240px); height:clamp(150px, 22vh, 240px); }
+    .hub-tile .tile-emoji{ font-size: clamp(56px, 21vmin, 160px); }
+    .hub-tile .tile-emojis{ font-size: clamp(30px, 11.5vmin, 88px); }
+    .hub-tile .tile-label{ font-size: clamp(30px, 9.5vmin, 72px); }
+  }
   /* Short viewports (landscape phones): a 24vh top margin plus only 2 columns
      pushed the last row below the fold, which hid the racing3d button entirely
      (measured: bottom=639 in a 390px viewport). Three narrower columns fit. */

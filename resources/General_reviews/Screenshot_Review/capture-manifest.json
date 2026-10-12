@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "81ed2c3e95c345045f70bbf8c91d5431751ec5e1",
+  "commitSha": "d0d4b048d83d45c253d53ca49f503ed540ad4922",
   "browser": {
     "product": "Chrome/155.0.8059.39",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-11T12:12:23.829Z",
+  "generatedAt": "2026-10-12T00:15:39.723Z",
   "pageSet": [
-    "parent"
+    "hub"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,40 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "parent_phone-portrait.png",
-      "page": "parent",
+      "file": "hub_phone-portrait.png",
+      "page": "hub",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 32122
+      "bytes": 68880
     },
     {
-      "file": "parent_phone-landscape.png",
-      "page": "parent",
+      "file": "hub_phone-landscape.png",
+      "page": "hub",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 23443
+      "bytes": 54255
     },
     {
-      "file": "parent_tablet-portrait.png",
-      "page": "parent",
+      "file": "hub_tablet-portrait.png",
+      "page": "hub",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 47361
+      "bytes": 138174
     },
     {
-      "file": "parent_tablet-landscape.png",
-      "page": "parent",
+      "file": "hub_tablet-landscape.png",
+      "page": "hub",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 39326
+      "bytes": 139305
     }
   ]
 }

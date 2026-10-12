@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-11T12:12:23.829Z
+- Генерисано / Generated: 2026-10-12T00:15:39.723Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -48,10 +48,10 @@
 | `explorer_phone-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 390×844 | портрет | — | 09.10.2026. 14:32:06 | 220 |
 | `explorer_tablet-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 1180×820 | пејзаж | — | 09.10.2026. 14:32:06 | 220 |
 | `explorer_tablet-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 820×1180 | портрет | — | 09.10.2026. 14:32:06 | 220 |
-| `hub_phone-landscape.png` | Петрин свет — почетна | `/index.html` | 844×390 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `hub_phone-portrait.png` | Петрин свет — почетна | `/index.html` | 390×844 | портрет | — | 07.10.2026. 13:09:03 | 213 |
-| `hub_tablet-landscape.png` | Петрин свет — почетна | `/index.html` | 1180×820 | пејзаж | — | 07.10.2026. 13:09:03 | 213 |
-| `hub_tablet-portrait.png` | Петрин свет — почетна | `/index.html` | 820×1180 | портрет | — | 07.10.2026. 13:09:03 | 213 |
+| `hub_phone-landscape.png` | Петрин свет — почетна | `/index.html` | 844×390 | пејзаж | — | 12.10.2026. 02:15:39 | 237 |
+| `hub_phone-portrait.png` | Петрин свет — почетна | `/index.html` | 390×844 | портрет | — | 12.10.2026. 02:15:39 | 237 |
+| `hub_tablet-landscape.png` | Петрин свет — почетна | `/index.html` | 1180×820 | пејзаж | — | 12.10.2026. 02:15:39 | 237 |
+| `hub_tablet-portrait.png` | Петрин свет — почетна | `/index.html` | 820×1180 | портрет | — | 12.10.2026. 02:15:39 | 237 |
 | `matching_game_phone-landscape.png` | Слагалица бомбона | `/pages/matching_game.html` | 844×390 | пејзаж | — | 09.10.2026. 13:41:25 | 219 |
 | `matching_game_phone-portrait.png` | Слагалица бомбона | `/pages/matching_game.html` | 390×844 | портрет | — | 09.10.2026. 13:41:25 | 219 |
 | `matching_game_tablet-landscape.png` | Слагалица бомбона | `/pages/matching_game.html` | 1180×820 | пејзаж | — | 09.10.2026. 13:41:25 | 219 |
