@@ -214,10 +214,11 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         const r3d = window.__r3d; r3d.haltLoop(true); r3d.step(1/60);
         const c = r3d.cameraInfo(); r3d.haltLoop(false); return JSON.stringify(c);
     })()`));
-    check('short landscape (390h): chase cam pulls in (camPull 0.6, target < 0.75x the 700h distance)',
-        camShort.pull === 0.6 && camShort.vh === 390 && camShort.target > 0 &&
+    check('short landscape (390h): chase cam pulls in (pull < 1, target < 0.8x the 700h distance)',
+        camShort.pull >= 0.4 && camShort.pull <= 0.7 && camShort.vh === 390 && camShort.target > 0 &&
         camTall.pull === 1 && camTall.vh === 700 &&
-        camShort.target < camTall.target * 0.75,
+        camShort.pull < camTall.pull &&
+        camShort.target < camTall.target * 0.8,
         JSON.stringify({ short: camShort, tall: camTall }));
 
     const cd = await h.evalv(`JSON.stringify({

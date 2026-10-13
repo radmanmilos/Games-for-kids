@@ -2572,10 +2572,13 @@ function main() {
 
     // camera (dynamic bouncy chase cam: suspension bob + steer sway + hill crest + shake)
     // On a phone in landscape the viewport is short, so a fixed-distance chase cam
-    // makes the kart read as "too far away" (task 247). Pull the whole rig in with
-    // the short viewport dimension so the kart keeps a readable on-screen size;
-    // portrait/tablet/desktop heights (>=700) keep the approved framing unchanged.
-    const camPull = Math.max(0.6, Math.min(1, window.innerHeight / 700));
+    // makes the kart read as "too far away" (task 247). Pull the rig in faster than
+    // 1:1 below a 700px-tall viewport, so a landscape phone gets noticeably closer;
+    // heights >=700 stay at factor 1 (approved framing unchanged). `camRise` keeps
+    // the camera high as it pulls in, so it looks DOWN at the kart rather than
+    // dropping level with it (raised on user request - increment 1).
+    const camPull = Math.max(0.5, Math.min(1, 1 - 1.1 * (1 - window.innerHeight / 700)));
+    const camRise = 0.35 + 0.65 * camPull;
     lastCamPull = camPull;
     const camTarget = kart.position
       .clone()
@@ -2583,11 +2586,11 @@ function main() {
       .add(
         new THREE.Vector3(
           REDUCED_MOTION ? 0 : -steer * 0.9 * (speed / MAX_SPEED),
-          (6.0 + rumble * 2.0) * camPull,
+          (6.0 + rumble * 2.0) * camRise,
           0,
         ),
       );
-    camTarget.y = Math.max(camTarget.y, kart.position.y + 5.0 * camPull);
+    camTarget.y = Math.max(camTarget.y, kart.position.y + 5.0 * camRise);
     lastCamTargetDist = camTarget.distanceTo(kart.position);
     camera.position.lerp(camTarget, 1 - Math.exp(-4 * dt));
     const desired = kart.position
