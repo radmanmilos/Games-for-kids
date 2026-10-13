@@ -5,13 +5,17 @@
    on purpose here and must produce a non-zero exit. The registry and index.html
    are restored afterwards.
 
-   Two rules this file had to learn the hard way, both from its own first draft:
+   Three rules this file had to learn the hard way:
      1. Every mutation must stay SYNTACTICALLY VALID. Three early cases "passed"
         only by breaking the JS parse - that is a crash, not a contract report,
         and it is exactly the shape of a check that cannot fail.
      2. A detection must come from the guard's own message, not merely a non-zero
         exit, or an unrelated failure (e.g. "page not found on disk") gets
         credited for a guard that did nothing.
+     3. A mutation must not assume a line ending. `game/` is CRLF on a Windows
+        checkout (core.autocrlf=true) and LF in git/CI, so an LF-only pattern
+         (e.g. /start: null \}\n\];/) is machine-dependent: it silently fails to
+         find the last entry on Windows while CI stays green. Match \r?\n.
 
    Usage: node tools/guards/registry_guards_negtest.js
    Exit 0 = every guard can fail. */
@@ -30,9 +34,9 @@ const indexOrig = fs.readFileSync(INDEX, 'utf8');
 /* A syntactically valid stand-in for the registry's last entry (which carries no
    trailing comma), so an inserted entry does not break the array. */
 function insertBeforeEnd(src, entry) {
-  const withComma = src.replace(/(start: null \})\n\];/, '$1,\n];');
+  const withComma = src.replace(/(start: null \})\r?\n\];/, '$1,\n];');
   if (withComma === src) throw new Error('could not find the last entry to terminate');
-  return withComma.replace(/\n\];/, '\n' + entry + '];');
+  return withComma.replace(/\r?\n\];/, '\n' + entry + '];');
 }
 
 const oceanEntry = regOrig.match(/\{ id: 'ocean',[\s\S]*?\},/)[0];
