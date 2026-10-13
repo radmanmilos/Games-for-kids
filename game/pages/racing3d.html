@@ -135,6 +135,13 @@
             color: #4A3F6B; border: 5px solid #fff; box-shadow: 0 8px 0 rgba(0,0,0,0.3); cursor: pointer;
         }
         .r3d-restart-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
+        /* task 244 — colour-code the finish buttons + «Крени!» so a child who
+           cannot read still infers the action: green = go/next, yellow = replay,
+           blue = pick a world. */
+        #r3d-next-world { background: #8BD65A; }
+        #r3d-start-btn { background: #8BD65A; }
+        #r3d-restart { background: #FFD23F; }
+        #r3d-pick-world { background: #7EC8F5; }
         /* --- Top-right corner controls (world picker + music) --- */
         .r3d-corner {
             /* must sit above .r3d-zone (z-index 11): on short landscape screens

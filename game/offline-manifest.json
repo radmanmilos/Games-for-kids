@@ -804,8 +804,8 @@
     "size": 4817
   },
   "games/racing3d.mjs": {
-    "sha256": "b0c66b1be634b4f6c8f8709c2aab21be507db102fca1b55b1147cc073c6f6a7d",
-    "size": 99309
+    "sha256": "489dde3178fc4ae1320035ab3dddb1b9c31f5730e9240946067c914ef89a29af",
+    "size": 100448
   },
   "games/rhythm.js": {
     "sha256": "5ef69557e33be41bc6df7d825b0bdfab0d96a00eb44b747e4f403157d3211bd7",
@@ -908,8 +908,8 @@
     "size": 12529
   },
   "pages/racing3d.html": {
-    "sha256": "50511e3118901c649aa93039dc7cdde16e0a704a6e97416fbecf5c418aa23a37",
-    "size": 16914
+    "sha256": "b58cba2b068c9267cafd03d1fbcfd13a3d4ac33ea4da2a0e75f69be75205cc10",
+    "size": 17311
   },
   "pages/rhythm.html": {
     "sha256": "c30b4d946ac1f02a64d6d5aa79a557812b8be9ad0c5030fc99bfe83ebdbeb336",

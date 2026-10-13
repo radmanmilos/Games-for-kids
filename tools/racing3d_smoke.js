@@ -253,12 +253,14 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         return JSON.stringify({ stA, stE1, stE2, stB, stC, stLeft, rm });
     })()`);
     const stj = JSON.parse(steerCheck);
-    check('steering: whole car hovers sideways + wheels turn in, glide stops while wheels still return, no side-drift, reverses',
+    check('steering: whole car turns its nose slightly into the glide + wheels turn in, glide stops + nose straightens while wheels still return, reverses',
         stj.stA.sp > 10 && stj.stA.yaw > 0.1 && stj.stA.lat > 0.3 &&
-        stj.stA.wheelYaw < -0.1 && Math.abs(stj.stA.byaw) < 0.005 &&
+        stj.stA.wheelYaw < -0.1 && Math.abs(stj.stA.byaw) > 0.1 &&
         stj.stE1.yaw > 0.1 && stj.stE2.yaw > 0.07 && Math.abs(stj.stE2.lat - stj.stE1.lat) < 0.4 &&
         Math.abs(stj.stB.yaw) < 0.05 && Math.abs(stj.stC.lat - stj.stB.lat) < 0.15 &&
-        stj.stLeft.lat < stj.stC.lat - 0.5 && stj.stLeft.wheelYaw > 0.1 && Math.abs(stj.stLeft.byaw) < 0.005, steerCheck);
+        stj.stLeft.lat < stj.stC.lat - 0.5 && stj.stLeft.wheelYaw > 0.1 &&
+        Math.abs(stj.stLeft.byaw) > 0.1 && stj.stA.byaw * stj.stLeft.byaw < 0 &&
+        Math.abs(stj.stB.byaw) < 0.02, steerCheck);
 
     const pads = await h.evalv(`JSON.stringify(window.__r3d.boostPads())`);
     const pj = JSON.parse(pads);
@@ -312,9 +314,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         return JSON.stringify({ bankA, bankB, rm });
     })()`);
     const bkj = JSON.parse(bankCheck);
-    check('kart leans gently into the hover (body stays square) + wheels carry a spin pattern, then level on release',
+    check('kart leans gently into the hover + turns its nose slightly in, then levels + straightens on release',
         bkj.bankA.spokes === 16 && bkj.bankA.roll > 0.08 && bkj.bankA.steerYaw > 0.1 &&
-        Math.abs(bkj.bankA.yaw) < 0.005 &&
+        Math.abs(bkj.bankA.yaw) > 0.1 &&
         Math.abs(bkj.bankB.roll) < 0.05 && Math.abs(bkj.bankB.steerYaw) < 0.05 && Math.abs(bkj.bankB.yaw) < 0.05,
         bankCheck);
 
@@ -805,6 +807,40 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     check('perf hooks: draw calls, triangles, particles, frame time and DPR all report sane values',
         pf.calls > 0 && pf.triangles > 0 && pf.dpr === 1 &&
         pf.avgFrameMs > 0 && pf.worstFrameMs >= pf.avgFrameMs && pf.drawBufferPx > 0, perfCheck);
+
+    // task 244 — a world/kart pick reloads the page to rebuild the scene, and
+    // the child's single «Крени!» tap must NOT become two. Drive the REAL button
+    // path: pick a DIFFERENT world card, tap start, let the app reload ITSELF
+    // (marker proves the reload happened), then assert it lands straight in the
+    // race with the menu gone and the one-shot flag consumed.
+    const worldCount = Number(await h.evalv(`document.querySelectorAll('#r3d-world-grid > button').length`));
+    const curWorld = Number(await h.evalv(`window.__r3d.worldIdx()`));
+    const nextWorld = (curWorld + 1) % worldCount;
+    await h.evalv(`window.__r3d.haltLoop(true); true`);
+    await h.evalv(`document.querySelectorAll('#r3d-world-grid > button')[${nextWorld}].click(); true`);
+    await h.evalv(`window.__autoMarker = 'pre-reload'; true`);
+    await h.evalv(`document.getElementById('r3d-start-btn').click(); true`);
+    await sleep(1500);
+    let autoBooted = false;
+    for (let i = 0; i < 40 && !autoBooted; i++) {
+        autoBooted = await h.evalv(`!!window.__r3d`);
+        if (!autoBooted) await sleep(250);
+    }
+    const autoJson = await h.evalv(`JSON.stringify((function () {
+        const r = window.__r3d;
+        const modal = document.getElementById('r3d-start-modal');
+        return {
+            reloaded: typeof window.__autoMarker === 'undefined',
+            mode: r ? r.mode() : 'none',
+            shown: !!(modal && modal.classList.contains('show')),
+            flag: sessionStorage.getItem('racing3dAutostart'),
+            world: r ? r.worldIdx() : null,
+        };
+    })())`);
+    const au = JSON.parse(autoJson);
+    check('one «Крени!» tap: after the world/kart scene-reload the race auto-starts (no second tap)',
+        au.reloaded === true && au.mode !== 'menu' && au.mode !== 'none' &&
+        au.shown === false && au.flag === null && Number(au.world) === nextWorld, autoJson);
 
     await h.close();
     process.exit(getFails() ? 1 : 0);

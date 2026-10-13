@@ -11,12 +11,14 @@ const ROAD_WIDTH = 20;
 const ROAD_SEGMENTS = 360;
 const MAX_LATERAL = 9.6;
 const STEER_YAW_MAX = 0.45; // front-wheel steering angle at full lock
-// Hovercraft steering (task 242): the WHOLE car glides sideways along the road
-// instead of yawing its nose into the turn. The steering IS the lateral hover —
-// the body stays square to the track (yawMax 0) and only leans gently into the
-// glide. Ramp rates default to the proven responsive feel and are tunable here.
+// Hovercraft steering (task 244): the WHOLE car glides sideways along the road
+// AND leans its nose slightly into the glide, pivoting about the rear axle so
+// the rear stays planted (no tail-spin). The steering IS the lateral hover;
+// the slight body yaw just makes the car visibly face where it's sliding. On
+// release the yaw eases back to straight and the car keeps the lane it slid to.
+// Ramp rates default to the proven responsive feel and are tunable here.
 const HOVER = {
-  yawMax: 0, // body yaw about the rear axle (0 = whole car stays square)
+  yawMax: 0.18, // slight body yaw about the rear axle (0 = whole car stays square)
   bankMax: 0.12, // gentle lean into the hover (0 = perfectly level)
   inRate: 8, // how fast the glide ramps up while a key is held
   outRate: 10, // how fast it eases out on release (lower = more glide-out)
@@ -36,6 +38,10 @@ const RUMBLE_ON = 8.4;
 const OFFROAD_LAT = 9.3;
 const MAX_PARTICLES = 420;
 const SAVE_KEY = "racing3dSave";
+// task 244: a world/kart pick reloads the page to rebuild the scene. This
+// one-shot flag makes the reloaded page start the race straight away, so the
+// child's single «Крени!» tap is not turned into two.
+const AUTOSTART_KEY = "racing3dAutostart";
 
 function mulberry32(a) {
   return function () {
@@ -2230,6 +2236,9 @@ function main() {
       if (needsReload) {
         save = { wins: save.wins || 0, world: pendingWorld, kart: pendingKart };
         persistSave(save);
+        // task 244: remember that the race was already confirmed, so the
+        // reload triggered by the scene rebuild starts it without a second tap.
+        try { sessionStorage.setItem(AUTOSTART_KEY, "1"); } catch (_) {}
         location.reload();
         return;
       }
@@ -2345,12 +2354,13 @@ function main() {
     kartShadow.position.y = kart.position.y + 0.06;
     kartShadow.scale.set(2.7, 2.7, 1);
 
-    // Hovercraft (task 242): the body stays SQUARE to the track — no nose-lead
-    // yaw. The steering motion is the whole-car lateral glide; a gentle lean
-    // turns it into a hover rather than a flat slide. Sign: the kart's local
-    // +X is its LEFT, so a positive rotation.z lifts the left side = leaning
-    // right = into the turn on ArrowRight. Derived straight from the eased
-    // steerDrive (no extra state: inherits the easing and dies on release).
+    // Hovercraft (task 244): the whole car leans its nose slightly into the
+    // glide (about the rear axle, so the rear stays planted — no tail-spin) on
+    // top of the whole-car lateral slide; a gentle lean makes it read as a hover
+    // rather than a flat slide. Sign: the kart's local +X is its LEFT, so a
+    // positive rotation.z lifts the left side = leaning right = into the turn on
+    // ArrowRight. Derived straight from the eased steerDrive (no extra state:
+    // inherits the easing, so the nose straightens on release).
     kartYaw.rotation.y = -(steerDrive / STEER_YAW_MAX) * HOVER.yawMax;
     // front wheels turn in quickly; on release they slowly return to the middle
     if (steer !== 0) {
@@ -2785,6 +2795,17 @@ function main() {
   });
 
   showStartPicker();
+  // task 244: if the picker was confirmed just before a scene-rebuild reload,
+  // start the race now instead of showing the menu again for a second tap.
+  let autostart = false;
+  try {
+    autostart = sessionStorage.getItem(AUTOSTART_KEY) === "1";
+    if (autostart) sessionStorage.removeItem(AUTOSTART_KEY);
+  } catch (_) {}
+  if (autostart) {
+    if (startModal) startModal.classList.remove("show");
+    launch();
+  }
   requestAnimationFrame(loop);
 
   window.__r3d = {
