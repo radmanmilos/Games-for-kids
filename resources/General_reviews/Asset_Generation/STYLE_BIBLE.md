@@ -371,3 +371,75 @@ Those documents must refer to this style bible for visual requirements and must 
 
 ### Explicit scope gate
 Do not interpret this style document as approval to generate every candidate in the inventory. The inventory remains subject to semantic review and explicit user approval. Do not change game mechanics, replace existing character sprites, regenerate good existing illustrations without a reason, or convert real 3D Racing objects into 2D images.
+
+
+## 18. Style-locking loop: every approved image strengthens the standard
+
+The style bible is a **living, versioned standard**. Each explicitly approved image is a new piece of evidence about what Little Play's visual style means in practice. Approval must therefore do two jobs: approve that asset for its stated use, and capture any reusable visual lesson that the image demonstrates. The goal is progressive convergence: each batch should make future results more consistent and reduce ambiguity.
+
+### 18.1 What counts as evidence
+- **Primary evidence:** the canonical bear and star references, plus any other explicitly designated fixed reference.
+- **Approved exemplar:** a new image the user has explicitly approved for the intended use. It can demonstrate how the style applies to a category such as animals, food, plants, or objects.
+- **Candidate/WIP:** an image awaiting review. It may be useful for comparison, but it must not silently change the standard.
+- **Rejected or superseded candidate:** useful as a negative example only when the reason for rejection is recorded; it must not be used as a positive style reference.
+- A generated, uploaded, technically valid, or previously unreviewed image is **not** an approved exemplar.
+
+### 18.2 Required action after each explicit approval
+For every image the user explicitly approves:
+
+1. **Record the approval accurately** in the progress ledger, including the exact filename/asset ID, approval date or commit context where available, and approved scope. Do not infer approval from silence or from a request to continue.
+2. **Compare it against the fixed references and existing approved exemplars.** Identify which visual qualities it confirms and whether it introduces a genuinely useful category-specific lesson.
+3. **Update this style bible only with reusable findings.** Examples include a proven range of animal-head/body proportions, a successful level of feather simplification, how much grain survives at small size, a repeatable leaf shape, or a validated balance of warm highlights and edge shading.
+4. **Make the rule operational.** State what to repeat, where it applies, and what to avoid. Prefer observable guidance over subjective praise such as “cute” or “nice.”
+5. **Add the approved image to the exemplar index** below, with its category and the specific style lesson it establishes. Link to the exact repository file when possible.
+6. **Check for conflicts** with existing rules. If a new exemplar seems to contradict the standard, do not silently add both rules. Determine whether the difference is category-specific, a one-off approved exception, or a real art-direction change. Document the resolution.
+7. **Record the documentation change** in the same commit or a clearly linked follow-up commit where practical, so the image approval and its learned rule remain traceable.
+8. **Use the updated guidance on the next generation.** The next prompt/review must consider the relevant approved exemplars, not just repeat the original generic prompt.
+
+### 18.3 Keep the standard stable, not endlessly subjective
+- An approved image does not automatically rewrite the style. Extract only properties that are intentional, visible, reusable, and consistent with the fixed references.
+- Do not promote accidental artifacts, generation defects, background quirks, inconsistent linework, or technical compromises into style rules.
+- Do not generalize an animal-specific feature to fruit or objects unless the evidence supports that transfer.
+- If the user approves an image despite a style deviation, record whether approval is **asset-specific exception** or an intentional **style-standard change**. Ask for clarification when that distinction materially affects future work.
+- A single exemplar can establish a useful category rule, but repeated successful examples increase confidence. Mark tentative observations as provisional rather than writing them as mandatory rules.
+- Keep the bear and star as the fixed anchor references unless the user explicitly changes that decision. New exemplars refine application of the style; they do not replace the anchors by default.
+- Preserve previous decisions and explain material changes. Do not silently rewrite history or claim a rule was always part of the standard.
+
+### 18.4 Exemplar index
+
+Add an entry only after explicit approval. The index records what each image teaches; the repository image remains the actual visual evidence.
+
+| Asset ID / filename | Category | Approval status and evidence | Reusable lesson / scope | Exceptions or cautions |
+|---|---|---|---|---|
+| Canonical bear reference | Character / animal | Fixed style anchor, per project decision | Rounded character construction, warm brown paint, restrained face, cream muzzle and subtle blush | Do not redraw or replace the canonical reference |
+| Canonical star reference | Simple object / shape | Fixed style anchor, per project decision | Plump rounded points, golden warmth, restrained edge shading, plain faceless treatment | No face, outline, or decorative extras |
+| — | — | No additional approved exemplars recorded by this section yet | Add only after explicit approval and review | WIP bundle presence alone is not approval |
+
+As approvals accumulate, replace the placeholder with individually grounded entries. Do not fabricate approval dates, claims, or links. If the project records approval in another authoritative tracker, link to that evidence and keep the status consistent across documents.
+
+### 18.5 Per-asset learning record
+
+For each approved image, record a compact note in the progress tracker or linked review note:
+
+- **What matched:** observable features that fit the style.
+- **What was learned:** reusable rule or category-specific refinement.
+- **What should not be copied:** any one-off feature, artifact, or exception.
+- **Scale check:** what remains legible at actual in-game size.
+- **Standard impact:** no change / clarification / category-specific rule / approved exception / explicit art-direction change.
+- **Next-use instruction:** how the learning should affect the next prompt or review.
+
+The style bible should remain the consolidated source of truth; do not create multiple competing style guides. Detailed per-image evidence may live in the progress ledger or review notes, but any generally applicable style rule must be consolidated here.
+
+### 18.6 The convergence test
+
+Before starting each new batch, compare the planned prompt and prior approved exemplars against this checklist:
+
+- [ ] The fixed bear and star anchors are still respected.
+- [ ] Relevant approved category exemplars have been reviewed.
+- [ ] New learning from the previous approval has been applied.
+- [ ] No rejected candidate is being treated as a positive exemplar.
+- [ ] Any exception or conflict has been resolved and documented.
+- [ ] The prompt describes the actual subject and its essential identifying features, not just the style.
+- [ ] The review will judge both standalone quality and family consistency.
+
+After the batch, ask whether the result confirms the standard or exposes a genuine gap. If it exposes a gap, update the standard only after the user has approved the image or the underlying direction. The goal is not to make the document longer after every image; the goal is to make it more precise, evidence-based, and predictive.
