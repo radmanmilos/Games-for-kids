@@ -253,12 +253,12 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         return JSON.stringify({ stA, stE1, stE2, stB, stC, stLeft, rm });
     })()`);
     const stj = JSON.parse(steerCheck);
-    check('steering: wheels turn in + car drifts, car stops while wheels still return slowly, no side-drift, reverses',
+    check('steering: whole car hovers sideways + wheels turn in, glide stops while wheels still return, no side-drift, reverses',
         stj.stA.sp > 10 && stj.stA.yaw > 0.1 && stj.stA.lat > 0.3 &&
-        stj.stA.wheelYaw < -0.1 && stj.stA.byaw < -0.02 &&
+        stj.stA.wheelYaw < -0.1 && Math.abs(stj.stA.byaw) < 0.005 &&
         stj.stE1.yaw > 0.1 && stj.stE2.yaw > 0.07 && Math.abs(stj.stE2.lat - stj.stE1.lat) < 0.4 &&
         Math.abs(stj.stB.yaw) < 0.05 && Math.abs(stj.stC.lat - stj.stB.lat) < 0.15 &&
-        stj.stLeft.lat < stj.stC.lat - 0.5 && stj.stLeft.wheelYaw > 0.1 && stj.stLeft.byaw > 0.02, steerCheck);
+        stj.stLeft.lat < stj.stC.lat - 0.5 && stj.stLeft.wheelYaw > 0.1 && Math.abs(stj.stLeft.byaw) < 0.005, steerCheck);
 
     const pads = await h.evalv(`JSON.stringify(window.__r3d.boostPads())`);
     const pj = JSON.parse(pads);
@@ -312,8 +312,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         return JSON.stringify({ bankA, bankB, rm });
     })()`);
     const bkj = JSON.parse(bankCheck);
-    check('kart banks into the turn + wheels carry a spin pattern, then point forward on release',
-        bkj.bankA.spokes === 16 && bkj.bankA.roll > 0.15 && bkj.bankA.steerYaw > 0.1 &&
+    check('kart leans gently into the hover (body stays square) + wheels carry a spin pattern, then level on release',
+        bkj.bankA.spokes === 16 && bkj.bankA.roll > 0.08 && bkj.bankA.steerYaw > 0.1 &&
+        Math.abs(bkj.bankA.yaw) < 0.005 &&
         Math.abs(bkj.bankB.roll) < 0.05 && Math.abs(bkj.bankB.steerYaw) < 0.05 && Math.abs(bkj.bankB.yaw) < 0.05,
         bankCheck);
 

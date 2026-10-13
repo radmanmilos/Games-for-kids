@@ -11,12 +11,18 @@ const ROAD_WIDTH = 20;
 const ROAD_SEGMENTS = 360;
 const MAX_LATERAL = 9.6;
 const STEER_YAW_MAX = 0.45; // front-wheel steering angle at full lock
-// Body yaw at full lock, pivoted about the rear axle (task 212): the nose
-// sweeps into the turn while the rear stays planted, so holding a button reads
-// as TURNING to the side instead of the old pure-slide crab ("drifts, rear
-// tosses out"). Deliberately smaller than the wheel angle — the front wheels
-// visibly lead, the body follows.
-const BODY_YAW_MAX = 0.18;
+// Hovercraft steering (task 242): the WHOLE car glides sideways along the road
+// instead of yawing its nose into the turn. The steering IS the lateral hover —
+// the body stays square to the track (yawMax 0) and only leans gently into the
+// glide. Ramp rates default to the proven responsive feel and are tunable here.
+const HOVER = {
+  yawMax: 0, // body yaw about the rear axle (0 = whole car stays square)
+  bankMax: 0.12, // gentle lean into the hover (0 = perfectly level)
+  inRate: 8, // how fast the glide ramps up while a key is held
+  outRate: 10, // how fast it eases out on release (lower = more glide-out)
+  bobY: 0.05, // vertical hover-float amplitude (suppressed under reduced motion)
+  bobSpeed: 2.4, // hover-float angular speed (rad/s)
+};
 const LATERAL_GAIN = 26; // lateral speed per radian of front-wheel yaw
 const MAX_SPEED = 35;
 // Speed eases toward its target exponentially at this rate (per second). There
@@ -2339,40 +2345,42 @@ function main() {
     kartShadow.position.y = kart.position.y + 0.06;
     kartShadow.scale.set(2.7, 2.7, 1);
 
-    // Body yaw (task 212): the nose leads INTO the turn, pivoted about the
-    // rear axle so the rear stays planted — holding a button now reads as
-    // TURNING, not the old pure-slide crab. Sign: the kart's local +X is its
-    // LEFT, so a positive rotation.y would swing the nose away from the turn;
-    // negative yaw turns the nose toward the kart's right = the turn side on
-    // ArrowRight. Derived straight from the eased steerDrive (no extra state:
-    // inherits the 8-in/10-out easing and dies on release), so reset paths and
-    // the frame-timing test need no change.
-    kartYaw.rotation.y = -(steerDrive / STEER_YAW_MAX) * BODY_YAW_MAX;
+    // Hovercraft (task 242): the body stays SQUARE to the track — no nose-lead
+    // yaw. The steering motion is the whole-car lateral glide; a gentle lean
+    // turns it into a hover rather than a flat slide. Sign: the kart's local
+    // +X is its LEFT, so a positive rotation.z lifts the left side = leaning
+    // right = into the turn on ArrowRight. Derived straight from the eased
+    // steerDrive (no extra state: inherits the easing and dies on release).
+    kartYaw.rotation.y = -(steerDrive / STEER_YAW_MAX) * HOVER.yawMax;
     // front wheels turn in quickly; on release they slowly return to the middle
     if (steer !== 0) {
       steerYawValue +=
         (steer * STEER_YAW_MAX - steerYawValue) * (1 - Math.exp(-8 * dt));
       steerDrive +=
-        (steer * STEER_YAW_MAX - steerDrive) * (1 - Math.exp(-8 * dt));
+        (steer * STEER_YAW_MAX - steerDrive) *
+        (1 - Math.exp(-HOVER.inRate * dt));
     } else {
       steerYawValue += (0 - steerYawValue) * (1 - Math.exp(-2.8 * dt));
-      steerDrive += (0 - steerDrive) * (1 - Math.exp(-10 * dt));
+      steerDrive += (0 - steerDrive) * (1 - Math.exp(-HOVER.outRate * dt));
     }
     steerWheels.forEach((g) => {
       g.rotation.y = -steerYawValue;
     });
-    // bank the body with the drive (straightens up fast with the car; the
-    // kart stays where it is — no auto-center)
-    const targetLean = (steerDrive / STEER_YAW_MAX) * 0.22;
+    // gentle lean into the hover (straightens up fast with the car; the kart
+    // stays where it is — no auto-center)
+    const targetLean = (steerDrive / STEER_YAW_MAX) * HOVER.bankMax;
     leanValue += (targetLean - leanValue) * (1 - Math.exp(-10 * dt));
     kartLean.rotation.z = leanValue;
 
-    const bounce =
+    // the hull floats on a cushion of air: a slow vertical bob on top of the
+    // speed rumble (both suppressed under reduced motion)
+    const rumble =
       mode !== "countdown"
         ? Math.abs(Math.sin(now * 0.03 * (speed / MAX_SPEED + 0.4))) * 0.06 +
           (now < boostUntil ? 0.05 : 0)
         : 0;
-    kartBounce.position.y = REDUCED_MOTION ? 0 : bounce;
+    const hover = Math.sin(now * 0.001 * HOVER.bobSpeed) * HOVER.bobY;
+    kartBounce.position.y = REDUCED_MOTION ? 0 : rumble + hover;
     // wheels roll forward around their axle (radius 0.5): rotation.x, not y
     const wheelRoll = (speed / 0.5) * dt;
     wheelParts.forEach((p) => {
@@ -2554,7 +2562,7 @@ function main() {
       .add(
         new THREE.Vector3(
           REDUCED_MOTION ? 0 : -steer * 0.9 * (speed / MAX_SPEED),
-          6.0 + bounce * 2.0,
+          6.0 + rumble * 2.0,
           0,
         ),
       );
