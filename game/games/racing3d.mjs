@@ -1481,6 +1481,8 @@ function main() {
   let driftNow = false;
   let lastDt = 0.016;
   let skidAcc = 0;
+  let lastCamPull = 1;
+  let lastCamTargetDist = 0;
   let dustAcc = 0;
   let flameAcc = 0;
   let boostDustAcc = 0;
@@ -2569,22 +2571,29 @@ function main() {
     }
 
     // camera (dynamic bouncy chase cam: suspension bob + steer sway + hill crest + shake)
+    // On a phone in landscape the viewport is short, so a fixed-distance chase cam
+    // makes the kart read as "too far away" (task 247). Pull the whole rig in with
+    // the short viewport dimension so the kart keeps a readable on-screen size;
+    // portrait/tablet/desktop heights (>=700) keep the approved framing unchanged.
+    const camPull = Math.max(0.6, Math.min(1, window.innerHeight / 700));
+    lastCamPull = camPull;
     const camTarget = kart.position
       .clone()
-      .addScaledVector(tan, -12)
+      .addScaledVector(tan, -12 * camPull)
       .add(
         new THREE.Vector3(
           REDUCED_MOTION ? 0 : -steer * 0.9 * (speed / MAX_SPEED),
-          6.0 + rumble * 2.0,
+          (6.0 + rumble * 2.0) * camPull,
           0,
         ),
       );
-    camTarget.y = Math.max(camTarget.y, kart.position.y + 5.0);
+    camTarget.y = Math.max(camTarget.y, kart.position.y + 5.0 * camPull);
+    lastCamTargetDist = camTarget.distanceTo(kart.position);
     camera.position.lerp(camTarget, 1 - Math.exp(-4 * dt));
     const desired = kart.position
       .clone()
-      .addScaledVector(tan, 10)
-      .add(new THREE.Vector3(0, 1.5 + (speed / MAX_SPEED) * 0.4, 0));
+      .addScaledVector(tan, 10 * camPull)
+      .add(new THREE.Vector3(0, (1.5 + (speed / MAX_SPEED) * 0.4) * camPull, 0));
     lookTarget.lerp(desired, 1 - Math.exp(-6 * dt));
     const shake = Math.max(finishShake, rumbleShake);
     const lookPt = lookTarget
@@ -2930,6 +2939,13 @@ function main() {
         kartY: +kart.rotation.y.toFixed(3),
       };
     },
+    cameraInfo: () => ({
+      pull: +lastCamPull.toFixed(3),
+      dist: +camera.position.distanceTo(kart.position).toFixed(3),
+      target: +lastCamTargetDist.toFixed(3),
+      fov: +camera.fov.toFixed(2),
+      vh: window.innerHeight,
+    }),
     wheelPose: () => wheels.map((w) => [w.rotation.x, w.rotation.y]),
     spokes: () => studCount,
     steerState: () => ({

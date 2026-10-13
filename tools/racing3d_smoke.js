@@ -196,8 +196,29 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const R = JSON.parse(reach);
     check('short landscape (844x390): world + music buttons are the topmost element (not covered by a steering zone)',
         R.world === 'r3d-world-btn' && R.music === 'r3d-music-btn', reach);
+
+    // task 247: on a phone in landscape (short viewport) a fixed-distance chase cam
+    // made the kart read as "too far away", so the rig now pulls in with the short
+    // dimension (camPull = clamp(innerHeight/700, 0.6, 1)). Read the pull and the
+    // live camera TARGET distance one sim frame apart, so both samples share almost
+    // the same track point and the target ratio is exactly camPull (0.6 here). If
+    // the pull is not applied (or applied to the wrong place) the ratio is ~1 and
+    // this fails; the exact clamp values also pin the 700px knee.
+    const camShort = JSON.parse(await h.evalv(`(function(){
+        const r3d = window.__r3d; r3d.haltLoop(true); r3d.step(1/60);
+        const c = r3d.cameraInfo(); r3d.haltLoop(false); return JSON.stringify(c);
+    })()`));
     await h.c.send('Emulation.setDeviceMetricsOverride', { width: 1100, height: 700, deviceScaleFactor: 1, mobile: false });
     await sleep(300);
+    const camTall = JSON.parse(await h.evalv(`(function(){
+        const r3d = window.__r3d; r3d.haltLoop(true); r3d.step(1/60);
+        const c = r3d.cameraInfo(); r3d.haltLoop(false); return JSON.stringify(c);
+    })()`));
+    check('short landscape (390h): chase cam pulls in (camPull 0.6, target < 0.75x the 700h distance)',
+        camShort.pull === 0.6 && camShort.vh === 390 && camShort.target > 0 &&
+        camTall.pull === 1 && camTall.vh === 700 &&
+        camShort.target < camTall.target * 0.75,
+        JSON.stringify({ short: camShort, tall: camTall }));
 
     const cd = await h.evalv(`JSON.stringify({
         countdown: document.getElementById('r3d-countdown').textContent,

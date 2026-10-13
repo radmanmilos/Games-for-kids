@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-13T11:35:26.249Z
+- Генерисано / Generated: 2026-10-13T12:22:39.051Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -76,7 +76,7 @@
 | `piano_phone-portrait.png` | Клавир | `/pages/piano.html` | 390×844 | портрет | — | 12.10.2026. 11:52:29 | 240 |
 | `piano_tablet-landscape.png` | Клавир | `/pages/piano.html` | 1180×820 | пејзаж | — | 12.10.2026. 11:52:29 | 240 |
 | `piano_tablet-portrait.png` | Клавир | `/pages/piano.html` | 820×1180 | портрет | — | 12.10.2026. 11:52:29 | 240 |
-| `racing3d_phone-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 844×390 | пејзаж | — | 13.10.2026. 13:12:02 | 245 |
+| `racing3d_phone-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 844×390 | пејзаж | — | 13.10.2026. 14:22:39 | 247 |
 | `racing3d_phone-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 390×844 | портрет | — | 13.10.2026. 13:12:02 | 245 |
 | `racing3d_tablet-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 1180×820 | пејзаж | — | 13.10.2026. 13:12:02 | 245 |
 | `racing3d_tablet-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 820×1180 | портрет | — | 13.10.2026. 13:12:02 | 245 |
