@@ -1,5 +1,5 @@
 # Little Play — Illustration Style Bible
-## Canonical visual standard for the asset work-in-progress bundle
+## Single source of truth for illustration art direction, generation, approval, and handoff
 
 **Purpose:** This document defines the visual language to follow when creating new standalone illustrations for Little Play. The images already present in `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/` are the primary visual examples. This document translates their visible qualities into repeatable art-direction rules; it does not replace those images or grant production approval to any candidate asset.
 
@@ -308,3 +308,66 @@ This document defines style, not inventory approval. The existing source invento
 **Soft, warm, simple, tactile, recognizable, and consistent.**
 
 Every new illustration should feel like it was painted by the same gentle storybook illustrator who made the canonical bear and star. When deciding between adding detail and preserving clarity, choose clarity. When deciding between stronger effects and a quieter painted finish, choose the quieter finish. When uncertain, compare with the actual reference files rather than improvising a new style.
+
+
+---
+
+## 17. Production workflow, reuse, and implementation contract
+
+This section consolidates the operational rules that previously lived in `ART_DIRECTION.md`. This file is now the single authoritative document for illustration style and the associated asset workflow.
+
+### Canonical references and storage
+- Use the exact user-supplied bear and star files as fixed references; do not substitute similar images.
+- If the original reference files cannot be found in the working resources, request that they be added under `resources/General_reviews/Asset_Generation/references/`. Do not silently recreate them.
+- Preserve prompts, reference notes, generation decisions, and asset mapping documentation under `resources/General_reviews/Asset_Generation/`.
+- Keep generated candidates in the work-in-progress area until explicitly approved.
+- Put only explicitly approved runtime assets in the appropriate `game/assets/images/` subfolder.
+
+### Canvas, export, and offline operation
+- Default standalone-object canvas: **512×512 PNG**. Use 1024×1024 only when the intended display size or detail requirements justify it.
+- Production standalone objects should use optimized PNG with alpha transparency when supported and required by the runtime use case.
+- Keep the subject's proportions, leave comfortable padding, and ensure identifying parts are not clipped.
+- A white or warm off-white background is acceptable for WIP/style review when requested. Transparency is a runtime/implementation requirement where needed, not a reason to delay an illustration-only task.
+- Keep the application offline-first: do not add remote runtime image URLs or external runtime dependencies for artwork.
+
+### Canonical assets and reuse
+- Create one canonical asset per distinct concept, not a separate image for every game.
+- Reuse the same approved apple, star, flower, animal, or other object across games when its meaning, framing, and scale remain suitable.
+- Do not create arbitrary alternate poses, color variants, or duplicates unless a real gameplay or teaching distinction requires them.
+- Preserve suitable existing illustrations; this is a targeted replacement of selected emoji visuals, not a general repaint of the application.
+- Standard UI controls—back, arrows, sound, restart, play/pause, close, hints, and similar controls—should use a coherent SVG/CSS icon family or text where appropriate, not watercolor pictures by default.
+- Never create illustrations that replace the existing Explorer or Kitty character sprites/animation frames.
+- In 3D Racing, only eligible emoji glyphs/UI decorations may be considered. Preserve real 3D models, meshes, geometry, scenery, lighting, and rendering.
+
+### Approval workflow
+1. Verify the asset's ID, meaning, actual source/render location, and inventory status before generation.
+2. Generate one asset at a time or a small, reviewable batch; do not generate speculative inventory rows as if already approved.
+3. Compare every candidate with the exact bear and star references and the closest related image in the WIP bundle.
+4. Inspect at full size and at actual or representative in-game display sizes; test against relevant backgrounds when available.
+5. Record objective observations and remaining issues in the progress tracker.
+6. Mark a candidate approved only after explicit user review. Generation, upload, inclusion in the bundle, or technical validity is not approval.
+7. Save the final prompt/reference notes and file mapping for approved assets.
+8. Only after approval, prepare the runtime export and implementation mapping.
+
+### Required handoff record for every approved asset
+- Stable asset ID and agreed filename.
+- Image dimensions and file format; alpha/transparency status when relevant.
+- Exact source glyph(s) or existing visual being replaced.
+- Exact game/component and source location(s) where it is used.
+- Intended runtime destination under `game/assets/images/`.
+- Approved prompt and reference notes.
+- Reuse plan across games, including any scale/framing caveats.
+- Cropping, scaling, animation, or background notes where relevant.
+- QA status and outstanding caveats.
+
+### Implementation AI contract
+The implementation phase must map approved asset IDs only to the agreed render sites. It must preserve layout, gameplay, accessibility, and behavior; avoid inventing or altering artwork; avoid replacing excluded sprites, existing good illustrations, or 3D content; update offline/cache manifests where required; and test each affected game. Any uncertainty about a mapping or the semantic role of an emoji must be resolved against the source inventory rather than guessed.
+
+### Relationship to the inventory and progress tracker
+This style bible defines the single source of truth for **visual style and asset workflow**. It does not replace the separate semantic inventory of candidate emoji/render sites or the progress ledger:
+- `ASSET_INVENTORY.md` records candidate assets, source use sites, semantic treatment, and review status.
+- `PROGRESS.md` records audit, approval, generation, QA, and implementation progress.
+Those documents must refer to this style bible for visual requirements and must not maintain a competing copy of the style rules.
+
+### Explicit scope gate
+Do not interpret this style document as approval to generate every candidate in the inventory. The inventory remains subject to semantic review and explicit user approval. Do not change game mechanics, replace existing character sprites, regenerate good existing illustrations without a reason, or convert real 3D Racing objects into 2D images.
