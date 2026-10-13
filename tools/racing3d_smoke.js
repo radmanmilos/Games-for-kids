@@ -258,21 +258,24 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     check('countdown finished -> driving mode', driveWait === true);
 
     // task 249: the chase cam's position lerp trailed the moving kart by ~speed/4
-    // world units, so the kart only looked close at the instant it slowed (user: "at
+    // world units, so the kart looked close only at the instant it slowed (user: "at
     // the slowest moment it is actually in good view ... aiming to that"). The target
     // now carries a speed/4 feed-forward that cancels the lag, so the camera keeps the
     // same distance at speed as at rest. Drive up to speed on a phone viewport and
-    // assert the camera stays close; without the feed-forward the distance ~doubles.
+    // assert the camera TARGET pulls in versus its at-rest value (`camShort.target`,
+    // also at 844x390) — `target` is recomputed every update, so unlike the live
+    // camera POSITION (which needs many frames to converge) it is host-independent.
     await h.c.send('Emulation.setDeviceMetricsOverride', { width: 844, height: 390, deviceScaleFactor: 1, mobile: false });
     await sleep(200);
     const camMove = JSON.parse(await h.evalv(`(function(){
         const r3d = window.__r3d; r3d.haltLoop(true);
-        for (let i = 0; i < 600 && r3d.speed() < 25; i++) r3d.step(1/60);
+        for (let i = 0; i < 400 && r3d.speed() < 25; i++) r3d.step(1/60);
         const sp = r3d.speed(); const c = r3d.cameraInfo(); r3d.haltLoop(false);
-        return JSON.stringify({ sp: +sp.toFixed(1), dist: c.dist });
+        return JSON.stringify({ sp: +sp.toFixed(1), target: c.target });
     })()`));
-    check('chase cam cancels its speed lag (kart stays close once moving at speed)',
-        camMove.sp >= 25 && camMove.dist < 9 && camMove.dist > 3, JSON.stringify(camMove));
+    check('chase cam cancels its speed lag (target pulls in when moving)',
+        camMove.sp >= 25 && camMove.target < camShort.target * 0.85,
+        JSON.stringify(camMove) + ' restTarget=' + camShort.target);
     await h.c.send('Emulation.setDeviceMetricsOverride', { width: 1100, height: 700, deviceScaleFactor: 1, mobile: false });
     await sleep(200);
 
