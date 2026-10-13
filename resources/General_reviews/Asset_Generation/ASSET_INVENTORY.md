@@ -25,7 +25,7 @@
 The rows below are based on actual glyphs/emoji fields found in current `game/` source. The same concept is consolidated where practical. **“Review” means the user must decide whether to replace it with a storybook image, retain it as an icon, or remove it.** This is not a request to generate every row.
 
 | ID | Current glyph / visual | Confirmed source location(s) | Current purpose | Proposed treatment | Status  | Existing WIP asset file/location | Production-ready asset file/location |
-|---|---|---|---|---|--- | --- | --- |
+|---|---|---|---|---|---|---|---|
 | animal-dog | 🐶 | `game/games/animals.js`, `animal_counting.js`, `candy.js`, `spatial.js`, `sorting.js` | Animal flashcard/counting, candy game's animal set, spatial scene, sorting item | One shared simple dog PNG for all object/animal-card uses | REVIEW  | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/dog.png` | — |
 | animal-cat | 🐱 | `game/games/animals.js`, `animal_counting.js`, `sorting.js` | Animal flashcard/counting and sorting item | One shared simple cat PNG | REVIEW  | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cat.png` | — |
 | animal-cow | 🐮 / 🐄; 🐄 | `game/games/animals.js`, `animal_counting.js`, `candy.js`, `animal_puzzle.js`, `racing-config.js`, `game/data/serbian.js`; `animal_puzzle.js`, racing decor | Animal flashcard/counting, candy set, farm puzzle/scenery, Serbian phonics; Farm puzzle and scenery | One canonical cow illustration; confirm it reads clearly at card and scenery sizes | REVIEW  | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cow.png` | — |
@@ -73,7 +73,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 ## Additional source-confirmed candidates from the expanded all-pages audit
 
 | ID | Current glyph / visual | Confirmed source location(s) | Current purpose | Proposed treatment | Status  | Existing WIP asset file/location | Production-ready asset file/location |
-|---|---|---|---|---|--- | --- | --- |
+|---|---|---|---|---|---|---|---|
 | object-car | 🚗 | `game/data/serbian.js`, `game/index.html`, driving favicon | Serbian phonics object and hub tile/icon | Reuse existing driving-car illustration if visually appropriate; favicon/UI may remain icon | REVIEW  | — | — |
 | food-banana | 🍌 | `game/data/serbian.js`, Kitty collectible themes | Phonics vocabulary and collectible theme | One shared banana asset | REVIEW  | — | — |
 | animal-wolf | 🐺 | `game/data/serbian.js` | Serbian phonics picture | Simple wolf asset | REVIEW  | — | — |
