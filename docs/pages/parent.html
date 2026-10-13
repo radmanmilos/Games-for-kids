@@ -384,6 +384,40 @@
       // not yet re-cached. Drives the "Ажурирано" confirmation after the update.
       let pendingUpdate = false;
 
+      // R20: a long «Преузми за офлајн рад» run can be killed out from under the
+      // page. The worker is kept alive by waitUntil (sw.js), but a backgrounded
+      // tab, a sleeping tablet, or a browser that still reaps the worker can stop
+      // the cache-progress stream mid-run — the bar then freezes forever and the
+      // button stays locked, which is the reported "stuck" bug. This watchdog
+      // turns that stall into a self-heal: while a download is in flight, if no
+      // progress arrives for CACHE_STALL_MS the page re-issues cacheAll. The
+      // worker resumes, files already stored come back cheaply, and the run
+      // continues from where it stopped. cache-progress resets the clock;
+      // cache-complete/cache-error (or a new click) clears it.
+      let cacheWorker = null;
+      let cacheStallTimer = null;
+      let cacheStallMs = 30000;
+      const clearCacheWatchdog = () => {
+        if (cacheStallTimer) { clearTimeout(cacheStallTimer); cacheStallTimer = null; }
+      };
+      const armCacheWatchdog = () => {
+        clearCacheWatchdog();
+        cacheStallTimer = setTimeout(() => {
+          if (!cacheWorker) return;
+          cacheWorker.postMessage({ cmd: 'cacheAll' });
+          armCacheWatchdog();
+        }, cacheStallMs);
+      };
+      // Test hook (mirrors window.__parentGate / window.__parentProgress): lets
+      // the smoke drive the watchdog against a stub worker without a real stall.
+      window.__parentCache = {
+        setWorker: (w) => { cacheWorker = w; },
+        arm: armCacheWatchdog,
+        clear: () => { cacheWorker = null; clearCacheWatchdog(); },
+        isArmed: () => !!cacheStallTimer,
+        setStallMs: (ms) => { cacheStallMs = ms; },
+      };
+
       // Download / update offline copy
       downloadBtn.addEventListener('click', async () => {
         downloadBtn.disabled = true;
@@ -393,7 +427,9 @@
           if ('serviceWorker' in navigator) {
             const reg = await navigator.serviceWorker.ready;
             if (reg.active) {
-              reg.active.postMessage({ cmd: 'cacheAll' });
+              cacheWorker = reg.active;
+              cacheWorker.postMessage({ cmd: 'cacheAll' });
+              armCacheWatchdog();
             } else {
               hideProgress();
               status.textContent = 'Сервис још није спреман';
@@ -465,9 +501,12 @@
         navigator.serviceWorker.addEventListener('message', (e) => {
           const data = e.data || {};
           if (data.type === 'cache-progress') {
+            armCacheWatchdog();
             showProgress(data.completed || 0, data.total || 0);
           }
           if (data.type === 'cache-complete') {
+            cacheWorker = null;
+            clearCacheWatchdog();
             hideProgress();
             if (pendingUpdate) {
               status.textContent = 'Ажурирано';
@@ -503,6 +542,8 @@
             checkBtn.disabled = false;
           }
           if (data.type === 'cache-error') {
+            cacheWorker = null;
+            clearCacheWatchdog();
             hideProgress();
             status.textContent = 'Грешка при преузимању: ' + (data.message || 'непознато');
             downloadBtn.disabled = false;

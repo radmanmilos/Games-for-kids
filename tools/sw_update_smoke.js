@@ -165,6 +165,20 @@ const mkManifest = entries => JSON.stringify(
   t('after re-caching an identical manifest, updates report 0 changes again',
     r4 && r4.changed === 0, JSON.stringify(r4).slice(0, 200));
 
+  /* --- R20: the worker must keep a cache-all alive across its whole run. This is
+     a deliberate SOURCE-level guard: the failure it prevents (the browser reaping
+     the worker mid-download, freezing the parent's progress bar) is caused by the
+     worker having no waitUntil, and headless Chrome keeps an idle worker alive
+     long enough that a missing waitUntil still finishes here — so no behavioural
+     check in this harness can observe it. */
+  const swSrc = fs.readFileSync(path.join(GAME, 'sw.js'), 'utf8');
+  t('sw.js keeps cacheAll alive via event.waitUntil (worker cannot be reaped mid-run)',
+    /event\.waitUntil\(\s*cacheAllAssets\(/.test(swSrc), 'event.waitUntil(cacheAllAssets(...)) present');
+  t('sw.js keeps checkForUpdates alive via event.waitUntil',
+    /event\.waitUntil\(\s*checkForUpdates\(/.test(swSrc), 'event.waitUntil(checkForUpdates(...)) present');
+  t('sw.js allows only one cache-all in flight at a time',
+    /cacheInFlight/.test(swSrc), 'cacheInFlight guard present');
+
   await h.close();
   server.close();
 

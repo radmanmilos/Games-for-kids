@@ -342,6 +342,62 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     (JSON.parse(await barState()).hidden === true) && /Грешка при преузимању/.test(s),
     JSON.stringify({ status: s }));
 
+  // R20: a stalled cache-all must unstick itself. The worker can be reaped
+  // mid-run (backgrounded tab / sleeping tablet), which used to freeze the bar and
+  // lock the button forever. The page now arms a stall watchdog on the download
+  // and re-issues cacheAll when progress stops.
+  // (a) A worker must be live before the click can aim at it. `ready` is the
+  //     same promise the button awaits, so it is the honest precondition; a
+  //     `getRegistration().active` poll would false-fail while the ~250-file
+  //     install precache is still running (registration exists, `.active` null).
+  const swReady = await h.evalp(`(async () => { const r = await navigator.serviceWorker.ready; return (r && r.active) ? 'yes' : 'no'; })()`);
+  check('R20: a live service worker is available to the parent page', swReady === 'yes');
+
+  // (b) Clicking «Преузми» arms the watchdog (aimed at the live worker). The
+  //     message is swallowed so the real worker does not start a full cache run —
+  //     we are testing the page's wiring, not the download itself.
+  await h.evalv(`(function(){
+    window.__swPost = ServiceWorker.prototype.postMessage;
+    window.__posts = 0;
+    ServiceWorker.prototype.postMessage = function(){ window.__posts++; };
+    document.getElementById('download-offline').click();
+    return true;
+  })()`);
+  await sleep(300);
+  const armed = JSON.parse(await h.evalv(`JSON.stringify({
+    posts: window.__posts,
+    armed: window.__parentCache.isArmed(),
+    busy: document.getElementById('download-offline').disabled
+  })`));
+  check('R20: starting the download arms the stall watchdog against the live worker',
+    armed.posts >= 1 && armed.armed === true && armed.busy === true, JSON.stringify(armed));
+
+  // (c) With no further progress, the watchdog re-issues cacheAll by itself.
+  await h.evalv(`(function(){
+    window.__nudges = 0;
+    window.__parentCache.setStallMs(200);
+    window.__parentCache.setWorker({ postMessage: function(){ window.__nudges++; } });
+    window.__parentCache.arm();
+    return true;
+  })()`);
+  await sleep(750);
+  const nudges = await h.evalv(`window.__nudges`);
+  check('R20: a stalled download is re-issued automatically (the bar unsticks itself)',
+    nudges >= 2, 'nudges=' + nudges);
+
+  // (d) Completing the download clears the watchdog and unlocks the button.
+  await fake({ type: 'cache-progress', completed: 10, total: 208 });
+  await fake({ type: 'cache-complete', total: 208, skipped: [] });
+  const cleared = JSON.parse(await h.evalv(`JSON.stringify({
+    armed: window.__parentCache.isArmed(),
+    busy: document.getElementById('download-offline').disabled
+  })`));
+  check('R20: completing the download clears the watchdog and unlocks the button',
+    cleared.armed === false && cleared.busy === false, JSON.stringify(cleared));
+
+  // restore the real postMessage for anything after this
+  await h.evalv(`if (window.__swPost) ServiceWorker.prototype.postMessage = window.__swPost; true`);
+
   // The audio test should actually produce a running audio context.
   await h.evalv(`document.getElementById('audio-test').click(); true`);
   await sleep(600);

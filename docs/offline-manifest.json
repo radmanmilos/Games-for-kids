@@ -896,8 +896,8 @@
     "size": 4642
   },
   "pages/parent.html": {
-    "sha256": "2bad19448c7461e44c3380b5c3156c0a6b2db9b86c7f541d71f36a50746f7e98",
-    "size": 28198
+    "sha256": "a8bd0cfa8b4c1e46cb393379b14014afff3ccd3e25e81ce05f5dd4c7ea2f832c",
+    "size": 30191
   },
   "pages/phonics.html": {
     "sha256": "c64ae3f569adafe11dad4a7459b444819b20aaeb7a0901c6865a4b5bbff7b750",
@@ -1016,7 +1016,7 @@
     "size": 8290
   },
   "sw.js": {
-    "sha256": "cb988a394d0d5515fd0966cc745f2f78a6b3e32aac0e4d6a96548ad2f66917b1",
-    "size": 7406
+    "sha256": "1786145e516a5cc58b210c622e265697a23ba3b49726ab54a5705724c4ed64b6",
+    "size": 8706
   }
 }

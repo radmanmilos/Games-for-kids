@@ -89,11 +89,20 @@ self.addEventListener('fetch', event => {
 // message API: { cmd: 'cacheAll' } or { cmd: 'checkForUpdates' }
 self.addEventListener('message', event => {
   const data = event.data || {};
+  // waitUntil is NOT optional here. A service worker only lives as long as the
+  // event that woke it: with no promise passed to waitUntil/respondWith, the
+  // browser treats the message event as finished the moment this handler returns
+  // and is free to terminate the worker mid-run. On a tablet that is exactly what
+  // happened — the worker was shut down partway through cacheAllAssets, so the
+  // last cache-progress and the final cache-complete simply never arrived and the
+  // parent's «Преузми за офлајн рад» progress bar froze forever, forcing a restart
+  // from file 0. Passing the run to waitUntil keeps the worker (and therefore the
+  // progress stream) alive until it finishes.
   if (data.cmd === 'cacheAll') {
-    cacheAllAssets(event.source || event.target);
+    event.waitUntil(cacheAllAssets(event.source || event.target));
   }
   if (data.cmd === 'checkForUpdates') {
-    checkForUpdates(event.source || event.target);
+    event.waitUntil(checkForUpdates(event.source || event.target));
   }
 });
 
@@ -127,7 +136,17 @@ async function addWithTimeout(cache, url, timeoutMs = FETCH_TIMEOUT_MS, retries 
   return false;
 }
 
+let cacheInFlight = false;
+
 async function cacheAllAssets(sourceClient) {
+  // A cache-all is a long run. Two at once (e.g. a page's stall watchdog
+  // re-issuing while a live run is merely slow) would double the work, so only
+  // one may be in flight per worker lifetime. Module state is fine for this: a
+  // worker that was killed and restarted starts with the flag false — which is
+  // exactly the case the watchdog is recovering from, so the resume is not
+  // blocked by a stale lock.
+  if (cacheInFlight) return;
+  cacheInFlight = true;
   try {
     const res = await fetch(CACHE_LIST_URL);
     const list = await res.json();
@@ -143,6 +162,8 @@ async function cacheAllAssets(sourceClient) {
     await postToAllClients({ type: 'cache-complete', total: list.length, skipped });
   } catch (e) {
     await postToAllClients({ type: 'cache-error', message: String(e) });
+  } finally {
+    cacheInFlight = false;
   }
 }
 
