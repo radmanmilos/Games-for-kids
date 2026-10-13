@@ -2349,7 +2349,10 @@ function main() {
     }
 
     kart.position.copy(p).addScaledVector(right, lateral);
-    kart.lookAt(p.clone().add(tan));
+    // aim along the road tangent FROM the kart's own (offset) position — aiming
+    // at p+tan from a laterally-offset kart skewed the heading by up to ~84°
+    // (task 245), which read as the rear "sliding" and never realigning.
+    kart.lookAt(kart.position.clone().add(tan));
     kartShadow.position.copy(kart.position);
     kartShadow.position.y = kart.position.y + 0.06;
     kartShadow.scale.set(2.7, 2.7, 1);
@@ -2913,6 +2916,19 @@ function main() {
     seekLateral: (v) => {
       lateral = clamp(v, -MAX_LATERAL, MAX_LATERAL);
       return lateral;
+    },
+    kartInfo: () => {
+      const f = new THREE.Vector3();
+      kart.getWorldDirection(f);
+      const gt = curve.getTangentAt(progress);
+      const flatF = new THREE.Vector3(f.x, 0, f.z).normalize();
+      const flatT = new THREE.Vector3(gt.x, 0, gt.z).normalize();
+      return {
+        alignDot: +flatF.dot(flatT).toFixed(3),
+        lat: +lateral.toFixed(2),
+        bodyYaw: +kartYaw.rotation.y.toFixed(3),
+        kartY: +kart.rotation.y.toFixed(3),
+      };
     },
     wheelPose: () => wheels.map((w) => [w.rotation.x, w.rotation.y]),
     spokes: () => studCount,

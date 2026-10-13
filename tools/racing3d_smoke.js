@@ -262,6 +262,31 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         Math.abs(stj.stLeft.byaw) > 0.1 && stj.stA.byaw * stj.stLeft.byaw < 0 &&
         Math.abs(stj.stB.byaw) < 0.02, steerCheck);
 
+    // task 245: the kart's heading must follow the ROAD, not its lateral offset.
+    // The old `kart.lookAt(p + tan)` aimed from the centerline point, so a kart
+    // that had slid aside pointed up to ~84 deg toward the centre (alignDot
+    // ~0.10 at lat 9.6) and never realigned while the offset persisted.
+    const aimCheck = await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.haltLoop(true);
+        const offs = [0, 3, 6, 9.6, -6, -9.6];
+        const out = [];
+        for (const lat of offs) {
+            r3d.seekLateral(lat);
+            r3d.step(1 / 60);
+            const k = r3d.kartInfo();
+            out.push({ lat: k.lat, dot: k.alignDot });
+        }
+        r3d.seekLateral(0);
+        r3d.resetSteerState(0, 0, 0);
+        r3d.haltLoop(false);
+        return JSON.stringify(out);
+    })()`);
+    const amj = JSON.parse(aimCheck);
+    check('kart heading stays road-aligned at every lane offset (no sideways skew while gliding)',
+        amj.length === 6 && amj.every(s => s.dot > 0.99) &&
+        amj.some(s => s.lat >= 9) && amj.some(s => s.lat <= -9), aimCheck);
+
     const pads = await h.evalv(`JSON.stringify(window.__r3d.boostPads())`);
     const pj = JSON.parse(pads);
     check('boost pads spawned on road lanes (6 pads, within road width)',
