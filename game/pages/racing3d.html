@@ -45,8 +45,10 @@
         #r3d-world { top: 12px; right: 16px; font-size: 17px; }
         #r3d-round { top: 62px; right: 16px; font-size: 15px; }
         /* --- Race-track mini-map (loop + live running position) --- */
+        /* Sits in the top-left column under the «Поени»/«🌸» pills, NOT centred —
+           centred it covered the road right where the kart drives (task 249). */
         #r3d-map {
-            position: absolute; top: 10vmin; left: 50%; transform: translateX(-50%);
+            position: absolute; top: 112px; left: 16px;
             z-index: 10; pointer-events: none; width: 21vmin; height: 21vmin;
             max-width: 230px; max-height: 230px;
             background: #FFF8ED; border-radius: 16px; border: 4px solid #FFD23F;
@@ -82,8 +84,10 @@
             display: flex; align-items: center; justify-content: center;
             touch-action: none;
         }
-        #r3d-zone-left { left: 0; }
-        #r3d-zone-right { right: 0; }
+        /* Push the steering buttons out toward the screen edges so they do not sit
+           under the kart (task 249); the padding keeps them off the bezel. */
+        #r3d-zone-left { left: 0; justify-content: flex-start; padding-left: 4vmin; }
+        #r3d-zone-right { right: 0; justify-content: flex-end; padding-right: 4vmin; }
         .r3d-zone .r3d-btn {
             width: 120px; height: 120px; border-radius: 50%;
             border: 6px solid #fff; display: flex; align-items: center; justify-content: center;
@@ -201,6 +205,8 @@
             #r3d-kart-row { gap: 8px; margin-bottom: 4px; }
             .r3d-kart-swatch { width: 40px; height: 40px; }
             .r3d-restart-btn { padding: 10px 30px; font-size: 16px; line-height: 1.1; }
+            /* keep the minimap above the (edge-pushed) steering button on a 390h phone */
+            #r3d-map { top: 106px; width: 16vmin; height: 16vmin; }
         }
     </style>
 </head>

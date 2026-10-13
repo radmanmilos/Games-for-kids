@@ -804,8 +804,8 @@
     "size": 4817
   },
   "games/racing3d.mjs": {
-    "sha256": "92970183b15ef38c5893d39f49dd46d45d9926125ef90ae3651d81302503b8e4",
-    "size": 102233
+    "sha256": "0d19277a0d9b4bf2787e9ac193ba0a982aafe221070947f77a06f2517e6c2da1",
+    "size": 102413
   },
   "games/rhythm.js": {
     "sha256": "5ef69557e33be41bc6df7d825b0bdfab0d96a00eb44b747e4f403157d3211bd7",
@@ -840,7 +840,7 @@
     "size": 16627
   },
   "manifest.json": {
-    "sha256": "55d61750e87b1dd9e68076f8a886f91745cea0e06a2cb67105c3102029b3d487",
+    "sha256": "6b8185e2fced202b39abcbaee7fdffc701155c8b72c11351025e6dd9f500443b",
     "size": 577
   },
   "pages/animal_counting.html": {
@@ -908,8 +908,8 @@
     "size": 12529
   },
   "pages/racing3d.html": {
-    "sha256": "b58cba2b068c9267cafd03d1fbcfd13a3d4ac33ea4da2a0e75f69be75205cc10",
-    "size": 17311
+    "sha256": "0b6bece2349ace70df301492e4e075a6ef542f6b599cc7f179aa5ea233bb3f69",
+    "size": 17881
   },
   "pages/rhythm.html": {
     "sha256": "c30b4d946ac1f02a64d6d5aa79a557812b8be9ad0c5030fc99bfe83ebdbeb336",

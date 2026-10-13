@@ -2582,7 +2582,7 @@ function main() {
     lastCamPull = camPull;
     const camTarget = kart.position
       .clone()
-      .addScaledVector(tan, -12 * camPull)
+      .addScaledVector(tan, -12 * camPull + speed / 4)
       .add(
         new THREE.Vector3(
           REDUCED_MOTION ? 0 : -steer * 0.9 * (speed / MAX_SPEED),
@@ -2593,10 +2593,12 @@ function main() {
     camTarget.y = Math.max(camTarget.y, kart.position.y + 5.0 * camRise);
     lastCamTargetDist = camTarget.distanceTo(kart.position);
     camera.position.lerp(camTarget, 1 - Math.exp(-4 * dt));
+    // Look further ahead and higher so the camera pitches UP and shows more road
+    // instead of staring down at the kart (task 249: "too much focused on the car").
     const desired = kart.position
       .clone()
-      .addScaledVector(tan, 10 * camPull)
-      .add(new THREE.Vector3(0, (1.5 + (speed / MAX_SPEED) * 0.4) * camPull, 0));
+      .addScaledVector(tan, 11 * camPull)
+      .add(new THREE.Vector3(0, (2.8 + (speed / MAX_SPEED) * 0.4) * camPull, 0));
     lookTarget.lerp(desired, 1 - Math.exp(-6 * dt));
     const shake = Math.max(finishShake, rumbleShake);
     const lookPt = lookTarget

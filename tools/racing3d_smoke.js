@@ -197,6 +197,26 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     check('short landscape (844x390): world + music buttons are the topmost element (not covered by a steering zone)',
         R.world === 'r3d-world-btn' && R.music === 'r3d-music-btn', reach);
 
+    // task 249: the minimap was centred at the top and covered the road right where
+    // the kart drives; it now lives in the top-left column under the score pills. The
+    // steering buttons were centred in each half (barely a quarter-width from the
+    // edge), which read as "too close to the kart"; they are pushed to the edges.
+    // Assert the geometry — a click-driven smoke passes with any of this still wrong.
+    const hud = JSON.parse(await h.evalv(`JSON.stringify((() => {
+        const r = id => { const b = document.getElementById(id).getBoundingClientRect();
+            return { left: b.left, right: b.right, top: b.top, bottom: b.bottom,
+                     cx: (b.left + b.right) / 2, cy: (b.top + b.bottom) / 2 }; };
+        return { w: window.innerWidth, h: window.innerHeight,
+                 map: r('r3d-map'), left: r('r3d-left'), right: r('r3d-right') };
+    })())`));
+    check('short landscape: minimap sits in the top-left (clear of the road view)',
+        hud.map.right < hud.w * 0.33 && hud.map.top > 0 && hud.map.top < 160,
+        JSON.stringify(hud.map) + ' w=' + hud.w);
+    check('short landscape: steering buttons are pushed to the screen edges (off the kart)',
+        hud.left.cx < hud.w * 0.2 && hud.right.cx > hud.w * 0.8 &&
+        hud.left.left >= 0 && hud.right.right <= hud.w && hud.left.cy > hud.map.bottom,
+        JSON.stringify({ left: hud.left, right: hud.right, mapBottom: hud.map.bottom }));
+
     // task 247: on a phone in landscape (short viewport) a fixed-distance chase cam
     // made the kart read as "too far away", so the rig now pulls in with the short
     // dimension (camPull = clamp(innerHeight/700, 0.6, 1)). Read the pull and the
@@ -236,6 +256,25 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         if (!driveWait) await sleep(200);
     }
     check('countdown finished -> driving mode', driveWait === true);
+
+    // task 249: the chase cam's position lerp trailed the moving kart by ~speed/4
+    // world units, so the kart only looked close at the instant it slowed (user: "at
+    // the slowest moment it is actually in good view ... aiming to that"). The target
+    // now carries a speed/4 feed-forward that cancels the lag, so the camera keeps the
+    // same distance at speed as at rest. Drive up to speed on a phone viewport and
+    // assert the camera stays close; without the feed-forward the distance ~doubles.
+    await h.c.send('Emulation.setDeviceMetricsOverride', { width: 844, height: 390, deviceScaleFactor: 1, mobile: false });
+    await sleep(200);
+    const camMove = JSON.parse(await h.evalv(`(function(){
+        const r3d = window.__r3d; r3d.haltLoop(true);
+        for (let i = 0; i < 600 && r3d.speed() < 25; i++) r3d.step(1/60);
+        const sp = r3d.speed(); const c = r3d.cameraInfo(); r3d.haltLoop(false);
+        return JSON.stringify({ sp: +sp.toFixed(1), dist: c.dist });
+    })()`));
+    check('chase cam cancels its speed lag (kart stays close once moving at speed)',
+        camMove.sp >= 25 && camMove.dist < 9 && camMove.dist > 3, JSON.stringify(camMove));
+    await h.c.send('Emulation.setDeviceMetricsOverride', { width: 1100, height: 700, deviceScaleFactor: 1, mobile: false });
+    await sleep(200);
 
     // Frame-rate independent by construction. This used to hold the key and
     // `await sleep(N)`, which only works if a frame costs less than the 50ms dt

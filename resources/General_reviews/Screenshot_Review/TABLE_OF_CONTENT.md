@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-13T12:49:11.513Z
+- Генерисано / Generated: 2026-10-13T14:46:57.405Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -64,10 +64,10 @@
 | `ocean_phone-portrait.png` | Океан | `/pages/ocean.html` | 390×844 | портрет | — | 12.10.2026. 11:52:29 | 240 |
 | `ocean_tablet-landscape.png` | Океан | `/pages/ocean.html` | 1180×820 | пејзаж | — | 12.10.2026. 11:52:29 | 240 |
 | `ocean_tablet-portrait.png` | Океан | `/pages/ocean.html` | 820×1180 | портрет | — | 12.10.2026. 11:52:29 | 240 |
-| `parent_phone-landscape.png` | За родитеље | `/pages/parent.html` | 844×390 | пејзаж | — | 13.10.2026. 14:49:11 | 248 |
-| `parent_phone-portrait.png` | За родитеље | `/pages/parent.html` | 390×844 | портрет | — | 13.10.2026. 14:49:11 | 248 |
-| `parent_tablet-landscape.png` | За родитеље | `/pages/parent.html` | 1180×820 | пејзаж | — | 13.10.2026. 14:49:11 | 248 |
-| `parent_tablet-portrait.png` | За родитеље | `/pages/parent.html` | 820×1180 | портрет | — | 13.10.2026. 14:49:11 | 248 |
+| `parent_phone-landscape.png` | За родитеље | `/pages/parent.html` | 844×390 | пејзаж | — | 13.10.2026. 16:46:57 | 249 |
+| `parent_phone-portrait.png` | За родитеље | `/pages/parent.html` | 390×844 | портрет | — | 13.10.2026. 16:46:57 | 249 |
+| `parent_tablet-landscape.png` | За родитеље | `/pages/parent.html` | 1180×820 | пејзаж | — | 13.10.2026. 16:46:57 | 249 |
+| `parent_tablet-portrait.png` | За родитеље | `/pages/parent.html` | 820×1180 | портрет | — | 13.10.2026. 16:46:57 | 249 |
 | `phonics_phone-landscape.png` | Слова и звуци | `/pages/phonics.html` | 844×390 | пејзаж | — | 12.10.2026. 11:52:29 | 240 |
 | `phonics_phone-portrait.png` | Слова и звуци | `/pages/phonics.html` | 390×844 | портрет | — | 12.10.2026. 11:52:29 | 240 |
 | `phonics_tablet-landscape.png` | Слова и звуци | `/pages/phonics.html` | 1180×820 | пејзаж | — | 12.10.2026. 11:52:29 | 240 |
@@ -76,10 +76,10 @@
 | `piano_phone-portrait.png` | Клавир | `/pages/piano.html` | 390×844 | портрет | — | 12.10.2026. 11:52:29 | 240 |
 | `piano_tablet-landscape.png` | Клавир | `/pages/piano.html` | 1180×820 | пејзаж | — | 12.10.2026. 11:52:29 | 240 |
 | `piano_tablet-portrait.png` | Клавир | `/pages/piano.html` | 820×1180 | портрет | — | 12.10.2026. 11:52:29 | 240 |
-| `racing3d_phone-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 844×390 | пејзаж | — | 13.10.2026. 14:48:37 | 248 |
-| `racing3d_phone-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 390×844 | портрет | — | 13.10.2026. 13:12:02 | 245 |
-| `racing3d_tablet-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 1180×820 | пејзаж | — | 13.10.2026. 13:12:02 | 245 |
-| `racing3d_tablet-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 820×1180 | портрет | — | 13.10.2026. 13:12:02 | 245 |
+| `racing3d_phone-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 844×390 | пејзаж | — | 13.10.2026. 16:46:57 | 249 |
+| `racing3d_phone-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 390×844 | портрет | — | 13.10.2026. 16:46:57 | 249 |
+| `racing3d_tablet-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 1180×820 | пејзаж | — | 13.10.2026. 16:46:57 | 249 |
+| `racing3d_tablet-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 820×1180 | портрет | — | 13.10.2026. 16:46:57 | 249 |
 | `rhythm_phone-landscape.png` | Ритам | `/pages/rhythm.html` | 844×390 | пејзаж | — | 12.10.2026. 11:52:29 | 240 |
 | `rhythm_phone-portrait.png` | Ритам | `/pages/rhythm.html` | 390×844 | портрет | — | 12.10.2026. 11:52:29 | 240 |
 | `rhythm_tablet-landscape.png` | Ритам | `/pages/rhythm.html` | 1180×820 | пејзаж | — | 12.10.2026. 11:52:29 | 240 |
