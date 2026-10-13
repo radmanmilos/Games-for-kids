@@ -4,7 +4,9 @@
 
 ---
 
-## Current status (2026-10-12)
+## Current status (2026-10-13)
+
+- **Task 241 DONE (2026-10-13):** CI fix — the two Extended/schedule `play_matrix` failures (task-237/240 backlog item). `animal_counting` portrait «Назад» was genuinely unclickable (`DIV.count-stage-wrap.learn-stage`, `position:relative` z-index auto, paints over `BUTTON.back-btn` `[16,16,72,72]`); `.back-btn` was the only learning-page back button missing `z-index` → added `z-index:20` (`animal_counting.html:19`). `rhythm` hit a `/favicon.ico` 404 (`rhythm.html` had no `<link rel="icon">`; the console error has no URL so the `/favicon/i` text filter cannot catch it) → added the shared inline-SVG `data:` favicon to the only three pages lacking it (`rhythm` 🥁, `spatial` 🧭, `maze` 🧩). `play_matrix` for the 4 pages **40/40**; no visual change (the stage is transparent, so the shot is byte-identical → review metadata untouched). (Ponytail Lazy Dev)
 
 - **Task 240 DONE (2026-10-12):** Phase 21-23 - V23 (Final visual QA baseline, spec 41) - terminal task: regenerated the full battery (100 shots = 25 pages x 4 viewports), updated TOC + provenance + manifest, reviewed drift, and ran every gate. `check_release --release` green (Fast 7/7, battery 34/34 = 990 checks, offline E2E PASS, axe 0 violations across 25 pages, read-only contract intact) after fixing a CRLF bug in `registry_guards_negtest.js` (LF-only regex could not find a CRLF terminator). Drift: `spatial_phone-landscape` real (stale since the 213 baseline; short-landscape-only; still 0 FAIL at 844x390), `animals_*` ~25px glyph AA jitter, `parent_*` live status column (version/online/offline-copy state). Documented the intentionally different screens per spec 41 step 10. (Ponytail Lazy Dev)
 
