@@ -1,0 +1,10 @@
+# Lessons: shared modules, standalone boot, HUD, coloring, audio
+
+Read before touching `game/shared/*`, standalone/boot detection, the kitty HUD, coloring regions or audio helpers. Each entry is a past incident; text is moved verbatim from `AGENTS.md` (Footguns section, 2026-10-13 refactor).
+
+- Shared modules load **after** the game script on all 13 pages that use them (`game/games/x.js` first, then `shared/audio-buses.js`, `viewport.js`, `input.js`, `feedback.js`, `motion.js`, `main.js`). A top-level `function` in a game file becomes `window.<name>`, so a shared module exporting the same name **silently replaces it** — this is how the candy 💡 hint button died: `candy.js`'s `showHint()` was overwritten by `feedback.js`'s `window.showHint(el)`, whose `if (!el) return;` made every click a no-op with no error. Never give a game file a generic top-level name that a shared module also exports (`showHint`, `softPop`, `speakSr`, `gentleMiss`, `successChime`, `celebrateFeedback`); prefix it (`showCandyHint`).
+- `window.tone`'s real signature is `(freq, dur, delay, type, vol)` (`game/shared/audio.js:29`) — the `type` string is the **4th** argument, not the 3rd. Passing it in the `delay` slot makes `start` `NaN` and `setValueAtTime` throws, which aborts the rest of the calling function (this is how the Учионица 🏅 finish panel never appeared).
+- Standalone boot is single-shot: `game/shared/main.js` calls each page's `startX()` exactly once, guarded by a `started` flag, because the retry path + `DOMContentLoaded` + `load` can all fire. Start functions bind click/pointer listeners, so a second boot doubles every interaction (that bug made one ➡️ tap advance 3 scenes). Never add a second call site or remove the guard.
+- Cloudflare Workers serves extensionless URLs: standalone detection must strip `.html` before comparing page names. Never match `'name.html'`.
+- Coloring regions: `createColoringRegion` accepts both `r.attrs` and flat fields — never assume `attrs` is always present.
+- Kitty HUD button offsets are sacred: music 🔊 at `right:268px`, worlds 🌍 at `right:200px` — do not move them closer or they overlap.

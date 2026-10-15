@@ -35,6 +35,7 @@ const STAGES = [
   ['scan-alert guards', 'check_scan_alerts.js', ['--quiet']],
   ['generated artifacts', 'validate_generated.js', []],
   ['offline inventory', 'validate_offline.js', ['--quiet']],
+  ['docs budgets/links', 'check_docs.js', ['--quiet']],
   ['hub smoke', 'hub_smoke.js', []]
 ];
 

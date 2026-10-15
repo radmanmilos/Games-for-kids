@@ -1,12 +1,12 @@
 # AI startup helper for Little Play
-# Reads PROJECT_TASKS.md, shows the next non-DONE task, and prompts whether to continue.
+# Reads project/tasks/ACTIVE.md, shows the next non-DONE task, and prompts whether to continue.
 # If the user confirms, marks the task IN PROGRESS with an optional note and timestamp.
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
-$tasksPath = Join-Path $projectRoot 'PROJECT_TASKS.md'
+$tasksPath = Join-Path $projectRoot 'project\tasks\ACTIVE.md'
 
 if (-not (Test-Path $tasksPath)) {
-    Write-Host "PROJECT_TASKS.md not found at $tasksPath" -ForegroundColor Red
+    Write-Host "project/tasks/ACTIVE.md not found at $tasksPath" -ForegroundColor Red
     exit 1
 }
 
@@ -49,7 +49,7 @@ switch ($choice.ToUpper()) {
             $titlePart = if ($nextTask.Line -match '—') { ($nextTask.Line -split '—')[0].Trim() } else { ($nextTask.Line -split '-')[0].Trim() }
             $lines[$index] = "$titlePart — $newStatus"
             $lines | Set-Content -Path $tasksPath -Encoding UTF8
-            Write-Host "Task updated to IN PROGRESS in PROJECT_TASKS.md" -ForegroundColor Green
+            Write-Host "Task updated to IN PROGRESS in project/tasks/ACTIVE.md" -ForegroundColor Green
         } else {
             Write-Host "Could not locate the task line to update. No changes made." -ForegroundColor Yellow
         }

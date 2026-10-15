@@ -1,38 +1,21 @@
-# Petrin svet — Roadmap index
+# Roadmap
 
-**This file is the single entry point.** There is exactly one active roadmap.
-Any other document that claims to be "the master plan" is historical and is
-labelled SUPERSEDED there; it is never the queue to work from.
+*Updated 2026-10-13. Current state: [`project/STATUS.md`](project/STATUS.md). Open tasks: [`project/tasks/ACTIVE.md`](project/tasks/ACTIVE.md).*
 
-## Active roadmap
+## Where we are
 
-- **[Fresh Elevation Roadmap](resources/General_reviews/Petrin_svet_Fresh_Elevation_Roadmap_2026-09-29.md)**
-  — the active implementation queue (R0–R27). Take work from here, in
-  dependency order, one item at a time.
+**No plan is open.** Everything planned so far is finished and archived in [`archive/plans/`](archive/plans/):
 
-## Current position (2026-10-05)
+- Fresh Elevation / learning roadmap R0–R27b (the previous version of this file is `archive/plans/ROADMAP_2026-10-05.md`)
+- Visual/UX plan V0–V23 (38/38, tasks 216–240)
+- racing3d game and tuning (tasks 242–249)
 
-- **R0–R27b DONE.** The roadmap queue is now complete. Tier A of the reassessment is next: extend `phonics` to the full alphabet, then 11–20 number recognition.
-- Authoritative task-by-task status and execution log: [`PROJECT_TASKS.md`](PROJECT_TASKS.md).
-- Progress tracker table (R0–R27): [`HANDOVER_PROMPT.md`](HANDOVER_PROMPT.md#progress-tracker-r0-r27).
+## Candidate next work (the user decides)
 
-## Document roles
+1. Emoticon-replacement asset project: `resources/General_reviews/Asset_Generation/` (Phase 1, inventory awaiting approval). Open question: native emoji are currently the settled choice.
+2. racing3d further play-test tuning.
+3. "Tier A" learning content: see `project/reference/LEARNING_ROADMAP_REVIEW.md` and verify what is still open first.
 
-| Document | Role |
-|----------|------|
-| `ROADMAP.md` (this file) | Single index; names the active roadmap. |
-| `resources/General_reviews/Petrin_svet_Fresh_Elevation_Roadmap_2026-09-29.md` | **Active** implementation queue. |
-| `PROJECT_TASKS.md` | Task lifecycle and execution log (authoritative status). |
-| `ROADMAP_AUDIT.md` | Mapping of roadmap concepts to current implementation state. |
-| `README.md` | Product- and contributor-facing overview. |
-| [`LEARNING_ROADMAP_REVIEW.md`](LEARNING_ROADMAP_REVIEW.md) | **R27b** reassessment of the original 9-item learning roadmap: per-item verdicts, evidence, and the do-not-build list. |
-| `PLAYTESTING.md` | Manual portfolio-level playtest protocol (R20). |
-| `HANDOVER_PROMPT.md` | Current-state session handoff (history archived). |
-| `resources/General_reviews/` | Research, external reviews, design studies, historical plans. |
+## How a new plan starts
 
-## Superseded plans (historical — do not execute)
-
-- `resources/General_reviews/Petrin_svet_Master_Implementation_Plan.md` — the old
-  18-task plan. **SUPERSEDED / COMPLETED.**
-- `resources/General_reviews/PETRIN_SVET_MASTER_EXECUTION_ROADMAP.md` — the
-  previous-generation master roadmap. **SUPERSEDED** by the Fresh Elevation Roadmap.
+Write it as `project/plans/<name>.md`, add its tasks to `project/tasks/ACTIVE.md`, and link it here. When it is finished, move it to `archive/plans/` and note that here.

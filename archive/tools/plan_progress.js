@@ -16,7 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const PLAN = path.join(__dirname, '..', 'VISUAL_UX_IMPLEMENTATION_PLAN.md');
+const PLAN = path.join(__dirname, '..', 'plans', 'VISUAL_UX_IMPLEMENTATION_PLAN.md');
 
 const md = fs.readFileSync(PLAN, 'utf8');
 let phase = '(no phase)';

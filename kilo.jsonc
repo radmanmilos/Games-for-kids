@@ -15,6 +15,7 @@
       "game/**": "allow",
       "tools/**": "allow",
       ".vscode/**": "allow",
+      "project/**": "allow",
       "*": "ask"
     },
     "read": "allow"

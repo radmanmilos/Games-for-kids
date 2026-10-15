@@ -1,0 +1,15 @@
+# Search-noise filter for ripgrep-based tools (OpenCode, Kilo, Claude Code, VS Code search ...). git ignores this file.
+# Finished work: kept for reference, never needed to start a session.
+archive/
+tools/_archive/
+# Byte-exact copy of game/ (served by GitHub Pages): every hit would appear twice.
+docs/
+# Vendored / generated files.
+game/assets/lib/
+tools/vendor/
+*.min.js
+game/offline-manifest.json
+game/sw-cache-list.json
+# Review screenshots (binary, hundreds of files).
+resources/**/*.png
+resources/**/*.jpg

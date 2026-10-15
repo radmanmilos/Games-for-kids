@@ -1,10 +1,6 @@
-# Petrin svet Handover Prompt
+# Handover session logs (up to 2026-10-13)
 
-Location: `E:\GitHub\Games for kids`
-
-Purpose
-
-This file summarizes the current workspace, conventions, and project state so the next session can continue without friction. Read this before making changes. It is refreshed at the end of every session.
+Moved **verbatim** from `HANDOVER_PROMPT.md` (origin/main 71e1b7a) in the 2026-10-13 repo refactor. Paths inside refer to the pre-refactor layout (git tag `pre-refactor-2026-10-13`).
 
 ## Current session — Tasks 242–249 (racing3d hovercraft / hover feel / heading skew / landscape camera pull-in + tuning + camera lag/look-up + HUD layout + offline download self-heal + app-version bump) DONE — 2026-10-13
 
@@ -203,7 +199,6 @@ R24 is complete in `25f8d1e`. R25 adds a no-score two-tap rhythm echo (`тап�
 - **Tests:** `parent_smoke.js` (14/14) drives the update flow with the exact worker messages; `offline_smoke.mjs` no longer hard-codes `petrin-v2` (discovers the active `petrin-*` cache). `check_fast.js` 7/7 after `docs/` sync + offline-inventory regen.
 - **Not yet committed/pushed** — R17 is committed locally (`2a3dba7`, plus the progress-bar follow-up `07e6b9d`); not pushed to `main`.
 
-
 ## Current session — R18–R22 DONE (2026-10-04)
 
 - **R18 (task 184) — Documentation and Roadmap Consolidation.** `ROADMAP.md` is now the single roadmap index; the Fresh Elevation Roadmap is the one active queue. `Petrin_svet_Master_Implementation_Plan.md` and `PETRIN_SVET_MASTER_EXECUTION_ROADMAP.md` carry SUPERSEDED banners in `resources/General_reviews/`. `ROADMAP_AUDIT.md`'s scope is clarified. The stale "stop before R16 / do not start it" instructions were neutralised, and this file was split: session history now lives in `resources/General_reviews/HANDOVER_ARCHIVE.md`.
@@ -237,75 +232,3 @@ R24 is complete in `25f8d1e`. R25 adds a no-score two-tap rhythm echo (`тап�
 - **Task 209 — Classroom activities on small screens DONE (2026-10-06).** User report: items in the classroom grid containers are crowded/overlapping/clipped. Root cause: `game/shared/accessibility.css:2-7` global `button { min-width:64px; min-height:64px; padding:10px }` forced `.class-tile`/`.kids-option` wider than their grid tracks (~40px at 360–640); `#kidsPrompt` (a `<button>`) flex-shrunk its content so a 20-emoji count row clipped; the overflow hub on tablet portrait started at a negative (unreachable) top. Fix in `game/pages/classroom.html`: (1) `.activity-grid .class-tile, #kidsOptions .kids-option { min-width:0; min-height:0; padding:0 }`; (2) `#kidsPrompt { flex-shrink:0 }`; (3) `.kids-count-row` → `repeat(10, minmax(0,1fr))` + `justify-items:center` + `font-size:5vmin` + `max-width:72vmin` (plain `1fr`, 6vmin font, 62vmin row previously caused emoji crowding — measured 6.3px glyph overlap pre-fix, 0.6px post-fix of advance boxes, visually clear as color-emoji ink has side bearings); (4) `#classroomHub { margin:auto }` + `#game-classroom { justify-content:flex-start }` so the overflow hub top-anchors (top 0) instead of clipping above the fold. **Guard:** `classroom_smoke.js` gained a small-screen block — phone session (360×640) asserts activity tiles pairwise-disjoint + inside the grid + max tile width < 64px; worst-case emoji row (pool filtered to count ≥ 10) does not clip `#kidsPrompt` and span overlap < 2px; tablet session (768×1024) asserts hub top ≥ 0. `classroom_smoke` ALL PASS; `check_fast` 7/7; docs synced + offline rebuilt.
 - **Task 211 — Candy hint button smaller, bulb bigger (DONE 2026-10-06).** User asked for a smaller button with a bigger 💡. Root cause: `game/shared/accessibility.css:2-7`'s global `button{min-width:64px;min-height:64px;padding:10px}` pinned `#candyHintBtn` to 64×64 on **every** screen, so the earlier `fd0e563` "30% smaller" shrink never rendered. Fix in `game/pages/matching_game.html`: the page rule now sets `min-width/min-height:44px` (the project's stated minimum target) + `width/height:4.4vmin` and a bigger bulb via `font-size:max(3.6vmin,22px)`. Measured after: phone 390×844 → 44×44 (was 64×64), bulb 22px (was 12px); desktop 1440×900 → 44×44, bulb 32.4px (was 27.5px). `candy_smoke` hint checks still PASS; `check_fast` 7/7; docs synced + offline rebuilt; committed + pushed.
 - **Task 210 — Explorer jump button triangle (DONE 2026-10-06).** `game/pages/explorer.html`: jump glyph changed to ▲, `.btn-jump` shrunk to 100×100 (used to be 120×120), HUD offsets for `#worlds-btn`/`#music-btn` adjusted to reference `+100px` for the bottom inset. `kitty_smoke.js` geometry asserts still pass (left/right/jump fully on-screen, topmost at centre). `build_offline.js` + `sync-docs.sh` run; `check_fast` 7/7. Committed + pushed. Also in this round, two CI fixes landed: `rhythm.html`'s active mode button now `#2E7D32` (~5.1:1) instead of white-on-`--green` (~2.06:1, which turned Release QA's a11y report red), and the tag-stripper in `validate_pages.js:61` plus `check_scan_alerts.js` Rule 2 were hardened against the generic `<[^>]*>` CodeQL shape (char scan replaces the regex; guard widened from "mentions </script>" to "opens with <" with a Rule-3 negative test).
-
-## Two traps a future session will hit immediately
-
-- **The parent page is gated.** Anything touching the parent area in a test must answer the question first. `tools/offline_smoke.mjs` has `unlockParentGate(h, label)` for this and calls it at **both** parent visits — the page is navigated to twice and the gate is per load. The pre-existing parent checks use `.click()`, which bypasses hit-testing, so they would pass even with no gate at all; `parent_smoke.js` now asserts reachable state (`offsetParent === null` **and** `elementFromPoint`).
-- **A mouse-driven harness cannot see touch bugs.** `headless.js` has no touch emulation, so any `touch-action`-class defect stays green until a real finger finds it. Assert the computed style for anything drag-related.
-
-## History archived
-
-Session logs and historical task write-ups (tasks 156, 176–181, R14/R15, the racing3d review and polish plans) were moved verbatim to
-[`resources/General_reviews/HANDOVER_ARCHIVE.md`](resources/General_reviews/HANDOVER_ARCHIVE.md).
-
-## Progress Tracker (R0–R27)
-
-**Task numbers below are the real `PROJECT_TASKS.md` numbers, not the roadmap's "suggested task number"** — those drifted (the roadmap proposed 155–178, but 155 became the user-reported-bug fix, 156 the resource-budget task and 163 landed R12 early). Unfiled roadmap items show `—`. **29/29 done (R0–R27b) — the roadmap queue is complete.**
-
-| # | ID | Task | Status |
-|---|---|---|---|
-| 1 | R0 | 151 | DONE — 4 failures classified (**2 of the 4 root causes were later found WRONG; see the correction note in `PROJECT_TASKS.md` 151**) |
-| 2 | R1 | 152 | DONE — 19/19 tools, 435 checks, 0 fail, 1 skip |
-| 3 | R2 | 153 | DONE — offline inventory validator + report; found & fixed the manifest self-hash bug and the Linux Chrome leak |
-| 4 | R3 | 154 | DONE — fixed a live subpath bug in the service worker; added `sw_update_smoke.js` |
-| 5 | R4 | 164 | DONE — CI topology refactor: 5 jobs, self-generating matrix, `fail-fast: false`; **CI was red before it** (referenced a deleted tool) |
-| 6 | R5 | — | DONE 2026-09-30 (task 165) — validation commands are one meaning each: `check_fast.js` (read-only 6-stage gate), `validate_generated.js`, `validate_workflow.js` added; `check_release.js` rewritten as a read-only release gate that self-enforces the contract |
-| 7 | R6 | 166 | DONE — true offline play E2E: one session, real offline controls (origin killed), 16 games driven with trusted input + geometry, **101 checks, 0 fail, 0 skip**; fixed 3 product bugs (dead back buttons in `explorer`/`parent`, racing3d start-modal trapping the back button, parent's update-check hanging forever offline) |
-| 8 | R7 | 167 + 168 | DONE 2026-10-01 - `app-registry.js` is the single source of truth (shared `tools/registry.js`; 8 tools rewired; runtime routes, validation, offline coverage and the game-file-to-smoke mapping all derived); 3 guard negative-test suites so the new checks provably can fail. **Task 168 is the one to remember: 3 harness bugs that made checks pass while proving nothing** - the Chrome debug port was derived arithmetically and ~9% were unbindable on Windows (the real cause of the "intermittent" touch_interruption failures), `close()` was not awaited, and `screenshot.js` could not fail (relative navigate = blank PNGs, override applied before navigation, missing `deviceScaleFactor` = all sizes byte-identical). Battery **24/24, 492 checks**. |
-| 9 | R8 | 169 | DONE — runtime-error, console, unhandled-rejection and resource-failure gate. |
-| 10 | R9 | 170 | DONE 2026-10-01 — 85 reviewed baselines; deterministic decoded-pixel compare; explicit approval required for updates. |
-| 11 | R10 | 171 | DONE 2026-10-01 — pinned axe-core, 18-surface blocking gate, contrast fixes. |
-| 12 | R11 | 172 | DONE 2026-10-01 — blocking 180-cell Chromium/WebKit matrix; fixed portrait classroom overflow and covered coloring next button; 85 approved baselines refreshed. |
-| 13 | R12 | 163 | DONE — parent area has version + connection status + manual ZIP link (**ZIP link hidden per user decision 2026-09-30**); hub guard asserts the child launcher stays clean |
-| 14 | R13 | 173 | DONE — removed dead embedded Kitty/Explorer UI from the hub. |
-| 15 | R14 | 174 | DONE — stable shared Serbian vocabulary, speech mappings and advisory duplicate-string audit. |
-| 16 | R15 | 175 | DONE — shared audio routing, semantic events, speech ducking and game-family adoption. |
-| 17 | R16 | 182 | DONE — asset and performance budget report (`ASSET_BUDGET.md`; committed `c2a40a2`). |
-| 18 | R17 | 183 | DONE — manifest.json is the single version source; SW cache name derived from `sw.js?v=<version>`; update lifecycle + Serbian parent UX. |
-| 19 | R18 | 184 | DONE — single roadmap index (`ROADMAP.md`); SUPERSEDED banners on the old plans; `HANDOVER_PROMPT.md` split into a short handoff + `resources/General_reviews/HANDOVER_ARCHIVE.md`. |
-| 20 | R19 | 185 | DONE — local progress store (`window.PetrinProgress`); parent-only `📊 Напредак` panel (`Шта је коришћено` / `Шта је вежбано`) + reset. No XP/streak/badge/profile/sync. |
-| 21 | R20 | 186 | DONE — `PLAYTESTING.md`: four manual sessions (toddler flow, five-game walk, offline, parent handoff) + `BLOCKER/MAJOR/MINOR/COSMETIC` classification. Live pass is the user's. |
-| 22 | R21 | 187 | DONE — more/less/same pilot (`compare.html` + `compare.js`); three modes, no equations, gentle miss + hint; `compare_smoke` 24/24, offline E2E green (17 games). `screenshot:false` pending user-approved baseline. |
-| 23 | R22 | 188 | DONE — sorting/classification pilot (`sorting.html` + `sorting.js`); two categories, drag/tap-to-place, magnetic + gentle miss, reusable category data. `sorting_smoke` 20/20, offline E2E green (18 games). `screenshot:false` pending user-approved baseline. |
-| 24 | R23 | 189 | DONE — Serbian phonics pilot (`phonics.html` + `phonics.js`); audio-first (autoplay sound + tiny repeat), big Cyrillic letter, 2 choices with correct-start validation for 10 letters. No reading question, no score pressure. `phonics_smoke` 13/13, offline E2E green (19 games). `screenshot:false` pending user-approved baseline. |
-| 25 | R24 | 190 | DONE 2026-10-04 — sequencing pilot (`sequencing.html` + `sequencing.js`); seed→plant→flower (start 3 cards), drag to slots, gentle feedback; celebration after each three-card sequence. `sequencing_smoke` 14/14; offline E2E 123/123 (20 games). `screenshot:false` pending user-approved baseline. |
-| 26 | R25 | 191 | DONE 2026-10-04 — rhythm echo pilot; tap-tap and tap-pause-tap, one large drum, replay, gentle retry, no visible score/timer. `rhythm_smoke` 18/18; offline E2E 128/128 (21 games). `screenshot:false` pending user-approved baseline. |
-| 27 | R26 | 192 | DONE 2026-10-05 — spatial concepts pilot (`spatial.html` + `spatial.js`); all five roadmap pairs as a scene plus two large Cyrillic words, mirrored `build()` so the scene cannot contradict the answer. `spatial_smoke` 41/41; offline E2E green (22 games). `screenshot:false` — baseline refresh blocked on a WebGL-capable host. |
-| 28 | R27 | 193 | DONE 2026-10-05 — maze/path pilot (`maze.html` + `maze.js`); drag the bear along a wide forgiving stone path, cell-normalised snap, gentle off-path redirect, retry always available. `maze_smoke` 19/19; offline E2E green (23 games). `screenshot:false`. |
-| 29 | R27b | 194 | DONE 2026-10-05 — reassessment of the original 9-item learning roadmap, delivered as `LEARNING_ROADMAP_REVIEW.md`: per-item verdicts with `file:line` evidence. Colors and World declined as duplicates per §41; alphabet largely done (30 letters in data, 10 with sounds) so the gap is data not architecture; numbers 11–20 is the cheapest real gap and is gated on de-hardcoding `classroom_smoke.js:62`. |
-| — | *not a roadmap item* | 156 | DONE — resilient profiling, touch-interruption shards, piano readiness wait, and Windows Chrome teardown optimization; 27 tools / 575 checks passed. |
-
-## Cross-platform setup
-
-This project was originally built on Windows. When working from a Linux server (e.g. Alpine), see `SETUP_LINUX.md` for the non-obvious setup: PowerShell doesn't work on Alpine/musl, so `build_offline.ps1` was replaced with `build_offline.js` (Node.js). Everything else works as-is.
-
-## Validation is now one command
-
-`node tools/check_all.js` = `node --check` over `game/`+`tools/` → the full 19-tool smoke battery in parallel → optional `--docs` (`tools/sync-docs.sh`, required whenever `game/` changed) / `--offline` (`tools/build_offline.ps1`). Current baseline: **19/19 tools, 398 checks, 0 fail** (classroom 17 — grew in task 120; candy 12; racing3d 32, hub 10 — grew in task 105). While iterating use `node tools/run_all.js --game <name>` or `--watch`; the `validate-game-change` skill spells out the ladder. A smoke that exits non-zero with **0 checks** is a Chrome boot crash, not a real failure (the runner retries it twice automatically) — four separate 0-check crashes happened in the task 105 session and every one passed on a clean re-run. **A failure that reproduces when the tool is re-run ALONE is a real bug, not a load flake — do not dismiss it as "environment".** The task 120 session is the double proof: the classroom finish-panel failure had been carried as a "known flake" and was in fact a `NaN` audio-delay TypeError that stopped the 🏅 panel from ever appearing for a child; the candy hint failures also reproduced alone *and* on the committed tree, and were a silent shared-module/global name collision.
-
-## Racing game decisions (ALL 10 CONFIRMED 2026-09-22)
-
-The Мала тркачица (Little Racer) game is fully built (Stages 1–5, tasks 95–99) and committed. The 10 gameplay/design decisions below were made autonomously during the build and have now been **explicitly confirmed by the user as-is (2026-09-22)**. Do NOT re-open or re-litigate them. Only #8 is called out because it visibly changes the game on the user's own machine:
-
-1. **Unlock progression = wins-based thresholds `[0, 2, 4, 7]`** — 3rd car of each driver unlocks after 4 finished races, 4th after 7. No coins/currency; kids earn cars by completing races. (Also drives the ARIA/🎉 "НОВО" unlock toast.)
-2. **One picker** — a single 8-card combo grid (2 drivers × 4 cars): driver sprite + car emoji, selected = gold ring, locked = greyed 🔒 + "N победе" hint, no pick-through on locked.
-3. **Car stats stay subtle** — only `accel` (0.95–1.15 speed-growth multiplier) added to the existing maxSpeed/steer; NO stats UI — differences are "feel" only, shown as name + emoji.
-4. **Countdown words use existing MP3s** (`три`/`два`/`један`); `Крени!` uses TTS. No new audio assets.
-5. **Engine hum is synthesized** Web Audio (twin sawtooth, pitch/gain follows speed); music restarts on replay (also fixed a pre-existing bug: music never resumed after a race).
-6. **Pickup collect → 5 sparkle particles** in the world's finish color (gold default).
-7. **Controls = tablet-first thumb zones** — two big round buttons (⬅/➡) inside full screen-half zones (left/right 50% width, top 26vmin → bottom); portrait tablets ≥520px get an "Окрени уређај водоравно 🌍" overlay.
-8. **Reduced-motion caveat (watch this one):** the user's OS reports `prefers-reduced-motion: reduce` = ON (same reason task 83 was reverted). Consequence on the user's machine (`racing.js` `&& !REDUCED_MOTION`): the obstacle screen-shake AND the 2026-09-11 FOV/scale pulse + speed-line streaks are suppressed; `@media (prefers-reduced-motion: reduce)` also removes button-press and progress-fill transitions. Banking lean, hills, fog, shadows, skids/dust and the vignette still render (kept so the user can SEE the upgrade; discrete/gentle effects stay on). Slowdown + sound feedback always work. If the user wants any of the gated effects, it's a one-line change.
-9. **Wins count only on a real finish** — quitting mid-race never counts (guarded by `finishRecorded`, reset in `restart()`).
-10. **Locked cars announce via ARIA + 🎉 "НОВО: <car>" toast** when a threshold is crossed.
-
-Verified state to give the user: `racing_smoke.js` **39/39 PASS**, `hub_smoke.js` ALL PASS, docs mirrored (offline pack regenerated). **Open work: user commits the 2D racer visual-style adjustment (this session) + push, then play-tests.**

@@ -2,7 +2,7 @@
 
 **Date:** 2026-10-05 (last updated 2026-10-06 — tasks 197/198/202/203 closed Tier A items 1–2 and Tier B items 3/4/5)
 **Task:** 193 → 194 (roadmap §41 "Future Candidate Review")
-**Reviews:** `resources/General_reviews/Learning_Content_Roadmap.md` (the original nine-item proposal)
+**Reviews:** `archive/plans/Learning_Content_Roadmap.md` (the original nine-item proposal)
 **Method:** every claim below is checked against the current code, with `file:line`. Nothing here is carried over from the original document's "PLANNED" status column.
 
 §41 sets two rules that decide most of this review, and both are about **not** building things:
