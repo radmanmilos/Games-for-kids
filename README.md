@@ -1,6 +1,8 @@
 # Petrin svet
 
-> **Petrin svet** is an offline collection of educational mini-games for young children (approximately 2–6 years old), designed to be fun, safe, simple, and frustration-free.
+> **Petrin svet** is an offline-first collection of educational mini-games for young children (approximately 2–6 years old), designed to be fun, safe, simple, and frustration-free.
+>
+> **[Play Petrin svet](https://radmanmilos.github.io/Games-for-kids/)** · Static HTML/CSS/JavaScript · Serbian Cyrillic · No ads or in-app purchases
 
 ---
 
@@ -180,9 +182,9 @@ Desktop support is optional.
 
 ---
 
-# Current Mini Games
+# Game Guides
 
-One doc per game in [`project/games/`](project/games/) — behaviour, files and decisions. Update that file when a game's behaviour changes (not this README).
+These guides document selected games—the list is not the authoritative runtime catalogue. The public pages and routes are defined by [`game/data/app-registry.js`](game/data/app-registry.js). Each guide records behaviour, files and decisions; update the relevant guide when that game's behaviour changes, rather than duplicating details here.
 
 | Game | Doc |
 | --- | --- |
@@ -211,163 +213,30 @@ The live site is served by GitHub Pages from the **`docs/` folder on the `main` 
 - The earlier GitHub Actions workflow (`.github/workflows/deploy.yml`, deploy `game/` → `gh-pages`) was **abandoned** — GitHub Pages refused to deploy from `game/`, so it was removed per user decision. Keep it that way: no workflow, `docs/` mirror only.
 - Local preview: use Live Server on `game/` over HTTP — never `file://` (breaks audio and throws Unsafe-attempt warnings).
 
-## Offline installation (Task 94 — mechanism documented in `project/reference/OFFLINE.md`)
+## Offline installation
 
-The hub is being prepared as an installable Serbian-Cyrillic PWA. The manifest is at `game/manifest.json`, with a relative scope that works both at the repository root and under the GitHub Pages repository subpath. The service worker (`game/sw.js`) has install/activate/fetch handling, one-tap cache-all messaging with progress events, and content-hash update comparison. The hub exposes a download and an update-check control in the parent area; caregiver documentation and validation are tracked in Task 94.
+The app supports offline use through its service worker. In the parent area, a caregiver can use **«📥 Преузми за офлајн рад»** to cache the files the application needs, then use the update check to identify changed content. Caregiver instructions are in [`game/docs/OFFLINE_INSTALL.md`](game/docs/OFFLINE_INSTALL.md); the technical mechanism and its validation are documented in [`project/reference/OFFLINE.md`](project/reference/OFFLINE.md).
 
-Caregiver instructions are in `game/docs/OFFLINE_INSTALL.md`. **The full mechanism — service worker, the two generated inventories, the never-hard-code-the-path rule, and how it is tested — is documented in [`project/reference/OFFLINE.md`](project/reference/OFFLINE.md).**
-
-**No ZIP is produced or published (2026-10-02, user decision).** The `docs/game-offline.zip` fallback package has been removed along with every reference to it: it was never tracked in git, so GitHub Pages never published it and the parent-area link pointed at a 404, and its build step shelled out to `zip`, which is unavailable on this host. Offline delivery is the **service worker** — «Преузми за офлајн рад» caches every file the app needs, so there is nothing to unpack by hand. Do not edit `docs/` directly; regenerate it from `game/` after runtime changes.
-
-The one-tap download is self-healing (task 101, 2026-09-22): each file is fetched with a 20 s timeout and 2 retries — if one file keeps failing it is skipped and the run continues, so progress no longer gets stuck on a single file. The completion message reports how many files were skipped ("N прескочено — покушајте поново") and pressing the button again re-fetches the missing ones.
+**There is no ZIP download.** Offline delivery is handled by the service worker. After runtime changes, regenerate the published mirror from `game/` with `tools/sync-docs.sh`; never edit `docs/` directly. The offline inventories have their own generation and validation steps—follow the reference guide rather than editing generated files by hand.
 
 ---
 
 # Navigation Model
 
-The hub launches each game as a standalone page:
+The hub opens learning and game sub-hubs, which launch standalone game pages. The shared navigation system in `game/shared/navigation.js` handles registered `data-go` routes. The current route/page list is maintained in one place: [`game/data/app-registry.js`](game/data/app-registry.js). Do not maintain a second hand-written route list in documentation or runtime code.
 
-```
-Petrin svet (index.html landing: 🌈 title + two group tiles — УЧЕЊЕ 🏫📝🎹🎨 first, then 🎮 ИГРЕ)
+# Game Runtime and Shared Systems
 
-↓
+Games are standalone pages, with shared startup and navigation helpers. The exact pages, routes, boot functions and smoke-test associations are defined in [`game/data/app-registry.js`](game/data/app-registry.js); the registry is the source of truth, not an illustrative file tree in this README.
 
-Group tile
+Shared systems include:
 
-↓
+- **Navigation:** `game/shared/navigation.js` and `game/shared/main.js`.
+- **Audio and speech:** reuse the existing shared helpers; do not create duplicate audio contexts or one-off systems without a demonstrated need.
+- **Sound effects and celebrations:** reuse the established shared effects where appropriate.
+- **Utilities:** reuse existing randomization, shuffle, animation and touch helpers when they fit.
 
-Group sub-hub (round game buttons — ИГРЕ 9, УЧЕЊЕ 7)
-
-↓
-
-Standalone game page
-
-↓
-
-Back button
-
-↓
-
-Group sub-hub
-```
-
-`shared/navigation.js` drives every `data-go` button. All games are standalone pages under `pages/`.
-
----
-
-# Game Lifecycle
-
-Every mini-game follows the same structure.
-
-```javascript
-startGame();
-
-update();
-
-draw();
-
-stopGame();
-```
-
-Paper Kitty:
-
-```javascript
-startKitty();
-
-updateKitty();
-
-drawKitty();
-
-stopKitty();
-```
-
-Standalone pages expose `start<Game>()` entrypoints booted by `shared/main.js`.
-
-Example:
-
-```javascript
-let kittyRunning = false;
-
-function startKitty() {
-    kittyRunning = true;
-    loop();
-}
-
-function stopKitty() {
-    kittyRunning = false;
-}
-
-function loop() {
-
-    if (!kittyRunning)
-        return;
-
-    updateKitty();
-
-    drawKitty();
-
-    requestAnimationFrame(loop);
-}
-```
-
----
-
-# Shared Systems
-
-The application shares common systems between all games.
-
-## Navigation
-
-One shared navigation system.
-
----
-
-## Audio
-
-Only one AudioContext.
-
-Never create multiple AudioContexts.
-
----
-
-## Speech
-
-One reusable helper.
-
-Example:
-
-```javascript
-speak("Dog");
-```
-
----
-
-## Sound Effects
-
-Reusable sounds:
-
-- Click
-- Success
-- Pop
-- Star
-- Win
-- Animal sounds
-
----
-
-## Utilities
-
-Reusable helper functions.
-
-Examples:
-
-- Random
-- Shuffle
-- Collision helpers
-- Animation helpers
-- Touch helpers
-
----
+For a particular game's files and behavior, consult its guide in [`project/games/`](project/games/). For test harnesses and validation commands, start with [`tools/README.md`](tools/README.md) and [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 # Fonts
 
@@ -375,7 +244,7 @@ Main UI
 
 - Fredoka
 
-Used throughout the application, including the Paper Kitty HUD (bundled locally as `game/assets/fonts/fredoka-latin.woff2` + `fredoka-latin-ext.woff2`, no external requests at runtime).
+Fredoka is bundled locally (`game/assets/fonts/fredoka-latin.woff2` and `game/assets/fonts/fredoka-latin-ext.woff2`); runtime font loading must not require external network requests.
 
 ---
 
@@ -405,101 +274,20 @@ The contents of the `game/` folder should always be enough to launch and play th
 
 # Architecture
 
-The project is modular.
+The app is plain HTML, CSS and JavaScript and requires no build step. The main runtime areas are:
 
-Structure:
+- `game/index.html` and `game/pages/` — hub and standalone pages.
+- `game/data/app-registry.js` — authoritative public page/route registry.
+- `game/games/` and `game/shared/` — game implementations and shared systems.
+- `game/assets/` — local runtime assets.
 
-```
-game/
+The full current folder reference is [`project/reference/folder-structure.md`](project/reference/folder-structure.md). Avoid copying a complete file tree into this README: it becomes stale as the app evolves.
 
-index.html
+# Current Development State
 
-pages/
+The current project status and user-approved candidate next work are recorded in [`project/STATUS.md`](project/STATUS.md). The roadmap is [`ROADMAP.md`](ROADMAP.md); completed plans are archived and should not be presented as open work. The public page catalogue is in [`game/data/app-registry.js`](game/data/app-registry.js).
 
-  animals.html
-  shapes.html
-  matching_game.html
-  animal_puzzle.html
-  animal_counting.html
-  animal_memory.html
-  coloring.html
-  classroom.html
-  tracing.html
-  piano.html
-  papper_kitty.html
-  driving.html
-  ocean.html
-  dino.html
-  space.html
-  racing.html
-
-games/
-
-animals.js
-shapes.js
-candy.js
-kitty-standalone.js
-kitty-standalone.js
-animal_puzzle.js
-animal_counting.js
-animal_memory.js
-coloring.js
-classroom.js
-kids_games.js
-tracing.js
-piano.js
-adventure.js
-adventure-music.js
-adventure-modes.js
-driving.js
-ocean.js
-dino.js
-space.js
-racing-config.js
-racing3d-config.js
-racing3d.mjs
-
-shared/
-
-audio.js
-speech.js
-navigation.js
-utils.js
-main.js
-celebration.js
-accessibility.css
-adventure.css
-
-assets/
-
-fonts/
-sounds/
-images/
-```
-
-Each mini-game is self-contained and uses shared systems where possible.
-
----
-
-# Future Mini Games
-
-Planned additions include (note: Alphabet, Numbers, and Colors are now covered as Учионица activities; Phase 4 builds from this list; ✅ = already shipped):
-
-- 🎵 Piano — ✅ (Клавир, task 58; 3 songs: Трепери, Срећан ти рођендан, Џингл белс — task 59; task 121: "Прати светло" soft-light song mode, no-punish wrong key, free play made visually primary)
-- 🥁 Musical Instruments
-- 🎈 Balloon Pop
-- 🚜 Farm
-- 🚗 Vehicles — ✅ (Возила, task 60)
-- 🍎 Fruit Matching
-- 🦕 Dinosaurs — ✅ (Дино, task 62)
-- 📚 Story Time
-- ✏ Letter Tracing — ✅ (Писање / Tracing, task 53)
-- ✏ Number Tracing — ✅ (Писање / Tracing, task 53)
-- 🎂 Birthday Cake Builder
-- 🐠 Ocean Discovery — ✅ (Океан, task 61)
-- 🚀 Space Explorer — ✅ (Свемир, task 63)
-
----
+Do not infer that a feature is planned, approved, complete or tested from an old README list or archived plan. Check the current status, active tasks and locked decisions before proposing work.
 
 # User Experience Guidelines
 
@@ -575,6 +363,8 @@ Never optimize at the expense of readability unless necessary.
 ---
 
 # AI Development Rules
+
+**Binding instructions:** [`AGENTS.md`](AGENTS.md) is the primary rule source for AI coding tools. Follow [`project/PROCESS.md`](project/PROCESS.md) for task lifecycle and approval, [`project/STATUS.md`](project/STATUS.md) for the current snapshot, [`project/tasks/ACTIVE.md`](project/tasks/ACTIVE.md) for open tasks, and [`project/DECISIONS.md`](project/DECISIONS.md) for locked decisions. This section is a project-principles summary, not a replacement for those documents; if wording conflicts, follow the authoritative instructions and current project records.
 
 When working on this project:
 
