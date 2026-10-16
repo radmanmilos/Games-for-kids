@@ -1,6 +1,6 @@
 # Visual Audit — instructions for the audit model
 
-Run this task with the **MiMo V2.5 Free** model (the only free model that can view
+Run this task with the **Nemotron 3.5 Super VL Free** model (a free model that can view
 screenshots). Before starting, the human must have switched the model in the model
 picker — the audit cannot see anything without image input.
 

@@ -66,7 +66,7 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 ## Communication & approval
 
 - Propose → approve → implement. Ask before model switches, extension installs, or anything that changes scope or installs software.
-- Be honest about limits: if the current model cannot read images/audio, say so and recommend MiMo V2.5 Free for visual review; the user switches models.
+- Be honest about limits: if the current model cannot read images/audio, say so and recommend Nemotron 3.5 Super VL Free for visual review; the user switches models.
 - Report with evidence: `file:line` references, exact commands run, and their results. Keep it concise and machine-friendly. Format for findings and proposals: `project/PROCESS.md`.
  - Record decisions (including deferrals "per user decision") with dates and reasons so the next session does not re-litigate them.
 
@@ -76,11 +76,11 @@ At the start of every request, before executing anything, quickly decide whether
 
 - **Research-only / design / weighing-tradeoffs request** → current mode should be **Plan**. If the current mode is Build but the request is purely research ("investigate…", "which approach…", "should we…"), tell the user "switch to Plan to review first" and do not write code — unless the user already asked to execute.
 - **Implementation request** → current mode should be **Build**. If the current mode is Plan but the user clearly wants execution, note the switch needed and wait for confirmation before writing code.
-- **Model fit** → see "OpenCode Model Selection" below (screenshots/images/audio → MiMo; fast bulk coding → DeepSeek; huge context → Nemotron). If the current model cannot serve the request well, recommend the model and ask the user to switch via the model picker.
+- **Model fit** → see "OpenCode Model Selection" below (screenshots/images/audio → Nemotron 3.5 Super VL; fast bulk coding → DeepSeek V4.1 Flash; huge context → Nemotron 3.5 Lightning). If the current model cannot serve the request well, recommend the model and ask the user to switch via the model picker.
 
 Rules:
 - **Notify only when a switch is actually recommended.** If mode and model are fine, just continue — do not prompt with a recommendation every request.
-- When a switch IS recommended, state it in one line at the start of the reply (e.g. "Mode check: switch to Plan to review before I execute", "Model check: switch to MiMo to review this screenshot") and **wait for the user's action** before proceeding.
+- When a switch IS recommended, state it in one line at the start of the reply (e.g. "Mode check: switch to Plan to review before I execute", "Model check: switch to Nemotron 3.5 Super VL to review this screenshot") and **wait for the user's action** before proceeding.
 - The assistant never switches mode or model on its own.
 
 ## Orientation protocol
