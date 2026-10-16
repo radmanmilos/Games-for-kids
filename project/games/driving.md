@@ -32,3 +32,5 @@ Educational goals:
 - Observation
 
 ---
+
+Refactoring note (task 250, 2026-10-16): the shared adventure engine clears held keyboard/touch movement state when pausing on focus loss or document hiding, and touch controls treat `touchcancel` as release. The adventure smoke checks that blur clears held keyboard flags.
