@@ -94,13 +94,13 @@ When the user asks any of these orientation phrases — "where are we", "what ne
 
 ## OpenCode Model Selection
 
-Big Pickle is the default model for this project. Only recommend a switch when a request is clearly better served by another free model:
+Big Pickle is the default model for this project. Only recommend a switch when a request is clearly better served by another free model (free set rotates; last verified 2026-10-16 against `https://opencode.ai/zen/v1/models`):
 
-- Screenshots, images, or audio → MiMo V2.5 Free (the only free model that accepts attachments)
-- Fast routine coding, bulk edits, or new game modules → DeepSeek V4 Flash Free (fast, 128K output)
-- Very large files or huge context → Nemotron 3 Ultra Free (1M context)
+- Screenshots, images, or visual review → Nemotron 3.5 Super VL Free (`nemotron-3.5-super-vl-free`)
+- Fast routine coding, bulk edits, or new game modules → DeepSeek V4.1 Flash Free (`deepseek-v4.1-flash-free`)
+- Very large files or huge context → Nemotron 3.5 Lightning Free (`nemotron-3.5-lightning-free`, 256K context)
 
-When such a request arrives, recommend the model and ask the user to confirm before doing the work. The user performs the switch via the model picker; the assistant never switches models on its own.
+When a request matches one of these categories, proactively recommend the better model at the start of the reply (e.g. "Model check: switch to Nemotron 3.5 Super VL to review this screenshot") and ask the user to confirm before doing the work. If the request does not match any category, just continue on Big Pickle without prompting. The user performs the switch via the model picker; the assistant never switches models on its own.
 
 ## Kilo Model Selection
 
