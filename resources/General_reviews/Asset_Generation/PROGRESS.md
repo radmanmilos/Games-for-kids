@@ -4,7 +4,7 @@ This file is the single progress tracker for the emoticon replacement project. U
 
 ## Current phase
 
-**Phase 1 — Source audit and inventory.** A literal pictograph scan has now been run across the first-party runtime JS/MJS/HTML/CSS/JSON files in `game/` (excluding the third-party minified Three.js bundle). The inventory has been expanded and duplicate asset IDs consolidated. It remains a review draft: every candidate's visual role and render scale still need final semantic verification and user approval. No production assets have been generated or approved yet.
+**Phase 1 — Source audit and inventory.** A literal pictograph scan has now been run across the first-party runtime JS/MJS/HTML/CSS/JSON files in `game/` (excluding the third-party minified Three.js bundle). The inventory has been expanded and duplicate asset IDs consolidated. It remains a review draft: every candidate's visual role and render scale still need final semantic verification and user approval. One generated object candidate (`object-bone`) has been user-approved as an illustration candidate and recorded below; it is not yet designated production-ready.
 
 ## Fixed decisions
 
@@ -58,7 +58,7 @@ Add one row per asset. Keep this table synchronized with the inventory.
 
 | Asset ID | Replaces glyph / current visual | Used by | Prompt/reference saved? | File | Status | QA / notes |
 |---|---|---|---|---|---|---|
-| — | No production assets yet | — | — | — | NOT STARTED | Wait for final source audit and inventory approval |
+| `object-bone` | 🦴 | `game/games/spatial.js` — “Where is the bone?” task | Prompt was generated in chat; no separate prompt file verified | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bone.png` | GENERATED / USER-APPROVED CANDIDATE | User praised the result and reported adding it to the repo; production readiness, transparency, dimensions, file size, and in-game scale not independently checked |
 
 ## Decisions / issues
 
@@ -74,3 +74,11 @@ Add one row per asset. Keep this table synchronized with the inventory.
 - [x] Consolidated duplicate asset IDs and merged their known use sites (including cow glyph variants and repeated shell rows); inventory table IDs are now unique.
 - [ ] Manually verify every proposed illustration against actual render scale, semantic teaching purpose, existing PNG assets, and excluded character/3D areas.
 - [ ] User approves the final treatment of each row before any generation begins.
+
+
+## Asset update — 2026-10-16
+
+- [x] Recorded `object-bone` as generated at `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bone.png` after verifying the path exists on `main`.
+- [x] User praised the bone result and reported adding it to the repository; this is recorded as approval of the illustration candidate, not as proof of production QA.
+- [ ] Verify image dimensions, file size, alpha/transparency, and visual legibility at the actual spatial-game render size.
+- [ ] After QA, decide whether to promote the asset to a production-ready location and update its inventory location accordingly.
