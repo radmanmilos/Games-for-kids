@@ -124,7 +124,7 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
     } finally { piece.setPointerCapture = setCapture; }
     return { ok: true, done: piece.dataset.done, dragging: piece.classList.contains('dragging'), transform: piece.style.transform };
   })()`);
-  check('touch interruption: pointercancel cancels drag and restores visual state', cancelOk.ok === true && cancelOk.done === undefined && cancelOk.dragging === false && cancelOk.transform === 'translate(-50%,-50%) scale(1)', JSON.stringify(cancelOk));
+  check('touch interruption: pointercancel cancels drag and restores visual state', cancelOk.ok === true && cancelOk.done === undefined && cancelOk.dragging === false && cancelOk.transform.replace(/\s+/g, '') === 'translate(-50%,-50%)scale(1)', JSON.stringify(cancelOk));
 
   // Touch interruption: second finger (multi-touch)
   const multiTouchOk = await h.evalv(`(() => {
@@ -137,9 +137,12 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
       piece.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 2, clientX: 200, clientY: 200 }));
       piece.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 2 }));
     } finally { piece.setPointerCapture = setCapture; }
-    return { ok: true, done: piece.dataset.done };
+    const primaryStillDragging = piece.classList.contains('dragging') && piece.dataset.done === undefined;
+    piece.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 1 }));
+    const cleanedUp = !piece.classList.contains('dragging') && piece.style.transform === 'translate(-50%, -50%) scale(1)';
+    return { ok: true, done: piece.dataset.done, primaryStillDragging, cleanedUp };
   })()`);
-  check('touch interruption: second finger does not break game', multiTouchOk.ok === true && multiTouchOk.done === undefined, JSON.stringify(multiTouchOk));
+  check('touch interruption: second pointer is ignored and primary cancellation cleans up', multiTouchOk.ok === true && multiTouchOk.done === undefined && multiTouchOk.primaryStillDragging && multiTouchOk.cleanedUp, JSON.stringify(multiTouchOk));
 
   // Touch interruption: page hidden
   const hiddenOk = await h.evalv(`(() => {
