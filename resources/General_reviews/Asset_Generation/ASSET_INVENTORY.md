@@ -39,7 +39,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | animal-horse | 🐴 | `game/games/animal_counting.js`; also candy smoke-test set | Counting and candy-game set | One shared simple horse PNG | REVIEW  | — | — |
 | animal-chicken | 🐔 | `game/games/animal_counting.js`; also candy smoke-test set | Counting and candy-game set | One shared simple chicken PNG | REVIEW  | — | — |
 | animal-bear | 🐻 | `game/games/maze.js` | Maze start marker (“bear”) | Use the exact supplied bear reference if appropriate; assess scale/transparent crop | REVIEW  | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bear.png` | — |
-| object-bone | 🦴 | `game/games/spatial.js` | Object in “Where is the bone?” spatial task | Simple bone PNG; keep silhouette clear | REVIEW  | — | — |
+| object-bone | 🦴 | `game/games/spatial.js` | Object in “Where is the bone?” spatial task | Simple bone PNG; keep silhouette clear | GENERATED / USER-APPROVED CANDIDATE  | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bone.png` | — |
 | object-house | 🏠 | `game/games/maze.js` | Maze goal marker (“house”) | Simple cozy house PNG | REVIEW  | — | — |
 | food-apple | 🍎 | `game/games/sorting.js` | Food sorting bin/item | One shared simple apple PNG | REVIEW  | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/apple.png` | — |
 | animal-pawprint | 🐾 | `game/games/sorting.js` | Animal-category bin label | Prefer a small paw icon (SVG or simple illustration); not necessarily watercolor | REVIEW  | — | — |

@@ -413,7 +413,7 @@ Add an entry only after explicit approval. The index records what each image tea
 |---|---|---|---|---|
 | Canonical bear reference | Character / animal | Fixed style anchor, per project decision | Rounded character construction, warm brown paint, restrained face, cream muzzle and subtle blush | Do not redraw or replace the canonical reference |
 | Canonical star reference | Simple object / shape | Fixed style anchor, per project decision | Plump rounded points, golden warmth, restrained edge shading, plain faceless treatment | No face, outline, or decorative extras |
-| — | — | No additional approved exemplars recorded by this section yet | Add only after explicit approval and review | WIP bundle presence alone is not approval |
+| `object-bone` — [`bone.png`](assets_work_in_progress_bundle/bone.png) | Simple object | User praised the generated result and reported adding it to the repository on 2026-10-16; recorded as user-approved candidate | Faceless object silhouette; warm ivory/beige palette, soft tan edge shading, restrained grain, broad simple form, no decorative scene elements | Current file has a cream paper-textured background rather than verified transparency; do not generalize background treatment to production assets without checking intended rendering |
 
 As approvals accumulate, replace the placeholder with individually grounded entries. Do not fabricate approval dates, claims, or links. If the project records approval in another authoritative tracker, link to that evidence and keep the status consistent across documents.
 
