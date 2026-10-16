@@ -30,6 +30,16 @@ async function waitReady(h) {
   const driveMode = await h.evalv(`window.__adv.mode`);
   check('drive mode: mode is drive', driveMode === 'drive');
 
+  const focusReset = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const a = window.__adv;
+    a.keys.left = true; a.keys.right = true; a.keys.jump = true;
+    window.dispatchEvent(new Event('blur'));
+    const cleared = Object.values(a.keys).every(value => value === false);
+    window.dispatchEvent(new Event('focus'));
+    return { cleared, keys: a.keys };
+  })())`));
+  check('adventure: blur clears every held keyboard movement flag', focusReset.cleared, JSON.stringify(focusReset));
+
   const drivePlayer = await h.evalv(`JSON.stringify({ x: window.__adv.player.x, y: window.__adv.player.y, offsetX: window.__adv.player.offsetX })`);
   const dp = JSON.parse(drivePlayer);
   check('drive mode: player spawns at valid position', dp.x >= 0 && dp.y >= 0 && dp.offsetX >= 0, drivePlayer);
