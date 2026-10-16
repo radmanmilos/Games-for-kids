@@ -23,6 +23,22 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('candy boots at level 1 (16 tiles, score 0)', ready);
   await h.evalv(`window.audioBuses.play=function(){};window.audioBuses.speakWithDuck=function(t,cb){if(cb)cb();};window.playAnimalSound=function(){}; true`);
 
+  const interruptedDrag = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const el = document.querySelector('#candyGrid .candy');
+    if (!el) return { ok:false, reason:'no tile' };
+    const rect = el.getBoundingClientRect();
+    const x = rect.left + rect.width / 2, y = rect.top + rect.height / 2;
+    const capture = el.setPointerCapture; el.setPointerCapture = () => {};
+    try {
+      el.dispatchEvent(new PointerEvent('pointerdown', { bubbles:true, pointerId:31, clientX:x, clientY:y }));
+      el.dispatchEvent(new PointerEvent('pointermove', { bubbles:true, pointerId:31, clientX:x+30, clientY:y }));
+      el.dispatchEvent(new PointerEvent('pointercancel', { bubbles:true, pointerId:31, clientX:x+30, clientY:y }));
+    } finally { el.setPointerCapture = capture; }
+    return { ok:true, dragging:el.classList.contains('dragging'), transform:el.style.transform,
+      neighborDragging:!!document.querySelector('#candyGrid .candy.dragging'), busy:candyBusy };
+  })())`));
+  check('interrupted candy drag restores tile/neighbor visuals and releases input', interruptedDrag.ok && !interruptedDrag.dragging && !interruptedDrag.neighborDragging && !interruptedDrag.transform && interruptedDrag.busy === false, JSON.stringify(interruptedDrag));
+
   const lv1 = await h.evalv(`JSON.stringify((() => {
     const grid = document.getElementById('candyGrid');
     const px = Math.min(innerWidth, innerHeight) / 100;
