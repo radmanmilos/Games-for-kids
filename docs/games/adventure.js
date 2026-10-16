@@ -105,6 +105,7 @@
         function bindButton(btn, keyProp) {
             const start = (e) => {
                 e.preventDefault();
+                if (keys[keyProp]) return;
                 initAudio();
                 keys[keyProp] = true;
             };
@@ -114,6 +115,7 @@
             };
             btn.addEventListener('touchstart', start, { passive: false });
             btn.addEventListener('touchend', end, { passive: false });
+            btn.addEventListener('touchcancel', end, { passive: false });
             btn.addEventListener('mousedown', start);
             btn.addEventListener('mouseup', end);
             btn.addEventListener('mouseleave', end);
@@ -1300,7 +1302,13 @@
         }
 
         // --- Loop ---
+        function resetHeldInput() {
+            Object.keys(keys).forEach(key => { keys[key] = false; });
+            document.querySelectorAll('#adv-controls [data-adv]').forEach(btn => btn.classList.remove('pressed'));
+        }
+
         function setPaused(p) {
+            if (p && !paused) resetHeldInput();
             if (p === paused) return;
             paused = p;
             if (!p) requestAnimationFrame(loop);
@@ -1313,8 +1321,11 @@
             requestAnimationFrame(loop);
         }
 
-        document.addEventListener('visibilitychange', () => setPaused(document.hidden));
-        window.addEventListener('blur', () => setPaused(true));
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) resetHeldInput();
+            setPaused(document.hidden);
+        });
+        window.addEventListener('blur', () => { resetHeldInput(); setPaused(true); });
         window.addEventListener('focus', () => setPaused(false));
 
         const game = {

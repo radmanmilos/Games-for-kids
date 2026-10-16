@@ -170,17 +170,27 @@ if (typeof window !== 'undefined') window.startCandy = startCandy;
 /* ---- swap dragging, with a real-time mirrored preview of the neighbor ---- */
 function attachCandyDrag(el){
   let startX, startY, dragging = false, locked = false, dir = null, neighborEl = null;
-  let r1, c1, r2, c2;
+  let r1, c1, r2, c2, activePointerId = null;
+  function resetDrag(){
+    dragging = false; locked = false; dir = null; activePointerId = null;
+    el.classList.remove('dragging');
+    el.style.transition = ''; el.style.transform = '';
+    if(neighborEl){ neighborEl.classList.remove('dragging'); neighborEl.style.transition = ''; neighborEl.style.transform = ''; }
+    neighborEl = null;
+  }
 
   el.addEventListener('pointerdown', (e)=>{
+    if(activePointerId !== null) return;
     const r = +el.dataset.r, c = +el.dataset.c;
     if(board[r][c] === -1){
+      activePointerId = e.pointerId;
       dragging = 'star';
       startX = e.clientX; startY = e.clientY;
       el.setPointerCapture(e.pointerId);
       return;
     }
     if(candyBusy) return;
+    activePointerId = e.pointerId;
     dragging = true; locked = false; dir = null; neighborEl = null;
     r1 = r; c1 = c;
     el.classList.add('dragging');
@@ -189,7 +199,7 @@ function attachCandyDrag(el){
   });
 
   el.addEventListener('pointermove', (e)=>{
-    if(dragging === 'star' || !dragging) return;
+    if(activePointerId !== e.pointerId || dragging === 'star' || !dragging) return;
     const dx = e.clientX - startX, dy = e.clientY - startY;
     const max = vminToPx(PITCH_VMIN);
     if(!locked){
@@ -216,6 +226,8 @@ function attachCandyDrag(el){
   });
 
   el.addEventListener('pointerup', (e)=>{
+    if(activePointerId !== e.pointerId) return;
+    activePointerId = null;
     if(dragging === 'star'){
       dragging = false;
       const r = +el.dataset.r, c = +el.dataset.c;
@@ -242,6 +254,12 @@ function attachCandyDrag(el){
       el.style.transform = 'translate(0,0)';
     }
   });
+  function cancelDrag(e){
+    if(activePointerId !== e.pointerId) return;
+    resetDrag();
+  }
+  el.addEventListener('pointercancel', cancelDrag);
+  el.addEventListener('lostpointercapture', cancelDrag);
 }
 
 function attachCandyKeys(el){

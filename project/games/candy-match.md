@@ -22,3 +22,5 @@ Educational goals:
 - Cause and effect
 
 ---
+
+Refactoring note (task 250, 2026-10-16): an interrupted tile drag cancels the preview, clears transient drag classes/transforms on both tiles, and releases pointer ownership without committing a swap. The Candy smoke includes a pointer-cancellation regression check.

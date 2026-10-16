@@ -22,3 +22,5 @@ Educational goals:
 - Observation (matching to reference)
 
 ---
+
+Refactoring note (task 250, 2026-10-16): restarting during the completion transition cancels pending scene/reward timers and invalidates callbacks from the previous round, preventing stale work from changing the restarted scene.

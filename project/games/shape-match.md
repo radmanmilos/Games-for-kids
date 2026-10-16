@@ -21,3 +21,5 @@ Educational goals:
 - Hand-eye coordination
 
 ---
+
+Refactoring note (task 250, 2026-10-16): tier 3 uses four explicit horizontal positions. Drag cancellation and lost pointer capture restore a piece to its neutral visual state; the Shapes smoke checks both on-stage geometry and cancellation cleanup.
