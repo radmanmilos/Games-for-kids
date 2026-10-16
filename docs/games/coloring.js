@@ -1,5 +1,15 @@
 /* ---------------- COLORING GAME ---------------- */
 const SVG_NS = 'http://www.w3.org/2000/svg';
+let coloringTransitionTimer = null;
+let coloringRewardTimer = null;
+let coloringRoundToken = 0;
+function cancelColoringTimers(){
+  if(coloringTransitionTimer !== null) clearTimeout(coloringTransitionTimer);
+  if(coloringRewardTimer !== null) clearTimeout(coloringRewardTimer);
+  coloringTransitionTimer = null;
+  coloringRewardTimer = null;
+  coloringRoundToken++;
+}
 const coloringHintColors = [
   {name:'Green', hex:'#67C971'},
   {name:'Red',   hex:'#FF4F5E'},
@@ -316,13 +326,20 @@ function tapColoringRegion(el){
     if(coloringSvg.querySelectorAll('.coloring-region.ok').length >= coloringTotal){
       coloringBusy = true;
       if(window.playAnimalSound) window.playAnimalSound(coloringSceneOrder[coloringSceneIdx].name);
+      const token = coloringRoundToken;
       const last = coloringSceneIdx >= coloringSceneOrder.length - 1;
       if(last){
         if(window.celebrate) window.celebrate('🏅');
-        setTimeout(showColoringReward, 700);
+        coloringRewardTimer = setTimeout(()=>{
+          if(token !== coloringRoundToken) return;
+          coloringRewardTimer = null;
+          showColoringReward();
+        }, 700);
       } else {
         if(window.celebrate) window.celebrate();
-        setTimeout(()=>{
+        coloringTransitionTimer = setTimeout(()=>{
+          if(token !== coloringRoundToken) return;
+          coloringTransitionTimer = null;
           coloringSceneIdx++;
           coloringBusy = false;
           buildColoringScene();
@@ -344,6 +361,7 @@ function startColoring(){
   if(!coloringSvg || !coloringRef) return;
   const restartBtn = document.getElementById('coloringRestart');
   if(restartBtn) restartBtn.addEventListener('click', ()=>{
+    cancelColoringTimers();
     if(window.popSound) window.popSound();
     const reward = document.getElementById('coloringReward');
     if(reward) reward.hidden = true;

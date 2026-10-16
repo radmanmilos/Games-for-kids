@@ -26,7 +26,7 @@ function startShapesRound(){
   roundShapes = shuffle(shapeDefs).slice(0, count);
   const slotOrder = shuffle(roundShapes);
   const trayOrder = shuffle(roundShapes);
-  const xPositions = count === 2 ? [30, 70] : [22, 50, 78];
+  const xPositions = count === 2 ? [30, 70] : count === 3 ? [22, 50, 78] : [16, 39, 62, 85];
 
   slotOrder.forEach((s,i)=>{
     const el = document.createElement('div');
@@ -109,22 +109,30 @@ function attachPieceKeys(piece){
 }
 
 function attachDrag(piece){
-  let startX, startY, origLeftPx, origTopPx, dx=0, dy=0;
+  let startX, startY, dx=0, dy=0, activePointerId=null;
+  function resetDrag(){
+    activePointerId = null;
+    piece.classList.remove('dragging');
+    piece.style.transition = 'transform .15s ease';
+    piece.style.transform = 'translate(-50%,-50%) scale(1)';
+  }
   piece.addEventListener('pointerdown', (e)=>{
-    if(piece.dataset.done) return;
+    if(piece.dataset.done || activePointerId !== null) return;
+    activePointerId = e.pointerId;
     piece.setPointerCapture(e.pointerId);
     piece.classList.add('dragging');
     startX = e.clientX; startY = e.clientY;
     dx = 0; dy = 0;
   });
   piece.addEventListener('pointermove', (e)=>{
-    if(!piece.classList.contains('dragging')) return;
+    if(activePointerId !== e.pointerId || !piece.classList.contains('dragging')) return;
     dx = e.clientX - startX;
     dy = e.clientY - startY;
     piece.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(1.08)`;
   });
   piece.addEventListener('pointerup', (e)=>{
-    if(!piece.classList.contains('dragging')) return;
+    if(activePointerId !== e.pointerId || !piece.classList.contains('dragging')) return;
+    activePointerId = null;
     piece.classList.remove('dragging');
     const rect = piece.getBoundingClientRect();
     const cx = rect.left + rect.width/2;
@@ -161,6 +169,14 @@ function attachDrag(piece){
         }
       }
     }
+  });
+  piece.addEventListener('pointercancel', (e)=>{
+    if(activePointerId !== e.pointerId) return;
+    resetDrag();
+  });
+  piece.addEventListener('lostpointercapture', (e)=>{
+    if(activePointerId !== e.pointerId) return;
+    resetDrag();
   });
 }
 
