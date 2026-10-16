@@ -60,6 +60,17 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   const T3R = JSON.parse(T3);
   check('tier 3: 4 slots + 4 pieces', T3R.slots === 4 && T3R.pieces === 4, T3);
   check('tier 3 button active', T3R.activeTier === '3', T3);
+  const tier3Geometry = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const stage = document.getElementById('shapesStage');
+    const box = stage.getBoundingClientRect();
+    const parts = [...stage.querySelectorAll('.slot,.piece')];
+    return { count: parts.length, allPositioned: parts.length === 8 && parts.every(el => {
+      const r = el.getBoundingClientRect();
+      return Number.isFinite(r.left) && Number.isFinite(r.top) && r.width > 0 && r.height > 0 &&
+        r.left >= box.left - 1 && r.right <= box.right + 1 && r.top >= box.top - 1 && r.bottom <= box.bottom + 1;
+    }) };
+  })())`));
+  check('tier 3: all four slots and pieces have finite on-stage geometry', tier3Geometry.count === 8 && tier3Geometry.allPositioned, JSON.stringify(tier3Geometry));
 
   // Back to tier 1 for placement tests
   await h.evalv(`document.querySelector('#shapesTier button[data-tier="1"]').click()`);
@@ -111,9 +122,9 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
       piece.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerId: 1, clientX: 100, clientY: 100 }));
       piece.dispatchEvent(new PointerEvent('pointercancel', { bubbles: true, pointerId: 1 }));
     } finally { piece.setPointerCapture = setCapture; }
-    return { ok: true, done: piece.dataset.done };
+    return { ok: true, done: piece.dataset.done, dragging: piece.classList.contains('dragging'), transform: piece.style.transform };
   })()`);
-  check('touch interruption: pointercancel does not place piece', cancelOk.ok === true && cancelOk.done === undefined, JSON.stringify(cancelOk));
+  check('touch interruption: pointercancel cancels drag and restores visual state', cancelOk.ok === true && cancelOk.done === undefined && cancelOk.dragging === false && cancelOk.transform === 'translate(-50%,-50%) scale(1)', JSON.stringify(cancelOk));
 
   // Touch interruption: second finger (multi-touch)
   const multiTouchOk = await h.evalv(`(() => {
