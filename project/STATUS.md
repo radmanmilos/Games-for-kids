@@ -12,8 +12,8 @@
 - Focused regression assertions are in `tools/shapes_smoke.js`, `tools/candy_smoke.js`, `tools/adventure_smoke.js`, and `tools/coloring_smoke.js`.
 - **Offline delivery:** app version bumped from 2.0.3 to 2.0.4 so installed devices can pick up the shipped fixes; the `manifest.json` entry in the offline integrity manifest is refreshed. `docs/` must mirror `game/` exactly.
 - **Docs:** `docs/` and `game/` had 257 matching paths and zero content-hash mismatches after the previous sync. Shared adventure behavior notes now cover Driving, Dino, Ocean, and Space.
-- **Validation:** CI run `38956943913` passed the fast gate and several targeted smokes; final job results were still pending at the last check. The previous run failed because of a stale offline manifest; that was corrected. Keep the PR draft until the latest CI and review requirements are complete.
-- **Still outstanding:** refresh review screenshots in `resources/General_reviews/Screenshot_Review/` for Shapes, matching_game (Candy), Coloring, Driving, Dino, Ocean, and Space; confirm the prescribed broader validation. Screenshot refresh and local browser tests cannot be executed in this connector-only environment.
+- **Validation:** the latest observed CI run passed the fast gate and all targeted game smokes plus `sw_update_smoke.js`; Release QA was still in progress and the extended Chromium/WebKit matrix was skipped. Re-check CI on the current PR head before completion. The earlier offline-manifest failure was corrected.
+- **Still outstanding:** refresh review screenshots in `resources/General_reviews/Screenshot_Review/` for Shapes, matching_game (Candy), Coloring, Driving, Dino, Ocean, Space, and Parent (the app version is visible there); confirm the prescribed broader validation. Screenshot refresh and local browser tests cannot be executed in this connector-only environment.
 
 ## Next actions
 
