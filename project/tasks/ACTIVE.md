@@ -18,4 +18,4 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-*(none — as of 2026-10-13. Candidate next work is listed in `project/STATUS.md`.)*
+- 250. IN PROGRESS — Game input and round-lifecycle refactoring: Shapes layout/drag cleanup, Candy drag cancellation, adventure input reset, Coloring timer invalidation + regression tests (2026-10-16, ChatGPT/GPT-6).
