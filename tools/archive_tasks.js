@@ -17,7 +17,7 @@ const ACTIVE = path.join(ROOT, 'project', 'tasks', 'ACTIVE.md');
 const INDEX = path.join(ROOT, 'project', 'tasks', 'INDEX.md');
 const ARCH = path.join(ROOT, 'archive', 'tasks');
 const TERMINAL = new Set(['DONE', 'FIXED', 'REVERTED', 'ABANDONED', 'RETIRED']);
-const ENTRY = /^- (\d+)\. ([A-Z][A-Z \/]*?)(?:\s*\([^)]*\))?\s+\u2014\s+(.*)$/;
+const ENTRY = /^- (\d+)\. ([A-Z][A-Z \/]*?)(?:\s*\([^)]*\))?\s+\u2014\s+(.*?)\r?$/;
 
 function rangeFor(n) {
   if (n <= 99) return '001-099';
