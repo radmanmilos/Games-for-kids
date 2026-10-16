@@ -18,4 +18,3 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 250. IN PROGRESS — Game input/round-lifecycle refactor: Shapes/Candy drag cancellation, shared adventure focus/touch reset, Coloring timer invalidation; regression tests, offline manifest, and app version 2.0.4 updated. Docs mirror hash-verified; required review screenshots and full validation still pending (2026-10-16, ChatGPT/GPT-6).

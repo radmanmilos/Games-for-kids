@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **250**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **251**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -250,3 +250,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 247 | DONE | 2026-10-13 | Racing (racing3d) chase camera pulled in on a phone in landscape (user report: "the car is too far away from… | tasks-200-249.md
 248 | DONE | 2026-10-13 | Racing (racing3d) chase-camera tuning, increment 1 (user follow-up to 247: "a bit more closer and the camera… | tasks-200-249.md
 249 | DONE | 2026-10-13 | Racing (racing3d) chase-camera lag + look-up + HUD layout (user play-test of 248: car position "better now",… | tasks-200-249.md
+250 | DONE | 2026-10-16 | Game input/round-lifecycle refactor: Shapes/Candy drag cancellation, shared adventure focus/touch reset,… | tasks-250-299.md
