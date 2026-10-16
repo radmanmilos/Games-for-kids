@@ -181,6 +181,24 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
   const refModeBack = await h.evalv(`!document.getElementById('coloringModeToggle').classList.contains('free')`);
   check('toggle back to reference mode works', refModeBack === true);
 
+  // Complete a scene, restart before the delayed transition, and ensure the old
+  // round cannot advance or display its reward after the restart.
+  const restartDuringTransition = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const regions = [...document.querySelectorAll('#coloringSvg .coloring-region')];
+    for (const region of regions) {
+      const swatch = [...document.querySelectorAll('#coloringPalette .coloring-swatch')].find(s => s.dataset.color === region.dataset.target);
+      if (swatch) swatch.click();
+      region.dispatchEvent(new PointerEvent('pointerdown', { bubbles:true }));
+    }
+    const scheduled = coloringTransitionTimer !== null || coloringRewardTimer !== null;
+    document.getElementById('coloringRestart').click();
+    return { scheduled, scene: coloringSceneIdx, busy: coloringBusy, rewardHidden: document.getElementById('coloringReward').hidden };
+  })())`));
+  check('coloring: restart cancels a pending scene/reward callback', restartDuringTransition.scheduled && restartDuringTransition.scene === 0 && restartDuringTransition.busy === false && restartDuringTransition.rewardHidden, JSON.stringify(restartDuringTransition));
+  await sleep(1600);
+  const staleTransition = JSON.parse(await h.evalv(`JSON.stringify({ scene:coloringSceneIdx, busy:coloringBusy, rewardHidden:document.getElementById('coloringReward').hidden })`));
+  check('coloring: canceled callback cannot change the restarted round', staleTransition.scene === 0 && staleTransition.busy === false && staleTransition.rewardHidden, JSON.stringify(staleTransition));
+
   // Static checks
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
