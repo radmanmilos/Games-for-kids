@@ -728,8 +728,8 @@
     "size": 15812
   },
   "games/adventure.js": {
-    "sha256": "c9e0da1a3f7e7ef14d6458ce979f901bc068b5600c4a910ccd7c530d2d6074a3",
-    "size": 57661
+    "sha256": "1368e872c56ee494cbbd0140de130728d2c52fb10c59ccae0b0420cb00305ef6",
+    "size": 58157
   },
   "games/animal_counting.js": {
     "sha256": "1ddf2ed67d37f32d491ab09aee204ad75feec37940c8715885c0699ab6e37acc",
@@ -748,16 +748,16 @@
     "size": 5920
   },
   "games/candy.js": {
-    "sha256": "8dd299c27253582bf84682ace725fb16b69145c094464a90658018b0afb6edf6",
-    "size": 19118
+    "sha256": "6f056f0ade18ed8e618fd18a3d74eca57f49b11ef87add037f57d41be19551b8",
+    "size": 19917
   },
   "games/classroom.js": {
     "sha256": "2cf80d7d7fbe7bbb193bb7d93acb6ff1a7d4dc490274ff226d46bd2fa74745a4",
     "size": 14513
   },
   "games/coloring.js": {
-    "sha256": "6a7f5654f82b5c97e9db70d54ee9b63131a237c30636dbbff3c243b86dd75066",
-    "size": 18412
+    "sha256": "f5b6ba59f7dc9f44828a22e3311e7f78335017676a353edd275d8795581cbaa5",
+    "size": 19106
   },
   "games/compare.js": {
     "sha256": "4183533077ef7c8df791231e3eeaddde4e847d3cd1384dc04b7e736e4a27910a",
@@ -816,8 +816,8 @@
     "size": 7138
   },
   "games/shapes.js": {
-    "sha256": "08101561c5699726718133db6fb0206bd86c048c18881c084fd415aec667e2c5",
-    "size": 6283
+    "sha256": "b11400f93d287590ae7a02e36de70efda94884dd0a5f753dc9d8aeb20cdebfd0",
+    "size": 6930
   },
   "games/sorting.js": {
     "sha256": "75663a0f94590a3a4addb088eac55b1c146672b1b7f4c39f3c95af6349f60708",
