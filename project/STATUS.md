@@ -2,16 +2,14 @@
 
 *Overwrite this file at the end of every session (never append). Budget: 6 KB, checked by `node tools/check_docs.js`.*
 
-**Last updated:** 2026-10-16 · **App version:** 2.0.4 (`game/manifest.json`)
+**Last updated:** 2026-10-17 · **App version:** 2.0.4 (`game/manifest.json`)
 **Repository:** https://github.com/radmanmilos/Games-for-kids
 
 ## Where we are
 
-- **No open task.** The next task number is **251**.
-- **Task 250 — DONE (closed 2026-10-16):** game input/round-lifecycle refactor (Shapes/Candy drag cancellation, shared adventure focus/touch reset, Coloring timer invalidation). Merged to `main` via PR #5. Closure this session (OpenCode/Big Pickle): refreshed the `Screenshot_Review` battery for the 8 affected pages with provenance/TOC stamped 250, then archived the task and overwrote this status. Only the Parent screens changed pixels (app version 2.0.3→2.0.4); the other 7 pages are pixel-identical, confirming the refactor was logic-only.
-- **CI is green** on the last runs (the PR #5 merge and its checks all succeeded). Re-check with `gh run list` before starting anything.
-- **Model recommendations refreshed:** `AGENTS.md` now points to the current free set (screenshots → Nemotron 3.5 Super VL Free; fast bulk coding → DeepSeek V4.1 Flash Free; huge context → Nemotron 3.5 Lightning Free; default stays Big Pickle), verified 2026-10-16 against `https://opencode.ai/zen/v1/models`. The retired MiMo V2.5 references were removed from `AGENTS.md` and `resources/visual_audit_instructions.md`.
-- **Tooling fix:** `tools/archive_tasks.js` now tolerates CRLF (its `ENTRY` regex anchored `$` and failed on a Windows `core.autocrlf=true` checkout, so it silently found nothing to archive). Fixed by allowing a trailing `\r`.
+- **No open task.** The next task number is **252**.
+- **Task 251 — DONE (closed 2026-10-17):** Little Explorer got a "fun speed" rocket toggle under the star counter — when ON the whole tick runs 3x faster (exact time-scale: `stepFrame()` calls `update()` 3x per frame, so per-substep displacement is unchanged and nothing tunnels). Default OFF on every load; the choice is deliberately not remembered. Merged to `main` via PR #6 (merge commit `2b34cda`). `kitty_smoke` went 34 → 35 checks (four task-251 guards, each negative-tested by mutation), `check_fast` 8/8, Release QA + CodeQL green, axe clean on `/pages/explorer.html`, offline E2E 23 games green. `game/` was synced to `docs/` and the four explorer review screenshots refreshed with `--task=251` (provenance/TOC stamped 251; `capture-manifest.json` left at the task-240 full battery, matching how tasks 249/250 handled a partial refresh).
+- **CI is green** on the PR #6 merge and its checks. Re-check with `gh run list` before starting anything.
 
 ## Candidate next work (the user decides; do not start without asking)
 

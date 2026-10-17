@@ -18,5 +18,3 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 251. IN PROGRESS — Little Explorer: "fun speed" toggle button under the point counter, 3× character movement when ON, default OFF (2026-10-17, OpenCode/Big Pickle)
-
