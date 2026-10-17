@@ -227,8 +227,8 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
     setFunSpeed(false);
     return { off, on, ratio: +(on / off).toFixed(2), restored: funSpeedOn };
   })()`);
-  check('task251: fun speed ON covers ~3x the distance of OFF in the same steps',
-    funPace && funPace.off > 0 && funPace.ratio > 2.5 && funPace.ratio < 4 && funPace.restored === false,
+  check('task251: fun speed ON covers ~2x the distance of OFF in the same steps',
+    funPace && funPace.off > 0 && funPace.ratio > 1.5 && funPace.ratio < 2.5 && funPace.restored === false,
     JSON.stringify(funPace));
 
   const patrol = await h.evalv(`(() => {

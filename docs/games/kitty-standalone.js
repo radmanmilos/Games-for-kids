@@ -1105,10 +1105,10 @@ document.getElementById('music-btn').classList.toggle('off', !musicOn);
 
 // --- Task 251: "fun speed" toggle (under the point counter) ---
 // ON runs the whole tick FUN_SPEED_MULT times per frame, so the hero walks and
-// jumps 3x quicker (an exact time-scale, so physics and collision behave the
+// jumps 2x quicker (an exact time-scale, so physics and collision behave the
 // same as at normal speed). OFF every load — the child gets normal speed by
 // default; the choice is deliberately not remembered.
-const FUN_SPEED_MULT = 3;
+const FUN_SPEED_MULT = 2;
 let funSpeedOn = false;
 
 function setFunSpeed(on) {
