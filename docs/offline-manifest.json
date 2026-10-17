@@ -776,7 +776,7 @@
     "size": 5054
   },
   "games/kitty-standalone.js": {
-    "sha256": "8c966107d62a1edbf41ccd63fbf53af7a0137a23b8ec33fcbcc5a9e0302aff4a",
+    "sha256": "2ba3b50bc4b23b05bf3e49ae371a7deec97f39bd41f270a4c968fda0cf73e016",
     "size": 102206
   },
   "games/maze.js": {
@@ -840,7 +840,7 @@
     "size": 16627
   },
   "manifest.json": {
-    "sha256": "c6f4fa6182ec0d982340be47788825829fc87b0760c688448b22b62dc4ff3dbb",
+    "sha256": "679039cba91ff7eb5049fcce1efa73eafeef635c6420776a215894aa6bb383c0",
     "size": 577
   },
   "pages/animal_counting.html": {
@@ -880,7 +880,7 @@
     "size": 4416
   },
   "pages/explorer.html": {
-    "sha256": "58b6e00dfaa0d680887a4e2d5373f6dae25ac8f8980f4098c9d284766c96d721",
+    "sha256": "a297cf7467b08e0e56a98531b91685421554d1db245ada6d80fbafaa6adbad76",
     "size": 10040
   },
   "pages/matching_game.html": {
