@@ -776,8 +776,8 @@
     "size": 5054
   },
   "games/kitty-standalone.js": {
-    "sha256": "10a7e5100a663c4523594851030b35d3e27c25a038bb4842b261bd59dda68a20",
-    "size": 101298
+    "sha256": "8c966107d62a1edbf41ccd63fbf53af7a0137a23b8ec33fcbcc5a9e0302aff4a",
+    "size": 102206
   },
   "games/maze.js": {
     "sha256": "99e1ccd0b6d0c5681e31a079e450034675f53d80cfeff874190b6ce892c07272",
@@ -880,8 +880,8 @@
     "size": 4416
   },
   "pages/explorer.html": {
-    "sha256": "f55d9de95bef5f045bb7002f6244d7a021df8df56a4d80caa93b95f7e3f1ac0c",
-    "size": 9523
+    "sha256": "58b6e00dfaa0d680887a4e2d5373f6dae25ac8f8980f4098c9d284766c96d721",
+    "size": 10040
   },
   "pages/matching_game.html": {
     "sha256": "2ce0485ec2721151745a43f42b2ebc2215cd61b412dba3c77fa31dad66e1f9af",

@@ -20,6 +20,7 @@ Features:
 - Character picker at game start (kitty default / explorer girl, task 90)
 - Character-specific death sounds (cat for the kitty, "Јао!" for the girl, task 90)
 - **Toddler-first (task 125):** soft respawn to last safe position, forgiving platforms (40px tolerance), exploration reward (bonus coin for new areas)
+- **Fun speed toggle (task 251):** a 🚀 button under the point counter runs the whole tick 3× faster (hero walks and jumps 3× quicker; OFF on every load — normal speed is the default)
 
 Educational goals:
 
