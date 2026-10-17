@@ -402,5 +402,21 @@
   "animals__phone-portrait__PLAY.png": {
     "updatedAt": "2026-10-07T17:58:37.530Z",
     "task": "216"
+  },
+  "fastcat_phone-portrait.png": {
+    "updatedAt": "2026-10-17T19:41:57.405Z",
+    "task": "254"
+  },
+  "fastcat_phone-landscape.png": {
+    "updatedAt": "2026-10-17T19:41:57.405Z",
+    "task": "254"
+  },
+  "fastcat_tablet-portrait.png": {
+    "updatedAt": "2026-10-17T19:41:57.405Z",
+    "task": "254"
+  },
+  "fastcat_tablet-landscape.png": {
+    "updatedAt": "2026-10-17T19:41:57.405Z",
+    "task": "254"
   }
 }

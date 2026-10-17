@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#4A3F6B">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Брзи мачак — Петрин свет</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+  <link rel="stylesheet" href="../styles/viewport.css">
+  <link rel="stylesheet" href="../styles/design-tokens.css">
+  <link rel="stylesheet" href="../shared/accessibility.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style>
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;}
+    html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:#5c94fc;font-family:'Fredoka',sans-serif;}
+    #app{position:fixed;inset:0;overflow:hidden;}
+    #canvas{width:100%;height:100%;display:block;}
+    .hud{position:absolute;z-index:10;display:flex;align-items:center;gap:2vmin;padding:1.2vmin 2.5vmin;background:rgba(0,0,0,.45);border:3px solid white;border-radius:12px;color:white;font:600 clamp(12px,2.4vmin,22px)/1.5 'Fredoka',sans-serif;pointer-events:none;}
+    #score-count{top:2vmin;left:16vmin;}
+    #meter-wrap{top:2vmin;left:50%;transform:translateX(-50%);gap:1.5vmin;}
+    #meter-label{white-space:nowrap;}
+    #meter-bar{width:min(38vmin,260px);height:2.6vmin;min-height:14px;background:rgba(255,255,255,.25);border:2px solid white;border-radius:99px;overflow:hidden;}
+    #meter-fill{height:100%;width:0%;background:linear-gradient(90deg,#FFD23F,#FF9FB6);border-radius:99px;transition:width .15s linear;}
+    .hud-btn{position:absolute;z-index:10;width:10vmin;height:10vmin;min-width:44px;min-height:44px;border-radius:50%;border:3px solid white;background:rgba(0,0,0,.45);color:white;font-size:5vmin;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+    .hud-btn:active{transform:scale(.92);}
+    #super-btn{top:2vmin;right:2vmin;background:rgba(0,0,0,.45);opacity:.55;font-size:4.5vmin;}
+    #super-btn.ready{opacity:1;background:#FFD23F;color:#4A3F6B;box-shadow:0 1vmin 0 rgba(0,0,0,.25),0 0 0 3px rgba(255,210,63,.6);animation:superPulse .8s ease-in-out infinite alternate;}
+    #super-btn.active{opacity:1;background:#FF6B6B;color:white;text-shadow:2px 2px 0 rgba(0,0,0,.3);animation:none;}
+    @keyframes superPulse{from{transform:scale(1);}to{transform:scale(1.08);}}
+    /* V21 (§39): superPulse is a state cue ("meter full — tap ⚡"), it only runs
+       while #super-btn.ready is actionable; freeze it under reduced motion like
+       the other justified indefinite cues. */
+    @media (prefers-reduced-motion: reduce){ #super-btn.ready{ animation:none; } }
+    .back-btn{position:absolute;top:2vmin;left:2vmin;z-index:30;width:10vmin;height:10vmin;min-width:44px;min-height:44px;border-radius:50%;border:none;background:rgba(74,63,107,.85);color:white;font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);cursor:pointer;}
+    .back-btn:active{transform:scale(.9);}
+    .btn{position:absolute;bottom:calc(2vmin + env(safe-area-inset-bottom));z-index:10;pointer-events:auto;width:min(110px,17vmin);height:min(110px,17vmin);border-radius:50%;border:6px solid #fff;display:flex;justify-content:center;align-items:center;font-size:min(40px,7vmin);color:white;box-shadow:0 8px 0 rgba(0,0,0,.3),inset 0 -4px 0 rgba(0,0,0,.2);cursor:pointer;text-shadow:3px 3px 0 rgba(0,0,0,.3);font-family:inherit;font-weight:700;}
+    .btn:active{transform:translateY(4px);box-shadow:0 4px 0 rgba(0,0,0,.3);}
+    .btn-slide{left:calc(2vmin + env(safe-area-inset-left));background-color:#43b047;}
+    .btn-jump{right:calc(2vmin + env(safe-area-inset-right));background-color:#e52521;}
+    #win-modal{display:none;position:absolute;inset:0;z-index:20;align-items:center;justify-content:center;flex-direction:column;background:rgba(74,63,107,.72);color:#FFD23F;text-align:center;padding:5vmin;}
+    #win-modal.show{display:flex;}
+    #win-modal h2{font-size:clamp(22px,5vmin,48px);margin:0 0 4vmin;}
+    #win-modal p{font-size:clamp(16px,3.5vmin,32px);margin:0 0 4vmin;color:white;}
+    #win-modal button{border:4px solid white;border-radius:12px;background:#67C971;color:white;padding:2vmin 4vmin;font:600 clamp(14px,2.5vmin,24px) 'Fredoka',sans-serif;box-shadow:0 6px 0 #267b35;cursor:pointer;}
+    #char-modal{display:none;position:absolute;inset:0;z-index:20;align-items:center;justify-content:center;flex-direction:column;background:rgba(74,63,107,.72);color:#FFD23F;text-align:center;padding:5vmin;}
+    #char-modal.show{display:flex;}
+    #char-modal h2{font-size:clamp(22px,5vmin,48px);margin:0 0 4vmin;}
+    #char-modal .char-btn{padding:2vmin;border-radius:16px;border:4px solid white;background:rgba(255,255,255,.15);cursor:pointer;}
+    #char-modal .char-btn:active{transform:scale(.95);}
+    #char-modal .char-btn img{width:14vmin;height:14vmin;display:block;}
+    /* Landscape-first: portrait devices get a gentle rotate hint (same pattern
+       as racing3d's #r3d-landscape-hint). Game logic runs in any orientation;
+       this only asks the parent/child to turn the device. */
+    #fc-rotate{display:none;position:absolute;inset:0;z-index:40;align-items:center;justify-content:center;flex-direction:column;gap:3vmin;background:rgba(74,63,107,.94);color:#FFD23F;font:600 clamp(18px,5vmin,34px)/1.4 'Fredoka',sans-serif;text-align:center;padding:5vmin;}
+    @media (orientation:portrait) and (max-width:900px){
+      #fc-rotate{display:flex;}
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <canvas id="canvas"></canvas>
+    <button id="back-btn" class="back-btn" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <div class="hud" id="score-count">⭐ 0</div>
+    <div class="hud" id="meter-wrap">
+      <span id="meter-label">СУПЕР ⚡</span>
+      <div id="meter-bar" role="progressbar" aria-label="Супер брзина" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="meter-fill"></div></div>
+    </div>
+    <button class="hud-btn" id="super-btn" aria-label="Супер брзина ⚡">⚡</button>
+    <div class="btn btn-slide" id="btn-slide" role="button" aria-label="Клизање">▼</div>
+    <div class="btn btn-jump" id="btn-jump" role="button" aria-label="Скок">▲</div>
+    <div id="win-modal" role="dialog" aria-label="Победа">
+      <h2>СВЕТ ПРЕЂЕН!</h2>
+      <p id="win-sub"></p>
+      <button id="modal-btn">ИГРАЈ ПОНОВО</button>
+    </div>
+    <div id="char-modal" role="dialog" aria-label="Изабери лик">
+      <h2>Изабери лик</h2>
+      <div style="display:flex;gap:3vmin;justify-content:center;">
+        <button class="char-btn" data-character="kitty" aria-label="Маца"><img src="../assets/images/explorer_kitty/01_idle_right.png" alt="Маца"></button>
+        <button class="char-btn" data-character="explorer" aria-label="Истраживачица"><img src="../assets/images/explorer/01_idle_right.png" alt="Истраживачица"></button>
+      </div>
+    </div>
+    <div id="fc-rotate">Окрени уређај водоравно 🌍</div>
+  </div>
+
+  <script src="../data/serbian.js"></script>
+  <script src="../shared/navigation.js"></script>
+  <script src="../shared/celebration.js"></script>
+  <script src="../shared/audio.js"></script>
+  <script src="../shared/speech.js"></script>
+  <script src="../shared/utils.js"></script>
+  <script src="../games/fastcat.js"></script>
+  <script src="../shared/audio-buses.js"></script>
+  <script src="../shared/viewport.js"></script>
+  <script src="../shared/input.js"></script>
+  <script src="../shared/feedback.js"></script>
+  <script src="../shared/motion.js"></script>
+  <script src="../data/app-registry.js"></script>
+  <script src="../shared/main.js"></script>
+</body>
+</html>

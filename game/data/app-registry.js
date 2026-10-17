@@ -84,6 +84,8 @@ window.APP_REGISTRY = [
     route: 'game-racing3d', hubOrder: 10, hubGroup: 'games', back: 'r3d-back', start: 'startRacing3D' },
   { id: 'explorer', path: 'pages/explorer.html', category: 'games', title: window.SERBIAN.titles.explorer, smoke: 'kitty_smoke', screenshot: true, offline: true, toddler: false,
     route: 'game-explorer', hubOrder: 1, hubGroup: 'games', back: 'back-btn', start: null },
+  { id: 'fastcat', path: 'pages/fastcat.html', category: 'games', title: window.SERBIAN.titles.fastcat, smoke: 'fastcat_smoke', screenshot: true, offline: true, toddler: false,
+    route: 'game-fastcat', hubOrder: 11, hubGroup: 'games', back: 'back-btn', start: 'startFastCat' },
   { id: 'parent', path: 'pages/parent.html', category: 'parent', title: window.SERBIAN.titles.parent, smoke: null, screenshot: false, offline: true, toddler: false,
     route: 'game-parent', hubOrder: null, hubGroup: null, back: 'back-btn', start: null }
 ];

@@ -18,3 +18,6 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
+- 254. DONE (2026-10-17, OpenCode/Big Pickle) — New game „Брзи мачак" (fastcat): one deterministic 15000px auto-runner course (seed 254, shuffled 7-type chunk deck so every hazard family recurs), coins/bolts → ⚡ super (4s invulnerable 2×, smashes obstacles), 4 hazards, no fail states, char picker, landscape + rotate overlay. First smoke run: 6 fail + 1 crash, all root-caused (deck, plateau coin off, slide re-anchor, stale/vacuous asserts, h.c.send, jump-approach offset). Final: fastcat_smoke 42/42, hub_smoke all green (10th button → 4-col short-landscape grid; V21 allowlist gains superPulse ready cue, reduced-motion frozen), check_fast 8/8, manifest 2.0.6 → 2.1.0, offline + docs + 4 screenshots refreshed.
+- 253. DONE (2026-10-17, OpenCode/Big Pickle) — Explorer fun-speed multiplier 3x → 2x (user request); manifest 2.0.6, offline manifest regenerated after CI caught the stale hashes.
+

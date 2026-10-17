@@ -126,10 +126,14 @@
   }
   /* Short viewports (landscape phones): a 24vh top margin plus only 2 columns
      pushed the last row below the fold, which hid the racing3d button entirely
-     (measured: bottom=639 in a 390px viewport). Three narrower columns fit. */
+     (measured: bottom=639 in a 390px viewport). Three narrower columns fit.
+     task 254: with 10 game buttons the 90vmin (351px) grid still only fit 3
+     columns and fastcat landed in row 4 (bottom=493 in a 390px viewport), so
+     widen to 32rem — 4 columns keep all 10 buttons inside 3 rows. */
   @media (max-height: 560px){
     #hub-games .hub-grid, #hub-learning .hub-grid{
       margin: 14vh auto 0;
+      width: min(94%, 32rem);
       grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
       padding-bottom: 3vmin;
     }
@@ -287,6 +291,7 @@
       <button class="hub-btn" data-go="game-puzzle" aria-label="Слагалице">🧩</button>
       <button class="hub-btn sky" data-go="game-racing" aria-label="Мала тркачица" hidden>🏎️</button>
       <button class="hub-btn sky" data-go="game-racing3d" aria-label="Мала тркачица 3Д">🏎️💨</button>
+      <button class="hub-btn sky" data-go="game-fastcat" aria-label="Брзи мачак">🐱💨</button>
     </div>
   </div>
 

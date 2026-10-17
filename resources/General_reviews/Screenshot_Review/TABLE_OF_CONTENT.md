@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-17T15:10:05.365Z
+- Генерисано / Generated: 2026-10-17T19:41:57.405Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -48,6 +48,10 @@
 | `explorer_phone-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 390×844 | портрет | — | 17.10.2026. 17:10:05 | 251 |
 | `explorer_tablet-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 1180×820 | пејзаж | — | 17.10.2026. 17:10:05 | 251 |
 | `explorer_tablet-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 820×1180 | портрет | — | 17.10.2026. 17:10:05 | 251 |
+| `fastcat_phone-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 844×390 | пејзаж | — | 17.10.2026. 21:41:57 | 254 |
+| `fastcat_phone-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 390×844 | портрет | — | 17.10.2026. 21:41:57 | 254 |
+| `fastcat_tablet-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 1180×820 | пејзаж | — | 17.10.2026. 21:41:57 | 254 |
+| `fastcat_tablet-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 820×1180 | портрет | — | 17.10.2026. 21:41:57 | 254 |
 | `hub_phone-landscape.png` | Петрин свет — почетна | `/index.html` | 844×390 | пејзаж | — | 12.10.2026. 11:52:29 | 240 |
 | `hub_phone-portrait.png` | Петрин свет — почетна | `/index.html` | 390×844 | портрет | — | 12.10.2026. 11:52:29 | 240 |
 | `hub_tablet-landscape.png` | Петрин свет — почетна | `/index.html` | 1180×820 | пејзаж | — | 12.10.2026. 11:52:29 | 240 |
