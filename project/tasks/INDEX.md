@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **252**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **253**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -252,3 +252,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 249 | DONE | 2026-10-13 | Racing (racing3d) chase-camera lag + look-up + HUD layout (user play-test of 248: car position "better now",… | tasks-200-249.md
 250 | DONE | 2026-10-16 | Game input/round-lifecycle refactor: Shapes/Candy drag cancellation, shared adventure focus/touch reset,… | tasks-250-299.md
 251 | DONE | 2026-10-17 | Little Explorer: "fun speed" toggle button under the point counter, 3x character movement when ON, default… | tasks-250-299.md
+252 | DONE | 2026-10-17 | Bump app version 2.0.4 to 2.0.5 so installed/offline devices pick up the task-251 fun speed toggle… | tasks-250-299.md
