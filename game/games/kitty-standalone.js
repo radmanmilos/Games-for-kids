@@ -1103,6 +1103,34 @@ document.getElementById('music-btn').addEventListener('click', () => setMusicOn(
 document.getElementById('music-btn').textContent = musicOn ? '🔊' : '🔇';
 document.getElementById('music-btn').classList.toggle('off', !musicOn);
 
+// --- Task 251: "fun speed" toggle (under the point counter) ---
+// ON runs the whole tick FUN_SPEED_MULT times per frame, so the hero walks and
+// jumps 3x quicker (an exact time-scale, so physics and collision behave the
+// same as at normal speed). OFF every load — the child gets normal speed by
+// default; the choice is deliberately not remembered.
+const FUN_SPEED_MULT = 3;
+let funSpeedOn = false;
+
+function setFunSpeed(on) {
+    funSpeedOn = on;
+    const btn = document.getElementById('fun-speed-btn');
+    if (btn) {
+        btn.classList.toggle('on', on);
+        btn.setAttribute('aria-pressed', String(on));
+    }
+    playSound('pop');
+}
+
+document.getElementById('fun-speed-btn').addEventListener('click', () => {
+    initAudio();
+    setFunSpeed(!funSpeedOn);
+});
+
+function stepFrame() {
+    const steps = funSpeedOn ? FUN_SPEED_MULT : 1;
+    for (let i = 0; i < steps; i++) update();
+}
+
 function spawnParticles(x, y, color) {
     const MAX_PARTICLES = 120;
     if (particles.length > MAX_PARTICLES) return;
@@ -2528,7 +2556,7 @@ function setPaused(p) {
 
 function loop() {
     if (paused) return;
-    update();
+    stepFrame();
     draw();
     requestAnimationFrame(loop);
 }

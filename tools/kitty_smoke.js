@@ -95,6 +95,32 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
     geom && geom.hud.length === 3 && geom.hud.every(c => !c.missing && c.inViewport),
     JSON.stringify(geom && geom.hud));
 
+  // Task 251: the "fun speed" toggle sits under the point counter, a real tap
+  // can reach it, and it boots OFF (normal speed is the default for a child).
+  const funUi = await h.evalv(`(() => {
+    const b = document.getElementById('fun-speed-btn');
+    const c = document.getElementById('coin-count');
+    if (!b || !c) return { missing: true };
+    const r = b.getBoundingClientRect(), cr = c.getBoundingClientRect();
+    const cx = (r.left + r.right) / 2, cy = (r.top + r.bottom) / 2;
+    const top = document.elementFromPoint(cx, cy);
+    return {
+      inViewport: r.top >= 0 && r.left >= 0 && r.bottom <= innerHeight && r.right <= innerWidth,
+      onTop: !!(top && top.closest && top.closest('#fun-speed-btn') === b),
+      underCounter: r.top >= cr.bottom - 1,
+      rightAligned: Math.abs(r.right - cr.right) < 4,
+      label: (b.textContent || '').trim(),
+      on: b.classList.contains('on'),
+      pressed: b.getAttribute('aria-pressed'),
+      state: funSpeedOn
+    };
+  })()`);
+  check('task251: fun speed button under the point counter, tappable, default OFF',
+    funUi && !funUi.missing && funUi.inViewport && funUi.onTop && funUi.underCounter &&
+    funUi.rightAligned && funUi.label.length > 0 &&
+    funUi.on === false && funUi.pressed === 'false' && funUi.state === false,
+    JSON.stringify(funUi));
+
   const bootName = await h.evalv('document.getElementById("world-name").textContent');
   check('boot: world HUD renders after choosing the kitty', typeof bootName === 'string' && bootName.length > 0, bootName);
 
@@ -165,6 +191,45 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   check('static: walker draw + creation wired', all.includes('drawWalker(theme.walker)') && all.includes('walkers = (w.walkers || []).map'), 'drawWalker/loadWorld');
 
   await h.evalv('setPaused(true); "paused"');
+
+  // Task 251: the button really toggles the flag (and its pressed/on states),
+  // and ON runs the tick 3x per frame — measured as distance covered over the
+  // same number of steps, on a cleared stretch of the first ground.
+  const funToggle = await h.evalv(`(() => {
+    const b = document.getElementById('fun-speed-btn');
+    const snap = () => ({ state: funSpeedOn, pressed: b.getAttribute('aria-pressed'), cls: b.classList.contains('on') });
+    b.click();
+    const on = snap();
+    b.click();
+    const off = snap();
+    return { on, off };
+  })()`);
+  check('task251: fun speed button toggles ON then OFF (flag + aria-pressed + class)',
+    funToggle && funToggle.on.state === true && funToggle.on.pressed === 'true' && funToggle.on.cls === true &&
+    funToggle.off.state === false && funToggle.off.pressed === 'false' && funToggle.off.cls === false,
+    JSON.stringify(funToggle));
+
+  const funPace = await h.evalv(`(() => {
+    const run = (on) => {
+      setFunSpeed(on);
+      worldPos = 0; loadWorld();
+      pipes.length = 0; walkers.length = 0; mice.length = 0;
+      keys.left = keys.jump = false; keys.right = true;
+      player.x = 40; player.grounded = true; player.y = groundY - player.height;
+      player.vx = 0; player.vy = 0; player.squish = 1; player.animTime = 0;
+      const x0 = player.x;
+      for (let i = 0; i < 30; i++) stepFrame();
+      keys.right = false;
+      return +(player.x - x0).toFixed(1);
+    };
+    const off = run(false);
+    const on = run(true);
+    setFunSpeed(false);
+    return { off, on, ratio: +(on / off).toFixed(2), restored: funSpeedOn };
+  })()`);
+  check('task251: fun speed ON covers ~3x the distance of OFF in the same steps',
+    funPace && funPace.off > 0 && funPace.ratio > 2.5 && funPace.ratio < 4 && funPace.restored === false,
+    JSON.stringify(funPace));
 
   const patrol = await h.evalv(`(() => {
     worldPos = 0; loadWorld();
@@ -443,6 +508,36 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   })()`);
   check('task73: hero mirrors when facing left (runtime flip)',
     mirror && mirror.mirrored === true, JSON.stringify(mirror));
+
+  // Task 251: on the two smallest viewports the new toggle must not collide with
+  // the counter or any other control (a child must be able to tap each of them)
+  // and must stay fully inside the viewport.
+  const funFit = async (w, ht) => {
+    await h.c.send('Emulation.setDeviceMetricsOverride', { width: w, height: ht, deviceScaleFactor: 1, mobile: false });
+    await h.sleep(150);
+    await h.evalv(`window.dispatchEvent(new Event('resize'))`);
+    await h.sleep(100);
+    return await h.evalv(`(() => {
+      const ids = ['#coin-count', '#worlds-btn', '#music-btn', '#btn-jump'];
+      const f = document.getElementById('fun-speed-btn');
+      if (!f) return { missing: true };
+      const fr = f.getBoundingClientRect();
+      const hit = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+      return {
+        inViewport: fr.top >= 0 && fr.left >= 0 && fr.bottom <= innerHeight && fr.right <= innerWidth,
+        overlaps: ids.filter(s => {
+          const b = document.querySelector(s);
+          return b && hit(fr, b.getBoundingClientRect());
+        })
+      };
+    })()`);
+  };
+  const funSmall = await funFit(844, 390);
+  const funTall = await funFit(390, 844);
+  check('task251: fun speed button stays in view and clears every HUD control at 844x390 and 390x844',
+    funSmall && funTall && funSmall.inViewport && funSmall.overlaps.length === 0 &&
+    funTall.inViewport && funTall.overlaps.length === 0,
+    JSON.stringify({ small: funSmall, tall: funTall }));
 
   // Regression: a viewport resize after load must keep the ground anchored to
   // the bottom so the kitty never "drops through the ground and respawns".
