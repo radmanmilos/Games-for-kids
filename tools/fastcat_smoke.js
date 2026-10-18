@@ -8,7 +8,9 @@
    meter, pointerdown activation while other controls are held, pickups
    prolong the super blast, auto-advance after the win), play-test 6 (2.5s
    blast with small capped prolongs, ⚡ raised to a 12vmin/40px gap, СЛЕДЕЋИ СВЕТ
-   always offered incl. the last-level wrap to a new tour), portrait play (no rotate gate — controls tappable there), control geometry
+   always offered incl. the last-level wrap to a new tour), play-test 7
+   (СЛЕДЕЋИ СВЕТ computed-visible + clear green, replay = round yellow
+   icon-only button clicked for real), portrait play (no rotate gate — controls tappable there), control geometry
    (on-screen + topmost at the centre point), and the route contract.
    Run:  node tools/fastcat_smoke.js     Requires Node >= 22. CHROME_PATH optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -213,9 +215,15 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
     goal.won && goal.score >= 100, JSON.stringify(goal));
   const modalShown = await h.evalv(`document.getElementById('win-modal').classList.contains('show')`);
   check('goal: win modal is visible', modalShown === true);
-  const replay = JSON.parse(await h.evalv(`window.__fc.restart(); JSON.stringify(window.__fc.state())`));
+  // play-test 7: the replay control is a round YELLOW icon-only button.
+  const mbRound = JSON.parse(await h.evalv(`JSON.stringify((function(){ var b = document.getElementById('modal-btn'), cs = getComputedStyle(b), r = b.getBoundingClientRect(); return { w: Math.round(r.width), h: Math.round(r.height), radius: cs.borderRadius, bg: cs.backgroundColor, text: b.textContent.trim(), svg: !!b.querySelector('svg') }; })())`));
+  check('replay is a round yellow icon-only button (repeat glyph, no text)',
+    mbRound.w === mbRound.h && mbRound.radius === '50%' && mbRound.bg === 'rgb(255, 210, 63)' &&
+    mbRound.text === '' && mbRound.svg === true, JSON.stringify(mbRound));
+  // play-test 7: exercise the REAL replay button (icon click → fresh run).
+  const replay = JSON.parse(await h.evalv(`document.getElementById('modal-btn').click(), JSON.stringify(window.__fc.state())`));
   // play-test 5: the meter starts FULL on every (re)run — that is the point.
-  check('replay: restart resets win state and re-arms the full starting meter',
+  check('replay: clicking the round ИГРАЈ ПОНОВО button resets win state and re-arms the full meter',
     replay.won === false && replay.score === 0 && replay.meter === 100, JSON.stringify(replay));
 
   // --- Themed levels (play-test 4; task 254): picker, per-level theme,
@@ -317,9 +325,14 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   // world" and is offered on the LAST level too, where it wraps to a new tour.
   await h.evalv(`window.__fc.selectLevel(3); true`);
   const nxPre = JSON.parse(await h.evalv(`window.__fc.teleport(${spots.goal - 30}); JSON.stringify(window.__fc.step(10))`));
-  const nxShown = await h.evalv(`(function(){ var m = document.getElementById('win-modal'), n = document.getElementById('next-btn'); return m.classList.contains('show') && n.style.display !== 'none' && n.textContent.indexOf('СЛЕДЕЋИ СВЕТ') === 0; })()`);
-  check('win on a mid level: win modal + СЛЕДЕЋИ СВЕТ button (wording + visible)',
-    nxPre.won && nxShown === true, JSON.stringify({ won: nxPre.won, nxShown }));
+  // play-test 7: assert COMPUTED visibility + rendered box + green — the old
+  // inline `style.display` check was vacuous (a CSS display:none underneath
+  // kept the button hidden while the assertion passed).
+  const nxShown = JSON.parse(await h.evalv(`JSON.stringify((function(){ var m = document.getElementById('win-modal'), n = document.getElementById('next-btn'), r = n.getBoundingClientRect(), cs = getComputedStyle(n); return { shown: m.classList.contains('show'), visible: cs.display !== 'none' && r.width > 0, text: n.textContent, bg: cs.backgroundColor }; })())`));
+  check('win on a mid level: СЛЕДЕЋИ СВЕТ is a CLEAR GREEN, actually-rendered button',
+    nxPre.won === true && nxShown.shown === true && nxShown.visible === true &&
+    nxShown.text.indexOf('СЛЕДЕЋИ СВЕТ') === 0 && nxShown.bg === 'rgb(103, 201, 113)',
+    JSON.stringify({ won: nxPre.won, ...nxShown }));
   await h.evalv(`document.getElementById('next-btn').click(); true`);
   await sleep(60);
   const nxt = JSON.parse(await h.evalv(`JSON.stringify(Object.assign(window.__fc.state(), {
@@ -330,9 +343,10 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
     nxt.won === false && nxt.score === 0 && nxt.x > 0 && nxt.modalHidden === true,
     JSON.stringify(nxt));
   await h.evalv(`window.__fc.selectLevel(9); window.__fc.teleport(${spots.goal - 30}); JSON.stringify(window.__fc.step(10))`);
-  const lastBtn = JSON.parse(await h.evalv(`JSON.stringify((function(){ var n = document.getElementById('next-btn'); return { display: n.style.display, text: n.textContent }; })())`));
-  check('last level (10 · Острво): СЛЕДЕЋИ СВЕТ still offered (no replay-only dead end)',
-    lastBtn.display !== 'none' && lastBtn.text.indexOf('СЛЕДЕЋИ СВЕТ') === 0, JSON.stringify(lastBtn));
+  const lastBtn = JSON.parse(await h.evalv(`JSON.stringify((function(){ var n = document.getElementById('next-btn'), r = n.getBoundingClientRect(); return { computed: getComputedStyle(n).display, w: Math.round(r.width), text: n.textContent }; })())`));
+  check('last level (10 · Острво): СЛЕДЕЋИ СВЕТ still rendered (no replay-only dead end)',
+    lastBtn.computed !== 'none' && lastBtn.w > 0 && lastBtn.text.indexOf('СЛЕДЕЋИ СВЕТ') === 0,
+    JSON.stringify(lastBtn));
   await h.evalv(`document.getElementById('next-btn').click(); true`);
   await sleep(60);
   const wrap = JSON.parse(await h.evalv(`JSON.stringify(Object.assign(window.__fc.state(), {

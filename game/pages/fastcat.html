@@ -74,7 +74,17 @@
     #level-grid .level-btn:active{transform:scale(.95);}
     #level-grid .lv-emoji{display:block;font-size:clamp(20px,5vmin,40px);}
     #level-close{margin-top:3vmin;border:3px solid white;border-radius:12px;background:rgba(255,255,255,.15);color:white;padding:1.5vmin 3vmin;font:600 clamp(12px,2.5vmin,20px) 'Fredoka',sans-serif;cursor:pointer;}
-    #next-btn{display:none;margin-top:2vmin;background:#4A90D9 !important;box-shadow:0 6px 0 #2C5F94 !important;}
+    /* play-test 7: the end-of-level action must be unmissable — a CLEAR GREEN
+       button (this rule previously carried `display:none` + a blue override:
+       the win block only ever cleared the INLINE style, so the stylesheet's
+       display:none kept the button computed-hidden and the child saw only the
+       replay). The #win-modal wrapper hides it until the win, so the button
+       itself needs no display:none; it inherits the modal's green + white
+       border and gets a bigger label. */
+    #win-modal #next-btn{display:inline-block;margin-top:3vmin;font-size:clamp(18px,4vmin,30px);}
+    /* play-test 7: replay is a small round YELLOW icon-only button (repeat
+       glyph; the label lives in aria-label/title for the parent). */
+    #win-modal #modal-btn{width:clamp(48px,11vmin,64px);height:clamp(48px,11vmin,64px);border-radius:50%;padding:0;margin-top:3vmin;background:#FFD23F;color:#4A3F6B;box-shadow:0 6px 0 #C99A0E;font-size:clamp(22px,5.5vmin,32px);display:flex;align-items:center;justify-content:center;}
     /* play-test 2: portrait play is allowed — no rotate gate; the layout
        (full-bleed canvas + corner controls) works in both orientations. */
   </style>
@@ -98,7 +108,7 @@
       <h2>СВЕТ ПРЕЂЕН!</h2>
       <p id="win-sub"></p>
       <button id="next-btn">СЛЕДЕЋИ СВЕТ! ➜</button>
-      <button id="modal-btn">ИГРАЈ ПОНОВО</button>
+      <button id="modal-btn" aria-label="Играј поново" title="Играј поново"><svg class="ps-icon" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-8 8s3.58 8 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
     </div>
     <div id="level-modal" role="dialog" aria-label="Изабери ниво">
       <h2>Изабери ниво</h2>
