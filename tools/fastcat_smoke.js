@@ -2,7 +2,9 @@
    Drives pages/fastcat.html headlessly: character picker, auto-run forward
    motion, jump/slide, coin→meter fill, super-speed gate + drain + 2x speed,
    hazard behaviours (puddle slows, rock jumpable, bar slideable, boost pad),
-   win + restart, portrait play (no rotate gate — controls tappable there), control geometry
+   win + restart, themed levels (🌍 picker with 10 open choices, per-level
+   pickup emoji + palette + music loop, per-level seeds, next-level flow,
+   ♪ toggle on the shared pkMusic key), portrait play (no rotate gate — controls tappable there), control geometry
    (on-screen + topmost at the centre point), and the route contract.
    Run:  node tools/fastcat_smoke.js     Requires Node >= 22. CHROME_PATH optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -178,14 +180,106 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   const replay = JSON.parse(await h.evalv(`window.__fc.restart(); JSON.stringify(window.__fc.state())`));
   check('replay: restart resets score, meter and win state', replay.won === false && replay.score === 0 && replay.meter === 0, JSON.stringify(replay));
 
+  // --- Themed levels (play-test 4; task 254): picker, per-level theme,
+  //     per-level music loop, next-level flow ------------------------------
+  const th = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.state())`));
+  check('level 1 starts themed: pickup emoji + music key + course still complete',
+    th.level === 0 && th.coinEmoji === '🌺' && th.musicTheme === 'fcJungle' &&
+    th.coinsTotal > 30 && th.rocks > 0 && th.banners > 0 && th.puddles > 0 && th.boosts > 0,
+    JSON.stringify(th));
+  const label1 = await h.evalv(`document.getElementById('level-label').textContent`);
+  check('level label shows number + Serbian name + emoji (1 · Прашума 🌺)',
+    /^1\s·\sПрашума\s🌺$/.test(label1), JSON.stringify(label1));
+  const scoreIcon1 = await h.evalv(`document.getElementById('score-count').textContent`);
+  check('score icon is the level pickup emoji (star coins are gone)', scoreIcon1.indexOf('🌺') === 0, JSON.stringify(scoreIcon1));
+
+  // The picker: 🌍 opens it, 10 open choices (explorer parity — no locks),
+  // picking Вулкан re-themes everything.
+  await h.evalv(`document.getElementById('levels-btn').click(); true`);
+  await sleep(60);
+  const menu = JSON.parse(await h.evalv(`JSON.stringify({
+    shown: document.getElementById('level-modal').classList.contains('show'),
+    buttons: document.querySelectorAll('#level-grid .level-btn').length,
+    fourth: (document.querySelectorAll('#level-grid .level-btn')[3] || {}).textContent || ''
+  })`));
+  check('level picker: 🌍 opens the modal with 10 open choices (names + emoji)',
+    menu.shown && menu.buttons === 10 && /Вулкан/.test(menu.fourth) && /🌋/.test(menu.fourth),
+    JSON.stringify(menu));
+  await h.evalv(`document.querySelector('#level-grid .level-btn[data-level="3"]').click(); true`);
+  await sleep(60);
+  const vul = JSON.parse(await h.evalv(`JSON.stringify(Object.assign(window.__fc.state(), {
+    modalHidden: !document.getElementById('level-modal').classList.contains('show')
+  }))`));
+  const vulLabel = await h.evalv(`document.getElementById('level-label').textContent`);
+  check('picking Вулкан: re-themed (🌋 pickup, fcVolcano loop, new label), modal closed, fresh run',
+    vul.level === 3 && vul.coinEmoji === '🌋' && vul.musicTheme === 'fcVolcano' &&
+    vul.won === false && vul.score === 0 && vul.coinsTotal > 30 && vul.modalHidden === true &&
+    /4\s·\sВулкан\s🌋/.test(vulLabel),
+    JSON.stringify({ vul, vulLabel }));
+
+  // Same deck, different seed per level → the course itself must differ.
+  const l0 = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.selectLevel(0).level)`));
+  const s0 = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.spots())`));
+  const s3 = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.selectLevel(3).level)`));
+  const s3b = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.spots())`));
+  check('each level generates its own deterministic course (seed 254 + 101*i)',
+    l0 === 0 && s3 === 3 &&
+    JSON.stringify(s0.rocks) !== JSON.stringify(s3b.rocks) &&
+    JSON.stringify(s0.coins) !== JSON.stringify(s3b.coins),
+    JSON.stringify({ rocksL0: s0.rocks.slice(0, 3), rocksL3: s3b.rocks.slice(0, 3) }));
+
+  // Music: the loop timer belongs to the level (present iff audio is
+  // available in this environment — probe honestly, never vacuously).
+  const audioOk = await h.evalv(`(function(){ try { return !!(window.ctx && window.ctx()); } catch (e) { return false; } })()`);
+  const mus = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.state())`));
+  check('music: per-level loop runs with the level (timer iff audio context exists)',
+    mus.musicRunning === audioOk && mus.musicTheme === 'fcVolcano',
+    JSON.stringify({ audioOk, musicRunning: mus.musicRunning, musicTheme: mus.musicTheme }));
+  await h.evalv(`document.getElementById('music-btn').click(); true`);
+  await sleep(60);
+  const musOff = JSON.parse(await h.evalv(`JSON.stringify({ st: window.__fc.state(), pk: localStorage.getItem('pkMusic') })`));
+  const offClass = await h.evalv(`document.getElementById('music-btn').classList.contains('off')`);
+  check('♪ toggle: mutes the loop (timer stopped, .off state, shared pkMusic key)',
+    musOff.st.musicRunning === false && offClass === true && musOff.pk === 'off',
+    JSON.stringify({ musicRunning: musOff.st.musicRunning, offClass, pk: musOff.pk }));
+  await h.evalv(`document.getElementById('music-btn').click(); true`);
+  await sleep(60);
+  const musOn = JSON.parse(await h.evalv(`JSON.stringify({ st: window.__fc.state(), pk: localStorage.getItem('pkMusic') })`));
+  check('♪ toggle again: the loop comes back (timer iff audio context exists)',
+    musOn.st.musicRunning === audioOk && musOn.pk === 'on',
+    JSON.stringify({ audioOk, musicRunning: musOn.st.musicRunning, pk: musOn.pk }));
+
+  // Win → СЛЕДЕЋИ НИВО advances; the LAST level offers replay only.
+  await h.evalv(`window.__fc.selectLevel(3); true`);
+  const nxPre = JSON.parse(await h.evalv(`window.__fc.teleport(${spots.goal - 30}); JSON.stringify(window.__fc.step(10))`));
+  const nxShown = await h.evalv(`(function(){ var m = document.getElementById('win-modal'), n = document.getElementById('next-btn'); return m.classList.contains('show') && n.style.display !== 'none'; })()`);
+  check('win on a mid level: win modal + СЛЕДЕЋИ НИВО offered',
+    nxPre.won && nxShown === true, JSON.stringify({ won: nxPre.won, nxShown }));
+  await h.evalv(`document.getElementById('next-btn').click(); true`);
+  await sleep(60);
+  const nxt = JSON.parse(await h.evalv(`JSON.stringify(Object.assign(window.__fc.state(), {
+    modalHidden: !document.getElementById('win-modal').classList.contains('show')
+  }))`));
+  check('СЛЕДЕЋИ НИВО: advances to the next themed level with a fresh run',
+    nxt.level === 4 && nxt.coinEmoji === '💎' && nxt.musicTheme === 'fcCave' &&
+    nxt.won === false && nxt.score === 0 && nxt.x > 0 && nxt.modalHidden === true,
+    JSON.stringify(nxt));
+  await h.evalv(`window.__fc.selectLevel(9); window.__fc.teleport(${spots.goal - 30}); JSON.stringify(window.__fc.step(10))`);
+  const lastShown = await h.evalv(`document.getElementById('next-btn').style.display`);
+  check('last level (10 · Острво): no СЛЕДЕЋИ НИВО — replay only',
+    lastShown === 'none', JSON.stringify({ lastShown }));
+  // clean slate for the DOM-geometry section below (never leave a modal up)
+  await h.evalv(`window.__fc.restart(); true`);
+  await sleep(60);
+
   // Control geometry (AGENTS: a .click() smoke is not enough — the controls
   // must be on-screen AND topmost where a child actually taps). Only the
   // tappable controls get the topmost check: #hud is pointer-events:none, so
   // meter-wrap (display-only) correctly resolves to the canvas underneath.
-  const TAPPABLE = ['btn-jump', 'btn-slide', 'super-btn', 'back-btn'];
+  const TAPPABLE = ['btn-jump', 'btn-slide', 'super-btn', 'back-btn', 'levels-btn', 'music-btn'];
   const geo = JSON.parse(await h.evalv(`JSON.stringify((() => {
     const out = {};
-    for (const id of ['btn-jump', 'btn-slide', 'super-btn', 'meter-wrap', 'back-btn']) {
+    for (const id of ['btn-jump', 'btn-slide', 'super-btn', 'meter-wrap', 'back-btn', 'levels-btn', 'music-btn', 'level-label']) {
       const el = document.getElementById(id);
       const r = el.getBoundingClientRect();
       const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
@@ -197,7 +291,7 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
     }
     return out;
   })())`));
-  for (const id of ['btn-jump', 'btn-slide', 'super-btn', 'meter-wrap', 'back-btn']) {
+  for (const id of ['btn-jump', 'btn-slide', 'super-btn', 'meter-wrap', 'back-btn', 'levels-btn', 'music-btn', 'level-label']) {
     if (TAPPABLE.includes(id)) {
       check(`geometry: ${id} fully in viewport and topmost at its centre (844x390 landscape)`,
         geo[id].inViewport && geo[id].topmost, JSON.stringify(geo[id]));
@@ -225,7 +319,7 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   check('portrait 390x844: rotate-device overlay is gone (portrait play allowed)', rot === false, JSON.stringify({ fcRotatePresent: rot }));
   const pGeo = JSON.parse(await h.evalv(`JSON.stringify((() => {
     const out = {};
-    for (const id of ['btn-jump', 'btn-slide', 'super-btn']) {
+    for (const id of ['btn-jump', 'btn-slide', 'super-btn', 'levels-btn', 'music-btn']) {
       const el = document.getElementById(id);
       const r = el.getBoundingClientRect();
       const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
@@ -235,8 +329,9 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
     }
     return out;
   })())`));
-  check('portrait 390x844: jump, slide and super buttons are in the viewport and tappable',
-    pGeo['btn-jump'] === true && pGeo['btn-slide'] === true && pGeo['super-btn'] === true, JSON.stringify(pGeo));
+  check('portrait 390x844: jump, slide, super, levels and music controls are in the viewport and tappable',
+    pGeo['btn-jump'] === true && pGeo['btn-slide'] === true && pGeo['super-btn'] === true &&
+    pGeo['levels-btn'] === true && pGeo['music-btn'] === true, JSON.stringify(pGeo));
   // back to landscape for the static route-contract checks below
   await h.c.send('Emulation.setDeviceMetricsOverride', { width: 844, height: 390, deviceScaleFactor: 1, mobile: true });
   for (let i = 0; i < 20 && !(await h.evalv(`innerWidth === 844 && innerHeight === 390`)); i++) await sleep(100);

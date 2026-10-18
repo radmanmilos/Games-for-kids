@@ -52,6 +52,24 @@
     #char-modal .char-btn{padding:2vmin;border-radius:16px;border:4px solid white;background:rgba(255,255,255,.15);cursor:pointer;}
     #char-modal .char-btn:active{transform:scale(.95);}
     #char-modal .char-btn img{width:14vmin;height:14vmin;display:block;}
+    /* play-test 4 (task 254): themed levels — 🌍 picker + ♪ music toggle on
+       the free top-right corner, the level name sits bottom-centre between
+       the two thumb buttons (pointer-events:none — never a touch target). */
+    #levels-btn{top:calc(2vmin + env(safe-area-inset-top));right:calc(2vmin + env(safe-area-inset-right));}
+    #music-btn{top:calc(2vmin + env(safe-area-inset-top) + 10vmin + 2vmin);right:calc(2vmin + env(safe-area-inset-right));}
+    #music-btn .ic-alt{display:none;}
+    #music-btn.off .ic-main{display:none;}
+    #music-btn.off .ic-alt{display:block;}
+    #level-label{top:auto;bottom:calc(2vmin + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:none;}
+    #level-modal{display:none;position:absolute;inset:0;z-index:20;align-items:center;justify-content:center;flex-direction:column;background:rgba(74,63,107,.85);padding:5vmin;}
+    #level-modal.show{display:flex;}
+    #level-modal h2{color:#FFD23F;font-size:clamp(20px,4vmin,40px);margin:0 0 3vmin;}
+    #level-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:2vmin;width:min(90vw,600px);}
+    #level-grid .level-btn{padding:2vmin;border-radius:12px;border:3px solid white;background:rgba(255,255,255,.15);color:white;font:600 clamp(12px,2.5vmin,20px) 'Fredoka',sans-serif;cursor:pointer;}
+    #level-grid .level-btn:active{transform:scale(.95);}
+    #level-grid .lv-emoji{display:block;font-size:clamp(20px,5vmin,40px);}
+    #level-close{margin-top:3vmin;border:3px solid white;border-radius:12px;background:rgba(255,255,255,.15);color:white;padding:1.5vmin 3vmin;font:600 clamp(12px,2.5vmin,20px) 'Fredoka',sans-serif;cursor:pointer;}
+    #next-btn{display:none;margin-top:2vmin;background:#4A90D9 !important;box-shadow:0 6px 0 #2C5F94 !important;}
     /* play-test 2: portrait play is allowed — no rotate gate; the layout
        (full-bleed canvas + corner controls) works in both orientations. */
   </style>
@@ -60,6 +78,8 @@
   <div id="app">
     <canvas id="canvas"></canvas>
     <button id="back-btn" class="back-btn" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <button class="hud-btn" id="levels-btn" aria-label="Изабери ниво">🌍</button>
+    <button class="hud-btn" id="music-btn" aria-label="Музика"><svg class="ic-main" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg><svg class="ic-alt" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg></button>
     <div class="hud" id="score-count">⭐ 0</div>
     <div class="hud" id="meter-wrap">
       <span id="meter-label">СУПЕР ⚡</span>
@@ -68,10 +88,17 @@
     <button class="hud-btn" id="super-btn" aria-label="Супер брзина ⚡">⚡</button>
     <div class="btn btn-slide" id="btn-slide" role="button" aria-label="Клизање">▼</div>
     <div class="btn btn-jump" id="btn-jump" role="button" aria-label="Скок">▲</div>
+    <div class="hud" id="level-label">1 · Прашума 🌺</div>
     <div id="win-modal" role="dialog" aria-label="Победа">
       <h2>СВЕТ ПРЕЂЕН!</h2>
       <p id="win-sub"></p>
       <button id="modal-btn">ИГРАЈ ПОНОВО</button>
+      <button id="next-btn">СЛЕДЕЋИ НИВО ➜</button>
+    </div>
+    <div id="level-modal" role="dialog" aria-label="Изабери ниво">
+      <h2>Изабери ниво</h2>
+      <div id="level-grid"></div>
+      <button id="level-close">Затвори</button>
     </div>
     <div id="char-modal" role="dialog" aria-label="Изабери лик">
       <h2>Изабери лик</h2>

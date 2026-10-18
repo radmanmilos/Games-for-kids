@@ -117,6 +117,147 @@
   }
   window.addEventListener('resize', resizeCanvas);
 
+  // --- Themed levels (task 254 play-test 4; explorer world parity) ---------
+  // Each level themes the whole course: the sky/hill/ground/grass palette,
+  // the pickup emoji (the old star coins are now the level's thing), its own
+  // music loop (see MUSIC below), and a distinct seed (254 + 101*i) so every
+  // course is its own deterministic layout of the same 7-type deck.
+  const LEVELS = [
+    { name: 'Прашума', emoji: '🌺', music: 'fcJungle',
+      sky: ['#3E9B6B', '#C8F0C0'], hill: '#2E8B57', ground: '#6B4A2B', grass: '#2F9E44' },
+    { name: 'Тропска долина', emoji: '🦜', music: 'fcValley',
+      sky: ['#59B7F4', '#D6F3FF'], hill: '#7BC86C', ground: '#C98B5E', grass: '#5FBF57' },
+    { name: 'Језеро', emoji: '💧', music: 'fcLake',
+      sky: ['#5CAFE8', '#D9F1FF'], hill: '#58A8D8', ground: '#8A7550', grass: '#4FA8C8' },
+    { name: 'Вулкан', emoji: '🌋', music: 'fcVolcano',
+      sky: ['#5A3A55', '#E8926A'], hill: '#6E4550', ground: '#4E3A3A', grass: '#B0563A' },
+    { name: 'Пећина', emoji: '💎', music: 'fcCave',
+      sky: ['#2A2A45', '#45456E'], hill: '#3A3A5E', ground: '#33314A', grass: '#6E6EB0' },
+    { name: 'Мочвара', emoji: '🐸', music: 'fcSwamp',
+      sky: ['#7BA05B', '#D5E8B8'], hill: '#5C7A4A', ground: '#5A4A38', grass: '#6E8F3E' },
+    { name: 'Ледено доба', emoji: '❄️', music: 'fcIce',
+      sky: ['#9CC8F0', '#EAF6FF'], hill: '#B8D8F0', ground: '#C8D8E8', grass: '#E8F4FC' },
+    { name: 'Пустиња', emoji: '🌵', music: 'fcDesert',
+      sky: ['#F4C77A', '#FCE8C0'], hill: '#E0A860', ground: '#D8A868', grass: '#C89050' },
+    { name: 'Ноћни свет', emoji: '🌙', music: 'fcNight',
+      sky: ['#1E2445', '#3E4878'], hill: '#2A3260', ground: '#33305A', grass: '#4A5290' },
+    { name: 'Острво', emoji: '🏝️', music: 'fcIsland',
+      sky: ['#4FB8E8', '#CFF2EE'], hill: '#58C8A8', ground: '#E8D0A0', grass: '#48B890' }
+  ];
+  let levelIdx = 0;
+
+  // --- Per-level music (explorer parity: kitty-standalone.js:177-332, but
+  //     without the ambient layer — the loop alone carries the theme) ------
+  // Each level plays its own 4-bar loop (32 melody steps + 16-beat bass),
+  // synthesized on the shared 'music' bus; tempo is runner-tilted (~20 BPM
+  // above the explorer's walking pace). The ♪ toggle shares the explorer's
+  // pkMusic preference, so one tap mutes music across both games.
+  const MUSIC = {
+    fcJungle: { root: 392.00, bpm: 120, wave: 'triangle', vol: 0.09,
+      bass: [-12,-12,-19,-19,-12,-12,-17,-17,-12,-12,-19,-19,-14,-14,-17,-17],
+      seq:  [0,2,4,7,9,7,4,2, 0,4,7,9,12,9,7,4, 7,9,12,14,12,9,7,4, 4,7,9,12,9,7,4,2] },
+    fcValley: { root: 523.25, bpm: 126, wave: 'sine', vol: 0.09,
+      bass: [-12,-12,-12,-12,-12,-12,-12,-12,-7,-7,-7,-7,-5,-5,-5,-5],
+      seq:  [0,4,7,9,7,4,2,4, 0,4,7,12,9,7,4,2, 7,9,12,14,12,9,7,4, 2,4,7,9,12,7,4,2] },
+    fcLake: { root: 440.00, bpm: 112, wave: 'sine', vol: 0.09,
+      bass: [-12,-12,-12,-12,-7,-7,-7,-7,-9,-9,-9,-9,-7,-7,-7,-7],
+      seq:  [0,4,7,9,12,9,7,4, 0,4,7,12,14,12,9,7, 4,7,9,14,12,9,7,4, 7,4,2,4,7,9,4,null] },
+    fcVolcano: { root: 174.61, bpm: 132, wave: 'triangle', vol: 0.10,
+      bass: [-12,-12,-12,-12,-15,-15,-15,-15,-12,-12,-12,-12,-17,-17,-17,-17],
+      seq:  [0,3,7,10,7,3,0,3, 0,3,7,12,10,7,3,0, 7,10,12,15,12,10,7,3, 3,0,3,7,3,0,-2,null] },
+    fcCave: { root: 196.00, bpm: 100, wave: 'sine', vol: 0.10,
+      bass: [-12,-12,-12,-12,-12,-12,-12,-12,-12,-12,-12,-12,-12,-12,-12,-12],
+      seq:  [0,null,3,null,7,null,3,0, null,7,null,10,7,5,3,null, 0,null,3,7,10,7,3,null, 5,3,0,null,3,0,null,null] },
+    fcSwamp: { root: 220.00, bpm: 108, wave: 'sine', vol: 0.10,
+      bass: [-12,-12,-17,-17,-12,-12,-15,-15,-12,-12,-17,-17,-19,-19,-17,-17],
+      seq:  [0,2,3,5,7,5,3,2, 0,3,5,7,10,7,5,3, 5,7,10,12,10,7,5,3, 3,2,0,2,3,5,2,null] },
+    fcIce: { root: 659.25, bpm: 116, wave: 'triangle', vol: 0.08,
+      bass: [-12,-12,-12,-12,-12,-12,-12,-12,-5,-5,-5,-5,-7,-7,-7,-7],
+      seq:  [12,16,19,16,12,16,19,21, 16,19,21,24,21,19,16,12, 19,21,24,28,24,21,19,16, 12,16,19,21,19,16,12,16] },
+    fcDesert: { root: 329.63, bpm: 120, wave: 'sine', vol: 0.09,
+      bass: [-12,-12,-12,-12,-12,-12,-12,-12,-17,-17,-17,-17,-12,-12,-12,-12],
+      seq:  [0,1,4,5,7,5,4,1, 0,4,5,7,8,7,5,4, 0,1,4,7,8,10,8,7, 5,4,1,0,4,1,0,null] },
+    fcNight: { root: 261.63, bpm: 104, wave: 'sine', vol: 0.10,
+      bass: [-12,-12,-12,-12,-12,-12,-12,-12,-9,-9,-9,-9,-7,-7,-7,-7],
+      seq:  [0,3,7,8,7,3,0,null, 0,3,7,12,8,7,3,0, 3,7,8,12,8,7,3,null, 0,3,7,8,7,3,0,null] },
+    fcIsland: { root: 587.33, bpm: 128, wave: 'triangle', vol: 0.09,
+      bass: [-12,-12,-12,-12,-5,-5,-5,-5,-12,-12,-12,-12,-3,-3,-3,-3],
+      seq:  [0,4,7,9,12,9,7,4, 0,4,7,9,7,4,2,4, 9,12,14,16,14,12,9,7, 4,7,9,12,14,12,9,7] }
+  };
+  let musicTheme = null, musicStep = 0, musicStepTime = 0, musicTimer = null;
+  let musicOn = localStorage.getItem('pkMusic') !== 'off';
+
+  function fcAudioCtx() {
+    try { return window.ctx ? window.ctx() : null; } catch (e) { return null; }
+  }
+
+  function setMusicOn(on) {
+    musicOn = on;
+    localStorage.setItem('pkMusic', on ? 'on' : 'off');
+    const btn = el('music-btn');
+    if (btn) btn.classList.toggle('off', !on);
+    if (on) startMusic(musicTheme); else stopMusic();
+  }
+
+  function stopMusic() {
+    if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
+  }
+
+  function startMusic(themeKey) {
+    if (!MUSIC[themeKey]) return;
+    musicTheme = themeKey;
+    const audio = fcAudioCtx();
+    if (!musicOn || !audio) return;
+    stopMusic();
+    musicStep = 0;
+    musicStepTime = audio.currentTime + 0.08;
+    musicTimer = setInterval(musicTick, 120);
+  }
+
+  function musicTick() {
+    const audio = fcAudioCtx();
+    if (!audio || !musicOn || won || !started) return;
+    const cfg = MUSIC[musicTheme];
+    if (!cfg) return;
+    const eighth = 60 / cfg.bpm / 2;
+    const horizon = audio.currentTime + 0.35;
+    while (musicStepTime < horizon) {
+      scheduleMusicStep(audio, cfg, musicStep, musicStepTime, eighth);
+      musicStep++;
+      musicStepTime += eighth;
+    }
+  }
+
+  function scheduleMusicStep(audio, cfg, step, t, eighth) {
+    const note = (semi, dur, vol, wave) => {
+      const osc = audio.createOscillator();
+      const gain = audio.createGain();
+      osc.connect(gain);
+      if (window.audioBuses) window.audioBuses.connect(gain, 'music');
+      else gain.connect(audio.destination);
+      osc.type = wave || cfg.wave;
+      osc.frequency.value = cfg.root * Math.pow(2, semi / 12);
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(vol, t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.9);
+      osc.start(t);
+      osc.stop(t + dur * 0.95);
+    };
+    const mel = cfg.seq[step % cfg.seq.length];
+    if (mel !== null && mel !== undefined) note(mel, eighth, cfg.vol);
+    if (step % 2 === 0) note(cfg.bass[(step / 2) % cfg.bass.length], eighth * 1.8, cfg.vol * 0.7, 'sine');
+  }
+
+  // Best-effort resume: if the AudioContext was created before the first
+  // gesture (autoplay policy), the first tap starts the theme for real —
+  // explorer parity (kitty-standalone.js:103-107).
+  document.addEventListener('pointerdown', () => {
+    try {
+      window.initAudio && initAudio();
+      if (musicTheme && musicOn && !musicTimer && started && !won) startMusic(musicTheme);
+    } catch (e) { /* audio is optional */ }
+  }, { once: true });
+
   // --- Level generation (deterministic) ------------------------------------
   let coins = [], bolts = [], puddles = [], rocks = [], banners = [], boosts = [];
   let level = [];
@@ -139,7 +280,8 @@
 
   function buildLevel() {
     coins = []; bolts = []; puddles = []; rocks = []; banners = []; boosts = []; plateaus = [];
-    const rnd = mulberry32(254);           // fixed seed = stable course
+    // fixed seed per level = stable course; different levels = different runs
+    const rnd = mulberry32(254 + levelIdx * 101);
     const pick = (arr) => arr[Math.floor(rnd() * arr.length)];
     const arc = (x0, n, gap, h0, h1) => {
       for (let i = 0; i < n; i++) {
@@ -232,7 +374,9 @@
   // --- HUD -----------------------------------------------------------------
   const el = (id) => document.getElementById(id);
   function updateHud() {
-    const s = el('score-count'); if (s) s.textContent = '⭐ ' + score;
+    const lv = LEVELS[levelIdx];
+    const s = el('score-count'); if (s) s.textContent = lv.emoji + ' ' + score;
+    const lab = el('level-label'); if (lab) lab.textContent = (levelIdx + 1) + ' · ' + lv.name + ' ' + lv.emoji;
     const f = el('meter-fill'); if (f) f.style.width = Math.round(meter) + '%';
     const bar = el('meter-bar'); if (bar) bar.setAttribute('aria-valuenow', String(Math.round(meter)));
     const b = el('super-btn');
@@ -464,11 +608,16 @@
     if (player.x >= LEVEL_LEN) {
       won = true;
       score += 100;
+      stopMusic();
       window.playSound && playSound('win');
       window.speakSr && speakSr('praise');
       burst(player.x + 24, player.y, '#FFD23F', 20);
       const m = el('win-modal'), sub = el('win-sub');
       if (sub) sub.textContent = 'Поени: ' + score;
+      // next-level is offered while more themed levels remain (the last
+      // level keeps the single replay button)
+      const nb = el('next-btn');
+      if (nb) nb.style.display = levelIdx < LEVELS.length - 1 ? '' : 'none';
       if (m) m.classList.add('show');
       updateHud();
     }
@@ -482,18 +631,6 @@
   }
 
   // --- Draw ----------------------------------------------------------------
-  function drawStar(cx, cy, r, fill, stroke) {
-    ctx.beginPath();
-    for (let i = 0; i < 10; i++) {
-      const rad = i % 2 === 0 ? r : r * 0.45;
-      const a = -Math.PI / 2 + i * Math.PI / 5;
-      ctx[i === 0 ? 'moveTo' : 'lineTo'](cx + Math.cos(a) * rad, cy + Math.sin(a) * rad);
-    }
-    ctx.closePath();
-    ctx.fillStyle = fill; ctx.fill();
-    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 2; ctx.stroke(); }
-  }
-
   function currentFrame() {
     const s = player.animState;
     if (s === 'jump') return frames.jump;
@@ -504,10 +641,11 @@
 
   function draw() {
     const w = canvas.width, h = canvas.height;
-    // sky
+    const lv = LEVELS[levelIdx];
+    // sky (themed per level)
     const sky = ctx.createLinearGradient(0, 0, 0, h);
-    sky.addColorStop(0, '#7FC2FF');
-    sky.addColorStop(1, '#CDEBFF');
+    sky.addColorStop(0, lv.sky[0]);
+    sky.addColorStop(1, lv.sky[1]);
     ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
 
     // clouds (slow parallax)
@@ -522,8 +660,8 @@
       ctx.fill();
     }
 
-    // far hills (parallax)
-    ctx.fillStyle = '#A5E5A0';
+    // far hills (parallax, themed)
+    ctx.fillStyle = lv.hill;
     for (let i = 0; i < 8; i++) {
       const hx = ((i * 613 - camX * 0.35) % (w + 500) + w + 500) % (w + 500) - 250;
       ctx.beginPath();
@@ -537,15 +675,15 @@
     for (let sx = -8; sx <= w + 8; sx += 6) ctx.lineTo(sx, groundYAt(sx + camX));
     ctx.lineTo(w + 8, h);
     ctx.closePath();
-    ctx.fillStyle = '#C98B5E';
+    ctx.fillStyle = lv.ground;
     ctx.fill();
-    // grass line
+    // grass line (themed — snow/sand/lava read from the level palette)
     ctx.beginPath();
     for (let sx = -8; sx <= w + 8; sx += 6) {
       const gy = groundYAt(sx + camX);
       if (sx === -8) ctx.moveTo(sx, gy); else ctx.lineTo(sx, gy);
     }
-    ctx.strokeStyle = '#5FBF57';
+    ctx.strokeStyle = lv.grass;
     ctx.lineWidth = 10;
     ctx.stroke();
 
@@ -554,7 +692,8 @@
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    // coins
+    // coins — themed pickups: the level's emoji on a soft glow backing
+    // (explorer parity: the backing keeps them visible on any palette)
     const pulse = 1 + Math.sin(frame * 0.15) * 0.08;
     for (const c of coins) {
       if (c.got) continue;
@@ -562,7 +701,12 @@
       ctx.save();
       ctx.translate(c.x, c.y);
       ctx.scale(pulse, pulse);
-      drawStar(0, 0, 13, '#FFD23F', '#E8A800');
+      ctx.beginPath();
+      ctx.arc(0, 0, 15, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,.75)';
+      ctx.fill();
+      ctx.font = '22px serif';
+      ctx.fillText(lv.emoji, 0, 1);
       ctx.restore();
     }
     // bolts (powerup pickups)
@@ -719,16 +863,51 @@
   }
 
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stopLoop();
+    if (document.hidden) { stopLoop(); stopMusic(); }
     // `player` exists only after a character was picked — never resume into a
     // null-player tick (the rAF loop must not run before the game really starts).
-    else if (player && !won && !loopOn) startLoop();
+    else if (player && !won && !loopOn) { startLoop(); startMusic(musicTheme); }
   });
+
+  // --- Level picker (explorer parity: open choice, no locks — task 254) ---
+  function buildLevelMenu() {
+    const grid = el('level-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    LEVELS.forEach((lv, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'level-btn';
+      btn.setAttribute('data-level', String(i));
+      btn.innerHTML = '<span class="lv-emoji">' + lv.emoji + '</span>' + lv.name;
+      btn.addEventListener('click', () => pickLevel(i));
+      grid.appendChild(btn);
+    });
+  }
+
+  function openLevelMenu() {
+    const m = el('level-modal');
+    if (m) m.classList.add('show');
+  }
+
+  function closeLevelMenu() {
+    const m = el('level-modal');
+    if (m) m.classList.remove('show');
+  }
+
+  function pickLevel(i) {
+    window.playSound && playSound('pop');
+    levelIdx = Math.max(0, Math.min(i, LEVELS.length - 1));
+    closeLevelMenu();
+    reset();
+    startMusic(LEVELS[levelIdx].music);
+    startLoop();
+  }
 
   function winAgain() {
     const m = el('win-modal');
     if (m) m.classList.remove('show');
     reset();
+    startMusic(LEVELS[levelIdx].music);
     startLoop();
   }
 
@@ -751,6 +930,37 @@
       window.initAudio && initAudio();
       winAgain();
     });
+    const nextBtn = el('next-btn');
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+      window.initAudio && initAudio();
+      const m = el('win-modal');
+      if (m) m.classList.remove('show');
+      levelIdx = Math.min(levelIdx + 1, LEVELS.length - 1);
+      reset();
+      startMusic(LEVELS[levelIdx].music);
+      startLoop();
+    });
+    // ♪ music toggle (shares the explorer's pkMusic preference)
+    const musicBtn = el('music-btn');
+    if (musicBtn) {
+      musicBtn.classList.toggle('off', !musicOn);
+      musicBtn.addEventListener('click', () => {
+        window.initAudio && initAudio();
+        setMusicOn(!musicOn);
+      });
+    }
+    // 🌍 level picker (reachable any time; the run keeps playing behind it)
+    const levelsBtn = el('levels-btn');
+    if (levelsBtn) levelsBtn.addEventListener('click', () => {
+      window.playSound && playSound('pop');
+      openLevelMenu();
+    });
+    const levelClose = el('level-close');
+    if (levelClose) levelClose.addEventListener('click', () => {
+      window.playSound && playSound('pop');
+      closeLevelMenu();
+    });
+    buildLevelMenu();
 
     // character picker (explorer parity: shown every load)
     const charModal = el('char-modal');
@@ -761,6 +971,7 @@
         loadFrames();
         if (charModal) charModal.classList.remove('show');
         reset();
+        startMusic(LEVELS[levelIdx].music);
         startLoop();
       });
     });
@@ -781,6 +992,16 @@
     press(key, down) { keys[key] = !!down; },
     super: activateSuper,
     restart: winAgain,
+    // jump straight to a themed level (deterministic picker equivalent —
+    // same effect as tapping it in the picker, music included)
+    selectLevel(i) {
+      stopLoop();
+      levelIdx = Math.max(0, Math.min(i, LEVELS.length - 1));
+      reset();
+      startMusic(LEVELS[levelIdx].music);
+      draw();
+      return this.state();
+    },
     // deterministic state setup / inspection for the smoke (test hooks — the
     // smoke drives real state through them, it does not stub behaviour)
     setMeter(v) { meter = Math.max(0, Math.min(100, v)); meterFullAnnounced = meter >= 100; updateHud(); },
@@ -818,6 +1039,11 @@
         puddles: puddles.length, boosts: boosts.length,
         plateaus: plateaus.length,
         levelLen: LEVEL_LEN,
+        level: levelIdx,
+        levelName: LEVELS[levelIdx].name,
+        coinEmoji: LEVELS[levelIdx].emoji,
+        musicTheme,
+        musicRunning: !!musicTimer,
         hasGoal: true
       };
     }
