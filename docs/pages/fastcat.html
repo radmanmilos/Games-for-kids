@@ -85,6 +85,11 @@
     /* play-test 7: replay is a small round YELLOW icon-only button (repeat
        glyph; the label lives in aria-label/title for the parent). */
     #win-modal #modal-btn{width:clamp(48px,11vmin,64px);height:clamp(48px,11vmin,64px);border-radius:50%;padding:0;margin-top:3vmin;background:#FFD23F;color:#4A3F6B;box-shadow:0 6px 0 #C99A0E;font-size:clamp(22px,5.5vmin,32px);display:flex;align-items:center;justify-content:center;}
+    /* play-test 8: the repeat glyph was reported invisible on a phone even
+       though it measured 22px dark-on-yellow headlessly — size it EXPLICITLY
+       in CSS (no reliance on em-in-attribute resolution) and make it chunky
+       enough to read at a glance: 1.5em inside the 48-64px disc. */
+    #win-modal #modal-btn svg{width:1.5em;height:1.5em;flex:none;}
     /* play-test 2: portrait play is allowed — no rotate gate; the layout
        (full-bleed canvas + corner controls) works in both orientations. */
   </style>

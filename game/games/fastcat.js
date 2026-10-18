@@ -20,7 +20,7 @@
   // --- Constants -----------------------------------------------------------
   const BASE_SPEED = 6.4;      // px/frame at 60fps reference
   const SUPER_MULT = 2.0;
-  const SUPER_FRAMES = 150;    // play-test 6: 2.5s (was 4s — the bar drained too slowly)
+  const SUPER_FRAMES = 180;    // play-test 8: 3s (2.5s drained too fast, 4s dragged)
   const BOOST_MULT = 1.35;
   const BOOST_FRAMES = 72;     // 1.2s boost panel
   const SLOW_MULT = 0.5;
@@ -132,7 +132,11 @@
     { name: 'Вулкан', emoji: '🌋', music: 'fcVolcano',
       sky: ['#5A3A55', '#E8926A'], hill: '#6E4550', ground: '#4E3A3A', grass: '#B0563A' },
     { name: 'Пећина', emoji: '💎', music: 'fcCave',
-      sky: ['#2A2A45', '#45456E'], hill: '#3A3A5E', ground: '#33314A', grass: '#6E6EB0' },
+      // play-test 8: warm torch-lit rock — it used to be navy like Ноћни свет
+      // and the two dark worlds looked identical. A cave also hangs a solid
+      // CEILING: draw() paints lv.ceil as a jagged band instead of sky+clouds.
+      sky: ['#4A3428', '#93643C'], hill: '#5A4332', ground: '#463A31', grass: '#C8A45E',
+      ceiling: true, ceil: '#241A16' },
     { name: 'Мочвара', emoji: '🐸', music: 'fcSwamp',
       sky: ['#7BA05B', '#D5E8B8'], hill: '#5C7A4A', ground: '#5A4A38', grass: '#6E8F3E' },
     { name: 'Ледено доба', emoji: '❄️', music: 'fcIce',
@@ -657,16 +661,33 @@
     sky.addColorStop(1, lv.sky[1]);
     ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
 
-    // clouds (slow parallax)
-    ctx.fillStyle = 'rgba(255,255,255,.85)';
-    for (let i = 0; i < 6; i++) {
-      const cx = ((i * 431 - camX * 0.15) % (w + 300) + w + 300) % (w + 300) - 150;
-      const cy = 30 + (i * 47) % Math.max(60, h * 0.28);
+    if (lv.ceiling) {
+      // play-test 8: caves hang a ROCK CEILING — a jagged stalactite band on
+      // slow parallax where every other level gets sky + clouds.
+      const CH = Math.max(46, h * 0.16), off = -camX * 0.15;
+      ctx.fillStyle = lv.ceil;
       ctx.beginPath();
-      ctx.ellipse(cx, cy, 44, 18, 0, 0, Math.PI * 2);
-      ctx.ellipse(cx + 30, cy + 6, 30, 14, 0, 0, Math.PI * 2);
-      ctx.ellipse(cx - 32, cy + 7, 26, 12, 0, 0, Math.PI * 2);
+      ctx.moveTo(w + 8, -8);
+      for (let sx = w + 8; sx >= -8; sx -= 6) {
+        const ph = sx - off;
+        const tri = 1 - Math.abs(((ph % 78) + 78) % 78 - 39) / 39;   // stalactite 0..1
+        ctx.lineTo(sx, CH * (0.5 + 0.25 * Math.sin(ph * 0.04)) + tri * CH * 0.8);
+      }
+      ctx.lineTo(-8, -8);
+      ctx.closePath();
       ctx.fill();
+    } else {
+      // clouds (slow parallax)
+      ctx.fillStyle = 'rgba(255,255,255,.85)';
+      for (let i = 0; i < 6; i++) {
+        const cx = ((i * 431 - camX * 0.15) % (w + 300) + w + 300) % (w + 300) - 150;
+        const cy = 30 + (i * 47) % Math.max(60, h * 0.28);
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, 44, 18, 0, 0, Math.PI * 2);
+        ctx.ellipse(cx + 30, cy + 6, 30, 14, 0, 0, Math.PI * 2);
+        ctx.ellipse(cx - 32, cy + 7, 26, 12, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
 
     // far hills (parallax, themed)

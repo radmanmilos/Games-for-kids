@@ -6,11 +6,14 @@
    pickup emoji + palette + music loop, per-level seeds, next-level flow,
    ♪ toggle on the shared pkMusic key), play-test 5 (⚡ starts ready on a full
    meter, pointerdown activation while other controls are held, pickups
-   prolong the super blast, auto-advance after the win), play-test 6 (2.5s
-   blast with small capped prolongs, ⚡ raised to a 12vmin/40px gap, СЛЕДЕЋИ СВЕТ
+   prolong the super blast, auto-advance after the win), play-test 6 (⚡
+   raised to a 12vmin/40px gap, СЛЕДЕЋИ СВЕТ
    always offered incl. the last-level wrap to a new tour), play-test 7
    (СЛЕДЕЋИ СВЕТ computed-visible + clear green, replay = round yellow
-   icon-only button clicked for real), portrait play (no rotate gate — controls tappable there), control geometry
+   icon-only button clicked for real), play-test 8
+   (3s blast, cave = warm torch-lit rock with a hanging CEILING — real
+   canvas pixels vs the cool navy night, replay glyph measured rendered),
+   portrait play (no rotate gate — controls tappable there), control geometry
    (on-screen + topmost at the centre point), and the route contract.
    Run:  node tools/fastcat_smoke.js     Requires Node >= 22. CHROME_PATH optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -216,10 +219,16 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   const modalShown = await h.evalv(`document.getElementById('win-modal').classList.contains('show')`);
   check('goal: win modal is visible', modalShown === true);
   // play-test 7: the replay control is a round YELLOW icon-only button.
-  const mbRound = JSON.parse(await h.evalv(`JSON.stringify((function(){ var b = document.getElementById('modal-btn'), cs = getComputedStyle(b), r = b.getBoundingClientRect(); return { w: Math.round(r.width), h: Math.round(r.height), radius: cs.borderRadius, bg: cs.backgroundColor, text: b.textContent.trim(), svg: !!b.querySelector('svg') }; })())`));
+  // play-test 8: the glyph must actually RENDER — DOM presence alone lied
+  // ("svg exists" was true while the child reported a blank disc): measure
+  // the painted box and the colours that hit the screen.
+  const mbRound = JSON.parse(await h.evalv(`JSON.stringify((function(){ var b = document.getElementById('modal-btn'), cs = getComputedStyle(b), r = b.getBoundingClientRect(), s = b.querySelector('svg'), sr = s ? s.getBoundingClientRect() : { width: 0, height: 0 }, ss = s ? getComputedStyle(s) : {}, p = s && s.querySelector('path'); return { w: Math.round(r.width), h: Math.round(r.height), radius: cs.borderRadius, bg: cs.backgroundColor, text: b.textContent.trim(), svg: !!s, svgW: Math.round(sr.width), svgH: Math.round(sr.height), svgDisplay: ss.display, svgColor: ss.color, pathFill: p ? getComputedStyle(p).fill : null }; })())`));
   check('replay is a round yellow icon-only button (repeat glyph, no text)',
     mbRound.w === mbRound.h && mbRound.radius === '50%' && mbRound.bg === 'rgb(255, 210, 63)' &&
-    mbRound.text === '' && mbRound.svg === true, JSON.stringify(mbRound));
+    mbRound.text === '' && mbRound.svg === true &&
+    mbRound.svgW >= 24 && mbRound.svgH >= 24 && mbRound.svgDisplay !== 'none' &&
+    mbRound.svgColor === 'rgb(74, 63, 107)' && mbRound.pathFill === 'rgb(74, 63, 107)',
+    JSON.stringify(mbRound));
   // play-test 7: exercise the REAL replay button (icon click → fresh run).
   const replay = JSON.parse(await h.evalv(`document.getElementById('modal-btn').click(), JSON.stringify(window.__fc.state())`));
   // play-test 5: the meter starts FULL on every (re)run — that is the point.
@@ -238,6 +247,19 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
     /^1\s·\sПрашума\s🌺$/.test(label1), JSON.stringify(label1));
   const scoreIcon1 = await h.evalv(`document.getElementById('score-count').textContent`);
   check('score icon is the level pickup emoji (star coins are gone)', scoreIcon1.indexOf('🌺') === 0, JSON.stringify(scoreIcon1));
+
+  // --- Play-test 8: the cave hangs a rock CEILING (no clouds) and its warm
+  //     torch-lit palette must never read as the cool navy Ноћни свет —
+  //     sampled from real canvas pixels (selectLevel() redraws before it
+  //     returns, so the frame on the backing store is the picked level).
+  const caveTop = JSON.parse(await h.evalv(`JSON.stringify((function(){ window.__fc.selectLevel(4); var d = document.getElementById('canvas').getContext('2d').getImageData(4, 4, 1, 1).data; return { r: d[0], g: d[1], b: d[2] }; })())`));
+  check('cave: top of the screen is dark warm rock — a ceiling, not clouds or sky',
+    caveTop.r + caveTop.g + caveTop.b < 200 && caveTop.r > caveTop.b, JSON.stringify(caveTop));
+  const nightTop = JSON.parse(await h.evalv(`JSON.stringify((function(){ window.__fc.selectLevel(8); var d = document.getElementById('canvas').getContext('2d').getImageData(4, 4, 1, 1).data; return { r: d[0], g: d[1], b: d[2] }; })())`));
+  check('cave vs night: warm torch-lit rock vs cool blue night sky (clearly different)',
+    caveTop.r > caveTop.b && nightTop.b > nightTop.r &&
+    Math.abs(caveTop.r - nightTop.r) + Math.abs(caveTop.g - nightTop.g) + Math.abs(caveTop.b - nightTop.b) >= 40,
+    JSON.stringify({ caveTop, nightTop }));
 
   // --- Play-test 5: ⚡ fires by pointerdown while another control is held,
   //     and a pickup during super PROLONGS the blast ------------------------
@@ -258,11 +280,12 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   await h.evalv(`window.__fc.teleport(${(pcoin ? pcoin.x : 900) - 55}); true`);
   const preProlong = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.state())`));
   const prolong = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.step(2))`));
-  // play-test 6: the prolong is a small capped nudge now (+6, was +18 — dense
-  // arcs made the blast endless): baseline drain of the 2 measured frames is 2,
-  // so the timer must sit above (145 - 2) = 143, and never past SUPER_FRAMES.
+  // play-test 6: the prolong is a small capped nudge (+6, was +18 — dense
+  // arcs made the blast endless); play-test 8: SUPER_FRAMES is 180 again
+  // (3s — 2.5s drained too fast), so baseline drain of the 2 measured frames
+  // is 2 (175 -> 173) and one pickup lands on 179, capped at 180.
   check('pickup during super gives a small capped prolong (+6 frames, coin still scores)',
-    prolong.superT >= 146 && prolong.superT <= 150 && prolong.score > preProlong.score,
+    prolong.superT >= 176 && prolong.superT <= 180 && prolong.score > preProlong.score,
     JSON.stringify({ before: preProlong.superT, after: prolong.superT, scoreGained: prolong.score - preProlong.score }));
 
   // The picker: 🌍 opens it, 10 open choices (explorer parity — no locks),
