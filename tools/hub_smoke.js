@@ -397,15 +397,15 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
   // V21 (§39) — semantic-motion gate. Decorative infinite motion (hub bob/drift,
   // explorer jump pulse, dino advPulse, candy starGlow) failed the spec's tests
   // 1/5/6 (communicates nothing, runs indefinitely, costs battery/CPU) and was
-  // removed. The ONLY remaining indefinite animations in game/ are the five
+  // removed. The ONLY remaining indefinite animations in game/ are the six
   // justified cues, each a gameplay/instructional loop that prefers-reduced-motion
   // freezes: animalIdle (animals — "alive" idle), softLight (piano "Прати светло"
   // target-key cue), introDraw/introBob (tracing — teaches how to trace),
-  // superPulse (fastcat — "meter full, tap ⚡" ready cue, only while #super-btn
-  // is .ready; task 254).
+  // superPulse + superRing (fastcat — "meter full, tap ⚡" ready cues, only
+  // while #super-btn is .ready; task 254 rounds 1 and 5).
   // Set equality is non-vacuous both ways: an unjustified `infinite` (even a dead
   // one hidden in a hidden section) OR a deleted justified loop turns this red.
-  const V21_ALLOWED = ['animalIdle', 'softLight', 'introDraw', 'introBob', 'superPulse'].sort().join(',');
+  const V21_ALLOWED = ['animalIdle', 'softLight', 'introDraw', 'introBob', 'superPulse', 'superRing'].sort().join(',');
   const V21_KEYWORDS = new Set(['infinite','none','alternate','alternate-reverse','reverse',
     'forwards','backwards','both','running','paused','normal','ease','linear','ease-in',
     'ease-out','ease-in-out','step-start','step-end']);
@@ -427,7 +427,7 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
     }
   }
   const infFound = [...foundInf].sort().join(',');
-  check('V21: the only indefinite animations are the five justified cues (animalIdle, softLight, introDraw, introBob, superPulse)',
+  check('V21: the only indefinite animations are the six justified cues (animalIdle, softLight, introDraw, introBob, superPulse, superRing)',
     infFound === V21_ALLOWED,
     infFound === V21_ALLOWED ? 'allowlist intact: ' + infFound
       : (infFound ? 'found: ' + infFound + ' | allowlist: ' + V21_ALLOWED

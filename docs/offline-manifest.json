@@ -772,8 +772,8 @@
     "size": 17984
   },
   "games/fastcat.js": {
-    "sha256": "41e22f44089cff143b1fdbeb6013a4d15ffaf5defc7960e2757cc8a0ca3ea4b6",
-    "size": 41571
+    "sha256": "295d75beb7f29a52a701e451c139180548a496f55d782b2a00be95cb34fad052",
+    "size": 43356
   },
   "games/kids_games.js": {
     "sha256": "7799198c377ed7f24cab555a5884fdaacb459854e810df2fbb180f4f65c59036",
@@ -844,7 +844,7 @@
     "size": 16989
   },
   "manifest.json": {
-    "sha256": "f2dde211a5aaa94e059e05282a3535ce79be9f46955838a8fa67dfddabc3b688",
+    "sha256": "548ba1095bdfacda8386b7182eb3b01663f768f7c8c28503b0fc22b6df131f6e",
     "size": 577
   },
   "pages/animal_counting.html": {
@@ -888,8 +888,8 @@
     "size": 10040
   },
   "pages/fastcat.html": {
-    "sha256": "428379c69d30e91cfafed59fcdc8a281a9e4ab00325698df386f3ba62decc331",
-    "size": 11200
+    "sha256": "eeddac59f91eed691b2ee8fe23263f8ce59d07f95206cb4eaa49ecb3fa814194",
+    "size": 12057
   },
   "pages/matching_game.html": {
     "sha256": "2ce0485ec2721151745a43f42b2ebc2215cd61b412dba3c77fa31dad66e1f9af",

@@ -4,7 +4,9 @@
    hazard behaviours (puddle slows, rock jumpable, bar slideable, boost pad),
    win + restart, themed levels (🌍 picker with 10 open choices, per-level
    pickup emoji + palette + music loop, per-level seeds, next-level flow,
-   ♪ toggle on the shared pkMusic key), portrait play (no rotate gate — controls tappable there), control geometry
+   ♪ toggle on the shared pkMusic key), play-test 5 (⚡ starts ready on a full
+   meter, pointerdown activation while other controls are held, pickups
+   prolong the super blast, auto-advance after the win), portrait play (no rotate gate — controls tappable there), control geometry
    (on-screen + topmost at the centre point), and the route contract.
    Run:  node tools/fastcat_smoke.js     Requires Node >= 22. CHROME_PATH optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -39,12 +41,24 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   await sleep(100);
 
   const boot = await h.evalv(`JSON.stringify(Object.assign(window.__fc.state(), {
-    modalHidden: !document.getElementById('char-modal').classList.contains('show')
+    modalHidden: !document.getElementById('char-modal').classList.contains('show'),
+    readyClass: document.getElementById('super-btn').classList.contains('ready')
   }))`);
   const B = JSON.parse(boot);
   check('picking a character hides the modal and starts the run', B.modalHidden && B.x > 0, boot);
   check('level 1 generated: long course with every hazard family',
-    B.levelLen === 19500 && B.coinsTotal > 30 && B.rocks > 0 && B.banners > 0 && B.puddles > 0 && B.boosts > 0 && B.plateaus > 0,
+    B.levelLen === 25350 && B.coinsTotal > 30 && B.rocks > 0 && B.banners > 0 && B.puddles > 0 && B.boosts > 0 && B.plateaus > 0,
+    boot);
+  // play-test 5: every run opens with ⚡ READY — full meter + the loud state
+  // cues (gold gradient, pulse AND rotating ring) present from the first frame.
+  check('⚡ starts ready: meter full from the first frame with the loud ready state (pulse + rotating ring)',
+    B.meter === 100 && B.readyClass === true &&
+    (await h.evalv(`(function(){
+      var b = document.getElementById('super-btn');
+      return /superPulse/.test(getComputedStyle(b).animationName) &&
+             /superRing/.test(getComputedStyle(b, '::after').animationName) &&
+             /linear-gradient/.test(getComputedStyle(b).backgroundImage);
+    })()`)),
     boot);
 
   // Auto-run: x advances, stays grounded on the flat intro.
@@ -75,12 +89,28 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   const spots = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.spots())`));
   const coinSpot = spots.coins.find(c => c.off <= 55);
   check('level has a grounded-reachable coin', !!coinSpot, JSON.stringify(spots.coins.slice(0, 8)));
+  // play-test 5: the run starts with a FULL meter, so drop it to a known
+  // partial level first — the delta then proves the fill, not the cap.
+  await h.evalv(`window.__fc.setMeter(40); true`);
   const preCoin = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.state())`));
   if (coinSpot) await h.evalv(`window.__fc.teleport(${coinSpot.x - 55}); true`);
   const coin = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.step(14))`));
   check('coins fill the meter and score points',
     coin.score > preCoin.score && coin.coinsLeft < preCoin.coinsLeft && coin.meter > 0,
     JSON.stringify({ pre: preCoin, post: coin }));
+
+  // play-test 5: the blast can chain through coin arcs (pickups prolong it),
+  // so the full lapse is proven where NO pickup is in reach — enter the goal
+  // run-out (past the last chunk) mid-super, win, and let the countdown
+  // finish (superT-- runs before the won-guard, so it completes post-win).
+  await h.evalv(`window.__fc.selectLevel(0); window.__fc.setMeter(100); window.__fc.super(); true`);
+  await h.evalv(`window.__fc.teleport(${25350 - 300}); true`);
+  const lapseA = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.step(25))`));
+  const lapseB = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.step(300))`));
+  check('super countdown runs to zero (full lapse) once no more pickups are in reach',
+    lapseA.won === true && lapseA.superT > 0 && lapseB.superT === 0 && lapseB.meter === 0,
+    JSON.stringify({ atWin: lapseA.superT, after: lapseB.superT }));
+  await h.evalv(`window.__fc.restart(); true`);   // hides the win modal, cancels auto-advance
 
   // Super-speed gate: needs a full meter.
   const gate = JSON.parse(await h.evalv(`window.__fc.setMeter(50); JSON.stringify({ ok: window.__fc.super(), st: window.__fc.state() })`));
@@ -101,15 +131,19 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   const supPace = supB.x - baseB.x;
   check('super speed: ~2x forward pace', supPace > basePace * 1.7 && supPace < basePace * 2.4, JSON.stringify({ basePace, supPace }));
 
-  // Let super lapse, then hazards:
-  await h.evalv(`JSON.stringify(window.__fc.step(260))`);
-  const after = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.state())`));
-  // The lapse run legally collects coins, so the meter is low but not 0.
-  check('super speed lapses back to normal (timer off, meter no longer full)',
-    after.superT === 0 && after.meter < 100, JSON.stringify(after));
+  // (The old "super lapses mid-level after step(260)" pin is gone: a run
+  // through the coin arcs now legally CHAINS via the play-test-5 prolong, so
+  // mid-level zero-lapse is no longer observable. The lapse contract is pinned
+  // honestly by the goal run-out check above — countdown to zero where no
+  // pickup is in reach — and the meter-drain check above that.)
+  // Restart here so the hazard tests below run at base pace from a clean slate
+  // (extended super + any slowT/hit latches are cleared with the reset).
+  const preHaz = JSON.parse(await h.evalv(`window.__fc.restart(); JSON.stringify(window.__fc.state())`));
+  check('restart before hazards: clean base-pace slate (no super, no slow)',
+    preHaz.superT === 0 && preHaz.slowT === 0 && preHaz.won === false, JSON.stringify(preHaz));
 
-  // Settle in the empty zone first so a leftover slowT from the super-lapse
-  // run cannot make the puddle assertion vacuous (72-frame slow expires).
+  // Settle in the empty zone first so nothing left over from the tests above
+  // can make the puddle assertion vacuous (72-frame slow expires).
   const pudPre = JSON.parse(await h.evalv(`window.__fc.teleport(300); JSON.stringify(window.__fc.step(80))`));
   const pud = spots.puddles[0];
   await h.evalv(`window.__fc.teleport(${pud - 40}); true`);
@@ -178,7 +212,9 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   const modalShown = await h.evalv(`document.getElementById('win-modal').classList.contains('show')`);
   check('goal: win modal is visible', modalShown === true);
   const replay = JSON.parse(await h.evalv(`window.__fc.restart(); JSON.stringify(window.__fc.state())`));
-  check('replay: restart resets score, meter and win state', replay.won === false && replay.score === 0 && replay.meter === 0, JSON.stringify(replay));
+  // play-test 5: the meter starts FULL on every (re)run — that is the point.
+  check('replay: restart resets win state and re-arms the full starting meter',
+    replay.won === false && replay.score === 0 && replay.meter === 100, JSON.stringify(replay));
 
   // --- Themed levels (play-test 4; task 254): picker, per-level theme,
   //     per-level music loop, next-level flow ------------------------------
@@ -192,6 +228,31 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
     /^1\s·\sПрашума\s🌺$/.test(label1), JSON.stringify(label1));
   const scoreIcon1 = await h.evalv(`document.getElementById('score-count').textContent`);
   check('score icon is the level pickup emoji (star coins are gone)', scoreIcon1.indexOf('🌺') === 0, JSON.stringify(scoreIcon1));
+
+  // --- Play-test 5: ⚡ fires by pointerdown while another control is held,
+  //     and a pickup during super PROLONGS the blast ------------------------
+  await h.evalv(`window.__fc.selectLevel(0); true`);   // fresh state: meter 100, superT 0
+  const pd = JSON.parse(await h.evalv(`JSON.stringify((function () {
+    window.__fc.press('jump', true);                    // hold JUMP the whole time
+    var b = document.getElementById('super-btn');
+    b.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, pointerId: 1 }));
+    var st = window.__fc.state();
+    window.__fc.press('jump', false);
+    return { superT: st.superT, activeClass: b.classList.contains('active') };
+  })())`));
+  check('⚡ fires on pointerdown even while another control is held (second finger)',
+    pd.superT > 0 && pd.activeClass === true, JSON.stringify(pd));
+  await h.evalv(`window.__fc.step(5); true`);
+  const pspots = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.spots())`));
+  const pcoin = pspots.coins.find(c => c.off <= 55);
+  await h.evalv(`window.__fc.teleport(${(pcoin ? pcoin.x : 900) - 55}); true`);
+  const preProlong = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.state())`));
+  const prolong = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.step(2))`));
+  // baseline drain of the 2 measured frames is 2; the coin adds +18, so the
+  // timer must sit far above (235 - 2) = 233 — and the coin must be collected.
+  check('pickup during super PROLONGS the blast (+18 frames, coin still scores)',
+    prolong.superT >= 243 && prolong.superT <= 260 && prolong.score > preProlong.score,
+    JSON.stringify({ before: preProlong.superT, after: prolong.superT, scoreGained: prolong.score - preProlong.score }));
 
   // The picker: 🌍 opens it, 10 open choices (explorer parity — no locks),
   // picking Вулкан re-themes everything.
@@ -272,6 +333,17 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   await h.evalv(`window.__fc.restart(); true`);
   await sleep(60);
 
+  // --- Play-test 5: the win moves the child on automatically --------------
+  await h.evalv(`window.__fc.selectLevel(8); window.__fc.teleport(${spots.goal - 30}); JSON.stringify(window.__fc.step(10))`);
+  await sleep(4200);   // WIN_AUTO_MS (3500) + margin
+  const auto = JSON.parse(await h.evalv(`JSON.stringify(Object.assign(window.__fc.state(), {
+    modalHidden: !document.getElementById('win-modal').classList.contains('show')
+  }))`));
+  check('win moves on automatically: after the celebration pause the next level runs (9 → 10 · Острво)',
+    auto.level === 9 && auto.modalHidden === true && auto.won === false && auto.score === 0 &&
+    auto.musicTheme === 'fcIsland' && auto.x > 0,
+    JSON.stringify(auto));
+
   // Control geometry (AGENTS: a .click() smoke is not enough — the controls
   // must be on-screen AND topmost where a child actually taps). Only the
   // tappable controls get the topmost check: #hud is pointer-events:none, so
@@ -300,11 +372,11 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
         geo[id].inViewport, JSON.stringify(geo[id]));
     }
   }
-  // play-test 3: the ⚡ tap must sit clearly ABOVE the jump button — pin a
-  // real clear gap (its glow ring + pulse used to visually touch the jump
-  // button), right edges stay aligned for one-thumb reach.
-  check('geometry: super-btn sits directly above the jump button (right edges aligned, >=8px clear)',
-    geo['btn-jump'].top - geo['super-btn'].bottom >= 8 &&
+  // play-test 5: the ⚡ tap must sit well clear ABOVE the jump button — the
+  // 5vmin gap still read as touching on the real phone (glow + pulse
+  // overshoot), so the CSS gap is 9vmin (~35px at 844x390); pin >= 24px.
+  check('geometry: super-btn sits directly above the jump button (right edges aligned, >=24px clear)',
+    geo['btn-jump'].top - geo['super-btn'].bottom >= 24 &&
     Math.abs(geo['super-btn'].right - geo['btn-jump'].right) <= 4,
     JSON.stringify({ super: geo['super-btn'], jump: geo['btn-jump'] }));
 

@@ -32,7 +32,7 @@
                                // 34 above ground, so sliding clears by 6px
   const STAND_H = 48;
   const PLAYER_W = 48;
-  const LEVEL_LEN = 19500;    // play-test 4: ~30% longer run (was 15000)
+  const LEVEL_LEN = 25350;    // play-test 5: +30% again (19500 -> 25350)
   const GOAL_PAD = 240;        // flat run-out after the goal post
   const COIN_SCORE = 10, COIN_METER = 3;
   const BOLT_SCORE = 50, BOLT_METER = 12;
@@ -364,7 +364,10 @@
   function reset() {
     player = { x: 150, y: 0, vy: 0, grounded: true, slide: 0, animState: 'run', animTime: 0, squish: 1 };
     buildLevel();
-    camX = 0; score = 0; meter = 0; meterFullAnnounced = false;
+    camX = 0; score = 0;
+    // play-test 5: ⚡ starts READY — the meter is full from the first frame,
+    // so every run opens with a free super blast the child can discover.
+    meter = 100; meterFullAnnounced = true;
     superT = 0; boostT = 0; slowT = 0; annT = 0; won = false; frame = 0;
     particles = [];
     player.y = groundYAt(player.x) - STAND_H;
@@ -467,7 +470,9 @@
     if (annT > 0) annT--;
     if (superT > 0) {
       superT--;
-      meter = superT > 0 ? 100 * superT / SUPER_FRAMES : 0;
+      // the meter mirrors the remaining super — capped, because a pickup can
+      // now push superT above SUPER_FRAMES (prolonged blast, play-test 5)
+      meter = superT > 0 ? Math.min(100, 100 * superT / SUPER_FRAMES) : 0;
       if (superT === 0) { meterFullAnnounced = false; updateHud(); }
       if (superT % 6 === 0) burst(player.x, player.y + 40, '#FFD23F', 2); // barrel-roll trail
     }
@@ -535,7 +540,9 @@
         c.got = true; score += COIN_SCORE;
         burst(c.x, c.y, '#FFD23F', 5);
         window.playSound && playSound('coin');
-        addMeter(COIN_METER);
+        // play-test 5: during super a pickup PROLONGS the blast (+0.3s)
+        // instead of filling the meter (the meter is the super countdown)
+        if (superT > 0) superT += 18; else addMeter(COIN_METER);
       }
     }
     for (const b of bolts) {
@@ -544,7 +551,7 @@
         b.got = true; score += BOLT_SCORE;
         burst(b.x, b.y, '#FFE45C', 9);
         window.playSound && playSound('coin');
-        addMeter(BOLT_METER);
+        if (superT > 0) superT += 60; else addMeter(BOLT_METER);  // +1s during super
       }
     }
     for (const p of puddles) {                       // grounded only = jump clears
@@ -620,6 +627,7 @@
       if (nb) nb.style.display = levelIdx < LEVELS.length - 1 ? '' : 'none';
       if (m) m.classList.add('show');
       updateHud();
+      scheduleAutoNext();   // play-test 5: toddlers move on by themselves
     }
 
     // camera
@@ -869,6 +877,24 @@
     else if (player && !won && !loopOn) { startLoop(); startMusic(musicTheme); }
   });
 
+  // play-test 5: the win modal moves the child on by itself after a short
+  // celebration pause; both win-modal buttons cancel the countdown (a manual
+  // choice always wins), and level 10 wraps around to a new tour from Прашума.
+  const WIN_AUTO_MS = 3500;
+  let autoNextT = null;
+  function cancelAutoNext() { if (autoNextT) { clearTimeout(autoNextT); autoNextT = null; } }
+  function scheduleAutoNext() {
+    cancelAutoNext();
+    autoNextT = setTimeout(() => {
+      autoNextT = null;
+      const m = el('win-modal');
+      if (m) m.classList.remove('show');
+      levelIdx = (levelIdx + 1) % LEVELS.length;
+      reset();
+      if (!document.hidden) { startMusic(LEVELS[levelIdx].music); startLoop(); }
+    }, WIN_AUTO_MS);
+  }
+
   // --- Level picker (explorer parity: open choice, no locks — task 254) ---
   function buildLevelMenu() {
     const grid = el('level-grid');
@@ -896,6 +922,7 @@
 
   function pickLevel(i) {
     window.playSound && playSound('pop');
+    cancelAutoNext();
     levelIdx = Math.max(0, Math.min(i, LEVELS.length - 1));
     closeLevelMenu();
     reset();
@@ -904,6 +931,7 @@
   }
 
   function winAgain() {
+    cancelAutoNext();
     const m = el('win-modal');
     if (m) m.classList.remove('show');
     reset();
@@ -921,7 +949,12 @@
     bindButton('btn-slide', 'slide');
 
     const superBtn = el('super-btn');
-    if (superBtn) superBtn.addEventListener('click', () => {
+    // play-test 5: pointerdown, not click — a second finger's tap must fire
+    // ⚡ instantly even while JUMP/SLIDE are held (click synthesis can be
+    // swallowed when another touch is already active); preventDefault drops
+    // the compatibility mouse events so it cannot double-fire.
+    if (superBtn) superBtn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
       window.initAudio && initAudio();
       activateSuper();
     });
@@ -933,6 +966,7 @@
     const nextBtn = el('next-btn');
     if (nextBtn) nextBtn.addEventListener('click', () => {
       window.initAudio && initAudio();
+      cancelAutoNext();
       const m = el('win-modal');
       if (m) m.classList.remove('show');
       levelIdx = Math.min(levelIdx + 1, LEVELS.length - 1);
