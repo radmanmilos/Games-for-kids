@@ -20,7 +20,7 @@
   // --- Constants -----------------------------------------------------------
   const BASE_SPEED = 6.4;      // px/frame at 60fps reference
   const SUPER_MULT = 2.0;
-  const SUPER_FRAMES = 240;    // 4s of super speed
+  const SUPER_FRAMES = 150;    // play-test 6: 2.5s (was 4s — the bar drained too slowly)
   const BOOST_MULT = 1.35;
   const BOOST_FRAMES = 72;     // 1.2s boost panel
   const SLOW_MULT = 0.5;
@@ -470,8 +470,8 @@
     if (annT > 0) annT--;
     if (superT > 0) {
       superT--;
-      // the meter mirrors the remaining super — capped, because a pickup can
-      // now push superT above SUPER_FRAMES (prolonged blast, play-test 5)
+      // the meter mirrors the remaining super (play-test 6 caps the prolong at
+      // SUPER_FRAMES upstream; the min keeps aria/width sane as a belt)
       meter = superT > 0 ? Math.min(100, 100 * superT / SUPER_FRAMES) : 0;
       if (superT === 0) { meterFullAnnounced = false; updateHud(); }
       if (superT % 6 === 0) burst(player.x, player.y + 40, '#FFD23F', 2); // barrel-roll trail
@@ -540,9 +540,10 @@
         c.got = true; score += COIN_SCORE;
         burst(c.x, c.y, '#FFD23F', 5);
         window.playSound && playSound('coin');
-        // play-test 5: during super a pickup PROLONGS the blast (+0.3s)
-        // instead of filling the meter (the meter is the super countdown)
-        if (superT > 0) superT += 18; else addMeter(COIN_METER);
+        // play-test 6: during super a pickup gives the blast a small nudge
+        // (was +18 — dense coin arcs made it feel endless); capped at the full
+        // duration, and the meter is the super countdown (not refilled here)
+        if (superT > 0) superT = Math.min(SUPER_FRAMES, superT + 6); else addMeter(COIN_METER);
       }
     }
     for (const b of bolts) {
@@ -551,7 +552,7 @@
         b.got = true; score += BOLT_SCORE;
         burst(b.x, b.y, '#FFE45C', 9);
         window.playSound && playSound('coin');
-        if (superT > 0) superT += 60; else addMeter(BOLT_METER);  // +1s during super
+        if (superT > 0) superT = Math.min(SUPER_FRAMES, superT + 18); else addMeter(BOLT_METER);  // +0.3s during super (was +1s)
       }
     }
     for (const p of puddles) {                       // grounded only = jump clears
@@ -621,10 +622,10 @@
       burst(player.x + 24, player.y, '#FFD23F', 20);
       const m = el('win-modal'), sub = el('win-sub');
       if (sub) sub.textContent = 'Поени: ' + score;
-      // next-level is offered while more themed levels remain (the last
-      // level keeps the single replay button)
+      // play-test 6: СЛЕДЕЋИ СВЕТ is always offered — even on the last level,
+      // where it wraps around to a new tour from Прашума
       const nb = el('next-btn');
-      if (nb) nb.style.display = levelIdx < LEVELS.length - 1 ? '' : 'none';
+      if (nb) nb.style.display = '';
       if (m) m.classList.add('show');
       updateHud();
       scheduleAutoNext();   // play-test 5: toddlers move on by themselves
@@ -969,7 +970,7 @@
       cancelAutoNext();
       const m = el('win-modal');
       if (m) m.classList.remove('show');
-      levelIdx = Math.min(levelIdx + 1, LEVELS.length - 1);
+      levelIdx = (levelIdx + 1) % LEVELS.length;   // play-test 6: last level wraps to a new tour
       reset();
       startMusic(LEVELS[levelIdx].music);
       startLoop();

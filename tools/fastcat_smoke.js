@@ -6,7 +6,9 @@
    pickup emoji + palette + music loop, per-level seeds, next-level flow,
    ♪ toggle on the shared pkMusic key), play-test 5 (⚡ starts ready on a full
    meter, pointerdown activation while other controls are held, pickups
-   prolong the super blast, auto-advance after the win), portrait play (no rotate gate — controls tappable there), control geometry
+   prolong the super blast, auto-advance after the win), play-test 6 (2.5s
+   blast with small capped prolongs, ⚡ raised to a 12vmin/40px gap, СЛЕДЕЋИ СВЕТ
+   always offered incl. the last-level wrap to a new tour), portrait play (no rotate gate — controls tappable there), control geometry
    (on-screen + topmost at the centre point), and the route contract.
    Run:  node tools/fastcat_smoke.js     Requires Node >= 22. CHROME_PATH optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -248,10 +250,11 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   await h.evalv(`window.__fc.teleport(${(pcoin ? pcoin.x : 900) - 55}); true`);
   const preProlong = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.state())`));
   const prolong = JSON.parse(await h.evalv(`JSON.stringify(window.__fc.step(2))`));
-  // baseline drain of the 2 measured frames is 2; the coin adds +18, so the
-  // timer must sit far above (235 - 2) = 233 — and the coin must be collected.
-  check('pickup during super PROLONGS the blast (+18 frames, coin still scores)',
-    prolong.superT >= 243 && prolong.superT <= 260 && prolong.score > preProlong.score,
+  // play-test 6: the prolong is a small capped nudge now (+6, was +18 — dense
+  // arcs made the blast endless): baseline drain of the 2 measured frames is 2,
+  // so the timer must sit above (145 - 2) = 143, and never past SUPER_FRAMES.
+  check('pickup during super gives a small capped prolong (+6 frames, coin still scores)',
+    prolong.superT >= 146 && prolong.superT <= 150 && prolong.score > preProlong.score,
     JSON.stringify({ before: preProlong.superT, after: prolong.superT, scoreGained: prolong.score - preProlong.score }));
 
   // The picker: 🌍 opens it, 10 open choices (explorer parity — no locks),
@@ -310,25 +313,35 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
     musOn.st.musicRunning === audioOk && musOn.pk === 'on',
     JSON.stringify({ audioOk, musicRunning: musOn.st.musicRunning, pk: musOn.pk }));
 
-  // Win → СЛЕДЕЋИ НИВО advances; the LAST level offers replay only.
+  // Win → СЛЕДЕЋИ СВЕТ advances; play-test 6: the button is worded "next
+  // world" and is offered on the LAST level too, where it wraps to a new tour.
   await h.evalv(`window.__fc.selectLevel(3); true`);
   const nxPre = JSON.parse(await h.evalv(`window.__fc.teleport(${spots.goal - 30}); JSON.stringify(window.__fc.step(10))`));
-  const nxShown = await h.evalv(`(function(){ var m = document.getElementById('win-modal'), n = document.getElementById('next-btn'); return m.classList.contains('show') && n.style.display !== 'none'; })()`);
-  check('win on a mid level: win modal + СЛЕДЕЋИ НИВО offered',
+  const nxShown = await h.evalv(`(function(){ var m = document.getElementById('win-modal'), n = document.getElementById('next-btn'); return m.classList.contains('show') && n.style.display !== 'none' && n.textContent.indexOf('СЛЕДЕЋИ СВЕТ') === 0; })()`);
+  check('win on a mid level: win modal + СЛЕДЕЋИ СВЕТ button (wording + visible)',
     nxPre.won && nxShown === true, JSON.stringify({ won: nxPre.won, nxShown }));
   await h.evalv(`document.getElementById('next-btn').click(); true`);
   await sleep(60);
   const nxt = JSON.parse(await h.evalv(`JSON.stringify(Object.assign(window.__fc.state(), {
     modalHidden: !document.getElementById('win-modal').classList.contains('show')
   }))`));
-  check('СЛЕДЕЋИ НИВО: advances to the next themed level with a fresh run',
+  check('СЛЕДЕЋИ СВЕТ: advances to the next themed level with a fresh run',
     nxt.level === 4 && nxt.coinEmoji === '💎' && nxt.musicTheme === 'fcCave' &&
     nxt.won === false && nxt.score === 0 && nxt.x > 0 && nxt.modalHidden === true,
     JSON.stringify(nxt));
   await h.evalv(`window.__fc.selectLevel(9); window.__fc.teleport(${spots.goal - 30}); JSON.stringify(window.__fc.step(10))`);
-  const lastShown = await h.evalv(`document.getElementById('next-btn').style.display`);
-  check('last level (10 · Острво): no СЛЕДЕЋИ НИВО — replay only',
-    lastShown === 'none', JSON.stringify({ lastShown }));
+  const lastBtn = JSON.parse(await h.evalv(`JSON.stringify((function(){ var n = document.getElementById('next-btn'); return { display: n.style.display, text: n.textContent }; })())`));
+  check('last level (10 · Острво): СЛЕДЕЋИ СВЕТ still offered (no replay-only dead end)',
+    lastBtn.display !== 'none' && lastBtn.text.indexOf('СЛЕДЕЋИ СВЕТ') === 0, JSON.stringify(lastBtn));
+  await h.evalv(`document.getElementById('next-btn').click(); true`);
+  await sleep(60);
+  const wrap = JSON.parse(await h.evalv(`JSON.stringify(Object.assign(window.__fc.state(), {
+    modalHidden: !document.getElementById('win-modal').classList.contains('show')
+  }))`));
+  check('СЛЕДЕЋИ СВЕТ on the last level wraps to a new tour (10 → 1 · Прашума)',
+    wrap.level === 0 && wrap.levelName === 'Прашума' && wrap.won === false &&
+    wrap.score === 0 && wrap.x > 0 && wrap.modalHidden === true,
+    JSON.stringify(wrap));
   // clean slate for the DOM-geometry section below (never leave a modal up)
   await h.evalv(`window.__fc.restart(); true`);
   await sleep(60);
@@ -372,11 +385,10 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
         geo[id].inViewport, JSON.stringify(geo[id]));
     }
   }
-  // play-test 5: the ⚡ tap must sit well clear ABOVE the jump button — the
-  // 5vmin gap still read as touching on the real phone (glow + pulse
-  // overshoot), so the CSS gap is 9vmin (~35px at 844x390); pin >= 24px.
-  check('geometry: super-btn sits directly above the jump button (right edges aligned, >=24px clear)',
-    geo['btn-jump'].top - geo['super-btn'].bottom >= 24 &&
+  // play-test 6: the ⚡ tap moved further up again — 12vmin gap (~47px at
+  // 844x390), pin >= 40px; right edges stay aligned for one-thumb reach.
+  check('geometry: super-btn sits directly above the jump button (right edges aligned, >=40px clear)',
+    geo['btn-jump'].top - geo['super-btn'].bottom >= 40 &&
     Math.abs(geo['super-btn'].right - geo['btn-jump'].right) <= 4,
     JSON.stringify({ super: geo['super-btn'], jump: geo['btn-jump'] }));
 

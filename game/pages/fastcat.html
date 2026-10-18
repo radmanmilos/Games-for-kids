@@ -24,10 +24,9 @@
     #meter-fill{height:100%;width:0%;background:linear-gradient(90deg,#FFD23F,#FF9FB6);border-radius:99px;transition:width .15s linear;}
     .hud-btn{position:absolute;z-index:10;width:10vmin;height:10vmin;min-width:44px;min-height:44px;border-radius:50%;border:3px solid white;background:rgba(0,0,0,.45);color:white;font-size:5vmin;display:flex;align-items:center;justify-content:center;cursor:pointer;}
     .hud-btn:active{transform:scale(.92);}
-    /* play-test 5: the ⚡ tap sits well clear ABOVE the jump button — the
-       5vmin gap still read as touching on the real phone (glow + pulse
-       overshoot), so the gap is now 9vmin. */
-    #super-btn{right:calc(2vmin + env(safe-area-inset-right));bottom:calc(2vmin + env(safe-area-inset-bottom) + min(110px,17vmin) + 9vmin);width:14vmin;height:14vmin;min-width:56px;min-height:56px;font-size:7vmin;background:rgba(0,0,0,.45);opacity:.55;}
+    /* play-test 6: moved a bit further up — the 9vmin gap still felt tight
+       on the real phone; 12vmin keeps a clear shelf of its own. */
+    #super-btn{right:calc(2vmin + env(safe-area-inset-right));bottom:calc(2vmin + env(safe-area-inset-bottom) + min(110px,17vmin) + 12vmin);width:14vmin;height:14vmin;min-width:56px;min-height:56px;font-size:7vmin;background:rgba(0,0,0,.45);opacity:.55;}
     /* ready: the child must SEE "full" without reading anything — bright gold,
        a thick white ring + outer glow, a rotating rainbow ring behind the
        button, and a livelier bounce (was a timid 1.08 scale). */
@@ -98,8 +97,8 @@
     <div id="win-modal" role="dialog" aria-label="Победа">
       <h2>СВЕТ ПРЕЂЕН!</h2>
       <p id="win-sub"></p>
+      <button id="next-btn">СЛЕДЕЋИ СВЕТ! ➜</button>
       <button id="modal-btn">ИГРАЈ ПОНОВО</button>
-      <button id="next-btn">СЛЕДЕЋИ НИВО ➜</button>
     </div>
     <div id="level-modal" role="dialog" aria-label="Изабери ниво">
       <h2>Изабери ниво</h2>
