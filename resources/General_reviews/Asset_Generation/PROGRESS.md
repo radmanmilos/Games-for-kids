@@ -92,3 +92,14 @@ Add one row per asset. Keep this table synchronized with the inventory.
 - [ ] Compare the committed file directly with the canonical bear/star reference images before declaring style QA complete.
 - [ ] Decide whether to promote it to a production-ready location after QA; it is not integrated into runtime and is not marked production-ready.
 - Note: the user approved the illustration in conversation. That approval does not by itself establish technical QA or runtime integration.
+
+
+## Animal asset update — 2026-10-18
+
+- [x] Verified on `main` that `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/lion.png` exists (GitHub returned blob SHA `c493a9e7bc3c78d1b177889f6a874dc34a64b895`).
+- [x] Verified on `main` that `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/frog.png` exists (GitHub returned blob SHA `3a46c83840b1e0babbcda6eb71de65b621202411`).
+- [x] Updated the asset inventory rows for lion and frog to record their WIP paths.
+- [ ] Inspect both committed PNG files at full size and verify dimensions, file size, alpha/transparency, edge quality, and legibility at the actual animal-flashcard render size.
+- [ ] Compare both images directly with the canonical bear/star references and existing animal candidates.
+- [ ] Decide whether either candidate is ready for promotion; neither is marked production-ready or integrated into runtime.
+- Note: GitHub's file fetch returned empty Base64 content for lion and frog despite returning blob SHAs. Existence is verified; image bytes and technical properties were not verified by that fetch.
