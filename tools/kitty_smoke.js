@@ -551,7 +551,7 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
     walkers.length = 0;
     const gy0 = platforms[0].y;
     const canvasEl = document.getElementById('canvas');
-    return JSON.stringify({ gy0, ch: canvasEl.height, gyExpected: canvasEl.height - 140 });
+    return JSON.stringify({ gy0, ch: canvasEl.height, gyExpected: canvasEl.height - 100 });
   })()`);
   const rj = JSON.parse(rsz);
   const settle = await h.evalv(`(() => {

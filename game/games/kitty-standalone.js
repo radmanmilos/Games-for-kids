@@ -983,7 +983,9 @@ function loadWorld() {
         prevGrounded: false
     };
 
-    const gY = canvas.height - 140;
+    // play-test 3 (task 254 round): same landscape ground treatment as fastcat
+    // — the band under the ground is narrowed so the scene sits lower.
+    const gY = canvas.height - 100;
     groundY = gY;
 
     platforms = w.grounds.map(g => ({ x: g.x, y: gY, width: g.w, height: 140, color: w.groundColor }))

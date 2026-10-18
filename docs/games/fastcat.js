@@ -32,7 +32,7 @@
                                // 34 above ground, so sliding clears by 6px
   const STAND_H = 48;
   const PLAYER_W = 48;
-  const LEVEL_LEN = 15000;
+  const LEVEL_LEN = 19500;    // play-test 4: ~30% longer run (was 15000)
   const GOAL_PAD = 240;        // flat run-out after the goal post
   const COIN_SCORE = 10, COIN_METER = 3;
   const BOLT_SCORE = 50, BOLT_METER = 12;

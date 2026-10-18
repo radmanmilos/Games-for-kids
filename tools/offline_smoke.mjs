@@ -398,6 +398,29 @@ const APPS = [
     },
   },
   {
+    id: 'fastcat', back: '#back-btn',
+    ready: `!!document.querySelector('#char-modal.show .char-btn[data-character="kitty"]')`,
+    start: async h => {
+      const t = await h.tap('#char-modal .char-btn[data-character="kitty"]');
+      if (!t.ok) return { ok: false, why: 'character button: ' + t.why };
+      const closed = await h.waitFor(`!document.getElementById('char-modal').classList.contains('show')`,
+        { label: 'the character chooser to close' });
+      if (!closed.ok) return closed;
+      return h.waitFor(`!!window.__fc && window.__fc.state().grounded === true`,
+        { timeout: 8000, label: 'the kitty to land on the ground' });
+    },
+    act: async h => {
+      const p = await h.press('#btn-jump');
+      if (!p.ok) return p;
+      const jumped = await h.waitFor(`window.__fc.state().grounded === false`,
+        { timeout: 3000, label: 'the kitty to leave the ground' });
+      await h.release('#btn-jump');
+      if (!jumped.ok) return jumped;
+      return h.waitFor(`window.__fc.state().grounded === true`,
+        { timeout: 6000, label: 'the kitty to land again' });
+    },
+  },
+  {
     id: 'compare', back: '#compare-back',
     ready: `!!window.__compare && document.querySelectorAll('.cmp-item').length>0`,
     act: async h => {

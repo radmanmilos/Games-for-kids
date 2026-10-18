@@ -2,15 +2,16 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "ce3230a43d93ca73cd711939b9e0143b5ba8b717",
+  "commitSha": "85f7a1c5d330f9a51a7bc97443353e284784e53f",
   "browser": {
     "product": "Chrome/136.0.7103.113",
     "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/136.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-18T06:45:47.646Z",
+  "generatedAt": "2026-10-18T07:09:06.857Z",
   "pageSet": [
-    "fastcat"
+    "fastcat",
+    "explorer"
   ],
   "viewports": {
     "phone-portrait": {
@@ -46,7 +47,7 @@
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 25708
+      "bytes": 26007
     },
     {
       "file": "fastcat_phone-landscape.png",
@@ -55,7 +56,7 @@
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 24652
+      "bytes": 24973
     },
     {
       "file": "fastcat_tablet-portrait.png",
@@ -64,7 +65,7 @@
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 61243
+      "bytes": 62064
     },
     {
       "file": "fastcat_tablet-landscape.png",
@@ -73,7 +74,43 @@
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 59869
+      "bytes": 60788
+    },
+    {
+      "file": "explorer_phone-portrait.png",
+      "page": "explorer",
+      "size": "phone-portrait",
+      "state": null,
+      "width": 390,
+      "height": 844,
+      "bytes": 31745
+    },
+    {
+      "file": "explorer_phone-landscape.png",
+      "page": "explorer",
+      "size": "phone-landscape",
+      "state": null,
+      "width": 844,
+      "height": 390,
+      "bytes": 31753
+    },
+    {
+      "file": "explorer_tablet-portrait.png",
+      "page": "explorer",
+      "size": "tablet-portrait",
+      "state": null,
+      "width": 820,
+      "height": 1180,
+      "bytes": 61092
+    },
+    {
+      "file": "explorer_tablet-landscape.png",
+      "page": "explorer",
+      "size": "tablet-landscape",
+      "state": null,
+      "width": 1180,
+      "height": 820,
+      "bytes": 59815
     }
   ]
 }

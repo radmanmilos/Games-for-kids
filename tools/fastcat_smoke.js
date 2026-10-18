@@ -42,7 +42,7 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   const B = JSON.parse(boot);
   check('picking a character hides the modal and starts the run', B.modalHidden && B.x > 0, boot);
   check('level 1 generated: long course with every hazard family',
-    B.levelLen === 15000 && B.coinsTotal > 30 && B.rocks > 0 && B.banners > 0 && B.puddles > 0 && B.boosts > 0 && B.plateaus > 0,
+    B.levelLen === 19500 && B.coinsTotal > 30 && B.rocks > 0 && B.banners > 0 && B.puddles > 0 && B.boosts > 0 && B.plateaus > 0,
     boot);
 
   // Auto-run: x advances, stays grounded on the flat intro.
@@ -206,10 +206,11 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
         geo[id].inViewport, JSON.stringify(geo[id]));
     }
   }
-  // play-test 2: the ⚡ tap must sit directly above the jump button (one
-  // thumb cluster on the right edge) — pin the stack, not just reachability.
-  check('geometry: super-btn sits directly above the jump button (right edges aligned)',
-    geo['super-btn'].bottom <= geo['btn-jump'].top &&
+  // play-test 3: the ⚡ tap must sit clearly ABOVE the jump button — pin a
+  // real clear gap (its glow ring + pulse used to visually touch the jump
+  // button), right edges stay aligned for one-thumb reach.
+  check('geometry: super-btn sits directly above the jump button (right edges aligned, >=8px clear)',
+    geo['btn-jump'].top - geo['super-btn'].bottom >= 8 &&
     Math.abs(geo['super-btn'].right - geo['btn-jump'].right) <= 4,
     JSON.stringify({ super: geo['super-btn'], jump: geo['btn-jump'] }));
 

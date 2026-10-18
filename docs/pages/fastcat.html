@@ -24,9 +24,10 @@
     #meter-fill{height:100%;width:0%;background:linear-gradient(90deg,#FFD23F,#FF9FB6);border-radius:99px;transition:width .15s linear;}
     .hud-btn{position:absolute;z-index:10;width:10vmin;height:10vmin;min-width:44px;min-height:44px;border-radius:50%;border:3px solid white;background:rgba(0,0,0,.45);color:white;font-size:5vmin;display:flex;align-items:center;justify-content:center;cursor:pointer;}
     .hud-btn:active{transform:scale(.92);}
-    /* play-test 2: the ⚡ tap lives directly above the jump button (one thumb
-       cluster on the right edge), not across the screen at the top. */
-    #super-btn{right:calc(2vmin + env(safe-area-inset-right));bottom:calc(2vmin + env(safe-area-inset-bottom) + min(110px,17vmin) + 2.5vmin);background:rgba(0,0,0,.45);opacity:.55;font-size:4.5vmin;}
+    /* play-test 3: the ⚡ tap sits clearly ABOVE the jump button — bigger gap
+       (5vmin; its glow ring + pulse used to visually touch the jump button)
+       and a bigger target for the younger thumb. */
+    #super-btn{right:calc(2vmin + env(safe-area-inset-right));bottom:calc(2vmin + env(safe-area-inset-bottom) + min(110px,17vmin) + 5vmin);width:14vmin;height:14vmin;min-width:56px;min-height:56px;font-size:7vmin;background:rgba(0,0,0,.45);opacity:.55;}
     #super-btn.ready{opacity:1;background:#FFD23F;color:#4A3F6B;box-shadow:0 1vmin 0 rgba(0,0,0,.25),0 0 0 3px rgba(255,210,63,.6);animation:superPulse .8s ease-in-out infinite alternate;}
     #super-btn.active{opacity:1;background:#FF6B6B;color:white;text-shadow:2px 2px 0 rgba(0,0,0,.3);animation:none;}
     @keyframes superPulse{from{transform:scale(1);}to{transform:scale(1.08);}}
