@@ -82,3 +82,13 @@ Add one row per asset. Keep this table synchronized with the inventory.
 - [x] User praised the bone result and reported adding it to the repository; this is recorded as approval of the illustration candidate, not as proof of production QA.
 - [ ] Verify image dimensions, file size, alpha/transparency, and visual legibility at the actual spatial-game render size.
 - [ ] After QA, decide whether to promote the asset to a production-ready location and update its inventory location accordingly.
+
+
+## Asset update — 2026-10-18
+
+- [x] Verified commit `bd526899f54940e627a4c5f7c3402e4c9a55b048` adds `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/elephant.png` to `main`.
+- [x] Recorded `animal-elephant` in the asset inventory as a **generated, user-approved candidate**.
+- [ ] Independently inspect the committed PNG at full size and verify dimensions, file size, alpha/transparency, edge quality, and legibility at the actual animal-flashcard render size.
+- [ ] Compare the committed file directly with the canonical bear/star reference images before declaring style QA complete.
+- [ ] Decide whether to promote it to a production-ready location after QA; it is not integrated into runtime and is not marked production-ready.
+- Note: the user approved the illustration in conversation. That approval does not by itself establish technical QA or runtime integration.
