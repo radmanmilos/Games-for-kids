@@ -104,7 +104,7 @@ POSIX keeps the existing profile-tag kill.
 | `kitty_smoke.js` | Canonical validation for Мала истраживачица (Мала истраживачица, formerly Папир Маца/Paper Kitty) — 30 checks: boot + world HUD, 11 worlds × 4… |
 | `adventure_smoke.js` | Canonical validation for the shared adventure engine (game/games/adventure.js) — 25 checks: drive mode (driving.html), ground mode (dino.html), and… |
 | `racing3d_smoke.js` | Canonical validation for the 3D Мала тркачица 3Д (three.js racer, task 100) — 32 checks: boots to window.__r3d, canvas + Serbian HUD (Ливада / Круг… |
-| `fastcat_smoke.js` | Canonical validation for Брзи мачак (Fastcat, task 254) — 42 checks: char picker, auto-run, jump/slide, coin→meter deltas, super gate + drain + 2× pace + lapse, all four hazards with hit-flag anti-vacuous proofs, win/replay, control geometry, rotate overlay, route contract. |
+| `fastcat_smoke.js` | Canonical validation for Брзи мачак (Fastcat, task 254) — 42 checks: char picker, auto-run, jump/slide, coin→meter deltas, super gate + drain + 2× pace + lapse, all four hazards with hit-flag anti-vacuous proofs, win/replay, control geometry (⚡ stacked above jump), portrait playability, route contract. |
 | `sync-docs.sh` | Publish helper: replaces the ENTIRE docs/ content with the current game/ content (GitHub Pages serves main → /docs). |
 | `build_offline.js` | Generates the two service-worker inventories: game/sw-cache-list.json (what the worker pre-caches) and game/offline-manifest.json (canonical… |
 | `build_offline.ps1` | The older PowerShell builder, kept as a Windows alternative. |

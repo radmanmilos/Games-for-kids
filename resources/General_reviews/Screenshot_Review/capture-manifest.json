@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "d29f49926e4b3d6191c01c2328a08c22043986c3",
+  "commitSha": "ce3230a43d93ca73cd711939b9e0143b5ba8b717",
   "browser": {
     "product": "Chrome/136.0.7103.113",
     "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/136.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-17T19:41:57.405Z",
+  "generatedAt": "2026-10-18T06:45:47.646Z",
   "pageSet": [
     "fastcat"
   ],
@@ -46,7 +46,7 @@
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 19826
+      "bytes": 25708
     },
     {
       "file": "fastcat_phone-landscape.png",
@@ -55,7 +55,7 @@
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 24647
+      "bytes": 24652
     },
     {
       "file": "fastcat_tablet-portrait.png",
@@ -64,7 +64,7 @@
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 40737
+      "bytes": 61243
     },
     {
       "file": "fastcat_tablet-landscape.png",
@@ -73,7 +73,7 @@
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 60084
+      "bytes": 59869
     }
   ]
 }

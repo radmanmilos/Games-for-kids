@@ -2,7 +2,7 @@
    Drives pages/fastcat.html headlessly: character picker, auto-run forward
    motion, jump/slide, coin→meter fill, super-speed gate + drain + 2x speed,
    hazard behaviours (puddle slows, rock jumpable, bar slideable, boost pad),
-   win + restart, the landscape/portrait rotate overlay, control geometry
+   win + restart, portrait play (no rotate gate — controls tappable there), control geometry
    (on-screen + topmost at the centre point), and the route contract.
    Run:  node tools/fastcat_smoke.js     Requires Node >= 22. CHROME_PATH optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -191,7 +191,8 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
       const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
       out[id] = {
         inViewport: r.left >= 0 && r.top >= 0 && r.bottom <= innerHeight + 1 && r.right <= innerWidth + 1 && r.width > 0,
-        topmost: !!(document.elementFromPoint(cx, cy) && document.elementFromPoint(cx, cy).closest('#' + id))
+        topmost: !!(document.elementFromPoint(cx, cy) && document.elementFromPoint(cx, cy).closest('#' + id)),
+        top: r.top, bottom: r.bottom, right: r.right
       };
     }
     return out;
@@ -205,17 +206,39 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
         geo[id].inViewport, JSON.stringify(geo[id]));
     }
   }
+  // play-test 2: the ⚡ tap must sit directly above the jump button (one
+  // thumb cluster on the right edge) — pin the stack, not just reachability.
+  check('geometry: super-btn sits directly above the jump button (right edges aligned)',
+    geo['super-btn'].bottom <= geo['btn-jump'].top &&
+    Math.abs(geo['super-btn'].right - geo['btn-jump'].right) <= 4,
+    JSON.stringify({ super: geo['super-btn'], jump: geo['btn-jump'] }));
 
-  // Portrait: the rotate overlay must cover the game (landscape-first design).
+  // Portrait (play-test 2): portrait play is allowed — no rotate gate. Prove
+  // it is genuinely playable: the overlay element is gone AND the three game
+  // controls are in the viewport and topmost where a child taps (an overlay
+  // re-added at any z-index fails the elementFromPoint half).
   await h.c.send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
   // readiness wait: poll on the viewport size (not on the assertion itself)
   for (let i = 0; i < 20 && !(await h.evalv(`innerWidth === 390 && innerHeight === 844`)); i++) await sleep(100);
-  const rot = await h.evalv(`getComputedStyle(document.getElementById('fc-rotate')).display`);
-  check('portrait 390x844: rotate-device overlay is showing', rot === 'flex', rot);
+  const rot = await h.evalv(`!!document.getElementById('fc-rotate')`);
+  check('portrait 390x844: rotate-device overlay is gone (portrait play allowed)', rot === false, JSON.stringify({ fcRotatePresent: rot }));
+  const pGeo = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const out = {};
+    for (const id of ['btn-jump', 'btn-slide', 'super-btn']) {
+      const el = document.getElementById(id);
+      const r = el.getBoundingClientRect();
+      const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      const hit = document.elementFromPoint(cx, cy);
+      out[id] = r.left >= 0 && r.top >= 0 && r.bottom <= innerHeight + 1 && r.right <= innerWidth + 1 &&
+        !!(hit && hit.closest('#' + id));
+    }
+    return out;
+  })())`));
+  check('portrait 390x844: jump, slide and super buttons are in the viewport and tappable',
+    pGeo['btn-jump'] === true && pGeo['btn-slide'] === true && pGeo['super-btn'] === true, JSON.stringify(pGeo));
+  // back to landscape for the static route-contract checks below
   await h.c.send('Emulation.setDeviceMetricsOverride', { width: 844, height: 390, deviceScaleFactor: 1, mobile: true });
   for (let i = 0; i < 20 && !(await h.evalv(`innerWidth === 844 && innerHeight === 390`)); i++) await sleep(100);
-  const rotOff = await h.evalv(`getComputedStyle(document.getElementById('fc-rotate')).display`);
-  check('back to landscape 844x390: overlay is gone', rotOff === 'none', rotOff);
 
   // Static: hub + route contract + Serbian title.
   const root = path.join(__dirname, '..');

@@ -180,6 +180,29 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
     // start the race from the picker
     await h.evalv(`window.__r3d.confirmStart(); true`);
+    // Read the countdown IMMEDIATELY after the start tap (lesson: never race an
+    // animation). The sequence runs on the WALL clock (curTime =
+    // performance.now, racing3d.mjs:1494) and is over after 3400ms — the old
+    // read sat after the whole camera batch and raced that window (CI run
+    // 39063913068: sampled countdown '1' at 5092 ms/check under the full
+    // matrix). Readiness wait: poll until the loop has RENDERED a label (any
+    // label — not the assertion itself), then assert it is a real countdown
+    // word with the overlay active in countdown mode.
+    let cd0 = null;
+    for (let i = 0; i < 40 && !cd0; i++) {
+      const s = await h.evalv(`JSON.stringify({
+        countdown: document.getElementById('r3d-countdown').textContent,
+        shown: document.getElementById('r3d-countdown').classList.contains('show'),
+        mode: window.__r3d.mode()
+      })`);
+      if (JSON.parse(s).countdown) cd0 = s;
+      else await sleep(100);
+    }
+    const cj = JSON.parse(cd0 || '{}');
+    check('countdown overlay active (3 / Крени!)',
+      cd0 !== null && cj.shown === true && cj.mode === 'countdown' &&
+      ['3', '2', '1', 'Крени!'].includes(cj.countdown),
+      cd0 || 'no countdown label rendered within 4s of confirmStart');
     await sleep(150);
 
     // The steering zones are z-index 11 and start at 26vmin, which on a short
@@ -241,14 +264,6 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         camShort.target < camTall.target * 0.8,
         JSON.stringify({ short: camShort, tall: camTall }));
 
-    const cd = await h.evalv(`JSON.stringify({
-        countdown: document.getElementById('r3d-countdown').textContent,
-        shown: document.getElementById('r3d-countdown').classList.contains('show'),
-        mode: window.__r3d.mode()
-    })`);
-    const cj = JSON.parse(cd);
-    check('countdown overlay active (3 / Крени!)',
-        cj.shown === true && (cj.countdown === '3' || cj.countdown === '2') && cj.mode === 'countdown', cd);
 
     let driveWait = null;
     for (let i = 0; i < 40 && !driveWait; i++) {

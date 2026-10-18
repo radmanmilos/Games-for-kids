@@ -24,7 +24,9 @@
     #meter-fill{height:100%;width:0%;background:linear-gradient(90deg,#FFD23F,#FF9FB6);border-radius:99px;transition:width .15s linear;}
     .hud-btn{position:absolute;z-index:10;width:10vmin;height:10vmin;min-width:44px;min-height:44px;border-radius:50%;border:3px solid white;background:rgba(0,0,0,.45);color:white;font-size:5vmin;display:flex;align-items:center;justify-content:center;cursor:pointer;}
     .hud-btn:active{transform:scale(.92);}
-    #super-btn{top:2vmin;right:2vmin;background:rgba(0,0,0,.45);opacity:.55;font-size:4.5vmin;}
+    /* play-test 2: the ⚡ tap lives directly above the jump button (one thumb
+       cluster on the right edge), not across the screen at the top. */
+    #super-btn{right:calc(2vmin + env(safe-area-inset-right));bottom:calc(2vmin + env(safe-area-inset-bottom) + min(110px,17vmin) + 2.5vmin);background:rgba(0,0,0,.45);opacity:.55;font-size:4.5vmin;}
     #super-btn.ready{opacity:1;background:#FFD23F;color:#4A3F6B;box-shadow:0 1vmin 0 rgba(0,0,0,.25),0 0 0 3px rgba(255,210,63,.6);animation:superPulse .8s ease-in-out infinite alternate;}
     #super-btn.active{opacity:1;background:#FF6B6B;color:white;text-shadow:2px 2px 0 rgba(0,0,0,.3);animation:none;}
     @keyframes superPulse{from{transform:scale(1);}to{transform:scale(1.08);}}
@@ -49,13 +51,8 @@
     #char-modal .char-btn{padding:2vmin;border-radius:16px;border:4px solid white;background:rgba(255,255,255,.15);cursor:pointer;}
     #char-modal .char-btn:active{transform:scale(.95);}
     #char-modal .char-btn img{width:14vmin;height:14vmin;display:block;}
-    /* Landscape-first: portrait devices get a gentle rotate hint (same pattern
-       as racing3d's #r3d-landscape-hint). Game logic runs in any orientation;
-       this only asks the parent/child to turn the device. */
-    #fc-rotate{display:none;position:absolute;inset:0;z-index:40;align-items:center;justify-content:center;flex-direction:column;gap:3vmin;background:rgba(74,63,107,.94);color:#FFD23F;font:600 clamp(18px,5vmin,34px)/1.4 'Fredoka',sans-serif;text-align:center;padding:5vmin;}
-    @media (orientation:portrait) and (max-width:900px){
-      #fc-rotate{display:flex;}
-    }
+    /* play-test 2: portrait play is allowed — no rotate gate; the layout
+       (full-bleed canvas + corner controls) works in both orientations. */
   </style>
 </head>
 <body>
@@ -82,7 +79,6 @@
         <button class="char-btn" data-character="explorer" aria-label="Истраживачица"><img src="../assets/images/explorer/01_idle_right.png" alt="Истраживачица"></button>
       </div>
     </div>
-    <div id="fc-rotate">Окрени уређај водоравно 🌍</div>
   </div>
 
   <script src="../data/serbian.js"></script>

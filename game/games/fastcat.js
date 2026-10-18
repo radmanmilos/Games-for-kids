@@ -98,7 +98,9 @@
   function resizeCanvas() {
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
-    baseY = canvas.height - 140;
+    // play-test 2: the ground sat too high in landscape — shift the whole
+    // scene (ground, hills, entities) down by narrowing the band below it.
+    baseY = canvas.height - 100;
     if (!level.length) return;
     // every entity stores `off` (height above ground line), so a resize only
     // re-derives y — no delta bookkeeping that can drift (unlike explorer).
@@ -674,10 +676,12 @@
       ctx.save();
       ctx.translate(feetX, feetY);
       // rotate around the sprite CENTER (not the feet): the barrel roll and
-      // the slide lean read as body motion, not as spinning in place on the spot
+      // the flat slide read as body motion, not as spinning in place on the spot
       ctx.translate(0, -SPRITE_H / 2);
       if (superT > 0) ctx.rotate(frame * 0.45);        // barrel roll
-      else if (player.slide > 0) ctx.rotate(0.35);    // slide lean
+      // play-test 2: lying FLAT on the surface — a 90° turn about the sprite
+      // centre puts the body horizontal, head forward, just above the ground.
+      else if (player.slide > 0) ctx.rotate(Math.PI / 2);
       ctx.translate(0, SPRITE_H / 2);
       const sq = player.squish;
       if (f) {

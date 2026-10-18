@@ -11,7 +11,7 @@ Gameplay:
 - Obstacles never kill or fail the run: puddles slow you, rocks must be jumped, slide bars must be ducked, boost pads speed you up for free.
 - One deterministic 15000px course (seed 254) dealt from a shuffled 7-type deck (calm / rocks / puddle / banner / boost / hills / mixed) so every hazard family is guaranteed to recur; coin arcs teach the jump lines and the low coin lines teach the slide lines.
 - Character picker on start: kitty or explorer-girl (same choice as Мала истраживачица).
-- Landscape-first: portrait orientation shows the "okreni uređaj" rotate overlay.
+- Playable in both orientations (play-test 2 removed the portrait rotate gate); controls: SLIDE bottom-left, JUMP bottom-right, and the ⚡ button stacked directly above JUMP so one thumb reaches both. Sliding shows the character lying flat on the surface.
 - Reaching the goal shows the win modal; replay resets score, meter and the course.
 
 Educational goals:

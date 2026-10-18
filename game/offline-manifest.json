@@ -772,8 +772,8 @@
     "size": 17984
   },
   "games/fastcat.js": {
-    "sha256": "13579812ea1dc19b70d28fc59cf5ca1b6fb7bd221536cc409210565c28a15e68",
-    "size": 30579
+    "sha256": "17a5ef184e455b1b509bc7d7d24f98decb24362d8c97fa88eaed7763d2087ca6",
+    "size": 30882
   },
   "games/kids_games.js": {
     "sha256": "7799198c377ed7f24cab555a5884fdaacb459854e810df2fbb180f4f65c59036",
@@ -888,8 +888,8 @@
     "size": 10040
   },
   "pages/fastcat.html": {
-    "sha256": "6fa792897abbcbceb991e5b30c52fc56cb2538a39d6f7e728002305dda32ef94",
-    "size": 8212
+    "sha256": "eeb48bed441a35757bd7defb410273210eda0fcfa817a425b9be6f9479523e85",
+    "size": 7949
   },
   "pages/matching_game.html": {
     "sha256": "2ce0485ec2721151745a43f42b2ebc2215cd61b412dba3c77fa31dad66e1f9af",
