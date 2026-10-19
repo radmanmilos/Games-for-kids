@@ -56,3 +56,10 @@ The Мала тркачица (Little Racer) game is fully built (Stages 1–5, 
 - Tiny save (met cats + decorations) in one localStorage key, cleared by the existing parent reset. Drag-and-drop treats in addition to tap.
 - Delivery (amends package D11, 2026-10-19): after each card/bundle is DONE and gates are green, the AI commits and pushes to `main` and verifies CI; never continue on red or dirty.
 - Plan package: `resources/General_reviews/Cat_Forest/` (README.md, PROGRESS.md).
+
+## OpenCode 2 upgrade (2026-10-19)
+
+- The OpenCode CLI was upgraded `1.19.3 → 2.0.32` via `opencode upgrade --major --method npm`. Decision per user, guided by `https://opencode.ai/v2/docs/migrate-v1/`.
+- Impact is confined to the assistant layer: `game/`, `tools/`, CI and `docs/` are plain Node and reference OpenCode nowhere, so nothing about our way of working (skill, agents, Plan/Build, provenance trailer, model id) was lost. Verified post-upgrade: `opencode.json` parses with no warnings; Playwright MCP `connected`; skill `validate-game-change` still loads; model `opencode/big-pickle` resolves; agents `build`/`plan` (primary) + `explore`/`general` (subagent) present.
+- Config migrated to the **native V2 shape**: `mcp.playwright` → `mcp.servers.playwright` with `enabled: true` dropped (V2 uses the inverse `disabled`). `.opencode/package.json` + `package-lock.json` (unused `@opencode-ai/plugin@1.18.32`) were deleted — V1 plugin implementations do not run in V2, and we had no plugin.
+- Do not re-add `tui.json` (V2 uses one global `~/.config/opencode/cli.json`; we had none). New V2 features (background subagents/shells, Code Mode) are noted but NOT adopted (YAGNI) — adopt only if a task needs them.
