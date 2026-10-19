@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **262**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **263**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -262,3 +262,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 259 | DONE | 2026-10-19 | Fix the malformed Material "refresh" SVG path in fastcat.html (pre-existing, found via the failed schedule… | tasks-250-299.md
 260 | DONE | 2026-10-19 | Harness hardening: headless.js (and therefore every smoke + the screenshot tool) now captures Chrome's… | tasks-250-299.md
 261 | DONE | 2026-10-19 | Cat Forest: CF-00 governance baseline (2026-10-19, OpenCode/Big Pickle) — card:… | tasks-250-299.md
+262 | DONE | 2026-10-19 | Cat Forest: CF-01 page shell + registry + hub tile (2026-10-19, OpenCode/Big Pickle) — card:… | tasks-250-299.md
