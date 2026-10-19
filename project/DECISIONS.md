@@ -46,3 +46,13 @@ The Мала тркачица (Little Racer) game is fully built (Stages 1–5, 
 - Do NOT reintroduce rejected/deferred scope: jigsaw puzzle pieces, memory difficulty levels, unlockable stickers, screen transitions.
 - Memory games speak the animal name + play its sound ONLY on matched pairs — never on single or mismatched flips.
 - Task 43 (alphabet audit) is DONE (2026-08-07, per user) — 25 consonant sound MP3s + 3 word swaps were regenerated and the user's listening pass confirmed no further changes. Do not regenerate TTS unless the user lists specific wrong files.
+
+## Мачја шума (Cat Forest) — product rules (approved 2026-10-19)
+
+- Port of the Secret Cat Forest idea as a toddler game: feed visiting emoji cats, collect gifts that grow a forest.
+- No currency, shop, XP, levels, locks, score, counters, timers, fail states, notifications or offline earnings.
+- No visible text; Serbian Cyrillic speech and aria-labels only; emoji art only; no new assets/libraries/network.
+- Day/night and rain are child-controlled toggles; they never affect rewards. Friends book shows met cats only (no counts/silhouettes).
+- Tiny save (met cats + decorations) in one localStorage key, cleared by the existing parent reset. Drag-and-drop treats in addition to tap.
+- Delivery (amends package D11, 2026-10-19): after each card/bundle is DONE and gates are green, the AI commits and pushes to `main` and verifies CI; never continue on red or dirty.
+- Plan package: `resources/General_reviews/Cat_Forest/` (README.md, PROGRESS.md).

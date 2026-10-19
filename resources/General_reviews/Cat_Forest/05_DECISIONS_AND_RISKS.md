@@ -16,7 +16,7 @@ The user answered in chat on 2026-10-19: D1 and D3+D4 by choice, D2/D5/D6/D7/D8/
 | D8 | Drag-and-drop treats | **Yes** (as CF-13, after tap works) | 2–3-year-olds drag instinctively; tap path stays primary | CF-13 | **APPROVED 2026-10-19** |
 | D9 | Cat names + spoken prompt | Names as in PS §5 and «Нахрани мачиће!» | you are the language authority; TTS pronunciation must be checked on the tablet | CF-06, CF-10 | **APPROVED 2026-10-19** (no changes requested; verify TTS on tablet) |
 | D10 | Screenshot battery participation | **Later** (`screenshot:false` now; add states in CF-19; flip to `true` only after you create baselines) | `true` without baselines fails `visual_compare` | CF-19 | **APPROVED 2026-10-19** (states in CF-19; `screenshot:true` only after baselines) |
-| D11 | Delivery mode per card | Work stays **uncommitted** (or on a branch you name); AI lists changed files and a suggested commit message with an `Agent:` trailer; you commit/push | `AGENTS.md`: never commit/push to `main` unless told | all | **APPROVED 2026-10-19** |
+| D11 | Delivery mode per card | Work stays **uncommitted** (or on a branch you name); AI lists changed files and a suggested commit message with an `Agent:` trailer; you commit/push | `AGENTS.md`: never commit/push to `main` unless told | all | **APPROVED 2026-10-19**; **AMENDED 2026-10-19 (user chat, OpenCode/Big Pickle):** after each card/bundle is DONE and gates are green, the AI **commits and pushes to `main`** and verifies CI; never continue on red or dirty. Also settled: small cards may be bundled in one session/one repo task; `ACTIVE.md` entries stay lean with pointers to this package. |
 
 ## 2. Risk register
 

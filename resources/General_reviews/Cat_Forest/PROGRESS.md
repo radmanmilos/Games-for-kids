@@ -2,12 +2,12 @@
 
 Live ledger. **Every AI updates this at the start (claim) and end (result) of its session.** Keep it short: one row per task, newest notes at the bottom of *Log*. Last updated: 2026-10-19 (plan written, nothing started).
 
-Repo base when the plan was written: `main` @ `d83d6fc`. Next repo task number at that time: **250** (take the live number from `project/tasks/INDEX.md`).
+Repo base when the plan was written: `main` @ `d83d6fc`. Next repo task number at that time: **250** (take the live number from `project/tasks/INDEX.md`; live number when execution started: **261**).
 
 ## Gate
 
 - [x] User approved decisions D1–D11 and the risk plan (2026-10-19; `05_DECISIONS_AND_RISKS.md` §1–§2)
-- [ ] Package copied to `resources/General_reviews/Cat_Forest/` and committed by the user (CF-00)
+- [x] Package copied to `resources/General_reviews/Cat_Forest/` and committed (CF-00; committed `15dfb03` by OpenCode/Big Pickle per the amended D11 — the AI now commits+pushes after each done card/bundle)
 
 ## Task board
 
@@ -15,7 +15,7 @@ Status: `NEW` · `IN PROGRESS` · `DONE` · `BLOCKED` · `DEFERRED`. "Repo #" is
 
 | ID | Phase | Title | Depends on | Status | Repo # | Who (tool/model) | Date | Result / commit / notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| CF-00 | 0 | Approve decisions, install package, baseline | — | NEW | | | | decisions done; remaining: copy package, baseline, STATUS/DECISIONS/ACTIVE lines (text in 05 §5) |
+| CF-00 | 0 | Approve decisions, install package, baseline | — | DONE | 261 | OpenCode/Big Pickle | 2026-10-19 | decisions verified APPROVED; package committed `15dfb03`; baseline: clean tree, CI green (docs/CodeQL/pages), `check_fast` 8/8; STATUS pointer + DECISIONS.md section added; D11 amended (AI commits+pushes per done card/bundle) |
 | CF-01 | 1 | Page shell + registry + title + hub tile | CF-00 | NEW | | | | |
 | CF-02 | 1 | Smoke skeleton + tool wiring | CF-01 | NEW | | | | |
 | CF-03 | 1 | Static stage layout (CSS) + geometry checks | CF-01 | NEW | | | | |
@@ -47,3 +47,4 @@ Status: `NEW` · `IN PROGRESS` · `DONE` · `BLOCKED` · `DEFERRED`. "Repo #" is
 
 - 2026-10-19 — Claude/Sonnet 5.5 — Plan package written. No repo files changed. Sandbox had no Chrome and no `gh`: browser smokes and CI status were not (and could not be) checked.
 - 2026-10-19 — Claude/Sonnet 5.5 — Decisions D1–D11 and risk plan approved by the user in chat (D1 «Мачја шума»; D3+D4 book + saving; D2/D5–D8/D10/D11 defaults accepted; D9 names approved as written, TTS to be verified). Package updated; still no repo changes. Next: CF-00.
+- 2026-10-19 — OpenCode/Big Pickle — CF-00 done (repo task 261). Package committed+pushed (`15dfb03`). Baseline recorded: tree clean at `d2ceed6` before package commit; `gh run list`: last completed runs all success; `node tools/check_fast.js` 8/8 green. Added the STATUS.md pointer line, the ≤10-line «Мачја шума» section in `project/DECISIONS.md`, and claimed task 261. User decisions this session: **D11 amended** — after each done card/bundle the AI commits+pushes to main and verifies CI (was: user commits); **small cards may be bundled** in one session/one repo task when efficient; **ACTIVE.md stays lean** (one-liner + pointer to this package). Next: CF-01 (repo task 262).
