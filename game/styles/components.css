@@ -107,9 +107,24 @@
   border-radius: 50%;
 }
 
+/* Task 258: the corner NAVIGATION bubble. One geometry for „Назад" and
+   „Следеће" so the two read as siblings — sky (secondary) for back, green
+   (primary) for next — and one size for the whole app (--ps-nav-size). In-game
+   next controls use this instead of their own private sizes; .ps-back mirrors
+   the same size, so a back bubble and a next bubble can never drift apart. */
+.ps-btn--nav {
+  width: var(--ps-nav-size);
+  height: var(--ps-nav-size);
+  padding: 0;
+  border-radius: 50%;
+  font-size: calc(var(--ps-nav-size) * .5);
+  --ps-btn-press: 3px;
+}
+
 /* Direction triangle: a solid tinted triangle in the bubble's own colour
    (currentColor). Rotation classes cover all four directions; the base
-   triangle points up. Sized in em so the button's font-size scales it. */
+   triangle points up. Sized in em so the button's font-size scales it — inside
+   a control bubble that size is overridden below to a fraction of the button. */
 .ps-tri {
   width: .58em;
   height: .58em;
@@ -122,6 +137,16 @@
 .ps-tri--down { --ps-tri-rot: 180deg; }
 .ps-tri--left { --ps-tri-rot: -90deg; }
 
+/* Task 258 (user): inside the big action/steering bubbles the direction
+   triangle was a speck — .58em of the shared min(40px,7vmin) control font is
+   only ~23px in a 110px bubble (~21%). Size it as a fraction of the bubble
+   instead, so it reads as a direction at every viewport and every control size
+   (the 1.5x racing3D steering buttons included) without touching font-size. */
+.ps-btn--control .ps-tri {
+  width: 44%;
+  height: 44%;
+}
+
 /* Misc/V6.2: a selected icon control also carries the glow, like the glow rule in
    accessibility.css, but scoped to this component so it can be adopted per page. */
 
@@ -129,10 +154,12 @@
 /* Task 255: the back control joins the bubble family — same translucent
    body, white ring, 3D depth shadow; sky tint marks it a SECONDARY action.
    Arrow stays the Material SVG each page already ships (currentColor).
-   Size unified at 12vmin (the most common variant; min 44px on small
-   screens). Pages own position only. */
+   Task 258 (user): the oversized 12vmin bubble is retired — the back bubble
+   now takes the SAME corner size as the green „Следеће" (--ps-nav-size), so
+   back and next are visual siblings instead of one dwarfing the other.
+   Pages own position only. */
 .ps-back {
-  --ps-back-size: max(12vmin, 44px);
+  --ps-back-size: var(--ps-nav-size);
   --ps-btn-tint: 79, 195, 247;
   width: var(--ps-back-size);
   height: var(--ps-back-size);

@@ -123,13 +123,9 @@
   .animal-controls{
     display:flex; align-items:center; justify-content:center; gap:var(--animal-gap);
   }
-  /* task 255: bubble chrome from components.css (.ps-btn--icon); this block
-     keeps SIZING only (14vmin round, shared by speak + next). */
-  .animal-ctrl{
-    width:14vmin; height:14vmin;
-    display:flex; align-items:center; justify-content:center;
-    font-size:7vmin;
-  }
+  /* task 258: the speak/next pair is the shared corner navigation bubble
+     (.ps-btn--nav) so „Следеће" matches the sky back bubble and the pair stays
+     matched. Chrome and size come from components.css/design-tokens.css. */
 
   /* ---------- RECOGNITION MODE ---------- */
   /* task 255: bubble chrome from components.css (pill .ps-btn). The active
@@ -283,8 +279,8 @@
     <div id="flashcardWrap">
       <div class="animal-card" id="animalCard"><span class="animal-emoji" id="animalEmoji">🐶</span><span class="animal-name" id="animalName"></span></div>
       <div class="animal-controls">
-        <button class="animal-ctrl speak-btn ps-btn ps-btn--icon ps-btn--secondary" id="animalSpeak" aria-label="Изговори име"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button>
-        <button class="animal-ctrl next-btn ps-btn ps-btn--icon" id="animalNext" aria-label="Следеће"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
+        <button class="ps-btn ps-btn--nav ps-btn--secondary" id="animalSpeak" aria-label="Изговори име"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button>
+        <button class="ps-btn ps-btn--nav" id="animalNext" aria-label="Следеће"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
       </div>
     </div>
     <div id="recogWrap"></div>

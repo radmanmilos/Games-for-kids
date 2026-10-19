@@ -454,7 +454,17 @@
     document.querySelectorAll('#tracingHub .activity-btn').forEach(btn => {
       btn.addEventListener('click', () => enterActivity(btn.dataset.activity));
     });
-    $('tracingBack').addEventListener('click', leaveActivity);
+    /* task 258: one back control, one screen up per tap (the classroom rule).
+       While an activity is open the header #tracing-back walks back to the
+       tracing hub and stops the event so the page-level handler (main.js
+       navigates to the previous screen) does not also fire; on the hub it is
+       left alone, so main.js exits to the learning hub as before. Capture
+       phase, so this runs whatever the registration order. */
+    document.addEventListener('click', (e) => {
+      const el = e.target;
+      if (!el || !el.closest || !el.closest('#tracing-back')) return;
+      if (!$('tracingActivity').hidden) { e.stopPropagation(); leaveActivity(); }
+    }, true);
     $('tracingNext').addEventListener('click', () => {
       if (window.popSound) window.popSound();
       loadItem(index + 1);

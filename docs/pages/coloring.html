@@ -39,15 +39,12 @@
   .back-btn{
     position:absolute; top:4vmin; left:4vmin; z-index:20;
   }
-  /* task 257 — "Следеће" is NOT a second back button: it uses the icon-control
-     family (.ps-btn--icon, the green bubble tracing/animals already use for
-     "next"), keeping the back bubble's corner, footprint and glyph weight so
-     the header stays balanced. Layout only; chrome comes from components.css. */
+  /* task 257/258 — "Следеће" is NOT a second back button: it uses the shared
+     corner navigation bubble (.ps-btn--nav, green primary) at the same size as
+     the sky back bubble, so the two are siblings. Layout only; chrome + size
+     come from components.css/design-tokens.css. */
   #coloring-next{
-    --coloring-corner: max(12vmin, 44px);   /* same footprint as .ps-back */
     position:absolute; top:4vmin; right:4vmin; z-index:20;
-    width:var(--coloring-corner); height:var(--coloring-corner);
-    font-size:calc(var(--coloring-corner) * .5);
   }
 
   /* ---------- COLORING GAME ---------- */
@@ -189,7 +186,7 @@
         <h1 class="ps-title" id="coloringName"></h1>
         <p class="ps-status" id="coloringProgress"></p>
       </div>
-      <button class="ps-btn ps-btn--icon" id="coloring-next" aria-label="Следеће"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
+      <button class="ps-btn ps-btn--nav" id="coloring-next" aria-label="Следеће"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
     </div>
     <div class="coloring-wrap">
       <div class="coloring-stage">

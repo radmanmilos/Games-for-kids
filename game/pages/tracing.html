@@ -108,13 +108,11 @@
     overflow-y:auto; -webkit-overflow-scrolling:touch;
   }
   #tracingActivity[hidden]{ display:none; }
-  /* task 255: bubble chrome from components.css — Back joins .ps-btn (pill,
-     secondary sky); Next is a primary action (green bubble, round icon). */
-  #tracingBack{
-    position:absolute; top:4vmin; left:19vmin; z-index:20;
-    padding:0 3vmin;
-    font-size:4vmin; font-weight:600;
-  }
+  /* task 255/258: bubble chrome from components.css — Back and Next are now the
+     same corner navigation bubble (.ps-back / .ps-btn--nav), sky vs green.
+     Task 258: the activity panel's own second back button is GONE; the single
+     header #tracing-back is state-aware (one tap = one screen up), like the
+     classroom. */
   #tracingTitle2{
     position:absolute; top:4.5vmin; left:50%; transform:translateX(-50%);
     margin:0; font-size:5.5vmin; color:var(--plum-soft);
@@ -122,7 +120,6 @@
   }
   #tracingNext{
     position:absolute; top:4vmin; right:4vmin; z-index:20;
-    font-size:6vmin;
   }
 
   #tracingRef{
@@ -204,9 +201,8 @@
     </div>
 
     <div id="tracingActivity" hidden>
-      <button id="tracingBack" class="ps-btn ps-btn--secondary" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
       <h2 id="tracingTitle2">Слова</h2>
-      <button id="tracingNext" class="ps-btn ps-btn--icon" aria-label="Следеће"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
+      <button id="tracingNext" class="ps-btn ps-btn--nav" aria-label="Следеће"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
       <div id="tracingRef" aria-label="Слика за цртање"></div>
       <div id="tracingStage">
         <div id="tracingBoard">

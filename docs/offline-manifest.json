@@ -732,16 +732,16 @@
     "size": 58157
   },
   "games/animal_counting.js": {
-    "sha256": "c0df2975400dbcc763196d0ec49fb496949968b44633bec18669678671ef8988",
-    "size": 10382
+    "sha256": "565abc775f5bf60c7cc9b57a867a6befae6898362fdf71ecbd1362494dde64ff",
+    "size": 10381
   },
   "games/animal_memory.js": {
     "sha256": "5f75a666f150b893bd3caf9d2ce658e5b8cad5f1741194d1fb27c5fd4762f8f0",
     "size": 6708
   },
   "games/animal_puzzle.js": {
-    "sha256": "ab9286417add0c9e5bb66137b39093f665d0fdc3886240da45fe38fdaa980162",
-    "size": 32254
+    "sha256": "658b4cfdfa33fd5dc60b1d802f336a67e3eca0e5977b68c7a6adbc0fcf89aa30",
+    "size": 32281
   },
   "games/animals.js": {
     "sha256": "c821fc7e615b17a77ab5c935c7b3f6dbc860ba5c8e4840ce5feb010f80512e15",
@@ -808,8 +808,8 @@
     "size": 4817
   },
   "games/racing3d.mjs": {
-    "sha256": "0d19277a0d9b4bf2787e9ac193ba0a982aafe221070947f77a06f2517e6c2da1",
-    "size": 102413
+    "sha256": "4639b3b45c4cae28fad34f376c373e0dddbfd5e70c46e378982840d8ffcc0c19",
+    "size": 102415
   },
   "games/rhythm.js": {
     "sha256": "5ef69557e33be41bc6df7d825b0bdfab0d96a00eb44b747e4f403157d3211bd7",
@@ -836,40 +836,40 @@
     "size": 9882
   },
   "games/tracing.js": {
-    "sha256": "8e620d25eccb03e99bc0897eb0e85c9496820036c19b27503089c794252ffc7c",
-    "size": 17036
+    "sha256": "78eccc1bff448a031673fd9c7a69b9fab116286123770533c344fc0340ce2e22",
+    "size": 17659
   },
   "index.html": {
     "sha256": "1c0bdfb57a22015887c0d31062f78a8ddea6bf26df9237ff8e0d207a89ffda41",
     "size": 17500
   },
   "manifest.json": {
-    "sha256": "90fefa107fdc0675437ef55cf0634e915f2ff61cdb43456c0cf9d4910296cfa7",
+    "sha256": "cadfe68a198532395f69338baf91a98c7974920cfac5a4660914dcf8f219801f",
     "size": 577
   },
   "pages/animal_counting.html": {
-    "sha256": "48feae9b6ae9c81bdd3c8338c0d392a637e23973d741481df0a3e284e345265c",
-    "size": 6941
+    "sha256": "f63a4eea1232fc95b8345309c5032c9080d4c5822169f48712cde7e1006dc41d",
+    "size": 6871
   },
   "pages/animal_memory.html": {
     "sha256": "37052b1edf07ac835184c7c048aa0cf4a66b3d2e0a56687b12fc5bb420180550",
     "size": 9120
   },
   "pages/animal_puzzle.html": {
-    "sha256": "1b6cd805a4b5a3da06bf1dd061b5545a53afab0cf2ad4bc4fbe6dfbb275e057a",
-    "size": 4961
+    "sha256": "eaaeaeaf7c6e98c361f8b486d7447fed76d367c899da73d3b44d48b23fc7ed68",
+    "size": 4811
   },
   "pages/animals.html": {
-    "sha256": "5345f57807d9c33cd3c864b605430a9faae62afd368a181a4f3e95d925720811",
-    "size": 14598
+    "sha256": "c8262fe8628d476d694a6ec2f82343d37925168bdb07d70d6d759dcf10030fb5",
+    "size": 14514
   },
   "pages/classroom.html": {
     "sha256": "4b4e7a4b241a316d0d859b7eb005de43446ce2507acb2662ebfd57064bf71b1c",
     "size": 18463
   },
   "pages/coloring.html": {
-    "sha256": "25f716d5d3546213889a6da5a94cc4b02f45c44c46b8eb5425dee98f6517ef1a",
-    "size": 11435
+    "sha256": "ae770ba5882afd5dcef18991e82fdac7198ec2ed2aa42223e5be22193c55da4e",
+    "size": 11214
   },
   "pages/compare.html": {
     "sha256": "f8f4aa7a5b2622cc31f3a14da26522cd742d1fab1bd21ba50925a2da1871efef",
@@ -916,8 +916,8 @@
     "size": 12456
   },
   "pages/racing3d.html": {
-    "sha256": "148ecd19ebe98a381895151d9f3ce7264368f6002ec9278722e88b3881c229ab",
-    "size": 17157
+    "sha256": "a1141430083f6521c3f4abd9697ab5c03ec74c81329c0e2a57558183c87ad4cd",
+    "size": 17159
   },
   "pages/rhythm.html": {
     "sha256": "25562b13f0f2f1b13cd09b427ccdad4c303f5718176ff9a1541552494d9fd852",
@@ -944,8 +944,8 @@
     "size": 6900
   },
   "pages/tracing.html": {
-    "sha256": "609591cfcdab763ccaf0a9e6e442967cdf4b6074cead09d353ed5927002fe85f",
-    "size": 11059
+    "sha256": "bc13619975cbb006273a4b5b7f1e219e9c5c095a68daa4a10b655758f95dab76",
+    "size": 10812
   },
   "shared/accessibility.css": {
     "sha256": "0f4003e8e36802f811ab60049f0c6aef483795a723424f16fef649a5c34183ca",
@@ -1000,12 +1000,12 @@
     "size": 2292
   },
   "styles/components.css": {
-    "sha256": "d8d28a4c67b687fe3bdb1a6d9fd77b19882b5270b01e07c81c8cc625328982a6",
-    "size": 10548
+    "sha256": "deee5067531a35d2122b1a290e6943d302a67c08c91ac4d8870fbd568c691032",
+    "size": 11828
   },
   "styles/design-tokens.css": {
-    "sha256": "d0fa344bb121beba42fd538500f826dcdd93621c659a3e58abf15737f5096fe9",
-    "size": 1150
+    "sha256": "df799f501346a87dc731b2ba3467fcecbed0d1bf9db5acf5d57a268194683ecf",
+    "size": 1470
   },
   "styles/learning-stage.css": {
     "sha256": "bec74ce468fbf7a91667735d5d477ec7fe6e8c0ad14e6835a5f78a0a0b63e416",

@@ -226,7 +226,10 @@ const APPS = [
     },
   },
   {
-    id: 'tracing', back: '#tracing-back',
+    // task 258: like the classroom, tracing has an inner hub — while an activity
+    // is open the one back control walks up ONE level (activity -> tracing hub
+    // -> index), so it takes two taps to reach the hub.
+    id: 'tracing', back: '#tracing-back', backTaps: 2,
     ready: `!!document.querySelector('#tracingHub .activity-btn')`,
     start: async h => {
       const t = await h.tap('#tracingHub .activity-btn[data-activity="letters"]');

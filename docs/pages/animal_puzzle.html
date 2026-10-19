@@ -50,7 +50,7 @@ h1{font-size:clamp(24px,5vmin,48px);margin:0}
 .piece{position:absolute;touch-action:none;background-repeat:no-repeat;border:clamp(3px,.8vmin,6px) solid #fff;border-radius:10px;box-shadow:0 1vmin 1.5vmin rgba(0,0,0,.2);cursor:grab;z-index:5}
 .piece.dragging{cursor:grabbing;z-index:10;transform:scale(1.06);box-shadow:0 1.5vmin 2vmin rgba(0,0,0,.28)}
 .piece.placed{z-index:4;border-color:var(--green);box-shadow:none;cursor:default;pointer-events:none;transform:none}
-#puzzleNext{display:none;width:14vmin;height:14vmin;border:0;border-radius:50%;background:var(--yellow);color:var(--plum);font-size:7vmin;box-shadow:0 1vmin 0 rgba(0,0,0,.15)}
+#puzzleNext{display:none}
 #puzzleNext.show{display:block}
 .score{position:fixed;top:4vmin;right:4vmin;background:var(--plum);color:#fff;border-radius:999px;padding:1.2vmin 3vmin;font-size:clamp(16px,3vmin,28px);font-weight:700}
 @media(max-width:600px){#puzzleStage{min-height:330px}}

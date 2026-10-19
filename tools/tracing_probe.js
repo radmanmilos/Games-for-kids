@@ -81,7 +81,7 @@ const BLOB = `(function(){const cv=document.getElementById('tracingCanvas');cons
     await h.evalv(CLICK('tracingNext')); await sleep(200);
     await measure('LINE В', LINE);
 
-    await h.evalv(CLICK('tracingBack')); await sleep(150);
+    await h.evalv(CLICK('tracing-back')); await sleep(150);
     await h.evalv(ENTER('numbers')); await sleep(250);
     await measure('PERFECT 0', DRAW_REF('0', 14, 20));
     await h.evalv(CLICK('tracingNext')); await sleep(200);

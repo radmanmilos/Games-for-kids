@@ -242,7 +242,7 @@ const CHECK_RESULT = `JSON.stringify({
     check('dense scribble: early attempt preserved', BS.cap === 'Хајде још једном.' && BS.pixels > 0, badScr);
 
     // 13. Numbers: loads 0, correct 0 -> complete, no auto-advance
-    await h.evalv(CLICK('tracingBack'));
+    await h.evalv(CLICK('tracing-back'));
     await sleep(150);
     await h.evalv(ENTER('numbers'));
     await sleep(200);
@@ -276,7 +276,7 @@ const CHECK_RESULT = `JSON.stringify({
     check('filled blob: early attempt preserved', BO.cap === 'Хајде још једном.' && BO.pixels > 0, blob);
 
     // 15. Shapes: loads Круг, correct circle -> complete, no auto-advance
-    await h.evalv(CLICK('tracingBack'));
+    await h.evalv(CLICK('tracing-back'));
     await sleep(150);
     await h.evalv(ENTER('shapes'));
     await sleep(200);
@@ -311,7 +311,7 @@ const CHECK_RESULT = `JSON.stringify({
     check('shapes wraps to start', W2.cap === 'Нацртај Круг' && W2.counter === '1 од 4', wrap2);
 
     // 17. Prewriting activity loads
-    await h.evalv(CLICK('tracingBack'));
+    await h.evalv(CLICK('tracing-back'));
     await sleep(150);
     await h.evalv(ENTER('prewriting'));
     await sleep(200);

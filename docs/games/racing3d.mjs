@@ -200,7 +200,8 @@ function main() {
   const FLOWER_TOTAL = world.flowersPerLap;
   const ROAD_HALF = ROAD_WIDTH / 2;
 
-  const scoreEl = document.getElementById("r3d-score");
+  /* task 258 (user): the «Поени» pill is gone — the flower counter (icon +
+     n/12) is the only progress readout, so there is no scoreEl any more. */
   const flowersEl = document.getElementById("r3d-flowers");
   const worldEl = document.getElementById("r3d-world");
   const roundEl = document.getElementById("r3d-round");
@@ -1724,7 +1725,6 @@ function main() {
     f.done = true;
     f.mesh.visible = false;
     score++;
-    scoreEl.textContent = "Поени: " + score;
     flowersEl.textContent =
       world.collectible + " " + score + "/" + FLOWER_TOTAL;
     petalBurst(f.mesh.position, [
@@ -2136,9 +2136,6 @@ function main() {
     mode = "finished";
     winModalEl.classList.add("show");
     winScoreEl.textContent =
-      "Поени: " +
-      score +
-      "  ·  " +
       world.collectible +
       " " +
       score +

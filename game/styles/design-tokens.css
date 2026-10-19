@@ -43,4 +43,9 @@
   --touch-min: 48px;
   --touch-comfort: 56px;
   --touch-large: 72px;
+
+  /* Corner navigation bubble („Назад" / „Следеће"). ONE size app-wide so the
+     sky back bubble and the green next bubble read as siblings; page CSS owns
+     position only. Clamped by the a11y comfort floor, never smaller than it. */
+  --ps-nav-size: clamp(var(--touch-comfort, 56px), 9vmin, 84px);
 }
