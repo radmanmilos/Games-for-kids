@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **257**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **258**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -257,3 +257,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 254 | DONE | 2026-10-17 | New game „Брзи мачак" (fastcat): one deterministic 15000px auto-runner course (seed 254, shuffled 7-type… | tasks-250-299.md
 255 | DONE | 2026-10-19 | Unified button system for the whole app (user request). Delivered game/styles/components.css .ps-btn family… | tasks-250-299.md
 256 | DONE | 2026-10-19 | Post-release fixes after 2.3.0: (a) [hidden] guard in components.css — .ps-btn{display:inline-flex} beat the… | tasks-250-299.md
+257 | DONE | 2026-10-19 | Restyle the coloring „Следеће" control off the back-button chrome (user follow-up to 2.3.2's back-button… | tasks-250-299.md
