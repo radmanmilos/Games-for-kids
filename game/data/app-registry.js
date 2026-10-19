@@ -86,7 +86,7 @@ window.APP_REGISTRY = [
     route: 'game-explorer', hubOrder: 1, hubGroup: 'games', back: 'back-btn', start: null },
   { id: 'fastcat', path: 'pages/fastcat.html', category: 'games', title: window.SERBIAN.titles.fastcat, smoke: 'fastcat_smoke', screenshot: true, offline: true, toddler: false,
     route: 'game-fastcat', hubOrder: 11, hubGroup: 'games', back: 'back-btn', start: 'startFastCat' },
-  { id: 'cat_forest', path: 'pages/cat_forest.html', category: 'games', title: window.SERBIAN.titles.cat_forest, smoke: null, screenshot: false, offline: true, toddler: true,
+  { id: 'cat_forest', path: 'pages/cat_forest.html', category: 'games', title: window.SERBIAN.titles.cat_forest, smoke: 'cat_forest_smoke', screenshot: false, offline: true, toddler: true,
     route: 'game-cat-forest', hubOrder: 12, hubGroup: 'games', back: 'cat-forest-back', start: 'startCatForest' },
   { id: 'parent', path: 'pages/parent.html', category: 'parent', title: window.SERBIAN.titles.parent, smoke: null, screenshot: false, offline: true, toddler: false,
     route: 'game-parent', hubOrder: null, hubGroup: null, back: 'back-btn', start: null }

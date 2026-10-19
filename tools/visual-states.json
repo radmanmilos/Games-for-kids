@@ -32,6 +32,10 @@
     "INIT": "true",
     "PLAY": "document.querySelector('.sort-item')?.click(); true"
   },
+  "cat_forest": {
+    "INIT": "true",
+    "PLAY": "true"
+  },
   "phonics": {
     "INIT": "true",
     "PLAY": "document.querySelector('.phonics-choice')?.click(); true"

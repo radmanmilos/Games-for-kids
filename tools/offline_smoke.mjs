@@ -545,9 +545,10 @@ const APPS = [
      * behaviour is the back control returning to the hub. Proving that round
      * trip is honest coverage; CF-16 replaces this row with the real treat
      * interaction (TP §3.12). The shell is re-opened afterwards so the P6
-     * back-check below still runs against this page, not against the hub. */
-    ready: `typeof window.startCatForest==='function' && !!window.__catForest
-      && window.__catForest.state().booted===true`,
+     * back-check below still runs against this page, not against the hub.
+     * The predicate stays on startCatForest/__catForest (TD §8), never on the
+     * CF-01 stub payload, so CF-04 replacing the hook cannot stale it. */
+    ready: `typeof window.startCatForest==='function' && !!window.__catForest`,
     act: async h => {
       const t = await h.tap('#cat-forest-back');
       if (!t.ok) return { ok: false, why: 'back control: ' + t.why };
@@ -555,7 +556,7 @@ const APPS = [
         { timeout: 10000, label: 'the shell to return to the hub' });
       if (!home.ok) return home;
       await h.navigate(`${BASE}:${h.port}/pages/cat_forest.html`);
-      return h.waitFor(`!!window.__catForest && window.__catForest.state().booted===true`,
+      return h.waitFor(`typeof window.startCatForest==='function' && !!window.__catForest`,
         { timeout: 10000, label: 'the shell to boot again' });
     },
   },
