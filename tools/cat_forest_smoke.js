@@ -138,6 +138,69 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     await hv.close();
   }
 
+  /* ---- CF-04: engine core — clock, RNG, hook (TP §3.3) -------------------- */
+  const hookFns = await h.evalv(`['state','seed','rand','pause','step'].every(m => typeof window.__catForest[m] === 'function')`);
+  check('the hook exposes the CF-04 API (state/seed/rand/pause/step)', hookFns === true, String(hookFns));
+
+  const realHook = await h.evalv(`(() => { const s = window.__catForest.state(); return !('booted' in s) && !!s.config && s.plates.length === 3; })()`);
+  check('state() is the real snapshot, not the CF-01 stub', realHook === true, String(realHook));
+
+  /* The constants table is duplicated here on purpose (AC5): the smoke is the
+     place that pins PS §6, so a silent edit of CF in the engine is a failure. */
+  const EXPECTED_CONFIG = {
+    PLATES: 3, MAX_CATS: 3,
+    ARRIVE_MIN: 2500, ARRIVE_MAX: 4000,
+    ENTER_MIN: 2200, ENTER_MAX: 3000,
+    SIT_MS: 900,
+    EAT_MIN: 8000, EAT_MAX: 14000,
+    LEAVE_MIN: 2200, LEAVE_MAX: 3000,
+    UNLIKED_FACTOR: 0.25,
+    GIFT_CAP: 5, DECOR_MAX: 14, GIFT_FLY_MS: 600, PARTICLE_CAP: 12,
+    SPEECH_GAP_MS: 1500, MEOW_GAP_MS: 300,
+    IDLE_HINT_MS: 10000, FIRST_HINT_MS: 1500, HINT_MS: 1200, HINT_REPEAT_MAX: 3,
+    RAIN_DROPS: 24, DROP_PAD: 24, DRAG_START_PX: 8,
+    DT_CLAMP_MS: 100, STEP_MS: 50
+  };
+  const cfg = await h.evalv(`window.__catForest.state().config`);
+  const cfgDiff = Object.keys(EXPECTED_CONFIG).filter(k => cfg[k] !== EXPECTED_CONFIG[k])
+    .concat(Object.keys(cfg).filter(k => !(k in EXPECTED_CONFIG)));
+  check('state().config matches the PS §6 constants table (AC5)', cfgDiff.length === 0,
+    cfgDiff.length ? `differ: ${cfgDiff.join(', ')}` : 'exact');
+
+  const stepped = await h.evalv(`(() => { const hk = window.__catForest; hk.pause(true);
+    const a = hk.state().clock; hk.step(1000); return hk.state().clock - a; })()`);
+  check('paused step(1000) advances the clock by exactly 1000 ms (AC1)', stepped === 1000, String(stepped));
+
+  const rngSame = await h.evalv(`(() => { const hk = window.__catForest; hk.seed(7); const a = hk.rand(5);
+    hk.seed(7); const b = hk.rand(5); return JSON.stringify(a) === JSON.stringify(b) && a.every(v => v >= 0 && v < 1); })()`);
+  check('seed(7) then rand(5) is reproducible (AC2)', rngSame === true, String(rngSame));
+
+  const rngDiff = await h.evalv(`(() => { const hk = window.__catForest; hk.seed(7); const a = hk.rand(5);
+    hk.seed(8); const b = hk.rand(5); return JSON.stringify(a) !== JSON.stringify(b); })()`);
+  check('a different seed gives a different stream (AC2, other half)', rngDiff === true, String(rngDiff));
+
+  const noDouble = await h.evalv(`(() => { window.startCatForest(); const hk = window.__catForest;
+    hk.pause(true); const a = hk.state().clock; hk.step(1000); return hk.state().clock - a; })()`);
+  check('a second startCatForest() does not double the clock (started guard)', noDouble === 1000, String(noDouble));
+
+  /* AC3: force document.hidden, dispatch visibilitychange, and let 500 ms of
+     REAL time pass with the loop unpaused — only `hidden` can explain a freeze. */
+  await h.evalv(`(() => { window.__catForest.pause(false);
+    Object.defineProperty(document, 'hidden', { configurable: true, value: true });
+    document.dispatchEvent(new Event('visibilitychange')); return true; })()`);
+  const clockBeforeHidden = await h.evalv(`window.__catForest.state().clock`);
+  await sleep(500);
+  const clockAfterHidden = await h.evalv(`window.__catForest.state().clock`);
+  check('a hidden page freezes the clock over 500 ms of real time (AC3)',
+    clockAfterHidden === clockBeforeHidden, `${clockBeforeHidden} -> ${clockAfterHidden}`);
+  await h.evalv(`(() => { Object.defineProperty(document, 'hidden', { configurable: true, value: false });
+    document.dispatchEvent(new Event('visibilitychange')); window.__catForest.pause(true); return true; })()`);
+
+  const engineSrc = fs.readFileSync(path.join(root, 'game', 'games', 'cat_forest.js'), 'utf8');
+  const dateHits = ['Date.now(', 'new Date('].filter(s => engineSrc.includes(s));
+  check('the engine never reads the wall clock (AC4: no Date.now/new Date)',
+    dateHits.length === 0, dateHits.join(', ') || 'none');
+
   await h.close();
 
   /* ---- negative control: the reachability check must be able to fail --------

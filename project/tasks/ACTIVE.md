@@ -18,5 +18,6 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 264. IN PROGRESS — Cat Forest: CF-03 static stage layout (2026-10-19, OpenCode/Big Pickle) — card `resources/General_reviews/Cat_Forest/03_TASKS.md` CF-03; page DOM/CSS per TD §4 + TP §3.2 geometry in `tools/cat_forest_smoke.js`.
+- 264. DONE — Cat Forest: CF-03 static stage layout (2026-10-19, OpenCode/Big Pickle) — TD §4 stage DOM/CSS; smoke 42 checks incl. the 3-viewport TP §3.2 matrix; check_fast 8/8, offline 25/25, guards 6/6.
+- 265. IN PROGRESS — Cat Forest: CF-04 engine core + test hook (2026-10-19, OpenCode/Big Pickle) — `CF`/rng/clock/state/render + TD §8 hook; smoke 51 checks (AC1–AC5); CI pending.
 
