@@ -3,7 +3,8 @@
    boot + test hook, the route contract, the back control's reachability (inside
    the viewport AND hit-testable, never a bare .click()), the hub tile, and the
    no-network static rule (TD §8 / TP §3.1). CF-03 adds the three-viewport stage
-   geometry of TP §3.2; CF-06 adds the roster + weighted-picker checks of TP §3.5.
+   geometry of TP §3.2; CF-06 adds the roster + weighted-picker checks of TP §3.5;
+   CF-07 adds the cat actor lifecycle (spawn/enter/sit/eat/leave) of TP §3.6.
    Gameplay assertions arrive with the engine — this file grows card by card (TP §3).
    Run:  node tools/cat_forest_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
@@ -433,6 +434,146 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   })()`);
   check('pickCat consumes exactly one engine RNG draw per pick (no hidden randomness)',
     rngPath.same === true, `after3picks=${rngPath.a} after3rand=${rngPath.b}`);
+
+  /* ---- CF-07: cat actor lifecycle (TP §3.6) ------------------------------
+     A visit is driven only by the game clock, so each scenario gets a fresh
+     page (there is no reset() until CF-14) and every count stays exact. */
+  const bootFresh = async (tag, width, height) => {
+    const hh = await start({ page: '/pages/cat_forest.html', tag, width: width || 1024, height: height || 800 });
+    await bootedOn(hh);
+    await hh.evalv(STUB);
+    await hh.evalv(`window.__catForest.pause(true)`);
+    return hh;
+  };
+
+  /* AC1: place a treat; once the arrival wait elapses exactly one cat exists,
+     still walking in, and its plate is occupied. */
+  const h7 = await bootFresh('cf07-lifecycle');
+  const a1 = await h7.evalv(`(() => {
+    const hk = window.__catForest; hk.seed(11);
+    hk.place('fish', 0);
+    hk.step(hk.state().config.ARRIVE_MAX + 100);
+    const s = hk.state();
+    return { n: s.cats.length, phase: s.cats[0] && s.cats[0].phase, plate: s.plates[0].state };
+  })()`);
+  check('the arrival wait passes and exactly one cat is entering with its plate occupied (AC1)',
+    a1.n === 1 && a1.phase === 'entering' && a1.plate === 'occupied', JSON.stringify(a1));
+
+  /* AC2: the whole visit runs in order and the node is removed at the end.
+     Phases are sampled every sub-step so no transition can hide between steps. */
+  const a2 = await h7.evalv(`(() => {
+    const hk = window.__catForest;
+    const seen = [];
+    const push = ph => { if (seen[seen.length - 1] !== ph) seen.push(ph); };
+    const c0 = hk.state().cats[0]; if (c0) push(c0.phase);
+    for (let i = 0; i < 2000; i++) {
+      hk.step(50);
+      const c = hk.state().cats[0];
+      if (!c) { push('gone'); break; }
+      push(c.phase);
+    }
+    return { seen: seen, nodes: document.querySelectorAll('#cf-cats .cf-cat').length };
+  })()`);
+  check('the visit runs entering → sitting → eating → leaving → gone and the node is removed (AC2)',
+    JSON.stringify(a2.seen) === JSON.stringify(['entering', 'sitting', 'eating', 'leaving', 'gone'])
+      && a2.nodes === 0, JSON.stringify(a2));
+
+  /* AC3: at the end of eating the plate frees immediately and accepts a new treat. */
+  const a3 = await h7.evalv(`(() => {
+    const hk = window.__catForest;
+    const before = hk.state().plates[0].state;
+    const placed = hk.place('milk', 0);
+    const s = hk.state().plates[0];
+    return { before: before, placed: placed, state: s.state, treat: s.treat };
+  })()`);
+  check('after eating the plate is empty and a fresh treat can be placed (AC3)',
+    a3.before === 'empty' && a3.placed === true && a3.state === 'treat' && a3.treat === 'milk',
+    JSON.stringify(a3));
+
+  /* AC6: met cats are recorded once, on the first sit, and only known ids. */
+  const a6 = await h7.evalv(`(() => {
+    const hk = window.__catForest;
+    hk.seed(5);
+    const treats = ['fish', 'milk', 'chicken', 'sushi', 'cookie'];
+    for (let r = 0; r < 6; r++) {
+      const st = hk.state();
+      for (const p of st.plates) if (p.state === 'empty') hk.place(treats[r % 5], p.idx);
+      for (let i = 0; i < 300; i++) hk.step(50);
+    }
+    const met = hk.state().met;
+    const valid = ${JSON.stringify(EXPECTED_CAT_IDS)};
+    return { met: met, unique: met.length === new Set(met).size,
+      known: met.every(id => valid.includes(id)), n: met.length };
+  })()`);
+  check('state.met records each met cat id exactly once (AC6)',
+    a6.unique && a6.known && a6.n >= 1, JSON.stringify(a6));
+
+  /* AC4: fuzz — 30 reseeds of random placements; the caps hold every step. */
+  const h4 = await bootFresh('cf07-fuzz');
+  const a4 = await h4.evalv(`(() => {
+    const hk = window.__catForest;
+    const treats = ['fish', 'milk', 'chicken', 'sushi', 'cookie'];
+    const rand = () => hk.rand(1)[0];
+    let maxCats = 0; const dups = [];
+    for (let seedN = 1; seedN <= 30; seedN++) {
+      hk.seed(seedN);
+      for (let k = 0; k < 8; k++) {
+        const empty = hk.state().plates.filter(p => p.state === 'empty');
+        if (empty.length) {
+          const pi = empty[Math.floor(rand() * empty.length)].idx;
+          hk.place(treats[Math.floor(rand() * treats.length)], pi);
+        }
+        hk.step(Math.floor(rand() * 4000) + 50);
+        const s = hk.state();
+        if (s.cats.length > maxCats) maxCats = s.cats.length;
+        const ids = s.cats.map(c => c.id);
+        if (new Set(ids).size !== ids.length) dups.push(seedN + ':' + ids.join(','));
+      }
+    }
+    return { maxCats: maxCats, dups: dups };
+  })()`);
+  check('fuzz (30 seeds × random placements): never more than 3 cats, never a duplicate id (AC4)',
+    a4.maxCats <= 3 && a4.dups.length === 0, `maxCats=${a4.maxCats} dups=${a4.dups.join(' | ') || '0'}`);
+
+  /* AC5: a sitting cat stays inside the viewport and never covers the tray or
+     toggles. forceCat bypasses the picker so all three plates are covered. */
+  const catGeometry = hh => hh.evalv(`(() => {
+    const hk = window.__catForest;
+    hk.seed(3);
+    ['maca', 'puhko', 'mica'].forEach((id, p) => hk.forceCat(id, p));
+    hk.step(hk.state().config.ENTER_MAX + 100);
+    const boxes = [...document.querySelectorAll('#cf-cats .cf-cat')].map(el => {
+      const r = el.getBoundingClientRect();
+      return { l: r.left, t: r.top, r: r.right, b: r.bottom };
+    });
+    const pt = sel => { const r = document.querySelector(sel).getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; };
+    const coversCat = p => { const el = document.elementFromPoint(p.x, p.y); return !!(el && el.closest('.cf-cat')); };
+    const toggles = ['#cf-daynight', '#cf-rain-btn'].map(pt);
+    return {
+      n: boxes.length,
+      inside: boxes.every(b => b.l >= -1 && b.t >= -1 && b.r <= innerWidth + 1 && b.b <= innerHeight + 1),
+      sitting: hk.state().cats.every(c => c.phase === 'sitting' || c.phase === 'eating'),
+      trayCovered: coversCat(pt('#cf-tray')),
+      toggleCovered: toggles.some(coversCat)
+    };
+  })()`);
+  for (const vp of [{ name: '1024x800 tablet', width: 1024, height: 800 },
+    { name: '844x390 short landscape', width: 844, height: 390 }]) {
+    const hv = await bootFresh(`cf07-geom-${vp.width}`, vp.width, vp.height);
+    const g = await catGeometry(hv);
+    check(`${vp.name}: a sitting cat stays on-screen and never covers the tray or toggles (AC5)`,
+      g.n === 3 && g.inside && g.sitting && !g.trayCovered && !g.toggleCovered, JSON.stringify(g));
+    await hv.close();
+  }
+
+  /* AC7: no timer machinery — the whole lifecycle is the game clock. */
+  const timerHits = ['setInterval(', 'setTimeout('].filter(s => engineSrc.includes(s));
+  check('the engine schedules no timers (AC7: no setInterval / per-cat timers)',
+    timerHits.length === 0, timerHits.join(', ') || 'none');
+
+  await h7.close();
+  await h4.close();
 
   await h.close();
 

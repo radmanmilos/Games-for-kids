@@ -4,7 +4,8 @@
    resources/General_reviews/Cat_Forest/ (01_TECH_DESIGN.md is the contract).
    CF-01 shell · CF-03 static stage · CF-04 engine core (below): constants,
    clock, seedable RNG, state, render() and the __catForest test hook.
-   CF-06 adds the cat/treat/gift data and the weighted picker.
+   CF-06 adds the cat/treat/gift data and the weighted picker; CF-07 the cat
+   actor lifecycle (walk in, sit, eat, leave) fully driven by the game clock.
    Gameplay arrives card by card — nothing here is visible to the child yet. */
 (function () {
   'use strict';
@@ -183,20 +184,166 @@
     return weightedPick(pool, treat, last, true, true);
   }
 
+  /* ---- cats: actor lifecycle (CF-07; TD §5, §7) -------------------------
+     A cat actor is a JSON-safe record in state.cats; render() projects it to a
+     button. Every phase is timed off the game clock through the sub-step loop,
+     so step() reproduces a visit exactly and no per-cat timer exists.
+     EDGE_FRAC/CAT_LIFT are stage fractions kept out of CF, whose key set the
+     smoke pins (PS §6). */
+  var EDGE_FRAC = 0.08; // how far past the stage edge a walk starts/ends
+  var CAT_LIFT = 0.10;  // the cat sits this far above its plate so the treat shows
+  var BOB_PX = 6;       // walking-bob amplitude; forced to 0 under reduced motion
+  var uidSeq = 0;
+
+  /* Reduced motion (TD §7): one module-level boolean; it switches only the
+     decorative bob, never the logic-driven walk itself. */
+  var reduceMotion = false;
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    reduceMotion = mq.matches;
+    var onMqChange = function (e) { reduceMotion = e.matches; };
+    if (mq.addEventListener) mq.addEventListener('change', onMqChange);
+    else if (mq.addListener) mq.addListener(onMqChange);
+  }
+
+  function catById(id) {
+    for (var i = 0; i < CATS.length; i++) if (CATS[i].id === id) return CATS[i];
+    return null;
+  }
+
+  function easeOut(p) { return 1 - (1 - p) * (1 - p); }
+  function easeIn(p) { return p * p; }
+
+  function phaseDur(phase) {
+    if (phase === 'entering') return rngRange(CF.ENTER_MIN, CF.ENTER_MAX);
+    if (phase === 'sitting') return CF.SIT_MS;
+    if (phase === 'eating') return rngRange(CF.EAT_MIN, CF.EAT_MAX);
+    return rngRange(CF.LEAVE_MIN, CF.LEAVE_MAX); // leaving
+  }
+
+  function platesFilled() {
+    var n = 0;
+    for (var i = 0; i < state.plates.length; i++) if (state.plates[i].state !== 'empty') n++;
+    return n;
+  }
+
+  function spawnCat(plate, cat) {
+    state.cats.push({
+      uid: ++uidSeq, id: cat.id, plate: plate.idx,
+      side: rnd() < 0.5 ? 'L' : 'R', phase: 'entering', t: 0, dur: phaseDur('entering')
+    });
+    plate.state = 'occupied';
+    plate.catId = cat.id;
+    state.lastVisitorId = cat.id;
+  }
+
+  /* Arrival timers (TD §7): a treat plate counts down on the game clock and a
+     cat spawns when it elapses and a slot is free; otherwise the plate waits
+     (no deadlock — cats always leave). */
+  function updateArrivals(dt) {
+    for (var i = 0; i < state.plates.length; i++) {
+      var plate = state.plates[i];
+      if (plate.state !== 'treat') continue;
+      plate.arriveMs -= dt;
+      if (plate.arriveMs > 0 || state.cats.length >= CF.MAX_CATS) continue;
+      var cat = pickCat({
+        treat: plate.treat,
+        night: state.time === 'night',
+        platesFilled: platesFilled(),
+        occupiedIds: state.cats.map(function (c) { return c.id; }),
+        lastVisitorId: state.lastVisitorId
+      });
+      if (cat) spawnCat(plate, cat);
+    }
+  }
+
+  /* One sub-step can cross at most one phase boundary (every duration is much
+     larger than STEP_MS), so the leftover time is carried by hand. */
+  function advanceCat(c) {
+    var overflow = c.t - c.dur;
+    if (c.phase === 'entering') {
+      c.phase = 'sitting';
+      c.dur = phaseDur('sitting');
+      if (state.met.indexOf(c.id) === -1) state.met.push(c.id); // first sit = met (TD §5)
+    } else if (c.phase === 'sitting') {
+      c.phase = 'eating';
+      c.dur = phaseDur('eating');
+    } else if (c.phase === 'eating') {
+      endEating(c);
+      c.phase = 'leaving';
+      c.dur = phaseDur('leaving');
+    } else {
+      removeCat(c);
+      return;
+    }
+    c.t = overflow > 0 ? overflow : 0;
+  }
+
+  function updateCats(dt) {
+    for (var i = state.cats.length - 1; i >= 0; i--) {
+      var c = state.cats[i];
+      c.t += dt;
+      if (c.t >= c.dur) advanceCat(c);
+    }
+  }
+
+  function endEating(c) {
+    var plate = state.plates[c.plate];
+    if (plate) { plate.state = 'empty'; plate.treat = null; plate.catId = null; plate.arriveMs = 0; }
+    /* CF-08 queues a gift event here; until then it is a no-op (card step 4). */
+  }
+
+  function removeCat(c) {
+    var i = state.cats.indexOf(c);
+    if (i !== -1) state.cats.splice(i, 1);
+  }
+
+  /* forceCat (TD §8): spawn a named cat, bypassing the picker, so tests and the
+     geometry checks never depend on the RNG. */
+  function forceCat(catId, plateIdx) {
+    var plate = state.plates[plateIdx];
+    var cat = catById(catId);
+    if (!plate || !cat || plate.state === 'occupied' || state.cats.length >= CF.MAX_CATS) return false;
+    spawnCat(plate, cat);
+    render();
+    return true;
+  }
+
   /* ---- DOM handles and the render projection ----------------------------
      render() is a pure projection of state to the DOM (TD §6): positions and
      classes come from state, never from CSS transitions, which is what keeps
      the hook's step() exact in tests. Layers are filled by later cards. */
   var els = null;
+  var geom = null;    // { plates:[{x,y}] } in stage fractions, cached on resize (TD §7)
+  var catEls = {};    // actor uid -> button; DOM refs stay out of the JSON-safe state
 
   function cacheEls() {
     els = {
       app: document.getElementById('app'),
+      stage: document.getElementById('cf-stage'),
+      cats: document.getElementById('cf-cats'),
       tray: document.getElementById('cf-tray'),
       treats: [].slice.call(document.querySelectorAll('#cf-tray .cf-treat')),
       plates: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate')),
       plateTreats: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate-treat'))
     };
+  }
+
+  /* Plate centres in stage fractions, cached when the layout changes — never
+     read inside tick() (TD §7/§10). render() projects them onto the actors. */
+  function measure() {
+    if (!els || !els.stage) return;
+    var sr = els.stage.getBoundingClientRect();
+    if (!sr.width || !sr.height) return;
+    var plates = [];
+    for (var i = 0; i < els.plates.length; i++) {
+      var pr = els.plates[i].getBoundingClientRect();
+      plates.push({
+        x: (pr.left + pr.width / 2 - sr.left) / sr.width,
+        y: (pr.top + pr.height / 2 - sr.top) / sr.height
+      });
+    }
+    geom = { plates: plates };
   }
 
   function render() {
@@ -221,12 +368,93 @@
     if (els.tray) {
       els.tray.classList.toggle('cf-hint', state.nudge.kind === 'hint' && state.clock < state.nudge.until);
     }
+
+    renderCats();
+  }
+
+  /* ---- cat rendering (CF-07; TD §7/§10) ---------------------------------
+     render() projects each actor's fraction of its phase to a position; CSS
+     only scales the body for facing and bobs it while walking, so step() stays
+     exact and positions never come from a transition. */
+  function geomPlate(idx) {
+    return (geom && geom.plates[idx]) || { x: 0.3 + idx * 0.2, y: 0.48 };
+  }
+
+  function catDir(c) {
+    if (c.phase === 'leaving') return geomPlate(c.plate).x < 0.5 ? -1 : 1; // walk out the nearer edge
+    return c.side === 'L' ? 1 : -1;
+  }
+
+  function catPos(c) {
+    var plate = geomPlate(c.plate);
+    var p = c.dur > 0 ? c.t / c.dur : 1;
+    if (p < 0) p = 0; else if (p > 1) p = 1;
+    var x;
+    if (c.phase === 'entering') {
+      var from = c.side === 'L' ? -EDGE_FRAC : 1 + EDGE_FRAC;
+      x = from + (plate.x - from) * easeOut(p);
+    } else if (c.phase === 'leaving') {
+      var to = plate.x < 0.5 ? -EDGE_FRAC : 1 + EDGE_FRAC;
+      x = plate.x + (to - plate.x) * easeIn(p);
+    } else {
+      x = plate.x;
+    }
+    return { x: x, y: plate.y - CAT_LIFT }; // lifted so the treat on the plate stays visible
+  }
+
+  function makeCatEl(c) {
+    var cat = catById(c.id);
+    var el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'cf-cat';
+    el.setAttribute('data-cat', c.id);
+    el.setAttribute('aria-label', cat ? cat.name : '');
+    var body = document.createElement('span');
+    body.className = 'cf-cat-body';
+    body.setAttribute('data-e', cat ? cat.emoji : '');
+    el.appendChild(body);
+    if (cat && cat.acc) {
+      var acc = document.createElement('span');
+      acc.className = 'cf-cat-acc';
+      acc.setAttribute('data-e', cat.acc);
+      el.appendChild(acc);
+    }
+    return el;
+  }
+
+  function renderCats() {
+    if (!els || !els.cats) return;
+    if (!geom) measure();
+    var alive = {}, i, uid;
+    for (i = 0; i < state.cats.length; i++) alive[state.cats[i].uid] = true;
+    for (uid in catEls) {
+      if (!alive[uid]) { // gone: drop the node (no leaks, TD §10)
+        if (catEls[uid].parentNode) catEls[uid].parentNode.removeChild(catEls[uid]);
+        delete catEls[uid];
+      }
+    }
+    for (i = 0; i < state.cats.length; i++) {
+      var c = state.cats[i];
+      var el = catEls[c.uid];
+      if (!el) { el = makeCatEl(c); catEls[c.uid] = el; els.cats.appendChild(el); }
+      var pos = catPos(c);
+      el.style.left = (pos.x * 100) + '%';
+      el.style.top = (pos.y * 100) + '%';
+      el.style.setProperty('--dir', String(catDir(c)));
+      /* Walk-bob: a per-frame transform value from the game clock (never a CSS
+         animation loop), zero while sitting/eating and under reduced motion. */
+      var moving = c.phase === 'entering' || c.phase === 'leaving';
+      var bob = moving && !reduceMotion ? Math.sin((state.clock + c.uid * 90) / 110) * -BOB_PX : 0;
+      el.style.setProperty('--bob', bob.toFixed(2) + 'px');
+    }
   }
 
   /* Tick order (TD §6): idle/hints → arrivals → cats → gifts → flights → fx →
-     clock. CF-04 owns only the clock (last, so a tick's effects and its stamp
-     agree); CF-05..CF-09 fill the earlier stages. */
+     clock (last, so a tick's effects and its stamp agree). CF-07 fills arrivals
+     and cats; CF-05..CF-09 fill the rest. */
   function tick(dt) {
+    updateArrivals(dt);
+    updateCats(dt);
     state.clock += dt;
     if (state.nudge.kind && state.clock >= state.nudge.until) {
       state.nudge.kind = null;
@@ -361,6 +589,8 @@
     started = true;
 
     cacheEls();
+    measure();
+    window.addEventListener('resize', measure);
     render();
 
     window.__catForest = {
@@ -374,6 +604,7 @@
       pause: pause,
       step: step,
       place: place,
+      forceCat: forceCat,
       /* `pick` is the documented hook (TD §8); the two trailing arguments let
          CF-06 tests exercise the occupied/last-visitor rules without a new
          method. The engine itself never reads the hook. */
