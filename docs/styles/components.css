@@ -76,6 +76,14 @@
 .ps-btn.is-correct { --ps-btn-tint: 103, 201, 113; }
 .ps-btn.is-hint,
 .ps-btn.ps-hint { box-shadow: var(--ps-glow), 0 6px 0 var(--ps-btn-depth); }
+/* The component sets `display`, which BEATS the UA's `[hidden] { display: none }`
+   (a class rule outranks it), so any adopted control toggled with `el.hidden`
+   would keep rendering. Guard it here once, for the whole family: task 255
+   follow-up, animal_puzzle's #scenePreview card stayed in the layout after the
+   puzzle started (333px) and pushed the board off-screen, so the drop missed —
+   caught by the offline E2E gate. */
+.ps-btn[hidden],
+.ps-back[hidden] { display: none; }
 
 .ps-btn--secondary { --ps-btn-tint: 79, 195, 247; }  /* rgb(--sky) */
 

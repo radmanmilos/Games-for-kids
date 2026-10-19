@@ -75,6 +75,26 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('first puzzle starts 1×2 (2 pieces): label "1/8"',
     B.pieces === 2 && B.slots === 2 && B.label === '1/8', JSON.stringify(B));
 
+  /* Task 255 follow-up: the start card is hidden with `el.hidden`, and a class
+     rule that sets `display` outranks the UA `[hidden]` rule — so if the card
+     stays in the layout it silently pushes the board off-screen and the drop
+     misses (this shipped in 2.3.0 and only the offline E2E caught it, because
+     the drags here re-measure both ends). Assert the rendered result, not the
+     attribute: the card must occupy no space. */
+  const PS = await h.evalv(`(() => {
+    const card = document.getElementById('sceneButton').getBoundingClientRect();
+    const board = document.getElementById('puzzleBoard').getBoundingClientRect();
+    return {
+      cardW: Math.round(card.width), cardH: Math.round(card.height),
+      boardInView: board.top >= 0 && board.bottom <= innerHeight,
+      boardTop: Math.round(board.top), winH: innerHeight,
+    };
+  })()`);
+  check('start card leaves the layout when the puzzle starts (no hidden-vs-display leak)',
+    PS.cardW === 0 && PS.cardH === 0, JSON.stringify(PS));
+  check('board is fully on-screen after start (the drop target is reachable)',
+    PS.boardInView, JSON.stringify(PS));
+
   const peek = await h.evalv(`(() => {
     const btn = document.getElementById('puzzlePeek');
     const overlay = document.getElementById('puzzlePreviewOverlay');
