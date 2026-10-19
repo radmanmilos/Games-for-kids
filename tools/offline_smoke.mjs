@@ -539,6 +539,26 @@ const APPS = [
         { label: 'the child to drag the bear one stone along the path while offline' });
     },
   },
+  {
+    id: 'cat_forest', back: '#cat-forest-back',
+    /* CF-01 shell: the page boots with no gameplay yet, so its ONE real
+     * behaviour is the back control returning to the hub. Proving that round
+     * trip is honest coverage; CF-16 replaces this row with the real treat
+     * interaction (TP §3.12). The shell is re-opened afterwards so the P6
+     * back-check below still runs against this page, not against the hub. */
+    ready: `typeof window.startCatForest==='function' && !!window.__catForest
+      && window.__catForest.state().booted===true`,
+    act: async h => {
+      const t = await h.tap('#cat-forest-back');
+      if (!t.ok) return { ok: false, why: 'back control: ' + t.why };
+      const home = await h.waitFor(`location.pathname.endsWith('/index.html')`,
+        { timeout: 10000, label: 'the shell to return to the hub' });
+      if (!home.ok) return home;
+      await h.navigate(`${BASE}:${h.port}/pages/cat_forest.html`);
+      return h.waitFor(`!!window.__catForest && window.__catForest.state().booted===true`,
+        { timeout: 10000, label: 'the shell to boot again' });
+    },
+  },
 ];
 
 /* Every registry child must be covered - a new offline game cannot skip this test.
