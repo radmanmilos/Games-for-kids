@@ -17,16 +17,119 @@
   html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--cream);font-family:Fredoka, sans-serif;color:var(--plum);}
   #app.cf-app{position:fixed;inset:0;}
   #app.cf-app .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;z-index:20;}
-  /* absolute, not fixed: the parent #app.cf-app is already position:fixed
-     inset:0, so this covers the viewport identically — and the short-landscape
-     audit treats sibling fixed elements as chrome pairs (task 262 / CF-01). */
+
+  /* Stage: absolute, not fixed — #app is already position:fixed;inset:0, so this
+     covers the viewport identically and the short-landscape audit does not read
+     two sibling fixed elements as a chrome pair (task 262 / CF-01 deviation). */
   #cf-stage{position:absolute;inset:0;overflow:hidden;}
+  #cf-stage > *{position:absolute;}
+
+  /* ---- decorative layers: aria-hidden in markup AND unclickable, so no tree
+         or hill can ever steal a child's tap (TP §3.2) ---- */
+  .cf-sky{inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(#DDF1FF 0%, #EAF7E4 58%, #F7ECCF 100%);}
+  #cf-scenery{inset:0;z-index:2;pointer-events:none;}
+  #cf-decor{inset:0;z-index:3;pointer-events:none;}
+
+  /* Scenery: hills are CSS shapes; trees are emoji drawn through ::before so no
+     text node exists (the no-visible-text guard reads body.innerText). */
+  .cf-hill{position:absolute;border-radius:50% 50% 0 0;background:#BFE3B0;opacity:.9;}
+  .cf-hill-1{left:-14vmin;right:30vmin;bottom:-20vmin;height:36vmin;}
+  .cf-hill-2{left:32vmin;right:-16vmin;bottom:-24vmin;height:42vmin;background:#A9D69A;opacity:.85;}
+  .cf-tree{position:absolute;line-height:1;font-size:12vmin;font-variant-emoji:emoji;}
+  .cf-tree::before{content:"🌲";}
+  .cf-tree-1{left:2vmin;bottom:27vmin;}
+  .cf-tree-2{right:3vmin;bottom:29vmin;font-size:10vmin;}
+  .cf-tree-3{left:20vmin;bottom:24vmin;font-size:8vmin;}
+
+  /* ---- interactive layers: the container never blocks, only its controls do ---- */
+  #cf-plates{z-index:4;left:0;right:0;top:48%;transform:translateY(-50%);
+    display:flex;justify-content:center;align-items:center;gap:clamp(16px,6vmin,64px);
+    pointer-events:none;}
+  .cf-plate{pointer-events:auto;position:relative;padding:0;border:none;background:none;cursor:pointer;
+    width:clamp(72px,22vmin,132px);aspect-ratio:1;border-radius:50%;
+    display:grid;place-items:center;line-height:1;
+    filter:drop-shadow(0 1vmin 1.2vmin rgba(74,63,107,.16));
+    transition:transform .16s ease, filter .16s ease;}
+  .cf-plate::before{content:"🍽️";font-size:clamp(40px,14vmin,88px);line-height:1;font-variant-emoji:emoji;}
+  .cf-plate-treat{position:absolute;left:50%;top:50%;transform:translate(-50%,-64%);
+    font-size:clamp(30px,9vmin,56px);line-height:1;opacity:0;font-variant-emoji:emoji;}
+  .cf-plate-treat::before{content:"";}
+
+  #cf-cats{z-index:5;inset:0;pointer-events:none;}
+
+  #cf-tray{z-index:8;left:50%;bottom:clamp(8px,2.6vmin,24px);transform:translateX(-50%);
+    display:flex;align-items:center;gap:clamp(6px,1.8vmin,22px);padding:clamp(6px,1.4vmin,14px);
+    border-radius:999px;background:rgba(255,255,255,.6);box-shadow:var(--shadow-soft);
+    pointer-events:none;}
+  .cf-treat{pointer-events:auto;width:clamp(64px,11vmin,96px);aspect-ratio:1;padding:0;border:none;
+    border-radius:50%;background:#fff;box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);cursor:pointer;
+    display:grid;place-items:center;line-height:1;
+    transition:transform .16s ease, box-shadow .16s ease;}
+  .cf-treat::before{font-size:clamp(30px,7vmin,60px);line-height:1;font-variant-emoji:emoji;}
+  .cf-treat[data-treat="fish"]::before{content:"🐟";}
+  .cf-treat[data-treat="milk"]::before{content:"🥛";}
+  .cf-treat[data-treat="chicken"]::before{content:"🍗";}
+  .cf-treat[data-treat="sushi"]::before{content:"🍣";}
+  .cf-treat[data-treat="cookie"]::before{content:"🍪";}
+
+  .cf-toggles{z-index:9;top:2.6vmin;right:2.6vmin;display:flex;gap:2.6vmin;pointer-events:none;}
+  .cf-toggles button{pointer-events:auto;width:clamp(56px,8vmin,72px);aspect-ratio:1;padding:0;border:none;
+    border-radius:50%;background:#fff;box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);cursor:pointer;
+    display:grid;place-items:center;font-size:clamp(26px,5.5vmin,44px);line-height:1;
+    transition:transform .16s ease, box-shadow .16s ease;}
+  #cf-daynight::before{content:"☀️";line-height:1;font-variant-emoji:emoji;}
+  #app[data-time="night"] #cf-daynight::before{content:"🌙";}
+  #cf-rain-btn::before{content:"🌧️";line-height:1;font-variant-emoji:emoji;}
+
+  /* The keyboard/OS preference always wins over the page's own motion. */
+  @media (prefers-reduced-motion: reduce){
+    .cf-plate,.cf-treat,.cf-toggles button{transition:none;}
+  }
+
+  /* Desktop tier, mirroring sorting.html: cap the vmin glyphs so a tablet held
+     in landscape does not turn the forest into giant emoji. */
+  @media (min-width:800px) and (min-height:600px){
+    .cf-plate::before{font-size:88px;}
+    .cf-treat::before{font-size:60px;}
+    .cf-toggles button{font-size:44px;}
+    .cf-tree{font-size:110px;}
+    .cf-tree-2{font-size:92px;}
+    .cf-tree-3{font-size:74px;}
+  }
 </style>
 </head>
 <body>
-<div id="app" class="cf-app">
+<div id="app" class="cf-app" data-time="day" data-weather="clear">
   <button class="back-btn ps-back" id="cat-forest-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
-  <div id="cf-stage"></div>
+  <div id="cf-stage">
+    <div class="cf-sky" aria-hidden="true"></div>
+    <div id="cf-scenery" aria-hidden="true">
+      <span class="cf-hill cf-hill-1"></span>
+      <span class="cf-hill cf-hill-2"></span>
+      <span class="cf-tree cf-tree-1"></span>
+      <span class="cf-tree cf-tree-2"></span>
+      <span class="cf-tree cf-tree-3"></span>
+    </div>
+    <div id="cf-decor" aria-hidden="true"></div>
+    <div id="cf-plates">
+      <button class="cf-plate" data-plate="0" aria-label="Тањир"><span class="cf-plate-treat"></span></button>
+      <button class="cf-plate" data-plate="1" aria-label="Тањир"><span class="cf-plate-treat"></span></button>
+      <button class="cf-plate" data-plate="2" aria-label="Тањир"><span class="cf-plate-treat"></span></button>
+    </div>
+    <div id="cf-cats"></div>
+    <div id="cf-tray">
+      <button class="cf-treat" data-treat="fish" aria-label="Риба" aria-pressed="false"></button>
+      <button class="cf-treat" data-treat="milk" aria-label="Млеко" aria-pressed="false"></button>
+      <button class="cf-treat" data-treat="chicken" aria-label="Пилетина" aria-pressed="false"></button>
+      <button class="cf-treat" data-treat="sushi" aria-label="Суши" aria-pressed="false"></button>
+      <button class="cf-treat" data-treat="cookie" aria-label="Колачић" aria-pressed="false"></button>
+    </div>
+    <div class="cf-toggles">
+      <button id="cf-daynight" aria-pressed="false" aria-label="Дан и ноћ"></button>
+      <button id="cf-rain-btn" aria-pressed="false" aria-label="Киша"></button>
+    </div>
+  </div>
 </div>
 <script src="../data/serbian.js"></script>
 <script src="../shared/navigation.js"></script>

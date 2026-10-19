@@ -18,3 +18,5 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
+- 264. IN PROGRESS — Cat Forest: CF-03 static stage layout (2026-10-19, OpenCode/Big Pickle) — card `resources/General_reviews/Cat_Forest/03_TASKS.md` CF-03; page DOM/CSS per TD §4 + TP §3.2 geometry in `tools/cat_forest_smoke.js`.
+

@@ -1,9 +1,10 @@
-/* Мачја шума (Cat Forest) smoke — CF-02 skeleton (page shell, task 263).
+/* Мачја шума (Cat Forest) smoke — CF-02 skeleton + CF-03 static stage (tasks 263, 264).
    Drives pages/cat_forest.html headlessly and pins the CF-01 wiring contract:
    boot + test hook, the route contract, the back control's reachability (inside
    the viewport AND hit-testable, never a bare .click()), the hub tile, and the
-   no-network static rule (TD §8 / TP §3.1). Gameplay assertions arrive with the
-   engine — this file grows card by card (TP §3).
+   no-network static rule (TD §8 / TP §3.1). CF-03 adds the three-viewport stage
+   geometry of TP §3.2. Gameplay assertions arrive with the engine — this file
+   grows card by card (TP §3).
    Run:  node tools/cat_forest_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -70,6 +71,71 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     const src = fs.readFileSync(path.join(root, file), 'utf8').replace(ALLOWED_SVG_XMLNS, '');
     const hits = BANNED.filter(b => src.includes(b));
     check(`the ${label} makes no network calls (TD §8)`, hits.length === 0, hits.join(', ') || 'none');
+  }
+
+  /* ---- CF-03: the static stage holds in all three target viewports (TP §3.2).
+     Fresh session per size: a broken size cannot be masked by the first one. */
+  const pageHtml = fs.readFileSync(path.join(root, 'game', 'pages', 'cat_forest.html'), 'utf8');
+  check('the page ships a prefers-reduced-motion block (TP §10)',
+    /@media\s*\(\s*prefers-reduced-motion:\s*reduce\s*\)/.test(pageHtml));
+
+  /* Same reachability definition as the back control (TP §1.3): inside the
+     viewport AND hit-testable at its centre. */
+  const stageGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() => {
+    const box = el => {
+      const r = el.getBoundingClientRect();
+      const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return { inside: r.top >= -1 && r.left >= -1 && r.bottom <= innerHeight + 1 && r.right <= innerWidth + 1,
+               hit: !!(hit && (hit === el || el.contains(hit))), w: r.width, h: r.height };
+    };
+    const all = s => [...document.querySelectorAll(s)];
+    return {
+      treats: all('.cf-treat').map(box),
+      plates: all('.cf-plate').map(box),
+      toggles: all('#cf-daynight, #cf-rain-btn').map(box),
+      scrollW: document.documentElement.scrollWidth, scrollH: document.documentElement.scrollHeight,
+      vw: innerWidth, vh: innerHeight,
+      text: document.body.innerText.trim(),
+      latin: all('[aria-label]').map(e => e.getAttribute('aria-label') || '').filter(l => /[A-Za-z]/.test(l)),
+      decor: ['.cf-sky', '#cf-scenery', '#cf-decor'].map(s => {
+        const el = document.querySelector(s);
+        return { s, ok: !!el && el.getAttribute('aria-hidden') === 'true'
+          && getComputedStyle(el).pointerEvents === 'none' };
+      }),
+    };
+  })())`));
+
+  for (const vp of [
+    { name: '1024x800 tablet', width: 1024, height: 800, min: 72 },
+    { name: '844x390 short landscape', width: 844, height: 390, min: 56 },
+    { name: '390x844 portrait', width: 390, height: 844, min: 56 },
+  ]) {
+    const hv = await start({ page: '/pages/cat_forest.html', tag: `cat-forest-stage-${vp.width}x${vp.height}`, width: vp.width, height: vp.height });
+    let laidOut = false;
+    for (let i = 0; i < 20 && !laidOut; i++) {
+      laidOut = await hv.evalv(`document.querySelectorAll('.cf-treat').length === 5`);
+      if (!laidOut) await sleep(100);
+    }
+    const m = await stageGeometry(hv);
+    check(`${vp.name}: 5 treats, 3 plates and 2 toggles render`,
+      m.treats.length === 5 && m.plates.length === 3 && m.toggles.length === 2,
+      `treats=${m.treats.length} plates=${m.plates.length} toggles=${m.toggles.length}`);
+    check(`${vp.name}: every control is inside the viewport and hit-testable`,
+      [...m.treats, ...m.plates, ...m.toggles].every(b => b.inside && b.hit),
+      JSON.stringify([...m.treats, ...m.plates, ...m.toggles]));
+    check(`${vp.name}: treats and plates are at least ${vp.min}px`,
+      [...m.treats, ...m.plates].every(b => Math.min(b.w, b.h) >= vp.min),
+      [...m.treats, ...m.plates].map(b => `${Math.round(b.w)}x${Math.round(b.h)}`).join(' '));
+    check(`${vp.name}: toggles are at least 56px`,
+      m.toggles.every(b => Math.min(b.w, b.h) >= 56),
+      m.toggles.map(b => `${Math.round(b.w)}x${Math.round(b.h)}`).join(' '));
+    check(`${vp.name}: the stage does not scroll`, m.scrollW <= m.vw + 1 && m.scrollH <= m.vh + 1,
+      `${m.scrollW}x${m.scrollH} in ${m.vw}x${m.vh}`);
+    check(`${vp.name}: no visible text (body.innerText is empty)`, m.text === '', JSON.stringify(m.text));
+    check(`${vp.name}: every aria-label is Cyrillic (no Latin letters)`, m.latin.length === 0, m.latin.join(' | '));
+    check(`${vp.name}: decorative layers are aria-hidden and unclickable`, m.decor.every(d => d.ok),
+      JSON.stringify(m.decor));
+    await hv.close();
   }
 
   await h.close();
