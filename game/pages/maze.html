@@ -25,7 +25,7 @@
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
     html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--cream);font-family:Fredoka,sans-serif;color:var(--plum)}
     #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.5vmin;padding:3vmin}
-    .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--plum);color:#fff;font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);z-index:20}
+    .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;z-index:20}
     #maze-prompt{font-size:5.6vmin;font-weight:800;text-align:center}
 
     /* The board keeps the maze's own aspect ratio, so a stone is square and the
@@ -77,16 +77,17 @@
     .maze-token.maze-dragging{cursor:grabbing;transition:none}
     @media (prefers-reduced-motion: reduce){.maze-stone,.maze-token{transition:none}.maze-token.maze-dragging{transition:none}}
 
-    .retry-btn{position:absolute;top:2.6vmin;right:2.6vmin;width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--sky);color:var(--plum);font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.15);cursor:pointer}
+    /* task 255: bubble chrome from components.css (.ps-btn--icon + --secondary). */
+    .retry-btn{position:absolute;top:2.6vmin;right:2.6vmin;font-size:5vmin;}
     #maze-feedback{min-height:6vmin;font-size:4.4vmin;font-weight:700;color:var(--green);text-align:center}
     @media (min-width:800px){#maze-prompt{font-size:36px}.maze-mark{font-size:34px}.maze-goal .maze-mark{font-size:40px}.maze-motif{font-size:20px}.maze-token{font-size:44px}#maze-feedback{font-size:28px}}
   </style>
 </head>
 <body>
   <div id="app">
-    <button class="back-btn" id="maze-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <button class="back-btn ps-back" id="maze-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <div class="retry-btn-wrap">
-      <button class="retry-btn" id="maze-retry" aria-label="Почни поново"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-8 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
+      <button class="retry-btn ps-btn ps-btn--icon ps-btn--secondary" id="maze-retry" aria-label="Почни поново"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-8 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
     </div>
     <div id="maze-prompt">Пронађи пут до куће</div>
     <div id="maze-board">

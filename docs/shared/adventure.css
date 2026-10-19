@@ -90,45 +90,24 @@ body, html {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+/* task 255: chrome from components.css (.ps-btn--icon + --secondary). The
+   sacred offsets (worlds right:200px, music right:268px — they overlap if
+   closer, see lessons/game-runtime.md) are untouched. */
 #adv-worlds-btn {
     position: absolute;
     top: 12px;
     right: 200px;
     z-index: 10;
-    width: 58px;
-    height: 58px;
-    border-radius: 50%;
-    border: 4px solid #fff;
-    background: #4A3F6B;
-    color: #fff;
     font-size: 26px;
-    box-shadow: 0 5px 0 rgba(0,0,0,0.25);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
-#adv-worlds-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
 #adv-music-btn {
     position: absolute;
     top: 12px;
     right: 268px;
     z-index: 10;
-    width: 58px;
-    height: 58px;
-    border-radius: 50%;
-    border: 4px solid #fff;
-    background: #4A3F6B;
-    color: #fff;
     font-size: 24px;
-    box-shadow: 0 5px 0 rgba(0,0,0,0.25);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
-#adv-music-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
-#adv-music-btn.off { background: #8a82a8; }
+#adv-music-btn.off { opacity: .55; }
 @media (max-width: 329px) {
     #adv-music-btn { right: 256px; }
     #adv-worlds-btn { right: 188px; }
@@ -164,6 +143,8 @@ body, html {
     max-height: 74%;
     padding: 4px;
 }
+/* task 255: modal choice tiles keep the cream shape but share the bubble's
+   solid depth shadow + translateY press (same as fastcat/explorer tiles). */
 .adv-world-btn {
     border: 4px solid #fff;
     border-radius: 18px;
@@ -174,25 +155,20 @@ body, html {
     font-size: 15px;
     padding: 10px 6px;
     cursor: pointer;
-    box-shadow: 0 5px 0 rgba(0,0,0,0.25);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.22);
     line-height: 1.2;
+    transition: transform .12s ease, box-shadow .12s ease;
 }
 .adv-world-btn .adv-w-emoji { display: block; font-size: 30px; margin-bottom: 4px; }
-.adv-world-btn:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
+.adv-world-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.22); }
+/* task 255: Затвори is a secondary action — .ps-btn + --secondary pill. */
 #adv-worlds-close {
     margin-top: 3vmin;
-    border: 4px solid #fff;
-    border-radius: 50vmin;
-    background: #FF6F91;
-    color: #fff;
     font-family: inherit;
     font-weight: 700;
     font-size: 17px;
     padding: 12px 40px;
-    box-shadow: 0 5px 0 rgba(0,0,0,0.25);
-    cursor: pointer;
 }
-#adv-worlds-close:active { transform: translateY(4px); box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
 
 /* --- Touch controls as an overlay: the canvas uses the whole screen, the
    button clusters float over the bottom edges so no play area is wasted. --- */
@@ -260,49 +236,18 @@ body, html {
     flex-direction: column;
 }
 
-#adv-controls.adv-fly-controls .adv-btn {
-    width: 92px;
-    height: 92px;
-    font-size: 34px;
-}
-
 #adv-controls.adv-fly-controls .adv-btn-up { order: 0; }
 #adv-controls.adv-fly-controls .adv-btn-down { order: 1; }
 #adv-controls.adv-fly-controls .adv-btn-left { order: 0; }
 #adv-controls.adv-fly-controls .adv-btn-right { order: 1; }
 
+/* task 255: chrome comes from components.css (.ps-btn--control); this file
+   keeps LAYOUT only — d-pad grouping, cluster order, control-set placement.
+   All controls share the one unified size (fastcat geometry). */
 .adv-btn {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 6px solid #fff;
-    display: flex;
-    justify-content: center;
+    display: inline-flex;
     align-items: center;
-    font-size: 40px;
-    color: white;
-    box-shadow: 0 8px 0 rgba(0,0,0,0.3), inset 0 -4px 0 rgba(0,0,0,0.2);
-    cursor: pointer;
-    text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
-    font-family: inherit;
-}
-
-.adv-btn:active {
-    transform: translateY(4px);
-    box-shadow: 0 4px 0 rgba(0,0,0,0.3);
-}
-
-.adv-btn-left { background-color: #e52521; }
-.adv-btn-right { background-color: #fbd000; color: #4A3F6B; text-shadow: none; }
-.adv-btn-up { background-color: #4fc3f7; }
-.adv-btn-down { background-color: #a070ff; }
-
-.adv-btn-jump {
-    width: 120px;
-    height: 120px;
-    background-color: #43b047;
-    border-color: #fff;
-    font-size: 50px;
+    justify-content: center;
 }
 
 /* --- Back button + page title (shared across adventure pages) --- */
@@ -311,20 +256,7 @@ body, html {
     top: 4vmin;
     left: 4vmin;
     z-index: 20;
-    width: 12vmin;
-    height: 12vmin;
-    border-radius: 50%;
-    border: none;
-    background: rgba(74, 63, 107, 0.85);
-    color: #fff;
-    font-size: 6vmin;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 1vmin 0 rgba(0, 0, 0, 0.2);
-    cursor: pointer;
 }
-.adv-back:active { transform: scale(0.9) translateY(3px); }
 #adv-title {
     position: absolute;
     top: 2vmin;
@@ -364,19 +296,13 @@ body, html {
     white-space: pre-line;
 }
 
+/* task 255: chrome from components.css (primary .ps-btn bubble pill); this
+   rule keeps the modal's sizing only. */
 .adv-play-again-btn {
     padding: 20px 40px;
     font-size: 18px;
-    font-family: 'Fredoka', 'Comic Sans MS', cursive, sans-serif;
     font-weight: 700;
-    border-radius: 50vmin;
-    background: #FFD23F;
-    color: #4A3F6B;
-    border: 5px solid white;
-    box-shadow: 0 8px 0 rgba(0,0,0,0.3);
-    cursor: pointer;
 }
-.adv-play-again-btn:active { transform: translateY(4px); box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
 
 /* --- Dino hero picker (shown at the start of every level) ---
    z15, not 25: it must cover the HUD/buttons (z10-12) but let the back button

@@ -118,7 +118,7 @@
     items.forEach(function (it) {
       var btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'phonics-choice';
+      btn.className = 'phonics-choice ps-btn';
       btn.dataset.key = it.key;
       btn.dataset.correct = it.isCorrect ? '1' : '0';
       btn.setAttribute('aria-label', it.obj.name);

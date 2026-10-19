@@ -192,7 +192,7 @@
       feedback.textContent = '';
       Object.keys(buttons).forEach(key => {
         buttons[key].textContent = mode[key];
-        buttons[key].className = 'spatial-choice';
+        buttons[key].className = 'spatial-choice ps-btn';
         buttons[key].removeAttribute('data-answer');
         buttons[key].removeAttribute('data-correct');
       });

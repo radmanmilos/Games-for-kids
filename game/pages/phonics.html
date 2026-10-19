@@ -16,11 +16,11 @@
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none;}
   html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--cream);font-family:Fredoka, sans-serif;color:var(--plum);}
   #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.6vmin;padding:4vmin;}
-  .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--plum);color:#fff;font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);z-index:20;}
+  .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;z-index:20;}
   .back-btn:active{transform:scale(.92) translateY(3px);}
   .top-bar{position:absolute;top:2.6vmin;right:2.6vmin;display:flex;gap:2vmin;align-items:center;}
-  .repeat-btn{width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--sky);color:var(--plum);font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.15);z-index:20;}
-  .repeat-btn:active{transform:scale(.92) translateY(3px);}
+  /* task 255: bubble chrome from components.css (.ps-btn--icon + --secondary). */
+  .repeat-btn{font-size:5vmin;z-index:20;}
   #phonics-letter{font-size:24vmin;font-weight:800;line-height:1;text-align:center;color:var(--plum);text-shadow:0 .4vmin 0 rgba(255,255,255,.6);padding:0 .16em .04em;border-radius:24px;cursor:pointer;background:linear-gradient(#FFFDF7,#FBF1E0);box-shadow:0 0 0 .34em rgba(155,109,255,.10), inset 0 -.14em .22em rgba(74,63,107,.08);transition:box-shadow .3s ease;}
   /* V18 (spec 36/42.15): the letter is the active element — it blooms softly
      while its sound plays (phonics-letter-live) and green-settles on a hit
@@ -31,7 +31,10 @@
   #phonics-speaker:active{transform:scale(.92) translateY(3px);}
   #phonics-speaker.phonics-speaker-live{box-shadow:var(--ps-glow), 0 1vmin 0 rgba(0,0,0,.2);animation:phon-pulse .5s ease 1;}
   #phonics-objects{display:flex;gap:6vmin;justify-content:center;align-items:center;width:100%;}
-  .phonics-choice{width:24vmin;height:24vmin;border:none;border-radius:50%;background:linear-gradient(145deg,#FFFDF7 0%,#FFFFFF 55%,#FBF1E0 100%);box-shadow:inset 0 -.6vmin .8vmin rgba(74,63,107,.08), 0 1.6vmin 0 rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .12s ease, box-shadow .12s ease;}
+  /* task 255: answer choices take the bubble chrome (components.css); the
+     cream material survives as the tint, geometry + state rings stay here.
+     V18 still holds: body = gradient sheen over tint, never flat white. */
+  .phonics-choice{width:24vmin;height:24vmin;border-radius:50%;--ps-btn-tint:255, 250, 240;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .12s ease, box-shadow .12s ease;}
   .phonics-choice:active{transform:translateY(3px);}
   /* V18: a round-start substile attention cue — the two object choices bloom
      plum once with the letter's sound, then settle back to their material. */
@@ -63,9 +66,9 @@
 </head>
 <body>
 <div id="app">
-  <button class="back-btn" id="phonics-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+  <button class="back-btn ps-back" id="phonics-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
   <div class="top-bar">
-    <button class="repeat-btn" id="phonics-repeat" aria-label="Понови звук"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-8 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
+    <button class="repeat-btn ps-btn ps-btn--icon ps-btn--secondary" id="phonics-repeat" aria-label="Понови звук"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-8 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
   </div>
       <div id="phonics-letter" class="learn-stage-mat" role="button" tabindex="0" aria-label="Понови звук">М</div>
       <button id="phonics-speaker" type="button" aria-label="Понови звук"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-8 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>

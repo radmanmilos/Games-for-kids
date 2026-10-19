@@ -16,7 +16,7 @@
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none;}
   html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--cream);font-family:Fredoka, sans-serif;color:var(--plum);}
   #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.6vmin;padding:4vmin;}
-  .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--plum);color:#fff;font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);z-index:20;}
+  .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;z-index:20;}
   .back-btn:active{transform:scale(.92) translateY(3px);}
   #compare-prompt{font-size:5.6vmin;font-weight:800;line-height:1.15;text-align:center;}
   .compare-groups{display:flex;gap:3vmin;justify-content:center;align-items:stretch;width:100%;}
@@ -25,7 +25,9 @@
   .cmp-item{font-size:9vmin;line-height:1;pointer-events:none;}
   .compare-answers{display:flex;gap:3vmin;}
   .compare-answers[hidden]{display:none;}
-  .cmp-answer{min-width:26vmin;min-height:12vmin;padding:0 3vmin;border:3px solid rgba(74,63,107,.12);border-radius:var(--radius-md);background:var(--yellow);color:var(--plum);font-family:inherit;font-size:4.6vmin;font-weight:800;box-shadow:0 1.4vmin 0 rgba(0,0,0,.08);cursor:pointer;}
+  /* task 255: answer buttons take the bubble chrome (components.css); the
+     yellow hue survives as the tint, geometry + state rings stay here. */
+  .cmp-answer{min-width:26vmin;min-height:12vmin;padding:0 3vmin;border-radius:var(--radius-md);--ps-btn-tint:255, 210, 63;color:var(--plum);font-family:inherit;font-size:4.6vmin;font-weight:800;cursor:pointer;}
   .cmp-answer:active{transform:translateY(3px);}
   #compare-feedback{min-height:6vmin;font-size:4vmin;font-weight:700;color:var(--green);text-align:center;}
   .cmp-wrong{animation:cmp-shake .4s ease;border-color:var(--pink)!important;}
@@ -45,15 +47,15 @@
 </head>
 <body>
 <div id="app">
-  <button class="back-btn" id="compare-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+  <button class="back-btn ps-back" id="compare-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
   <div id="compare-prompt" class="learn-instruction">Где има више?</div>
   <div class="compare-groups learn-stage-mat">
     <button class="cmp-group" id="cmp-group-a" aria-label="Прва група"></button>
     <button class="cmp-group" id="cmp-group-b" aria-label="Друга група"></button>
   </div>
     <div class="compare-answers learn-answers" id="compare-answers" hidden>
-    <button class="cmp-answer" id="cmp-yes" data-answer="yes">Да</button>
-    <button class="cmp-answer" id="cmp-no" data-answer="no">Не</button>
+    <button class="cmp-answer ps-btn" id="cmp-yes" data-answer="yes">Да</button>
+    <button class="cmp-answer ps-btn" id="cmp-no" data-answer="no">Не</button>
   </div>
   <div id="compare-feedback" class="learn-feedback" aria-live="polite"></div>
 </div>

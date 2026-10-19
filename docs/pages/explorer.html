@@ -20,14 +20,17 @@
     #world-name{top:2vmin;left:50%;transform:translateX(-50%);}
     #level-num{top:2vmin;left:14vmin;}
     #coin-count{top:2vmin;right:2vmin;}
-    .hud-btn{position:absolute;z-index:10;width:10vmin;height:10vmin;border-radius:50%;border:3px solid white;background:rgba(0,0,0,.45);color:white;font-size:5vmin;display:flex;align-items:center;justify-content:center;cursor:pointer;}
-    .hud-btn:active{transform:scale(.92);}
-    #worlds-btn{bottom:calc(2vmin + 100px + 15vmin);right:2vmin;}
-    #music-btn{bottom:calc(2vmin + 100px + 3vmin);right:2vmin;}
+    /* task 255: HUD chrome from components.css (.ps-btn--icon); position +
+       glyph size only. Offsets reference the unified control size. */
+    .hud-btn{position:absolute;z-index:10;font-size:5vmin;}
+    #worlds-btn{bottom:calc(2vmin + min(110px,17vmin) + 15vmin);right:2vmin;}
+    #music-btn{bottom:calc(2vmin + min(110px,17vmin) + 3vmin);right:2vmin;}
     /* Task 251: fun speed toggle — parked directly under the point counter
-       (#coin-count). Off = muted like the other hud buttons, on = gold. */
+       (#coin-count). Off = muted like the other hud buttons, on = gold.
+       Task 255: keeps its bespoke gold ON state (it is a state cue, not a
+       static style); base ring/rounding come from .ps-btn--icon. */
     #fun-speed-btn{top:calc(2vmin + 13vmin);right:2vmin;font-size:4.5vmin;opacity:.62;}
-    #fun-speed-btn.on{opacity:1;background:#FFD23F;color:#4A3F6B;text-shadow:none;box-shadow:0 1vmin 0 rgba(0,0,0,.25),0 0 0 3px rgba(255,210,63,.6);}
+    #fun-speed-btn.on{opacity:1;background:#FFD23F;color:#4A3F6B;text-shadow:none;border-color:#FFD23F;box-shadow:0 1vmin 0 rgba(0,0,0,.25),0 0 0 3px rgba(255,210,63,.6);}
     #win-modal{display:none;position:absolute;inset:0;z-index:20;align-items:center;justify-content:center;flex-direction:column;background:rgba(74,63,107,.72);color:#FFD23F;text-align:center;padding:5vmin;}
     #win-modal.show{display:flex;}
     #win-modal h2{font-size:clamp(22px,5vmin,48px);margin:0 0 4vmin;}
@@ -43,22 +46,29 @@
     #char-modal{display:none;position:absolute;inset:0;z-index:20;align-items:center;justify-content:center;flex-direction:column;background:rgba(74,63,107,.72);color:#FFD23F;text-align:center;padding:5vmin;}
     #char-modal.show{display:flex;}
     #char-modal h2{font-size:clamp(22px,5vmin,48px);margin:0 0 4vmin;}
+    /* task 255: modal choice tiles share the bubble depth + press (same as
+       fastcat's #char-modal). */
+    #char-modal .char-btn{padding:2vmin;border-radius:16px;border:4px solid white;background:rgba(255,255,255,.15);cursor:pointer;box-shadow:0 6px 0 rgba(0,0,0,.22);transition:transform .12s ease,box-shadow .12s ease;}
+    #char-modal .char-btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.22);}
     #worlds-modal h2{color:#FFD23F;font-size:clamp(20px,4vmin,40px);margin:0 0 3vmin;}
     #worlds-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:2vmin;width:min(90vw,600px);}
-    #worlds-grid button{padding:2vmin;border-radius:12px;border:3px solid white;background:rgba(255,255,255,.15);color:white;font:600 clamp(12px,2.5vmin,20px) 'Fredoka',sans-serif;cursor:pointer;}
-    #worlds-grid button:active{transform:scale(.95);}
-    #worlds-close{margin-top:3vmin;border:3px solid white;border-radius:12px;background:rgba(255,255,255,.15);color:white;padding:1.5vmin 3vmin;font:600 clamp(12px,2.5vmin,20px) 'Fredoka',sans-serif;cursor:pointer;}
-    .back-btn{position:absolute;top:2vmin;left:2vmin;z-index:30;width:10vmin;height:10vmin;border-radius:50%;border:none;background:rgba(74,63,107,.85);color:white;font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);cursor:pointer;}
-    .back-btn:active{transform:scale(.9);}
+    /* task 255: modal choice tiles keep the translucent look but share the
+       bubble's solid depth shadow + translateY press. */
+    #worlds-grid button{padding:2vmin;border-radius:12px;border:3px solid white;background:rgba(255,255,255,.15);color:white;font:600 clamp(12px,2.5vmin,20px) 'Fredoka',sans-serif;cursor:pointer;box-shadow:0 6px 0 rgba(0,0,0,.22);transition:transform .12s ease,box-shadow .12s ease;}
+    #worlds-grid button:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.22);}
+    /* task 255: Затвори is a secondary action — .ps-btn + --secondary pill. */
+    #worlds-close{margin-top:3vmin;padding:1.5vmin 3vmin;font:600 clamp(12px,2.5vmin,20px) 'Fredoka',sans-serif;}
+    .back-btn{position:absolute;top:2vmin;left:2vmin;z-index:30;}
     /* Play controls overlay the full-bleed canvas. Without positioning they
        stayed in normal flow after the 100%-height canvas inside #app
        (position:fixed; overflow:hidden), so they rendered below the fold and a
        child could not move or jump. Same class of bug as #char-modal above. */
-    .btn{position:absolute;bottom:calc(2vmin + env(safe-area-inset-bottom));z-index:10;pointer-events:auto;width:100px;height:100px;border-radius:50%;border:6px solid #fff;display:flex;justify-content:center;align-items:center;font-size:40px;color:white;box-shadow:0 8px 0 rgba(0,0,0,.3),inset 0 -4px 0 rgba(0,0,0,.2);cursor:pointer;text-shadow:3px 3px 0 rgba(0,0,0,.3);font-family:inherit;}
-    .btn:active{transform:translateY(4px);box-shadow:0 4px 0 rgba(0,0,0,.3);}
-    .btn-left{left:2vmin;background-color:#e52521;}
-    .btn-right{left:calc(4vmin + 100px);background-color:#fbd000;color:#4A3F6B;text-shadow:none;}
-    .btn-jump{right:2vmin;background-color:#43b047;border-color:#fff;}
+    /* task 255: bubble chrome from components.css; this page owns POSITION
+       only. Left/right share the fastcat bottom-left corner as a pair. */
+    .btn{position:absolute;bottom:calc(2vmin + env(safe-area-inset-bottom));z-index:10;pointer-events:auto;}
+    .btn-left{left:calc(2vmin + env(safe-area-inset-left));}
+    .btn-right{left:calc(4vmin + min(110px,17vmin) + 2vmin);}
+    .btn-jump{right:calc(2vmin + env(safe-area-inset-right));}
   </style>
 </head>
 <body>
@@ -67,14 +77,14 @@
     <div class="hud" id="level-num">Свет 1</div>
     <div class="hud" id="world-name">Свет</div>
     <div class="hud" id="coin-count">⭐ 0</div>
-    <button class="hud-btn" id="fun-speed-btn" aria-pressed="false" aria-label="Брза игра 🚀 (2×)">🚀</button>
+    <button class="hud-btn ps-btn ps-btn--icon" id="fun-speed-btn" aria-pressed="false" aria-label="Брза игра 🚀 (2×)">🚀</button>
     <span id="collect-emoji" style="position:absolute;left:-9999px;top:-9999px;">🍓</span>
-    <button class="hud-btn" id="worlds-btn" aria-label="Изабери свет"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></button>
-    <button class="hud-btn ps-icon-toggle" id="music-btn" aria-label="Музика"><svg class="ic-main" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg><svg class="ic-alt" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg></button>
-    <button id="back-btn" class="back-btn" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
-    <div class="btn btn-left" id="btn-left">◀</div>
-    <div class="btn btn-right" id="btn-right">▶</div>
-    <div class="btn btn-jump" id="btn-jump">▲</div>
+    <button class="hud-btn ps-btn ps-btn--icon ps-btn--secondary" id="worlds-btn" aria-label="Изабери свет"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></button>
+    <button class="hud-btn ps-btn ps-btn--icon ps-btn--secondary ps-icon-toggle" id="music-btn" aria-label="Музика"><svg class="ic-main" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg><svg class="ic-alt" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg></button>
+    <button id="back-btn" class="back-btn ps-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <div class="btn btn-left ps-btn ps-btn--control ps-btn--secondary" id="btn-left" role="button" aria-label="Лево"><span class="ps-tri ps-tri--left" aria-hidden="true"></span></div>
+    <div class="btn btn-right ps-btn ps-btn--control ps-btn--secondary" id="btn-right" role="button" aria-label="Десно"><span class="ps-tri ps-tri--right" aria-hidden="true"></span></div>
+    <div class="btn btn-jump ps-btn ps-btn--control" id="btn-jump" role="button" aria-label="Скок"><span class="ps-tri" aria-hidden="true"></span></div>
     <div id="win-modal" role="dialog" aria-label="Победа">
       <h2 id="win-title">СВЕТ ПРЕЂЕН!</h2>
       <p id="win-sub"></p>
@@ -90,7 +100,7 @@
     <div id="worlds-modal" role="dialog" aria-label="Изабери свет">
       <h2>Изабери свет</h2>
       <div id="worlds-grid"></div>
-      <button id="worlds-close">Затвори</button>
+      <button id="worlds-close" class="ps-btn ps-btn--secondary">Затвори</button>
     </div>
   </div>
 

@@ -16,7 +16,7 @@
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none;}
   html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--cream);font-family:Fredoka, sans-serif;color:var(--plum);}
   #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.4vmin;padding:4vmin;}
-  .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--plum);color:#fff;font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);z-index:20;}
+  .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;z-index:20;}
   .back-btn:active{transform:scale(.92) translateY(3px);}
   #sort-prompt{font-size:5.4vmin;font-weight:700;line-height:1.15;text-align:center;}
   .sort-baskets{display:flex;gap:4vmin;justify-content:center;width:100%;}
@@ -68,7 +68,7 @@
 </head>
 <body>
 <div id="app">
-  <button class="back-btn" id="sorting-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+  <button class="back-btn ps-back" id="sorting-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
   <div id="sort-prompt" class="learn-instruction">Разврстај!</div>
   <div class="sort-baskets learn-stage-mat" id="sort-baskets"></div>
   <div class="sort-tray learn-answers" id="sort-tray"></div>

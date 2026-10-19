@@ -58,11 +58,11 @@
     text-shadow:0 3px 0 rgba(255,255,255,.6);
     pointer-events:none;
   }
+  /* task 255: bubble chrome from components.css (.ps-btn--icon). The running
+     state keeps its pink cue (state signal, not static style). */
   #classroomAutoplay{
     position:absolute; top:4vmin; right:4vmin; z-index:20;
-    width:12vmin; height:12vmin; border-radius:50%; border:none;
-    background:var(--yellow); color:var(--plum); font-size:5.5vmin;
-    box-shadow:0 1vmin 0 rgba(0,0,0,.2); cursor:pointer;
+    font-size:5.5vmin;
   }
   #classroomAutoplay.running{ background:var(--pink); color:#fff; }
   #classroomAutoplay[hidden]{ display:none; }
@@ -288,7 +288,7 @@
     <div class="ps-header">
       <button class="back-btn ps-back" id="classroom-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
       <h1 id="classroomTitle">Учионица</h1>
-      <button id="classroomAutoplay" class="ps-icon-toggle" hidden aria-label="Аутоматски приказ"><svg class="ic-main" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg><svg class="ic-alt" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></button>
+      <button id="classroomAutoplay" class="ps-btn ps-btn--icon ps-icon-toggle" hidden aria-label="Аутоматски приказ"><svg class="ic-main" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg><svg class="ic-alt" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></button>
     </div>
 
     <div id="classroomHub">

@@ -2,8 +2,9 @@
 
 Read before touching `tools/*_smoke*`, `tools/headless.js`, any guard, or before running a negative test. Each entry is a past incident; text is verbatim.
 
-## Two traps (from project/STATUS.md)
+## Traps (last two from project/STATUS.md)
 
+- **The server restarts mid-run and kills background shells (user rule 2026-10-19).** A long battery (`run_all.js`, screenshot battery) can die at any moment with no partial output (a `| tail` pipe never flushes). Validation state must be durable ON DISK, not in conversation memory: after every completed gate/smoke run, append the result to the per-task log `tools/.cache/task<N>-validation.md` (git-ignored) — command, pass/fail count, known-expected FAILs with why, pending steps — and record a background battery's shell ID there the moment it is launched. After a restart, read the log first and re-run ONLY what is missing; already-green runs are never repeated. A killed battery is simply relaunched; the per-game greens it individually covered stay recorded. (Incident: task 255 lost one full battery run to a restart; the per-game results survived only because they had been run individually earlier.)
 - **The parent page is gated.** Anything touching the parent area in a test must answer the question first. `tools/offline_smoke.mjs` has `unlockParentGate(h, label)` for this and calls it at **both** parent visits — the page is navigated to twice and the gate is per load. The pre-existing parent checks use `.click()`, which bypasses hit-testing, so they would pass even with no gate at all; `parent_smoke.js` now asserts reachable state (`offsetParent === null` **and** `elementFromPoint`).
 - **A mouse-driven harness cannot see touch bugs.** `headless.js` has no touch emulation, so any `touch-action`-class defect stays green until a real finger finds it. Assert the computed style for anything drag-related.
 

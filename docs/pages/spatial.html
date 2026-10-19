@@ -16,7 +16,7 @@
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
     html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;background:var(--cream);font-family:Fredoka,sans-serif;color:var(--plum)}
     #app{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3vmin;padding:3vmin}
-    .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;width:11vmin;height:11vmin;border-radius:50%;border:none;background:var(--plum);color:#fff;font-size:5vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);z-index:20}
+    .back-btn{position:absolute;top:2.6vmin;left:2.6vmin;z-index:20}
     #spatial-prompt{font-size:6vmin;font-weight:800;line-height:1.15;text-align:center}
 
     /* The scene is a fixed-ratio stage so a percentage position means the same
@@ -49,16 +49,18 @@
     .sp-house::after{content:"";position:absolute;left:4%;top:34%;width:92%;height:66%;background:#fff0d0;border-radius:1.4vmin;box-shadow:inset 0 0 0 .8vmin rgba(178,120,60,.25)}
 
     #spatial-choices{display:flex;gap:4vmin;justify-content:center;flex-wrap:wrap}
+    /* task 255: answer buttons take the bubble chrome (components.css);
+       neutral white body via tint, geometry + state rules stay here. */
     .spatial-choice{
       min-width:34vmin;min-height:17vmin;padding:2vmin 4vmin;
-      border:none;border-radius:5vmin;
+      border-radius:5vmin;
+      --ps-btn-tint:255, 255, 255;
       font-family:inherit;font-size:5.4vmin;font-weight:800;
-      background:#fff;color:var(--plum);
-      box-shadow:0 1vmin 0 rgba(0,0,0,.18);
+      color:var(--plum);
       cursor:pointer;touch-action:manipulation;
       transition:transform .12s ease,background .2s ease;
     }
-    .spatial-choice:active{transform:translateY(.6vmin)}
+    .spatial-choice:active{transform:translateY(3px)}
     .spatial-choice.spatial-correct{background:var(--green);color:#fff}
     .spatial-choice.spatial-wrong{animation:spatial-shake .32s ease}
     /* V6.2: hint target carries the Petrin Glow on top of its semantic sky ring. */
@@ -74,12 +76,12 @@
 </head>
 <body>
   <div id="app">
-    <button class="back-btn" id="spatial-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <button class="back-btn ps-back" id="spatial-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <div id="spatial-prompt" class="learn-instruction">Где је лопта?</div>
     <div id="spatial-scene" class="learn-stage-mat"></div>
     <div id="spatial-choices" class="learn-answers">
-      <button class="spatial-choice" id="spatial-choice-a" aria-disabled="false"></button>
-      <button class="spatial-choice" id="spatial-choice-b" aria-disabled="false"></button>
+      <button class="spatial-choice ps-btn" id="spatial-choice-a" aria-disabled="false"></button>
+      <button class="spatial-choice ps-btn" id="spatial-choice-b" aria-disabled="false"></button>
     </div>
     <div id="spatial-feedback" class="learn-feedback" aria-live="polite"></div>
   </div>

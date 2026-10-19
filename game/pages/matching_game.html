@@ -101,13 +101,6 @@
     transition: transform .18s cubic-bezier(.34,1.56,.64,1), background .3s;
   }
   .animal-card.bounce{ transform: scale(1.15) rotate(-4deg); }
-  .next-btn{
-    width:14vmin; height:14vmin; border-radius:50%; border:none;
-    background:var(--yellow); color:var(--plum); font-size:7vmin;
-    display:flex; align-items:center; justify-content:center;
-    box-shadow:0 1vmin 0 rgba(0,0,0,.15); cursor:pointer;
-  }
-  .next-btn:active{ transform:scale(.9) translateY(3px); }
 
   /* ---------- SHAPES GAME ---------- */
   #game-shapes .stage{ position:relative; width:100%; height:100%; }
@@ -165,16 +158,16 @@
      floor made the row 44px tall, the bar block outgrew candy.js's 14vmin top
      budget and the flex column squeezed the grid. Sits just right of the bar
      block (plenty of free space there at every viewport). */
+  /* task 255: hint icon joins the bubble family (ps-btn + --icon + --secondary);
+     position/size stay here, chrome comes from components.css. */
   #candyHintBtn{
     position:absolute; left:calc(100% + 2.5vmin); top:0; transform:translateY(-50%);
     width:4.4vmin; height:4.4vmin; min-width:44px; min-height:44px;
-    border-radius:50%; border:none; cursor:pointer; flex:none;
-    background:linear-gradient(135deg,#FFF3B0,#FFD23F);
+    border-radius:50%; cursor:pointer; flex:none;
     font-size:max(3.6vmin, 22px);
     display:flex; align-items:center; justify-content:center;
-    box-shadow:0 .5vmin 0 rgba(0,0,0,.18);
   }
-  #candyHintBtn:active{ transform:translateY(calc(-50% + 3px)) scale(.9); box-shadow:0 .4vmin 0 rgba(0,0,0,.18); }
+  #candyHintBtn:active{ transform:translateY(calc(-50% + 3px)) scale(.9); }
   .candy-grid .candy.hint{ animation:hintGlow .6s ease-in-out 3; z-index:12; }
   @keyframes hintGlow{
     /* V6.2: the pulse animates box-shadow, so the Petrin Glow lives in every stop. */
@@ -266,7 +259,7 @@
       <span id="candyLevelLabel" aria-live="polite">Ниво 1 · до 60</span>
       <div class="candy-level-row">
         <div class="candy-bar-track"><div class="candy-bar-fill" id="candyBarFill"><span id="candyBarTip">⭐</span></div></div>
-        <button id="candyHintBtn" aria-label="Назначи потез" title="Назначи потез"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg></button>
+        <button id="candyHintBtn" class="ps-btn ps-btn--icon ps-btn--secondary" aria-label="Назначи потез" title="Назначи потез"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg></button>
       </div>
     </div>
     <div class="candy-grid" id="candyGrid"></div>

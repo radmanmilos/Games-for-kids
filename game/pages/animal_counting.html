@@ -16,7 +16,7 @@
 :root{ --cream:#FFF8ED; --sky:#4FC3F7; --sky-deep:#2FA6DA; --yellow:#FFD23F; --green:#67C971; --pink:#FF6F91; --plum:#4A3F6B; --plum-soft:#655A8C; }
 body{font-family:Fredoka, sans-serif;background:var(--cream);margin:0;height:100vh;color:var(--plum)}
 #app{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
-.back-btn{position:absolute;top:4vmin;left:4vmin;z-index:20;width:12vmin;height:12vmin;border-radius:50%;border:none;background:var(--plum);color:white;font-size:6vmin;display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.2);}
+.back-btn{position:absolute;top:4vmin;left:4vmin;z-index:20;}
 .candy-score{position:absolute;top:2vmin;right:4vmin;z-index:30;background:var(--plum);color:#fff;font-size:4vmin;font-weight:700;padding:1.2vmin 3.4vmin;border-radius:999px;box-shadow:0 1vmin 0 rgba(0,0,0,.2)}
 </style>
 </head>
@@ -61,15 +61,16 @@ body{font-family:Fredoka, sans-serif;background:var(--cream);margin:0;height:100
 
   .count-buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(8px,2.2vmin,16px)}
   /* number choice tiles — large, comfortable, always at/above the 64px touch floor */
+  /* task 255: answer buttons take the bubble chrome (components.css); the
+     yellow hue survives as the tint, geometry + state rings stay here. */
   .count-choice{min-width:clamp(64px,15vmin,84px);min-height:clamp(64px,15vmin,84px);border-radius:16px;
-    background:var(--yellow);color:var(--plum);font-weight:800;border:3px solid rgba(74,63,107,.12);
-    box-shadow:0 1.2vmin 0 rgba(0,0,0,.06);font-size:clamp(24px,5vmin,34px)}
+    --ps-btn-tint:255, 210, 63;color:var(--plum);
+    font-weight:800;font-size:clamp(24px,5vmin,34px);cursor:pointer}
   .count-choice:active{transform:translateY(4px)}
   .count-choice.correct{transform:scale(1.06);box-shadow:0 1.6vmin 0 rgba(0,0,0,.08);border:4px solid rgba(74,63,107,.16)}
 
-  /* NEXT button style matches animals.html next-btn */
-  .next-btn{width:clamp(64px,13vmin,84px);height:clamp(64px,13vmin,84px);border-radius:50%;border:none;
-    background:var(--yellow);color:var(--plum);font-size:clamp(30px,6.4vmin,42px);display:flex;align-items:center;justify-content:center;box-shadow:0 1vmin 0 rgba(0,0,0,.15);z-index:20;}
+  /* NEXT button. task 255: chrome from components.css (primary .ps-btn--icon). */
+  .next-btn{width:clamp(64px,13vmin,84px);height:clamp(64px,13vmin,84px);font-size:clamp(30px,6.4vmin,42px);z-index:20;}
 
   .count-result{color:var(--plum);font-weight:800;font-size:clamp(16px,4.2vmin,26px);min-height:1.5em;text-align:center}
   .collected{transform:scale(1.12);transition:transform .14s ease}

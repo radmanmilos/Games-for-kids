@@ -139,17 +139,19 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         bj.canvas > 0 && bj.world === 'Ливада' && bj.round === 'Круг 1/3' && bj.flowers === '🌸 0/12', boot);
 
     // Regression guard (task 105): the back button shipped empty and the
-    // steering arrows were two different emoji glyphs.
+    // steering arrows were two different emoji glyphs. Task 255: the arrows
+    // are now CSS triangles (.ps-tri spans, platform-stable geometry) — the
+    // intent stays "not empty, not emoji text".
     const icons = await h.evalv(`JSON.stringify({
         backSvg: !!document.querySelector('#r3d-back svg'),
-        leftSvg: !!document.querySelector('#r3d-left svg'),
-        rightSvg: !!document.querySelector('#r3d-right svg'),
+        leftTri: !!document.querySelector('#r3d-left .ps-tri'),
+        rightTri: !!document.querySelector('#r3d-right .ps-tri'),
         leftText: (document.getElementById('r3d-left').textContent || '').trim(),
         rightText: (document.getElementById('r3d-right').textContent || '').trim()
     })`);
     const I = JSON.parse(icons);
-    check('back button has an arrow and both steering buttons use SVG (no emoji glyphs)',
-        I.backSvg && I.leftSvg && I.rightSvg && I.leftText === '' && I.rightText === '', icons);
+    check('back button has an arrow and both steering buttons use CSS triangles (no emoji glyphs)',
+        I.backSvg && I.leftTri && I.rightTri && I.leftText === '' && I.rightText === '', icons);
 
     const picker = await h.evalv(`JSON.stringify({
         modal: document.getElementById('r3d-start-modal').classList.contains('show'),

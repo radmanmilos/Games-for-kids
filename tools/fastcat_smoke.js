@@ -218,16 +218,20 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
     goal.won && goal.score >= 100, JSON.stringify(goal));
   const modalShown = await h.evalv(`document.getElementById('win-modal').classList.contains('show')`);
   check('goal: win modal is visible', modalShown === true);
-  // play-test 7: the replay control is a round YELLOW icon-only button.
+  // play-test 7: the replay control is a round icon-only button.
   // play-test 8: the glyph must actually RENDER — DOM presence alone lied
   // ("svg exists" was true while the child reported a blank disc): measure
   // the painted box and the colours that hit the screen.
-  const mbRound = JSON.parse(await h.evalv(`JSON.stringify((function(){ var b = document.getElementById('modal-btn'), cs = getComputedStyle(b), r = b.getBoundingClientRect(), s = b.querySelector('svg'), sr = s ? s.getBoundingClientRect() : { width: 0, height: 0 }, ss = s ? getComputedStyle(s) : {}, p = s && s.querySelector('path'); return { w: Math.round(r.width), h: Math.round(r.height), radius: cs.borderRadius, bg: cs.backgroundColor, text: b.textContent.trim(), svg: !!s, svgW: Math.round(sr.width), svgH: Math.round(sr.height), svgDisplay: ss.display, svgColor: ss.color, pathFill: p ? getComputedStyle(p).fill : null }; })())`));
-  check('replay is a round yellow icon-only button (repeat glyph, no text)',
-    mbRound.w === mbRound.h && mbRound.radius === '50%' && mbRound.bg === 'rgb(255, 210, 63)' &&
+  // task 255: the disc is now the shared translucent bubble (sky tint for the
+  // secondary replay); intent stays "round, icon-only, visible glyph".
+  const mbRound = JSON.parse(await h.evalv(`JSON.stringify((function(){ var b = document.getElementById('modal-btn'), cs = getComputedStyle(b), r = b.getBoundingClientRect(), s = b.querySelector('svg'), sr = s ? s.getBoundingClientRect() : { width: 0, height: 0 }, ss = s ? getComputedStyle(s) : {}, p = s ? s.querySelector('path') : null; return { w: Math.round(r.width), h: Math.round(r.height), radius: cs.borderRadius, bg: cs.backgroundColor, tint: cs.getPropertyValue('--ps-btn-tint').trim(), text: b.textContent.trim(), svg: !!s, svgW: Math.round(sr.width), svgH: Math.round(sr.height), svgDisplay: ss.display, svgColor: ss.color, pathFill: p ? getComputedStyle(p).fill : null }; })())`));
+  check('replay is a round sky-tinted icon-only button (repeat glyph, no text)',
+    mbRound.w === mbRound.h && mbRound.radius === '50%' &&
+    mbRound.bg !== 'none' && mbRound.bg !== '' &&
+    mbRound.tint === '79, 195, 247' &&
     mbRound.text === '' && mbRound.svg === true &&
     mbRound.svgW >= 24 && mbRound.svgH >= 24 && mbRound.svgDisplay !== 'none' &&
-    mbRound.svgColor === 'rgb(74, 63, 107)' && mbRound.pathFill === 'rgb(74, 63, 107)',
+    mbRound.svgColor === 'rgb(79, 195, 247)' && mbRound.pathFill === 'rgb(79, 195, 247)',
     JSON.stringify(mbRound));
   // play-test 7: exercise the REAL replay button (icon click → fresh run).
   const replay = JSON.parse(await h.evalv(`document.getElementById('modal-btn').click(), JSON.stringify(window.__fc.state())`));
@@ -348,13 +352,15 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   // world" and is offered on the LAST level too, where it wraps to a new tour.
   await h.evalv(`window.__fc.selectLevel(3); true`);
   const nxPre = JSON.parse(await h.evalv(`window.__fc.teleport(${spots.goal - 30}); JSON.stringify(window.__fc.step(10))`));
-  // play-test 7: assert COMPUTED visibility + rendered box + green — the old
-  // inline `style.display` check was vacuous (a CSS display:none underneath
-  // kept the button hidden while the assertion passed).
+  // play-test 7: assert COMPUTED visibility + rendered box + green tint — the
+  // old inline `style.display` check was vacuous (a CSS display:none
+  // underneath kept the button hidden while the assertion passed).
+  // task 255: the button is the shared bubble now — its body carries the
+  // green primary tint (rgba(103,201,113,.42)), not a solid fill.
   const nxShown = JSON.parse(await h.evalv(`JSON.stringify((function(){ var m = document.getElementById('win-modal'), n = document.getElementById('next-btn'), r = n.getBoundingClientRect(), cs = getComputedStyle(n); return { shown: m.classList.contains('show'), visible: cs.display !== 'none' && r.width > 0, text: n.textContent, bg: cs.backgroundColor }; })())`));
-  check('win on a mid level: СЛЕДЕЋИ СВЕТ is a CLEAR GREEN, actually-rendered button',
+  check('win on a mid level: СЛЕДЕЋИ СВЕТ is a CLEAR GREEN-TINTED, actually-rendered button',
     nxPre.won === true && nxShown.shown === true && nxShown.visible === true &&
-    nxShown.text.indexOf('СЛЕДЕЋИ СВЕТ') === 0 && nxShown.bg === 'rgb(103, 201, 113)',
+    nxShown.text.indexOf('СЛЕДЕЋИ СВЕТ') === 0 && /rgba?\(103, 201, 113/.test(nxShown.bg),
     JSON.stringify({ won: nxPre.won, ...nxShown }));
   await h.evalv(`document.getElementById('next-btn').click(); true`);
   await sleep(60);

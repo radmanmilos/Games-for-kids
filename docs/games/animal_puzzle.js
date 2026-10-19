@@ -312,11 +312,11 @@
     const screen = document.createElement('div');
     screen.id = 'game-puzzle';
     screen.className = 'screen';
-    screen.innerHTML = `<button class="back-btn" aria-label="${SERBIAN.nav.back}"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>` +
+    screen.innerHTML = `<button class="back-btn ps-back" aria-label="${SERBIAN.nav.back}"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>` +
       '<div class="score">Слагалице <span id="puzzleScore">0</span></div>' +
       '<div class="puzzle-area"><div class="puzzle-header"><h1 id="puzzleTitle">Слагалица</h1><div class="puzzle-info" id="puzzleLevel"></div>' +
-      '<button class="peek-btn" id="puzzlePeek" aria-label="Погледај слику" hidden><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button></div>' +
-      '<button class="scene-button" id="sceneButton" aria-label="Почни слагалицу"><canvas id="scenePreview" width="640" height="420"></canvas></button>' +
+      '<button class="peek-btn ps-btn ps-btn--icon ps-btn--secondary" id="puzzlePeek" aria-label="Погледај слику" hidden><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button></div>' +
+      '<button class="scene-button ps-btn" id="sceneButton" aria-label="Почни слагалицу"><canvas id="scenePreview" width="640" height="420"></canvas></button>' +
       '<div class="scene-hint" id="sceneHint">Додирни слику да направиш слагалицу</div>' +
       '<div id="puzzleStage" hidden><div id="puzzleBoard" aria-label="Место за слагалицу"></div>' +
       '<div id="puzzlePreviewOverlay" hidden><img id="puzzlePreviewImg" alt="Цела слика"></div>' +

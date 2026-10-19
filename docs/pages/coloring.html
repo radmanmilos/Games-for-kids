@@ -114,30 +114,24 @@
   /* ---------- COLORING MODE TOGGLE ---------- */
   /* V2.5: in-flow with the palette (was absolute in the top band — spec §32
      "mode is secondary"). */
+  /* task 255: bubble chrome from components.css (pill .ps-btn); state cues
+     (.free pink, .visible reveal) stay. */
   .coloring-mode-toggle{
-    border:none; border-radius:999px; cursor:pointer;
-    background:var(--plum); color:#fff;
+    border-radius:999px;
     font:600 clamp(11px,2vmin,18px)/1 'Fredoka',sans-serif;
     padding:1.4vmin 2.8vmin;
-    box-shadow:0 1vmin 0 rgba(0,0,0,.2);
     display:flex; align-items:center; gap:.8vmin;
-    transition:transform .12s ease,background .2s;
   }
-  .coloring-mode-toggle:active{ transform:scale(.94) translateY(2px); }
-  .coloring-mode-toggle.free{ background:var(--pink); }
+  .coloring-mode-toggle.free{ background:var(--pink); color:#fff; }
   /* V2.5: clear left its absolute bottom-right spot (which overlapped the
      palette — 1613 px² on phone) and joined the tools row; on narrow screens
      flex-wrap drops it to its own centred line below the palette. */
   .coloring-clear-btn{
-    border:none; border-radius:999px; cursor:pointer;
-    background:var(--sky); color:#fff;
+    border-radius:999px;
     font:600 clamp(11px,2vmin,18px)/1 'Fredoka',sans-serif;
     padding:1.4vmin 2.8vmin;
-    box-shadow:0 1vmin 0 rgba(0,0,0,.2);
     display:none; align-items:center; gap:.8vmin;
-    transition:transform .12s ease;
   }
-  .coloring-clear-btn:active{ transform:scale(.94) translateY(2px); }
   .coloring-clear-btn.visible{ display:flex; }
 
   /* ---------- ALL-11 REWARD ---------- */
@@ -198,9 +192,9 @@
         </div>
       </div>
       <div class="coloring-tools">
-        <button class="coloring-mode-toggle" id="coloringModeToggle" aria-label="Слободно бојење"><svg class="ps-icon" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5S18.33 12 17.5 12z"/></svg> Слободно</button>
+        <button class="coloring-mode-toggle ps-btn" id="coloringModeToggle" aria-label="Слободно бојење"><svg class="ps-icon" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5S18.33 12 17.5 12z"/></svg> Слободно</button>
         <div class="coloring-palette" id="coloringPalette"></div>
-        <button class="coloring-clear-btn" id="coloringClear" aria-label="Обриши"><svg class="ps-icon" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg> Обриши</button>
+        <button class="coloring-clear-btn ps-btn ps-btn--secondary" id="coloringClear" aria-label="Обриши"><svg class="ps-icon" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg> Обриши</button>
       </div>
     </div>
     <div class="coloring-reward" id="coloringReward" hidden>

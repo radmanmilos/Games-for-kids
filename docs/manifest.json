@@ -3,7 +3,7 @@
   "short_name": "Петрин свет",
   "description": "Комплетан пакет дечјих игрица за офлајн употребу — Петрин свет",
   "lang": "sr",
-  "version": "2.2.4",
+  "version": "2.3.0",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

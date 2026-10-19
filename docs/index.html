@@ -54,17 +54,24 @@
     margin: 18vh auto 0;
     padding: 2vmin 2vmin 6vmin;
   }
-  /* adaptive circular buttons */
+  /* adaptive circular buttons — task 255: bubble chrome unified (white ring,
+     gloss, solid depth shadow, translateY press). Per-game gradient HUE stays
+     (user-confirmed 2026-10-18: tiles keep their colour identity). */
   .hub-btn{
     width: clamp(72px, 22vmin, 180px);
     height: clamp(72px, 22vmin, 180px);
-    border-radius:50%; border:none;
+    border-radius:50%; border:5px solid #fff;
     display:flex; align-items:center; justify-content:center;
     font-size: clamp(28px, 9vmin, 88px); cursor:pointer;
-    box-shadow: 0 1.5vmin 0 rgba(0,0,0,.15), 0 2vmin 4vmin rgba(0,0,0,.12);
-    transition: transform .12s ease;
+    box-shadow: 0 8px 0 rgba(0,0,0,.22),
+                inset 0 -4px 0 rgba(0,0,0,.10),
+                inset 0 5px 6px rgba(255,255,255,.55);
+    transition: transform .12s ease, box-shadow .12s ease;
   }
-  .hub-btn:active{ transform: scale(.92) translateY(4px); }
+  .hub-btn:active{ transform: translateY(4px);
+    box-shadow: 0 3px 0 rgba(0,0,0,.22),
+                inset 0 -4px 0 rgba(0,0,0,.10),
+                inset 0 5px 6px rgba(255,255,255,.4); }
   .hub-btn[hidden]{ display:none; }
   .hub-btn.sky{ background: radial-gradient(circle at 35% 30%, #7FDBFF, var(--sky)); }
   .hub-btn.pink{ background: radial-gradient(circle at 35% 30%, #FF9FB6, var(--pink)); }
@@ -87,11 +94,17 @@
   }
   .hub-tile{
     width: clamp(150px, 34vmin, 320px); height: clamp(150px, 34vmin, 320px);
-    border-radius:12%; border:none; cursor:pointer; color:white;
+    border-radius:12%; border:5px solid #fff; cursor:pointer; color:white;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.5vmin;
-    box-shadow: 0 1.5vmin 0 rgba(0,0,0,.15), 0 2vmin 4vmin rgba(0,0,0,.12);
-    transition: transform .12s ease;
+    box-shadow: 0 8px 0 rgba(0,0,0,.22),
+                inset 0 -4px 0 rgba(0,0,0,.10),
+                inset 0 5px 6px rgba(255,255,255,.5);
+    transition: transform .12s ease, box-shadow .12s ease;
   }
+  .hub-tile:active{ transform: translateY(4px);
+    box-shadow: 0 3px 0 rgba(0,0,0,.22),
+                inset 0 -4px 0 rgba(0,0,0,.10),
+                inset 0 5px 6px rgba(255,255,255,.35); }
   .hub-tile .tile-emoji{ font-size: clamp(56px, 17vmin, 160px); line-height:1; }
   .hub-tile .tile-emojis{
     display:grid; grid-template-columns:1fr 1fr; gap:.4em;
@@ -142,15 +155,10 @@
   }
 
   /* ---------- BACK BUTTON (shared) ---------- */
+  /* task 255: chrome from components.css (.ps-back bubble); position only. */
   .back-btn{
     position:absolute; top:4vmin; left:4vmin; z-index:20;
-    width:12vmin; height:12vmin; border-radius:50%; border:none;
-    background:var(--plum); color:white; font-size:6vmin;
-    display:flex; align-items:center; justify-content:center;
-    box-shadow:0 1vmin 0 rgba(0,0,0,.2);
-    cursor:pointer;
   }
-  .back-btn:active{ transform:scale(.9) translateY(3px); }
 
   /* ---------- ANIMALS GAME ---------- */
   #game-animals .card-wrap{
@@ -278,7 +286,7 @@
 
   <!-- HUB GAMES -->
   <div class="screen" id="hub-games">
-    <button class="back-btn" data-go="hub" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <button class="back-btn ps-back" data-go="hub" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <h2 class="hub-sub-title">🎮 ИГРЕ</h2>
     <div class="hub-grid">
       <button class="hub-btn kitty" data-go="game-explorer" aria-label="Мала истраживачица"><img src="assets/images/explorer_kitty/01_idle_right.png" alt="Мала истраживачица"></button>
@@ -297,7 +305,7 @@
 
   <!-- HUB LEARNING -->
   <div class="screen" id="hub-learning">
-    <button class="back-btn" data-go="hub" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <button class="back-btn ps-back" data-go="hub" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <h2 class="hub-sub-title">🧠 УЧЕЊЕ</h2>
     <div class="hub-grid">
       <button class="hub-btn green" data-go="game-classroom" aria-label="Учионица">🏫</button>

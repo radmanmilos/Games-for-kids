@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "7059e2c6aa9850ef952aae046d17af39e0923de9",
+  "commitSha": "94b15a7104bfebfd0fdcb7c405e55f7a3a9e2588",
   "browser": {
     "product": "Chrome/136.0.7103.113",
     "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/136.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-18T14:34:31.896Z",
+  "generatedAt": "2026-10-19T05:42:21.902Z",
   "pageSet": [
-    "fastcat"
+    "animals"
   ],
   "viewports": {
     "phone-portrait": {
@@ -18,62 +18,19 @@
       "height": 844,
       "deviceScaleFactor": 1,
       "mobile": true
-    },
-    "phone-landscape": {
-      "width": 844,
-      "height": 390,
-      "deviceScaleFactor": 1,
-      "mobile": true
-    },
-    "tablet-portrait": {
-      "width": 820,
-      "height": 1180,
-      "deviceScaleFactor": 1,
-      "mobile": true
-    },
-    "tablet-landscape": {
-      "width": 1180,
-      "height": 820,
-      "deviceScaleFactor": 1,
-      "mobile": true
     }
   },
   "screenshots": [
     {
-      "file": "fastcat_phone-portrait.png",
-      "page": "fastcat",
+      "file": "animals__phone-portrait__PLAY.png",
+      "page": "animals",
       "size": "phone-portrait",
-      "state": null,
+      "state": [
+        "PLAY"
+      ],
       "width": 390,
       "height": 844,
-      "bytes": 30216
-    },
-    {
-      "file": "fastcat_phone-landscape.png",
-      "page": "fastcat",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 29288
-    },
-    {
-      "file": "fastcat_tablet-portrait.png",
-      "page": "fastcat",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 70264
-    },
-    {
-      "file": "fastcat_tablet-landscape.png",
-      "page": "fastcat",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 69493
+      "bytes": 21995
     }
   ]
 }

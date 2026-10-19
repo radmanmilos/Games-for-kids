@@ -123,30 +123,25 @@
   .animal-controls{
     display:flex; align-items:center; justify-content:center; gap:var(--animal-gap);
   }
+  /* task 255: bubble chrome from components.css (.ps-btn--icon); this block
+     keeps SIZING only (14vmin round, shared by speak + next). */
   .animal-ctrl{
-    width:14vmin; height:14vmin; border-radius:50%; border:none;
+    width:14vmin; height:14vmin;
     display:flex; align-items:center; justify-content:center;
-    font-size:7vmin; cursor:pointer;
-    box-shadow:0 1vmin 0 rgba(0,0,0,.15);
-    transition: transform .12s ease;
+    font-size:7vmin;
   }
-  .animal-ctrl:active{ transform:scale(.9) translateY(3px); }
-  .next-btn{ background:var(--yellow); color:var(--plum); }
-  .speak-btn{ background:var(--sky); color:#fff; }
 
   /* ---------- RECOGNITION MODE ---------- */
+  /* task 255: bubble chrome from components.css (pill .ps-btn). The active
+     state keeps its green cue. */
   .recog-toggle{
     position:absolute; top:4vmin; right:4vmin; z-index:20;
-    border:none; border-radius:999px; cursor:pointer;
-    background:var(--plum); color:#fff;
+    border-radius:999px;
     font:600 clamp(12px,2.2vmin,20px)/1 'Fredoka',sans-serif;
     padding:1.6vmin 3.2vmin;
-    box-shadow:0 1vmin 0 rgba(0,0,0,.2);
     display:flex; align-items:center; gap:1vmin;
-    transition: transform .12s ease, background .2s;
   }
-  .recog-toggle:active{ transform:scale(.94) translateY(2px); }
-  .recog-toggle.active{ background:var(--green); }
+  .recog-toggle.active{ background:var(--green); color:#fff; }
   #recogWrap{
     display:none; flex-direction:column; align-items:center; gap:var(--animal-gap);
     width:100%; padding:0 4vmin;
@@ -284,12 +279,12 @@
   <!-- ANIMALS GAME -->
   <div class="screen" id="game-animals">
     <button class="back-btn ps-back" id="animals-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
-    <button class="recog-toggle" id="recogToggle" aria-label="Пронађи животињу"><svg class="ps-icon" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg> Пронађи</button>
+    <button class="recog-toggle ps-btn" id="recogToggle" aria-label="Пронађи животињу"><svg class="ps-icon" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg> Пронађи</button>
     <div id="flashcardWrap">
       <div class="animal-card" id="animalCard"><span class="animal-emoji" id="animalEmoji">🐶</span><span class="animal-name" id="animalName"></span></div>
       <div class="animal-controls">
-        <button class="animal-ctrl speak-btn" id="animalSpeak" aria-label="Изговори име"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button>
-        <button class="animal-ctrl next-btn" id="animalNext" aria-label="Следеће"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
+        <button class="animal-ctrl speak-btn ps-btn ps-btn--icon ps-btn--secondary" id="animalSpeak" aria-label="Изговори име"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button>
+        <button class="animal-ctrl next-btn ps-btn ps-btn--icon" id="animalNext" aria-label="Следеће"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
       </div>
     </div>
     <div id="recogWrap"></div>

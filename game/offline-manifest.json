@@ -732,16 +732,16 @@
     "size": 58157
   },
   "games/animal_counting.js": {
-    "sha256": "1ddf2ed67d37f32d491ab09aee204ad75feec37940c8715885c0699ab6e37acc",
-    "size": 10347
+    "sha256": "c0df2975400dbcc763196d0ec49fb496949968b44633bec18669678671ef8988",
+    "size": 10382
   },
   "games/animal_memory.js": {
     "sha256": "5f75a666f150b893bd3caf9d2ce658e5b8cad5f1741194d1fb27c5fd4762f8f0",
     "size": 6708
   },
   "games/animal_puzzle.js": {
-    "sha256": "abaef89afe3e681b8e4e621fad1d2d97272c34e1b0c5a3e5d6468d749e7039f6",
-    "size": 32201
+    "sha256": "ab9286417add0c9e5bb66137b39093f665d0fdc3886240da45fe38fdaa980162",
+    "size": 32254
   },
   "games/animals.js": {
     "sha256": "c821fc7e615b17a77ab5c935c7b3f6dbc860ba5c8e4840ce5feb010f80512e15",
@@ -792,8 +792,8 @@
     "size": 40414
   },
   "games/phonics.js": {
-    "sha256": "a0447dcefb9a0512d701bd589f7ee73cb623768d9d57609dbd7f8534e9be045d",
-    "size": 8691
+    "sha256": "8b7b45afab9097e2f2cf5a641f1258df6e070c0f2d81d245d389b0282d8f0d4a",
+    "size": 8698
   },
   "games/piano.js": {
     "sha256": "0129fc81dbb18dcdcb095437df52e41ed116647cb9c89772abebb1eba1ec3bdf",
@@ -832,128 +832,128 @@
     "size": 43992
   },
   "games/spatial.js": {
-    "sha256": "1ec5fb44057cc5ea1af03bc6521227d960ac73683b6396aa32872eab763b5332",
-    "size": 9875
+    "sha256": "ad6b48158ea8d43ba0318f79e98aeab95d0ccc60a1efceeb18481047ee864955",
+    "size": 9882
   },
   "games/tracing.js": {
     "sha256": "8e620d25eccb03e99bc0897eb0e85c9496820036c19b27503089c794252ffc7c",
     "size": 17036
   },
   "index.html": {
-    "sha256": "0b15e7ab4c838013b3ca85aecefed85a010b1ddd85c033817e35fe2bb442e112",
-    "size": 16989
+    "sha256": "1c0bdfb57a22015887c0d31062f78a8ddea6bf26df9237ff8e0d207a89ffda41",
+    "size": 17500
   },
   "manifest.json": {
-    "sha256": "8cc16a34837441527c4690697fd03b36c3f82ca04db73adc4836d132cc02fb1d",
+    "sha256": "f49e3ece96d98357a2ed908baeee7e663a6e50e503125c88599fdeebeae9a5de",
     "size": 577
   },
   "pages/animal_counting.html": {
-    "sha256": "d733246ecaa1045e89e7b7e0c7e43cdae2388f72874c8c94d99c147c1fdda92e",
-    "size": 7192
+    "sha256": "48feae9b6ae9c81bdd3c8338c0d392a637e23973d741481df0a3e284e345265c",
+    "size": 6941
   },
   "pages/animal_memory.html": {
-    "sha256": "c1abd2b0f524432ba2f1411c99b0c3e349f33f27aa263435292f23d170786d3a",
-    "size": 9261
+    "sha256": "37052b1edf07ac835184c7c048aa0cf4a66b3d2e0a56687b12fc5bb420180550",
+    "size": 9120
   },
   "pages/animal_puzzle.html": {
-    "sha256": "e8743b457d2e445f0f8a0bdd51638c836ad1668c034c080543eb52fada6c00d3",
-    "size": 5126
+    "sha256": "1b6cd805a4b5a3da06bf1dd061b5545a53afab0cf2ad4bc4fbe6dfbb275e057a",
+    "size": 4961
   },
   "pages/animals.html": {
-    "sha256": "1b3999a405cff5630540e8ede3744de1013749438a2cd80e96f1cc2b7c1bf385",
-    "size": 14794
+    "sha256": "5345f57807d9c33cd3c864b605430a9faae62afd368a181a4f3e95d925720811",
+    "size": 14598
   },
   "pages/classroom.html": {
-    "sha256": "796327f90de467de384e8198b7a82bd1aaad223aa3eab1fc44c3a5b0a0dc0a56",
-    "size": 19457
+    "sha256": "6294e5a23fec2f35fed465287fbe184c58df504c0cd9a5c1020af52036daf91f",
+    "size": 19455
   },
   "pages/coloring.html": {
-    "sha256": "15b536eaef80c9e17039f231e91afbf5e8a0e6206808b0c41e3c20179cdc4b9b",
-    "size": 11149
+    "sha256": "3a0bba4eb7593a981f04b7714b76e3cddfe94df98d8fcda3c081ae7289813f91",
+    "size": 10865
   },
   "pages/compare.html": {
-    "sha256": "eea20c608957771b71ea2aec7fbf2276983f7fc392a5a41f971eacd8358d6797",
-    "size": 5048
+    "sha256": "8a57b31406eaaa8c50b0be3dcd78609e565f9fe005a7ba90a880346a42ccafb1",
+    "size": 4948
   },
   "pages/dino.html": {
-    "sha256": "63e1833c8a6684ac20942da7ab69a76b19547af6597ea4f163d1483e410b3e97",
-    "size": 4448
+    "sha256": "90065c611adf5823492c5127a19b8e37b17f27f1611dab833fbfb24b9fb28a7b",
+    "size": 4954
   },
   "pages/driving.html": {
-    "sha256": "ad84eb465aed7aa9510409db2cb294c3e4c66b6ef00cfce1b2b90174c3306aca",
-    "size": 4416
+    "sha256": "f9b4e3249aaf5e818270abd85a5c8ea41fa623de5722dc13afa39e53b92fdf52",
+    "size": 4785
   },
   "pages/explorer.html": {
-    "sha256": "a297cf7467b08e0e56a98531b91685421554d1db245ada6d80fbafaa6adbad76",
-    "size": 10040
+    "sha256": "a26a739f43b998eadee596ae0f784a774c73ebf4fd35540e4c263e4d60b2437a",
+    "size": 10827
   },
   "pages/fastcat.html": {
-    "sha256": "c9eea586762f59696e6548fb0a643b26af05b09bcac5912f13084c87de0fd5c6",
-    "size": 13663
+    "sha256": "d34c8068636c6027e5c0b79dfbda000570da360c8964185110f710bb2eff0d7f",
+    "size": 13984
   },
   "pages/matching_game.html": {
-    "sha256": "2ce0485ec2721151745a43f42b2ebc2215cd61b412dba3c77fa31dad66e1f9af",
-    "size": 14703
+    "sha256": "5e60419383a889dfbe5ea4f6dbdc1abb2e4e259fc45e286892f37235ecac75c6",
+    "size": 14420
   },
   "pages/maze.html": {
-    "sha256": "f9b580327ebb4b78cba039a63a5d310a77f49d2674008b18557c43068e50a63b",
-    "size": 6570
+    "sha256": "0bc8256748eadd4cfc8e74f64ddad1dae05ae85dfee53abae131512e16f81104",
+    "size": 6300
   },
   "pages/ocean.html": {
-    "sha256": "c7aec3c37a3218dd2c62c3a2fd5ad0007f8555e9bed09f36c4dc46ac27e09a39",
-    "size": 4642
+    "sha256": "48f3efff768d1989a4c54b701f9b406b8cc3812e4ea3f83d2a9ccd856ef40d4f",
+    "size": 5282
   },
   "pages/parent.html": {
     "sha256": "a8bd0cfa8b4c1e46cb393379b14014afff3ccd3e25e81ce05f5dd4c7ea2f832c",
     "size": 30191
   },
   "pages/phonics.html": {
-    "sha256": "c64ae3f569adafe11dad4a7459b444819b20aaeb7a0901c6865a4b5bbff7b750",
-    "size": 7673
+    "sha256": "2befca019fa9da8436eae8c370d757e607e1487ae0d90155acee1b92ae022f2a",
+    "size": 7444
   },
   "pages/piano.html": {
-    "sha256": "2fefe4fa7fd27903148291410cd151476752657629dcad15a7da527c2d072781",
-    "size": 12529
+    "sha256": "49625cf42bee439970a12b7543ce59115bb1b60e4d3688e762af83d410c31180",
+    "size": 12456
   },
   "pages/racing3d.html": {
-    "sha256": "0b6bece2349ace70df301492e4e075a6ef542f6b599cc7f179aa5ea233bb3f69",
-    "size": 17881
+    "sha256": "464ceeb8d9d613446ebdbdfbc334194319d9df17bab3da7bb306b5e5db9bc950",
+    "size": 16317
   },
   "pages/rhythm.html": {
-    "sha256": "c30b4d946ac1f02a64d6d5aa79a557812b8be9ad0c5030fc99bfe83ebdbeb336",
-    "size": 8766
+    "sha256": "782ed836a7290dd55a302aab3bb994ea73d2b46b2f9484d4675525b17136e502",
+    "size": 8495
   },
   "pages/sequencing.html": {
-    "sha256": "35e3e110fd200af9537308c194b3a4719499912cf8246d9967543b06c87f7906",
-    "size": 6404
+    "sha256": "126d2c02370d1ebc0208447f0e7c1168179917e078bff9ecf30fa576671f997f",
+    "size": 6214
   },
   "pages/shapes.html": {
-    "sha256": "42f2d8ee96bf31cc3ff3f33845dc738609eb780482fcf6903a15f248eceed084",
-    "size": 12312
+    "sha256": "fa14276d4e8c8ca7eb426417f306c2417f48e11ff94b4d90d2b80ecc5c404584",
+    "size": 12048
   },
   "pages/sorting.html": {
-    "sha256": "c7b728fee3a91f7a6205bb8c2317815bd37a6d0a8c5081dae6ee23e551f2ad4d",
-    "size": 6796
+    "sha256": "225945716800c34b2fc8703cf1b2d92a306f44e6a56a34c110df95eb56a3672c",
+    "size": 6606
   },
   "pages/space.html": {
-    "sha256": "aa5d14bf54760fba9146ebb7172c0dec731d3431c25d2251d72d9b16599c7c85",
-    "size": 4644
+    "sha256": "649eb8708bf75662d5e2cb559bd097390345280cab07a3fd3b52569d4ca3e818",
+    "size": 5284
   },
   "pages/spatial.html": {
-    "sha256": "173eb065c7878acb08a0a898c155bcd84a37b1acae72c978cc6869d00c304cfb",
-    "size": 6970
+    "sha256": "c545125b8ba703708c466aa17531b58ff7a8b19661f1adcbeb97d5e008f392e4",
+    "size": 6900
   },
   "pages/tracing.html": {
-    "sha256": "e5cb5c336601ed3ffbbdea93530d0bbf72b33674e3b46a4075a8200d042a73b2",
-    "size": 11366
+    "sha256": "609591cfcdab763ccaf0a9e6e442967cdf4b6074cead09d353ed5927002fe85f",
+    "size": 11059
   },
   "shared/accessibility.css": {
     "sha256": "0f4003e8e36802f811ab60049f0c6aef483795a723424f16fef649a5c34183ca",
     "size": 3580
   },
   "shared/adventure.css": {
-    "sha256": "51c2c38bfd8e3b4bf9fa651ebcbaa9dbc01d58c92b71eb9132198bffe4f60e3a",
-    "size": 13046
+    "sha256": "666134dfe3950fae2a1916f5a7f3202025ebea426b8910df7cf746fe505e7d8d",
+    "size": 11403
   },
   "shared/audio-buses.js": {
     "sha256": "4eac8f8e712df655871b5a64193cb38fa2b84d30dc3bf90e93f4a9910a8db900",
@@ -1000,8 +1000,8 @@
     "size": 2292
   },
   "styles/components.css": {
-    "sha256": "f4758e364efc06034478277138028d6a0e71a1f14f39657a34a33773b68eba23",
-    "size": 7835
+    "sha256": "36ff96dad2bddcd2365591736b221b3278b462dc20dd6706bffe3b1294b53299",
+    "size": 10057
   },
   "styles/design-tokens.css": {
     "sha256": "d0fa344bb121beba42fd538500f826dcdd93621c659a3e58abf15737f5096fe9",

@@ -21,10 +21,19 @@
    layout stay with the page (override via the --ps-* variables when needed). */
 
 /* ------------------------------------------------------------------ buttons */
+/* Task 255 — the "bubble button": the ONE button of the whole app. A
+   translucent tinted bubble (white ring, top gloss, solid depth shadow = the
+   3D feel games already had) with a solid tinted triangle glyph showing the
+   action's direction. Primary actions are green (--green), secondary actions
+   (slide, back, close) take a soft sky tint via .ps-btn--secondary. The body
+   is deliberately transparent so the game world shows through; the depth
+   shadow + white ring keep it readable on busy backgrounds. Chrome only —
+   position and layout stay with the page (fastcat's corner placement is the
+   canonical control layout). */
 .ps-btn {
-  --ps-btn-bg: var(--sky);
-  --ps-btn-fg: var(--plum);
-  --ps-btn-lift: 0 1vmin 0 rgba(0, 0, 0, .18);
+  --ps-btn-tint: 103, 201, 113;           /* rgb(--green) — primary */
+  --ps-btn-depth: rgba(0, 0, 0, .28);
+  --ps-btn-press: 4px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -32,74 +41,120 @@
   min-width: var(--touch-comfort, 56px);
   min-height: var(--touch-comfort, 56px);
   padding: var(--space-2, 10px) var(--space-4, 18px);
-  border: 0;
+  border: 4px solid #fff;
   border-radius: var(--radius-pill, 999px);
-  background: var(--ps-btn-bg);
-  color: var(--ps-btn-fg);
+  background:
+    linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, .18)),
+    rgba(var(--ps-btn-tint), .42);
+  color: rgb(var(--ps-btn-tint));
   font: inherit;
   font-weight: 700;
   line-height: 1;
   cursor: pointer;
-  box-shadow: var(--ps-btn-lift);
-  transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease;
+  box-shadow:
+    0 6px 0 var(--ps-btn-depth),
+    inset 0 -4px 0 rgba(0, 0, 0, .10),
+    inset 0 5px 6px rgba(255, 255, 255, .65);
+  transition: transform .12s ease, box-shadow .12s ease;
   touch-action: manipulation;
   -webkit-user-select: none;
   user-select: none;
 }
-.ps-btn:hover { filter: brightness(1.03); }
-.ps-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0, 0, 0, .18); }
+.ps-btn:hover { filter: brightness(1.04); }
+.ps-btn:active {
+  transform: translateY(var(--ps-btn-press));
+  box-shadow:
+    0 2px 0 var(--ps-btn-depth),
+    inset 0 -4px 0 rgba(0, 0, 0, .10),
+    inset 0 5px 6px rgba(255, 255, 255, .45);
+}
 .ps-btn:disabled,
-.ps-btn[aria-disabled="true"] { opacity: .5; cursor: default; transform: none; box-shadow: 0 1vmin 0 rgba(0, 0, 0, .10); }
+.ps-btn[aria-disabled="true"] { opacity: .5; cursor: default; transform: none; }
 .ps-btn.is-selected,
 .ps-btn[aria-pressed="true"],
-.ps-btn[aria-selected="true"] { box-shadow: var(--ps-glow); }
-.ps-btn.is-correct { --ps-btn-bg: var(--green); --ps-btn-fg: #fff; }
+.ps-btn[aria-selected="true"] { box-shadow: var(--ps-glow), 0 6px 0 var(--ps-btn-depth); }
+.ps-btn.is-correct { --ps-btn-tint: 103, 201, 113; }
 .ps-btn.is-hint,
-.ps-btn.ps-hint { box-shadow: var(--ps-glow); }
+.ps-btn.ps-hint { box-shadow: var(--ps-glow), 0 6px 0 var(--ps-btn-depth); }
 
-.ps-btn--secondary {
-  --ps-btn-bg: #fff;
-  --ps-btn-fg: var(--plum);
-  --ps-btn-lift: 0 1vmin 0 rgba(0, 0, 0, .10);
+.ps-btn--secondary { --ps-btn-tint: 79, 195, 247; }  /* rgb(--sky) */
+
+/* Big round thumb control — fastcat's exact geometry (min(110px,17vmin),
+   6px ring) so every control set shares one size everywhere. The a11y touch
+   floors in accessibility.css still apply (never set min-width:0 here). */
+.ps-btn--control {
+  width: min(110px, 17vmin);
+  height: min(110px, 17vmin);
+  padding: 0;
+  border-width: 6px;
+  border-radius: 50%;
+  font-size: min(40px, 7vmin);
+  --ps-btn-press: 4px;
 }
 
 .ps-btn--icon {
-  --ps-btn-bg: var(--plum);
-  --ps-btn-fg: #fff;
   min-width: var(--touch-min, 48px);
   min-height: var(--touch-min, 48px);
   padding: 0;
   border-radius: 50%;
 }
 
+/* Direction triangle: a solid tinted triangle in the bubble's own colour
+   (currentColor). Rotation classes cover all four directions; the base
+   triangle points up. Sized in em so the button's font-size scales it. */
+.ps-tri {
+  width: .58em;
+  height: .58em;
+  flex: none;
+  background: currentColor;
+  clip-path: polygon(50% 8%, 100% 100%, 0 100%);
+  transform: rotate(var(--ps-tri-rot, 0deg));
+}
+.ps-tri--right { --ps-tri-rot: 90deg; }
+.ps-tri--down { --ps-tri-rot: 180deg; }
+.ps-tri--left { --ps-tri-rot: -90deg; }
+
 /* Misc/V6.2: a selected icon control also carries the glow, like the glow rule in
    accessibility.css, but scoped to this component so it can be adopted per page. */
 
 /* -------------------------------------------------------------- back control */
-/* Spec 44.1: canonical arrow, large hit area, stable in every orientation, never
-   moved by title length, with pressed feedback. Size is a token so the 11vmin /
-   10vmin variants this repo already ships can adopt it without a visual change. */
+/* Task 255: the back control joins the bubble family — same translucent
+   body, white ring, 3D depth shadow; sky tint marks it a SECONDARY action.
+   Arrow stays the Material SVG each page already ships (currentColor).
+   Size unified at 12vmin (the most common variant; min 44px on small
+   screens). Pages own position only. */
 .ps-back {
-  --ps-back-size: 12vmin;
-  --ps-back-bg: var(--plum);
-  --ps-back-fg: #fff;
+  --ps-back-size: max(12vmin, 44px);
+  --ps-btn-tint: 79, 195, 247;
   width: var(--ps-back-size);
   height: var(--ps-back-size);
-  border: 0;
+  padding: 0;
+  border: 4px solid #fff;
   border-radius: 50%;
-  background: var(--ps-back-bg);
-  color: var(--ps-back-fg);
+  background:
+    linear-gradient(rgba(255, 255, 255, .5), rgba(255, 255, 255, .18)),
+    rgba(var(--ps-btn-tint), .42);
+  color: rgb(var(--ps-btn-tint));
   font-size: calc(var(--ps-back-size) * .5);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1vmin 0 rgba(0, 0, 0, .2);
+  box-shadow:
+    0 4px 0 rgba(0, 0, 0, .28),
+    inset 0 -3px 0 rgba(0, 0, 0, .10),
+    inset 0 4px 5px rgba(255, 255, 255, .65);
   cursor: pointer;
   touch-action: manipulation;
   -webkit-user-select: none;
   user-select: none;
 }
-.ps-back:active { transform: scale(.9) translateY(3px); }
+.ps-back:active {
+  transform: translateY(3px);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, .28),
+    inset 0 -3px 0 rgba(0, 0, 0, .10),
+    inset 0 4px 5px rgba(255, 255, 255, .45);
+}
 
 /* ------------------------------------------------------------- icon family */
 /* V22 (spec 40) — the shell uses ONE icon family: the Material 24x24 *filled*

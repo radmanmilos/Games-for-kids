@@ -4,7 +4,7 @@
     let screen = document.getElementById('game-counting');
     if(!screen){
       screen = document.createElement('div'); screen.id='game-counting'; screen.className='screen';
-      screen.innerHTML = `<button class="back-btn" aria-label="${SERBIAN.nav.back}"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+      screen.innerHTML = `<button class="back-btn ps-back" aria-label="${SERBIAN.nav.back}"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
         <div class="count-stage-wrap learn-stage">
           <div class="count-head">
             <h2 class="count-title learn-instruction">Изброј животиње</h2>
@@ -14,7 +14,7 @@
           <div id="countScene" class="count-scene learn-stage-mat"></div>
           <div id="countResult" class="count-result learn-feedback"></div>
           <div id="countButtons" class="count-buttons learn-answers"></div>
-          <button id="countNext" class="next-btn" style="display:none"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
+          <button id="countNext" class="next-btn ps-btn ps-btn--icon" style="display:none"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg></button>
         </div>`;
       app.appendChild(screen);
     }
@@ -87,7 +87,7 @@
 
       function showChoices() {
         const choices = Array.from({length:10}).map((_,i)=>i+1).slice(0, Math.max(4, Math.min(10,max)));
-        buttons.innerHTML = choices.map(c=>`<button class="count-choice" data-val="${c}">${c}</button>`).join('');
+        buttons.innerHTML = choices.map(c=>`<button class="count-choice ps-btn" data-val="${c}">${c}</button>`).join('');
         buttons.querySelectorAll('button').forEach(b=>{
           b.disabled = false;
           b.style.visibility = 'visible';

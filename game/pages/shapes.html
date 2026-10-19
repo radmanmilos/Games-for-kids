@@ -101,13 +101,6 @@
     transition: transform .18s cubic-bezier(.34,1.56,.64,1), background .3s;
   }
   .animal-card.bounce{ transform: scale(1.15) rotate(-4deg); }
-  .next-btn{
-    width:14vmin; height:14vmin; border-radius:50%; border:none;
-    background:var(--yellow); color:var(--plum); font-size:7vmin;
-    display:flex; align-items:center; justify-content:center;
-    box-shadow:0 1vmin 0 rgba(0,0,0,.15); cursor:pointer;
-  }
-  .next-btn:active{ transform:scale(.9) translateY(3px); }
 
   /* ---------- SHAPES GAME ---------- */
   #game-shapes .stage{ position:relative; width:100%; height:100%; }
@@ -149,8 +142,10 @@
     50%{ box-shadow:var(--ps-glow), 0 0 2vmin 1vmin rgba(255,210,63,.8); }
   }
   #shapesTier{ position:absolute; top:4vmin; right:4vmin; display:flex; gap:1vmin; z-index:20; }
-  #shapesTier button{ width:8vmin; height:8vmin; border-radius:50%; border:0; font-size:3.5vmin; font-weight:700; cursor:pointer; background:rgba(255,255,255,.7); color:var(--plum); box-shadow:0 .5vmin 0 rgba(0,0,0,.15); }
-  #shapesTier button.active{ background:var(--yellow); }
+  /* task 255: bubble chrome from components.css; .active keeps the yellow cue
+     as the tint (translucent body preserved). */
+  #shapesTier button{ font-size:3.5vmin; font-weight:700; }
+  #shapesTier button.active{ --ps-btn-tint:255, 210, 63; color:var(--plum); }
   .shape-fill.circle{ border-radius:50%; }
   .shape-fill.square{ border-radius:14%; }
   .shape-fill.triangle{
@@ -225,9 +220,9 @@
   <div class="screen" id="game-shapes">
     <button class="back-btn ps-back" id="shapes-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <div id="shapesTier">
-      <button data-tier="1" class="active" aria-label="Тир 1 — 2 облика">1</button>
-      <button data-tier="2" aria-label="Тир 2 — 3 облика">2</button>
-      <button data-tier="3" aria-label="Тир 3 — 4 облика">3</button>
+      <button data-tier="1" class="ps-btn ps-btn--icon active" aria-label="Тир 1 — 2 облика">1</button>
+      <button data-tier="2" class="ps-btn ps-btn--icon" aria-label="Тир 2 — 3 облика">2</button>
+      <button data-tier="3" class="ps-btn ps-btn--icon" aria-label="Тир 3 — 4 облика">3</button>
     </div>
     <div class="stage" id="shapesStage">
       <div class="mat" aria-hidden="true"></div>

@@ -30,7 +30,7 @@
        `.ps-header` row (V2.10), so the title can never run under the back button. */
     .memory-header{ flex:0 0 auto; box-sizing:border-box; padding: calc(var(--ps-safe-top) + 1rem) 1rem 0; gap:2vmin; }
     .memory-header .ps-title{ flex:1 1 auto; min-width:0; margin:0; text-align:center; }
-    .back-btn{ flex:0 0 auto; width:clamp(44px,11vmin,64px); height:clamp(44px,11vmin,64px); border:0; border-radius:50%; background:var(--plum); color:#fff; font-size:clamp(20px,5vmin,30px); display:flex; align-items:center; justify-content:center; }
+    .back-btn{ flex:0 0 auto; }
     #memoryStatus{ flex:0 0 auto; text-align:center; font-size:clamp(14px,2.6vmin,22px); font-weight:600; color:var(--plum-soft); margin:.25rem 0 .5rem; display:none; }
 
     /* Board area: takes the remaining height and centres a grid of near-square
@@ -79,12 +79,16 @@
        can never fall below the fold in short landscape (spec §30/§42.3). */
     #controls{ flex:0 0 auto; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:clamp(8px,2vmin,18px); padding:clamp(6px,1.2vmin,12px) 1rem calc(var(--ps-safe-bottom) + clamp(8px,1.6vmin,16px)); }
     .diff-group{ display:flex; gap:clamp(6px,1.6vmin,12px); }
-    .next-btn{ width:clamp(44px,10vmin,60px); height:clamp(44px,10vmin,60px); border-radius:50%; border:none; background:var(--yellow); color:var(--plum); font-size:clamp(22px,5vmin,30px); display:flex; align-items:center; justify-content:center; box-shadow:0 .5vmin 0 rgba(0,0,0,.15); cursor:pointer; }
-    .next-btn:active{ transform:scale(.9) translateY(2px); }
-    .diff-btn{ padding:.55em 1.1em; border-radius:999px; border:0; font-weight:700; font-size:clamp(14px,3.4vmin,20px); cursor:pointer; color:#302741; background:#E7E0F5; box-shadow:0 .5vmin 0 rgba(0,0,0,.12); }
-    .diff-btn[data-diff="easy"]{ background:var(--green); }
-    .diff-btn[data-diff="medium"]{ background:var(--yellow); color:var(--plum); }
-    .diff-btn[data-diff="standard"]{ background:#FF6F91; }
+    /* task 255: chrome from components.css (.ps-btn--icon + --secondary —
+       restart is not the primary action); sizing only. */
+    .next-btn{ width:clamp(44px,10vmin,60px); height:clamp(44px,10vmin,60px); font-size:clamp(22px,5vmin,30px); }
+    /* task 255: difficulty chips take the pill body; aria-pressed=true gets
+       the component's glow (selected state). Sizing only here. */
+    /* task 255: difficulty chips keep their hue as the bubble tint. */
+    .diff-btn{ padding:.55em 1.1em; border-radius:999px; font-weight:700; font-size:clamp(14px,3.4vmin,20px); color:#302741; }
+    .diff-btn[data-diff="easy"]{ --ps-btn-tint:103, 201, 113; }
+    .diff-btn[data-diff="medium"]{ --ps-btn-tint:255, 210, 63; }
+    .diff-btn[data-diff="standard"]{ --ps-btn-tint:255, 111, 145; }
     .diff-btn[aria-pressed="true"]{ outline:4px solid var(--plum); outline-offset:2px; }
     .diff-btn:active{ transform:translateY(3px); }
 
@@ -99,17 +103,17 @@
 </head>
 <body>
   <header class="ps-header memory-header">
-    <button class="back-btn" aria-label="Назад на игре"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
+    <button class="back-btn ps-back" aria-label="Назад на игре"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <h1 class="ps-title">Памтилица животиња</h1>
   </header>
   <div id="memoryStatus" aria-live="polite"></div>
   <div id="board-wrap"><div id="board" aria-live="polite"></div></div>
   <div id="controls">
-    <button id="restart" class="next-btn" aria-label="Почни поново" title="Почни поново"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-8 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
+    <button id="restart" class="next-btn ps-btn ps-btn--icon ps-btn--secondary" aria-label="Почни поново" title="Почни поново"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-8 8s3.58 8 8 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg></button>
     <div class="diff-group" role="group" aria-label="Тежина">
-      <button class="diff-btn" data-diff="easy" aria-pressed="true">Лако</button>
-      <button class="diff-btn" data-diff="medium" aria-pressed="false">Средње</button>
-      <button class="diff-btn" data-diff="standard" aria-pressed="false">Тешко</button>
+      <button class="diff-btn ps-btn" data-diff="easy" aria-pressed="true">Лако</button>
+      <button class="diff-btn ps-btn" data-diff="medium" aria-pressed="false">Средње</button>
+      <button class="diff-btn ps-btn" data-diff="standard" aria-pressed="false">Тешко</button>
     </div>
   </div>
 

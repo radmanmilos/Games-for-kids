@@ -10,7 +10,7 @@
 
 | Need | Go to |
 | --- | --- |
-| Rules for every AI tool (OpenCode, Kilo, Codex, Copilot, Claude) | [`AGENTS.md`](AGENTS.md) |
+| Rules for every AI tool (OpenCode, Codex, Copilot, Claude) | [`AGENTS.md`](AGENTS.md) |
 | Current state and candidate next work | [`project/STATUS.md`](project/STATUS.md) |
 | Open tasks / task history | [`project/tasks/ACTIVE.md`](project/tasks/ACTIVE.md), [`project/tasks/INDEX.md`](project/tasks/INDEX.md) (full text: `archive/tasks/`) |
 | Process and definition of done | [`project/PROCESS.md`](project/PROCESS.md), [`CONTRIBUTING.md`](CONTRIBUTING.md) |
@@ -19,7 +19,7 @@
 | One doc per game | [`project/games/`](project/games/) |
 | Offline, playtesting, asset budget, setup | [`project/reference/`](project/reference/) |
 | Roadmap | [`ROADMAP.md`](ROADMAP.md) |
-| Which AI reads what (OpenCode, Kilo, Codex, Copilot, Claude) | [`project/reference/ai-tools.md`](project/reference/ai-tools.md) |
+| Which AI reads what (OpenCode, Codex, Copilot, Claude) | [`project/reference/ai-tools.md`](project/reference/ai-tools.md) |
 | Finished work (plans, reviews, handover logs, tasks) | `archive/` (excluded from AI search by `.ignore`) |
 | The app / its published copy | `game/` / `docs/` (byte-exact mirror, never edit by hand) |
 | Dev tooling | `tools/` (index: [`tools/README.md`](tools/README.md)) |

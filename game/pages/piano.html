@@ -75,18 +75,18 @@
     margin-top:0;
   }
   #pianoModes{ display:flex; align-items:center; gap:2.5vmin; }
+  /* task 255: bubble chrome from components.css (pill .ps-btn). The .on state
+     keeps the plum fill + glow (active cue, not static style). */
   .mode-btn{
-    padding:2.2vmin 4.2vmin; border-radius:50vmin; border:.4vmin solid var(--plum-soft); cursor:pointer;
+    border-radius:50vmin;
     font-family:inherit; font-weight:700; font-size:3.6vmin;
-    color:var(--plum-soft); background:#fff; box-shadow:0 .8vmin 0 rgba(0,0,0,.12);
   }
-  .mode-btn.on{ background:var(--plum); border-color:var(--plum); color:#fff; box-shadow:var(--ps-glow), 0 .8vmin 0 rgba(0,0,0,.25); }
-  .mode-btn:active{ transform:scale(.92) translateY(3px); }
+  .mode-btn.on{ background:var(--plum); border-color:var(--plum); color:#fff; box-shadow:var(--ps-glow), 0 4px 0 rgba(0,0,0,.28); }
   /* Free play is the loud, obvious choice; "Прати светло" stays the quiet one
-     (roadmap acceptance criterion: free play more prominent than challenge mode). */
-  #modeFree{ padding:3.4vmin 7vmin; font-size:5.4vmin; box-shadow:0 1.4vmin 0 rgba(0,0,0,.25); }
+     (roadmap acceptance criterion: free play more prominent than challenge mode). task 255: shadow from the component. */
+  #modeFree{ padding:3.4vmin 7vmin; font-size:5.4vmin; }
   /* V6.2: the #modeFree id outranks .mode-btn.on, so the active glow must be merged here. */
-  #modeFree.on{ box-shadow:var(--ps-glow), 0 1.4vmin 0 rgba(0,0,0,.25); }
+  #modeFree.on{ box-shadow:var(--ps-glow), 0 6px 0 rgba(0,0,0,.28); }
   #modeSong{ padding:1.8vmin 3.4vmin; font-size:3.2vmin; }
 
   #songInfo{ display:none; flex-direction:column; align-items:center; gap:1.8vmin; }
@@ -207,8 +207,8 @@
 
     <div id="pianoControls">
       <div id="pianoModes">
-        <button id="modeFree" class="mode-btn on" aria-label="Свирај слободно — слободна свирка">Свирај слободно</button>
-        <button id="modeSong" class="mode-btn" aria-label="Прати светло — свирај песму тако што пратиш светло">Прати светло</button>
+        <button id="modeFree" class="mode-btn ps-btn on" aria-label="Свирај слободно — слободна свирка">Свирај слободно</button>
+        <button id="modeSong" class="mode-btn ps-btn" aria-label="Прати светло — свирај песму тако што пратиш светло">Прати светло</button>
       </div>
       <div id="songInfo">
         <div id="songChips"></div>
