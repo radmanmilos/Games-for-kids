@@ -103,3 +103,13 @@ Add one row per asset. Keep this table synchronized with the inventory.
 - [ ] Compare both images directly with the canonical bear/star references and existing animal candidates.
 - [ ] Decide whether either candidate is ready for promotion; neither is marked production-ready or integrated into runtime.
 - Note: GitHub's file fetch returned empty Base64 content for lion and frog despite returning blob SHAs. Existence is verified; image bytes and technical properties were not verified by that fetch.
+
+## Animal asset update — 2026-10-19
+
+- [x] Verified that `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pig.png` exists on `main`; GitHub blob SHA: `ef3e52435f005acd57f06d4ff9eabed4690e3b50`.
+- [x] Updated the `animal-pig` inventory row with the confirmed WIP path and status **GENERATED / CANDIDATE — TECHNICAL QA PENDING**.
+- [x] Inspected the actual repository image. PNG IHDR reports 1448 × 1086 pixels, 8-bit RGBA (color type 6). The illustration is readable and broadly matches the soft, warm storybook direction.
+- [ ] Verify actual alpha values/background transparency, file size, edge quality, and visible colored fringes around the silhouette; RGBA support alone does not prove transparent background pixels.
+- [ ] Compare pig directly against the canonical bear/star references and related animal candidates at full size and representative game sizes.
+- [ ] Confirm whether the same pig image reads correctly in both counting and candy-game contexts; no runtime integration or game tests were performed as part of this update.
+- Status remains a WIP candidate: not marked user-approved, production-ready, or runtime-integrated by this documentation update.
