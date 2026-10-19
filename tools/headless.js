@@ -490,7 +490,7 @@ async function start({
         /* The target is only usable once its session answers the enable commands.
            These used to sit AFTER the boot loop, so a Chrome whose browser process
            responded to Target.* but whose renderer never enabled Page/Runtime/
-           Network threw a bare 30 s CDP timeout straight out of start() with zero
+           Network/Log threw a bare 30 s CDP timeout straight out of start() with zero
            checks — and every run_all.js retry re-created Chrome and re-hit the same
            wall (the parent_smoke CI leg of 2026-10-07: "CDP Page.enable (id 3)
            got no response"). A renderer that never enables is a failed boot by the
@@ -500,6 +500,7 @@ async function start({
         await c.send('Page.enable');
         await c.send('Runtime.enable');
         await c.send('Network.enable');
+        await c.send('Log.enable');
         session = { dbg, sessionId, c, version };
       } catch (e) {
         lastBootError = String((e && e.message) || e);
@@ -547,6 +548,21 @@ async function start({
     const source = stackTrace?.callFrames?.[0]?.url || '';
     addRuntimeError(serviceWorkerWarning ? 'service-worker' : 'console.error',
       detail || 'console.error called', source);
+  });
+  /* Rendering/parser problems never reach the Runtime domain: Chrome reports them
+     through Log.entryAdded (task 259: a malformed SVG path in fastcat.html threw
+     "Error: <path> attribute d: Expected number" — WebKit refused the path too —
+     and every smoke and the screenshot tool stayed green, because they only saw
+     Runtime.consoleAPICalled. Only the weekly Extended matrix, which uses
+     Playwright's page.on('console') — that collects Log.entryAdded as well — ever
+     caught it). Level 'error' only. Source 'network' is skipped on purpose:
+     request failures already come through Network.responseReceived/loadingFailed
+     above (addResourceError), which applies the local-origin and favicon filters;
+     double-reporting the same 404 here would just duplicate the message. */
+  c.on('Log.entryAdded', ({ entry = {} }) => {
+    if (entry.level !== 'error' || entry.source === 'network') return;
+    addRuntimeError('log.' + (entry.source || 'other'),
+      entry.text || '(no text)', entry.url || '');
   });
   c.on('Network.requestWillBeSent', ({ requestId, request, type }) => {
     requestUrls.set(requestId, { url: request.url, type });

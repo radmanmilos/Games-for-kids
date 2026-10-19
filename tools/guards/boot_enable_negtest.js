@@ -17,7 +17,7 @@
  *   2. The detection comes from the scenario's own output, not a non-zero exit.
  *
  * Usage:  node tools/guards/boot_enable_negtest.js
- * Exit 0 = the three enables are inside the boot retry loop and the mutation
+ * Exit 0 = the session enables are inside the boot retry loop and the mutation
  * round-trip works; exit 1 = the invariant is broken or the restore failed. */
 const fs = require('fs');
 const path = require('path');
@@ -41,7 +41,7 @@ const inline = text.split('\n');
 const loopIdx = inline.findIndex(l => l.includes(LOOP_OPEN));
 const throwIdx = inline.findIndex((l, i) => i > loopIdx && l.includes(SESSION_THROW));
 const between = loopIdx >= 0 && throwIdx > loopIdx ? inline.slice(loopIdx, throwIdx).join('\n') : '';
-const ENABLES = ['Page.enable', 'Runtime.enable', 'Network.enable'];
+const ENABLES = ['Page.enable', 'Runtime.enable', 'Network.enable', 'Log.enable'];
 const SESSION_ASSIGN = 'session = { dbg, sessionId, c, version };';
 
 let failures = 0;
@@ -51,7 +51,7 @@ function report(name, ok, info) {
 }
 
 report('boot loop is present in headless.js', loopIdx !== -1);
-report('all three session enables sit inside the boot loop (before the !session throw)',
+report('all session enables sit inside the boot loop (before the !session throw)',
   loopIdx >= 0 && throwIdx > loopIdx && ENABLES.every(e => between.includes(`send('${e}')`)),
   ENABLES.map(e => `send('${e}')=${between.includes(`send('${e}')`)}`).join(' '));
 report('the session object carries the derived c handle (enables ran before assignment)',
@@ -66,6 +66,7 @@ try {
     "        await c.send('Page.enable');",
     "        await c.send('Runtime.enable');",
     "        await c.send('Network.enable');",
+    "        await c.send('Log.enable');",
     "        session = { dbg, sessionId, c, version };",
   ].join('\n');
   if (!text.includes(IN_LOOP)) throw new Error('expected in-loop enable block not found - test is stale');

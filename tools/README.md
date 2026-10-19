@@ -14,6 +14,20 @@ awaited command whose rejection escaped as an exception through a `.mjs` tool's
 top-level await (task 204's second path). See `guards/cdp_fail_negtest.js` for the
 real disconnect regression test.
 
+`headless.js` also collects browser-side failures and asserts them at `close()`
+(the `no browser runtime errors` check, which every smoke and the screenshot
+tool inherits): `Runtime.exceptionThrown`, `Runtime.consoleAPICalled` at level
+`error` (kind `console.error`), `Network.*` request failures (kind `resource`,
+after the local-origin/favicon filters), the unhandled-rejection binding, and —
+since task 260 — `Log.entryAdded` at level `error` (kind `log.<source>`, e.g.
+`log.rendering`). The Log domain is the one that carries **rendering/parser**
+errors, such as an SVG `<path>` whose `d` fails to parse; the Runtime domain
+never reports those, so a malformed icon could ship unseen (task 259's fastcat
+bug stayed invisible for weeks because only the weekly Extended matrix, which
+uses Playwright's `page.on('console')`, collected them). `source === 'network'`
+Log entries are skipped deliberately: request failures already arrive through
+`addResourceError`, and re-reporting them here would only duplicate messages.
+
 **Chrome boot crashes are routine on GitHub runners, and `run_all.js` is the retry
 that absorbs them (task 181).** In run #40, 13 of 27 matrix legs hit
 `Chrome did not start (debug port N) after 4 attempts ... no assertions ran` with
