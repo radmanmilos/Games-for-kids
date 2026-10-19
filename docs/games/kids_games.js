@@ -128,15 +128,17 @@
     if (window.popSound) window.popSound();
     start(kind);
   });
-  Q('kidsExit').addEventListener('click', () => {
+  /* One back control (task 256): leaving the quiz goes through the classroom,
+     which owns the single header back button. */
+  function leaveQuiz() {
     if (window.popSound) window.popSound();
-    const b = Q('kidsBack');
-    if (b) b.click();
-  });
+    if (window.classroomLeaveKids) window.classroomLeaveKids();
+  }
+  Q('kidsExit').addEventListener('click', leaveQuiz);
 
   window.kidsGame = {
     start,
-    exit: () => { const b = Q('kidsBack'); if (b) b.click(); },
+    exit: leaveQuiz,
     isBusy: () => busy,
   };
 }());

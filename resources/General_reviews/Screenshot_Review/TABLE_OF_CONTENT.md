@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-19T05:42:21.902Z
+- Генерисано / Generated: 2026-10-19T07:41:07.253Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -24,18 +24,18 @@
 | `animals_phone-portrait.png` | Животиње | `/pages/animals.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
 | `animals_tablet-landscape.png` | Животиње | `/pages/animals.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
 | `animals_tablet-portrait.png` | Животиње | `/pages/animals.html` | 820×1180 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `classroom_phone-landscape.png` | Учионица | `/pages/classroom.html` | 844×390 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `classroom_phone-portrait.png` | Учионица | `/pages/classroom.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `classroom_tablet-landscape.png` | Учионица | `/pages/classroom.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `classroom_tablet-portrait.png` | Учионица | `/pages/classroom.html` | 820×1180 | портрет | — | 19.10.2026. 07:11:08 | 255 |
+| `classroom_phone-landscape.png` | Учионица | `/pages/classroom.html` | 844×390 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
+| `classroom_phone-portrait.png` | Учионица | `/pages/classroom.html` | 390×844 | портрет | — | 19.10.2026. 09:41:07 | 256 |
+| `classroom_tablet-landscape.png` | Учионица | `/pages/classroom.html` | 1180×820 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
+| `classroom_tablet-portrait.png` | Учионица | `/pages/classroom.html` | 820×1180 | портрет | — | 19.10.2026. 09:41:07 | 256 |
 | `coloring_phone-landscape.png` | Бојење | `/pages/coloring.html` | 844×390 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
 | `coloring_phone-portrait.png` | Бојење | `/pages/coloring.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
 | `coloring_tablet-landscape.png` | Бојење | `/pages/coloring.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
 | `coloring_tablet-portrait.png` | Бојење | `/pages/coloring.html` | 820×1180 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `compare_phone-landscape.png` | Више или мање | `/pages/compare.html` | 844×390 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `compare_phone-portrait.png` | Више или мање | `/pages/compare.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `compare_tablet-landscape.png` | Више или мање | `/pages/compare.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `compare_tablet-portrait.png` | Више или мање | `/pages/compare.html` | 820×1180 | портрет | — | 19.10.2026. 07:11:08 | 255 |
+| `compare_phone-landscape.png` | Више или мање | `/pages/compare.html` | 844×390 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
+| `compare_phone-portrait.png` | Више или мање | `/pages/compare.html` | 390×844 | портрет | — | 19.10.2026. 09:41:07 | 256 |
+| `compare_tablet-landscape.png` | Више или мање | `/pages/compare.html` | 1180×820 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
+| `compare_tablet-portrait.png` | Више или мање | `/pages/compare.html` | 820×1180 | портрет | — | 19.10.2026. 09:41:07 | 256 |
 | `dino_phone-landscape.png` | Дино | `/pages/dino.html` | 844×390 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
 | `dino_phone-portrait.png` | Дино | `/pages/dino.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
 | `dino_tablet-landscape.png` | Дино | `/pages/dino.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
@@ -72,34 +72,34 @@
 | `parent_phone-portrait.png` | За родитеље | `/pages/parent.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
 | `parent_tablet-landscape.png` | За родитеље | `/pages/parent.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
 | `parent_tablet-portrait.png` | За родитеље | `/pages/parent.html` | 820×1180 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `phonics_phone-landscape.png` | Слова и звуци | `/pages/phonics.html` | 844×390 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `phonics_phone-portrait.png` | Слова и звуци | `/pages/phonics.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `phonics_tablet-landscape.png` | Слова и звуци | `/pages/phonics.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `phonics_tablet-portrait.png` | Слова и звуци | `/pages/phonics.html` | 820×1180 | портрет | — | 19.10.2026. 07:11:08 | 255 |
+| `phonics_phone-landscape.png` | Слова и звуци | `/pages/phonics.html` | 844×390 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
+| `phonics_phone-portrait.png` | Слова и звуци | `/pages/phonics.html` | 390×844 | портрет | — | 19.10.2026. 09:41:07 | 256 |
+| `phonics_tablet-landscape.png` | Слова и звуци | `/pages/phonics.html` | 1180×820 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
+| `phonics_tablet-portrait.png` | Слова и звуци | `/pages/phonics.html` | 820×1180 | портрет | — | 19.10.2026. 09:41:07 | 256 |
 | `piano_phone-landscape.png` | Клавир | `/pages/piano.html` | 844×390 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
 | `piano_phone-portrait.png` | Клавир | `/pages/piano.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
 | `piano_tablet-landscape.png` | Клавир | `/pages/piano.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
 | `piano_tablet-portrait.png` | Клавир | `/pages/piano.html` | 820×1180 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `racing3d_phone-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 844×390 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `racing3d_phone-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `racing3d_tablet-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `racing3d_tablet-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 820×1180 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `rhythm_phone-landscape.png` | Ритам | `/pages/rhythm.html` | 844×390 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `rhythm_phone-portrait.png` | Ритам | `/pages/rhythm.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `rhythm_tablet-landscape.png` | Ритам | `/pages/rhythm.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `rhythm_tablet-portrait.png` | Ритам | `/pages/rhythm.html` | 820×1180 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `sequencing_phone-landscape.png` | Редослед | `/pages/sequencing.html` | 844×390 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `sequencing_phone-portrait.png` | Редослед | `/pages/sequencing.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `sequencing_tablet-landscape.png` | Редослед | `/pages/sequencing.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `sequencing_tablet-portrait.png` | Редослед | `/pages/sequencing.html` | 820×1180 | портрет | — | 19.10.2026. 07:11:08 | 255 |
+| `racing3d_phone-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 844×390 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
+| `racing3d_phone-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 390×844 | портрет | — | 19.10.2026. 09:41:07 | 256 |
+| `racing3d_tablet-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 1180×820 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
+| `racing3d_tablet-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 820×1180 | портрет | — | 19.10.2026. 09:41:07 | 256 |
+| `rhythm_phone-landscape.png` | Ритам | `/pages/rhythm.html` | 844×390 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
+| `rhythm_phone-portrait.png` | Ритам | `/pages/rhythm.html` | 390×844 | портрет | — | 19.10.2026. 09:41:07 | 256 |
+| `rhythm_tablet-landscape.png` | Ритам | `/pages/rhythm.html` | 1180×820 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
+| `rhythm_tablet-portrait.png` | Ритам | `/pages/rhythm.html` | 820×1180 | портрет | — | 19.10.2026. 09:41:07 | 256 |
+| `sequencing_phone-landscape.png` | Редослед | `/pages/sequencing.html` | 844×390 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
+| `sequencing_phone-portrait.png` | Редослед | `/pages/sequencing.html` | 390×844 | портрет | — | 19.10.2026. 09:41:07 | 256 |
+| `sequencing_tablet-landscape.png` | Редослед | `/pages/sequencing.html` | 1180×820 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
+| `sequencing_tablet-portrait.png` | Редослед | `/pages/sequencing.html` | 820×1180 | портрет | — | 19.10.2026. 09:41:07 | 256 |
 | `shapes_phone-landscape.png` | Облици | `/pages/shapes.html` | 844×390 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
 | `shapes_phone-portrait.png` | Облици | `/pages/shapes.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
 | `shapes_tablet-landscape.png` | Облици | `/pages/shapes.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
 | `shapes_tablet-portrait.png` | Облици | `/pages/shapes.html` | 820×1180 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `sorting_phone-landscape.png` | Разврставање | `/pages/sorting.html` | 844×390 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `sorting_phone-portrait.png` | Разврставање | `/pages/sorting.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `sorting_tablet-landscape.png` | Разврставање | `/pages/sorting.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `sorting_tablet-portrait.png` | Разврставање | `/pages/sorting.html` | 820×1180 | портрет | — | 19.10.2026. 07:11:08 | 255 |
+| `sorting_phone-landscape.png` | Разврставање | `/pages/sorting.html` | 844×390 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
+| `sorting_phone-portrait.png` | Разврставање | `/pages/sorting.html` | 390×844 | портрет | — | 19.10.2026. 09:41:07 | 256 |
+| `sorting_tablet-landscape.png` | Разврставање | `/pages/sorting.html` | 1180×820 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
+| `sorting_tablet-portrait.png` | Разврставање | `/pages/sorting.html` | 820×1180 | портрет | — | 19.10.2026. 09:41:07 | 256 |
 | `space_phone-landscape.png` | Свемир | `/pages/space.html` | 844×390 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
 | `space_phone-portrait.png` | Свемир | `/pages/space.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
 | `space_tablet-landscape.png` | Свемир | `/pages/space.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |

@@ -85,10 +85,22 @@
         #r3d-zone-left { left: 0; justify-content: flex-start; padding-left: 4vmin; }
         #r3d-zone-right { right: 0; justify-content: flex-end; padding-right: 4vmin; }
         /* task 255: bubble chrome from components.css (.ps-btn--control);
-           the zones keep layout/padding only. Steering = secondary tint. */
+           the zones keep layout/padding only. Steering = secondary tint.
+           task 256: the steering controls are the biggest targets in the game,
+           so they are 1.5x the shared control size and sit one whole control
+           width closer to the middle — the child grips inboard, not on the
+           bezel. (task 249 pushed them out to the edges; this brings each one
+           back in by exactly its own width, not to the centre.) */
         .r3d-zone .r3d-btn {
+            --r3d-steer: min(165px, 25.5vmin);   /* 1.5 x min(110px, 17vmin) */
+            width: var(--r3d-steer);
+            height: var(--r3d-steer);
+            font-size: min(60px, 10.5vmin);      /* the triangle glyph scales too */
+            flex: 0 0 auto;                      /* never shrink to fit the half */
             display: flex; align-items: center; justify-content: center;
         }
+        #r3d-zone-left .r3d-btn { margin-left: var(--r3d-steer); }
+        #r3d-zone-right .r3d-btn { margin-right: var(--r3d-steer); }
         /* --- Screen-reader live region --- */
         .sr-only {
             position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;

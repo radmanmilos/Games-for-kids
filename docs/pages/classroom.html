@@ -118,15 +118,6 @@
     padding:16vmin 4vmin 3vmin;
   }
   #classroomActivity[hidden]{ display:none; }
-  #classroomBack{
-    position:absolute; top:4vmin; left:19vmin; z-index:20;
-    height:12vmin; min-width:12vmin; padding:0 3vmin;
-    border-radius:50vmin; border:none;
-    background:var(--plum-soft); color:#fff; font-size:4vmin; font-weight:600;
-    display:flex; align-items:center; justify-content:center;
-    box-shadow:0 1vmin 0 rgba(0,0,0,.2); cursor:pointer;
-  }
-  #classroomBack:active{ transform:scale(.92) translateY(3px); }
   #activityTitle{
     position:absolute; top:4.5vmin; left:50%; transform:translateX(-50%);
     margin:0; font-size:5.5vmin; color:var(--plum-soft);
@@ -216,7 +207,6 @@
     padding:16vmin 4vmin 3vmin;
   }
   #kidsGame[hidden]{ display:none; }
-  #kidsBack{ top:4vmin; left:4vmin; background:var(--plum-soft); }
   #kidsTitle{
     position:absolute; top:4.5vmin; left:50%; transform:translateX(-50%);
     margin:0; font-size:5.5vmin; color:var(--plum-soft);
@@ -315,7 +305,6 @@
     </div>
 
     <div id="classroomActivity" hidden>
-      <button id="classroomBack" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
       <h2 id="activityTitle"></h2>
       <div class="class-tabs" id="classTabs">
         <button class="class-tab" data-tab="alphabet"><span class="tab-emoji">🔤</span>Азбука</button>
@@ -333,7 +322,6 @@
     </div>
 
     <div id="kidsGame" hidden>
-      <button id="kidsBack" class="back-btn ps-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
       <h2 id="kidsTitle"></h2>
       <button id="kidsPrompt" aria-label="Понови звук">
         <div class="kids-question">?</div>

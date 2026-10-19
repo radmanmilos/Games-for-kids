@@ -1,6 +1,6 @@
 # Short-landscape audit — 844×390 (spec §11)
 
-Generated: 2026-10-12 00:14 UTC · task 217 (V3.1) · `node tools/short_landscape_audit.js`
+Generated: 2026-10-19 07:33 UTC · task 217 (V3.1) · `node tools/short_landscape_audit.js`
 
 Every surface (hub + 24 registry apps) measured at **844×390** against the
 Master Visual/UX plan §11 checklist: header budget 56–72 px, board-first,
@@ -27,8 +27,8 @@ adjudication. The tool exits 1 while any FAIL remains.**
 | `sequencing` | Постави у редослед! | 66 | OK | 0 | 0 |
 | `rhythm` | Слушај, па понови | 66 | OK | 0 | 0 |
 | `spatial` | Где је лопта? | 66 | OK | 0 | 0 |
-| `maze` | Пронађи пут до куће | 90 | WARN | 0 | 1 |
-| `coloring` | Жаба | 72 | OK | 0 | 0 |
+| `maze` | Пронађи пут до куће | 89 | WARN | 0 | 1 |
+| `coloring` | Слон | 72 | OK | 0 | 0 |
 | `tracing` | Писање | 72 | OK | 0 | 0 |
 | `piano` | Клавир | 72 | OK | 0 | 0 |
 | `shapes` | (none) | 72 | WARN | 0 | 1 |
@@ -39,9 +39,10 @@ adjudication. The tool exits 1 while any FAIL remains.**
 | `space` | Свемир | 83 | WARN | 0 | 1 |
 | `racing3d` | 🏎️ Мала тркачица 3Д | 32 | OK | 0 | 0 |
 | `explorer` | Свет | 64 | OK | 0 | 0 |
+| `fastcat` | (none) | 64 | WARN | 0 | 1 |
 | `parent` | 🔒 За родитеље | 72 | WARN | 0 | 1 |
 
-**Summary:** 25 surfaces · 12 OK · 13 WARN · 0 FAIL · 0 error · 0 individual failures.
+**Summary:** 26 surfaces · 12 OK · 14 WARN · 0 FAIL · 0 error · 0 individual failures.
 
 ## Warnings — adjudicate
 
@@ -67,7 +68,7 @@ adjudication. The tool exits 1 while any FAIL remains.**
 
 ### `maze`
 
-- WARN: header budget: top chrome reaches 90px (spec §11.1: 56–72px)
+- WARN: header budget: top chrome reaches 89px (spec §11.1: 56–72px)
 
 ### `shapes`
 
@@ -92,6 +93,10 @@ adjudication. The tool exits 1 while any FAIL remains.**
 ### `space`
 
 - WARN: header budget: top chrome reaches 83px (spec §11.1: 56–72px)
+
+### `fastcat`
+
+- WARN: no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate
 
 ### `parent`
 
@@ -121,5 +126,5 @@ adjudication. The tool exits 1 while any FAIL remains.**
 - `ocean`: modal: none open in the default state
 - `dino`: modal: none open in the default state
 - `space`: modal: none open in the default state
-- `racing3d`: modal: none open in the default state
+- `racing3d`: modal: none open in the default state · WebGL/feature unavailable on this host — the fallback screen is what was audited
 - `parent`: modal: none open in the default state

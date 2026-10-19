@@ -147,9 +147,16 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
   check('classroom routes taps and labels through shared audio buses',
     classroomAudio[0] === 'play:tap' && classroomAudio.some(event => event.startsWith('speak:')), classroomAudio.join('|'));
 
-  // Back to hub
-  await h.evalv(CLICK('#classroomBack'));
+  // Back to hub — one tap from an activity goes one screen up (task 256)
+  await h.evalv(CLICK('#classroom-back'));
   await sleep(100);
+  const afterBack = JSON.parse(await h.evalv(`JSON.stringify({
+    activityHidden: document.getElementById('classroomActivity').hidden,
+    hubVisible: !document.getElementById('classroomHub').hidden,
+    onPage: location.pathname.endsWith('/classroom.html')
+  })`));
+  check('activity back goes one screen up to the classroom hub (not out of the room)',
+    afterBack.activityHidden && afterBack.hubVisible && afterBack.onPage, JSON.stringify(afterBack));
 
   // --- Kids tier quiz games ---
   for (const [kind, title] of [['alphabet', 'Азбука за децу'], ['numbers', 'Бројеви за децу'], ['colors', 'Боје за децу'], ['shapes', 'Облици за децу']]) {
@@ -167,7 +174,7 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
     const j = JSON.parse(r);
     check(kind + ': game screen shows title + 4 options + 1 answer', j.visible && j.title === title && j.progress === '1 од 8' && j.opts === 4 && j.answer === 1, r);
     if (kind === 'numbers') check('numbers: prompt shows countable emoji row', j.countRow === true, r);
-    await h.evalv(CLICK('#kidsBack'));
+    await h.evalv(CLICK('#classroom-back'));
     await sleep(100);
   }
 
@@ -250,7 +257,7 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
 
   // (b) kids numbers: a worst-case emoji count row must not clip the prompt.
   await h2.evalv(`window._origNums = window.classroomData.numbers; window.classroomData.numbers = window._origNums.filter(n => n.count >= 10); true`);
-  await h2.evalv(CLICK('#classroomBack'));
+  await h2.evalv(CLICK('#classroom-back'));
   await sleep(100);
   await h2.evalv(CLICK('#classroomHub .kids-btn[data-kids="numbers"]'));
   await sleep(300);

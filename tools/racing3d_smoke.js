@@ -222,11 +222,14 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     check('short landscape (844x390): world + music buttons are the topmost element (not covered by a steering zone)',
         R.world === 'r3d-world-btn' && R.music === 'r3d-music-btn', reach);
 
-    // task 249: the minimap was centred at the top and covered the road right where
-    // the kart drives; it now lives in the top-left column under the score pills. The
-    // steering buttons were centred in each half (barely a quarter-width from the
-    // edge), which read as "too close to the kart"; they are pushed to the edges.
-    // Assert the geometry — a click-driven smoke passes with any of this still wrong.
+    // task 249 moved the minimap out of the road view, and pushed the steering
+    // buttons to the edges (they had been centred in each half, barely a
+    // quarter-width from the edge, which read as "too close to the kart").
+    // task 256 reverses the position half of that on user feedback: the controls
+    // are 1.5x the shared size and sit one whole control width in from the edge
+    // (the child grips inboard), but they must still never cross into the other
+    // half or reach the kart. Assert the geometry — a click-driven smoke passes
+    // with any of this still wrong.
     const hud = JSON.parse(await h.evalv(`JSON.stringify((() => {
         const r = id => { const b = document.getElementById(id).getBoundingClientRect();
             return { left: b.left, right: b.right, top: b.top, bottom: b.bottom,
@@ -237,10 +240,15 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     check('short landscape: minimap sits in the top-left (clear of the road view)',
         hud.map.right < hud.w * 0.33 && hud.map.top > 0 && hud.map.top < 160,
         JSON.stringify(hud.map) + ' w=' + hud.w);
-    check('short landscape: steering buttons are pushed to the screen edges (off the kart)',
-        hud.left.cx < hud.w * 0.2 && hud.right.cx > hud.w * 0.8 &&
-        hud.left.left >= 0 && hud.right.right <= hud.w && hud.left.cy > hud.map.bottom,
-        JSON.stringify({ left: hud.left, right: hud.right, mapBottom: hud.map.bottom }));
+    const ctrl = Math.min(110, 0.17 * Math.min(hud.w, hud.h));   // shared .ps-btn--control
+    const wL = hud.left.right - hud.left.left, wR = hud.right.right - hud.right.left;
+    check('short landscape: steering controls are 1.5x the shared control, one control width in from the edge (off the kart, not crossing the middle)',
+        Math.abs(wL - ctrl * 1.5) < 1 && Math.abs(wR - ctrl * 1.5) < 1 &&
+        hud.left.left >= wL && hud.w - hud.right.right >= wR &&
+        hud.left.left >= 0 && hud.right.right <= hud.w &&
+        hud.left.right < hud.w / 2 && hud.right.left > hud.w / 2 &&
+        hud.left.cy > hud.map.bottom,
+        JSON.stringify({ left: hud.left, right: hud.right, wL, wR, ctrl: ctrl * 1.5, mapBottom: hud.map.bottom }));
 
     // task 247: on a phone in landscape (short viewport) a fixed-distance chase cam
     // made the kart read as "too far away", so the rig now pulls in with the short

@@ -195,6 +195,12 @@
     $('classroomAutoplay').hidden = true;
   }
 
+  /* One back tap = one screen up, always with the same feedback. */
+  function backOneScreen(go) {
+    if (window.popSound) window.popSound();
+    go();
+  }
+
   function setAutoplayBtn(running) {
     const btn = $('classroomAutoplay');
     btn.classList.toggle('running', running);
@@ -247,14 +253,18 @@
         enterKidsGame(btn.dataset.kids);
       });
     });
-    $('classroomBack').addEventListener('click', () => {
-      if (window.popSound) window.popSound();
-      leaveActivity();
-    });
-    $('kidsBack').addEventListener('click', () => {
-      if (window.popSound) window.popSound();
-      leaveKidsGame();
-    });
+    /* One back control that goes exactly ONE screen up (task 256). The header
+       button is the only back control in the classroom: main.js's registry
+       binding exits to the app hub, so this capture-phase listener takes the
+       click first while an inner screen is open (capture runs before main.js's
+       target-phase listener, whatever the registration order), and lets it
+       through untouched when the classroom is already on its own hub. */
+    document.addEventListener('click', (e) => {
+      const el = e.target;
+      if (!el || !el.closest || !el.closest('#classroom-back')) return;
+      if (!$('kidsGame').hidden) { e.stopPropagation(); backOneScreen(leaveKidsGame); }
+      else if (!$('classroomActivity').hidden) { e.stopPropagation(); backOneScreen(leaveActivity); }
+    }, true);
     $('classroomAutoplay').addEventListener('click', () => {
       if (window.popSound) window.popSound();
       if (autoplayActive) stopAutoplay();
@@ -270,4 +280,7 @@
 
   window.classroomData = { alphabet: ALPHABET, numbers: NUMBERS, shapes: SHAPES, colors: COLORS, time: TIME, seasons: SEASONS };
   window.startClassroom = startClassroom;
+  /* The kids quiz lives in kids_games.js and used to leave by clicking its own
+     #kidsBack button; there is one back control now, so it calls this instead. */
+  window.classroomLeaveKids = leaveKidsGame;
 }());

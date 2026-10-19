@@ -195,7 +195,7 @@ const APPS = [
     },
   },
   {
-    id: 'classroom', back: '#classroom-back',
+    id: 'classroom', back: '#classroom-back', backTaps: 2,
     ready: `!!document.querySelector('#classroomHub .activity-btn')`,
     start: async h => {
       const t = await h.tap('#classroomHub .activity-btn[data-activity="alphabet"]');
@@ -733,8 +733,16 @@ await h.c.send('Network.enable');
     })()`);
     check(`P5 ${a.id} audio failure does not crash the game`, audio === 'no-throw', String(audio));
 
-    // Phase 6: a child must be able to leave the game and get back to the hub
-    const back = await h.tap(a.back);
+    // Phase 6: a child must be able to leave the game and get back to the hub.
+    // A game whose back control goes ONE screen up per tap (classroom has an
+    // inner hub) declares `backTaps`, so the same button is tapped that many
+    // times before the hub is expected. The last tap must still land on index.
+    const taps = a.backTaps || 1;
+    let back = await h.tap(a.back);
+    for (let i = 1; i < taps && back.ok; i++) {
+      await h.sleep(200);
+      back = await h.tap(a.back);
+    }
     if (!back.ok) { check(`P6 ${a.id} back button returns to the hub`, false, back.why); results.push([a.id, 'BACK FAILED', back.why]); continue; }
     const home = await h.waitFor(`location.pathname.endsWith('/index.html')`,
     { timeout: 10000, label: a.id + ' to land on the hub' });
