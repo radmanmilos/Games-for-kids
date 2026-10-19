@@ -201,6 +201,111 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   check('the engine never reads the wall clock (AC4: no Date.now/new Date)',
     dateHits.length === 0, dateHits.join(', ') || 'none');
 
+  /* ---- CF-05: treat selection and placement (TP §3.4) -------------------- */
+  const clickSel = async sel => h.evalv(
+    `(() => { const el = document.querySelector(${JSON.stringify(sel)}); if (!el) return false; el.click(); return true; })()`);
+  const snap = async () => h.evalv(`window.__catForest.state()`);
+
+  const treatIds = await h.evalv(`[...document.querySelectorAll('#cf-tray .cf-treat')].map(b => b.getAttribute('data-treat'))`);
+  let ac1ok = true;
+  const ac1bad = [];
+  for (const id of treatIds) {
+    const sel = `.cf-treat[data-treat="${id}"]`;
+    await clickSel(sel);
+    const on = await h.evalv(`(() => { const b = document.querySelector('${sel}');
+      return b.classList.contains('cf-selected') && b.getAttribute('aria-pressed') === 'true'
+        && window.__catForest.state().selectedTreat === '${id}'; })()`);
+    await clickSel(sel);
+    const off = await h.evalv(`(() => { const b = document.querySelector('${sel}');
+      return !b.classList.contains('cf-selected') && b.getAttribute('aria-pressed') === 'false'
+        && window.__catForest.state().selectedTreat === null; })()`);
+    if (!(on && off)) { ac1ok = false; ac1bad.push(id); }
+  }
+  check('each of the 5 treats selects on tap and deselects on the second tap (AC1)',
+    ac1ok && treatIds.length === 5, ac1bad.join(',') || '5/5');
+
+  await clickSel('.cf-treat[data-treat="fish"]');
+  await clickSel('.cf-treat[data-treat="milk"]');
+  const oneAtATime = await h.evalv(`(() => { const f = document.querySelector('.cf-treat[data-treat="fish"]');
+    return !f.classList.contains('cf-selected') && window.__catForest.state().selectedTreat === 'milk'; })()`);
+  check('only one treat is selected at a time', oneAtATime === true, String(oneAtATime));
+  await clickSel('.cf-treat[data-treat="milk"]'); // deselect before the next case
+
+  await h.evalv(`window.__catForest.seed(42)`); // deterministic arrivalMs
+  await clickSel('.cf-treat[data-treat="fish"]');
+  await clickSel('.cf-plate[data-plate="0"]');
+  const placed0 = await h.evalv(`(() => { const s = window.__catForest.state();
+    const b = document.querySelector('.cf-plate[data-plate="0"]');
+    return { plate: s.plates[0], sel: s.selectedTreat, drawn: b.querySelector('.cf-plate-treat').getAttribute('data-treat'),
+      min: s.config.ARRIVE_MIN, max: s.config.ARRIVE_MAX }; })()`);
+  check('select + tap plate 0 places the treat and clears the selection (AC2)',
+    placed0.plate.state === 'treat' && placed0.plate.treat === 'fish' && placed0.sel === null && placed0.drawn === 'fish',
+    JSON.stringify(placed0.plate) + ' sel=' + placed0.sel + ' drawn=' + placed0.drawn);
+  check('the arrival wait is inside [ARRIVE_MIN, ARRIVE_MAX] (AC2)',
+    placed0.plate.arriveMs >= placed0.min && placed0.plate.arriveMs <= placed0.max,
+    `${placed0.plate.arriveMs} in [${placed0.min}, ${placed0.max}]`);
+
+  const beforeHint = JSON.stringify(await snap());
+  await clickSel('.cf-plate[data-plate="1"]');
+  const afterHint = JSON.stringify(await snap());
+  const hintOn = await h.evalv(`document.getElementById('cf-tray').classList.contains('cf-hint')`);
+  check('an empty-handed tap on an empty plate changes nothing and bounces the tray (AC3)',
+    beforeHint === afterHint && hintOn === true, `unchanged=${beforeHint === afterHint} hint=${hintOn}`);
+
+  await h.evalv(`window.__catForest.step(1300)`);
+  const hintGone = await h.evalv(`!document.getElementById('cf-tray').classList.contains('cf-hint')`);
+  check('the tray hint clears itself on the game clock (no timer leak)', hintGone === true, String(hintGone));
+
+  for (const [treat, plate] of [['milk', 1], ['chicken', 2]]) {
+    await clickSel(`.cf-treat[data-treat="${treat}"]`);
+    await clickSel(`.cf-plate[data-plate="${plate}"]`);
+  }
+  await clickSel('.cf-treat[data-treat="sushi"]');
+  const beforeBusy = JSON.stringify(await snap());
+  await clickSel('.cf-plate[data-plate="0"]');
+  const afterBusy = JSON.stringify(await snap());
+  const bounced = await h.evalv(`document.querySelector('.cf-treat[data-treat="sushi"]').classList.contains('cf-bounce')`);
+  check('all plates busy + a treat in hand: nothing changes, the treat bounces (AC4)',
+    beforeBusy === afterBusy && bounced === true, `unchanged=${beforeBusy === afterBusy} bounce=${bounced}`);
+  await clickSel('.cf-treat[data-treat="sushi"]');
+
+  /* AC5: the hook must be the same path as a tap. Two fresh sessions, same seed,
+     compare everything that placement determines (the independent page clocks
+     are the only thing that can differ). */
+  const bootedOn = async hh => {
+    for (let i = 0; i < 20; i++) {
+      if (await hh.evalv(`typeof window.startCatForest === 'function' && !!window.__catForest`)) return true;
+      await sleep(100);
+    }
+    return false;
+  };
+  const pathA = await start({ page: '/pages/cat_forest.html', tag: 'cf05-tap', width: 1024, height: 800 });
+  await bootedOn(pathA);
+  await pathA.evalv(`window.__catForest.pause(true); window.__catForest.seed(99); true`);
+  await pathA.evalp(`document.querySelector('.cf-treat[data-treat="cookie"]').click()`);
+  await pathA.evalp(`document.querySelector('.cf-plate[data-plate="2"]').click()`);
+  const stA = await pathA.evalv(`window.__catForest.state()`);
+  await pathA.close();
+
+  const pathB = await start({ page: '/pages/cat_forest.html', tag: 'cf05-hook', width: 1024, height: 800 });
+  await bootedOn(pathB);
+  await pathB.evalv(`window.__catForest.pause(true); window.__catForest.seed(99); window.__catForest.place('cookie', 2); true`);
+  const stB = await pathB.evalv(`window.__catForest.state()`);
+  await pathB.close();
+
+  const pick = s => JSON.stringify({ plates: s.plates, sel: s.selectedTreat, cats: s.cats, gifts: s.gifts,
+    decor: s.decor, met: s.met, idle: s.idle, timers: s.timers, time: s.time, weather: s.weather });
+  check('placing through the hook and through taps gives identical state (AC5)',
+    pick(stA) === pick(stB), pick(stA) + ' vs ' + pick(stB));
+
+  /* AC6: no failure vocabulary can reach the child. Comments are stripped first
+     (the engine's own comments explain that there are no fail states). */
+  const stripComments = s => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1');
+  const vocabulary = /fail|error|wrong|gre[sš]|pogre[sš]|neuspeh/i;
+  const vocabHits = [['page', pageHtml], ['engine', engineSrc]]
+    .filter(([, src]) => vocabulary.test(stripComments(src))).map(([k]) => k);
+  check('no failure vocabulary in the page or engine (AC6)', vocabHits.length === 0, vocabHits.join(', ') || 'none');
+
   await h.close();
 
   /* ---- negative control: the reachability check must be able to fail --------

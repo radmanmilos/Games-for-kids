@@ -65,7 +65,11 @@
       lastVisitorId: null,
       visitsThisSession: 0,
       idle: { sinceMs: 0, hints: 0, firstDone: false },
-      fx: { count: 0 }
+      fx: { count: 0 },
+      /* Transient picture hints (no text): a gentle bounce of the tray or of the
+         selected treat. Kept in state and timed by the clock so step() can drive
+         it in tests; not part of the TD §8 snapshot. */
+      nudge: { kind: null, treat: null, until: 0 }
     };
   }
 
@@ -94,6 +98,10 @@
 
   seed((Math.random() * 0x100000000) >>> 0);
 
+  function rngRange(min, max) {
+    return min + Math.floor(rnd() * (max - min + 1));
+  }
+
   /* ---- DOM handles and the render projection ----------------------------
      render() is a pure projection of state to the DOM (TD §6): positions and
      classes come from state, never from CSS transitions, which is what keeps
@@ -102,7 +110,11 @@
 
   function cacheEls() {
     els = {
-      app: document.getElementById('app')
+      app: document.getElementById('app'),
+      tray: document.getElementById('cf-tray'),
+      treats: [].slice.call(document.querySelectorAll('#cf-tray .cf-treat')),
+      plates: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate')),
+      plateTreats: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate-treat'))
     };
   }
 
@@ -110,6 +122,24 @@
     if (!els || !els.app) return;
     els.app.setAttribute('data-time', state.time);
     els.app.setAttribute('data-weather', state.weather);
+
+    for (var i = 0; i < els.treats.length; i++) {
+      var el = els.treats[i];
+      var on = state.selectedTreat === el.getAttribute('data-treat');
+      el.classList.toggle('cf-selected', on);
+      el.setAttribute('aria-pressed', on ? 'true' : 'false');
+      el.classList.toggle('cf-bounce', on && state.nudge.kind === 'treat' && state.clock < state.nudge.until);
+    }
+
+    for (var j = 0; j < els.plates.length; j++) {
+      var plate = state.plates[j];
+      if (plate && plate.treat) els.plateTreats[j].setAttribute('data-treat', plate.treat);
+      else if (els.plateTreats[j]) els.plateTreats[j].removeAttribute('data-treat');
+    }
+
+    if (els.tray) {
+      els.tray.classList.toggle('cf-hint', state.nudge.kind === 'hint' && state.clock < state.nudge.until);
+    }
   }
 
   /* Tick order (TD §6): idle/hints → arrivals → cats → gifts → flights → fx →
@@ -117,6 +147,10 @@
      agree); CF-05..CF-09 fill the earlier stages. */
   function tick(dt) {
     state.clock += dt;
+    if (state.nudge.kind && state.clock >= state.nudge.until) {
+      state.nudge.kind = null;
+      state.nudge.treat = null;
+    }
   }
 
   /* Advance the logic by exactly `ms`, in fixed STEP_MS sub-steps, then render
@@ -153,6 +187,62 @@
 
   function pause(on) {
     state.paused = !!on;
+  }
+
+  /* ---- treats and plates (CF-05; PS §4) ---------------------------------
+     There is no failure path: every tap either does the thing or shows a
+     picture hint (a bounce), never a message, colour or sound that reads as
+     "wrong". */
+  function selectTreat(id) {
+    state.selectedTreat = state.selectedTreat === id ? null : id;
+    render();
+  }
+
+  function allPlatesBusy() {
+    for (var i = 0; i < state.plates.length; i++) {
+      if (state.plates[i].state === 'empty') return false;
+    }
+    return true;
+  }
+
+  function nudge(kind, treat) {
+    state.nudge = { kind: kind, treat: treat || null, until: state.clock + CF.HINT_MS };
+    render();
+  }
+
+  /* The exact function a tap on an empty plate runs; the hook calls this too
+     (TD §8), so tests exercise the real path. */
+  function place(treat, plateIdx) {
+    var plate = state.plates[plateIdx];
+    if (!plate || plate.state !== 'empty' || !treat) return false;
+    plate.state = 'treat';
+    plate.treat = treat;
+    plate.arriveMs = rngRange(CF.ARRIVE_MIN, CF.ARRIVE_MAX);
+    state.selectedTreat = null;
+    render();
+    if (window.tone) {
+      window.tone(660, 0.12, 0, 'sine', 0.3);
+      window.tone(880, 0.12, 0.08, 'sine', 0.25);
+    }
+    return true;
+  }
+
+  function onTreatClick(e) {
+    selectTreat(e.currentTarget.getAttribute('data-treat'));
+  }
+
+  function onPlateClick(e) {
+    var plate = state.plates[+e.currentTarget.getAttribute('data-plate')];
+    if (!plate) return;
+    /* Full forest: if a treat is in hand, it bounces gently; either way nothing
+       else happens (PS §4). */
+    if (allPlatesBusy()) {
+      if (state.selectedTreat) nudge('treat', state.selectedTreat);
+      return;
+    }
+    if (plate.state !== 'empty') return;           // occupied plate: nothing
+    if (!state.selectedTreat) { nudge('hint'); return; } // empty-handed: picture hint
+    place(state.selectedTreat, plate.idx);
   }
 
   /* ---- test hook (TD §8; the game itself never reads it) ---------------- */
@@ -201,8 +291,12 @@
         return out;
       },
       pause: pause,
-      step: step
+      step: step,
+      place: place
     };
+
+    els.treats.forEach(function (el) { el.addEventListener('click', onTreatClick); });
+    els.plates.forEach(function (el) { el.addEventListener('click', onPlateClick); });
 
     lastTs = 0;
     // A tab that woke up must not jump the clock by the time it slept.

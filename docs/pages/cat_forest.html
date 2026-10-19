@@ -54,7 +54,12 @@
   .cf-plate::before{content:"🍽️";font-size:clamp(40px,14vmin,88px);line-height:1;font-variant-emoji:emoji;}
   .cf-plate-treat{position:absolute;left:50%;top:50%;transform:translate(-50%,-64%);
     font-size:clamp(30px,9vmin,56px);line-height:1;opacity:0;font-variant-emoji:emoji;}
-  .cf-plate-treat::before{content:"";}
+  .cf-plate-treat[data-treat]{opacity:1;}
+  .cf-plate-treat[data-treat="fish"]::before{content:"🐟";}
+  .cf-plate-treat[data-treat="milk"]::before{content:"🥛";}
+  .cf-plate-treat[data-treat="chicken"]::before{content:"🍗";}
+  .cf-plate-treat[data-treat="sushi"]::before{content:"🍣";}
+  .cf-plate-treat[data-treat="cookie"]::before{content:"🍪";}
 
   #cf-cats{z-index:5;inset:0;pointer-events:none;}
 
@@ -72,6 +77,21 @@
   .cf-treat[data-treat="chicken"]::before{content:"🍗";}
   .cf-treat[data-treat="sushi"]::before{content:"🍣";}
   .cf-treat[data-treat="cookie"]::before{content:"🍪";}
+
+  /* Picture-only feedback: a selected treat lifts, the tray or the treat bounces
+     when a tap cannot do anything. No red, no text, no "wrong". */
+  .cf-treat.cf-selected{transform:translateY(-8px) scale(1.08);
+    box-shadow:0 0 0 3px var(--green), 0 1vmin 0 rgba(74,63,107,.14);}
+  .cf-treat.cf-bounce{animation:cf-treat-bounce .35s ease 2;}
+  #cf-tray.cf-hint{animation:cf-tray-hint .4s ease 3;}
+  @keyframes cf-treat-bounce{
+    0%,100%{transform:translateY(-8px) scale(1.08);}
+    50%{transform:translateY(-16px) scale(1.12);}
+  }
+  @keyframes cf-tray-hint{
+    0%,100%{transform:translateX(-50%) translateY(0);}
+    50%{transform:translateX(-50%) translateY(-10px);}
+  }
 
   .cf-toggles{z-index:9;top:2.6vmin;right:2.6vmin;display:flex;gap:2.6vmin;pointer-events:none;}
   .cf-toggles button{pointer-events:auto;width:clamp(56px,8vmin,72px);aspect-ratio:1;padding:0;border:none;
