@@ -2,21 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "3b6a0999555853c9fd0b0b180f96409b0a65cf90",
+  "commitSha": "40bb2eb6c418a9ddb493503accf7d813a1b2cae8",
   "browser": {
     "product": "Chrome/136.0.7103.113",
     "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/136.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-19T07:41:07.253Z",
+  "generatedAt": "2026-10-19T08:20:35.221Z",
   "pageSet": [
-    "classroom",
-    "racing3d",
-    "compare",
-    "phonics",
-    "rhythm",
-    "sequencing",
-    "sorting"
+    "coloring"
   ],
   "viewports": {
     "phone-portrait": {
@@ -46,256 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "classroom_phone-portrait.png",
-      "page": "classroom",
+      "file": "coloring_phone-portrait.png",
+      "page": "coloring",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 85453
+      "bytes": 63014
     },
     {
-      "file": "classroom_phone-landscape.png",
-      "page": "classroom",
+      "file": "coloring_phone-landscape.png",
+      "page": "coloring",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 69827
+      "bytes": 57160
     },
     {
-      "file": "classroom_tablet-portrait.png",
-      "page": "classroom",
+      "file": "coloring_tablet-portrait.png",
+      "page": "coloring",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 228345
+      "bytes": 115263
     },
     {
-      "file": "classroom_tablet-landscape.png",
-      "page": "classroom",
+      "file": "coloring_tablet-landscape.png",
+      "page": "coloring",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 188053
-    },
-    {
-      "file": "racing3d_phone-portrait.png",
-      "page": "racing3d",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 58611
-    },
-    {
-      "file": "racing3d_phone-landscape.png",
-      "page": "racing3d",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 73775
-    },
-    {
-      "file": "racing3d_tablet-portrait.png",
-      "page": "racing3d",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 57922
-    },
-    {
-      "file": "racing3d_tablet-landscape.png",
-      "page": "racing3d",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 130860
-    },
-    {
-      "file": "compare_phone-portrait.png",
-      "page": "compare",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 11394
-    },
-    {
-      "file": "compare_phone-landscape.png",
-      "page": "compare",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 13004
-    },
-    {
-      "file": "compare_tablet-portrait.png",
-      "page": "compare",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 20154
-    },
-    {
-      "file": "compare_tablet-landscape.png",
-      "page": "compare",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 19299
-    },
-    {
-      "file": "phonics_phone-portrait.png",
-      "page": "phonics",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 32872
-    },
-    {
-      "file": "phonics_phone-landscape.png",
-      "page": "phonics",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 37812
-    },
-    {
-      "file": "phonics_tablet-portrait.png",
-      "page": "phonics",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 57512
-    },
-    {
-      "file": "phonics_tablet-landscape.png",
-      "page": "phonics",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 56892
-    },
-    {
-      "file": "rhythm_phone-portrait.png",
-      "page": "rhythm",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 59015
-    },
-    {
-      "file": "rhythm_phone-landscape.png",
-      "page": "rhythm",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 50241
-    },
-    {
-      "file": "rhythm_tablet-portrait.png",
-      "page": "rhythm",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 95970
-    },
-    {
-      "file": "rhythm_tablet-landscape.png",
-      "page": "rhythm",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 95910
-    },
-    {
-      "file": "sequencing_phone-portrait.png",
-      "page": "sequencing",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 23197
-    },
-    {
-      "file": "sequencing_phone-landscape.png",
-      "page": "sequencing",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 26206
-    },
-    {
-      "file": "sequencing_tablet-portrait.png",
-      "page": "sequencing",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 45389
-    },
-    {
-      "file": "sequencing_tablet-landscape.png",
-      "page": "sequencing",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 45025
-    },
-    {
-      "file": "sorting_phone-portrait.png",
-      "page": "sorting",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 25122
-    },
-    {
-      "file": "sorting_phone-landscape.png",
-      "page": "sorting",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 24383
-    },
-    {
-      "file": "sorting_tablet-portrait.png",
-      "page": "sorting",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 47469
-    },
-    {
-      "file": "sorting_tablet-landscape.png",
-      "page": "sorting",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 48332
+      "bytes": 104762
     }
   ]
 }

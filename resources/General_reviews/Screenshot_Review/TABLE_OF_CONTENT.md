@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-19T07:41:07.253Z
+- Генерисано / Generated: 2026-10-19T08:20:35.221Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -28,10 +28,10 @@
 | `classroom_phone-portrait.png` | Учионица | `/pages/classroom.html` | 390×844 | портрет | — | 19.10.2026. 09:41:07 | 256 |
 | `classroom_tablet-landscape.png` | Учионица | `/pages/classroom.html` | 1180×820 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
 | `classroom_tablet-portrait.png` | Учионица | `/pages/classroom.html` | 820×1180 | портрет | — | 19.10.2026. 09:41:07 | 256 |
-| `coloring_phone-landscape.png` | Бојење | `/pages/coloring.html` | 844×390 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `coloring_phone-portrait.png` | Бојење | `/pages/coloring.html` | 390×844 | портрет | — | 19.10.2026. 07:11:08 | 255 |
-| `coloring_tablet-landscape.png` | Бојење | `/pages/coloring.html` | 1180×820 | пејзаж | — | 19.10.2026. 07:11:08 | 255 |
-| `coloring_tablet-portrait.png` | Бојење | `/pages/coloring.html` | 820×1180 | портрет | — | 19.10.2026. 07:11:08 | 255 |
+| `coloring_phone-landscape.png` | Бојење | `/pages/coloring.html` | 844×390 | пејзаж | — | 19.10.2026. 10:20:35 | 257 |
+| `coloring_phone-portrait.png` | Бојење | `/pages/coloring.html` | 390×844 | портрет | — | 19.10.2026. 10:20:35 | 257 |
+| `coloring_tablet-landscape.png` | Бојење | `/pages/coloring.html` | 1180×820 | пејзаж | — | 19.10.2026. 10:20:35 | 257 |
+| `coloring_tablet-portrait.png` | Бојење | `/pages/coloring.html` | 820×1180 | портрет | — | 19.10.2026. 10:20:35 | 257 |
 | `compare_phone-landscape.png` | Више или мање | `/pages/compare.html` | 844×390 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
 | `compare_phone-portrait.png` | Више или мање | `/pages/compare.html` | 390×844 | портрет | — | 19.10.2026. 09:41:07 | 256 |
 | `compare_tablet-landscape.png` | Више или мање | `/pages/compare.html` | 1180×820 | пејзаж | — | 19.10.2026. 09:41:07 | 256 |
