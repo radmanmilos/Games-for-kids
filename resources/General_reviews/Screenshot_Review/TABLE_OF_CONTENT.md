@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-19T10:22:43.702Z
+- Генерисано / Generated: 2026-10-19T11:24:13.973Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -48,10 +48,10 @@
 | `explorer_phone-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 390×844 | портрет | — | 19.10.2026. 12:22:43 | 258 |
 | `explorer_tablet-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 1180×820 | пејзаж | — | 19.10.2026. 12:22:43 | 258 |
 | `explorer_tablet-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 820×1180 | портрет | — | 19.10.2026. 12:22:43 | 258 |
-| `fastcat_phone-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 844×390 | пејзаж | — | 19.10.2026. 12:22:43 | 258 |
-| `fastcat_phone-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 390×844 | портрет | — | 19.10.2026. 12:22:43 | 258 |
-| `fastcat_tablet-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 1180×820 | пејзаж | — | 19.10.2026. 12:22:43 | 258 |
-| `fastcat_tablet-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 820×1180 | портрет | — | 19.10.2026. 12:22:43 | 258 |
+| `fastcat_phone-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 844×390 | пејзаж | — | 19.10.2026. 13:24:13 | 259 |
+| `fastcat_phone-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 390×844 | портрет | — | 19.10.2026. 13:24:13 | 259 |
+| `fastcat_tablet-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 1180×820 | пејзаж | — | 19.10.2026. 13:24:13 | 259 |
+| `fastcat_tablet-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 820×1180 | портрет | — | 19.10.2026. 13:24:13 | 259 |
 | `hub_phone-landscape.png` | Петрин свет — почетна | `/index.html` | 844×390 | пејзаж | — | 19.10.2026. 12:22:43 | 258 |
 | `hub_phone-portrait.png` | Петрин свет — почетна | `/index.html` | 390×844 | портрет | — | 19.10.2026. 12:22:43 | 258 |
 | `hub_tablet-landscape.png` | Петрин свет — почетна | `/index.html` | 1180×820 | пејзаж | — | 19.10.2026. 12:22:43 | 258 |

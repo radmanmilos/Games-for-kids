@@ -17,3 +17,7 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 4. Do **not** copy the task into README, CONTRIBUTING or STATUS. `project/STATUS.md` is overwritten at session end instead.
 
 ## Open tasks
+
+- 259. IN PROGRESS — Fix the malformed Material "refresh" SVG path in fastcat.html (pre-existing, found via the failed schedule Extended/WebKit matrix) (2026-10-19, OpenCode/Big Pickle)
+
+  The path reads `s3.58 8 8c3.73`; a smooth-cubic `s` needs 4 numbers, and the canonical Material icon is `s3.58 8 8 8c3.73` — one `8` was lost. Result: `<path> attribute d: Expected number` in Chromium and WebKit `Problem parsing d=...`, i.e. the «Играј поново» icon is broken on WebKit (iPad/Safari). It only surfaces in the Extended job (schedule/workflow_dispatch), which is why it went unnoticed.
