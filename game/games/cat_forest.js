@@ -6,6 +6,7 @@
    clock, seedable RNG, state, render() and the __catForest test hook.
    CF-06 adds the cat/treat/gift data and the weighted picker; CF-07 the cat
    actor lifecycle (walk in, sit, eat, leave) fully driven by the game clock.
+   CF-08 the gift that a finished visit leaves and the forest it grows into.
    Gameplay arrives card by card — nothing here is visible to the child yet. */
 (function () {
   'use strict';
@@ -91,11 +92,12 @@
       gifts: [],
       flights: [],
       decor: [],
+      decorCollected: 0,
       met: [],
       lastVisitorId: null,
       visitsThisSession: 0,
       idle: { sinceMs: 0, hints: 0, firstDone: false },
-      fx: { count: 0 },
+      fx: { count: 0, parts: [] },
       /* Transient picture hints (no text): a gentle bounce of the tray or of the
          selected treat. Kept in state and timed by the clock so step() can drive
          it in tests; not part of the TD §8 snapshot. */
@@ -290,7 +292,7 @@
   function endEating(c) {
     var plate = state.plates[c.plate];
     if (plate) { plate.state = 'empty'; plate.treat = null; plate.catId = null; plate.arriveMs = 0; }
-    /* CF-08 queues a gift event here; until then it is a no-op (card step 4). */
+    spawnGift(c.plate); // the finished visit leaves a gift on the freed plate (CF-08)
   }
 
   function removeCat(c) {
@@ -322,6 +324,9 @@
       app: document.getElementById('app'),
       stage: document.getElementById('cf-stage'),
       cats: document.getElementById('cf-cats'),
+      decor: document.getElementById('cf-decor'),
+      gifts: document.getElementById('cf-gifts'),
+      fx: document.getElementById('cf-fx'),
       tray: document.getElementById('cf-tray'),
       treats: [].slice.call(document.querySelectorAll('#cf-tray .cf-treat')),
       plates: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate')),
@@ -369,7 +374,11 @@
       els.tray.classList.toggle('cf-hint', state.nudge.kind === 'hint' && state.clock < state.nudge.until);
     }
 
+    renderDecor();
     renderCats();
+    renderGifts();
+    renderFlights();
+    renderFx();
   }
 
   /* ---- cat rendering (CF-07; TD §7/§10) ---------------------------------
@@ -449,12 +458,206 @@
     }
   }
 
+  /* ---- gifts, the growing forest and particles (CF-08; TD §5, §7, §10) --
+     A finished visit leaves a gift on the freed plate; tapping it flies the
+     gift to the next decor slot and it becomes scenery. Everything is
+     logic-driven off the game clock (a one-shot decor fade-in is the only CSS
+     animation) and capped so the forest never fills up and the child is never
+     blocked. Gift/decor/fly coordinates are stage fractions, like the cats. */
+  var DECOR_LIFT = 0.02; // a gift sits just above its plate's centre
+  /* 14 hand-placed slots on the grass and between the trees — clear of the tray,
+     the plate row and the toggles/back controls (PS §4, TP §3.2). */
+  var DECOR_SLOTS = [
+    { x: 0.10, y: 0.28 }, { x: 0.19, y: 0.17 }, { x: 0.28, y: 0.30 }, { x: 0.37, y: 0.19 },
+    { x: 0.46, y: 0.31 }, { x: 0.55, y: 0.18 }, { x: 0.64, y: 0.30 }, { x: 0.73, y: 0.19 },
+    { x: 0.82, y: 0.29 }, { x: 0.91, y: 0.20 }, { x: 0.15, y: 0.41 }, { x: 0.42, y: 0.42 },
+    { x: 0.62, y: 0.41 }, { x: 0.88, y: 0.41 }
+  ];
+
+  /* Slots fill in a fixed shuffled order (TD §7) from a local PRNG seeded by a
+     constant, so the spread is varied but never touches the gameplay RNG. */
+  function buildDecorOrder() {
+    var a = [], r = mulberry32(1337), i, j, t;
+    for (i = 0; i < CF.DECOR_MAX; i++) a.push(i);
+    for (j = a.length - 1; j > 0; j--) {
+      i = Math.floor(r() * (j + 1)); t = a[j]; a[j] = a[i]; a[i] = t;
+    }
+    return a;
+  }
+
+  var decorOrder = buildDecorOrder();
+  var giftEls = {};   // gift uid -> button
+  var flightEls = {}; // flight uid -> element
+  var decorEls = {};  // decor uid -> element
+  var fxEls = {};     // particle uid -> element
+
+  function spawnGift(plateIdx) {
+    state.gifts.push({ uid: ++uidSeq, emoji: GIFTS[rngRange(0, GIFTS.length - 1)], plate: plateIdx });
+    if (state.gifts.length > CF.GIFT_CAP) collectGift(state.gifts[0]); // cap: the oldest auto-collects
+  }
+
+  /* The exact function a tap on a gift runs; the auto-collect uses it too, so a
+     capped gift leaves with the normal animation (CF-08 step 2). */
+  function collectGift(gift) {
+    var i = state.gifts.indexOf(gift);
+    if (i === -1) return;
+    state.gifts.splice(i, 1);
+    var plate = geomPlate(gift.plate);
+    var from = { x: plate.x, y: plate.y - DECOR_LIFT };
+    var slot = decorOrder[state.decorCollected % CF.DECOR_MAX];
+    state.decorCollected++;
+    spendSparkle(from.x, from.y - 0.02);
+    if (window.softPop && giftEls[gift.uid]) window.softPop(giftEls[gift.uid]);
+    if (window.tone) {
+      window.tone(880, 0.09, 0, 'sine', 0.18);
+      window.tone(1174, 0.1, 0.07, 'sine', 0.12);
+    }
+    if (reduceMotion) {
+      landDecor(gift.emoji, slot); // no flight: the gift fades, the decoration fades in
+    } else {
+      state.flights.push({
+        uid: ++uidSeq, emoji: gift.emoji, from: from,
+        to: { x: DECOR_SLOTS[slot].x, y: DECOR_SLOTS[slot].y },
+        t: 0, dur: CF.GIFT_FLY_MS, slot: slot
+      });
+    }
+  }
+
+  function landDecor(emoji, slot) {
+    state.decor.push({ uid: ++uidSeq, e: emoji, s: slot });
+    if (state.decor.length > CF.DECOR_MAX) state.decor.shift(); // the forest never fills up
+  }
+
+  function spendSparkle(x, y) {
+    state.fx.parts.push({ uid: ++uidSeq, x: x, y: y, e: '✨', t: 0, dur: 520 });
+    while (state.fx.parts.length > CF.PARTICLE_CAP) state.fx.parts.shift();
+    state.fx.count = state.fx.parts.length;
+  }
+
+  function updateFlights(dt) {
+    for (var i = state.flights.length - 1; i >= 0; i--) {
+      var f = state.flights[i];
+      f.t += dt;
+      if (f.t >= f.dur) { landDecor(f.emoji, f.slot); state.flights.splice(i, 1); }
+    }
+  }
+
+  function updateFx(dt) {
+    for (var i = state.fx.parts.length - 1; i >= 0; i--) {
+      var p = state.fx.parts[i];
+      p.t += dt;
+      if (p.t >= p.dur) state.fx.parts.splice(i, 1);
+    }
+    state.fx.count = state.fx.parts.length;
+  }
+
+  function removeNode(el) {
+    if (el && el.parentNode) el.parentNode.removeChild(el);
+  }
+
+  function makeGiftEl(g) {
+    var el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'cf-gift';
+    el.setAttribute('aria-label', 'Поклон');
+    el.setAttribute('data-e', g.emoji);
+    el.addEventListener('click', function () { collectGift(g); });
+    return el;
+  }
+
+  function makeFlyEl(emoji) {
+    var el = document.createElement('span');
+    el.className = 'cf-fly';
+    el.setAttribute('aria-hidden', 'true');
+    el.setAttribute('data-e', emoji);
+    return el;
+  }
+
+  function makeDecorEl(emoji) {
+    var el = document.createElement('span');
+    el.className = 'cf-decor-item'; // one-shot fade-in (CSS); decorative only
+    el.setAttribute('aria-hidden', 'true');
+    el.setAttribute('data-e', emoji);
+    return el;
+  }
+
+  function makeFxEl(emoji) {
+    var el = document.createElement('span');
+    el.className = 'cf-party';
+    el.setAttribute('aria-hidden', 'true');
+    el.setAttribute('data-e', emoji);
+    return el;
+  }
+
+  function renderGifts() {
+    if (!els || !els.gifts) return;
+    if (!geom) measure();
+    var alive = {}, i, uid;
+    for (i = 0; i < state.gifts.length; i++) alive[state.gifts[i].uid] = true;
+    for (uid in giftEls) if (!alive[uid]) { removeNode(giftEls[uid]); delete giftEls[uid]; }
+    for (i = 0; i < state.gifts.length; i++) {
+      var g = state.gifts[i], el = giftEls[g.uid];
+      if (!el) { el = makeGiftEl(g); giftEls[g.uid] = el; els.gifts.appendChild(el); }
+      var p = geomPlate(g.plate);
+      el.style.left = (p.x * 100) + '%';
+      el.style.top = ((p.y - DECOR_LIFT) * 100) + '%';
+    }
+  }
+
+  function renderFlights() {
+    if (!els || !els.fx) return;
+    var alive = {}, i, uid;
+    for (i = 0; i < state.flights.length; i++) alive[state.flights[i].uid] = true;
+    for (uid in flightEls) if (!alive[uid]) { removeNode(flightEls[uid]); delete flightEls[uid]; }
+    for (i = 0; i < state.flights.length; i++) {
+      var f = state.flights[i], el = flightEls[f.uid];
+      if (!el) { el = makeFlyEl(f.emoji); flightEls[f.uid] = el; els.fx.appendChild(el); }
+      var q = f.dur > 0 ? f.t / f.dur : 1;
+      if (q < 0) q = 0; else if (q > 1) q = 1;
+      var e = easeOut(q);
+      el.style.left = ((f.from.x + (f.to.x - f.from.x) * e) * 100) + '%';
+      el.style.top = ((f.from.y + (f.to.y - f.from.y) * e) * 100) + '%';
+      el.style.opacity = String(1 - q * 0.6);
+    }
+  }
+
+  function renderDecor() {
+    if (!els || !els.decor) return;
+    var alive = {}, i, uid;
+    for (i = 0; i < state.decor.length; i++) alive[state.decor[i].uid] = true;
+    for (uid in decorEls) if (!alive[uid]) { removeNode(decorEls[uid]); delete decorEls[uid]; }
+    for (i = 0; i < state.decor.length; i++) {
+      var d = state.decor[i], el = decorEls[d.uid];
+      if (!el) { el = makeDecorEl(d.e); decorEls[d.uid] = el; els.decor.appendChild(el); }
+      var s = DECOR_SLOTS[d.s] || DECOR_SLOTS[0];
+      el.style.left = (s.x * 100) + '%';
+      el.style.top = (s.y * 100) + '%';
+    }
+  }
+
+  function renderFx() {
+    if (!els || !els.fx) return;
+    var alive = {}, i, uid;
+    for (i = 0; i < state.fx.parts.length; i++) alive[state.fx.parts[i].uid] = true;
+    for (uid in fxEls) if (!alive[uid]) { removeNode(fxEls[uid]); delete fxEls[uid]; }
+    for (i = 0; i < state.fx.parts.length; i++) {
+      var p = state.fx.parts[i], el = fxEls[p.uid];
+      if (!el) { el = makeFxEl(p.e); fxEls[p.uid] = el; els.fx.appendChild(el); }
+      var q = p.dur > 0 ? p.t / p.dur : 1;
+      el.style.left = (p.x * 100) + '%';
+      el.style.top = (p.y * 100) + '%';
+      el.style.opacity = String(1 - q);
+    }
+  }
+
   /* Tick order (TD §6): idle/hints → arrivals → cats → gifts → flights → fx →
      clock (last, so a tick's effects and its stamp agree). CF-07 fills arrivals
-     and cats; CF-05..CF-09 fill the rest. */
+     and cats; CF-08 flights and fx; CF-05..CF-09 fill the rest. */
   function tick(dt) {
     updateArrivals(dt);
     updateCats(dt);
+    updateFlights(dt);
+    updateFx(dt);
     state.clock += dt;
     if (state.nudge.kind && state.clock >= state.nudge.until) {
       state.nudge.kind = null;

@@ -5,6 +5,7 @@
    no-network static rule (TD §8 / TP §3.1). CF-03 adds the three-viewport stage
    geometry of TP §3.2; CF-06 adds the roster + weighted-picker checks of TP §3.5;
    CF-07 adds the cat actor lifecycle (spawn/enter/sit/eat/leave) of TP §3.6.
+   CF-08 adds gifts and the growing forest of TP §3.7.
    Gameplay assertions arrive with the engine — this file grows card by card (TP §3).
    Run:  node tools/cat_forest_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
@@ -571,9 +572,149 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   const timerHits = ['setInterval(', 'setTimeout('].filter(s => engineSrc.includes(s));
   check('the engine schedules no timers (AC7: no setInterval / per-cat timers)',
     timerHits.length === 0, timerHits.join(', ') || 'none');
-
   await h7.close();
   await h4.close();
+
+  /* ---- CF-08: gifts and the growing forest (TP §3.7) ---------------------
+     A finished visit leaves a gift on the freed plate; tapping it flies to the
+     next decor slot and becomes scenery. Each scenario is one fresh page.
+     Headless Chrome defaults prefers-reduced-motion to reduce, so the mode is
+     pinned explicitly and the page is reloaded for the engine to read it. */
+  const bootEmulated = async (tag, width, height, value) => {
+    const hh = await start({ page: '/pages/cat_forest.html', tag, width: width || 1024, height: height || 800 });
+    await hh.c.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] });
+    await hh.navigate(`http://127.0.0.1:${hh.port}/pages/cat_forest.html`);
+    await bootedOn(hh);
+    await hh.evalv(STUB);
+    await hh.evalv(`window.__catForest.pause(true)`);
+    return hh;
+  };
+
+  const h8 = await bootEmulated('cf08-gifts', 1024, 800, 'no-preference');
+
+  const b1 = await h8.evalv(`(() => {
+    const hk = window.__catForest; hk.seed(21);
+    hk.place('fish', 0);
+    for (let i = 0; i < 400 && hk.state().cats.length === 0; i++) hk.step(50);
+    for (let i = 0; i < 2000 && hk.state().cats.length; i++) hk.step(50);
+    const s = hk.state();
+    const g = document.querySelector('#cf-gifts .cf-gift');
+    const pr = document.querySelector('.cf-plate[data-plate="0"]').getBoundingClientRect();
+    if (!g) return { gifts: s.gifts.length, node: false };
+    const r = g.getBoundingClientRect();
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    const hit = document.elementFromPoint(cx, cy);
+    return { gifts: s.gifts.length, node: true, hit: !!(hit && (hit === g || g.contains(hit))),
+      dx: Math.round(Math.abs(cx - (pr.left + pr.width / 2))), dy: Math.round(Math.abs(cy - (pr.top + pr.height / 2))),
+      w: Math.round(r.width), h: Math.round(r.height) };
+  })()`);
+  check('after a visit one gift exists at the plate position and is hit-testable (AC1)',
+    b1.gifts === 1 && b1.node && b1.hit && b1.dx < 8 && b1.dy < 40 && Math.min(b1.w, b1.h) >= 72,
+    JSON.stringify(b1));
+
+  const b2 = await h8.evalv(`(() => {
+    const hk = window.__catForest;
+    const before = hk.state().decor.length;
+    const g = document.querySelector('#cf-gifts .cf-gift');
+    if (g) g.click();
+    const removed = hk.state().gifts.length;
+    hk.step(50); // one render so the flight node exists
+    const flying = document.querySelectorAll('#cf-fx .cf-fly').length;
+    hk.step(hk.state().config.GIFT_FLY_MS + 200);
+    const s = hk.state();
+    return { before: before, removed: removed, after: s.decor.length, gifts: s.gifts.length,
+      flying: flying, fly: document.querySelectorAll('#cf-fx .cf-fly').length,
+      nodes: document.querySelectorAll('#cf-decor .cf-decor-item').length };
+  })()`);
+  check('tapping the gift removes it, it flies, and the forest grows by one decoration (AC2)',
+    b2.removed === 0 && b2.flying === 1 && b2.after === b2.before + 1 && b2.gifts === 0
+      && b2.fly === 0 && b2.nodes === b2.after, JSON.stringify(b2));
+
+  /* A visit is driven only by the game clock; collecting taps the real button. */
+  const VISIT = `const treats = ['fish','milk','chicken','sushi','cookie'];
+    const visit = () => {
+      const empty = hk.state().plates.filter(p => p.state === 'empty');
+      const pi = empty.length ? empty[0].idx : 0;
+      hk.place(treats[pi % 5], pi);
+      for (let i = 0; i < 400 && hk.state().cats.length === 0; i++) hk.step(50);
+      for (let i = 0; i < 4000 && hk.state().cats.length; i++) hk.step(50);
+    };
+    const collectFirst = () => {
+      const g = document.querySelector('#cf-gifts .cf-gift');
+      if (g) { g.click(); hk.step(hk.state().config.GIFT_FLY_MS + 200); }
+    };`;
+
+  /* AC3: six visits without collecting — the uncollected cap auto-collects the
+     oldest so the child is never blocked. */
+  const b3 = await bootFresh('cf08-cap');
+  const c3 = await b3.evalv(`(() => { const hk = window.__catForest; hk.seed(31);
+    ${VISIT}
+    const counts = [];
+    for (let n = 0; n < 6; n++) { visit(); counts.push(hk.state().gifts.length); }
+    hk.step(700);
+    return { counts: counts, gifts: hk.state().gifts.length,
+      nodes: document.querySelectorAll('#cf-gifts .cf-gift').length, decor: hk.state().decor.length };
+  })()`);
+  check('six visits leave at most five uncollected gifts — the oldest auto-collects (AC3)',
+    c3.counts.every(c => c <= 5) && c3.gifts === 5 && c3.nodes === c3.gifts && c3.decor >= 1,
+    JSON.stringify(c3));
+
+  /* AC4: the decor cap means the forest never fills up, and the shuffled slots
+     stay distinct while it grows. */
+  const b4 = await bootFresh('cf08-decor');
+  const c4 = await b4.evalv(`(() => { const hk = window.__catForest; hk.seed(41);
+    ${VISIT}
+    const marks = [];
+    for (let n = 0; n < 16; n++) { visit(); collectFirst(); marks.push(hk.state().decor.length); }
+    return { marks: marks, decor: hk.state().decor.length,
+      nodes: document.querySelectorAll('#cf-decor .cf-decor-item').length,
+      slots: hk.state().decor.map(d => d.s) };
+  })()`);
+  check('with 14 decorations, collecting one more keeps 14 (AC4)',
+    c4.decor === 14 && c4.nodes === 14 && c4.marks.indexOf(15) === -1
+      && new Set(c4.slots).size === c4.slots.length,
+    JSON.stringify({ decor: c4.decor, nodes: c4.nodes, saw15: c4.marks.indexOf(15) !== -1 }));
+
+  /* AC5: with a full forest the decorations never block a control (they are
+     aria-hidden and pointer-events:none). */
+  for (const vp of [{ name: '1024x800 tablet', width: 1024, height: 800 },
+    { name: '844x390 short landscape', width: 844, height: 390 }]) {
+    const hv = await bootFresh(`cf08-geom-${vp.width}`, vp.width, vp.height);
+    const seeded = await hv.evalv(`(() => { const hk = window.__catForest; hk.seed(51);
+      ${VISIT}
+      for (let n = 0; n < 15; n++) { visit(); collectFirst(); }
+      return hk.state().decor.length; })()`);
+    const m = await stageGeometry(hv);
+    check(`${vp.name}: with 14 decorations every treat, plate and toggle is still hit-testable (AC5)`,
+      seeded === 14 && [...m.treats, ...m.plates, ...m.toggles].every(b => b.inside && b.hit),
+      `decor=${seeded} ` + JSON.stringify([...m.treats, ...m.plates, ...m.toggles]));
+    await hv.close();
+  }
+
+  /* Reduced motion (CF-08 step 5): no flight — the gift is collected and the
+     decoration appears at once, and no fly node is ever created. */
+  const h8r = await bootEmulated('cf08-reduce', 1024, 800, 'reduce');
+  const r5 = await h8r.evalv(`(() => { const hk = window.__catForest; hk.seed(61);
+    ${VISIT}
+    visit();
+    const before = hk.state().decor.length;
+    collectFirst();
+    hk.step(50);
+    return { before: before, decor: hk.state().decor.length,
+      gifts: hk.state().gifts.length, flying: document.querySelectorAll('#cf-fx .cf-fly').length };
+  })()`);
+  check('under reduced motion the gift is collected with no flight (CF-08 step 5)',
+    r5.decor === r5.before + 1 && r5.gifts === 0 && r5.flying === 0, JSON.stringify(r5));
+  await h8r.close();
+
+  /* AC6: no counter ever reaches the child — the DOM text stays digit-free. */
+  const c6 = await h8.evalv(`document.body.innerText.trim()`);
+  check('no number, score or counter reaches the child (AC6: body.innerText has no digits)',
+    c6 === '' || !/\d/.test(c6), JSON.stringify(c6));
+
+  await b3.close();
+  await b4.close();
+  await h8.close();
 
   await h.close();
 

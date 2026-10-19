@@ -76,6 +76,32 @@
   .cf-cat-acc{position:absolute;top:-0.32em;right:-0.24em;font-size:.55em;line-height:1;font-variant-emoji:emoji;}
   .cf-cat-acc::before{content:attr(data-e);}
 
+  /* Gifts sit above the cats (z 6) so a leaving cat never blocks one; the fx
+     layer (z 7) holds the flying gift and the sparkles, both unclickable. */
+  #cf-gifts{z-index:6;inset:0;pointer-events:none;}
+  .cf-gift{pointer-events:auto;position:absolute;left:0;top:0;transform:translate(-50%,-50%);
+    width:clamp(72px,14vmin,104px);height:clamp(72px,14vmin,104px);padding:0;border:none;background:none;
+    cursor:pointer;display:grid;place-items:center;line-height:1;
+    font-size:clamp(40px,11vmin,72px);font-variant-emoji:emoji;animation:cf-gift-in .3s ease;}
+  .cf-gift::before{content:attr(data-e);}
+  /* Opacity-only entrance: the tap target is full size from the first frame
+     (a scale-in would shrink it), and reduced motion keeps the same fade. */
+  @keyframes cf-gift-in{from{opacity:0;}to{opacity:1;}}
+
+  #cf-fx{z-index:7;inset:0;pointer-events:none;}
+  .cf-fly,.cf-party{position:absolute;left:0;top:0;transform:translate(-50%,-50%);
+    line-height:1;font-variant-emoji:emoji;pointer-events:none;}
+  .cf-fly{font-size:clamp(36px,10vmin,64px);}
+  .cf-party{font-size:clamp(22px,6vmin,40px);}
+  .cf-fly::before,.cf-party::before{content:attr(data-e);}
+
+  /* A decoration fades in once when it lands; opacity only, so reduced motion
+     keeps it (the flight itself is what gets skipped). */
+  .cf-decor-item{position:absolute;transform:translate(-50%,-50%);line-height:1;
+    font-size:clamp(24px,7vmin,52px);font-variant-emoji:emoji;animation:cf-decor-in .4s ease;}
+  .cf-decor-item::before{content:attr(data-e);}
+  @keyframes cf-decor-in{from{opacity:0;}to{opacity:1;}}
+
   #cf-tray{z-index:8;left:50%;bottom:clamp(8px,2.6vmin,24px);transform:translateX(-50%);
     display:flex;align-items:center;gap:clamp(6px,1.8vmin,22px);padding:clamp(6px,1.4vmin,14px);
     border-radius:999px;background:rgba(255,255,255,.6);box-shadow:var(--shadow-soft);
@@ -151,6 +177,8 @@
       <button class="cf-plate" data-plate="2" aria-label="Тањир"><span class="cf-plate-treat"></span></button>
     </div>
     <div id="cf-cats"></div>
+    <div id="cf-gifts"></div>
+    <div id="cf-fx" aria-hidden="true"></div>
     <div id="cf-tray">
       <button class="cf-treat" data-treat="fish" aria-label="Риба" aria-pressed="false"></button>
       <button class="cf-treat" data-treat="milk" aria-label="Млеко" aria-pressed="false"></button>
