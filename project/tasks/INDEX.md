@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **264**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **267**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -264,3 +264,6 @@ One line per task: `number | status | date | title | archive file`. Every finish
 261 | DONE | 2026-10-19 | Cat Forest: CF-00 governance baseline (2026-10-19, OpenCode/Big Pickle) — card:… | tasks-250-299.md
 262 | DONE | 2026-10-19 | Cat Forest: CF-01 page shell + registry + hub tile (2026-10-19, OpenCode/Big Pickle) — card:… | tasks-250-299.md
 263 | DONE | 2026-10-19 | Cat Forest: CF-02 smoke skeleton + tool wiring (2026-10-19, OpenCode/Big Pickle) — tools/cat_forest_smoke.js… | tasks-250-299.md
+264 | DONE | 2026-10-19 | Cat Forest: CF-03 static stage layout (2026-10-19, OpenCode/Big Pickle) — TD §4 stage DOM/CSS; smoke 42… | tasks-250-299.md
+265 | DONE | 2026-10-19 | Cat Forest: CF-04 engine core + test hook (2026-10-19, OpenCode/Big Pickle) — CF/rng/clock/state/render + TD… | tasks-250-299.md
+266 | DONE | 2026-10-19 | Cat Forest: CF-05 treat selection + placement (2026-10-19, OpenCode/Big Pickle) — place() shared by UI and… | tasks-250-299.md
