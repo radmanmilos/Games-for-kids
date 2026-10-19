@@ -3,8 +3,8 @@
    boot + test hook, the route contract, the back control's reachability (inside
    the viewport AND hit-testable, never a bare .click()), the hub tile, and the
    no-network static rule (TD §8 / TP §3.1). CF-03 adds the three-viewport stage
-   geometry of TP §3.2. Gameplay assertions arrive with the engine — this file
-   grows card by card (TP §3).
+   geometry of TP §3.2; CF-06 adds the roster + weighted-picker checks of TP §3.5.
+   Gameplay assertions arrive with the engine — this file grows card by card (TP §3).
    Run:  node tools/cat_forest_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, getFails } = require('./headless.js');
@@ -305,6 +305,134 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   const vocabHits = [['page', pageHtml], ['engine', engineSrc]]
     .filter(([, src]) => vocabulary.test(stripComments(src))).map(([k]) => k);
   check('no failure vocabulary in the page or engine (AC6)', vocabHits.length === 0, vocabHits.join(', ') || 'none');
+
+  /* ---- CF-06: cat data + weighted picker (TP §3.5) -----------------------
+     The roster is pinned here the same way the CF table is (AC5 policy): a
+     silent data edit in the engine is a failure, so the smoke holds its own
+     expected id lists. All statistical checks use a fixed seed and wide
+     margins (2x, never a tight threshold). */
+  const EXPECTED_CAT_IDS = ['maca', 'puhko', 'mica', 'sef', 'cveta', 'tigar',
+    'tacka', 'senka', 'zvezda', 'kralj'];
+  const EXPECTED_TREAT_IDS = ['fish', 'milk', 'chicken', 'sushi', 'cookie'];
+
+  const roster = await h.evalv(`(() => { const d = window.__catForest.data;
+    if (!d) return null;
+    return { cats: d.cats.map(c => ({ id: c.id, likes: c.likes.slice() })), treats: d.treats.map(t => t.id) }; })()`);
+  const catIds = roster && Array.isArray(roster.cats) ? roster.cats.map(c => c.id) : [];
+  const uniqueCats = catIds.length === new Set(catIds).size;
+  const badLikes = roster && Array.isArray(roster.cats)
+    ? roster.cats.filter(c => !c.likes.every(id => EXPECTED_TREAT_IDS.includes(id))).map(c => c.id) : ['<no data>'];
+  check('the roster has 10 cats with unique ids and valid treat likes (AC5)',
+    !!roster && catIds.length === 10 && uniqueCats
+      && JSON.stringify(catIds) === JSON.stringify(EXPECTED_CAT_IDS)
+      && JSON.stringify(roster.treats) === JSON.stringify(EXPECTED_TREAT_IDS)
+      && badLikes.length === 0,
+    `cats=${catIds.length} unique=${uniqueCats} treats=${JSON.stringify(roster && roster.treats)} bad=${badLikes.join(',')}`);
+
+  /* AC1: seed(1), 2000 day picks per treat — night-only cats never appear and
+     Краљ only when all three plates are filled. */
+  const ac1 = await h.evalv(`(() => {
+    const hk = window.__catForest;
+    const treats = ${JSON.stringify(EXPECTED_TREAT_IDS)};
+    const NIGHT = ['senka', 'zvezda'];
+    const out = { nightAtDay: [], kraljLow: [], kralj3: [] };
+    hk.seed(1);
+    for (const t of treats) {
+      const day0 = hk.pick(t, false, 0, 2000);
+      for (const n of NIGHT) if (day0.indexOf(n) !== -1) out.nightAtDay.push(t + ':' + n);
+      if (day0.indexOf('kralj') !== -1) out.kraljLow.push(t);
+    }
+    for (const t of treats) {
+      const day3 = hk.pick(t, false, 3, 2000);
+      out.kralj3.push(day3.filter(x => x === 'kralj').length);
+    }
+    return out;
+  })()`);
+  check('seed(1), 2000 day picks/treat: night cats never visit and Краљ only at 3 plates (AC1)',
+    ac1.nightAtDay.length === 0 && ac1.kraljLow.length === 0 && ac1.kralj3.every(c => c >= 1),
+    `night=${ac1.nightAtDay.join(',') || '0'} kraljLow=${ac1.kraljLow.join(',') || '0'} kralj3=${ac1.kralj3.join(',')}`);
+
+  /* AC2: for each treat, the mean pick frequency of cats that like it is at
+     least twice that of cats that do not (day pool = the 7 non-special cats). */
+  const ac2ratios = await h.evalv(`(() => {
+    const hk = window.__catForest;
+    const cats = window.__catForest.data.cats;
+    const treats = ${JSON.stringify(EXPECTED_TREAT_IDS)};
+    const out = {};
+    hk.seed(1);
+    for (const t of treats) {
+      const ids = hk.pick(t, false, 0, 4000);
+      const freq = {};
+      for (const id of ids) freq[id] = (freq[id] || 0) + 1;
+      const elig = cats.filter(c => !c.night && !c.needsAllPlates);
+      const likers = elig.filter(c => c.likes.indexOf(t) !== -1);
+      const unliked = elig.filter(c => c.likes.indexOf(t) === -1);
+      const avg = g => g.reduce((s, c) => s + (freq[c.id] || 0), 0) / g.length;
+      out[t] = { like: avg(likers), no: avg(unliked) };
+    }
+    return out;
+  })()`);
+  const ac2bad = Object.keys(ac2ratios).filter(t => !(ac2ratios[t].no > 0 && ac2ratios[t].like >= 2 * ac2ratios[t].no));
+  check('for each treat the average frequency of likers is at least 2x non-likers (AC2)',
+    ac2bad.length === 0,
+    ac2bad.map(t => `${t}=${(ac2ratios[t].like / ac2ratios[t].no).toFixed(2)}x`).join(' ')
+      || Object.keys(ac2ratios).map(t => `${t}=${(ac2ratios[t].like / ac2ratios[t].no).toFixed(2)}x`).join(' '));
+
+  /* AC3: never null across treat x night x platesFilled x occupied, including
+     the pathological sets where every structurally eligible cat is occupied
+     (the fallback must still produce a cat). */
+  const ac3bad = await h.evalv(`(() => {
+    const hk = window.__catForest;
+    const treats = ${JSON.stringify(EXPECTED_TREAT_IDS)};
+    const occSets = [
+      [],
+      ['maca'],
+      ['maca', 'puhko', 'mica', 'sef', 'cveta', 'tigar', 'tacka'],
+      ${JSON.stringify(EXPECTED_CAT_IDS)}
+    ];
+    const bad = [];
+    for (const t of treats) {
+      for (const night of [false, true]) {
+        for (let pf = 0; pf <= 3; pf++) {
+          for (const occ of occSets) {
+            const ids = hk.pick(t, night, pf, 30, occ, null);
+            if (ids.length !== 30 || ids.some(x => !x || typeof x !== 'string'))
+              bad.push(t + '/' + night + '/' + pf + '/' + occ.length);
+          }
+        }
+      }
+    }
+    return bad;
+  })()`);
+  check('pick never returns null/undefined across every treat x night x plates x occupied (AC3)',
+    Array.isArray(ac3bad) && ac3bad.length === 0,
+    Array.isArray(ac3bad) ? (ac3bad.slice(0, 4).join(' | ') || 'clean') : JSON.stringify(ac3bad));
+
+  /* AC4: an occupied cat is never returned (in sets that leave an eligible cat
+     free) and halving the last visitor's weight lowers its frequency. */
+  const ac4 = await h.evalv(`(() => {
+    const hk = window.__catForest;
+    const count = (arr, id) => arr.filter(x => x === id).length;
+    hk.seed(3); const base = hk.pick('fish', false, 0, 2000, [], null);
+    hk.seed(3); const occ = hk.pick('fish', false, 0, 2000, ['maca'], null);
+    hk.seed(3); const rep = hk.pick('fish', false, 0, 2000, [], 'maca');
+    if (occ.indexOf('maca') !== -1) return { bad: true };
+    return { baseMaca: count(base, 'maca'), occMaca: count(occ, 'maca'), repMaca: count(rep, 'maca') };
+  })()`);
+  check('an occupied cat is never returned and the last visitor repeats less often (AC4)',
+    !ac4.bad && ac4.occMaca === 0 && ac4.repMaca < ac4.baseMaca,
+    `base=${ac4.baseMaca} occupied=${ac4.occMaca} repeat=${ac4.repMaca}`);
+
+  /* RNG path: pickCat must consume exactly one draw per pick. After seed(5),
+     three picks followed by rand(1) must equal seed(5) + rand(3) + rand(1). */
+  const rngPath = await h.evalv(`(() => {
+    const hk = window.__catForest;
+    hk.seed(5); hk.pick('fish', false, 0, 3); const a = hk.rand(1)[0];
+    hk.seed(5); hk.rand(3); const b = hk.rand(1)[0];
+    return { a: a, b: b, same: a === b };
+  })()`);
+  check('pickCat consumes exactly one engine RNG draw per pick (no hidden randomness)',
+    rngPath.same === true, `after3picks=${rngPath.a} after3rand=${rngPath.b}`);
 
   await h.close();
 

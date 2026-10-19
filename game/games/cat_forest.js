@@ -4,6 +4,7 @@
    resources/General_reviews/Cat_Forest/ (01_TECH_DESIGN.md is the contract).
    CF-01 shell · CF-03 static stage · CF-04 engine core (below): constants,
    clock, seedable RNG, state, render() and the __catForest test hook.
+   CF-06 adds the cat/treat/gift data and the weighted picker.
    Gameplay arrives card by card — nothing here is visible to the child yet. */
 (function () {
   'use strict';
@@ -39,6 +40,34 @@
     DT_CLAMP_MS: 100,
     STEP_MS: 50
   };
+
+  /* ---- data (CF-06; TD §3, PS §5) --------------------------------------
+     ids are ASCII code ids; names are the approved D9 Cyrillic strings. A new
+     cat or treat is a data-only change, so every list lives here in one place. */
+  var TREATS = [
+    { id: 'fish',    emoji: '🐟', name: 'Риба' },
+    { id: 'milk',    emoji: '🥛', name: 'Млеко' },
+    { id: 'chicken', emoji: '🍗', name: 'Пилетина' },
+    { id: 'sushi',   emoji: '🍣', name: 'Суши' },
+    { id: 'cookie',  emoji: '🍪', name: 'Колачић' }
+  ];
+
+  /* `acc` is the accessory drawn over the body emoji; `fallbackEmoji` covers
+     devices that do not render the 🐈‍⬛ ZWJ glyph as one (D7, probed later). */
+  var CATS = [
+    { id: 'maca',   name: 'Маца',     emoji: '🐱', acc: null, likes: ['fish', 'milk'],      weight: 1.0 },
+    { id: 'puhko',  name: 'Пухко',    emoji: '🐈', acc: null, likes: ['milk', 'cookie'],    weight: 1.0 },
+    { id: 'mica',   name: 'Мица',     emoji: '🐱', acc: '🎀', likes: ['cookie', 'chicken'], weight: 0.8 },
+    { id: 'sef',    name: 'Шеф',      emoji: '🐈', acc: '🎩', likes: ['chicken', 'sushi'],  weight: 0.7 },
+    { id: 'cveta',  name: 'Цвета',    emoji: '🐱', acc: '🌸', likes: ['milk', 'sushi'],     weight: 0.7 },
+    { id: 'tigar',  name: 'Тигар',    emoji: '🐯', acc: null, likes: ['chicken', 'fish'],   weight: 0.5 },
+    { id: 'tacka',  name: 'Тачка',    emoji: '🐆', acc: null, likes: ['sushi', 'fish'],     weight: 0.5 },
+    { id: 'senka',  name: 'Сенка',    emoji: '🐈‍⬛', fallbackEmoji: '🐱', acc: null, likes: ['fish'], weight: 1.0, night: true },
+    { id: 'zvezda', name: 'Звездица', emoji: '🐈', acc: '⭐', likes: ['milk', 'sushi'],     weight: 0.7, night: true },
+    { id: 'kralj',  name: 'Краљ',     emoji: '🦁', acc: '👑', likes: [],                    weight: 0.4, needsAllPlates: true }
+  ];
+
+  var GIFTS = ['🌸', '🌷', '🍄', '🍀', '🦋'];
 
   var started = false;
 
@@ -93,13 +122,65 @@
 
   function seed(n) {
     rnd = mulberry32((n >>> 0) || 1);
-    // CF-06 appends the pick-history reset here — seed() is documented to clear it.
+    // The anti-repeat memory lives in state (CF-07); there is no pick history to clear yet.
   }
 
   seed((Math.random() * 0x100000000) >>> 0);
 
   function rngRange(min, max) {
     return min + Math.floor(rnd() * (max - min + 1));
+  }
+
+  /* ---- picker (CF-06; TD §7) -------------------------------------------
+     Pure and UI-free: given the treat on the table and the world this instant,
+     choose the next visiting cat. Every draw goes through rnd(), so a seeded
+     run is reproducible and tests can pin the distribution. */
+  function eligibleCats(skipOccupied, night, platesFilled, occupied) {
+    return CATS.filter(function (c) {
+      if (c.night && !night) return false;                              // night-only cats only at night
+      if (c.needsAllPlates && platesFilled !== 3) return false;         // Краљ only with all plates full
+      if (!skipOccupied && occupied.indexOf(c.id) !== -1) return false; // a cat already on stage stays out
+      return true;
+    });
+  }
+
+  /* One cumulative-weight draw over `pool`. `noRepeat` drops the anti-repeat
+     halving and `relaxLike` drops the non-favourite penalty (fallback only). */
+  function weightedPick(pool, treat, lastVisitorId, noRepeat, relaxLike) {
+    var total = 0, w = [], i, c, x;
+    for (i = 0; i < pool.length; i++) {
+      c = pool[i];
+      x = c.weight;
+      if (!noRepeat && c.id === lastVisitorId) x *= 0.5;
+      if (!relaxLike && c.likes.indexOf(treat) === -1) x *= CF.UNLIKED_FACTOR;
+      w.push(x);
+      total += x;
+    }
+    var r = rnd() * total, acc = 0;
+    for (i = 0; i < pool.length; i++) {
+      acc += w[i];
+      if (r < acc) return pool[i];
+    }
+    return pool[pool.length - 1]; // float safety net — the draw never misses
+  }
+
+  function pickCat(opts) {
+    opts = opts || {};
+    var treat = opts.treat || null;
+    var night = !!opts.night;
+    var platesFilled = opts.platesFilled || 0;
+    var occupied = opts.occupiedIds || [];
+    var last = opts.lastVisitorId || null;
+
+    var pool = eligibleCats(false, night, platesFilled, occupied);
+    if (pool.length) return weightedPick(pool, treat, last, false, false);
+
+    /* Fallback (TD §7): the normal pool is empty only because every eligible
+       cat is occupied, so relax the anti-repeat, then the like penalty, and as
+       a last resort the occupied filter — pickCat must never return null. */
+    pool = eligibleCats(true, night, platesFilled, occupied);
+    if (!pool.length) pool = CATS.slice();
+    return weightedPick(pool, treat, last, true, true);
   }
 
   /* ---- DOM handles and the render projection ----------------------------
@@ -292,7 +373,23 @@
       },
       pause: pause,
       step: step,
-      place: place
+      place: place,
+      /* `pick` is the documented hook (TD §8); the two trailing arguments let
+         CF-06 tests exercise the occupied/last-visitor rules without a new
+         method. The engine itself never reads the hook. */
+      pick: function (treat, night, platesFilled, n, occupiedIds, lastVisitorId) {
+        var out = [];
+        for (var i = 0; i < n; i++) {
+          out.push(pickCat({
+            treat: treat, night: night, platesFilled: platesFilled,
+            occupiedIds: occupiedIds || [], lastVisitorId: lastVisitorId || null
+          }).id);
+        }
+        return out;
+      },
+      /* Read-only view of the DATA tables so the smoke can assert the roster
+         (AC5). Inspection only — nothing here changes behaviour. */
+      data: { treats: TREATS, cats: CATS, gifts: GIFTS }
     };
 
     els.treats.forEach(function (el) { el.addEventListener('click', onTreatClick); });
