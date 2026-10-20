@@ -938,10 +938,12 @@
   }
 
   function onTreatClick(e) {
+    if (suppressClick) { suppressClick = false; return; } // CF-13: the click a drag leaves behind
     selectTreat(e.currentTarget.getAttribute('data-treat'));
   }
 
   function onPlateClick(e) {
+    if (suppressClick) { suppressClick = false; return; } // CF-13 (sorting idiom)
     var plate = state.plates[+e.currentTarget.getAttribute('data-plate')];
     if (!plate) return;
     /* Full forest: if a treat is in hand, it bounces gently; either way nothing
@@ -953,6 +955,126 @@
     if (plate.state !== 'empty') return;           // occupied plate: nothing
     if (!state.selectedTreat) { nudge('hint'); return; } // empty-handed: picture hint
     place(state.selectedTreat, plate.idx);
+  }
+
+  /* ---- drag placement (CF-13; D8) ---------------------------------------
+     Tap-select + tap-plate (CF-05) is untouched: a gesture only becomes a
+     drag after CF.DRAG_START_PX of movement, so a plain tap still reaches
+     the click handlers. A drag lifts an inert ghost clone (the real treat
+     button only dims — it never moves), marks the plate under the pointer
+     within CF.DROP_PAD, and on release either runs the very same place()
+     path a tap uses or glides the ghost back — never a failure message
+     (PS §4). The click a drag leaves behind is swallowed the way sorting
+     does it: both click entry points consume the flag and a new gesture
+     clears it, so a missed click can never eat the next tap. */
+  var suppressClick = false;
+  var drag = null; // { el, id, x0, y0, moved, over, ghost }
+
+  function plateAt(x, y) {
+    for (var i = 0; i < els.plates.length; i++) {
+      var r = els.plates[i].getBoundingClientRect();
+      if (x >= r.left - CF.DROP_PAD && x <= r.right + CF.DROP_PAD &&
+          y >= r.top - CF.DROP_PAD && y <= r.bottom + CF.DROP_PAD) return i;
+    }
+    return -1;
+  }
+
+  /* AC4 has no engine timer to lean on (AC7 scans the source), so a ghost
+     whose transitionend never fires (tab hidden mid-glide) is swept by the
+     next pointerdown instead. */
+  function sweepGhosts() {
+    var stale = document.querySelectorAll('.cf-ghost');
+    for (var i = 0; i < stale.length; i++) stale[i].parentNode.removeChild(stale[i]);
+  }
+
+  function clearOver() {
+    for (var i = 0; i < els.plates.length; i++) els.plates[i].classList.remove('cf-over');
+  }
+
+  function endGesture(d) {
+    suppressClick = d.moved; // only a real drag swallows its trailing click
+    d.el.classList.remove('cf-dragging');
+    clearOver();
+  }
+
+  function onTreatPointerDown(e) {
+    if (drag) return; // a second finger while dragging: ignored
+    suppressClick = false; // fresh gesture: nothing left to swallow
+    sweepGhosts();
+    drag = { el: e.currentTarget, id: e.pointerId, x0: e.clientX, y0: e.clientY,
+             moved: false, over: -1, ghost: null };
+    try { drag.el.setPointerCapture(e.pointerId); } catch (_) { /* synthetic pointers */ }
+  }
+
+  function onTreatPointerMove(e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
+    if (!drag.moved) {
+      if (Math.abs(dx) + Math.abs(dy) <= CF.DRAG_START_PX) return; // still a tap
+      drag.moved = true;
+      var r = drag.el.getBoundingClientRect();
+      var g = drag.el.cloneNode(true);
+      g.className = 'cf-treat cf-ghost'; // size rules only — no live classes
+      g.removeAttribute('aria-pressed');
+      g.setAttribute('aria-hidden', 'true');
+      g.setAttribute('tabindex', '-1');
+      g.style.left = r.left + 'px';
+      g.style.top = r.top + 'px';
+      g.style.width = r.width + 'px';
+      g.style.height = r.height + 'px';
+      g.style.margin = '0';
+      document.body.appendChild(g);
+      drag.ghost = g;
+      drag.el.classList.add('cf-dragging');
+    }
+    drag.ghost.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    var over = plateAt(e.clientX, e.clientY);
+    if (over !== drag.over) {
+      clearOver();
+      if (over >= 0) els.plates[over].classList.add('cf-over');
+      drag.over = over;
+    }
+  }
+
+  function onTreatPointerUp(e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var d = drag;
+    drag = null;
+    endGesture(d);
+    if (!d.moved) return; // a tap: the click handlers take it from here
+    var treat = d.el.getAttribute('data-treat');
+    if (d.over >= 0 && place(treat, d.over)) {
+      /* AC4: the placed treat lives on the plate now — its ghost goes away
+         the moment it lands, no glide. */
+      if (d.ghost && d.ghost.parentNode) d.ghost.parentNode.removeChild(d.ghost);
+      return; // the tap path, verbatim
+    }
+    softReturn(d.ghost); // ground or an occupied plate: glide back, no failure
+  }
+
+  function onTreatPointerCancel(e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    var d = drag;
+    drag = null;
+    endGesture(d);
+    /* An interrupted gesture has nothing to animate: the node just goes. */
+    if (d.ghost && d.ghost.parentNode) d.ghost.parentNode.removeChild(d.ghost);
+  }
+
+  /* The miss glides the ghost back to the treat it came from, then removes
+     it: the clone's base left/top never moved, so returning is transform -> 0.
+     Reduced motion skips the travel (the node still goes away — DECISIONS #8),
+     and the removal needs no engine timer (AC7): transitionend removes it,
+     sweepGhosts() at the next gesture is the safety net. */
+  function softReturn(g) {
+    if (!g || !g.parentNode) return;
+    if (reduceMotion) { g.parentNode.removeChild(g); return; }
+    g.classList.add('cf-return');
+    g.style.transform = 'translate(0px,0px)';
+    g.addEventListener('transitionend', function done() {
+      g.removeEventListener('transitionend', done);
+      if (g.parentNode) g.parentNode.removeChild(g);
+    });
   }
 
   /* ---- test hook (TD §8; the game itself never reads it) ---------------- */
@@ -1029,7 +1151,15 @@
       data: { treats: TREATS, cats: CATS, gifts: GIFTS }
     };
 
-    els.treats.forEach(function (el) { el.addEventListener('click', onTreatClick); });
+    els.treats.forEach(function (el) {
+      el.addEventListener('click', onTreatClick);
+      /* CF-13: the whole gesture lives on the treat; clicks stay the single
+         entry point for taps, and a drag swallows the click it leaves. */
+      el.addEventListener('pointerdown', onTreatPointerDown);
+      el.addEventListener('pointermove', onTreatPointerMove);
+      el.addEventListener('pointerup', onTreatPointerUp);
+      el.addEventListener('pointercancel', onTreatPointerCancel);
+    });
     els.plates.forEach(function (el) { el.addEventListener('click', onPlateClick); });
     els.dayNight.addEventListener('click', onDayNightClick); // CF-11
     els.rainBtn.addEventListener('click', onRainClick);      // CF-12

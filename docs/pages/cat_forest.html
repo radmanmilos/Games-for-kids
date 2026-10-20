@@ -142,7 +142,7 @@
     display:flex;align-items:center;gap:clamp(6px,1.8vmin,22px);padding:clamp(6px,1.4vmin,14px);
     border-radius:999px;background:rgba(255,255,255,.6);box-shadow:var(--shadow-soft);
     pointer-events:none;}
-  .cf-treat{pointer-events:auto;width:clamp(64px,11vmin,96px);aspect-ratio:1;padding:0;border:none;
+  .cf-treat{pointer-events:auto;touch-action:none;width:clamp(64px,11vmin,96px);aspect-ratio:1;padding:0;border:none;
     border-radius:50%;background:#fff;box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);cursor:pointer;
     display:grid;place-items:center;line-height:1;
     transition:transform .16s ease, box-shadow .16s ease;}
@@ -167,6 +167,18 @@
     0%,100%{transform:translateX(-50%) translateY(0);}
     50%{transform:translateX(-50%) translateY(-10px);}
   }
+
+  /* CF-13 drag: touch-action:none lives on .cf-treat above so the browser
+     never steals a finger drag (scroll/zoom -> pointercancel). The lifted
+     ghost is an inert fixed clone with its OWN transition rules — the
+     treat's .16s must not chase the finger; only the return glide
+     transitions (.cf-return). The plate under the pointer lights up while
+     the drop is valid; the dragged treat merely dims (D8). */
+  .cf-treat.cf-dragging{opacity:.45;}
+  .cf-plate.cf-over{transform:scale(1.14);
+    filter:drop-shadow(0 0 1.4vmin rgba(255,214,90,.95));}
+  .cf-ghost{position:fixed;z-index:60;pointer-events:none;transition:none;}
+  .cf-ghost.cf-return{transition:transform .18s ease-out;}
 
   .cf-toggles{z-index:9;top:2.6vmin;right:2.6vmin;display:flex;gap:2.6vmin;pointer-events:none;}
   .cf-toggles button{pointer-events:auto;width:clamp(56px,8vmin,72px);aspect-ratio:1;padding:0;border:none;

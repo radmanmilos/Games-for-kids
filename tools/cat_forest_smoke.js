@@ -1304,6 +1304,152 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   check('no code path reads the wall clock to decide the time (AC5)',
     !engineSrc.includes('Date.now(') && !engineSrc.includes('new Date('));
 
+  /* ---- CF-13: drag-and-drop placement (D8) ------------------------------ */
+  const cf13Sel = '#cf-tray .cf-treat[data-treat="fish"]';
+  const cf13Fire = (hh, sel, type, x, y) => hh.evalv(`JSON.stringify((() => {
+    const el = document.querySelector(${JSON.stringify(sel)});
+    if (!el) return { err: 'missing treat' };
+    el.dispatchEvent(new PointerEvent('${type}', { bubbles: true, cancelable: true,
+      pointerId: 31, clientX: ${x}, clientY: ${y} }));
+    return { dragging: el.classList.contains('cf-dragging'),
+      ghosts: document.querySelectorAll('.cf-ghost').length,
+      over: [].map.call(document.querySelectorAll('.cf-plate.cf-over'),
+                        p => +p.getAttribute('data-plate')) }; })())`).then(JSON.parse);
+  const cf13Geo = hh => hh.evalv(`JSON.stringify((() => {
+    const t = document.querySelector(${JSON.stringify(cf13Sel)});
+    const p = document.querySelectorAll('#cf-plates .cf-plate');
+    const tr = t.getBoundingClientRect(), r0 = p[0].getBoundingClientRect();
+    return { tx: tr.left + tr.width / 2, ty: tr.top + tr.height / 2,
+      p0x: r0.left + r0.width / 2, p0y: r0.top + r0.height / 2,
+      gx: 4, gy: 4 }; })())`).then(JSON.parse);
+  const cf13Snap = hh => hh.evalv(`JSON.stringify((() => { const s = __catForest.state();
+    return { plates: s.plates, selectedTreat: s.selectedTreat, idle: s.idle }; })())`);
+
+  /* Static half (sorting's technique): the CSS that makes a finger drag
+     possible must be there before any gesture runs. */
+  const cf13Css = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    /* getComputedStyle is LIVE: every value must be read while the probe
+       element is still attached, or it comes back empty after remove(). */
+    const mk = c => { const d = document.createElement('div'); d.className = c;
+      document.body.appendChild(d); const s = getComputedStyle(d);
+      const out = { pos: s.position, pe: s.pointerEvents, tr: s.transform, op: s.opacity };
+      d.remove(); return out; };
+    const t = getComputedStyle(document.querySelector(${JSON.stringify(cf13Sel)}));
+    return { ta: t.touchAction, g: mk('cf-treat cf-ghost'),
+      o: mk('cf-plate cf-over'), d: mk('cf-treat cf-dragging') }; })())`));
+  check('CF-13 static: .cf-treat declares touch-action:none so the browser cannot steal a finger drag',
+    cf13Css.ta === 'none', `computed touch-action = ${cf13Css.ta} (must be 'none')`);
+  check('CF-13 static: the ghost is a fixed, pointer-inert clone and the drag CSS exists (.cf-dragging dims, .cf-over lights the plate)',
+    cf13Css.g.pos === 'fixed' && cf13Css.g.pe === 'none' &&
+    parseFloat(cf13Css.d.op) < 1 && cf13Css.o.tr !== 'none', JSON.stringify(cf13Css));
+
+  /* AC3 first: a gesture that never crosses CF.DRAG_START_PX is still a tap.
+     Both comparison boots share one protocol — warm up the idle windows
+     (any touch resets them, CF-10) and pause the clock — so every snapshot
+     field below is comparable byte for byte. */
+  const cf13Main = await bootFresh('cf13-main', 1024, 800);
+  const cf13G = await cf13Geo(cf13Main);
+  await cf13Main.evalv(`document.getElementById('app').dispatchEvent(new Event('pointerdown'));
+    __catForest.pause(true); true`);
+  await cf13Fire(cf13Main, cf13Sel, 'pointerdown', cf13G.tx, cf13G.ty);
+  const cf13TapUp = await cf13Fire(cf13Main, cf13Sel, 'pointerup', cf13G.tx, cf13G.ty);
+  await cf13Main.evalv(`document.querySelector(${JSON.stringify(cf13Sel)}).click(); true`);
+  const cf13Sel1 = await cf13Main.evalv(`JSON.stringify(__catForest.state().selectedTreat)`);
+  await cf13Main.evalv(`document.querySelector(${JSON.stringify(cf13Sel)}).click(); true`);
+  const cf13Sel2 = await cf13Main.evalv(`JSON.stringify(__catForest.state().selectedTreat)`);
+  check('CF-13 AC3: a plain tap below the drag threshold still toggles selection (no accidental drag)',
+    cf13Sel1 === '"fish"' && cf13Sel2 === 'null' &&
+    cf13TapUp.dragging === false && cf13TapUp.ghosts === 0, JSON.stringify({ cf13Sel1, cf13Sel2, cf13TapUp }));
+
+  /* AC1: drag onto a free plate — mid-gesture the plate lights up, then the
+     drop runs the very same place() a tap uses (same seed => same state). */
+  await cf13Main.evalv(`__catForest.seed(7); true`);
+  await cf13Fire(cf13Main, cf13Sel, 'pointerdown', cf13G.tx, cf13G.ty);
+  const cf13Mid = await cf13Fire(cf13Main, cf13Sel, 'pointermove', cf13G.p0x, cf13G.p0y);
+  check('CF-13 AC1 mid-drag: the plate under the pointer lights up, the treat dims and the ghost follows (DROP_PAD)',
+    JSON.stringify(cf13Mid.over) === '[0]' && cf13Mid.dragging === true && cf13Mid.ghosts === 1,
+    JSON.stringify(cf13Mid));
+  await cf13Fire(cf13Main, cf13Sel, 'pointerup', cf13G.p0x, cf13G.p0y);
+  const cf13A = JSON.parse(await cf13Snap(cf13Main));
+  const cf13Agh = await cf13Main.evalv(`document.querySelectorAll('.cf-ghost').length`);
+  check('CF-13 AC1: the drop places the treat through the same place() path (plate filled, selection cleared)',
+    cf13A.plates[0].state === 'treat' && cf13A.plates[0].treat === 'fish' && cf13A.selectedTreat === null,
+    JSON.stringify({ plate0: cf13A.plates[0], selectedTreat: cf13A.selectedTreat }));
+  check('CF-13 AC4: no ghost is left behind after a successful drop',
+    +cf13Agh === 0, `ghosts = ${cf13Agh}`);
+
+  /* AC2: the same gesture ending on empty ground must change nothing at all
+     — the idle warmup and the clock pause from boot make every state() field
+     comparable byte for byte (the drag's own pointerdown re-sets idle to the
+     same {0,0,true}). */
+  const cf13S1 = await cf13Snap(cf13Main);
+  await cf13Fire(cf13Main, cf13Sel, 'pointerdown', cf13G.tx, cf13G.ty);
+  const cf13GndMid = await cf13Fire(cf13Main, cf13Sel, 'pointermove', cf13G.gx, cf13G.gy);
+  const cf13GndUp = await cf13Fire(cf13Main, cf13Sel, 'pointerup', cf13G.gx, cf13G.gy);
+  const cf13S2 = await cf13Snap(cf13Main);
+  check('CF-13 AC2: a drag onto empty ground returns the treat and state is byte-identical (paused)',
+    cf13S1 === cf13S2, `same=${cf13S1 === cf13S2}`);
+  const cf13Clean = JSON.parse(await cf13Main.evalv(`JSON.stringify({
+    ghosts: document.querySelectorAll('.cf-ghost').length,
+    over: document.querySelectorAll('.cf-plate.cf-over').length,
+    bad: document.querySelectorAll('[class*="error"],[class*="fail"],[class*="wrong"]').length,
+    text: document.body.innerText })`));
+  check('CF-13 AC2: the miss lights no plate, leaves no ghost and no failure class or text',
+    JSON.stringify(cf13GndMid.over) === '[]' && +cf13GndUp.ghosts === 0 &&
+    cf13Clean.ghosts === 0 && cf13Clean.over === 0 && cf13Clean.bad === 0 && cf13Clean.text === '',
+    JSON.stringify({ cf13GndMid, cf13GndUp, cf13Clean }));
+
+  /* AC3's other half: the click a completed drag leaves behind is swallowed. */
+  await cf13Main.evalv(`document.querySelector(${JSON.stringify(cf13Sel)}).click(); true`);
+  const cf13Sup = await cf13Main.evalv(`JSON.stringify(__catForest.state().selectedTreat)`);
+  check('CF-13 AC3: the click that follows a real drag is suppressed (no double-handling)',
+    cf13Sup === 'null', `selectedTreat = ${cf13Sup}`);
+
+  /* AC4: an interrupted gesture cleans up synchronously (no glide, no timer). */
+  await cf13Fire(cf13Main, cf13Sel, 'pointerdown', cf13G.tx, cf13G.ty);
+  await cf13Fire(cf13Main, cf13Sel, 'pointermove', cf13G.p0x, cf13G.p0y);
+  const cf13Can = await cf13Fire(cf13Main, cf13Sel, 'pointercancel', cf13G.p0x, cf13G.p0y);
+  check('CF-13 AC4: pointercancel mid-drag removes the ghost immediately (no DOM leak)',
+    +cf13Can.ghosts === 0 && cf13Can.dragging === false, JSON.stringify(cf13Can));
+  await cf13Main.close();
+
+  /* AC1's identity half: the real tap path — pointer down/up then click,
+     the way a child taps it — with the same seed must land the same state
+     (arriveMs included, because both paths draw exactly one RNG value in
+     place()). Same warmup+pause protocol as the drag boot. */
+  const cf13TapH = await bootFresh('cf13-tap', 1024, 800);
+  await cf13TapH.evalv(`document.getElementById('app').dispatchEvent(new Event('pointerdown'));
+    __catForest.pause(true); __catForest.seed(7); true`);
+  await cf13Fire(cf13TapH, cf13Sel, 'pointerdown', cf13G.tx, cf13G.ty);
+  await cf13Fire(cf13TapH, cf13Sel, 'pointerup', cf13G.tx, cf13G.ty);
+  await cf13TapH.evalv(`document.querySelector(${JSON.stringify(cf13Sel)}).click()`);
+  const cf13Plate0 = '#cf-plates .cf-plate[data-plate="0"]';
+  await cf13Fire(cf13TapH, cf13Plate0, 'pointerdown', cf13G.p0x, cf13G.p0y);
+  await cf13Fire(cf13TapH, cf13Plate0, 'pointerup', cf13G.p0x, cf13G.p0y);
+  await cf13TapH.evalv(`document.querySelector(${JSON.stringify(cf13Plate0)}).click()`);
+  const cf13B = JSON.parse(await cf13Snap(cf13TapH));
+  await cf13TapH.close();
+  const cf13Id = a => JSON.stringify({ p: a.plates, s: a.selectedTreat, i: a.idle });
+  check('CF-13 AC1: the drag result is identical to the tap path (same seed, same place() draw)',
+    cf13Id(cf13A) === cf13Id(cf13B), `drag=${cf13Id(cf13A)} | tap=${cf13Id(cf13B)}`);
+
+  /* AC4 under motion: reduced motion removes the ghost instantly (asserted
+     above); with motion allowed the miss glides back and the node goes away
+     when the transition ends — still without any engine timer. */
+  const cf13Mot = await bootEmulated('cf13-motion', 1024, 800, 'no-preference');
+  const cf13MG = await cf13Geo(cf13Mot);
+  await cf13Fire(cf13Mot, cf13Sel, 'pointerdown', cf13MG.tx, cf13MG.ty);
+  await cf13Fire(cf13Mot, cf13Sel, 'pointermove', cf13MG.gx, cf13MG.gy);
+  const cf13MotUp = await cf13Fire(cf13Mot, cf13Sel, 'pointerup', cf13MG.gx, cf13MG.gy);
+  const cf13Gliding = await cf13Mot.evalv(`JSON.stringify({ n: document.querySelectorAll('.cf-ghost').length,
+    ret: document.querySelectorAll('.cf-ghost.cf-return').length })`);
+  await sleep(320);
+  const cf13After = await cf13Mot.evalv(`document.querySelectorAll('.cf-ghost').length`);
+  check('CF-13 AC4: with motion allowed a miss glides back and the ghost is removed at the end of the glide',
+    +cf13MotUp.ghosts === 1 && JSON.parse(cf13Gliding).n === 1 && JSON.parse(cf13Gliding).ret === 1 &&
+    +cf13After === 0, `mid=${cf13Gliding} after=${cf13After}`);
+  await cf13Mot.close();
+
   await h.close();
 
   /* ---- negative control: the reachability check must be able to fail --------

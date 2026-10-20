@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **275**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **276**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -276,3 +276,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 272 | DONE | 2026-10-20 | Cat Forest: day/night toggle (CF-11) (2026-10-20, OpenCode/Big Pickle). Button wired to the CF-10 setTime +… | tasks-250-299.md
 274 | DONE | 2026-10-20 | Gate GitHub Pages publishing on CI success (2026-10-20, OpenCode/Big Pickle). Pages build_type legacy →… | tasks-250-299.md
 273 | DONE | 2026-10-20 | Cat Forest: rain + reduced-motion gates (CF-12) (2026-10-20, OpenCode/Big Pickle).… | tasks-250-299.md
+275 | DONE | 2026-10-20 | Cat Forest: drag treat to plate (CF-13) (2026-10-20, OpenCode/Big Pickle). Pointer drag with an inert ghost… | tasks-250-299.md
