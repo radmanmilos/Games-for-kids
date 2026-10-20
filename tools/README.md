@@ -81,7 +81,7 @@ POSIX keeps the existing profile-tag kill.
 | `runtime_error_smoke.js` | R8/task 169 runtime-error gate. |
 | `guards/cdp_fail_negtest.js` | Task 177d regression test for headless.js websocket loss. |
 | `guards/boot_enable_negtest.js` | Task 214 regression guard for the parent_smoke CI boot crash (CDP Page.enable got no response within 30000ms, 0 checks, red on every run that hit it). |
-| `validate_workflow.js` | CI-topology guard (R5/task 165), 17 read-only checks over .github/workflows/ci.yml: every tools/*.js the workflow invokes exists; every… |
+| `validate_workflow.js` | CI-topology + publishing gate guard (R5/task 165; pages gate task 274), 21 read-only checks over .github/workflows/ci.yml: every tools/*.js the workflow invokes exists; every… |
 | `validate_generated.js` | Generated-artifact freshness (R5/task 165), the command the roadmap asked for. |
 | `check_scan_alerts.js` | Regression guard for the two GitHub code-scanning alerts (task 176). |
 | `check_release.js` | Read-only release gate (rewritten in R5/task 165). |

@@ -1,12 +1,16 @@
 name: CI
 
-# R4 (roadmap task 164) — four independent layers, so one failure can never
+# R4 (roadmap task 164) — layered so one failure can never
 # hide the rest of the results:
 #   setup    : generates the smoke matrix FROM the battery (never hand-listed)
 #   fast     : cheap read-only gates. Runs NO game smoke except the hub.
 #   smoke    : one matrix leg per smoke, fail-fast OFF.
 #   release  : offline E2E + deployment-artifact validation, after fast+smoke.
 #   extended : browser/device matrix — manual dispatch or weekly only.
+#   pages    : publishes docs/ to GitHub Pages — needs EVERY job above, so a
+#              red run can never go live (task 274; replaces the internal
+#              "pages build deployment" branch publisher, which fired on every
+#              push with no gate at all).
 on:
   push:
     branches: [main]
@@ -198,3 +202,60 @@ jobs:
       - name: Chromium + WebKit across 5 viewports
         run: node tools/play_matrix.mjs
         timeout-minutes: 25
+
+  # ---------------------------------------------------------------------------
+  # Job E — pages. Publishing used to be GitHub's INTERNAL "pages build
+  # deployment" (Pages source = branch main//docs): it fired on every push and
+  # no workflow could gate it, so a red run still went live. The source is now
+  # "GitHub Actions" (repo setting, switched with task 274) and this job is the
+  # ONLY publisher. It waits for every job of the run:
+  #   - always() is mandatory: with the default gate a skipped `smoke` leg
+  #     (the diff-driven matrix on a docs-only push) would propagate its skip
+  #     here and NOTHING would ever publish again;
+  #   - !failure() is the real gate: any failed job anywhere in the needs
+  #     graph blocks the deploy, while legs skipped by the diff count as
+  #     not-failed — exactly the run's own success rule;
+  #   - the event/ref guard keeps PR runs and the weekly schedule from
+  #     deploying.
+  # `needs` exposes DIRECT dependencies only (lesson project/lessons/
+  # ci-offline.md) — this job reads no needs.*.outputs, so listing all five
+  # jobs is purely the gate itself, and tools/validate_workflow.js pins it.
+  # ---------------------------------------------------------------------------
+  pages:
+    name: Deploy Pages (docs/ only when every gate is green)
+    needs: [setup, fast, smoke, release, extended]
+    if: ${{ always() && !failure() && !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-24.04
+    # Never let a stuck publisher hold the group; queue order keeps an older
+    # push from landing AFTER a newer one.
+    timeout-minutes: 10
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    # Job-level permissions REPLACE the workflow-level block, so `contents: read`
+    # must be restated next to the two things deploy-pages needs: `pages: write`
+    # for the deployment and `id-token: write` for its OIDC provenance.
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+
+      # Fails fast and loudly if the Pages setting is not the Actions build
+      # type — the first run after the switch proves the configuration.
+      - uses: actions/configure-pages@v6
+
+      # docs/ is the committed, sync-docs'd mirror of game/; the `fast` job we
+      # wait on already gates it (validate_generated.js byte-compares it), so
+      # this artifact cannot be stale relative to a green run.
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs
+
+      - name: Publish (runs only when nothing above failed)
+        id: deployment
+        uses: actions/deploy-pages@v5

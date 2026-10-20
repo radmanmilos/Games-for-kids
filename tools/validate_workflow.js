@@ -13,7 +13,10 @@
  *      the whole matrix job never runs — on a green-looking pipeline.
  *
  * Plus a few invariants R4 depends on, because each is a way for CI to
- * silently stop doing its job.
+ * silently stop doing its job. And since task 274: the publishing gate — the
+ * legacy branch publisher fired on every push with no gate, so the `pages`
+ * job's "waits for every job, only failed runs block, push-on-main only"
+ * contract is asserted here too, where every push's fast gate runs it.
  *
  * Usage:  node tools/validate_workflow.js           # validate + summary
  *         node tools/validate_workflow.js --quiet   # exit code only
@@ -166,6 +169,50 @@ check('matrix helper uses a guarded placeholder for an empty selection', emptySe
 const extendedJob = jobs && jobs.extended ? jobs.extended.join('\n') : '';
 const extendedGated = /workflow_dispatch|schedule/.test(extendedJob);
 check('extended (browser matrix) job is manual/schedule only', extendedGated, extendedGated ? 'gated' : 'would run on every push');
+
+// 6. The publishing gate (task 274, user rule 2026-10-20). The old publisher
+//    was GitHub's internal "pages build deployment" (branch source): it
+//    published on EVERY push regardless of the gates, and no YAML could stop
+//    it. Pages now uses the Actions build type and the `pages` job is the
+//    only publisher, so these are the invariants that keep a red run off the
+//    live site.
+const pagesJob = jobs && jobs.pages ? jobs.pages.join('\n') : '';
+check(
+  'pages deploy job exists (the legacy branch publisher is retired)',
+  pagesJob !== '',
+  pagesJob ? 'present' : 'missing — nothing would ever publish'
+);
+const pagesNeedsRaw = (pagesJob.match(/^\s+needs:\s*(.*)$/m) || [])[1] || '';
+const pagesNeeds = pagesNeedsRaw.replace(/[[\]]/g, '').split(/[\s,]+/).filter(Boolean);
+// Every OTHER job in the run must be a direct dependency: `needs` only
+// exposes direct dependencies (ci-offline.md), so this list IS the gate.
+const pagesMissing = jobNames.filter(j => j !== 'pages' && !pagesNeeds.includes(j));
+check(
+  'pages deploy waits directly on every other job of the run',
+  pagesJob !== '' && pagesMissing.length === 0,
+  pagesMissing.length
+    ? `missing from needs: ${pagesMissing.join(', ')} (has: ${pagesNeeds.join(', ') || 'none'})`
+    : pagesNeeds.join(', ')
+);
+// always() is required or a skipped smoke/release leg propagates its skip and
+// publishing stops forever; !failure() is the gate itself; the event/ref
+// guard keeps PRs and the weekly schedule off the live site.
+const pagesGate = /always\(\)/.test(pagesJob) && /!failure\(\)/.test(pagesJob) &&
+  /!cancelled\(\)/.test(pagesJob) && /github\.event_name == 'push'/.test(pagesJob) &&
+  /github\.ref == 'refs\/heads\/main'/.test(pagesJob);
+check(
+  'pages deploy fires only for a non-failed push run on main',
+  pagesGate,
+  pagesGate ? 'always() && !failure() && !cancelled(), push-only, main-only' : 'gate expression missing or weakened'
+);
+// Job-level permissions replace the workflow-level block; without these two
+// deploy-pages cannot create the deployment or prove its OIDC identity.
+const pagesPerms = /pages:\s*write/.test(pagesJob) && /id-token:\s*write/.test(pagesJob);
+check(
+  'pages deploy declares pages:write + id-token:write (deploy-pages needs both)',
+  pagesPerms,
+  pagesPerms ? 'present' : 'missing'
+);
 
 if (QUIET) {
   if (failures.length) {
