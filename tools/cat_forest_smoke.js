@@ -461,7 +461,11 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
      page (there is no reset() until CF-14) and every count stays exact. */
   const bootFresh = async (tag, width, height) => {
     const hh = await start({ page: '/pages/cat_forest.html', tag, width: width || 1024, height: height || 800 });
-    await bootedOn(hh);
+    const ok = await bootedOn(hh);
+    /* A page that never exposed the hook (a slow/flaky boot) would otherwise
+       crash hundreds of lines later with a confusing "undefined" TypeError.
+       Say what actually happened instead. */
+    if (!ok) throw new Error(`cat_forest did not boot for "${tag}" (no __catForest hook)`);
     await hh.evalv(STUB);
     await hh.evalv(`window.__catForest.pause(true)`);
     return hh;
@@ -604,7 +608,8 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     const hh = await start({ page: '/pages/cat_forest.html', tag, width: width || 1024, height: height || 800 });
     await hh.c.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] });
     await hh.navigate(`http://127.0.0.1:${hh.port}/pages/cat_forest.html`);
-    await bootedOn(hh);
+    const ok = await bootedOn(hh);
+    if (!ok) throw new Error(`cat_forest did not boot for "${tag}" (no __catForest hook)`);
     await hh.evalv(STUB);
     await hh.evalv(`window.__catForest.pause(true)`);
     return hh;
@@ -1473,6 +1478,22 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
         nodes: document.querySelectorAll('#cf-decor .cf-decor-item').length }; })()`);
   };
 
+  /* CF-15: reload a page and open the book the way the child does, so the
+     restored `met` array is what the grid is built from. */
+  const cf15ReloadBook = async hh => {
+    await hh.navigate(`http://127.0.0.1:${hh.port}/pages/cat_forest.html`);
+    await bootedOn(hh);
+    await hh.evalv(STUB);
+    await hh.evalv(`window.__catForest.pause(true); true`);
+    return hh.evalv(`(() => {
+      document.getElementById('cf-friends').click();
+      const book = document.getElementById('cf-book');
+      return { met: window.__catForest.state().met,
+        cats: book.querySelectorAll('.cf-book-cat').length,
+        empties: book.querySelectorAll('.cf-book-empty').length,
+        hidden: book.hidden }; })()`);
+  };
+
   /* AC5 + the save shape, gathered on the page that also feeds AC1: every
      localStorage.setItem call made during a whole visit + collection is
      recorded, and the raw save must carry exactly v/met/decor. */
@@ -1570,6 +1591,170 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   check('CF-14 AC4: with localStorage.setItem throwing the game still runs (AC4)',
     cf14Run.met >= 1 && cf14Run.decor >= 1 && cf14Run.text === '', JSON.stringify(cf14Run));
   await cf14T.close();
+
+  /* ---- CF-15: the «Мачке пријатељи» book (PS §7, D3) ---------------------
+     A wordless gallery of MET cats only: the button opens it (the clock
+     pauses), close returns the child to the 📖 button, a tap in the book is
+     the CF-09 cuddle, and the empty book is a single 🐾. Everything here is
+     deterministic: `state.met` is filled through the real visit path (or a
+     forceCat), the book is projected by render(), and every assertion reads
+     state + DOM rather than timing. */
+  const cf15H = await bootFresh('cf15-book');
+
+  /* AC1 (empty half) + AC3 (focus in, out and pause/resume) + AC2 (the clock
+     genuinely stops while the book is open): all on a fresh page with an empty
+     save, so the book is the pure «nothing met yet» state. */
+  const cf15Open = await cf15H.evalv(`(() => {
+    const hk = window.__catForest;
+    const btn = document.getElementById('cf-friends');
+    const book = document.getElementById('cf-book');
+    const close = document.getElementById('cf-book-close');
+    const before = { hidden: book.hidden, book: hk.state().book, clock: hk.state().clock };
+    /* A real tap: focus the button first (as a keyboard/AT user would) so the
+       return-focus half asserts the documented behaviour, not a lucky default. */
+    btn.focus();
+    btn.click();
+    const opened = { hidden: book.hidden, book: hk.state().book,
+      focus: document.activeElement === close,
+      empties: book.querySelectorAll('.cf-book-empty').length,
+      cats: book.querySelectorAll('.cf-book-cat').length,
+      text: book.innerText.trim() };
+    /* While open the clock must not move: step() is the hook's own advance. */
+    const clockBefore = hk.state().clock;
+    hk.step(2000);
+    const clockAfter = hk.state().clock;
+    close.click();
+    /* Close resumes: the same step now advances the clock again. */
+    const resumedBefore = hk.state().clock;
+    hk.step(500);
+    const resumed = hk.state().clock - resumedBefore;
+    const closed = { hidden: book.hidden, book: hk.state().book,
+      focus: document.activeElement === btn };
+    return { before: before, opened: opened, clockMoved: clockAfter - clockBefore,
+      resumed: resumed, closed: closed };
+  })()`);
+  check('CF-15 AC1: an empty book shows only 🐾 — no cat cards, no text (PS §7)',
+    cf15Open.opened.empties === 1 && cf15Open.opened.cats === 0 && cf15Open.opened.text === ''
+      && cf15Open.before.hidden === true,
+    JSON.stringify(cf15Open.opened));
+  check('CF-15 AC2: opening freezes the clock (step is a no-op) and close resumes it',
+    cf15Open.before.book === false && cf15Open.opened.book === true
+      && cf15Open.clockMoved === 0 && cf15Open.resumed > 0 && cf15Open.closed.book === false,
+    JSON.stringify({ book: cf15Open.opened.book, moved: cf15Open.clockMoved,
+      resumed: cf15Open.resumed, closed: cf15Open.closed.book }));
+  check('CF-15 AC3: focus moves to the close button on open and back to 📖 on close',
+    cf15Open.opened.focus === true && cf15Open.closed.focus === true,
+    JSON.stringify({ in: cf15Open.opened.focus, out: cf15Open.closed.focus }));
+
+  /* AC1 (populated half) + AC4 (no digits / Latin in the book) + the cuddle
+     path (a tap speaks the name and drops no state): meet cats through the
+     real visit path plus one forced, then open the book. The book is a pure
+     projection of `state.met`, so the assertion is that identity — never a
+     hard-coded roster. */
+  const cf15Pop = await cf15H.evalv(`(() => {
+    const hk = window.__catForest;
+    hk.seed(41);
+    ${VISIT}
+    visit();
+    hk.forceCat('mica', 1);
+    let g = 0;
+    while (g++ < 600 && hk.state().met.length < 2) hk.step(50);
+    const metBefore = hk.state().met.slice();
+    document.getElementById('cf-friends').click();
+    const cats = [...document.querySelectorAll('#cf-book .cf-book-cat')];
+    const box = el => { const r = el.getBoundingClientRect(); return { w: r.width, h: r.height,
+      top: r.top, left: r.left, right: r.right, bottom: r.bottom }; };
+    const text = document.getElementById('cf-book').innerText;
+    /* A tap on the first card is the CF-09 cuddle: hearts appear and met
+       is unchanged (looking at a friend never unlocks anything). */
+    const spoke0 = window.__spoke || 0;
+    const heartsBefore = document.querySelectorAll('#cf-fx .cf-party').length;
+    if (cats[0]) cats[0].click();
+    return { met: metBefore, cats: cats.length,
+      labels: cats.map(c => c.getAttribute('aria-label')),
+      accs: cats.map(c => (c.querySelector('.cf-book-cat-acc') || {}).textContent || ''),
+      hearts: document.querySelectorAll('#cf-fx .cf-party').length - heartsBefore,
+      spoke: (window.__spoke || 0) - spoke0,
+      metAfter: hk.state().met.slice(),
+      digits: /\\d/.test(text), latin: /[A-Za-z]/.test(text),
+      boxes: cats.map(box), close: box(document.getElementById('cf-book-close')),
+      vw: innerWidth, vh: innerHeight };
+  })()`);
+  check('CF-15 AC1: the book shows exactly the met cats (one card per friend, no extras)',
+    cf15Pop.met.length >= 2 && cf15Pop.cats === cf15Pop.met.length
+      && cf15Pop.labels.length === cf15Pop.cats,
+    JSON.stringify({ met: cf15Pop.met, cats: cf15Pop.cats, labels: cf15Pop.labels }));
+  check('CF-15 AC4: the book\'s innerText holds no digits and no Latin letters (PS §7)',
+    cf15Pop.digits === false && cf15Pop.latin === false,
+    JSON.stringify({ digits: cf15Pop.digits, latin: cf15Pop.latin }));
+  check('CF-15 step 2: a book tap is a cuddle — hearts + the spoken name, met unchanged',
+    cf15Pop.hearts >= 1 && cf15Pop.spoke >= 1
+      && JSON.stringify(cf15Pop.metAfter) === JSON.stringify(cf15Pop.met),
+    JSON.stringify({ hearts: cf15Pop.hearts, spoke: cf15Pop.spoke }));
+
+  /* AC5: cards and the close button are comfortable tap targets, inside the
+     viewport and hit-testable at their centres — measured while the book is
+     open, at the primary 1024×800 size. */
+  const cf15Boxes = cf15Pop.boxes.concat([cf15Pop.close]);
+  const cf15Inside = b => b.left >= -1 && b.top >= -1
+    && b.right <= cf15Pop.vw + 1 && b.bottom <= cf15Pop.vh + 1;
+  check('CF-15 AC5: every card and the close button are ≥ 72 px and inside the viewport (1024×800)',
+    cf15Boxes.length === cf15Pop.cats + 1 && cf15Boxes.every(b => Math.min(b.w, b.h) >= 72 && cf15Inside(b)),
+    JSON.stringify(cf15Boxes.map(b => ({ w: Math.round(b.w), h: Math.round(b.h), inside: cf15Inside(b) }))));
+  await cf15H.close();
+
+  /* AC5 (short landscape) + the regression risk: after closing, the book must
+     leave the layer stack so the tray is tappable again. Measured at 844×390,
+     where the card demands ≥ 56 px. */
+  const cf15S = await bootFresh('cf15-short', 844, 390);
+  const cf15Short = await cf15S.evalv(`(() => {
+    const hk = window.__catForest; hk.seed(43);
+    hk.forceCat('maca', 0);
+    let g = 0; while (g++ < 400 && hk.state().met.length < 1) hk.step(50);
+    hk.step(hk.state().config.SIT_MS + 100);
+    document.getElementById('cf-friends').click();
+    const book = document.getElementById('cf-book');
+    const box = el => { const r = el.getBoundingClientRect(); return { w: r.width, h: r.height,
+      left: r.left, top: r.top, right: r.right, bottom: r.bottom }; };
+    const hits = el => { const r = el.getBoundingClientRect();
+      const h = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return !!(h && (h === el || el.contains(h))); };
+    const card = book.querySelector('.cf-book-cat');
+    const close = document.getElementById('cf-book-close');
+    const open = { card: card && box(card), cardHit: card ? hits(card) : false,
+      close: box(close), closeHit: hits(close) };
+    document.getElementById('cf-book-close').click();
+    /* After close: the book is hidden AND the tray's first treat is tappable. */
+    const treat = document.querySelector('#cf-tray .cf-treat');
+    return { open: open, hidden: book.hidden,
+      trayHit: hits(treat), trayBox: box(treat),
+      bookZ: getComputedStyle(book).display, vw: innerWidth, vh: innerHeight };
+  })()`);
+  const cf15SInside = b => b.left >= -1 && b.top >= -1
+    && b.right <= cf15Short.vw + 1 && b.bottom <= cf15Short.vh + 1;
+  check('CF-15 AC5: at 844×390 cards and close are ≥ 56 px, inside and hit-testable',
+    cf15Short.open.cardHit && cf15Short.open.closeHit
+      && Math.min(cf15Short.open.card.w, cf15Short.open.card.h) >= 56
+      && Math.min(cf15Short.open.close.w, cf15Short.open.close.h) >= 56
+      && cf15SInside(cf15Short.open.card) && cf15SInside(cf15Short.open.close),
+    JSON.stringify(cf15Short.open));
+  check('CF-15 regression: after close the book is hidden and the tray is tappable again',
+    cf15Short.hidden === true && cf15Short.bookZ === 'none' && cf15Short.trayHit === true,
+    JSON.stringify({ hidden: cf15Short.hidden, display: cf15Short.bookZ, trayHit: cf15Short.trayHit }));
+  await cf15S.close();
+
+  /* The book must survive the CF-14 reload path too: met cats are restored, so
+     the book is populated again on a fresh boot (the two cards compose). */
+  const cf15R = await bootEmulated('cf15-reload', 1024, 800, 'reduce');
+  await cf15R.evalv(`(() => { const hk = window.__catForest; hk.seed(47);
+    hk.forceCat('puhko', 0);
+    let g = 0; while (g++ < 400 && hk.state().met.length < 1) hk.step(50);
+    hk.step(hk.state().config.SIT_MS + 100);
+    return hk.state().met.slice(); })()`);
+  const cf15Reload = await cf15ReloadBook(cf15R);
+  check('CF-15 + CF-14: after a reload the book shows the met cat again (persisted friend)',
+    cf15Reload.cats === 1 && cf15Reload.empties === 0, JSON.stringify(cf15Reload));
+  await cf15R.close();
 
   await h.close();
 

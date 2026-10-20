@@ -189,6 +189,57 @@
   #app[data-time="night"] #cf-daynight::before{content:"🌙";}
   #cf-rain-btn::before{content:"🌧️";line-height:1;font-variant-emoji:emoji;}
 
+  /* CF-15 friends book (PS §7, D3): a wordless gallery of the met cats only.
+     The button sits bottom-left, clear of the tray (which is centred) and of
+     the decor slots' safe band; the book is an overlay above every layer but
+     the back button (TD §4 z-order), presented as a real modal dialog. */
+  #cf-friends{z-index:9;left:clamp(8px,2.6vmin,24px);bottom:clamp(8px,2.6vmin,24px);
+    width:clamp(56px,8vmin,72px);aspect-ratio:1;padding:0;border:none;border-radius:50%;
+    background:#fff;box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);cursor:pointer;
+    display:grid;place-items:center;font-size:clamp(26px,5.5vmin,44px);line-height:1;
+    font-variant-emoji:emoji;transition:transform .16s ease, box-shadow .16s ease;}
+  #cf-friends::before{content:"📖";}
+  /* Portrait is the one layout where the centred tray spans nearly the whole
+     width (5 treats × 64 px), so the bottom-left 📖 would sit ON the first
+     treat (verified 390×844: tray left 10, treat left 21). Lift the button
+     clear of the tray row — still bottom-left, still ≥ 56 px, and it can
+     never steal a treat tap (card regression risk). */
+  @media (max-width:640px){
+    #cf-friends{bottom:calc(clamp(8px,2.6vmin,24px) + 6.2rem);}
+  }
+
+  /* Hidden by the `hidden` ATTRIBUTE, not a class: the book must genuinely
+     leave the layer stack when closed so it can never cover the tray's hit
+     test (card regression risk). `[hidden]` alone loses to `display:grid`
+     below, so the guard is stated explicitly. */
+  #cf-book{z-index:30;inset:0;display:grid;place-items:center;
+    background:rgba(255,255,255,.92);}
+  #cf-book[hidden]{display:none;}
+  .cf-book-grid{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;
+    gap:clamp(12px,3vmin,32px);padding:clamp(16px,5vmin,48px);
+    max-width:min(92vw,88vh);max-height:min(92vw,88vh);}
+  /* Met cats are buttons because a tap is a cuddle (CF-09): the same meow,
+     the spoken name and hearts, on this page's own clock stamps. */
+  .cf-book-cat{position:relative;pointer-events:auto;padding:0;border:none;background:#fff;
+    cursor:pointer;width:clamp(72px,16vmin,120px);aspect-ratio:1;border-radius:50%;
+    box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);display:grid;place-items:center;
+    font-size:clamp(38px,11vmin,68px);line-height:1;font-variant-emoji:emoji;
+    transition:transform .16s ease, box-shadow .16s ease;}
+  .cf-book-cat-body{display:block;line-height:1;font-variant-emoji:emoji;}
+  .cf-book-cat-body::before{content:attr(data-e);}
+  .cf-book-cat-acc{position:absolute;top:0.22em;right:0.22em;font-size:.5em;line-height:1;font-variant-emoji:emoji;}
+  .cf-book-cat-acc::before{content:attr(data-e);}
+  /* Empty book: a single 🐾, decorative and unclickable (PS §7). */
+  .cf-book-empty{width:clamp(72px,16vmin,120px);aspect-ratio:1;display:grid;place-items:center;
+    font-size:clamp(38px,11vmin,68px);line-height:1;font-variant-emoji:emoji;pointer-events:none;}
+  .cf-book-empty::before{content:"🐾";}
+  #cf-book-close{position:absolute;top:2.6vmin;right:2.6vmin;pointer-events:auto;
+    width:clamp(72px,9vmin,88px);aspect-ratio:1;padding:0;border:none;border-radius:50%;
+    background:#fff;box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);cursor:pointer;
+    display:grid;place-items:center;font-size:clamp(30px,6vmin,48px);line-height:1;
+    font-variant-emoji:emoji;transition:transform .16s ease, box-shadow .16s ease;}
+  #cf-book-close::before{content:"✖️";}
+
   /* The keyboard/OS preference always wins over the page's own motion.
      CF-12 audit (TP §3.10): every decorative *movement* is disabled here —
      press feedback and the idle pulse (DECISIONS: shake/pulse suppressed) and
@@ -196,6 +247,7 @@
      DELIBERATELY kept running: their keyframes touch opacity alone, which is     their exemption and is asserted by the smoke. */
   @media (prefers-reduced-motion: reduce){
     .cf-plate,.cf-treat,.cf-toggles button{transition:none;}
+    #cf-friends,#cf-book-close,.cf-book-cat{transition:none;}
     #cf-sky-night,#cf-night-tint,#cf-stars{transition:none;}
     #cf-rain i{animation:none;transform:translateY(var(--y));opacity:.3;}
     .cf-treat.cf-bounce,#cf-tray.cf-hint{animation:none;}
@@ -207,6 +259,9 @@
     .cf-plate::before{font-size:88px;}
     .cf-treat::before{font-size:60px;}
     .cf-toggles button{font-size:44px;}
+    #cf-friends{font-size:44px;}
+    #cf-book-close{font-size:48px;}
+    .cf-book-cat,.cf-book-empty{font-size:68px;}
     .cf-tree{font-size:110px;}
     .cf-tree-2{font-size:92px;}
     .cf-tree-3{font-size:74px;}
@@ -252,6 +307,11 @@
     <div class="cf-toggles">
       <button id="cf-daynight" aria-pressed="false" aria-label="Дан и ноћ"></button>
       <button id="cf-rain-btn" aria-pressed="false" aria-label="Киша"></button>
+    </div>
+    <button id="cf-friends" aria-label="Мачке пријатељи"></button>
+    <div id="cf-book" role="dialog" aria-modal="true" aria-label="Мачке пријатељи" hidden>
+      <button id="cf-book-close" aria-label="Затвори"></button>
+      <div class="cf-book-grid"><span class="cf-book-empty"></span></div>
     </div>
   </div>
 </div>

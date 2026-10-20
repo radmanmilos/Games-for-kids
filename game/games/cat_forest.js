@@ -90,6 +90,7 @@
     return {
       clock: 0,
       paused: false,
+      book: false,
       time: 'day',
       weather: 'clear',
       selectedTreat: null,
@@ -492,6 +493,10 @@
       tray: document.getElementById('cf-tray'),
       dayNight: document.getElementById('cf-daynight'),
       rainBtn: document.getElementById('cf-rain-btn'),
+      friends: document.getElementById('cf-friends'),
+      book: document.getElementById('cf-book'),
+      bookClose: document.getElementById('cf-book-close'),
+      bookGrid: document.querySelector('#cf-book .cf-book-grid'),
       treats: [].slice.call(document.querySelectorAll('#cf-tray .cf-treat')),
       plates: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate')),
       plateTreats: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate-treat'))
@@ -549,6 +554,7 @@
     renderFlights();
     renderFx();
     renderRain();
+    renderBook();
   }
 
   /* CF-12: the drops layer is pure state projection — no RNG anywhere, so a
@@ -870,13 +876,22 @@
 
   /* Advance the logic by exactly `ms`, in fixed STEP_MS sub-steps, then render
      once. Used by the rAF loop (clamped dt) and by the test hook, so there is
-     one code path for both. */
+     one code path for both.
+
+     CF-15: while the friends book is open the world is frozen — `step` is the
+     advance, so it must be the thing that refuses (card AC2). `state.paused`
+     is the rAF gate the tests already use to drive `step` themselves, so the
+     book's freeze is its own `state.book` flag: the hook keeps being exact
+     for the harness AND a book-open clock stands still. `render` always runs
+     (TD §6: pause stops `tick`, not `render`). */
   function step(ms) {
-    var left = ms;
-    while (left > 0) {
-      var sub = left < CF.STEP_MS ? left : CF.STEP_MS;
-      tick(sub);
-      left -= sub;
+    if (!state.book) {
+      var left = ms;
+      while (left > 0) {
+        var sub = left < CF.STEP_MS ? left : CF.STEP_MS;
+        tick(sub);
+        left -= sub;
+      }
     }
     render();
   }
@@ -888,7 +903,7 @@
     requestAnimationFrame(frame);
     var dt = lastTs === 0 ? 0 : Math.min(ts - lastTs, CF.DT_CLAMP_MS);
     lastTs = ts;
-    if (dt <= 0 || state.paused || document.hidden) return; // a hidden tab never advances
+    if (dt <= 0 || state.paused || state.book || document.hidden) return; // hidden tab / open book never advances
     /* rAF timestamps carry fractions of a millisecond; carry that remainder in
        `acc` and advance the clock in whole milliseconds so `state.clock` never
        accumulates float drift and the hook's deltas stay exact. */
@@ -1082,6 +1097,125 @@
     });
   }
 
+  /* ---- friends book (CF-15; PS §7, D3) -----------------------------------
+     A gentle gallery of the cats the child has MET — never a collection: no
+     counts, no percentage, no silhouettes of unmet cats, no hint of how many
+     exist. Met cats come from `state.met`, the one array CF-14 persists, so
+     the book is exactly the set of friends the forest has made. Opening it
+     pauses the game clock (TD §6/§7: `state.paused` stops `tick`, not
+     `render`); closing resumes. Focus follows the child: it moves to the
+     close button on open and back to the 📖 button on close (card step 3).
+     One module-level flag (like `reduceMotion`) remembers which control had
+     focus, so a close caused by anything but the button still restores it. */
+  var bookCatEls = {};    // cat id -> button; DOM refs stay out of state
+  var bookReturnFocus = false;
+
+  function bookDialog() {
+    return els && els.book ? els.book : null;
+  }
+
+  function openBook() {
+    if (state.book) return false;
+    state.book = true; // freezes tick/step (and the rAF loop) while it is open
+    render();
+    var dlg = bookDialog();
+    /* Remember only whether the child actually arrived from the 📖 button:
+       closing then returns focus where the child expects it. */
+    bookReturnFocus = !!(dlg && document.activeElement === els.friends);
+    if (els.bookClose) els.bookClose.focus();
+    return true;
+  }
+
+  function closeBook() {
+    if (!state.book) return false;
+    state.book = false;
+    render();
+    if (bookReturnFocus && els.friends) els.friends.focus();
+    bookReturnFocus = false;
+    return true;
+  }
+
+  /* A tap in the book is the CF-09 cuddle: hearts, a throttled meow and the
+     spoken name — never a new fact, so `state.met` cannot grow by looking. */
+  function cuddleInBook(id) {
+    var cat = catById(id);
+    if (!cat) return;
+    var el = bookCatEls[id];
+    var x = 0.5, y = 0.4;
+    if (el && els.stage) {
+      var r = el.getBoundingClientRect(), sr = els.stage.getBoundingClientRect();
+      if (sr.width && sr.height) {
+        x = (r.left + r.width / 2 - sr.left) / sr.width;
+        y = (r.top + r.height / 2 - sr.top) / sr.height;
+      }
+    }
+    spawnFx(x, y, '❤️', reduceMotion ? 1 : FX_BURST);
+    if (state.clock - lastMeowMs >= CF.MEOW_GAP_MS) {
+      lastMeowMs = state.clock;
+      if (window.playAnimalSound) window.playAnimalSound('Cat');
+      else if (window.sweep) window.sweep(600, 900, 0.18, 0, 'sine', 0.2);
+    }
+    if (state.clock - lastSpeakMs >= CF.SPEECH_GAP_MS) {
+      lastSpeakMs = state.clock;
+      if (window.audioBuses && window.audioBuses.speakWithDuck) window.audioBuses.speakWithDuck(cat.name);
+      else if (window.speech && window.speech.speak) window.speech.speak(cat.name);
+    }
+    render();
+  }
+
+  /* The book grid is a pure projection of `state.met` (like every other
+     render helper): the empty 🐾 while no cat has been met, otherwise one
+     button per met cat — emoji plus its accessory, so a dressed friend is
+     recognisable. Unmet cats simply have no node: there is nothing to count
+     and nothing to silhouette. */
+  function renderBook() {
+    if (!els || !els.book) return;
+    els.book.hidden = !state.book;
+    if (!state.book) return;
+    var grid = els.bookGrid;
+    if (!grid) return;
+    var want = state.met.length > 0;
+    var emptyEl = grid.querySelector('.cf-book-empty');
+    var alive = {}, i, id, cat;
+    for (i = 0; i < state.met.length; i++) alive[state.met[i]] = true;
+    for (id in bookCatEls) {
+      if (!alive[id]) { removeNode(bookCatEls[id]); delete bookCatEls[id]; }
+    }
+    if (want && emptyEl) grid.removeChild(emptyEl);
+    if (!want && !emptyEl) {
+      emptyEl = document.createElement('span');
+      emptyEl.className = 'cf-book-empty';
+      emptyEl.setAttribute('aria-hidden', 'true');
+      grid.appendChild(emptyEl);
+    }
+    for (i = 0; i < state.met.length; i++) {
+      id = state.met[i]; cat = catById(id);
+      if (!cat) continue;
+      var el = bookCatEls[id];
+      if (!el) { el = makeBookCatEl(cat); bookCatEls[id] = el; grid.appendChild(el); }
+    }
+  }
+
+  function makeBookCatEl(cat) {
+    var el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'cf-book-cat';
+    el.setAttribute('data-cat', cat.id);
+    el.setAttribute('aria-label', cat.name);
+    var body = document.createElement('span');
+    body.className = 'cf-book-cat-body';
+    body.setAttribute('data-e', cat.emoji);
+    el.appendChild(body);
+    if (cat.acc) {
+      var acc = document.createElement('span');
+      acc.className = 'cf-book-cat-acc';
+      acc.setAttribute('data-e', cat.acc);
+      el.appendChild(acc);
+    }
+    el.addEventListener('click', function () { cuddleInBook(cat.id); });
+    return el;
+  }
+
   /* ---- persistence (CF-14; TD §9, D4) ------------------------------------
      Only two facts survive closing the app: which cats the child has met and
      where the forest grew — cats on stage, plates, selection, time and
@@ -1155,6 +1289,7 @@
       weather: state.weather,
       selectedTreat: state.selectedTreat,
       paused: state.paused,
+      book: state.book,
       plates: state.plates.map(function (p) {
         return { idx: p.idx, state: p.state, treat: p.treat, arriveMs: p.arriveMs, catId: p.catId };
       }),
@@ -1224,6 +1359,8 @@
       setTime: setTime,
       setWeather: setWeather, // CF-12
       reset: reset,           // CF-14: clear state and storage (TD §8)
+      openBook: openBook,     // CF-15: the exact functions the buttons call
+      closeBook: closeBook,
       /* Read-only view of the DATA tables so the smoke can assert the roster
          (AC5). Inspection only — nothing here changes behaviour. */
       data: { treats: TREATS, cats: CATS, gifts: GIFTS }
@@ -1242,6 +1379,8 @@
     els.dayNight.addEventListener('click', onDayNightClick); // CF-11
     els.rainBtn.addEventListener('click', onRainClick);      // CF-12
     els.app.addEventListener('pointerdown', onAppPointerDown); // CF-10: any real touch restarts the idle windows
+    els.friends.addEventListener('click', openBook);   // CF-15
+    els.bookClose.addEventListener('click', closeBook); // CF-15
 
     /* CF-10 step 4: one spoken welcome prompt at boot (PS §5, D9). Best-effort
        with the sorting idiom — a silent failure is fine and nothing depends
