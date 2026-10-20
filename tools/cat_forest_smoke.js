@@ -6,6 +6,7 @@
    geometry of TP §3.2; CF-06 adds the roster + weighted-picker checks of TP §3.5;
    CF-07 adds the cat actor lifecycle (spawn/enter/sit/eat/leave) of TP §3.6.
    CF-08 adds gifts and the growing forest of TP §3.7.
+   CF-09 adds the cuddle tap of TP §3.8.
    Gameplay assertions arrive with the engine — this file grows card by card (TP §3).
    Run:  node tools/cat_forest_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
@@ -715,6 +716,131 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   await b3.close();
   await b4.close();
   await h8.close();
+
+  /* ---- CF-09: cuddle tap (TP §3.8) --------------------------------------
+     Tapping any visible cat is joyful and always safe: hearts, a throttled
+     meow and the spoken name, with every field of state() left untouched.
+     Headless Chrome runs with prefers-reduced-motion: reduce by default, so
+     each mode gets an explicitly emulated page (the engine reads the
+     preference at load). Every scenario is a fresh page: no reset() yet. */
+  const h9 = await bootEmulated('cf09-cuddle', 1024, 800, 'no-preference');
+
+  /* AC1 + AC4: hearts exist and the snapshot is byte-identical (only `clock`
+     is zeroed for the compare). The tap sits between two snapshot reads, so
+     nothing it changes can hide inside a step; innerText stays empty because
+     the hearts are CSS content. */
+  const d1 = await h9.evalv(`(() => {
+    const hk = window.__catForest; hk.seed(71);
+    hk.forceCat('maca', 1);
+    hk.step(200);
+    const zero = s => { const c = JSON.parse(JSON.stringify(s)); c.clock = 0; return JSON.stringify(c); };
+    const before = zero(hk.state());
+    const timersBefore = JSON.stringify(hk.state().timers);
+    document.querySelector('#cf-cats .cf-cat').click();
+    const hearts = [...document.querySelectorAll('#cf-fx .cf-party')]
+      .filter(el => el.getAttribute('data-e') === '❤️').length;
+    return { hearts: hearts, same: zero(hk.state()) === before,
+      timers: JSON.stringify(hk.state().timers) === timersBefore,
+      text: document.body.innerText.trim() };
+  })()`);
+  check('tapping a cat shows hearts and leaves every state() field identical (AC1)',
+    d1.hearts === 3 && d1.same && d1.timers, JSON.stringify(d1));
+  check('a cuddle adds no visible text (AC4)', d1.text === '', JSON.stringify(d1.text));
+
+  /* AC2: the speech throttle runs on the game clock (SPEECH_GAP_MS), so step()
+     drives it exactly: two taps inside the gap coalesce, 1600 ms apart both
+     speak. Deltas of the STUB's __spoke counter keep the accounting local, and
+     the stamp left by the AC1 tap is cleared with one gap step first. */
+  const d2 = await h9.evalv(`(() => {
+    const hk = window.__catForest;
+    const gap = hk.state().config.SPEECH_GAP_MS;
+    const spoke = () => window.__spoke || 0;
+    const tap = () => document.querySelector('#cf-cats .cf-cat').click();
+    hk.step(gap + 100);        // clear the stamp the AC1 tap left behind
+    const a0 = spoke(); tap(); // speaks (stamp = clock now)
+    hk.step(1000); tap();      // inside SPEECH_GAP -> coalesced
+    const first = spoke() - a0;
+    hk.step(600);              // 1600 ms past the stamp
+    const b0 = spoke(); tap(); // speaks again
+    hk.step(1600); tap();      // 1600 ms apart -> speaks
+    const second = spoke() - b0;
+    return { first: first, second: second,
+      phase: hk.state().cats[0] && hk.state().cats[0].phase };
+  })()`);
+  check('speech throttle: two taps in 1000 ms speak once, 1600 ms apart speak twice (AC2)',
+    d2.first === 1 && d2.second === 2, JSON.stringify(d2));
+
+  /* AC3: the tap works in entering and in leaving. Entering is hit-tested at
+     the cat's centre first (a .click() alone would prove nothing a child can
+     reach — task 120); at ~80% of the walk the cat is well inside the stage.
+     The leaving phase is walked to with small steps so the phase cannot be
+     overshot into `gone`, and only .click() is used there: by CF-08 design the
+     gift sits at that cat's plate above the cats layer, so it wins the centre
+     point at some viewports while the child taps the visible cat around it. */
+  const h9b = await bootFresh('cf09-phases');
+  const d3 = await h9b.evalv(`(() => {
+    const hk = window.__catForest; hk.seed(73);
+    const party = e => [...document.querySelectorAll('#cf-fx .cf-party')]
+      .filter(el => el.getAttribute('data-e') === e);
+    const cat = () => document.querySelector('#cf-cats .cf-cat');
+    hk.forceCat('puhko', 0);
+    let g = 0;
+    while (g++ < 200 && hk.state().cats[0] && hk.state().cats[0].phase === 'entering'
+      && hk.state().cats[0].t < hk.state().cats[0].dur * 0.8) hk.step(50);
+    const r = cat().getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    const enterHit = !!(hit && (hit === cat() || cat().contains(hit)));
+    const enterPhase = hk.state().cats[0] && hk.state().cats[0].phase;
+    cat().click();
+    const enterHearts = party('❤️').length;
+    let w = 0;
+    while (w++ < 600 && hk.state().cats[0] && hk.state().cats[0].phase !== 'leaving') hk.step(50);
+    const leavePhase = hk.state().cats[0] && hk.state().cats[0].phase;
+    cat().click();
+    const leaveHearts = party('❤️').length;
+    return { enterHit: enterHit, enterPhase: enterPhase, enterHearts: enterHearts,
+      leavePhase: leavePhase, leaveHearts: leaveHearts };
+  })()`);
+  check('a tap works while the cat is entering and while it is leaving (AC3)',
+    d3.enterHit && d3.enterPhase === 'entering' && d3.enterHearts >= 1
+      && d3.leavePhase === 'leaving' && d3.leaveHearts >= 1, JSON.stringify(d3));
+  await h9b.close();
+
+  /* CF-09 step 6 (reduced motion): a single static ❤️ that only fades — its
+     box never moves while the inline opacity drops over the particle's life.
+     Step 5 rides along on the same page: the cat's first sit bursts exactly
+     FX_BURST (3) sparkles around it, and they are the only live particles by
+     then (the hearts expired during the walk to sitting). */
+  const h9r = await bootEmulated('cf09-reduce', 1024, 800, 'reduce');
+  const r9 = await h9r.evalv(`(() => {
+    const hk = window.__catForest; hk.seed(75);
+    const party = e => [...document.querySelectorAll('#cf-fx .cf-party')]
+      .filter(el => el.getAttribute('data-e') === e);
+    hk.forceCat('cveta', 2);
+    hk.step(150);
+    document.querySelector('#cf-cats .cf-cat').click();
+    const hearts = party('❤️');
+    const el = hearts[0];
+    const box0 = el ? el.getBoundingClientRect() : null;
+    const op0 = el ? parseFloat(el.style.opacity) : NaN;
+    const n0 = hearts.length;
+    hk.step(300);
+    const box1 = el ? el.getBoundingClientRect() : null;
+    const op1 = el ? parseFloat(el.style.opacity) : NaN;
+    let g = 0;
+    while (g++ < 200 && hk.state().cats[0] && hk.state().cats[0].phase !== 'sitting') hk.step(50);
+    return { n0: n0, faded: op1 < op0,
+      moved: !!(box0 && box1 && (Math.abs(box0.left - box1.left) > 0.5
+        || Math.abs(box0.top - box1.top) > 0.5)),
+      spark: party('✨').length,
+      phase: hk.state().cats[0] && hk.state().cats[0].phase };
+  })()`);
+  check('under reduced motion a single static ❤️ appears and only fades (step 6)',
+    r9.n0 === 1 && !r9.moved && r9.faded, JSON.stringify(r9));
+  check('a cat\'s first sit bursts three sparkles around it (step 5)',
+    r9.spark === 3 && r9.phase === 'sitting', JSON.stringify(r9));
+  await h9r.close();
+  await h9.close();
 
   await h.close();
 

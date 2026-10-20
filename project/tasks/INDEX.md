@@ -271,3 +271,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 268 | DONE | 2026-10-19 | Cat Forest: CF-07 cat actor lifecycle (2026-10-19, OpenCode/Big Pickle). Spawn when a treat plate's arriveMs… | tasks-250-299.md
 269 | DONE | 2026-10-19 | Cat Forest: CF-08 gifts + growing forest (2026-10-19, OpenCode/Big Pickle). A finished visit now leaves a… | tasks-250-299.md
 270 | DONE | 2026-10-19 | Upgrade OpenCode 1.19.3 → 2.0.32 (2026-10-19, OpenCode/Big Pickle). What: upgraded the CLI (opencode upgrade… | tasks-250-299.md
+270 | DONE | 2026-10-20 | Cat Forest: cuddle tap (2026-10-20, OpenCode/Big Pickle). CF-09: cuddle() on every .cf-cat (hearts via the… | tasks-250-299.md

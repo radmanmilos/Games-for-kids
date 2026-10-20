@@ -7,6 +7,7 @@
    CF-06 adds the cat/treat/gift data and the weighted picker; CF-07 the cat
    actor lifecycle (walk in, sit, eat, leave) fully driven by the game clock.
    CF-08 the gift that a finished visit leaves and the forest it grows into.
+   CF-09 the cuddle tap: hearts, meow and the spoken name, changing nothing else.
    Gameplay arrives card by card — nothing here is visible to the child yet. */
 (function () {
   'use strict';
@@ -266,7 +267,11 @@
     if (c.phase === 'entering') {
       c.phase = 'sitting';
       c.dur = phaseDur('sitting');
-      if (state.met.indexOf(c.id) === -1) state.met.push(c.id); // first sit = met (TD §5)
+      if (state.met.indexOf(c.id) === -1) { // first sit = met (TD §5)
+        state.met.push(c.id);
+        var here = catPos(c); // CF-09 step 5: one decorative sparkle burst around the cat
+        spawnFx(here.x, here.y, '✨', FX_BURST);
+      }
     } else if (c.phase === 'sitting') {
       c.phase = 'eating';
       c.dur = phaseDur('eating');
@@ -309,6 +314,38 @@
     spawnCat(plate, cat);
     render();
     return true;
+  }
+
+  /* ---- cuddle (CF-09; PS §4) --------------------------------------------
+     Tapping a cat in any phase is joyful and always safe: hearts, a throttled
+     meow and the spoken name. It changes nothing else — no timers, no met, no
+     counters — so the throttle stamps live outside state (next to uidSeq) and
+     nothing in the snapshot moves. Every cue is guarded; the game works
+     silently when audio or TTS is unavailable. */
+  var lastMeowMs = -1e9;   // first tap always meows; then MEOW_GAP_MS on the game clock
+  var lastSpeakMs = -1e9;  // SPEECH_GAP_MS on the game clock (step() drives it in tests)
+
+  function cuddle(c) {
+    if (state.cats.indexOf(c) === -1) return; // the node is dropped in the render that ends a visit
+    var pos = catPos(c);
+    spawnFx(pos.x, pos.y, '❤️', reduceMotion ? 1 : FX_BURST);
+    if (state.clock - lastMeowMs >= CF.MEOW_GAP_MS) {
+      lastMeowMs = state.clock;
+      /* audio.js keys are capitalized: 'Cat' maps to assets/audio/cat.ogg
+         (audio.js:99) and falls back internally; the documented sweep is the
+         last resort (CF-09 step 2). No audio file is ever added here. */
+      if (window.playAnimalSound) window.playAnimalSound('Cat');
+      else if (window.sweep) window.sweep(600, 900, 0.18, 0, 'sine', 0.2);
+    }
+    if (state.clock - lastSpeakMs >= CF.SPEECH_GAP_MS) {
+      lastSpeakMs = state.clock;
+      var cat = catById(c.id);
+      if (cat) {
+        if (window.audioBuses && window.audioBuses.speakWithDuck) window.audioBuses.speakWithDuck(cat.name);
+        else if (window.speech && window.speech.speak) window.speech.speak(cat.name);
+      }
+    }
+    render();
   }
 
   /* ---- DOM handles and the render projection ----------------------------
@@ -428,6 +465,7 @@
       acc.setAttribute('data-e', cat.acc);
       el.appendChild(acc);
     }
+    el.addEventListener('click', function () { cuddle(c); }); // CF-09: any visible phase is a safe cuddle
     return el;
   }
 
@@ -528,11 +566,22 @@
     if (state.decor.length > CF.DECOR_MAX) state.decor.shift(); // the forest never fills up
   }
 
-  function spendSparkle(x, y) {
-    state.fx.parts.push({ uid: ++uidSeq, x: x, y: y, e: '✨', t: 0, dur: 520 });
-    while (state.fx.parts.length > CF.PARTICLE_CAP) state.fx.parts.shift();
+  /* Particles anchor at fixed offsets around their point (stage fractions), so
+     a tap never consumes the gameplay RNG stream and seeded runs stay exact.
+     n = 1 keeps the exact anchor, so CF-08's gift sparkle lands where it did. */
+  var FX_BURST = 3;   // hearts per cuddle / sparkles on a cat's first sit (CF-09)
+  var FX_OFFSETS = [{ x: 0, y: 0 }, { x: -0.03, y: -0.05 }, { x: 0.03, y: -0.05 }];
+
+  function spawnFx(x, y, emoji, n) {
+    for (var i = 0; i < n; i++) {
+      var o = FX_OFFSETS[i % FX_OFFSETS.length];
+      state.fx.parts.push({ uid: ++uidSeq, x: x + o.x, y: y + o.y, e: emoji, t: 0, dur: 520 });
+      while (state.fx.parts.length > CF.PARTICLE_CAP) state.fx.parts.shift();
+    }
     state.fx.count = state.fx.parts.length;
   }
+
+  function spendSparkle(x, y) { spawnFx(x, y, '✨', 1); }
 
   function updateFlights(dt) {
     for (var i = state.flights.length - 1; i >= 0; i--) {
