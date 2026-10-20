@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-20T15:37:14.726Z
+- Генерисано / Generated: 2026-10-20T20:01:33.156Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -72,10 +72,10 @@
 | `ocean_phone-portrait.png` | Океан | `/pages/ocean.html` | 390×844 | портрет | — | 19.10.2026. 12:22:43 | 258 |
 | `ocean_tablet-landscape.png` | Океан | `/pages/ocean.html` | 1180×820 | пејзаж | — | 19.10.2026. 12:22:43 | 258 |
 | `ocean_tablet-portrait.png` | Океан | `/pages/ocean.html` | 820×1180 | портрет | — | 19.10.2026. 12:22:43 | 258 |
-| `parent_phone-landscape.png` | За родитеље | `/pages/parent.html` | 844×390 | пејзаж | — | 19.10.2026. 12:22:43 | 258 |
-| `parent_phone-portrait.png` | За родитеље | `/pages/parent.html` | 390×844 | портрет | — | 19.10.2026. 12:22:43 | 258 |
-| `parent_tablet-landscape.png` | За родитеље | `/pages/parent.html` | 1180×820 | пејзаж | — | 19.10.2026. 12:22:43 | 258 |
-| `parent_tablet-portrait.png` | За родитеље | `/pages/parent.html` | 820×1180 | портрет | — | 19.10.2026. 12:22:43 | 258 |
+| `parent_phone-landscape.png` | За родитеље | `/pages/parent.html` | 844×390 | пејзаж | — | 20.10.2026. 22:01:33 | 283 |
+| `parent_phone-portrait.png` | За родитеље | `/pages/parent.html` | 390×844 | портрет | — | 20.10.2026. 22:01:33 | 283 |
+| `parent_tablet-landscape.png` | За родитеље | `/pages/parent.html` | 1180×820 | пејзаж | — | 20.10.2026. 22:01:33 | 283 |
+| `parent_tablet-portrait.png` | За родитеље | `/pages/parent.html` | 820×1180 | портрет | — | 20.10.2026. 22:01:33 | 283 |
 | `phonics_phone-landscape.png` | Слова и звуци | `/pages/phonics.html` | 844×390 | пејзаж | — | 19.10.2026. 12:22:43 | 258 |
 | `phonics_phone-portrait.png` | Слова и звуци | `/pages/phonics.html` | 390×844 | портрет | — | 19.10.2026. 12:22:43 | 258 |
 | `phonics_tablet-landscape.png` | Слова и звуци | `/pages/phonics.html` | 1180×820 | пејзаж | — | 19.10.2026. 12:22:43 | 258 |

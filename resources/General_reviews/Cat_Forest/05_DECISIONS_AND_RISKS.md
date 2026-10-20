@@ -49,24 +49,27 @@ The user accepted the risk plan as written (R1–R14 and their mitigations). Thr
 
 ## 3. Review checklist (reviewer AI or the user — every line must be true, with evidence)
 
-Philosophy
-- [ ] No currency, price, shop, XP, level, rating, lock/unlock, "coming soon".
-- [ ] No visible number, counter, percentage, timer or score anywhere (including the book).
-- [ ] No fail/lose/game-over/lives; nothing expires or is taken away; wrong/idle taps are harmless.
-- [ ] No reading required; **no visible text**; speech and `aria-label`s are Serbian Cyrillic only.
-- [ ] Emoji art only; no image assets; no new audio files; no new libraries.
-- [ ] No notifications, offline earnings, daily rewards, streaks; nothing happens while closed.
-- [ ] No network calls, ads, tracking, analytics, IAP.
-- [ ] Day/night and rain are child-controlled; neither affects any reward.
+**Ticked 2026-10-20 (task 283, CF-21) — evidence in the CF-xx ledger rows and log entries below.**
+
+Philosophy — all guarded live by the CF-16 PHILOSOPHY checks (each with a negative test) + the live-DOM wordless scan, re-run green in CF-21.
+- [x] No currency, price, shop, XP, level, rating, lock/unlock, "coming soon". — CF-16 `metricWords` guard.
+- [x] No visible number, counter, percentage, timer or score anywhere (including the book). — CF-16 `metricWords`/`digit` guards; CF-15 book shows no counts.
+- [x] No fail/lose/game-over/lives; nothing expires or is taken away; wrong/idle taps are harmless. — CF-16 `failWords` guard; CF-13 AC2 (a miss is silent).
+- [x] No reading required; **no visible text**; speech and `aria-label`s are Serbian Cyrillic only. — CF-16 live-DOM scan (`innerText === ''`, Cyrillic labels).
+- [x] Emoji art only; no image assets; no new audio files; no new libraries. — CF-18 offline inventory = exactly the page + the engine.
+- [x] No notifications, offline earnings, daily rewards, streaks; nothing happens while closed. — CF-04 clock frozen while hidden; CF-14 save only.
+- [x] No network calls, ads, tracking, analytics, IAP. — CF-02 no-network static rule; CF-18 offline smoke.
+- [x] Day/night and rain are child-controlled; neither affects any reward. — CF-11/CF-12 (toggles only change presentation).
 
 Quality
-- [ ] Tap targets ≥ 72 px @1024×800 and ≥ 56 px @844×390 (treats, plates, cats, gifts); toggles/book ≥ 56 px; all hit-testable at all four viewports.
-- [ ] Reduced motion: decorative effects off, essential movement kept, evidence in smoke.
-- [ ] ≤ 3 cats, ≤ 14 decor, ≤ 5 gifts, ≤ 24 rain nodes, ≤ 12 fx; no `setInterval`; no `Date` in rules.
-- [ ] Logic-driven positions (`step(ms)` exact); the hook is never read by the game.
-- [ ] `game/shared/*` untouched; `docs/` only changed by `sync-docs.sh`; generated files only via printed fix commands.
-- [ ] Smokes were actually run (or marked UNVERIFIED with commands); no assertion pins a literal the registry owns.
-- [ ] `check_fast` green; `check_docs` green when docs changed; `PROGRESS.md`/`ACTIVE.md` updated; budgets respected.
+- [x] Tap targets ≥ 72 px @1024×800 and ≥ 56 px @844×390 (treats, plates, cats, gifts); toggles/book ≥ 56 px; all hit-testable at all four viewports. — CF-03/CF-16 viewport matrix (4 sizes, inside + hit-testable).
+- [x] Reduced motion: decorative effects off, essential movement kept, evidence in smoke. — CF-12/CF-16 (`bootEmulated` pins the preference; the reduced path is asserted).
+- [x] ≤ 3 cats, ≤ 14 decor, ≤ 5 gifts, ≤ 24 rain nodes, ≤ 12 fx; no `setInterval`; no `Date` in rules. — CF-16 `timerApis` guard; caps asserted by CF-07/CF-08/CF-12/CF-16.
+- [x] Logic-driven positions (`step(ms)` exact); the hook is never read by the game. — CF-04; the hook is a write-only inspection surface.
+- [x] `game/shared/*` untouched; `docs/` only changed by `sync-docs.sh`; generated files only via printed fix commands. — no `game/shared/*` edit this build; CF-21 used `build_offline.js` then `sync-docs.sh`.
+- [x] Smokes were actually run (or marked UNVERIFIED with commands); no assertion pins a literal the registry owns. — the ledger's per-card validation lines; assertions derive from data.
+- [x] `check_fast` green; `check_docs` green when docs changed; `PROGRESS.md`/`ACTIVE.md` updated; budgets respected. — CF-21: check_fast 8/8, check_docs OK.
+
 
 ## 4. Known inconsistencies in the repo's own docs (found while planning — verify, do not assume)
 

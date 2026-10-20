@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "295e2f530f5cf1eb1198d465a82675542452f172",
+  "commitSha": "117bbf79ff4dfc6e024485baba9a865a7513d789",
   "browser": {
     "product": "Chrome/155.0.8059.85",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-20T15:37:14.726Z",
+  "generatedAt": "2026-10-20T20:01:33.156Z",
   "pageSet": [
-    "cat_forest"
+    "parent"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,40 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "cat_forest_phone-portrait.png",
-      "page": "cat_forest",
+      "file": "parent_phone-portrait.png",
+      "page": "parent",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 53603
+      "bytes": 33884
     },
     {
-      "file": "cat_forest_phone-landscape.png",
-      "page": "cat_forest",
+      "file": "parent_phone-landscape.png",
+      "page": "parent",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 53216
+      "bytes": 25749
     },
     {
-      "file": "cat_forest_tablet-portrait.png",
-      "page": "cat_forest",
+      "file": "parent_tablet-portrait.png",
+      "page": "parent",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 114159
+      "bytes": 49079
     },
     {
-      "file": "cat_forest_tablet-landscape.png",
-      "page": "cat_forest",
+      "file": "parent_tablet-landscape.png",
+      "page": "parent",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 111592
+      "bytes": 41142
     }
   ]
 }
