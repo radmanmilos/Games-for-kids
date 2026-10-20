@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **281**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **282**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -282,3 +282,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 278 | DONE | 2026-10-20 | Cat Forest: smoke completeness (2026-10-20, OpenCode/Big Pickle). CF-16: every TP §3 assertion present,… | tasks-250-299.md
 279 | DONE | 2026-10-20 | Cat Forest: a11y + touch audits (2026-10-20, OpenCode/Big Pickle). CF-17: all four audits pass with no game/… | tasks-250-299.md
 280 | DONE | 2026-10-20 | Cat Forest: offline inventory (2026-10-20, OpenCode/Big Pickle). CF-18: verification-only, nothing to… | tasks-250-299.md
+281 | DONE | 2026-10-20 | Cat Forest: screenshot states (2026-10-20, OpenCode/Big Pickle). CF-19 (D10): tools/visual-states.json… | tasks-250-299.md

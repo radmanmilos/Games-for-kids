@@ -34,7 +34,7 @@
   },
   "cat_forest": {
     "INIT": "true",
-    "PLAY": "true"
+    "PLAY": "(() => { const hk = window.__catForest; if (!hk) return false; hk.seed(7); hk.place('fish', 0); let g = 0; while (g++ < 400 && !hk.state().cats.some(c => c.phase === 'sitting')) hk.step(50); return hk.state().cats.some(c => c.phase === 'sitting'); })()"
   },
   "phonics": {
     "INIT": "true",
