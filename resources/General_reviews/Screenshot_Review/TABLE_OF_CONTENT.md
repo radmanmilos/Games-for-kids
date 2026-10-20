@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-10-20T12:52:20.372Z
+- Генерисано / Generated: 2026-10-20T15:14:47.920Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -24,10 +24,10 @@
 | `animals_phone-portrait.png` | Животиње | `/pages/animals.html` | 390×844 | портрет | — | 19.10.2026. 12:22:43 | 258 |
 | `animals_tablet-landscape.png` | Животиње | `/pages/animals.html` | 1180×820 | пејзаж | — | 19.10.2026. 12:22:43 | 258 |
 | `animals_tablet-portrait.png` | Животиње | `/pages/animals.html` | 820×1180 | портрет | — | 19.10.2026. 12:22:43 | 258 |
-| `cat_forest_phone-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 844×390 | пејзаж | — | 20.10.2026. 14:52:20 | 275 |
-| `cat_forest_phone-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 390×844 | портрет | — | 20.10.2026. 14:52:20 | 275 |
-| `cat_forest_tablet-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 1180×820 | пејзаж | — | 20.10.2026. 14:52:20 | 275 |
-| `cat_forest_tablet-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 820×1180 | портрет | — | 20.10.2026. 14:52:20 | 275 |
+| `cat_forest_phone-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 844×390 | пејзаж | — | 20.10.2026. 17:14:47 | 276 |
+| `cat_forest_phone-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 390×844 | портрет | — | 20.10.2026. 17:14:47 | 276 |
+| `cat_forest_tablet-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 1180×820 | пејзаж | — | 20.10.2026. 17:14:47 | 276 |
+| `cat_forest_tablet-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 820×1180 | портрет | — | 20.10.2026. 17:14:47 | 276 |
 | `classroom_phone-landscape.png` | Учионица | `/pages/classroom.html` | 844×390 | пејзаж | — | 19.10.2026. 12:22:43 | 258 |
 | `classroom_phone-portrait.png` | Учионица | `/pages/classroom.html` | 390×844 | портрет | — | 19.10.2026. 12:22:43 | 258 |
 | `classroom_tablet-landscape.png` | Учионица | `/pages/classroom.html` | 1180×820 | пејзаж | — | 19.10.2026. 12:22:43 | 258 |

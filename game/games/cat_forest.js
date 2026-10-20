@@ -10,7 +10,10 @@
    CF-09 the cuddle tap: hearts, meow and the spoken name, changing nothing else.
    CF-10 the first-visit nicety, the setTime hook and the gentle idle hint.
    CF-11 the ☀️/🌙 toggle: night sky, stars and the swish cue, all on data-time.
+   CF-14 persistence: the forest and the met cats survive closing the app
+   (localStorage, one key, validated on load, never in the render loop).
    Gameplay arrives card by card — nothing here is visible to the child yet. */
+
 (function () {
   'use strict';
 
@@ -306,6 +309,7 @@
       c.dur = phaseDur('sitting');
       if (state.met.indexOf(c.id) === -1) { // first sit = met (TD §5)
         state.met.push(c.id);
+        save(); // CF-14: a cat first sitting is one of the two save points
         var here = catPos(c); // CF-09 step 5: one decorative sparkle burst around the cat
         spawnFx(here.x, here.y, '✨', FX_BURST);
       }
@@ -712,6 +716,7 @@
   function landDecor(emoji, slot) {
     state.decor.push({ uid: ++uidSeq, e: emoji, s: slot });
     if (state.decor.length > CF.DECOR_MAX) state.decor.shift(); // the forest never fills up
+    save(); // CF-14: a decoration landing is the other save point
   }
 
   /* Particles anchor at fixed offsets around their point (stage fractions), so
@@ -1077,6 +1082,71 @@
     });
   }
 
+  /* ---- persistence (CF-14; TD §9, D4) ------------------------------------
+     Only two facts survive closing the app: which cats the child has met and
+     where the forest grew — cats on stage, plates, selection, time and
+     weather are transient by design (regression risk, card). One key,
+     `{v:1, met:[ids], decor:[{e,s}]}`. Every storage call is try/catch'd: a
+     private-mode or quota failure must never cost the child a working game
+     (racing3d.mjs:138-159 idiom). Saves happen on a cat's first sit and on a
+     decoration landing — never in the render loop. The parent's reset
+     («Обриши локални напредак», parent.html:471-477) is localStorage.clear(),
+     so it wipes this key too: no extra reset wiring exists anywhere. */
+  var SAVE_KEY = 'catForestSave';
+
+  function loadSave() {
+    var out = { met: [], decor: [] };
+    try {
+      var raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return out;
+      var s = JSON.parse(raw);
+      /* Wrong version or shape → a fresh start (TD §9), never a throw. */
+      if (!s || typeof s !== 'object' || s.v !== 1) return out;
+      var i, id, d;
+      if (s.met instanceof Array) {
+        for (i = 0; i < s.met.length; i++) {
+          id = s.met[i];
+          /* Unknown ids are dropped; duplicates collapse (card step 2). */
+          if (typeof id === 'string' && catById(id) && out.met.indexOf(id) === -1) out.met.push(id);
+        }
+      }
+      if (s.decor instanceof Array) {
+        for (i = 0; i < s.decor.length && out.decor.length < CF.DECOR_MAX; i++) {
+          d = s.decor[i];
+          /* Known gift emoji and a valid integer slot only; the loop bound
+             clamps an oversized forest to DECOR_MAX. */
+          if (d && typeof d === 'object' && GIFTS.indexOf(d.e) !== -1 &&
+              typeof d.s === 'number' && (d.s | 0) === d.s && d.s >= 0 && d.s < CF.DECOR_MAX) {
+            out.decor.push({ uid: ++uidSeq, e: d.e, s: d.s });
+          }
+        }
+      }
+    } catch (e) { /* corrupt or unavailable storage: fresh start */ }
+    return out;
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(SAVE_KEY, JSON.stringify({
+        v: 1,
+        met: state.met.slice(),
+        decor: state.decor.map(function (d) { return { e: d.e, s: d.s }; })
+      }));
+    } catch (e) { /* private mode / quota: play on */ }
+  }
+
+  /* reset (TD §8): clear the world AND the save — the test hook's way to get
+     a fresh forest on the same page. The element maps are deliberately NOT
+     cleared: render() drops every node whose actor left state, so the DOM is
+     swept by the same projection that maintains it in normal play. */
+  function reset() {
+    state = newState();
+    lastMeowMs = -1e9;
+    lastSpeakMs = -1e9;
+    try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* private mode */ }
+    render();
+  }
+
   /* ---- test hook (TD §8; the game itself never reads it) ---------------- */
   function snapshot() {
     return {
@@ -1110,6 +1180,13 @@
   function startCatForest() {
     if (started) return; // main.js boots each page once; a second call would double every handler and the rAF loop
     started = true;
+
+    /* CF-14: restore the saved met cats and forest before the first render
+       (TD §9). loadSave() validates and never throws; a missing or broken
+       save simply leaves the fresh state untouched. */
+    var saved = loadSave();
+    state.met = saved.met;
+    state.decor = saved.decor;
 
     cacheEls();
     measure();
@@ -1146,6 +1223,7 @@
       previewPick: previewPick,
       setTime: setTime,
       setWeather: setWeather, // CF-12
+      reset: reset,           // CF-14: clear state and storage (TD §8)
       /* Read-only view of the DATA tables so the smoke can assert the roster
          (AC5). Inspection only — nothing here changes behaviour. */
       data: { treats: TREATS, cats: CATS, gifts: GIFTS }

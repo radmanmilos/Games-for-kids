@@ -11,6 +11,7 @@
    the idle hint of TP §3.9.
    CF-11 adds the ☀️/🌙 toggle of TP §3.10 (day half).
    Gameplay assertions arrive with the engine — this file grows card by card (TP §3).
+   CF-14 adds the persistence save/load/reset checks (card CF-14, D4).
    Run:  node tools/cat_forest_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, skip, getFails } = require('./headless.js');
@@ -1452,6 +1453,123 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     +cf13MotUp.ghosts === 1 && JSON.parse(cf13Gliding).n === 1 && JSON.parse(cf13Gliding).ret === 1 &&
     +cf13After === 0, `mid=${cf13Gliding} after=${cf13After}`);
   await cf13Mot.close();
+
+  /* ---- CF-14: persistence — save / load / reset (D4, TD §9) --------------
+     One key (`catForestSave`) holds {v:1, met, decor}; it is written on a
+     cat's first sit and on a decoration landing, loaded (validated, never
+     throwing) at boot, and wiped by the parent reset through
+     localStorage.clear(). Every start() launches a fresh browser PROFILE, so
+     storage starts empty; a navigate() on the same handle is the reload the
+     card's ACs talk about and keeps storage intact. All scenarios pin the
+     media nothing here depends on motion — bootFresh is enough (the visit
+     recipe ends with a step past GIFT_FLY_MS, so flight and no-flight both
+     land the decoration before the assertion). */
+  const cf14Reload = async hh => {
+    await hh.navigate(`http://127.0.0.1:${hh.port}/pages/cat_forest.html`);
+    await bootedOn(hh);
+    await hh.evalv(`window.__catForest.pause(true); true`);
+    return hh.evalv(`(() => { const s = window.__catForest.state();
+      return { met: s.met, decor: s.decor.map(d => ({ e: d.e, s: d.s })),
+        nodes: document.querySelectorAll('#cf-decor .cf-decor-item').length }; })()`);
+  };
+
+  /* AC5 + the save shape, gathered on the page that also feeds AC1: every
+     localStorage.setItem call made during a whole visit + collection is
+     recorded, and the raw save must carry exactly v/met/decor. */
+  const cf14H = await bootFresh('cf14-save');
+  const cf14Pre = await cf14H.evalv(`(() => {
+    window.__savedKeys = [];
+    const orig = localStorage.setItem.bind(localStorage);
+    localStorage.setItem = function (k, v) { window.__savedKeys.push(String(k)); return orig(k, v); };
+    const hk = window.__catForest; hk.seed(17);
+    ${VISIT}
+    visit(); collectFirst();
+    return { met: hk.state().met, decor: hk.state().decor.map(d => ({ e: d.e, s: d.s })),
+      keys: window.__savedKeys.slice(), raw: localStorage.getItem('catForestSave') }; })()`);
+  const cf14Raw = JSON.parse(cf14Pre.raw);
+  check('CF-14 AC5: a visit + collection writes only the catForestSave key (met grows)',
+    cf14Pre.keys.length >= 2 && cf14Pre.keys.every(k => k === 'catForestSave')
+      && cf14Pre.met.length >= 1 && cf14Pre.decor.length >= 1,
+    JSON.stringify({ keys: cf14Pre.keys, met: cf14Pre.met, decor: cf14Pre.decor.length }));
+  check('CF-14: the save payload is exactly {v:1, met:[ids], decor:[{e,s}]}',
+    cf14Raw && cf14Raw.v === 1 && Array.isArray(cf14Raw.met) && Array.isArray(cf14Raw.decor)
+      && Object.keys(cf14Raw).sort().join(',') === 'decor,met,v'
+      && cf14Raw.met.every(id => typeof id === 'string')
+      && cf14Raw.decor.every(d => d && typeof d.e === 'string' && (d.s | 0) === d.s),
+    cf14Pre.raw);
+
+  /* AC1: reload the page — met and decor come back, and the forest is
+     projected to the DOM again (decor node count = restored entries). */
+  const cf14Post = await cf14Reload(cf14H);
+  check('CF-14 AC1: after a reload met and decor are restored (state + DOM)',
+    JSON.stringify(cf14Post.met) === JSON.stringify(cf14Raw.met)
+      && JSON.stringify(cf14Post.decor) === JSON.stringify(cf14Raw.decor)
+      && cf14Post.nodes === cf14Raw.decor.length,
+    JSON.stringify({ saved: cf14Raw, restored: cf14Post }));
+
+  /* reset (TD §8): the world AND the save are gone; the element maps must
+     NOT be cleared by hand — render() sweeps every stale node itself. */
+  const cf14Reset = await cf14H.evalv(`(() => {
+    window.__catForest.reset();
+    const s = window.__catForest.state();
+    return { fn: typeof window.__catForest.reset === 'function',
+      met: s.met.length, decor: s.decor.length, cats: s.cats.length,
+      plates: s.plates.filter(p => p.state !== 'empty').length,
+      raw: localStorage.getItem('catForestSave'),
+      nodes: document.querySelectorAll('#cf-decor .cf-decor-item').length }; })()`);
+  check('CF-14 reset(): state, save and the projected DOM are all cleared (TD §8)',
+    cf14Reset.fn && cf14Reset.met === 0 && cf14Reset.decor === 0 && cf14Reset.cats === 0
+      && cf14Reset.plates === 0 && cf14Reset.raw === null && cf14Reset.nodes === 0,
+    JSON.stringify(cf14Reset));
+  await cf14H.close();
+
+  /* AC2: four poisoned saves, one fresh profile — each boots clean. */
+  const cf14C = await bootFresh('cf14-corrupt');
+  await cf14C.evalv(`localStorage.setItem('catForestSave', '{"v":1,"met":'); true`); // truncated JSON
+  const cf14Bad1 = await cf14Reload(cf14C);
+  check('CF-14 AC2: corrupt JSON boots clean with fresh state (never throws)',
+    cf14Bad1.met.length === 0 && cf14Bad1.decor.length === 0, JSON.stringify(cf14Bad1));
+
+  await cf14C.evalv(`localStorage.setItem('catForestSave', JSON.stringify({ v: 2, met: ['maca'], decor: [] })); true`);
+  const cf14Bad2 = await cf14Reload(cf14C);
+  check('CF-14 AC2: a wrong save version is ignored (fresh start)',
+    cf14Bad2.met.length === 0 && cf14Bad2.decor.length === 0, JSON.stringify(cf14Bad2));
+
+  const cf14Big = [];
+  for (let i = 0; i < 20; i++) cf14Big.push({ e: '🌸', s: i % 14 });
+  await cf14C.evalv(`localStorage.setItem('catForestSave', JSON.stringify({ v: 1,
+    met: ['maca', 'bogus-cat', 42, null, 'maca'],
+    decor: [{ e: '🌸', s: 3 }, { e: '💥', s: 4 }, { e: '🌷', s: 99 }, { e: '🍀', s: -1 },
+      { e: '🍄', s: 7.5 }, null, 'x'].concat(${JSON.stringify(cf14Big)}) })); true`);
+  const cf14Bad3 = await cf14Reload(cf14C);
+  check('CF-14 AC2: unknown ids/bad entries drop, the valid rest restores, decor clamps to 14',
+    JSON.stringify(cf14Bad3.met) === '["maca"]' && cf14Bad3.decor.length === 14
+      && cf14Bad3.decor.every(d => ['🌸', '🌷', '🍄', '🍀', '🦋'].includes(d.e)
+        && (d.s | 0) === d.s && d.s >= 0 && d.s < 14),
+    JSON.stringify(cf14Bad3));
+
+  /* AC3: the parent reset path — localStorage.clear(), then a fresh start. */
+  await cf14C.evalv(`localStorage.clear(); true`);
+  const cf14Bad4 = await cf14Reload(cf14C);
+  const cf14KeyGone = await cf14C.evalv(`localStorage.getItem('catForestSave') === null`);
+  check('CF-14 AC3: localStorage.clear() then reload boots a fresh state, save key gone',
+    cf14Bad4.met.length === 0 && cf14Bad4.decor.length === 0 && cf14KeyGone,
+    JSON.stringify(cf14Bad4));
+  await cf14C.close();
+
+  /* AC4: a storage that throws must cost the child nothing — the visit and
+     the collection run to completion with setItem raising every call. */
+  const cf14T = await bootFresh('cf14-throw');
+  const cf14Run = await cf14T.evalv(`(() => {
+    localStorage.setItem = function () { throw new Error('quota'); };
+    const hk = window.__catForest; hk.seed(19);
+    ${VISIT}
+    visit(); collectFirst();
+    return { met: hk.state().met.length, decor: hk.state().decor.length,
+      text: document.body.innerText.trim() }; })()`);
+  check('CF-14 AC4: with localStorage.setItem throwing the game still runs (AC4)',
+    cf14Run.met >= 1 && cf14Run.decor >= 1 && cf14Run.text === '', JSON.stringify(cf14Run));
+  await cf14T.close();
 
   await h.close();
 
