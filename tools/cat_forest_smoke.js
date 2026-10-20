@@ -2,7 +2,7 @@
    Drives pages/cat_forest.html headlessly and pins the CF-01 wiring contract:
    boot + test hook, the route contract, the back control's reachability (inside
    the viewport AND hit-testable, never a bare .click()), the hub tile, and the
-   no-network static rule (TD §8 / TP §3.1). CF-03 adds the three-viewport stage
+   no-network static rule (TD §8 / TP §3.1). CF-03 adds the four-viewport stage
    geometry of TP §3.2; CF-06 adds the roster + weighted-picker checks of TP §3.5;
    CF-07 adds the cat actor lifecycle (spawn/enter/sit/eat/leave) of TP §3.6.
    CF-08 adds gifts and the growing forest of TP §3.7.
@@ -12,6 +12,9 @@
    CF-11 adds the ☀️/🌙 toggle of TP §3.10 (day half).
    Gameplay assertions arrive with the engine — this file grows card by card (TP §3).
    CF-14 adds the persistence save/load/reset checks (card CF-14, D4).
+   CF-15 adds the friends-book checks (PS §7, D3).
+   CF-16 completes TP §3 and adds the TP §4 philosophy guards, each with a
+   negative test, plus poll-not-sleep flake hardening.
    Run:  node tools/cat_forest_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
 const { start, check, skip, getFails } = require('./headless.js');
@@ -70,6 +73,22 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   checkRouteWired('cat_forest', 'game-cat-forest', 'pages/cat_forest.html',
     { back: 'cat-forest-back', start: 'startCatForest', check });
 
+  /* CF-16 flake hardening (TP §1.1): poll for a value to SETTLE instead of a
+     fixed sleep. Read the expression twice ~120 ms apart after the transition
+     was kicked off; return the value once two consecutive reads agree. This is
+     the `sorting` smoke's technique — a fixed `sleep(700)` for a 600 ms fade is
+     a bet on the machine, a poll is an observation. */
+  const settle = async (hh, expr, { tries = 40, poll = 120 } = {}) => {
+    let prev = await hh.evalv(expr);
+    for (let i = 0; i < tries; i++) {
+      await sleep(poll);
+      const cur = await hh.evalv(expr);
+      if (JSON.stringify(cur) === JSON.stringify(prev)) return cur;
+      prev = cur;
+    }
+    return prev;
+  };
+
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
   check('hub button wired (data-go="game-cat-forest")', indexHtml.includes('data-go="game-cat-forest"'));
@@ -80,7 +99,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     check(`the ${label} makes no network calls (TD §8)`, hits.length === 0, hits.join(', ') || 'none');
   }
 
-  /* ---- CF-03: the static stage holds in all three target viewports (TP §3.2).
+  /* ---- CF-03: the static stage holds in all four target viewports (TP §3.2).
      Fresh session per size: a broken size cannot be masked by the first one. */
   const pageHtml = fs.readFileSync(path.join(root, 'game', 'pages', 'cat_forest.html'), 'utf8');
   check('the page ships a prefers-reduced-motion block (TP §10)',
@@ -114,6 +133,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
 
   for (const vp of [
     { name: '1024x800 tablet', width: 1024, height: 800, min: 72 },
+    { name: '1280x800 desktop', width: 1280, height: 800, min: 72 },
     { name: '844x390 short landscape', width: 844, height: 390, min: 56 },
     { name: '390x844 portrait', width: 390, height: 844, min: 56 },
   ]) {
@@ -327,6 +347,56 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   const vocabHits = [['page', pageHtml], ['engine', engineSrc]]
     .filter(([, src]) => vocabulary.test(stripComments(src))).map(([k]) => k);
   check('no failure vocabulary in the page or engine (AC6)', vocabHits.length === 0, vocabHits.join(', ') || 'none');
+
+  /* ---- CF-16: philosophy guards (TP §4) ----------------------------------
+     Each guard is one named PREDICATE over (engine source, page source, live
+     DOM text) so the negative test further down can re-run the very same
+     predicate on mutated input and prove it fails — a guard nobody can make
+     fail is not a guard. `philosophy()` never touches the game: it is a pure
+     function of the strings/DOM it is handed.
+
+     Scope decision (recorded in PROGRESS.md): TP §4 says "comments included",
+     but the engine's own comments legitimately explain that there ARE no fail
+     states (e.g. "no fail states", "never a failure message"). Scanning prose
+     would force us to censor honest comments — bending `game/` to please a test,
+     which the repo forbids. So the vocabulary guards scan the source with
+     comments stripped (the AC6 technique) and word boundaries added: `\blose\b`
+     must not fire on `closeBook`/`bookClose`. The child-visible surface is then
+     covered separately by the live-DOM guards below. */
+  const PHILOSOPHY = {
+    /* TP §4 "no fail-state vocabulary". Word-bounded so `close`/`closeBook`
+       (the CF-15 book) never trips `lose`. */
+    failWords: /\bгрешка\b|\bизгуб|крај игре|\bgame over\b|\bfail\b|\blose\b|\bwrong\b|погреш|неуспех/i,
+    /* TP §4 "no currency/XP/lock vocabulary". `level`/`score` are word-bounded
+       so `.cf-plate-treat`'s "lev" cannot false-positive, and the Cyrillic
+       «ниво»/«поени» are covered too. */
+    metricWords: /coin|новчић|поен|скор|\bxp\b|бодов|\blevel\b|\bnivo\b|ниво|\block\b|закључ|брава|\bunlock\b|отклуч|\bprice\b|цена|\bscore\b|🔒/u,
+    /* TP §4 "no network/timer-API misuse": the banned network APIs are the
+       CF-02 static rule; here the extra rule is no timer machinery and no
+       wall clock in rule code (the CF-04 grep). */
+    timerApis: /setInterval\s*\(|setTimeout\s*\(|Date\.now\s*\(|new Date\s*\(/,
+    /* TP §4 "no visible numbers/counters/timers" + "no visible text at all":
+       applied to the child-visible text after a full scenario. */
+    digit: /\d/,
+    latin: /[A-Za-z]/,
+    /* TP §4 "Cyrillic only for child-facing labels": every aria-label. */
+    latinLabel: a => /[A-Za-z]/.test(a || ''),
+  };
+
+  /* Comments stripped before the vocabulary scan — see the scope decision above.
+     `stripComments` was defined for AC6 just above. */
+  const philosophySources = [['engine', stripComments(engineSrc)], ['page', stripComments(pageHtml)]];
+  const philosophy = {
+    failHits: philosophySources.filter(([, s]) => PHILOSOPHY.failWords.test(s)).map(([k]) => k),
+    metricHits: philosophySources.filter(([, s]) => PHILOSOPHY.metricWords.test(s)).map(([k]) => k),
+    timerHits: philosophySources.filter(([, s]) => PHILOSOPHY.timerApis.test(s)).map(([k]) => k),
+  };
+  check('PHILOSOPHY: neither file\'s code contains fail-state vocabulary (TP §4, comments stripped)',
+    philosophy.failHits.length === 0, philosophy.failHits.join(', ') || 'none');
+  check('PHILOSOPHY: neither file contains currency/XP/lock vocabulary (TP §4)',
+    philosophy.metricHits.length === 0, philosophy.metricHits.join(', ') || 'none');
+  check('PHILOSOPHY: neither file schedules timers or reads the wall clock (TP §4)',
+    philosophy.timerHits.length === 0, philosophy.timerHits.join(', ') || 'none');
 
   /* ---- CF-06: cat data + weighted picker (TP §3.5) -----------------------
      The roster is pinned here the same way the CF table is (AC5 policy): a
@@ -1054,18 +1124,16 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
       glyph: getComputedStyle(b, '::before').content };
   })())`));
   const glyphHas = (g, ch, hex) => g.indexOf(ch) !== -1 || g.indexOf(hex) !== -1;
-  const nightLayers = hh => hh.evalv(`['cf-sky-night', 'cf-night-tint', 'cf-stars']
-    .map(id => Number(getComputedStyle(document.getElementById(id)).opacity))`);
 
   const h11 = await bootFresh('cf11-toggle');
   await dnClick(h11);                       // day -> night
   const dnNight1 = await dnRead(h11);
-  await sleep(700);                         // wall clock: let the 600 ms fade finish
-  const dnNightL = await nightLayers(h11);
+  const dnNightL = await settle(h11, `['cf-sky-night', 'cf-night-tint', 'cf-stars']
+    .map(id => Number(getComputedStyle(document.getElementById(id)).opacity))`);  // opacity fade settled
   await dnClick(h11);                       // night -> day
   const dnDay1 = await dnRead(h11);
-  await sleep(700);
-  const dnDayL = await nightLayers(h11);
+  const dnDayL = await settle(h11, `['cf-sky-night', 'cf-night-tint', 'cf-stars']
+    .map(id => Number(getComputedStyle(document.getElementById(id)).opacity))`);
   check('the toggle flips state.time, data-time, aria-pressed and the glyph, both ways (AC1)',
     dnNight1.time === 'night' && dnNight1.data === 'night' && dnNight1.pressed === 'true'
       && glyphHas(dnNight1.glyph, '🌙', '1f319')
@@ -1134,7 +1202,8 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   })())`));
   const dnDay = await dnGeo();
   await dnClick(h11s);
-  await sleep(700);                       // the night layers are fully in now
+  await settle(h11s, `['cf-sky-night', 'cf-night-tint', 'cf-stars']
+    .map(id => Number(getComputedStyle(document.getElementById(id)).opacity))`);  // night layers fully in
   const dnNight = await dnGeo();
   check('at 844x390 the day/night toggle is >= 56px, inside and hit-testable in both states (AC4)',
     [dnDay, dnNight].every(x => x.inside && x.hit && Math.min(x.w, x.h) >= 56),
@@ -1452,7 +1521,8 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   const cf13MotUp = await cf13Fire(cf13Mot, cf13Sel, 'pointerup', cf13MG.gx, cf13MG.gy);
   const cf13Gliding = await cf13Mot.evalv(`JSON.stringify({ n: document.querySelectorAll('.cf-ghost').length,
     ret: document.querySelectorAll('.cf-ghost.cf-return').length })`);
-  await sleep(320);
+  await cf13Mot.waitFor(`document.querySelectorAll('.cf-ghost').length === 0`,
+    { timeout: 3000, label: 'the returning ghost to finish its glide and be removed' });  // poll, never sleep
   const cf13After = await cf13Mot.evalv(`document.querySelectorAll('.cf-ghost').length`);
   check('CF-13 AC4: with motion allowed a miss glides back and the ghost is removed at the end of the glide',
     +cf13MotUp.ghosts === 1 && JSON.parse(cf13Gliding).n === 1 && JSON.parse(cf13Gliding).ret === 1 &&
@@ -1701,6 +1771,36 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   check('CF-15 AC5: every card and the close button are ≥ 72 px and inside the viewport (1024×800)',
     cf15Boxes.length === cf15Pop.cats + 1 && cf15Boxes.every(b => Math.min(b.w, b.h) >= 72 && cf15Inside(b)),
     JSON.stringify(cf15Boxes.map(b => ({ w: Math.round(b.w), h: Math.round(b.h), inside: cf15Inside(b) }))));
+
+  /* ---- CF-16: philosophy guards on the LIVE DOM after a full scenario ------
+     TP §4 "nothing a child can see carries a number, a counter or a foreign
+     alphabet". A populated stage plus an open book is the richest visible text
+     the game can produce, so the scan runs here, not on the empty boot. The
+     scan is a named PREDICATE over the strings it is handed (`visibleScan`), so
+     the negative test below can re-run the very same function on a poisoned
+     copy and prove each guard can fail. */
+  const visibleScan = body => ({
+    digits: PHILOSOPHY.digit.test(body.innerText),
+    latin: PHILOSOPHY.latin.test(body.innerText),
+    latinLabels: body.labels.filter(PHILOSOPHY.latinLabel),
+  });
+  const cf16Scan = await cf15H.evalv(`JSON.stringify((() => {
+    /* The book is still OPEN from the CF-15 block above: scan the whole body
+       plus every aria-label in the document. */
+    return {
+      text: document.body.innerText,
+      labels: [...document.querySelectorAll('[aria-label]')].map(e => e.getAttribute('aria-label') || ''),
+      cats: document.querySelectorAll('#cf-book .cf-book-cat').length,
+    };
+  })())`).then(JSON.parse);
+  const cf16Body = { innerText: cf16Scan.text, labels: cf16Scan.labels };
+  const cf16Result = visibleScan(cf16Body);
+  check('PHILOSOPHY (live): a populated stage + open book shows no digits (TP §4)',
+    cf16Result.digits === false, `text=${JSON.stringify(cf16Scan.text.slice(0, 80))}`);
+  check('PHILOSOPHY (live): a populated stage + open book shows no Latin letters (TP §4)',
+    cf16Result.latin === false, `text=${JSON.stringify(cf16Scan.text.slice(0, 80))}`);
+  check('PHILOSOPHY (live): every aria-label in the document is Cyrillic-only (TP §4)',
+    cf16Result.latinLabels.length === 0, cf16Result.latinLabels.join(' | ') || 'none');
   await cf15H.close();
 
   /* AC5 (short landscape) + the regression risk: after closing, the book must
@@ -1786,6 +1886,42 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
 
   check('negative control: the page was restored byte-identically',
     sha(fs.readFileSync(pagePath, 'utf8')) === origSha);
+
+  /* ---- CF-16 negative tests: every philosophy guard must be able to fail ----
+     TP §1.4/§4. Each mutates a COPY of the real predicate INPUT (never the repo
+     file — a source-level guard is re-run on a poisoned string), so a guard that
+     silently stopped matching is caught here rather than passing forever. */
+  const enginePath = path.join(root, 'game', 'games', 'cat_forest.js');
+  const engineOrig = fs.readFileSync(enginePath, 'utf8');
+  const engineSha = sha(engineOrig);
+
+  /* fail-state vocabulary: the real (comments-stripped) source must be clean
+     AND the same regex must fire on a poisoned code string. `closeBook` must
+     NOT trip `\blose\b` — that is the word-boundary regression this pins. */
+  check('negative control: the fail-vocabulary guard fails on a poisoned string and passes on the real source',
+    PHILOSOPHY.failWords.test(stripComments(engineOrig)) === false
+      && PHILOSOPHY.failWords.test('if (x) { game over }') === true
+      && PHILOSOPHY.failWords.test('function closeBook(){}') === false);
+  /* currency/XP/lock vocabulary. */
+  check('negative control: the metric-vocabulary guard fails on a poisoned string and passes on the real source',
+    PHILOSOPHY.metricWords.test(stripComments(engineOrig)) === false
+      && PHILOSOPHY.metricWords.test('const score = 1;') === true);
+  /* timer/wall-clock APIs. */
+  check('negative control: the timer-API guard fails on a poisoned string and passes on the real source',
+    PHILOSOPHY.timerApis.test(stripComments(engineOrig)) === false
+      && PHILOSOPHY.timerApis.test('setInterval(fn, 1000)') === true);
+  /* live visible-text guards, on a poisoned scan result. */
+  const poisoned = visibleScan({ innerText: 'Ниво 3', labels: ['Ниво 3'] });
+  const clean = visibleScan({ innerText: '', labels: ['Мачка'] });
+  check('negative control: the visible-text guards fail on poisoned text and pass on clean text',
+    poisoned.digits && poisoned.latin === false && poisoned.latinLabels.length === 0
+      && clean.digits === false && clean.latin === false && clean.latinLabels.length === 0);
+  const latinHit = visibleScan({ innerText: 'cat', labels: ['cat'] });
+  check('negative control: the Latin guards fail on a poisoned Latin string',
+    latinHit.latin && latinHit.latinLabels.length === 1);
+
+  check('negative control: the engine file was never mutated (byte-identical)',
+    sha(fs.readFileSync(enginePath, 'utf8')) === engineSha);
 
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);
   process.exit(getFails() ? 1 : 0);

@@ -541,23 +541,25 @@ const APPS = [
   },
   {
     id: 'cat_forest', back: '#cat-forest-back',
-    /* CF-01 shell: the page boots with no gameplay yet, so its ONE real
-     * behaviour is the back control returning to the hub. Proving that round
-     * trip is honest coverage; CF-16 replaces this row with the real treat
-     * interaction (TP §3.12). The shell is re-opened afterwards so the P6
-     * back-check below still runs against this page, not against the hub.
-     * The predicate stays on startCatForest/__catForest (TD §8), never on the
-     * CF-01 stub payload, so CF-04 replacing the hook cannot stale it. */
+    /* Real treat interaction (TP §3.12): a child taps a treat in the tray and
+     * taps a plate, and a cat walks in — proving the whole loop works with the
+     * network cut. Driven through real taps (not the hook) so this integration
+     * smoke covers the DOM wiring the unit smoke bypasses. It leaves the page
+     * on cat_forest.html; the P6 back check below taps `back` itself. */
     ready: `typeof window.startCatForest==='function' && !!window.__catForest`,
     act: async h => {
-      const t = await h.tap('#cat-forest-back');
-      if (!t.ok) return { ok: false, why: 'back control: ' + t.why };
-      const home = await h.waitFor(`location.pathname.endsWith('/index.html')`,
-        { timeout: 10000, label: 'the shell to return to the hub' });
-      if (!home.ok) return home;
-      await h.navigate(`${BASE}:${h.port}/pages/cat_forest.html`);
-      return h.waitFor(`typeof window.startCatForest==='function' && !!window.__catForest`,
-        { timeout: 10000, label: 'the shell to boot again' });
+      const t1 = await h.tap('.cf-treat[data-treat="fish"]');
+      if (!t1.ok) return { ok: false, why: 'treat tap: ' + t1.why };
+      const selected = await h.waitFor(`window.__catForest.state().selectedTreat==='fish'`,
+        { timeout: 5000, label: 'tapping the fish treat to select it' });
+      if (!selected.ok) return selected;
+      const t2 = await h.tap('.cf-plate[data-plate="0"]');
+      if (!t2.ok) return { ok: false, why: 'plate tap: ' + t2.why };
+      const placed = await h.waitFor(`window.__catForest.state().plates[0].state==='treat'`,
+        { timeout: 5000, label: 'tapping a plate to place the treat' });
+      if (!placed.ok) return placed;
+      return h.waitFor(`window.__catForest.state().cats.length>0`,
+        { timeout: 15000, label: 'a cat to walk in to the placed treat while offline' });
     },
   },
 ];
