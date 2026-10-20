@@ -76,7 +76,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 |---|---|---|---|---|---|---|---|
 | object-car | 🚗 | `game/data/serbian.js`, `game/index.html`, driving favicon | Serbian phonics object and hub tile/icon | Reuse existing driving-car illustration if visually appropriate; favicon/UI may remain icon | REVIEW  | — | — |
 | food-banana | 🍌 | `game/data/serbian.js`, Kitty collectible themes | Phonics vocabulary and collectible theme | One shared banana asset | REVIEW  | — | — |
-| animal-wolf | 🐺 | `game/data/serbian.js` | Serbian phonics picture | Simple wolf asset | REVIEW  | — | — |
+| animal-wolf | 🐺 | `game/data/serbian.js` | Serbian phonics picture | One shared simple wolf illustration; calm, readable, consistent with bear reference | GENERATED / CANDIDATE — TECHNICAL QA PENDING | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/wolf.png` | — |
 | animal-caterpillar | 🐛 | `game/data/serbian.js`, `sequencing.js` | Phonics and life-cycle sequence | One shared caterpillar asset | REVIEW  | — | — |
 | object-tree | 🌳 | `game/data/serbian.js`, `sequencing.js`, racing decor | Phonics, tree-growth sequence, scenery | One tree illustration if scale/use match | REVIEW  | — | — |
 | object-student | 🧑‍🎓 | `game/data/serbian.js` | Serbian phonics picture | Simple child/student illustration; not an existing game character | REVIEW  | — | — |
