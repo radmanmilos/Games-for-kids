@@ -411,6 +411,21 @@
     }
   }
 
+  /* CF-12 (TP §3.10): the 🌧️ switch — mirrors setTime exactly (validate, flip
+     state.weather, project through render). Weather never affects gameplay
+     (card: out of scope), and rain is visual only: audio.js and adventure.js     expose no ambient/noise helper and the card forbids adding a shared one
+     (step 3), so there is deliberately no cue here. */
+  function setWeather(w) {
+    if (w !== 'clear' && w !== 'rain') return false;
+    state.weather = w;
+    render();
+    return true;
+  }
+
+  function onRainClick() {
+    setWeather(state.weather === 'rain' ? 'clear' : 'rain');
+  }
+
   /* previewPick (TD §8): the picks the engine would make for this plate right
      now, through the same pickArgs the spawn path uses. Side-effect free apart
      from the RNG stream itself (same contract as the pick hook). */
@@ -469,8 +484,10 @@
       decor: document.getElementById('cf-decor'),
       gifts: document.getElementById('cf-gifts'),
       fx: document.getElementById('cf-fx'),
+      rain: document.getElementById('cf-rain'),
       tray: document.getElementById('cf-tray'),
       dayNight: document.getElementById('cf-daynight'),
+      rainBtn: document.getElementById('cf-rain-btn'),
       treats: [].slice.call(document.querySelectorAll('#cf-tray .cf-treat')),
       plates: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate')),
       plateTreats: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate-treat'))
@@ -501,6 +518,8 @@
     /* CF-11: the toggle's pressed state mirrors the world; the glyph and the
        whole night palette hang off data-time in CSS. */
     if (els.dayNight) els.dayNight.setAttribute('aria-pressed', state.time === 'night' ? 'true' : 'false');
+    /* CF-12: the rain switch mirrors state.weather the same way. */
+    if (els.rainBtn) els.rainBtn.setAttribute('aria-pressed', state.weather === 'rain' ? 'true' : 'false');
 
     for (var i = 0; i < els.treats.length; i++) {
       var el = els.treats[i];
@@ -525,6 +544,26 @@
     renderGifts();
     renderFlights();
     renderFx();
+    renderRain();
+  }
+
+  /* CF-12: the drops layer is pure state projection — no RNG anywhere, so a
+     rebuild is byte-identical every time (TD §6). At most CF.RAIN_DROPS <i>
+     nodes exist and only while it rains: clear empties the layer (AC1). Each     drop gets its own x/phase/duration/park values so the sheet never falls     as one; the stylesheet parks them at --y under reduced motion, still
+     visible but motionless (card step 2). */
+  function renderRain() {
+    if (!els || !els.rain) return;
+    var want = state.weather === 'rain' ? CF.RAIN_DROPS : 0;
+    if (els.rain.children.length === want) return;
+    while (els.rain.firstChild) els.rain.removeChild(els.rain.firstChild);
+    for (var i = 0; i < want; i++) {
+      var d = document.createElement('i');
+      d.style.setProperty('--x', ((i + 0.5) / want * 100).toFixed(2) + '%');
+      d.style.setProperty('--d', (-(i * 0.061 % 1.3)).toFixed(3) + 's');
+      d.style.setProperty('--dur', (1.05 + (i % 3) * 0.17).toFixed(2) + 's');
+      d.style.setProperty('--y', (10 + (i * 137) % 76) + 'vh');
+      els.rain.appendChild(d);
+    }
   }
 
   /* ---- cat rendering (CF-07; TD §7/§10) ---------------------------------
@@ -984,6 +1023,7 @@
          and the time switch CF-11's button will call. */
       previewPick: previewPick,
       setTime: setTime,
+      setWeather: setWeather, // CF-12
       /* Read-only view of the DATA tables so the smoke can assert the roster
          (AC5). Inspection only — nothing here changes behaviour. */
       data: { treats: TREATS, cats: CATS, gifts: GIFTS }
@@ -992,6 +1032,7 @@
     els.treats.forEach(function (el) { el.addEventListener('click', onTreatClick); });
     els.plates.forEach(function (el) { el.addEventListener('click', onPlateClick); });
     els.dayNight.addEventListener('click', onDayNightClick); // CF-11
+    els.rainBtn.addEventListener('click', onRainClick);      // CF-12
     els.app.addEventListener('pointerdown', onAppPointerDown); // CF-10: any real touch restarts the idle windows
 
     /* CF-10 step 4: one spoken welcome prompt at boot (PS §5, D9). Best-effort

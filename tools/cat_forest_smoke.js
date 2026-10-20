@@ -103,7 +103,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
       vw: innerWidth, vh: innerHeight,
       text: document.body.innerText.trim(),
       latin: all('[aria-label]').map(e => e.getAttribute('aria-label') || '').filter(l => /[A-Za-z]/.test(l)),
-      decor: ['.cf-sky', '#cf-scenery', '#cf-decor', '#cf-sky-night', '#cf-night-tint', '#cf-stars'].map(s => {
+      decor: ['.cf-sky', '#cf-scenery', '#cf-decor', '#cf-sky-night', '#cf-night-tint', '#cf-stars', '#cf-rain'].map(s => {
         const el = document.querySelector(s);
         return { s, ok: !!el && el.getAttribute('aria-hidden') === 'true'
           && getComputedStyle(el).pointerEvents === 'none' };
@@ -208,8 +208,18 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     dateHits.length === 0, dateHits.join(', ') || 'none');
 
   /* ---- CF-05: treat selection and placement (TP §3.4) -------------------- */
+  /* CodeQL js/bad-code-sanitization (code-scanning alert #11 / issue #7):
+     JSON.stringify alone still lets <, >, / and U+2028/U+2029 reach generated
+     code — the query's own documented fix is a post-stringify escape, and any
+     String.replace after the stringify acts as its barrier. Stringify already
+     escapes quotes, backslashes and control chars, so this only maps the four
+     HTML/script-breakout characters to their escape FORM (same character when
+     parsed — selectors keep their exact meaning). */
+  const codeArg = v => JSON.stringify(String(v)).replace(
+    /[<>/\u2028\u2029]/g,
+    c => ({ '<': '\\u003C', '>': '\\u003E', '/': '\\u002F', '\u2028': '\\u2028', '\u2029': '\\u2029' }[c]));
   const clickSel = async sel => h.evalv(
-    `(() => { const el = document.querySelector(${JSON.stringify(sel)}); if (!el) return false; el.click(); return true; })()`);
+    `(() => { const el = document.querySelector(${codeArg(sel)}); if (!el) return false; el.click(); return true; })()`);
   const snap = async () => h.evalv(`window.__catForest.state()`);
 
   const treatIds = await h.evalv(`[...document.querySelectorAll('#cf-tray .cf-treat')].map(b => b.getAttribute('data-treat'))`);
@@ -1141,6 +1151,156 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
 
   /* AC5: the time is the child's choice, never the wall clock (static, same
      family as the CF-04 clock grep). */
+  /* ---- CF-12: rain toggle and reduced-motion gates (TP §3.10) -------------
+     The 🌧️ switch flips state.weather / data-weather / aria-pressed and
+     projects the drops layer. AC2 runs on BOTH halves: computed
+     animation-name on pages where the media feature is EXPLICITLY emulated
+     (bootEmulated sends Emulation.setEmulatedMedia over the exposed CDP
+     session — headless.js itself carries no emulation call), plus a static
+     audit of the page source, so an animation: that was never classified or a
+     suppressed one that lost its override fails the run (the card's
+     regression risk). AC3 keeps the clock walking cats under reduce; AC4
+     measures the button with the rain sheet up — the worst case for the hit
+     test. Every local is cf12-prefixed (per-section names, testing lesson). */
+  const cf12State = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() => {
+    const s = window.__catForest.state();
+    const b = document.getElementById('cf-rain-btn');
+    return { w: s.weather,
+      dw: document.getElementById('app').getAttribute('data-weather'),
+      ap: b ? b.getAttribute('aria-pressed') : null,
+      drops: document.querySelectorAll('#cf-rain i').length,
+      cap: s.config ? s.config.RAIN_DROPS : 0,
+      sw: typeof window.__catForest.setWeather === 'function' }; })())`));
+  const cf12Tap = async hh => {
+    await hh.evalv(`document.getElementById('cf-rain-btn').click()`);
+    return cf12State(hh);
+  };
+
+  const cf12S0 = await cf12State(h);
+  check('weather boots clear: state, data-weather and aria-pressed agree, zero drops, setWeather wired (AC1 + step 5)',
+    cf12S0.w === 'clear' && cf12S0.dw === 'clear' && cf12S0.ap === 'false'
+      && cf12S0.drops === 0 && cf12S0.sw, JSON.stringify(cf12S0));
+
+  const cf12S1 = await cf12Tap(h);
+  check('the rain toggle flips every view flag and builds exactly CF.RAIN_DROPS drops, <= 24 (AC1)',
+    cf12S1.w === 'rain' && cf12S1.dw === 'rain' && cf12S1.ap === 'true'
+      && cf12S1.drops > 0 && cf12S1.drops <= 24 && cf12S1.drops === cf12S1.cap,
+    JSON.stringify(cf12S1));
+
+  const cf12S2 = await cf12Tap(h);
+  check('back to clear: the drops leave the DOM entirely (AC1)',
+    cf12S2.w === 'clear' && cf12S2.dw === 'clear' && cf12S2.ap === 'false'
+      && cf12S2.drops === 0, JSON.stringify(cf12S2));
+
+  /* AC2 static half + the CF-12 audit, read from the live page source (the
+     page is the spec here: classification lives with the animation). */
+  const cf12Html = fs.readFileSync(path.join(root, 'game', 'pages', 'cat_forest.html'), 'utf8')
+    .replace(/\/\*[\s\S]*?\*\//g, '');
+  const cf12Rm = (cf12Html.match(/@media\s*\(prefers-reduced-motion:\s*reduce\)\s*\{[\s\S]*?\n\s*\}/) || [''])[0];
+  const cf12Groups = cf12Rm.match(/[^{}]+\{[^{}]*\}/g) || [];
+  const cf12Supp = ['.cf-treat.cf-bounce', '#cf-tray.cf-hint', '#cf-rain i'];
+  const cf12Miss = cf12Supp.filter(s => !cf12Groups.some(g => g.includes(s) && /animation:\s*none/.test(g)));
+  check('every suppressed animation keeps its override inside the reduce block (AC2 static)',
+    cf12Rm !== '' && cf12Miss.length === 0, cf12Miss.join(', ') || cf12Supp.length + ' overridden');
+
+  const cf12Kept = ['cf-gift-in', 'cf-decor-in'].map(n => {
+    const m = cf12Html.match(new RegExp('@keyframes\\s+' + n + '\\s*\\{[^\\n]*'));
+    return !!m && !/transform|scale|translate|filter|position|left:|top:|margin/.test(m[0]);
+  });
+  check('the two kept entrance fades stay opacity-only (their reduce exemption)',
+    cf12Kept.every(Boolean), JSON.stringify(cf12Kept));
+
+  const cf12Anim = [];
+  for (const m of cf12Html.replace(cf12Rm, '').matchAll(/([^{}@]+)\{[^{}]*\banimation\s*:/g)) {
+    const sel = m[1].split('\n').pop().trim();
+    if (sel) cf12Anim.push(sel);
+  }
+  const cf12Known = ['.cf-gift', '.cf-decor-item', '.cf-treat.cf-bounce', '#cf-tray.cf-hint', '#cf-rain i'];
+  const cf12Unknown = cf12Anim.filter(s => cf12Known.indexOf(s) === -1);
+  check('every animation: selector on the page is classified by the audit (AC2)',
+    cf12Anim.length >= 5 && cf12Unknown.length === 0,
+    cf12Unknown.join(', ') || cf12Anim.length + ' classified: ' + cf12Anim.join(', '));
+
+  /* AC2 computed half, on explicitly emulated pages: motion ALLOWED must
+     actually move (otherwise "none" below would be vacuous). */
+  const cf12Motion = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() => {
+    document.querySelector('.cf-treat').classList.add('cf-bounce');
+    document.getElementById('cf-tray').classList.add('cf-hint');
+    const bounce = getComputedStyle(document.querySelector('.cf-treat')).animationName;
+    const hint = getComputedStyle(document.getElementById('cf-tray')).animationName;
+    const ds = [...document.querySelectorAll('#cf-rain i')];
+    if (!ds.length) return { n: 0, uniq: [], ty: 0, op: 0, bounce: bounce, hint: hint };
+    const d0 = getComputedStyle(ds[0]);
+    const names = ds.map(d => getComputedStyle(d).animationName);
+    const m = d0.transform;
+    return { n: ds.length,
+      uniq: names.filter((v, i) => names.indexOf(v) === i),
+      ty: m.indexOf('matrix') === 0 ? parseFloat(m.split(',').pop()) : 0,
+      op: parseFloat(d0.opacity), bounce: bounce, hint: hint }; })())`));
+
+  const cf12NoPref = await bootEmulated('cf12-motion', 1024, 800, 'no-preference');
+  await cf12NoPref.evalv(`document.getElementById('cf-rain-btn').click()`);
+  const cf12N = await cf12Motion(cf12NoPref);
+  check('motion allowed: every drop runs cf-drop and the press/hint feedback animates (AC2)',
+    cf12N.n > 0 && cf12N.uniq.length === 1 && cf12N.uniq[0] === 'cf-drop'
+      && cf12N.bounce === 'cf-treat-bounce' && cf12N.hint === 'cf-tray-hint',
+    JSON.stringify(cf12N));
+  await cf12NoPref.close();
+
+  const cf12Red = await bootEmulated('cf12-reduce', 1024, 800, 'reduce');
+  await cf12Red.evalv(`document.getElementById('cf-rain-btn').click()`);
+  const cf12R = await cf12Motion(cf12Red);
+  check('reduced motion: the drops hang still, dimmed and motionless; shake/pulse off (AC2)',
+    cf12R.n > 0 && cf12R.uniq.length === 1 && cf12R.uniq[0] === 'none'
+      && cf12R.ty > 0 && cf12R.op > 0 && cf12R.op <= 0.45
+      && cf12R.bounce === 'none' && cf12R.hint === 'none',
+    JSON.stringify(cf12R));
+
+  /* AC3: reduce must never freeze the world — step() still walks a cat in
+     (CF-07/CF-08 spawn recipe: seed, place, step until a cat exists). */
+  await cf12Red.evalv(`(() => { const hk = window.__catForest; hk.seed(21); hk.place('fish', 0); return true; })()`);
+  let cf12Spawn = 0;
+  while (cf12Spawn++ < 200 && await cf12Red.evalv(`window.__catForest.state().cats.length`) === 0) {
+    await cf12Red.evalv(`window.__catForest.step(50)`);
+  }
+  const cf12W0 = await cf12Red.evalv(`(() => { const c = document.querySelector('.cf-cat');
+    return c ? c.getBoundingClientRect().left : null; })()`);
+  let cf12W = cf12W0;
+  let cf12Walk = 0;
+  while (cf12Walk++ < 60 && cf12W0 !== null && cf12W !== null && Math.abs(cf12W - cf12W0) <= 2) {
+    await cf12Red.evalv(`window.__catForest.step(50)`);
+    cf12W = await cf12Red.evalv(`(() => { const c = document.querySelector('.cf-cat');
+      return c ? c.getBoundingClientRect().left : null; })()`);
+  }
+  const cf12WPhase = await cf12Red.evalv(`(() => { const c = window.__catForest.state().cats[0];
+    return c ? c.phase : null; })()`);
+  check('under reduced motion the clock still walks a cat (AC3)',
+    cf12W0 !== null && cf12W !== null && Math.abs(cf12W - cf12W0) > 2 && cf12WPhase !== null,
+    JSON.stringify({ x0: cf12W0, x1: cf12W, phase: cf12WPhase, steps: cf12Walk }));
+  await cf12Red.close();
+
+  /* AC4: with the rain sheet up (worst case for elementFromPoint) the switch
+     must stay a real target at every card viewport — CF-11's geometry probe. */
+  const cf12Geo = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() => {
+    const el = document.getElementById('cf-rain-btn');
+    const r = el.getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    return { w: r.width, h: r.height,
+      inside: r.top >= -1 && r.left >= -1 && r.bottom <= innerHeight + 1 && r.right <= innerWidth + 1,
+      hit: !!(hit && (hit === el || el.contains(hit))) }; })())`));
+  for (const cf12Vp of [
+    { tag: 'cf12-tab', w: 1024, h: 800 },
+    { tag: 'cf12-short', w: 844, h: 390 },
+    { tag: 'cf12-port', w: 390, h: 844 },
+  ]) {
+    const cf12H = await bootFresh(cf12Vp.tag, cf12Vp.w, cf12Vp.h);
+    await cf12H.evalv(`document.getElementById('cf-rain-btn').click()`);
+    const cf12G = await cf12Geo(cf12H);
+    check(`rain up @${cf12Vp.w}x${cf12Vp.h}: the toggle stays >= 56px, inside and hittable (AC4)`,
+      cf12G.w >= 56 && cf12G.h >= 56 && cf12G.inside && cf12G.hit, JSON.stringify(cf12G));
+    await cf12H.close();
+  }
+
   check('no code path reads the wall clock to decide the time (AC5)',
     !engineSrc.includes('Date.now(') && !engineSrc.includes('new Date('));
 

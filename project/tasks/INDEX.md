@@ -275,3 +275,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 271 | DONE | 2026-10-20 | Cat Forest: special rules + idle hint (CF-10) (2026-10-20, OpenCode/Big Pickle). First-visit nicety,… | tasks-250-299.md
 272 | DONE | 2026-10-20 | Cat Forest: day/night toggle (CF-11) (2026-10-20, OpenCode/Big Pickle). Button wired to the CF-10 setTime +… | tasks-250-299.md
 274 | DONE | 2026-10-20 | Gate GitHub Pages publishing on CI success (2026-10-20, OpenCode/Big Pickle). Pages build_type legacy →… | tasks-250-299.md
+273 | DONE | 2026-10-20 | Cat Forest: rain + reduced-motion gates (CF-12) (2026-10-20, OpenCode/Big Pickle).… | tasks-250-299.md

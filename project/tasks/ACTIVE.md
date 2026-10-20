@@ -18,4 +18,3 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 273. IN PROGRESS — Cat Forest: rain + reduced-motion gates (CF-12) (2026-10-20, OpenCode/Big Pickle). Plan package: `resources/General_reviews/Cat_Forest/` (cards `03_TASKS.md`, ledger `PROGRESS.md`).

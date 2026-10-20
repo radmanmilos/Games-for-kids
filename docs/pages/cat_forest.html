@@ -50,6 +50,23 @@
   #app[data-time="night"] #cf-night-tint,
   #app[data-time="night"] #cf-stars{opacity:1;}
 
+  /* CF-12 rain: decorative layer over the whole scene but under the tray and
+     the toggles (z8, DOM before #cf-tray which shares z8, so the UI stays on
+     top). transform/opacity only, one phase + duration per drop (deterministic
+     --x/--d/--dur/--y set by renderRain — no RNG, TD §6) so the sheet never
+     pulses as one. Reduced motion parks the SAME drops at --y, dimmed and     motionless (step 2: static, low-opacity drops, no animation). */
+  #cf-rain{position:absolute;inset:0;z-index:8;pointer-events:none;}
+  /* Custom-prop defaults live on the rule itself (not as var() fallbacks) so the
+     animation shorthand stays comma-free — hub smoke's V21 motion gate
+     tokenizes shorthand values on commas. renderRain's inline values win. */
+  #cf-rain i{--x:50%;--d:0s;--dur:1.1s;--y:20vh;position:absolute;top:-8%;left:var(--x);
+    width:.55vmin;height:2.4vmin;border-radius:2px;background:rgba(140,170,210,.7);opacity:.5;
+    animation:cf-drop var(--dur) linear infinite;animation-delay:var(--d);}
+  @keyframes cf-drop{
+    from{transform:translateY(0);opacity:.2;}
+    35%{opacity:.6;}
+    to{transform:translateY(116vh);opacity:.25;}}
+
   /* Scenery: hills are CSS shapes; trees are emoji drawn through ::before so no
      text node exists (the no-visible-text guard reads body.innerText). */
   .cf-hill{position:absolute;border-radius:50% 50% 0 0;background:#BFE3B0;opacity:.9;}
@@ -160,10 +177,16 @@
   #app[data-time="night"] #cf-daynight::before{content:"🌙";}
   #cf-rain-btn::before{content:"🌧️";line-height:1;font-variant-emoji:emoji;}
 
-  /* The keyboard/OS preference always wins over the page's own motion. */
+  /* The keyboard/OS preference always wins over the page's own motion.
+     CF-12 audit (TP §3.10): every decorative *movement* is disabled here —
+     press feedback and the idle pulse (DECISIONS: shake/pulse suppressed) and
+     the rain fall (card step 2). The two opacity-only entrance fades above are
+     DELIBERATELY kept running: their keyframes touch opacity alone, which is     their exemption and is asserted by the smoke. */
   @media (prefers-reduced-motion: reduce){
     .cf-plate,.cf-treat,.cf-toggles button{transition:none;}
     #cf-sky-night,#cf-night-tint,#cf-stars{transition:none;}
+    #cf-rain i{animation:none;transform:translateY(var(--y));opacity:.3;}
+    .cf-treat.cf-bounce,#cf-tray.cf-hint{animation:none;}
   }
 
   /* Desktop tier, mirroring sorting.html: cap the vmin glyphs so a tablet held
@@ -206,6 +229,7 @@
     <div id="cf-cats"></div>
     <div id="cf-gifts"></div>
     <div id="cf-fx" aria-hidden="true"></div>
+    <div id="cf-rain" aria-hidden="true"></div>
     <div id="cf-tray">
       <button class="cf-treat" data-treat="fish" aria-label="Риба" aria-pressed="false"></button>
       <button class="cf-treat" data-treat="milk" aria-label="Млеко" aria-pressed="false"></button>
