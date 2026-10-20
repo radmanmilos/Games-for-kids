@@ -1344,10 +1344,13 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     parseFloat(cf13Css.d.op) < 1 && cf13Css.o.tr !== 'none', JSON.stringify(cf13Css));
 
   /* AC3 first: a gesture that never crosses CF.DRAG_START_PX is still a tap.
-     Both comparison boots share one protocol — warm up the idle windows
-     (any touch resets them, CF-10) and pause the clock — so every snapshot
-     field below is comparable byte for byte. */
-  const cf13Main = await bootFresh('cf13-main', 1024, 800);
+     Both comparison boots share one protocol — PIN `reduce` explicitly
+     (`bootFresh` would inherit the browser's *default* media, which differs
+     across Chrome builds — the CF-08 lesson; CI's runner defaults to
+     no-preference and would correctly glide instead of removing instantly),
+     warm up the idle windows (any touch resets them, CF-10) and pause the
+     clock — so every snapshot field below is comparable byte for byte. */
+  const cf13Main = await bootEmulated('cf13-main', 1024, 800, 'reduce');
   const cf13G = await cf13Geo(cf13Main);
   await cf13Main.evalv(`document.getElementById('app').dispatchEvent(new Event('pointerdown'));
     __catForest.pause(true); true`);
@@ -1417,7 +1420,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
      the way a child taps it — with the same seed must land the same state
      (arriveMs included, because both paths draw exactly one RNG value in
      place()). Same warmup+pause protocol as the drag boot. */
-  const cf13TapH = await bootFresh('cf13-tap', 1024, 800);
+  const cf13TapH = await bootEmulated('cf13-tap', 1024, 800, 'reduce');
   await cf13TapH.evalv(`document.getElementById('app').dispatchEvent(new Event('pointerdown'));
     __catForest.pause(true); __catForest.seed(7); true`);
   await cf13Fire(cf13TapH, cf13Sel, 'pointerdown', cf13G.tx, cf13G.ty);
