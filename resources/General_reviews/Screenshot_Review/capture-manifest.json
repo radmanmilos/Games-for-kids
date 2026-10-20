@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "dce5cdf9e44ceedf9bbfa0d9734e4456129be2b8",
+  "commitSha": "602a3a56c2e675b000c20f74de272b8de22ddba1",
   "browser": {
-    "product": "Chrome/136.0.7103.113",
-    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/136.0.0.0 Safari/537.36",
+    "product": "Chrome/155.0.8059.85",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-10-20T08:07:17.388Z",
+  "generatedAt": "2026-10-20T09:17:26.044Z",
   "pageSet": [
     "cat_forest"
   ],
@@ -46,7 +46,7 @@
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 27141
+      "bytes": 53345
     },
     {
       "file": "cat_forest_phone-landscape.png",
@@ -55,7 +55,7 @@
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 24820
+      "bytes": 51458
     },
     {
       "file": "cat_forest_tablet-portrait.png",
@@ -64,7 +64,7 @@
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 48109
+      "bytes": 111789
     },
     {
       "file": "cat_forest_tablet-landscape.png",
@@ -73,7 +73,7 @@
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 45259
+      "bytes": 109304
     }
   ]
 }

@@ -8,6 +8,8 @@
    actor lifecycle (walk in, sit, eat, leave) fully driven by the game clock.
    CF-08 the gift that a finished visit leaves and the forest it grows into.
    CF-09 the cuddle tap: hearts, meow and the spoken name, changing nothing else.
+   CF-10 the first-visit nicety, the setTime hook and the gentle idle hint.
+   CF-11 the ☀️/🌙 toggle: night sky, stars and the swish cue, all on data-time.
    Gameplay arrives card by card — nothing here is visible to the child yet. */
 (function () {
   'use strict';
@@ -126,7 +128,11 @@
 
   function seed(n) {
     rnd = mulberry32((n >>> 0) || 1);
-    // The anti-repeat memory lives in state (CF-07); there is no pick history to clear yet.
+    /* Reseeding also clears the session pick history (TD §8): the anti-repeat
+       memory and the first-visit nicety's visit count (CF-10), so a seeded run
+       is fully reproducible and "the first visit" is testable per seed. */
+    state.lastVisitorId = null;
+    state.visitsThisSession = 0;
   }
 
   seed((Math.random() * 0x100000000) >>> 0);
@@ -168,6 +174,22 @@
     return pool[pool.length - 1]; // float safety net — the draw never misses
   }
 
+  /* CF-10 step 2 (TD §7): the very first pick of a session only offers the
+     friendly heavyweight cats (weight >= FIRST_VISIT_W) that like the placed
+     treat — else any heavyweight — so the opening visit is warm and
+     predictable. An empty restriction falls through to the normal path, so the
+     never-null guarantee is untouched. FIRST_VISIT_W lives outside CF like
+     EDGE_FRAC: the smoke pins CF's key set against PS §6. */
+  var FIRST_VISIT_W = 1.0;
+
+  function firstVisitPool(pool, treat) {
+    var strong = pool.filter(function (c) {
+      return c.weight >= FIRST_VISIT_W && c.likes.indexOf(treat) !== -1;
+    });
+    if (strong.length) return strong;
+    return pool.filter(function (c) { return c.weight >= FIRST_VISIT_W; });
+  }
+
   function pickCat(opts) {
     opts = opts || {};
     var treat = opts.treat || null;
@@ -177,7 +199,13 @@
     var last = opts.lastVisitorId || null;
 
     var pool = eligibleCats(false, night, platesFilled, occupied);
-    if (pool.length) return weightedPick(pool, treat, last, false, false);
+    if (pool.length) {
+      if (opts.firstVisit) {
+        var opening = firstVisitPool(pool, treat);
+        if (opening.length) return weightedPick(opening, treat, last, false, false);
+      }
+      return weightedPick(pool, treat, last, false, false);
+    }
 
     /* Fallback (TD §7): the normal pool is empty only because every eligible
        cat is occupied, so relax the anti-repeat, then the like penalty, and as
@@ -238,6 +266,21 @@
     plate.state = 'occupied';
     plate.catId = cat.id;
     state.lastVisitorId = cat.id;
+    state.visitsThisSession++; // CF-10: the first-visit nicety applies only while this is 0
+  }
+
+  /* The exact arguments the engine passes for a plate right now (CF-10 step 1):
+     the spawn path and previewPick() share this one function, so a preview can
+     never drift from what a real pick would receive. */
+  function pickArgs(plate) {
+    return {
+      treat: plate.treat,
+      night: state.time === 'night',
+      platesFilled: platesFilled(),
+      occupiedIds: state.cats.map(function (c) { return c.id; }),
+      lastVisitorId: state.lastVisitorId,
+      firstVisit: state.visitsThisSession === 0
+    };
   }
 
   /* Arrival timers (TD §7): a treat plate counts down on the game clock and a
@@ -249,13 +292,7 @@
       if (plate.state !== 'treat') continue;
       plate.arriveMs -= dt;
       if (plate.arriveMs > 0 || state.cats.length >= CF.MAX_CATS) continue;
-      var cat = pickCat({
-        treat: plate.treat,
-        night: state.time === 'night',
-        platesFilled: platesFilled(),
-        occupiedIds: state.cats.map(function (c) { return c.id; }),
-        lastVisitorId: state.lastVisitorId
-      });
+      var cat = pickCat(pickArgs(plate));
       if (cat) spawnCat(plate, cat);
     }
   }
@@ -348,6 +385,74 @@
     render();
   }
 
+  /* ---- world + gentle guidance (CF-10; PS §4, TD §7) ---------------------
+     setTime flips only state.time (CF-11 wires the ☀️/🌙 button to this same
+     function); the idle hint is picture-only guidance — the tray bounces, never
+     a word, and only while the forest is quiet (no treat out, no cat on stage),
+     at most CF.HINT_REPEAT_MAX times until the next interaction. */
+  function setTime(t) {
+    if (t !== 'day' && t !== 'night') return false;
+    state.time = t;
+    render();
+    return true;
+  }
+
+  /* CF-11 (PS §4/§5): the child's ☀️/🌙 switch. It flips through the very same
+     setTime the hook exposes, plus the soft swish — down for night, up for day
+     (PS §5 sound table). The state flip is all that matters; the cue is a
+     guarded nicety. Cats already on stage are untouched: only NEW picks see
+     the new time (pickArgs reads state.time when it is asked). */
+  function onDayNightClick() {
+    var next = state.time === 'day' ? 'night' : 'day';
+    setTime(next);
+    if (window.sweep) {
+      window.sweep(next === 'night' ? 900 : 400, next === 'night' ? 400 : 900,
+        0.25, 0, 'sine', 0.2);
+    }
+  }
+
+  /* previewPick (TD §8): the picks the engine would make for this plate right
+     now, through the same pickArgs the spawn path uses. Side-effect free apart
+     from the RNG stream itself (same contract as the pick hook). */
+  function previewPick(plateIdx, n) {
+    var plate = state.plates[plateIdx];
+    var out = [];
+    if (!plate) return out;
+    var opts = pickArgs(plate);
+    for (var i = 0; i < n; i++) out.push(pickCat(opts).id);
+    return out;
+  }
+
+  /* Idle hint (TD §7): the clock accumulates since the last interaction; while
+     the forest is quiet the tray bounces once per idle window — one early
+     welcome hint at FIRST_HINT_MS if nothing was touched, then repeats at
+     IDLE_HINT_MS up to HINT_REPEAT_MAX. A treat on any plate or a cat on stage
+     suppresses the hint entirely (regression risk from the card), but the clock
+     keeps counting so guidance returns right after a visit ends. The bounce
+     reuses the CF-05 nudge channel, so it is clock-driven and self-clearing. */
+  function updateIdle(dt) {
+    state.idle.sinceMs += dt;
+    if (state.cats.length > 0 || platesFilled() > 0) return;
+    if (!state.idle.firstDone && state.idle.sinceMs >= CF.FIRST_HINT_MS) {
+      state.idle.firstDone = true;
+      state.idle.sinceMs = 0;
+      state.nudge = { kind: 'hint', treat: null, until: state.clock + CF.HINT_MS };
+    } else if (state.idle.hints < CF.HINT_REPEAT_MAX && state.idle.sinceMs >= CF.IDLE_HINT_MS) {
+      state.idle.hints++;
+      state.idle.sinceMs = 0;
+      state.nudge = { kind: 'hint', treat: null, until: state.clock + CF.HINT_MS };
+    }
+  }
+
+  /* Any real pointer interaction restarts the idle windows and the hint budget
+     (TD §7 "any interaction resets hints to 0"). Synthetic .click() in tests
+     dispatches no pointerdown, so step-driven hint scenarios stay exact. */
+  function onAppPointerDown() {
+    state.idle.sinceMs = 0;
+    state.idle.hints = 0;
+    state.idle.firstDone = true;
+  }
+
   /* ---- DOM handles and the render projection ----------------------------
      render() is a pure projection of state to the DOM (TD §6): positions and
      classes come from state, never from CSS transitions, which is what keeps
@@ -365,6 +470,7 @@
       gifts: document.getElementById('cf-gifts'),
       fx: document.getElementById('cf-fx'),
       tray: document.getElementById('cf-tray'),
+      dayNight: document.getElementById('cf-daynight'),
       treats: [].slice.call(document.querySelectorAll('#cf-tray .cf-treat')),
       plates: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate')),
       plateTreats: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate-treat'))
@@ -392,6 +498,9 @@
     if (!els || !els.app) return;
     els.app.setAttribute('data-time', state.time);
     els.app.setAttribute('data-weather', state.weather);
+    /* CF-11: the toggle's pressed state mirrors the world; the glyph and the
+       whole night palette hang off data-time in CSS. */
+    if (els.dayNight) els.dayNight.setAttribute('aria-pressed', state.time === 'night' ? 'true' : 'false');
 
     for (var i = 0; i < els.treats.length; i++) {
       var el = els.treats[i];
@@ -701,8 +810,9 @@
 
   /* Tick order (TD §6): idle/hints → arrivals → cats → gifts → flights → fx →
      clock (last, so a tick's effects and its stamp agree). CF-07 fills arrivals
-     and cats; CF-08 flights and fx; CF-05..CF-09 fill the rest. */
+     and cats; CF-08 flights and fx; CF-10 the idle hint at the front. */
   function tick(dt) {
+    updateIdle(dt);
     updateArrivals(dt);
     updateCats(dt);
     updateFlights(dt);
@@ -870,6 +980,10 @@
         }
         return out;
       },
+      /* CF-10 (TD §8): the picks the engine would make for a plate right now,
+         and the time switch CF-11's button will call. */
+      previewPick: previewPick,
+      setTime: setTime,
       /* Read-only view of the DATA tables so the smoke can assert the roster
          (AC5). Inspection only — nothing here changes behaviour. */
       data: { treats: TREATS, cats: CATS, gifts: GIFTS }
@@ -877,6 +991,14 @@
 
     els.treats.forEach(function (el) { el.addEventListener('click', onTreatClick); });
     els.plates.forEach(function (el) { el.addEventListener('click', onPlateClick); });
+    els.dayNight.addEventListener('click', onDayNightClick); // CF-11
+    els.app.addEventListener('pointerdown', onAppPointerDown); // CF-10: any real touch restarts the idle windows
+
+    /* CF-10 step 4: one spoken welcome prompt at boot (PS §5, D9). Best-effort
+       with the sorting idiom — a silent failure is fine and nothing depends
+       on it (TTS pronunciation is a playtest question on the tablet). */
+    if (window.audioBuses && window.audioBuses.speakWithDuck) window.audioBuses.speakWithDuck('Нахрани мачиће!');
+    else if (window.speech && window.speech.speak) window.speech.speak('Нахрани мачиће!');
 
     lastTs = 0;
     // A tab that woke up must not jump the clock by the time it slept.

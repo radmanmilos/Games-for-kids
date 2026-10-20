@@ -7,10 +7,13 @@
    CF-07 adds the cat actor lifecycle (spawn/enter/sit/eat/leave) of TP §3.6.
    CF-08 adds gifts and the growing forest of TP §3.7.
    CF-09 adds the cuddle tap of TP §3.8.
+   CF-10 adds the special rules (first-visit nicety, previewPick, setTime) and
+   the idle hint of TP §3.9.
+   CF-11 adds the ☀️/🌙 toggle of TP §3.10 (day half).
    Gameplay assertions arrive with the engine — this file grows card by card (TP §3).
    Run:  node tools/cat_forest_smoke.js     (from the repo root or anywhere)
    Requires Node >= 22. CHROME_PATH env optional. */
-const { start, check, getFails } = require('./headless.js');
+const { start, check, skip, getFails } = require('./headless.js');
 const { checkRouteWired } = require('./route_contract.js');
 const crypto = require('crypto');
 const fs = require('fs');
@@ -100,7 +103,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
       vw: innerWidth, vh: innerHeight,
       text: document.body.innerText.trim(),
       latin: all('[aria-label]').map(e => e.getAttribute('aria-label') || '').filter(l => /[A-Za-z]/.test(l)),
-      decor: ['.cf-sky', '#cf-scenery', '#cf-decor'].map(s => {
+      decor: ['.cf-sky', '#cf-scenery', '#cf-decor', '#cf-sky-night', '#cf-night-tint', '#cf-stars'].map(s => {
         const el = document.querySelector(s);
         return { s, ok: !!el && el.getAttribute('aria-hidden') === 'true'
           && getComputedStyle(el).pointerEvents === 'none' };
@@ -296,8 +299,13 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   const stB = await pathB.evalv(`window.__catForest.state()`);
   await pathB.close();
 
+  /* The comparator keeps everything placement determines. `idle.sinceMs` is
+     zeroed like CF-09's clock: it counts real milliseconds that raced between
+     boot and pause() on two independent pages (CF-10 made it live), not
+     anything placement touches — hints/firstDone stay in the compare. */
   const pick = s => JSON.stringify({ plates: s.plates, sel: s.selectedTreat, cats: s.cats, gifts: s.gifts,
-    decor: s.decor, met: s.met, idle: s.idle, timers: s.timers, time: s.time, weather: s.weather });
+    decor: s.decor, met: s.met, idle: { sinceMs: 0, hints: s.idle.hints, firstDone: s.idle.firstDone },
+    timers: s.timers, time: s.time, weather: s.weather });
   check('placing through the hook and through taps gives identical state (AC5)',
     pick(stA) === pick(stB), pick(stA) + ' vs ' + pick(stB));
 
@@ -841,6 +849,300 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     r9.spark === 3 && r9.phase === 'sitting', JSON.stringify(r9));
   await h9r.close();
   await h9.close();
+
+  /* ---- CF-10: special rules + the idle hint (TP §3.9) --------------------
+      previewPick must be the spawn path's exact mirror (same pickArgs), the
+      first-visit nicety must warm only the opening visit of a session, and the
+      idle hint is quiet guidance: suppressed while anything is out, capped at
+      HINT_REPEAT_MAX, restarted by a real pointer interaction. Each scenario
+      is a fresh paused page (no reset() until CF-14). A real pointerdown
+      (not .click()) is what resets the idle windows — the engine listens for
+      pointerdown exactly as TD §7 specifies. */
+  const pointerDown = hh => hh.evalv(`(() => {
+    document.getElementById('app').dispatchEvent(new Event('pointerdown')); return true; })()`);
+
+  /* AC1: with two plates filled previewPick never offers Краљ (needs all three
+      non-empty); with three filled and seed(3) he appears. One real visit runs
+      first so the first-visit nicety (which excludes weight-0.4 Краљ) is out of
+      the way — seed(3) is taken before that visit so the whole scenario stays
+      reproducible (seed() clears the session pick history by design). */
+  const h10 = await bootFresh('cf10-preview');
+  const f1 = await h10.evalv(`(() => {
+    const hk = window.__catForest; hk.seed(3);
+    hk.forceCat('maca', 0);                       // a real visit: visitsThisSession -> 1
+    for (let i = 0; i < 800 && hk.state().cats.length; i++) hk.step(50);
+    hk.place('fish', 1); hk.place('milk', 2);     // two plates non-empty
+    const filled2 = hk.state().plates.map(p => p.state);
+    const two = hk.previewPick(1, 300);
+    hk.place('chicken', 0);                       // all three non-empty
+    const three = hk.previewPick(0, 300);
+    return { twoKralj: two.filter(x => x === 'kralj').length,
+      threeKralj: three.filter(x => x === 'kralj').length,
+      filled2: filled2 };
+  })()`);
+  check('2 filled plates: 300 previewPick draws never contain Краљ (AC1)',
+    f1.filled2.filter(s => s !== 'empty').length === 2 && f1.twoKralj === 0, JSON.stringify(f1));
+  check('3 filled plates, seed(3): Краљ appears in the preview draws (AC1)',
+    f1.threeKralj >= 1, `kralj=${f1.threeKralj}`);
+  await h10.close();
+
+  /* AC2: night-only cats are structurally impossible at day and possible at
+      night — previewPick observes state.time, so setTime('night') (the hook
+      CF-11's button will call) is enough. No reseed after the visit: seed()
+      would re-arm the first-visit nicety, which excludes weight-0.7 Звездица.
+      setTime also refuses anything but day/night without touching state. */
+  const h10b = await bootFresh('cf10-time');
+  const f2 = await h10b.evalv(`(() => {
+    const hk = window.__catForest; hk.seed(13);
+    hk.forceCat('puhko', 1);
+    for (let i = 0; i < 800 && hk.state().cats.length; i++) hk.step(50);
+    hk.place('fish', 0);                           // visitsThisSession is 1: no nicety
+    const day = hk.previewPick(0, 300);
+    const badReject = hk.setTime('evening');       // only day|night is accepted
+    const timeAfterBad = hk.state().time;
+    hk.setTime('night');
+    const night = hk.previewPick(0, 300);
+    return { daySenka: day.filter(x => x === 'senka' || x === 'zvezda').length,
+      nightSenka: night.filter(x => x === 'senka').length,
+      nightZvezda: night.filter(x => x === 'zvezda').length,
+      badReject: badReject, timeAfterBad: timeAfterBad, time: hk.state().time };
+  })()`);
+  check('day previews never contain the night-only cats (AC2)',
+    f2.daySenka === 0, `day=${f2.daySenka}`);
+  check('after setTime("night") both night-only cats appear in the previews (AC2)',
+    f2.nightSenka >= 1 && f2.nightZvezda >= 1,
+    `senka=${f2.nightSenka} zvezda=${f2.nightZvezda}`);
+  check('setTime refuses anything but day/night and leaves state untouched (hook guard)',
+    f2.badReject === false && f2.timeAfterBad === 'day' && f2.time === 'night', JSON.stringify(f2));
+  await h10b.close();
+
+  /* AC5: the very first spawned cat of a session is always a heavyweight
+      (weight >= 1.0), over 30 reseeds — seed() clears visitsThisSession, so
+      every iteration genuinely re-runs "the first visit" through the REAL
+      spawn path (updateArrivals), not through a hook. Each iteration then
+      waits out the whole visit so the plate is free for the next one. */
+  const h10c = await bootFresh('cf10-first-visit');
+  const f5 = await h10c.evalv(`(() => {
+    const hk = window.__catForest;
+    const weights = {};
+    window.__catForest.data.cats.forEach(c => { weights[c.id] = c.weight; });
+    const treats = ['fish', 'milk', 'chicken', 'sushi', 'cookie'];
+    const firsts = [];
+    for (let s = 1; s <= 30; s++) {
+      hk.seed(s);
+      hk.place(treats[s % 5], 0);
+      let g = 0;
+      while (g++ < 200 && hk.state().cats.length === 0) hk.step(50);  // the spawn
+      const c = hk.state().cats[0];
+      firsts.push(c ? c.id : null);
+      let w = 0;
+      while (w++ < 800 && hk.state().cats.length) hk.step(50);        // the visit ends
+    }
+    return { firsts: firsts, min: Math.min.apply(null, firsts.map(id => weights[id])) };
+  })()`);
+  check('over 30 seeds the very first spawned cat always has weight >= 1.0 (AC5)',
+    f5.firsts.length === 30 && f5.firsts.every(Boolean) && f5.min >= 1.0,
+    `min=${f5.min} firsts=${f5.firsts.join(',')}`);
+  await h10c.close();
+
+  /* AC3: the idle hint cycle, normalized by one real pointerdown at the start
+      so the welcome branch cannot pre-fire during boot: every idle window
+      shows the tray bounce, HINT_REPEAT_MAX (3) is the budget, and the next
+      interaction restarts both. Each step lands the fresh hint inside its
+      HINT_MS window (fires at exactly IDLE_HINT_MS, the step ends 100 ms
+      later). */
+  const h10d = await bootFresh('cf10-idle');
+  const trayBounces = () => h10d.evalv(`document.getElementById('cf-tray').classList.contains('cf-hint')`);
+  const idleNow = () => h10d.evalv(`window.__catForest.state().idle`);
+  await pointerDown(h10d);
+  await h10d.evalv(`window.__catForest.step(10100)`); // idle window 1
+  const id1 = { on: await trayBounces(), idle: await idleNow() };
+  await h10d.evalv(`window.__catForest.step(10100)`); // idle window 2
+  const id2 = { on: await trayBounces(), idle: await idleNow() };
+  await h10d.evalv(`window.__catForest.step(10100)`); // idle window 3 (the budget)
+  const id3 = { on: await trayBounces(), idle: await idleNow() };
+  await h10d.evalv(`window.__catForest.step(20000)`); // well past any hint window
+  const id4 = { on: await trayBounces(), idle: await idleNow() };
+  await pointerDown(h10d);                             // an interaction restarts the cycle
+  await h10d.evalv(`window.__catForest.step(10100)`);
+  const id5 = { on: await trayBounces(), idle: await idleNow() };
+  check('each idle window bounces the tray, three times, then stops (AC3)',
+    id1.on && id1.idle.hints === 1 && id2.on && id2.idle.hints === 2
+      && id3.on && id3.idle.hints === 3 && !id4.on && id4.idle.hints === 3,
+    JSON.stringify([id1, id2, id3, id4]));
+  check('the next interaction restarts the idle hint cycle (AC3)',
+    id5.on && id5.idle.hints === 1 && id5.idle.sinceMs < 1000, JSON.stringify(id5));
+
+  /* AC4 + the card's regression risk, as one invariant over a real visit:
+     while ANY plate holds a treat or a cat is on stage the tray never bounces
+     (sampled every sub-step), and once the forest is quiet the hint returns.
+     40000 ms guarantees >= 15100 ms of quiet even if the visit's random
+     durations all roll their maximum. */
+  const f4 = await h10d.evalv(`(() => {
+    const hk = window.__catForest;
+    const tray = () => document.getElementById('cf-tray').classList.contains('cf-hint');
+    hk.step(1300);          // let the AC3 cycle's last bounce expire before the visit
+    hk.place('fish', 0);
+    let hintedBusy = 0, hintedQuiet = 0;
+    for (let i = 0; i < 800; i++) {
+      hk.step(50);
+      const s = hk.state();
+      const busy = s.cats.length > 0 || s.plates.some(p => p.state !== 'empty');
+      if (busy && tray()) hintedBusy++;
+      if (!busy && tray()) hintedQuiet++;
+    }
+    return { hintedBusy: hintedBusy, hintedQuiet: hintedQuiet };
+  })()`);
+  check('a treat on a plate (or a cat on stage) suppresses the idle hint (AC4)',
+    f4.hintedBusy === 0 && f4.hintedQuiet >= 1, JSON.stringify(f4));
+  await h10d.close();
+
+  /* CF-10 step 3's welcome half: one early hint at FIRST_HINT_MS if nothing
+      was ever touched. The page is never poked, so if the harness booted it
+      slowly enough that the real loop already fired the hint before pause(),
+      the check is skipped honestly rather than guessed (a SKIP is not a PASS). */
+  const h10w = await bootFresh('cf10-welcome');
+  const pre = await h10w.evalv(`window.__catForest.state().idle`);
+  if (pre && pre.firstDone) {
+    skip('the welcome hint fires at FIRST_HINT_MS when nothing is touched',
+      'the page ran unpaused past FIRST_HINT_MS before pause()');
+  } else {
+    await h10w.evalv(`window.__catForest.step(1600)`); // crosses FIRST_HINT_MS (1500)
+    const w = await h10w.evalv(`(() => ({
+      firstDone: window.__catForest.state().idle.firstDone,
+      on: document.getElementById('cf-tray').classList.contains('cf-hint') }))()`);
+    check('one welcome hint fires at FIRST_HINT_MS when nothing is touched',
+      w.firstDone === true && w.on === true, JSON.stringify(w));
+  }
+  await h10w.close();
+
+  /* CF-10 step 4: the spoken welcome prompt ships in the engine (speech is
+      best-effort, so the runtime effect is not asserted — only the string is,
+      as a static check, same family as the no-Date/no-timer greps). */
+  check('the engine speaks the approved boot prompt «Нахрани мачиће!» (step 4)',
+    engineSrc.includes('Нахрани мачиће!'));
+
+  /* ---- CF-11: the ☀️/🌙 toggle (TP §3.10, day half) ----------------------
+     The button drives the same setTime the hook exposes; the palette hangs off
+     data-time in CSS as three opacity layers (gradients cannot transition), so
+     their cross-fade runs on the WALL clock and gets a real sleep — the game
+     clock stays paused throughout. The glyph is read from computed content,
+     tolerant of how Chrome spells the emoji (literal or \hex escapes). */
+  const dnClick = hh => hh.evalv(`(() => {
+    document.getElementById('cf-daynight').click(); return true; })()`);
+  const dnRead = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() => {
+    const b = document.getElementById('cf-daynight');
+    return { time: window.__catForest.state().time,
+      data: document.getElementById('app').getAttribute('data-time'),
+      pressed: b.getAttribute('aria-pressed'),
+      glyph: getComputedStyle(b, '::before').content };
+  })())`));
+  const glyphHas = (g, ch, hex) => g.indexOf(ch) !== -1 || g.indexOf(hex) !== -1;
+  const nightLayers = hh => hh.evalv(`['cf-sky-night', 'cf-night-tint', 'cf-stars']
+    .map(id => Number(getComputedStyle(document.getElementById(id)).opacity))`);
+
+  const h11 = await bootFresh('cf11-toggle');
+  await dnClick(h11);                       // day -> night
+  const dnNight1 = await dnRead(h11);
+  await sleep(700);                         // wall clock: let the 600 ms fade finish
+  const dnNightL = await nightLayers(h11);
+  await dnClick(h11);                       // night -> day
+  const dnDay1 = await dnRead(h11);
+  await sleep(700);
+  const dnDayL = await nightLayers(h11);
+  check('the toggle flips state.time, data-time, aria-pressed and the glyph, both ways (AC1)',
+    dnNight1.time === 'night' && dnNight1.data === 'night' && dnNight1.pressed === 'true'
+      && glyphHas(dnNight1.glyph, '🌙', '1f319')
+      && dnDay1.time === 'day' && dnDay1.data === 'day' && dnDay1.pressed === 'false'
+      && glyphHas(dnDay1.glyph, '☀', '2600'),
+    JSON.stringify([dnNight1, dnDay1]));
+  check('the night sky, the scenery tint and the stars fade in and out with the toggle (step 2)',
+    dnNightL.every(o => o === 1) && dnDayL.every(o => o === 0),
+    JSON.stringify({ night: dnNightL, day: dnDayL }));
+
+  /* AC2: no surprising disappearances — a cat mid-walk is byte-identical
+     across the flip and keeps progressing afterwards. */
+  const f11c = await h11.evalv(`(() => {
+    const hk = window.__catForest;
+    hk.seed(31);
+    hk.forceCat('maca', 0);
+    hk.step(400);                                   // mid walk-in
+    const before = JSON.stringify(hk.state().cats);
+    const tBefore = hk.state().cats[0].t;
+    document.getElementById('cf-daynight').click(); // -> night
+    const afterFlip = JSON.stringify(hk.state().cats);
+    hk.step(200);                                   // and the visit still moves on
+    const c = hk.state().cats[0];
+    return { same: before === afterFlip, n: hk.state().cats.length,
+      id: c && c.id, advanced: !!c && c.t > tBefore };
+  })()`);
+  check('a cat on stage stays put and keeps walking when the time flips (AC2)',
+    f11c.same && f11c.n === 1 && f11c.id === 'maca' && f11c.advanced, JSON.stringify(f11c));
+  await h11.close();
+
+  /* AC3: the BUTTON (not the hook) gates eligibility — 200 picks per state on
+     one fresh page, past the first-visit nicety via a real visit, no reseed in
+     between so the stream stays honest. */
+  const h11b = await bootFresh('cf11-night-cats');
+  const f11n = await h11b.evalv(`(() => {
+    const hk = window.__catForest;
+    hk.seed(21);
+    hk.forceCat('puhko', 1);
+    for (let i = 0; i < 800 && hk.state().cats.length; i++) hk.step(50);  // the visit ends
+    hk.place('fish', 0);
+    document.getElementById('cf-daynight').click();          // -> night
+    const night = hk.previewPick(0, 200);
+    document.getElementById('cf-daynight').click();          // -> day
+    const day = hk.previewPick(0, 200);
+    return { night: night.filter(x => x === 'senka' || x === 'zvezda'),
+      day: day.filter(x => x === 'senka' || x === 'zvezda'),
+      time: hk.state().time };
+  })()`);
+  check('the button flips to night: both night-only cats appear in 200 picks (AC3)',
+    f11n.night.indexOf('senka') !== -1 && f11n.night.indexOf('zvezda') !== -1,
+    JSON.stringify(f11n.night));
+  check('back to day: no night-only cat in 200 picks (AC3)',
+    f11n.day.length === 0 && f11n.time === 'day', JSON.stringify(f11n));
+  await h11b.close();
+
+  /* AC4 + the card's regression risk: at 844x390 the toggle must stay a real
+     target in BOTH states — measured after the night layers have faded in, so
+     a covering star/scenery layer would fail the hit test. */
+  const h11s = await bootFresh('cf11-short', 844, 390);
+  const dnGeo = async () => JSON.parse(await h11s.evalv(`JSON.stringify((() => {
+    const el = document.getElementById('cf-daynight');
+    const r = el.getBoundingClientRect();
+    const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+    return { inside: r.top >= -1 && r.left >= -1 && r.bottom <= innerHeight + 1 && r.right <= innerWidth + 1,
+      hit: !!(hit && (hit === el || el.contains(hit))), w: r.width, h: r.height };
+  })())`));
+  const dnDay = await dnGeo();
+  await dnClick(h11s);
+  await sleep(700);                       // the night layers are fully in now
+  const dnNight = await dnGeo();
+  check('at 844x390 the day/night toggle is >= 56px, inside and hit-testable in both states (AC4)',
+    [dnDay, dnNight].every(x => x.inside && x.hit && Math.min(x.w, x.h) >= 56),
+    JSON.stringify([dnDay, dnNight]));
+  await h11s.close();
+
+  /* Step 2's reduced-motion half: transition:none makes the switch instant,
+     asserted on an explicitly emulated page. */
+  const h11r = await bootEmulated('cf11-reduce', 1024, 800, 'reduce');
+  await dnClick(h11r);
+  const f11r = await h11r.evalv(`(() => {
+    const css = id => getComputedStyle(document.getElementById(id));
+    const ids = ['cf-sky-night', 'cf-night-tint', 'cf-stars'];
+    return { o: ids.map(id => css(id).opacity),
+      t: ids.map(id => parseFloat(css(id).transitionDuration)) };
+  })()`);
+  check('under reduced motion the night switch is instant (no transition) (step 2)',
+    f11r.o.every(o => o === '1') && f11r.t.every(t => t < 0.001), JSON.stringify(f11r));
+  await h11r.close();
+
+  /* AC5: the time is the child's choice, never the wall clock (static, same
+     family as the CF-04 clock grep). */
+  check('no code path reads the wall clock to decide the time (AC5)',
+    !engineSrc.includes('Date.now(') && !engineSrc.includes('new Date('));
 
   await h.close();
 
