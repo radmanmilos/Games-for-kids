@@ -111,7 +111,7 @@ assets/
 ```
 
 - `index.html` is the hub. It loads every game module and embeds Kitty.
-- The standalone pages (`pages/animals.html`, `pages/shapes.html`, `pages/matching_game.html`, `pages/animal_puzzle.html`, `pages/animal_counting.html`, `pages/animal_memory.html`, `pages/coloring.html`, `pages/classroom.html`, `pages/tracing.html`, `pages/piano.html`, `pages/driving.html`, `pages/ocean.html`, `pages/dino.html`, `pages/space.html`, `pages/racing3d.html`, `pages/explorer.html`) each load only the modules they need.
+- The standalone pages (`pages/animals.html`, `pages/shapes.html`, `pages/matching_game.html`, `pages/animal_puzzle.html`, `pages/animal_counting.html`, `pages/animal_memory.html`, `pages/coloring.html`, `pages/classroom.html`, `pages/tracing.html`, `pages/piano.html`, `pages/driving.html`, `pages/ocean.html`, `pages/dino.html`, `pages/space.html`, `pages/racing3d.html`, `pages/explorer.html`, `pages/fastcat.html`, `pages/cat_forest.html`) each load only the modules they need.
 
 ```
 games/
@@ -139,6 +139,8 @@ space.js
 racing-config.js
 racing3d-config.js
 racing3d.mjs
+fastcat.js
+cat_forest.js
 ```
 
 ```
