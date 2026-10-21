@@ -102,6 +102,18 @@
         }
         #r3d-zone-left .r3d-btn { margin-left: var(--r3d-steer); }
         #r3d-zone-right .r3d-btn { margin-right: var(--r3d-steer); }
+        /* task 284 (play-test): on a phone held upright the two steering buttons
+           bunched into the middle (centres 60px apart at 390x844) and sat high on
+           the screen. Portrait only: sit each button near its own edge again and
+           drop the zones into the lower half, where the thumbs rest. Landscape
+           keeps the task-256 inboard grip. */
+        @media (orientation: portrait) and (max-width: 519px) {
+            .r3d-zone { top: 40vmin; align-items: flex-end; padding-bottom: 8vmin; }
+            #r3d-zone-left { padding-left: 3vmin; }
+            #r3d-zone-right { padding-right: 3vmin; }
+            #r3d-zone-left .r3d-btn { margin-left: 0; }
+            #r3d-zone-right .r3d-btn { margin-right: 0; }
+        }
         /* --- Screen-reader live region --- */
         .sr-only {
             position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;

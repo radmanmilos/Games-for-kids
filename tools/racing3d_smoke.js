@@ -250,6 +250,30 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         hud.left.cy > hud.map.bottom,
         JSON.stringify({ left: hud.left, right: hud.right, wL, wR, ctrl: ctrl * 1.5, mapBottom: hud.map.bottom }));
 
+    // task 284 (play-test): on a phone held upright the two steering buttons
+    // bunched into the middle and sat high on the screen (centres 60px apart at
+    // 390x844). Portrait now sits each button near its own edge and drops both
+    // into the lower half, where the thumbs rest. Assert the geometry, not just
+    // that the taps land -- a click-driven smoke passes with any of this wrong.
+    await h.c.send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
+    for (let i = 0; i < 20 && !(await h.evalv(`innerWidth === 390 && innerHeight === 844`)); i++) await sleep(100);
+    const port = JSON.parse(await h.evalv(`JSON.stringify((() => {
+        const r = id => { const b = document.getElementById(id).getBoundingClientRect();
+            return { left: b.left, right: b.right, top: b.top, bottom: b.bottom,
+                     cx: (b.left + b.right) / 2, cy: (b.top + b.bottom) / 2 }; };
+        return { w: window.innerWidth, h: window.innerHeight,
+                 left: r('r3d-left'), right: r('r3d-right') };
+    })())`));
+    check('portrait (390x844): steering buttons sit low and wide apart, fully on screen',
+        port.left.cx < port.w * 0.28 && port.right.cx > port.w * 0.72 &&
+        port.right.cx - port.left.cx > port.w * 0.5 &&
+        port.left.cy > port.h * 0.75 && port.right.cy > port.h * 0.75 &&
+        port.left.left >= 0 && port.right.right <= port.w &&
+        port.left.bottom <= port.h && port.right.bottom <= port.h,
+        JSON.stringify({ left: port.left, right: port.right, w: port.w, h: port.h }));
+    await h.c.send('Emulation.setDeviceMetricsOverride', { width: 844, height: 390, deviceScaleFactor: 1, mobile: false });
+    await sleep(200);
+
     // task 247: on a phone in landscape (short viewport) a fixed-distance chase cam
     // made the kart read as "too far away", so the rig now pulls in with the short
     // dimension (camPull = clamp(innerHeight/700, 0.6, 1)). Read the pull and the

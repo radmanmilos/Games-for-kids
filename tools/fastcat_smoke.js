@@ -35,6 +35,13 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
     if (!ready) await sleep(200);
   }
   check('fastcat game booted (startFastCat ready, char modal present)', ready);
+  // task 284: headless Chrome reports prefers-reduced-motion: reduce by default,
+  // and some hosts (e.g. a Windows box with animations switched off) do too. The
+  // ⚡ ready state below is the LOUD one -- the page deliberately drops the pulse
+  // and rotating ring under reduced motion (fastcat.html, V21 §39). Pin the media
+  // to no-preference so this asserts the product's loud state on any host instead
+  // of inheriting the machine's OS setting.
+  await h.c.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
   await h.evalv(STUB);
 
   const picker = JSON.parse(await h.evalv(`JSON.stringify({
