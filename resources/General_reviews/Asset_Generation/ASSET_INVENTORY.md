@@ -102,7 +102,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | food-carrot | 🥕 | `sequencing.js`, `kitty-standalone.js` | Growth sequence result and Kitty collectible | One shared carrot illustration | REVIEW  | — | — |
 | food-apple-green | 🍏 | `sequencing.js` | Unripe fruit sequence step | Separate from red apple because color conveys sequence stage | REVIEW  | — | — |
 | object-egg | 🥚 | `sequencing.js` | Egg-to-bird sequence | Simple egg illustration | REVIEW  | — | — |
-| animal-chick | 🐣 | `sequencing.js`; `sequencing.js`, `compare.js` | Egg-to-bird sequence; Egg-to-bird sequence and comparison pool | Simple chick illustration | REVIEW  | — | — |
+| animal-chick | 🐣 | `sequencing.js`; `sequencing.js`, `compare.js` | Egg-to-bird sequence; Egg-to-bird sequence and comparison pool | One shared simple chick illustration; clearly juvenile and distinct from adult chicken | GENERATED / CANDIDATE — TECHNICAL QA PENDING | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/chick.png` | — |
 | animal-bird | 🐦 | `sequencing.js` | Egg-to-bird sequence | Simple bird illustration | REVIEW  | — | — |
 | object-soap | 🧼 | `sequencing.js` | Washing sequence | Simple soap illustration | REVIEW  | — | — |
 | object-water-drop | 💧 | `sequencing.js`, dino collectible | Washing/growing sequence and collectible | One shared water drop if visually appropriate | REVIEW  | — | — |
