@@ -25,12 +25,16 @@ const LIT_IDX = `Array.from(document.querySelectorAll('.piano-key')).indexOf(doc
 (async () => {
   const h = await start({ page: '/pages/piano.html', tag: 'piano-smoke', width: 1024, height: 800 });
 
+  // task 286: the predicate must include the render artifact the checks read --
+  // `startPiano` exists as soon as the script loads, so the old predicate could
+  // pass before the keyboard was built (keys === 0) and the free-mode check
+  // below would fail. Readiness wait, not a retry-until-pass.
   let ready = false;
   for (let i = 0; i < 20 && !ready; i++) {
-    ready = await h.evalv(`typeof window.startPiano === 'function'`);
+    ready = await h.evalv(`typeof window.startPiano === 'function' && document.querySelectorAll('.piano-key').length === 8`);
     if (!ready) await sleep(200);
   }
-  check('piano game booted (startPiano ready)', ready);
+  check('piano game booted (startPiano ready + 8 keys built)', ready);
   await h.evalv(STUB);
 
   const free = await h.evalv(`JSON.stringify({

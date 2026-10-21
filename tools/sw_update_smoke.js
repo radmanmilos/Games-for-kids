@@ -92,9 +92,13 @@ const mkManifest = entries => JSON.stringify(
   // start() serves its own origin; this test uses the dedicated subpath server.
   await h.navigate(base + '/index.html');
 
-  // wait for the SW to control the page
+  // wait for the SW to control the page. task 286: 40 x 250 ms = 10 s was too
+  // tight when 36 browsers compete -- registration + activate genuinely took
+  // longer and the run read controller=false. Keep polling (a readiness wait,
+  // not a longer fixed sleep) with a larger budget so a slow host still passes
+  // while a genuinely unregistered SW still fails.
   let controlled = false;
-  for (let i = 0; i < 40 && !controlled; i++) {
+  for (let i = 0; i < 120 && !controlled; i++) {
     controlled = await h.evalv(`!!navigator.serviceWorker.controller`);
     if (!controlled) await sleep(250);
   }
@@ -104,9 +108,31 @@ const mkManifest = entries => JSON.stringify(
   t('worker scope follows the subpath, not the domain root',
     String(scope).includes(PREFIX), 'scriptURL=' + scope);
 
-  // Explicit cacheAll so the manifest is definitely in the cache.
-  await h.evalv(`(async () => { const r = await navigator.serviceWorker.ready; r.active.postMessage({ cmd: 'cacheAll' }); return true; })()`);
-  await sleep(2500);
+  // Explicit cacheAll so the manifest is definitely in the cache. task 286: the
+  // old fixed sleep(2500) hoped a ~260-file cacheAll finished; under load it had
+  // not. Wait for the worker's OWN completion signal instead: sw.js posts
+  // `cache-complete` after the whole run (sw.js:162). The listener is attached
+  // BEFORE postMessage so the message cannot arrive unseen. The assertion below
+  // stays strict -- if cacheAll never completes, the wait times out and it fails.
+  const waitCacheComplete = () => h.evalp(`(async () => {
+    const reg = await navigator.serviceWorker.ready;
+    const sw = reg.active || navigator.serviceWorker.controller;
+    if (!sw) return 'no-sw';
+    return await new Promise(resolve => {
+      const timer = setTimeout(() => { navigator.serviceWorker.removeEventListener('message', onMsg); resolve('timeout'); }, 30000);
+      const onMsg = ev => {
+        const m = ev.data || {};
+        if (m.type === 'cache-complete' || m.type === 'cache-error') {
+          clearTimeout(timer);
+          navigator.serviceWorker.removeEventListener('message', onMsg);
+          resolve(m.type);
+        }
+      };
+      navigator.serviceWorker.addEventListener('message', onMsg);
+      sw.postMessage({ cmd: 'cacheAll' });
+    });
+  })()`);
+  await waitCacheComplete();
 
   // R17: the cache name must derive from the single source of truth (manifest.json),
   // so a version bump inherently creates a new cache and nothing hand-maintains the
@@ -159,8 +185,7 @@ const mkManifest = entries => JSON.stringify(
   // --- And a clean rollback to "identical to cache" reports 0 again ---
   // (restore the server manifest, refresh the cached copy, expect silence)
   current = manifestA;
-  await h.evalv(`(async () => { const r = await navigator.serviceWorker.ready; r.active.postMessage({ cmd: 'cacheAll' }); return true; })()`);
-  await sleep(2500);
+  await waitCacheComplete();
   const r4 = JSON.parse(await askCheckUpdates(h));
   t('after re-caching an identical manifest, updates report 0 changes again',
     r4 && r4.changed === 0, JSON.stringify(r4).slice(0, 200));

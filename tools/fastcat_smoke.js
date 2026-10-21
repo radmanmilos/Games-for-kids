@@ -29,12 +29,17 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   const h = await start({ page: '/pages/fastcat.html', tag: 'fastcat-smoke', width: 844, height: 390 });
 
   // Boot: main.js calls startFastCat(); the character picker must be up.
+  // task 286: wait for the modal to actually be SHOWN (`show` class), not just
+  // present in the DOM -- #char-modal is display:none until startFastCat() adds
+  // the class (fastcat.html:62-63). The old predicate (`startFastCat` exists +
+  // modal element exists) passed as soon as the script loaded, so under load the
+  // picker check below read `shown: false`. Readiness wait, not a retry-until-pass.
   let ready = false;
   for (let i = 0; i < 20 && !ready; i++) {
-    ready = await h.evalv(`typeof window.startFastCat === 'function' && !!document.getElementById('char-modal')`);
+    ready = await h.evalv(`typeof window.startFastCat === 'function' && !!document.getElementById('char-modal') && document.getElementById('char-modal').classList.contains('show')`);
     if (!ready) await sleep(200);
   }
-  check('fastcat game booted (startFastCat ready, char modal present)', ready);
+  check('fastcat game booted (startFastCat ready, character picker shown)', ready);
   // task 284: headless Chrome reports prefers-reduced-motion: reduce by default,
   // and some hosts (e.g. a Windows box with animations switched off) do too. The
   // ⚡ ready state below is the LOUD one -- the page deliberately drops the pulse

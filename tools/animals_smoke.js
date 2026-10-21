@@ -31,12 +31,18 @@ const NAME_BY_EMOJI = {
 (async () => {
   const h = await start({ page: '/pages/animals.html', tag: 'animals-smoke', width: 1024, height: 800 });
 
+  // task 286: wait for the state the checks below actually read. `animalCard`
+  // exists in the static HTML and `startAnimals` exists as soon as the script
+  // loads, so the old predicate could pass before the game had rendered its
+  // first card -- the name is empty until startAnimals() -> showCard() runs
+  // (animals.html:280, animals.js:25). Poll a non-empty name (a readiness wait,
+  // not a retry-until-pass: it is unrelated to the assertions).
   let ready = false;
   for (let i = 0; i < 20 && !ready; i++) {
-    ready = await h.evalv(`typeof window.startAnimals === 'function' && !!document.getElementById('animalCard')`);
+    ready = await h.evalv(`typeof window.startAnimals === 'function' && !!document.getElementById('animalCard') && document.getElementById('animalName').textContent.trim().length > 0`);
     if (!ready) await sleep(200);
   }
-  check('animals game booted (startAnimals ready + card present)', ready);
+  check('animals game booted (startAnimals ready + first card rendered)', ready);
   // task 285: pin the media so the idle-cue animation-name read below asserts
   // the product's rule on any host (a reduced-motion host could otherwise
   // collapse the animation and silently change the read).

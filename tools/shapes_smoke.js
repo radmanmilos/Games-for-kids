@@ -16,12 +16,15 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
 (async () => {
   const h = await start({ page: '/pages/shapes.html', tag: 'shapes-smoke', width: 1024, height: 800 });
 
+  // task 286: include the render artifact the Tier-1 check below reads (.slot /
+  // .piece inside #shapesStage) -- `shapesStage` exists in the static HTML, so
+  // the old predicate could pass before the stage was built (0 slots/pieces).
   let ready = false;
   for (let i = 0; i < 20 && !ready; i++) {
-    ready = await h.evalv(`typeof window.startShapesRound === 'function' && !!document.getElementById('shapesStage')`);
+    ready = await h.evalv(`typeof window.startShapesRound === 'function' && document.querySelectorAll('#shapesStage .slot').length >= 2 && document.querySelectorAll('#shapesStage .piece').length >= 2`);
     if (!ready) await sleep(200);
   }
-  check('shapes game booted (startShapesRound ready)', ready);
+  check('shapes game booted (startShapesRound ready + stage built)', ready);
   await h.evalv(STUB);
 
   // Tier 1 (default): 2 slots + 2 pieces

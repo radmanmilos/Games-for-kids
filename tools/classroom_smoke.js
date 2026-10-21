@@ -27,9 +27,13 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
 (async () => {
   const h = await start({ page: '/pages/classroom.html', tag: 'kids-smoke', width: 1024, height: 800 });
 
+  // task 286: include the render artifact the hub check below reads (6 activity
+  // + 4 kids buttons) -- `kidsGame` is an object as soon as the script loads and
+  // the hub markup can exist before it is populated, so the old predicate could
+  // pass pre-render and the 6+4 assertion would fail.
   let ready = false;
   for (let i = 0; i < 20 && !ready; i++) {
-    ready = await h.evalv(`typeof window.startClassroom === 'function' && typeof window.kidsGame === 'object'`);
+    ready = await h.evalv(`typeof window.startClassroom === 'function' && typeof window.kidsGame === 'object' && document.querySelectorAll('#classroomHub .activity-btn').length === 6 && document.querySelectorAll('#classroomHub .kids-btn').length === 4`);
     if (!ready) await sleep(200);
   }
   check('classroom + kids engine booted', ready);

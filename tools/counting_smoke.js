@@ -26,12 +26,15 @@ const COUNT_ALL = `(function(){
 (async () => {
   const h = await start({ page: '/pages/animal_counting.html', tag: 'counting-smoke', width: 1024, height: 800 });
 
+  // task 286: include the render artifact the level-1 check below reads
+  // (.count-tile inside #countScene) -- `countScene` exists in the static HTML,
+  // so the old predicate could pass before the tiles were rendered.
   let ready = false;
   for (let i = 0; i < 20 && !ready; i++) {
-    ready = await h.evalv(`typeof window.startAnimalCounting === 'function' && !!document.getElementById('countScene')`);
+    ready = await h.evalv(`typeof window.startAnimalCounting === 'function' && document.querySelectorAll('#countScene .count-tile').length > 0`);
     if (!ready) await sleep(200);
   }
-  check('counting game booted (startAnimalCounting ready + scene present)', ready);
+  check('counting game booted (startAnimalCounting ready + tiles rendered)', ready);
   await h.evalv(STUB);
 
   // --- Level 1: verify counting phase (tiles visible, buttons hidden) ---
