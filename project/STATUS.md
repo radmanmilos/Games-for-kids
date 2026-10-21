@@ -11,6 +11,7 @@
   - **racing3d phone-portrait steering.** On a phone held upright the ◀/▶ buttons bunched in the middle (centres 60px apart at 390×844) and sat high. A portrait media query (`orientation: portrait` + `max-width: 519px`) now aligns each zone to a lower band (`top: 40vmin`, `align-items: flex-end`, `padding-bottom: 8vmin`) and drops the task-256 inboard margin (`margin-left/right: 0`, `padding-left/right: 3vmin`): centres **61/329 (268px apart), bottom 813** at 390×844 — lower and wider, fully on screen. Landscape and tablet-portrait (hint-covered) are unchanged. A portrait **geometry assertion** was added to `tools/racing3d_smoke.js` (a click-driven smoke passes with any of this wrong).
   - **fastcat reduced-motion assertion (was the last red leg of `check_release` here).** `tools/fastcat_smoke.js` now pins `prefers-reduced-motion` to `no-preference` (`Emulation.setEmulatedMedia`) before the ⚡ ready check, so it asserts the **product's** loud state on any host instead of inheriting the OS setting (headless Chrome defaults to reduce; this Windows host reports reduce too). The page deliberately drops the pulse/ring under reduced motion (fastcat.html, V21 §39) — hence the pin.
 - **Evidence:** `racing3d_smoke` 40/0 · `fastcat_smoke` 67/0 · `check_fast` 8/8 · 4 racing3d review PNGs refreshed (task 284) · `check_release` all-green except a `hub_smoke` `ERR_NO_BUFFER_SPACE` parallel-load flake that **passes isolated**. Log: `tools/.cache/task284-validation.md`.
+- **Task 284 landed on `main`:** commit `3fbeb13`, CI run **39563153468** = **success** (Fast, both racing3d jobs, fastcat, sw_update, Release QA, Deploy Pages all green). First attempt had one racing3d job fail on a **pre-existing wall-clock flake** in the `audio bus … backoff gate` check (39/1) — `game/games/racing3d.mjs` was untouched by this task; `gh run rerun --failed` passed. Filed as **task 285 NEW**.
 - **Tasks 258–284 archived (2026-10-19/20/21):** UI consistency round 2 (2.3.3) · fastcat malformed-SVG fix (2.3.4) · harness hardening · Cat Forest CF-00…CF-21 · this task 284. Next task number: **285**.
 - **Pages gated on CI (task 274):** CI's `pages` job publishes `docs/` only from a green push on `main`.
 - **Asset Generation project — active, Phase 1 (inventory/approval).** Test-batch PNGs under `resources/General_reviews/Asset_Generation/`: bone and elephant (approved), **lion (user-accepted)**, **frog (QA pending)**. Nothing integrated at runtime.
@@ -18,10 +19,11 @@
 ## Candidate next work (the user decides; do not start without asking)
 
 1. **CF-22 play-test rounds** on the real tablet (Cat Forest TP §6 protocol; tune only `CF` constants/CSS/data) — the remaining Cat Forest phase.
-2. **Cat Forest "look & feel toward Secret Cat Forest"** — **parked by the user** ("we will come back for that later"). No spec until resumed; art/animation/ambience/polish only.
-3. **Live play-test of 2.4.0** on a real device (unified nav bubble, bigger triangles, racing3D flowers-only HUD, tracing one-back, repaired fastcat 🌍 icon, the new portrait steering geometry); a force-refresh may be needed for the cached shell.
-4. **racing3d tuning** — levers in `game/games/racing3d.mjs` (`bankMax`, `LATERAL_GAIN`, `inRate`/`outRate`, `bobY`, `camPull`/`camRise`).
-5. **"Tier A" learning content** from the finished roadmaps in `archive/plans/` (see `project/reference/LEARNING_ROADMAP_REVIEW.md`).
+2. **Task 285** — de-flake the racing3d audio-bus backoff assertion (it reads host wall time; same class as the task-284 fastcat fix).
+3. **Cat Forest "look & feel toward Secret Cat Forest"** — **parked by the user** ("we will come back for that later"). No spec until resumed; art/animation/ambience/polish only.
+4. **Live play-test of 2.4.0** on a real device (unified nav bubble, bigger triangles, racing3D flowers-only HUD, tracing one-back, repaired fastcat 🌍 icon, the new portrait steering geometry); a force-refresh may be needed for the cached shell.
+5. **racing3d tuning** — levers in `game/games/racing3d.mjs` (`bankMax`, `LATERAL_GAIN`, `inRate`/`outRate`, `bobY`, `camPull`/`camRise`).
+6. **"Tier A" learning content** from the finished roadmaps in `archive/plans/` (see `project/reference/LEARNING_ROADMAP_REVIEW.md`).
 
 ## Validate (details: `AGENTS.md`)
 
