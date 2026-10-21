@@ -82,17 +82,29 @@ const STUB = `window.__rhythmSounds=0;window.audioBuses.playTone=function(){wind
   })())`));
   check('V10 listen/repeat state: the drum set tracks the live phase',
     repeatLook.attr === 'repeat' && repeatLook.attr === repeatLook.live, JSON.stringify(repeatLook));
-  const cheerState = JSON.parse(await h.evalv(`JSON.stringify((()=>{
-    const set=document.getElementById('rhythm-pads'), el=document.querySelector('.rhythm-pad');
-    const prev=set.dataset.phase; set.dataset.phase='success';
-    const anim=getComputedStyle(el).animationName; set.dataset.phase=prev;
-    return {anim, rm:matchMedia('(prefers-reduced-motion: reduce)').matches};
-  })())`));
   const rhythmPage = fs.readFileSync(path.join(__dirname, '..', 'game', 'pages', 'rhythm.html'), 'utf8');
   const hasCheerRule = /\[data-phase="success"\]\s*\.rhythm-pad\s*\{[^}]*animation\s*:\s*drumCheer/.test(rhythmPage);
-  check('V10 completion cue: repeating a melody right cues the drum set to cheer',
-    hasCheerRule && (cheerState.anim === 'drumCheer' || cheerState.rm),
-    JSON.stringify({hasCheerRule, ...cheerState}));
+  // task 285: assert the PRODUCT's rule for each preference rather than reading
+  // the host's live setting. Without this the check passed for any host whose
+  // pref matched its escape hatch (`anim === 'drumCheer' || rm`), so a broken
+  // cheer rule could hide behind a reduced-motion host. Pin no-preference, prove
+  // the cue is there; pin reduce, prove the product drops it.
+  await h.c.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
+  const cheerNoPref = await h.evalv(`(() => {
+    const set=document.getElementById('rhythm-pads'), el=document.querySelector('.rhythm-pad');
+    const prev=set.dataset.phase; set.dataset.phase='success';
+    const anim=getComputedStyle(el).animationName; set.dataset.phase=prev; return anim;
+  })()`);
+  await h.c.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+  const cheerReduce = await h.evalv(`(() => {
+    const set=document.getElementById('rhythm-pads'), el=document.querySelector('.rhythm-pad');
+    const prev=set.dataset.phase; set.dataset.phase='success';
+    const anim=getComputedStyle(el).animationName; set.dataset.phase=prev; return anim;
+  })()`);
+  await h.c.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
+  check('V10 completion cue: repeating a melody right cues the drum set to cheer (and the cue is dropped under reduced motion)',
+    hasCheerRule && cheerNoPref === 'drumCheer' && cheerReduce === 'none',
+    JSON.stringify({hasCheerRule, cheerNoPref, cheerReduce}));
 
   const st0 = await state();
   check('first melody length is 2 (the slowest start)', st0.length === 2 && st0.pattern.length === 2, JSON.stringify(st0));

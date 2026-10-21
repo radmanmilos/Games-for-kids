@@ -1492,7 +1492,12 @@ function main() {
   let lastPickupFreq = 0;
   let kartFlash = 0;
   const lookTarget = new THREE.Vector3();
-  const curTime = () => performance.now();
+  // Wall clock by default. Test hook `setClock` can pin it so timing-gated
+  // behaviour (audio drain, announce backoff, countdown) is asserted against a
+  // controlled `now` instead of the host's wall time -- a loaded runner then
+  // cannot change the outcome. See tools/racing3d_smoke.js batch 9.
+  let clockOverride = null;
+  const curTime = () => (clockOverride == null ? performance.now() : clockOverride);
 
   // --- particles ---
   const particles = [];
@@ -2911,6 +2916,12 @@ function main() {
       announceDuckUntil = 0;
       lastSpokenWord = "";
       return true;
+    },
+    // Pin the clock so timing-gated behaviour is deterministic under test.
+    // `setClock(null)` restores the real wall clock.
+    setClock: (t) => {
+      clockOverride = t == null ? null : +t;
+      return clockOverride;
     },
     setWarnUntil: (t) => {
       warnUntil = t == null ? Infinity : t;

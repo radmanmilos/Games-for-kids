@@ -18,5 +18,3 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 285. NEW — racing3d audio-bus smoke asserts host wall time (2026-10-21, OpenCode/Big Pickle). Found while validating task 284: the `audio bus: … exponential backoff gate` check reads `qRepeat === 1` after `4 × sleep(55)` ≈ 220 ms of WALL time, but `announceObstacle` gates on `performance.now()` (`curTime`, racing3d.mjs:1495) with a 600 ms minimum gap — so on a loaded CI runner the gate opens and the check fails (`qRepeat: 4`). Seen once in run 39563153468 (job 119099202885, 39/1); a rerun passed. Fix: assert the product's gate rule against a controlled `now`, or accept both branches, so the check cannot depend on host timing (same class as the task-284 fastcat fix).
-

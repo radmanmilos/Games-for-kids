@@ -37,6 +37,10 @@ const NAME_BY_EMOJI = {
     if (!ready) await sleep(200);
   }
   check('animals game booted (startAnimals ready + card present)', ready);
+  // task 285: pin the media so the idle-cue animation-name read below asserts
+  // the product's rule on any host (a reduced-motion host could otherwise
+  // collapse the animation and silently change the read).
+  await h.c.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
   await h.evalv(STUB);
 
   // --- Flashcard mode ---

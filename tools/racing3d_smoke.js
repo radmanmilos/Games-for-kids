@@ -791,17 +791,25 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         celj.spinAtCross > 0, celCheck);
 
     // batch 9 — audio bus: every SFX/announcement flows through a single
-    // queue drained AT MOST ONCE per frame (40 ms wall gate proves one call
-    // per step even with back-to-back steps), the obstacle announce speaks
-    // the hitText with a falling minor-third motif (G4 -> E4) and arms a duck
-    // window, and immediate repeats are gated by exponential backoff
+    // queue drained AT MOST ONCE per frame (the 40 ms gate proves one call per
+    // step even with back-to-back steps), the obstacle announce speaks the
+    // hitText with a falling minor-third motif (G4 -> E4) and arms a duck
+    // window, and immediate repeats are gated by exponential backoff.
+    // task 285: the clock is PINNED (setClock) so this asserts the product's
+    // gate rules, not the host's wall time. Before, the check relied on
+    // `sleep(55)` to beat the 40 ms drain gate while the 600 ms announce
+    // backoff was compared against real elapsed time -- on a loaded CI runner
+    // (avgFrameMs ~140) more than 600 ms passed, the gate opened, and the
+    // check failed. The clock is restored at the end of the batch.
     await h.evalv(`(function(){
         const r3d = window.__r3d;
         r3d.haltLoop(true);
         r3d.seekLateral(0);
         r3d.resetSteerState(0, 0, 0);
         r3d.setWarnUntil(null);
+        r3d.resetObstacleMsgs();
         r3d.resetAudio();
+        r3d.setClock(0);
         return true;
     })()`);
     // collect queues two chime tones; without wall time passing, two quick
@@ -817,10 +825,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         const d2 = r3d.audioDrained();
         return JSON.stringify({ q, d, d1, d2 });
     })()`));
-    // let the wall gate pass, then the second tone drains
-    await sleep(55);
+    // advance past the 40 ms drain gate, then the second tone drains
     const abDrain = JSON.parse(await h.evalv(`(function(){
         const r3d = window.__r3d;
+        r3d.setClock(50);
         r3d.step(1 / 60);
         return JSON.stringify({ q: r3d.audioQueueLen(), d: r3d.audioDrained() });
     })()`));
@@ -833,24 +841,39 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         const duckAfter = r3d.ducking();
         return JSON.stringify({ duckBefore, duckAfter, q: r3d.audioQueueLen() });
     })()`));
-    // drain those four items one per ~55 ms wall step
+    // drain those four items one per 50 ms of pinned time
     let abD = 0;
     for (let i = 0; i < 4; i++) {
-        await sleep(55);
         abD = JSON.parse(await h.evalv(`(function(){
             const r3d = window.__r3d;
+            r3d.setClock(${50 * (i + 2)});
             r3d.step(1 / 60);
             return JSON.stringify({ q: r3d.audioQueueLen(), d: r3d.audioDrained() });
         })()`));
     }
-    // immediate repeat hit: backoff gate suppresses the announce, leaves only
-    // the gentleMiss thud (still within the physical cooldown? no — direct
-    // hook), and the duck window stays armed
+    // immediate repeat hit while still inside the 600 ms backoff window: the
+    // announce is suppressed, leaving only the gentleMiss thud (1 item), and
+    // the duck window stays armed
     const ab2 = JSON.parse(await h.evalv(`(function(){
         const r3d = window.__r3d;
+        r3d.setClock(300);
         r3d.testObstacleHit();
         return JSON.stringify({ qRepeat: r3d.audioQueueLen(), duckRepeat: r3d.ducking() });
     })()`));
+    // a hit PAST the window re-announces, proving the gate reopens (the
+    // backoff rule, not just "always suppress"). The window from the hit at
+    // t=50 runs to msgUntil=1250, so t=1300 is the first open instant. Drain
+    // the leftover thud from ab2 first so this reads the announce alone.
+    const ab3 = JSON.parse(await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.setClock(300);
+        r3d.step(1 / 60);
+        r3d.setClock(1300);
+        r3d.testObstacleHit();
+        return JSON.stringify({ qReopen: r3d.audioQueueLen() });
+    })()`));
+    // restore the real wall clock for the remaining checks
+    await h.evalv(`window.__r3d.setClock(null)`);
     // both obstacle-hit items decode to two queued tones: G4 + E4 (minor third)
     const min3 = Math.abs(Math.log2(392 / 329.63) * 12);
     check('audio bus: one queued SFX call drained per frame, obstacle announce speaks + minor-third motif with duck window and exponential backoff gate',
@@ -858,8 +881,9 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         abDrain.q === 0 && abDrain.d === ab0.d1 + 1 &&
         ab1.duckBefore === false && ab1.duckAfter === true && ab1.q === 4 &&
         abD.q === 0 && abD.d === ab0.d1 + 5 &&
-        ab2.qRepeat === 1 && ab2.duckRepeat === true && Math.abs(min3 - 3) < 0.1,
-        JSON.stringify({ ab0, ab1, ab2, abD, min3 }));
+        ab2.qRepeat === 1 && ab2.duckRepeat === true &&
+        ab3.qReopen === 4 && Math.abs(min3 - 3) < 0.1,
+        JSON.stringify({ ab0, abDrain, ab1, abD, ab2, ab3, min3 }));
 
 // batch 10 — spoken Serbian hint: the obstacle announce speaks the MINIMAL
     // word "Пази!" (full hitText stays on the visual banner) and the boost
@@ -872,6 +896,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         r3d.resetAudio();
         r3d.resetObstacleMsgs();
         r3d.setWarnUntil(null);
+        r3d.setClock(0);   // task 285: pin the clock (see batch 9)
         return true;
     })()`);
     const sh0 = JSON.parse(await h.evalv(`(function(){
@@ -879,10 +904,13 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         r3d.testObstacleHit();
         return JSON.stringify({ kinds: r3d.audioKinds(), q: r3d.audioQueueLen(), spoken: r3d.lastSpoken() });
     })()`));
-    for (let i = 0; i < 4; i++) {
-        await sleep(55);
-        await h.evalv(`window.__r3d.step(1 / 60); true`);
-    }
+    // drain the 4 items on pinned time: the 40 ms drain gate means one item per
+    // step as long as each step advances the clock past the gate
+    await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        for (let i = 0; i < 4; i++) { r3d.setClock(50 * (i + 1)); r3d.step(1 / 60); }
+        return true;
+    })()`);
     const shDrain = JSON.parse(await h.evalv(`(function(){
         const r3d = window.__r3d;
         return JSON.stringify({ q: r3d.audioQueueLen(), spoken: r3d.lastSpoken() });
@@ -890,13 +918,17 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     const shBoost = JSON.parse(await h.evalv(`(function(){
         const r3d = window.__r3d;
         r3d.resetAudio();
+        r3d.setClock(500);
         r3d.triggerBoost(80);
         return JSON.stringify({ kinds: r3d.audioKinds(), q: r3d.audioQueueLen() });
     })()`));
-    for (let i = 0; i < 2; i++) {
-        await sleep(55);
-        await h.evalv(`window.__r3d.step(1 / 60); true`);
-    }
+    await h.evalv(`(function(){
+        const r3d = window.__r3d;
+        r3d.setClock(600); r3d.step(1 / 60);
+        r3d.setClock(700); r3d.step(1 / 60);
+        r3d.setClock(null);
+        return true;
+    })()`);
     const shDrain2 = JSON.parse(await h.evalv(`(function(){
         const r3d = window.__r3d;
         return JSON.stringify({ q: r3d.audioQueueLen(), spoken: r3d.lastSpoken() });
