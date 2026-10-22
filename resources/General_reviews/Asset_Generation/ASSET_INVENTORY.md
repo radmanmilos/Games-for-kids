@@ -113,7 +113,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | animal-giraffe | 🦒 | `animal_puzzle.js` | Savanna puzzle | Simple giraffe illustration | REVIEW  | — | — |
 | animal-deer | 🦌 | `animal_puzzle.js`, racing decor | Forest puzzle and winter scenery | One shared deer illustration if appropriate | REVIEW  | — | — |
 | animal-squirrel | 🐿️ | `animal_puzzle.js` | Forest puzzle | Simple squirrel illustration | REVIEW  | — | — |
-| animal-rooster | 🐓 | `game/games/animal_puzzle.js:8` (farm puzzle scene), `game/games/racing-config.js:180` (racing decor) | Farm puzzle and scenery | Its own picture, kept distinct from the approved hen (`chicken.png`): large red comb and wattle, golden-orange hackles, rich russet body, long arching deep green-black sickle tail, sturdy yellow legs | GENERATED / CANDIDATE — TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/rooster.png` | — |
+| animal-rooster | 🐓 | `game/games/animal_puzzle.js:8` (farm puzzle scene), `game/games/racing-config.js:180` (racing decor) | Farm puzzle and scenery | Its own picture, kept distinct from the approved hen (`chicken.png`): large red comb and wattle, golden-orange hackles, rich russet body, long arching deep green-black sickle tail, sturdy yellow legs | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/rooster.png` | — |
 | object-tractor | 🚜 | `animal_puzzle.js`, racing decor | Farm puzzle and scenery | One shared tractor illustration | REVIEW  | — | — |
 | object-rocket | 🚀 | `animal_puzzle.js`, space game/hub | Space puzzle, page decoration, hub tile | Reuse one rocket illustration for large game artwork; UI may use SVG | REVIEW  | — | — |
 | object-planet | 🪐 | `animal_puzzle.js`, driving/space/racing decor | Puzzle and game-world object | One shared planet illustration where meaning matches | REVIEW  | — | — |
@@ -282,7 +282,7 @@ measurements only — they say nothing about how the pictures look.
 | chick.png | 1254x1254 | rgb | 100/0/0 | 0.6732 | 58.9 | painted |
 | elephant.png | 1536x1024 | rgb | 100/0/0 | 0.6596 | 102.9 | painted |
 | sheep.png | 1254x1254 | rgb | 100/0/0 | 0.4186 | 61.6 | painted |
-| rooster.png | 1024x1024 | rgb | 100/0/0 | 0.5042 | 136.4 | painted (candidate, 2026-10-22) |
+| rooster.png | 1024x1024 | rgb | 100/0/0 | 0.5042 | 136.4 | painted |
 | bird.png | 1024x1024 | rgb | 100/0/0 | 0.0192 | 55.6 | painted (candidate, iteration 2, 2026-10-22) |
 | fox.png | 1254x1254 | rgb | 100/0/0 | 0.1596 | 116.9 | painted |
 | dog.png | 285x295 | rgb | 100/0/0 | 0.1145 | 105.2 | legacy raster |
