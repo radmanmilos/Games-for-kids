@@ -105,7 +105,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | animal-chick | 🐣 | `sequencing.js`; `sequencing.js`, `compare.js` | Egg-to-bird sequence; Egg-to-bird sequence and comparison pool | One shared simple chick illustration; clearly juvenile and distinct from adult chicken | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/chick.png` | — |
 | animal-bird | 🐦 | `game/games/sequencing.js:28` (label `Птица`), stage 3 of the egg → chick → bird sequence | Egg-to-bird sequence | One shared simple bird illustration; a generic small songbird, clearly distinct from the chick and the chicken; rounded compact body, short small beak, one simple wing, short tail, small feet, muted natural palette, tiny understated dark eye | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bird.png` | — |
 | object-soap | 🧼 | `sequencing.js` | Washing sequence | Simple soap illustration | REVIEW  | — | — |
-| object-water-drop | 💧 | `sequencing.js`, dino collectible | Washing/growing sequence and collectible | One shared water drop if visually appropriate | REVIEW  | — | — |
+| object-water-drop | 💧 | `game/games/sequencing.js:31` (label `Прљаво`, step 1 of the wash sequence 💧 → 🧼 → ✨), `game/games/sequencing.js:52` (label `Заливам`, the watering step of the vegetable sequence), the dino lake collectible (`game/games/dino.js:137`), the fastcat lake theme (`game/games/fastcat.js:130`) and the racing puddle hazard (`game/games/racing-config.js:5`) | Washing sequence, plant watering, lake collectibles, racing puddle | One shared water drop if visually appropriate: a plump upright teardrop in a muted grey blue with one soft highlight — no face, no splash, no puddle spreading under it; must read as a drop and not a grey blob at card size | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/water-drop.png` | — |
 | object-acorn | 🌰 | `sequencing.js` | Tree-growth sequence | Simple acorn illustration | REVIEW  | — | — |
 | object-sunflower | 🌻 | `sequencing.js`, racing decor | Plant sequence and scenery | One shared sunflower | REVIEW  | — | — |
 | object-mushroom | 🍄 | `animal_puzzle.js`, Kitty collectible | Forest puzzle and Kitty collectible | One shared mushroom | REVIEW  | — | — |
@@ -295,6 +295,7 @@ measurements only — they say nothing about how the pictures look.
 | caterpillar.png | 1448x1086 | rgb | 100/0/0 | 0.0171 | 107.6 | painted |
 | star.png | 290x280 | rgb | 100/0/0 | 0.0165 | 69.4 | legacy raster |
 | egg.png | 1024x1024 | rgb | 100/0/0 | 0.0164 | 38.8 | painted (candidate, iteration 2, 2026-10-22) |
+| water-drop.png | 1024x1024 | rgb | 100/0/0 | 0.0117 | 49.2 | painted (iteration 2, 2026-10-22) |
 | apple.png | 265x295 | rgb | 100/0/0 | 0.0091 | 146.4 | legacy raster |
 | pig.png | 1448x1086 | rgba | 0/78/22 | 0.0048 | 220.0 | painted |
 
@@ -308,7 +309,7 @@ Findings that still block the production step:
 3. `bundle/bear.png` is a re-save of the canonical bear (800x800, different sha256 from
    `Reference/bear.png`); the canonical file in `Reference/` stays the style anchor. Both are
    pixel-identical.
-4. The sixteen large files (800-1536 px) are the painted family; the seven small files
+4. The seventeen large files (800-1536 px) are the painted family; the seven small files
    (165-305 px) are rasterised emoji, not the painted family, so they are excluded from the
    automatic reference pick.
 5. `bone.png` has the lowest small-size contrast (36.8) and `chick.png` the second lowest (58.9)
@@ -327,6 +328,7 @@ Findings that still block the production step:
    |---|---|---|---|
    | bird.png (iteration 2) | 247.5/244.3/234.8 | 180.1/175.5/164.1 | 16.2% |
    | rooster.png (approved) | 246.8/243.3/236.5 | 163.7/121.9/97.6 | 27.2% |
+   | water-drop.png (approved, iteration 2) | 247.5/238.3/226.8 | 148.6/199.5/225.4 | 19.6% |
    | egg.png (candidate, iteration 2) | 241.3/238.8/231.3 | 219.2/193.8/167.0 | 16.8% |
    | bone.png (approved object exemplar) | 249.3/239.0/219.5 | 236.7/197.0/146.9 | 16.5% |
    | chicken.png | 253.3/250.5/238.3 | 239.0/182.3/127.0 | 23.8% |
@@ -340,7 +342,14 @@ Findings that still block the production step:
    re-briefed (a shell a clear step deeper than the paper, medium warm-brown speckles instead of
    faint light ones, a deeper tan shaded side) and iteration 2 measures **38.8**, just above
    `bone.png` (36.8); the subject coverage rose from 8.8% to 16.8%, exactly the `bone.png` value.
-   Measure the 64 px proxy for every pale subject, not just the coloured ones.
+   Measure the 64 px proxy for every pale subject, not just the coloured ones. The next object
+   candidate, `water-drop.png`, was measured the same way: iteration 1 read as a cool **grey**
+   (subject 164.0/172.2/178.1 — the blue only 14 units above the red) and the user asked for
+   "more blue", so iteration 2 states the blue explicitly and bans grey-blue / slate / steel.
+   Iteration 2 measures **148.6/199.5/225.4** (the blue 77 units above the red), paper
+   247.5/238.3/226.8 back inside the family range, and a 64 px proxy of **49.2** — below the
+   family band (55-125) because a light blue on cream paper is a small luminance step, and above
+   the two pale-object exemplars (`bone.png` 36.8, `egg.png` 38.8). The user approved it.
 
 ## Completion gate
 
