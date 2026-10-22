@@ -347,6 +347,8 @@ Workers AI bills in **neurons**: 10,000 per day are free and the allowance reset
 neurons: ~120.3 (3 input tile(s) x 5.37 + 4 output tile(s) x 26.05) | today: 6 run(s), ~638.3 of the 10000 free neurons
 ```
 
-Rates from the Workers AI pricing page (checked 2026-10-22): `@cf/black-forest-labs/flux-2-klein-4b` costs **5.37 neurons per input 512x512 tile** and **26.05 per output 512x512 tile**, so one 1024x1024 candidate with three references costs **~120 neurons**. Six runs today (five candidates + one 256x256 smoke) used **~638 neurons**, about 6 % of the free daily allowance. Note `flux-2-klein-9b` is priced per megapixel (1363.64 for the first MP) and would need a different estimate.
+Rates from the Workers AI pricing page (checked 2026-10-22): `@cf/black-forest-labs/flux-2-klein-4b` costs **5.37 neurons per input 512x512 tile** and **26.05 per output 512x512 tile**, so one 1024x1024 candidate with three references costs **~120 neurons**. Six runs today (five candidates + one 256x256 smoke) used **~638 neurons** by the local estimate, and the **dashboard showed 721.64 / 10,000** for the day — the difference is the runs that were made before this counter existed, so the local figure is a per-run planning number, not the account total. Read the dashboard for the real number.
+
+**Planning number:** at ~120 neurons per candidate the free 10,000 neurons cover roughly **80 candidates per day**, so a subject can afford two or three iterations and the limit never has to shape the creative decisions. Note `flux-2-klein-9b` is priced per megapixel (1363.64 for the first MP) and would need a different estimate — 9b is ~11x the cost of a 4b candidate.
 
 
