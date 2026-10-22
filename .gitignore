@@ -1,3 +1,4 @@
 tools/.cache/
 tools/screenshots/
 .playwright-mcp/
+tools/vendor/

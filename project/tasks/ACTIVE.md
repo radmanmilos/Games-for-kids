@@ -18,3 +18,5 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
+- 288. IN PROGRESS (2026-10-22, OpenCode/Big Pickle) — Asset Generation candidate `animal-rooster` (🐓): the glyph is live in the farm puzzle (`game/games/animal_puzzle.js:8`) and racing decor (`game/games/racing-config.js:180`), no rooster picture exists in the repo, and the `animal-chicken` row asks for the rooster to stay visually distinct from the approved hen. Generate one candidate with the task-287 pipeline (Cloudflare Workers AI, FLUX.2, bundle as reference pool), measure it, and keep it a candidate until the user reviews it.
+

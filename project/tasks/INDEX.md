@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **287**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **288**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -288,3 +288,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 284 | DONE | 2026-10-21 | racing3d phone-portrait steering geometry + fastcat reduced-motion assertion (2026-10-21, OpenCode/Big… | tasks-250-299.md
 285 | DONE | 2026-10-21 | smokes assert host wall time / host media preference instead of the product (2026-10-21, OpenCode/Big… | tasks-250-299.md
 286 | DONE | 2026-10-21 | smoke boot-readiness races, flaking under parallel load (2026-10-21, OpenCode/Big Pickle). Found validating… | tasks-250-299.md
+287 | DONE | 2026-10-22 | Asset generation pipeline + next candidate (animal-bird): a free-tier generation path (Cloudflare Workers AI,… | tasks-250-299.md

@@ -229,3 +229,90 @@ Add one row per asset. Keep this table synchronized with the inventory.
 - Before generating, search the rest of the repository for reusable bird PNG/SVG artwork and verify whether any existing bird illustration is appropriate for this final life-cycle stage. The WIP folder alone does not establish repository-wide absence.
 - If no suitable reusable asset exists, make a simple generic small bird (not another chick and not a species-specific parrot/duck): rounded compact body, muted natural blue/grey or warm brown accents, tiny understated dark eye, small beak and feet, simple wing shape, and restrained watercolor/paper texture. It should read as a grown/young bird stage distinct from the chick, remain clear at card size, and match the bear's quieter detail level. Avoid glossy eyes, dense feather strokes, thick outlines, or saturated decorative plumage.
 - Keep the bird as a candidate pending explicit approval, technical QA, and context review. Candidate generation, approval, and runtime integration are separate statuses.
+
+## Generation pipeline — 2026-10-21 (OpenCode/Big Pickle)
+
+### Decisions
+
+- [x] **Backend: Cloudflare Workers AI, free plan.** It is the only free image backend that accepts *reference images* (`input_image_0`…`input_image_3`, each below 512x512), which is what keeps a new candidate inside the approved family instead of guessing the style from text. Model `@cf/black-forest-labs/flux-2-klein-4b`; the free allowance is 10,000 neurons per day. Gemini image models were checked and rejected as "free" (free tier: not available), and the keyless Pollinations Classic endpoint cannot take references.
+- [x] **The whole `assets_work_in_progress_bundle/` is the reference pool.** The user confirmed on 2026-10-21 that every already created asset is approved and that each of them is a reference for the next candidate, and so on down the line.
+- [x] **Reference order for a generation run:** the canonical bear (`Reference/bear.png`) and the canonical golden star (`Reference/star.png`) first, then the approved *painted* illustrations whose colour distribution matches the bear best. The small rasterised emoji (165-305 px) are not part of the painted family and are only sent when named explicitly. The set can be overridden per run with `--ref-files`.
+- [x] **Runtime integration stays out of this task.** This work touches `tools/` and `resources/` only — no `game/` change, so no offline pack, no `sync-docs.sh`, no screenshot refresh.
+- [x] **The credentials live outside git.** `tools/vendor/` is now git-ignored; the token never enters the repository.
+
+### New tooling
+
+- `tools/lib/png.js` — dependency-free PNG decode/encode, premultiplied-alpha resize, alpha/border/palette stats, 64x64 legibility proxy. `node tools/lib/png.js --selftest` proves round-trip, resize and palette behaviour.
+- `tools/asset_qa.js` — objective QA of a PNG or a folder of PNGs (dimensions, format, alpha coverage, border alpha, palette mean, palette match against the bear, small-size contrast, sha256). It reports facts, never art.
+- `tools/asset_refpool.js` — turns the bundle + `Reference/` into the ranked reference pool and writes API-ready copies below 512x512 into `tools/.cache/asset_refs/`.
+- `tools/asset_generate.js` — one candidate per run: composes the prompt (reference routing + brief), posts multipart to Cloudflare, writes the picture into the bundle, then prints the QA line. Credentials come from `CF_ACCOUNT_ID` / `CF_API_TOKEN` or a JSON file outside the repository.
+
+### Measured technical QA of the approved bundle
+
+- [x] Real dimensions, format, alpha coverage, border alpha, palette match and small-size contrast measured for all 20 bundle files and both canonical references; recorded in `ASSET_INVENTORY.md` ("Technical QA facts" section).
+- [x] **No approved asset has a transparent background.** Every bundle PNG is fully opaque; `Reference/star.png` has an alpha channel it never uses.
+- [x] `pig.png` needs a fresh cut-out: only 0.02% of its pixels are fully opaque and 22% are semi-transparent, so the subject is faded edge to edge.
+- [ ] Naming checks and the visual-consistency pass are still open — the second needs a human (or a vision model) looking at the pictures.
+
+### API notes
+
+- The image endpoint returns **JPEG**, not PNG, whatever the output file name says. The generator now sniffs the real format from the magic bytes and converts the result to PNG (the bundle convention) before writing it, so a mislabelled file can never land in the bundle again. `tools/lib/imagefile.js` holds the sniffer and the conversion; on Windows it uses the built-in System.Drawing assembly, elsewhere it keeps the original bytes under their true extension and says so.
+- Reference images must stay below 512x512; the prepared copies are 500 px on the long edge.
+
+### Candidate — bird (`animal-bird`), generated 2026-10-22
+
+- [x] **Preflight.** The bird glyph `🐦` is live in the egg → chick → bird sequence at `game/games/sequencing.js:25-29` (stage 3, label `Птица`). A repository-wide search of `game/` and `resources/` found **no** reusable bird illustration, so the row was eligible for generation.
+- [x] **Brief written:** `prompts/bird.md` — a generic small songbird, explicitly *not* a chick, chicken, rooster, parrot, duck or owl; no crest, no long tail, no saturated plumage; one subject, full body, small mobile size.
+- [x] **Iteration 1 — rejected by the user as too chick-like.** References were `bear.png` + `star.png` + `chicken.png` + `chick.png`. Two causes: two round yellow birds pull the model towards a round yellow bird, and the brief itself said "compact rounded body", "tiny understated dark eyes" — baby-anatomy words. Rejected file kept at `%TEMP%\opencode\bird-v1-rejected-chicklike.png`.
+- [x] **Iteration 2 — generated** with `bear.png` + `star.png` + `horse.png` (a painted family member for the finish and paper tone, a non-bird silhouette, so nothing in the reference set can be mistaken for a bird to copy) and a rewritten brief spelling out adult proportions: body longer than tall, head in proportion to the body, slim pointed beak, thin legs, a folded wing with a shoulder line, a short tail projecting past the body, no down, no ball body, no oversized head or eyes, and a slate-blue-grey / warm buff / brown palette with no yellow.
+- [x] **Measured:** `assets_work_in_progress_bundle/bird.png` — 1024x1024 PNG, 1,169,139 bytes, fully opaque, paper 247.5/244.3/234.8 (iteration 1 was 243.3/239.5/231.8 — v2 sits on the canonical bear's tone), subject mean RGB 180.1/175.5/164.1 and desaturated (the chick's is 249.4/213.7/118.5, bright yellow), subject covers 16.2% of the frame (family 21-35%), small-size contrast 55.6 (family 36.8-146, median ~89).
+- [x] **User approved iteration 2** (2026-10-22) after comparing it with `chick.png` and `chicken.png`. The row moved to `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`. Approval only — production readiness and runtime integration stay separate steps.
+- [ ] If a later round still reads too young: iteration 3 should enlarge the bird in the frame (16.2% coverage is below the family) and deepen the palette (small-size contrast 55.6 is under the family median), not re-pick references.
+
+## Next-asset analysis — after bird (bundle audit 2026-10-22)
+
+The bundle was audited file by file against the inventory: **every `.png` in
+`assets_work_in_progress_bundle/` is a finished, user-approved asset**, and every inventory row
+that points at one of those files now says so. The audit script found **11 stale rows** that still
+read `REVIEW` although their `.png` exists (`animal-dog`, `animal-cat`, `animal-cow`,
+`animal-duck`, `animal-bear`, `maze-start-bear`, `food-apple`, `reward-star`, `piano-song-star`,
+`adventure-fish`, `kitty-fish`) plus 3 status spellings that did not match the rest
+(`animal-lion`, `animal-elephant`, `object-bone`). All 14 rows now carry the same status:
+**GENERATED / USER-APPROVED / TECHNICAL QA MEASURED**.
+
+Result: **21 bundle files, 24 inventory rows** (three rows share a file: `bear.png` → animal-bear
++ maze-start-bear, `fish.png` → adventure-fish + kitty-fish, `star.png` → reward-star +
+piano-song-star), 0 rows pointing at a missing file, 0 bundle files without a row. The note column
+now also says which files are legacy rasters rather than painted family members:
+
+| file | canvas | note |
+|---|---|---|
+| apple.png | 265x295 | legacy raster |
+| cat.png | 275x305 | legacy raster |
+| cow.png | 190x165 | legacy raster |
+| dog.png | 285x295 | legacy raster |
+| duck.png | 165x135 | legacy raster |
+| fish.png | 280x220 | legacy raster (shared by two rows) |
+| star.png | 290x280 | legacy raster (shared by two rows) |
+| bear.png | 800x800 | canonical style anchor, pixel-identical to `Reference/bear.png` |
+
+**Next candidate: rooster (`animal-rooster`).** The glyph 🐓 is live in two places —
+`game/games/animal_puzzle.js:8` (the farm-puzzle scene) and `game/games/racing-config.js:180`
+(racing decor) — and no rooster picture exists anywhere in the repository, so the row is eligible.
+The `animal-chicken` row says to keep the rooster "distinct from rooster-specific farm
+puzzle/scenery use unless visual semantics are confirmed", and the user chose the rooster as the
+next candidate on 2026-10-22, so the rooster gets its own picture and stays visually distinct from
+the approved hen (`chicken.png`): a large red comb and wattle, golden hackles, a rich russet body
+and long arching dark tail feathers.
+
+- Generate one subject at a time and keep it a candidate until the user reviews it.
+
+
+
+
+### What the numbers do not say
+
+- `palette-match` against the bear is 0.0152 for the bird, but 0.3157 against the sheep. The metric is a 4-bit histogram intersection over the whole frame and the flat paper is ~80% of it, so a ~10-unit shift in the paper's green channel moves the entire background mass into another bin. The bird's paper (243.3/239.5/231.8) is inside the family range (251.8-254.3 / 249.5-254 / 237-254). Read the paper tone, subject colour and coverage instead — the detail is in `ASSET_INVENTORY.md` ("Technical QA facts", finding 7).
+- Big Pickle cannot look at images. Every statement above is a measurement, not a judgement about how the bird looks.
+
+

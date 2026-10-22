@@ -2,26 +2,27 @@
 
 *Overwrite this file at the end of every session (never append). Budget: 6 KB, checked by `node tools/check_docs.js`.*
 
-**Last updated:** 2026-10-21 · **App version:** 2.4.0 (`game/manifest.json`) · **Repository:** https://github.com/radmanmilos/Games-for-kids
+**Last updated:** 2026-10-22 · **App version:** 2.4.0 (`game/manifest.json`) · **Repository:** https://github.com/radmanmilos/Games-for-kids
 
 ## Where we are
 
 - **Мачја шума (Cat Forest) 2.4.0 shipped** — commit `9a4af99`, CI **39491259589** green. CF-00…CF-21 (tasks 261–283) DONE/archived. The reference-app "look & feel" phase is **parked at the user's request** — do not start it; when resumed it stays art/animation/ambience/polish only (the reference's fishing/crafting/upgrades/ads/IAP/album-counts are excluded by the approved no-economy rules). **CF-22 (real-device play-test of 2.4.0) remains and belongs to the user.**
-- **Task 284 DONE (2026-10-21)** — racing3d phone-portrait steering: portrait media query (`orientation: portrait` + `max-width: 519px`) drops the ◀/▶ zones lower and wider (centres **61/329**, 268 px apart, bottom 813 at 390×844) and drops the task-256 inboard margin; landscape/tablet unchanged; asserted in `tools/racing3d_smoke.js`. Plus the fastcat reduced-motion pin (start of the host-dependency sweep). Commit `3fbeb13`.
-- **Task 285 DONE (2026-10-21)** — swept the "assert the host" smoke class: **racing3d** audio bus got a test-only `setClock(t)` hook over `curTime` (racing3d.mjs:1495) and a pinned timeline instead of `4 × sleep(55)`; **rhythm** completion cue now pins `no-preference` (must be `drumCheer`) then `reduce` (must drop to `none`) instead of reading the host pref through an escape hatch; **animals** pins the media before its `animationName` read. Every guard negative-tested. Log: `tools/.cache/task285-validation.md`.
-- **Task 286 DONE (2026-10-21, OpenCode/Big Pickle)** — de-flaked smoke boot races that only showed under parallel load (the last recurring CI/local noise). Boot-readiness loops polled `typeof window.startX === 'function' && !!document.getElementById(…)`, true **before** the game renders (static element + script-loaded function), so the next assertion read pre-render state. Seven smokes now wait on the render artifact their own assertion reads: **animals** (+non-empty name), **fastcat** (+`char-modal.show`), **piano** (+8 keys), **shapes** (+2 slots/pieces), **classroom** (+6/4 buttons), **counting** (+tiles); **sw_update** (different shape — a 10 s SW-control wait too short under load; raised to 30 s). Readiness waits only, no assertion loosened. Evidence: 6 tools isolated 221/0 · **full battery at default concurrency = ALL 36 TOOLS PASS (1306 checks)**, the run that failed before · `check_fast` 8/8. Follow-up audit: no other HIGH weak predicate. Log: `tools/.cache/task286-validation.md`.
-- **Archived through task 286 (2026-10-19/20/21):** UI consistency round 2 · fastcat SVG fix · harness hardening · Cat Forest CF-00…CF-21 · task 284 (racing3d portrait + fastcat pin) · task 285 (host-dependency sweep) · task 286 (boot-race sweep). Next task number: **287**.
+- **Tasks 284–286 DONE (2026-10-21)** — racing3d phone-portrait steering + fastcat reduced-motion pin (284) · "assert the host" smoke sweep (285) · smoke boot-race de-flake, seven smokes now wait on a render artifact (286). Logs: `tools/.cache/task28[4-6]-validation.md`.
+- **Task 287 DONE (2026-10-22, OpenCode/Big Pickle)** — Asset Generation pipeline + the `animal-bird` candidate. Free-tier image path (**Cloudflare Workers AI, FLUX.2 multi-reference**) that sends the approved bundle as style references. New tools: `tools/lib/png.js` (dependency-free PNG codec + stats), `tools/lib/imagefile.js` (magic-byte sniffer + JPEG→PNG — the endpoint returns JPEG whatever the file name says), `tools/asset_qa.js` (objective QA), `tools/asset_refpool.js` (ranked reference pool), `tools/asset_generate.js` (one candidate per run). The bird was generated twice — iteration 1 rejected by the user as **too chick-like**, iteration 2 approved — and the user approved it, so `animal-bird` is `GENERATED / USER-APPROVED`. Technical QA of all 21 bundle files is in `ASSET_INVENTORY.md`. Credentials live in the git-ignored `tools/vendor/`; **runtime integration is a separate, later task — nothing at runtime yet.**
+- **Archived through task 287.** Next task number: **288**.
 - **Pages gated on CI (task 274):** CI's `pages` job publishes `docs/` only from a green push on `main`.
-- **Asset Generation project — active, Phase 1 (inventory/approval).** Test-batch PNGs under `resources/General_reviews/Asset_Generation/`: bone and elephant (approved), **lion (user-accepted)**, **frog (QA pending)**. Nothing at runtime.
+- **Asset Generation project — active, Phase 1 (inventory/approval).** Bundle under `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/`: 21 files, **all user-approved** (24 inventory rows — `bear.png`, `fish.png` and `star.png` are each shared by two rows). Known defects: `pig.png` is washed out (0.02 % opaque, 22 % semi-transparent — needs a fresh cut-out); seven small files (165–305 px) are rasterised emoji, not the painted family. **Next candidate: rooster (`animal-rooster`)** — the glyph 🐓 is live in the farm puzzle (`game/games/animal_puzzle.js:8`) and racing decor (`game/games/racing-config.js:180`), no rooster picture exists in the repo, and the `animal-chicken` row asks for the rooster to stay distinct from the approved hen. Task **288** is open for it.
 
 ## Candidate next work (the user decides; do not start without asking)
 
 1. **CF-22 play-test rounds** on the real tablet (Cat Forest TP §6 protocol; tune only `CF` constants/CSS/data) — the remaining Cat Forest phase.
-2. **"Tier A" learning content** from the finished roadmaps in `archive/plans/` (see `project/reference/LEARNING_ROADMAP_REVIEW.md`).
-3. **Cat Forest "look & feel toward Secret Cat Forest"** — **parked by the user** ("we will come back for that later"). No spec until resumed; art/animation/ambience/polish only.
-4. **Live play-test of 2.4.0** on a real device (unified nav bubble, bigger triangles, racing3D flowers-only HUD, tracing one-back, repaired fastcat 🌍 icon, new portrait steering geometry); force-refresh may be needed for the cached shell.
-5. **racing3d tuning** — levers in `game/games/racing3d.mjs` (`bankMax`, `LATERAL_GAIN`, `inRate`/`outRate`, `bobY`, `camPull`/`camRise`).
-6. **Optional deeper gates if ever needed:** `tools/play_matrix.mjs` (chromium+webkit viewports), `tools/axe_check.js` (axe-core).
+2. **Next Asset Generation candidate** — **rooster** (task 288, below). One subject per round; the user reviews each candidate.
+3. **Runtime integration of the approved assets** (copy into `game/assets/images/`, swap the glyphs, smokes, screenshots) — a bigger step, not started.
+4. **"Tier A" learning content** from the finished roadmaps in `archive/plans/` (see `project/reference/LEARNING_ROADMAP_REVIEW.md`).
+5. **Cat Forest "look & feel toward Secret Cat Forest"** — **parked by the user** ("we will come back for that later"). No spec until resumed; art/animation/ambience/polish only.
+6. **Live play-test of 2.4.0** on a real device (unified nav bubble, bigger triangles, racing3D flowers-only HUD, tracing one-back, repaired fastcat 🌍 icon, new portrait steering geometry); force-refresh may be needed for the cached shell.
+7. **racing3d tuning** — levers in `game/games/racing3d.mjs` (`bankMax`, `LATERAL_GAIN`, `inRate`/`outRate`, `bobY`, `camPull`/`camRise`).
+8. **Optional deeper gates if ever needed:** `tools/play_matrix.mjs` (chromium+webkit viewports), `tools/axe_check.js` (axe-core).
 
 ## Validate (details: `AGENTS.md`)
 
@@ -31,6 +32,7 @@
 
 - `game/` changes ⇒ **`node tools/build_offline.js` FIRST, then** `tools/sync-docs.sh` (the manifest/pages are hashed; the wrong order leaves `docs/offline-manifest.json` stale and `validate_generated` fails), **and refresh the affected review screenshots**. Never edit `docs/` by hand.
 - **Cat Forest delivery (D11 amended 2026-10-19):** after each card/bundle is DONE and gates are green, the AI commits and pushes to `main` and verifies CI; never continue on red or dirty. (2.4.0 was handed off uncommitted and then committed at the user's request — `9a4af99`.)
+- **Never commit the Cloudflare credentials** (`tools/vendor/` is git-ignored) and never push to `main` without the user asking.
 - Before touching a risky area read its lesson file: see the table in `AGENTS.md` (`project/lessons/`).
 - Locked decisions: `project/DECISIONS.md`. Process: `project/PROCESS.md`.
 - Older session logs: `archive/handover/`.
