@@ -101,7 +101,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | food-watermelon | 🍉 | `kitty-standalone.js` | Kitty collectible | Simple watermelon slice | REVIEW  | — | — |
 | food-carrot | 🥕 | `sequencing.js`, `kitty-standalone.js` | Growth sequence result and Kitty collectible | One shared carrot illustration | REVIEW  | — | — |
 | food-apple-green | 🍏 | `sequencing.js` | Unripe fruit sequence step | Separate from red apple because color conveys sequence stage | REVIEW  | — | — |
-| object-egg | 🥚 | `sequencing.js` | Egg-to-bird sequence | Simple egg illustration | REVIEW  | — | — |
+| object-egg | 🥚 | `game/games/sequencing.js:26` (label `Јаје`, stage 1 of the egg → chick → bird sequence) and `game/games/sequencing.js:46` (label `Јаје`, stage 1 of the egg → caterpillar → butterfly sequence) | Egg-to-bird and egg-to-butterfly sequences | One shared simple egg illustration for both sequences: a smooth upright oval shell, warm cream-beige, a scatter of medium warm-brown speckles, one deeper tan shaded side — no face, no crack, no nest, no ribbon; must read at card size | GENERATED / CANDIDATE — TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/egg.png` | — |
 | animal-chick | 🐣 | `sequencing.js`; `sequencing.js`, `compare.js` | Egg-to-bird sequence; Egg-to-bird sequence and comparison pool | One shared simple chick illustration; clearly juvenile and distinct from adult chicken | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/chick.png` | — |
 | animal-bird | 🐦 | `game/games/sequencing.js:28` (label `Птица`), stage 3 of the egg → chick → bird sequence | Egg-to-bird sequence | One shared simple bird illustration; a generic small songbird, clearly distinct from the chick and the chicken; rounded compact body, short small beak, one simple wing, short tail, small feet, muted natural palette, tiny understated dark eye | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bird.png` | — |
 | object-soap | 🧼 | `sequencing.js` | Washing sequence | Simple soap illustration | REVIEW  | — | — |
@@ -283,7 +283,7 @@ measurements only — they say nothing about how the pictures look.
 | elephant.png | 1536x1024 | rgb | 100/0/0 | 0.6596 | 102.9 | painted |
 | sheep.png | 1254x1254 | rgb | 100/0/0 | 0.4186 | 61.6 | painted |
 | rooster.png | 1024x1024 | rgb | 100/0/0 | 0.5042 | 136.4 | painted |
-| bird.png | 1024x1024 | rgb | 100/0/0 | 0.0192 | 55.6 | painted (candidate, iteration 2, 2026-10-22) |
+| bird.png | 1024x1024 | rgb | 100/0/0 | 0.0192 | 55.6 | painted (iteration 2, 2026-10-22) |
 | fox.png | 1254x1254 | rgb | 100/0/0 | 0.1596 | 116.9 | painted |
 | dog.png | 285x295 | rgb | 100/0/0 | 0.1145 | 105.2 | legacy raster |
 | cat.png | 275x305 | rgb | 100/0/0 | 0.0852 | 88.7 | legacy raster |
@@ -294,6 +294,7 @@ measurements only — they say nothing about how the pictures look.
 | fish.png | 280x220 | rgb | 100/0/0 | 0.0220 | 86.9 | legacy raster |
 | caterpillar.png | 1448x1086 | rgb | 100/0/0 | 0.0171 | 107.6 | painted |
 | star.png | 290x280 | rgb | 100/0/0 | 0.0165 | 69.4 | legacy raster |
+| egg.png | 1024x1024 | rgb | 100/0/0 | 0.0164 | 38.8 | painted (candidate, iteration 2, 2026-10-22) |
 | apple.png | 265x295 | rgb | 100/0/0 | 0.0091 | 146.4 | legacy raster |
 | pig.png | 1448x1086 | rgba | 0/78/22 | 0.0048 | 220.0 | painted |
 
@@ -307,7 +308,7 @@ Findings that still block the production step:
 3. `bundle/bear.png` is a re-save of the canonical bear (800x800, different sha256 from
    `Reference/bear.png`); the canonical file in `Reference/` stays the style anchor. Both are
    pixel-identical.
-4. The fifteen large files (800-1536 px) are the painted family; the seven small files
+4. The sixteen large files (800-1536 px) are the painted family; the seven small files
    (165-305 px) are rasterised emoji, not the painted family, so they are excluded from the
    automatic reference pick.
 5. `bone.png` has the lowest small-size contrast (36.8) and `chick.png` the second lowest (58.9)
@@ -325,11 +326,21 @@ Findings that still block the production step:
    | file | paper (corners) | subject mean RGB | subject coverage |
    |---|---|---|---|
    | bird.png (iteration 2) | 247.5/244.3/234.8 | 180.1/175.5/164.1 | 16.2% |
-   | rooster.png (candidate) | 246.8/243.3/236.5 | 163.7/121.9/97.6 | 27.2% |
+   | rooster.png (approved) | 246.8/243.3/236.5 | 163.7/121.9/97.6 | 27.2% |
+   | egg.png (candidate, iteration 2) | 241.3/238.8/231.3 | 219.2/193.8/167.0 | 16.8% |
+   | bone.png (approved object exemplar) | 249.3/239.0/219.5 | 236.7/197.0/146.9 | 16.5% |
    | chicken.png | 253.3/250.5/238.3 | 239.0/182.3/127.0 | 23.8% |
    | chick.png | 252.8/252.5/239.0 | 249.4/213.7/118.5 | 23.7% |
    | sheep.png | 253.0/251.3/237.0 | 237.4/202.0/157.7 | 30.9% |
    | bear.png (canonical) | 247.0/246.0/244.0 | 218.3/166.4/98.5 | 33.1% |
+
+8. **A pale subject needs a legibility check before it is handed over.** `egg.png` iteration 1
+   measured a 64 px legibility proxy of **21.0** — the lowest value in the bundle, and the whole
+   card was nearly blank, because a cream shell on cream paper has almost no tonal range. It was
+   re-briefed (a shell a clear step deeper than the paper, medium warm-brown speckles instead of
+   faint light ones, a deeper tan shaded side) and iteration 2 measures **38.8**, just above
+   `bone.png` (36.8); the subject coverage rose from 8.8% to 16.8%, exactly the `bone.png` value.
+   Measure the 64 px proxy for every pale subject, not just the coloured ones.
 
 ## Completion gate
 

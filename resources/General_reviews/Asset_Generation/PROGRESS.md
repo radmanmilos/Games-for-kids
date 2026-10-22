@@ -282,7 +282,8 @@ read `REVIEW` although their `.png` exists (`animal-dog`, `animal-cat`, `animal-
 
 Result: **21 bundle files, 24 inventory rows** (three rows share a file: `bear.png` → animal-bear
 + maze-start-bear, `fish.png` → adventure-fish + kitty-fish, `star.png` → reward-star +
-piano-song-star), 0 rows pointing at a missing file, 0 bundle files without a row. The note column
+piano-song-star), 0 rows pointing at a missing file, 0 bundle files without a row. (The rooster and
+the egg were added later the same day, so the bundle now holds 23 files and 26 rows.) The note column
 now also says which files are legacy rasters rather than painted family members:
 
 | file | canvas | note |
@@ -296,7 +297,7 @@ now also says which files are legacy rasters rather than painted family members:
 | star.png | 290x280 | legacy raster (shared by two rows) |
 | bear.png | 800x800 | canonical style anchor, pixel-identical to `Reference/bear.png` |
 
-**Next candidate: rooster (`animal-rooster`).** The glyph 🐓 is live in two places —
+**Next candidate (chosen 2026-10-22): rooster (`animal-rooster`) — generated and approved the same day, see the candidate section below.** The glyph 🐓 is live in two places —
 `game/games/animal_puzzle.js:8` (the farm-puzzle scene) and `game/games/racing-config.js:180`
 (racing decor) — and no rooster picture exists anywhere in the repository, so the row is eligible.
 The `animal-chicken` row says to keep the rooster "distinct from rooster-specific farm
@@ -324,5 +325,28 @@ and long arching dark tail feathers.
 
 - `palette-match` against the bear is 0.0152 for the bird, but 0.3157 against the sheep. The metric is a 4-bit histogram intersection over the whole frame and the flat paper is ~80% of it, so a ~10-unit shift in the paper's green channel moves the entire background mass into another bin. The bird's paper (243.3/239.5/231.8) is inside the family range (251.8-254.3 / 249.5-254 / 237-254). Read the paper tone, subject colour and coverage instead — the detail is in `ASSET_INVENTORY.md` ("Technical QA facts", finding 7).
 - Big Pickle cannot look at images. Every statement above is a measurement, not a judgement about how the bird looks.
+
+## Candidate — egg (`object-egg`), generated 2026-10-22 (task 289)
+
+- [x] **Preflight.** The 🥚 glyph is used in **two** sequences — `game/games/sequencing.js:26` (label `Јаје`, stage 1 of egg → chick → bird) and `game/games/sequencing.js:46` (label `Јаје`, stage 1 of egg → caterpillar → butterfly) — and every sibling step is already painted and approved (`chick.png`, `bird.png`, `caterpillar.png`). A repository-wide search found **no** egg illustration in `game/` or `resources/`, so the row is eligible for generation.
+- [x] **Category decision — a simple object, not an animal.** The egg is the pipeline's first **object** candidate, so the reference set had to carry an object exemplar, and `bone.png` is the only approved simple object in the bundle. `chick.png` and `chicken.png` were deliberately **not** sent: their round, warm-yellow shapes pull the model towards a yellow chick-shaped blob.
+- [x] **Brief written:** `prompts/egg.md` — one upright egg shell, a smooth oval, warm cream-beige, a scatter of soft warm-brown speckles, one deeper shaded side; no face, no crack, no chick peeking out, no nest, no straw, no ribbon, no props, no ground line.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary) + `bone.png` (the approved object exemplar — finish and paper tone only, never its shape).
+- [x] **Iteration 1:** 1024x1024, 1,214,827 bytes, opaque. Measured: paper 241.5/237.3/228.5, subject mean RGB 222.2/197.1/170.5, subject coverage 8.8%, **64 px legibility proxy 21.0** — the lowest value in the bundle, i.e. the whole card was nearly blank, because a cream shell on cream paper has almost no tonal range. The shape and the framing were right (silhouette bbox 65% x 80% of the canvas), so only the tone was wrong. **Re-briefed instead of handing it over**: the shell a clear step deeper than the paper, medium warm-brown speckles instead of faint light ones, a deeper tan shaded side, plus an explicit "the picture must not look almost blank" instruction.
+- [x] **Iteration 2 (kept):** 1024x1024, 1,252,075 bytes, opaque. Measured: paper 241.3/238.8/231.3, subject mean RGB 219.2/193.8/167.0 (warm cream, no yellow), subject coverage **16.8%** (exactly `bone.png`'s 16.5%), **64 px legibility proxy 38.8** (up from 21.0, just above `bone.png`'s 36.8), 8.0% of the frame darker than luminance 200 (`bone.png` 5.7%, `chick.png` 4.2%), palette-match vs the bear 0.0164 — low, but that metric is dominated by the paper tone and a pale object has few tones to intersect (see `ASSET_INVENTORY.md` finding 7).
+- [ ] **User review** — the picture has not been looked at by a human yet, so the row stays `GENERATED / CANDIDATE`. Approval, production readiness and runtime integration remain separate steps.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` - `game/` was not touched.
+
+### Cost tracking (2026-10-22)
+
+Workers AI bills in **neurons**: 10,000 per day are free and the allowance resets at 00:00 UTC; above that, the Workers Paid plan charges $0.011 per 1,000 neurons. The account total is on the Cloudflare dashboard (**AI -> Workers AI**, `https://dash.cloudflare.com/?to=/:account/ai/workers-ai`) — *Billing -> Billable Usage* does **not** list Workers AI neurons on the Free plan, so the AI dashboard is the place to look.
+
+`tools/asset_generate.js` now also prints a per-run estimate and keeps a local log (`tools/.cache/asset-usage.json`, git-ignored), so the usage is visible per candidate and not only as a daily total:
+
+```
+neurons: ~120.3 (3 input tile(s) x 5.37 + 4 output tile(s) x 26.05) | today: 6 run(s), ~638.3 of the 10000 free neurons
+```
+
+Rates from the Workers AI pricing page (checked 2026-10-22): `@cf/black-forest-labs/flux-2-klein-4b` costs **5.37 neurons per input 512x512 tile** and **26.05 per output 512x512 tile**, so one 1024x1024 candidate with three references costs **~120 neurons**. Six runs today (five candidates + one 256x256 smoke) used **~638 neurons**, about 6 % of the free daily allowance. Note `flux-2-klein-9b` is priced per megapixel (1363.64 for the first MP) and would need a different estimate.
 
 

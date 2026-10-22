@@ -19,10 +19,22 @@ const path = require('path');
 const { buildPool, pickReferences, pickByName } = require('./asset_refpool.js');
 const { inspect } = require('./asset_qa.js');
 const { detectFormat, convertToPng } = require('./lib/imagefile.js');
+const { decodePng } = require('./lib/png.js');
 
 const ROOT = path.resolve(__dirname, '..');
 const API_ROOT = 'https://api.cloudflare.com/client/v4/accounts';
 const DEFAULT_MODEL = '@cf/black-forest-labs/flux-2-klein-4b';
+
+/**
+ * Neuron rates per 512x512 tile, from the Workers AI pricing page (checked
+ * 2026-10-22). Workers AI bills in neurons; the free allowance is 10,000 per day
+ * and it resets at 00:00 UTC. The dashboard shows the account total, so the
+ * per-run cost is also tracked locally (tools/.cache/asset-usage.json).
+ */
+const NEURON_RATES = {
+  '@cf/black-forest-labs/flux-2-klein-4b': { inputTile: 5.37, outputTile: 26.05 },
+};
+const DAILY_FREE_NEURONS = 10000;
 
 function parseArgs(argv) {
   const args = argv.slice(2);
@@ -142,6 +154,45 @@ async function generate(options, references, brief) {
   return Buffer.from(await response.arrayBuffer());
 }
 
+/**
+ * Estimate what one run costs in neurons and keep a local log of it, so the usage
+ * is visible per candidate and not only as a daily total on the Cloudflare
+ * dashboard (dash.cloudflare.com -> AI -> Workers AI).
+ */
+function tileCount(width, height) {
+  return Math.ceil(width / 512) * Math.ceil(height / 512);
+}
+
+function estimateNeurons(model, references, options) {
+  const rate = NEURON_RATES[model];
+  if (!rate) return null;
+  let inputTiles = 0;
+  for (const entry of references) {
+    const image = decodePng(fs.readFileSync(entry.apiFile));
+    inputTiles += tileCount(image.width, image.height);
+  }
+  const outputTiles = tileCount(options.width, options.height);
+  const input = inputTiles * rate.inputTile;
+  const output = outputTiles * rate.outputTile;
+  return { inputTiles, outputTiles, input, output, total: input + output };
+}
+
+/** Append the run to the local usage log and report the day's running total. */
+function recordUsage(entry) {
+  const dir = path.join(ROOT, 'tools', '.cache');
+  fs.mkdirSync(dir, { recursive: true });
+  const file = path.join(dir, 'asset-usage.json');
+  let rows = [];
+  if (fs.existsSync(file)) {
+    try { rows = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (error) { rows = []; }
+  }
+  rows.push(entry);
+  fs.writeFileSync(file, JSON.stringify(rows, null, 2) + '\n');
+  const today = rows.filter((row) => row.day === entry.day);
+  const total = today.reduce((sum, row) => sum + row.neurons, 0);
+  return { runs: today.length, total };
+}
+
 async function main() {
   const options = parseArgs(process.argv);
   const brief = extractPrompt(options.prompt);
@@ -183,6 +234,25 @@ async function main() {
   }
   const record = inspect(out, pool.bearPalette);
   console.log(`QA: ${record.width}x${record.height} ${record.colorType} | alpha opaque/transparent/partial ${record.alphaOpaquePct}/${record.alphaTransparentPct}/${record.alphaPartialPct}% | corner alpha ${record.cornerAlpha.join(',')} | palette ${record.paletteMean.join('/')} | palette-match vs bear ${record.paletteMatch}`);
+
+  const estimate = estimateNeurons(options.model, references, options);
+  if (!estimate) {
+    console.log(`neurons: no local rate for ${options.model} - check the Workers AI pricing page`);
+    return;
+  }
+  const usage = recordUsage({
+    day: new Date().toISOString().slice(0, 10),
+    ts: new Date().toISOString(),
+    model: options.model,
+    out: path.relative(ROOT, out).replace(/\\/g, '/'),
+    refs: references.map((entry) => entry.name),
+    neurons: Math.round(estimate.total * 100) / 100,
+  });
+  console.log(
+    `neurons: ~${estimate.total.toFixed(1)} `
+    + `(${estimate.inputTiles} input tile(s) x 5.37 + ${estimate.outputTiles} output tile(s) x 26.05)`
+    + ` | today: ${usage.runs} run(s), ~${usage.total.toFixed(1)} of the ${DAILY_FREE_NEURONS} free neurons`
+  );
 }
 
 if (require.main === module) {
@@ -191,4 +261,4 @@ if (require.main === module) {
     process.exit(1);
   });
 }
-module.exports = { composePrompt };
+module.exports = { composePrompt, estimateNeurons, tileCount };
