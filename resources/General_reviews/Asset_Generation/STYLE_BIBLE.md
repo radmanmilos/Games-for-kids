@@ -418,7 +418,7 @@ Add an entry only after explicit approval. The index records what each image tea
 
 ### 18.4.1 The approved bundle (2026-10-22)
 
-The user approved **every picture in `assets_work_in_progress_bundle/` — 21 files, 24 inventory rows** (three rows share a file). Big Pickle cannot look at images, so this table records only what was measured or decided; it states no visual claims. The per-file facts (canvas, alpha, palette-match, small-size contrast) live in `ASSET_INVENTORY.md` ("Technical QA facts") — that file stays the single source for measurements.
+The user approved **every picture in `assets_work_in_progress_bundle/` — 21 files, 24 inventory rows** (three rows share a file). A 22nd file, `rooster.png`, is a candidate awaiting review and is therefore **not** an exemplar yet. Big Pickle cannot look at images, so this table records only what was measured or decided; it states no visual claims. The per-file facts (canvas, alpha, palette-match, small-size contrast) live in `ASSET_INVENTORY.md` ("Technical QA facts") — that file stays the single source for measurements.
 
 | Files | Category | Approval evidence | Reusable lesson | Exceptions / cautions |
 |---|---|---|---|---|

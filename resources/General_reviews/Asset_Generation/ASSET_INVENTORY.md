@@ -113,7 +113,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | animal-giraffe | 🦒 | `animal_puzzle.js` | Savanna puzzle | Simple giraffe illustration | REVIEW  | — | — |
 | animal-deer | 🦌 | `animal_puzzle.js`, racing decor | Forest puzzle and winter scenery | One shared deer illustration if appropriate | REVIEW  | — | — |
 | animal-squirrel | 🐿️ | `animal_puzzle.js` | Forest puzzle | Simple squirrel illustration | REVIEW  | — | — |
-| animal-rooster | 🐓 | `animal_puzzle.js`, racing decor | Farm puzzle and scenery | Consolidate with `animal-chicken` only if one image reads correctly as rooster/chicken | REVIEW  | — | — |
+| animal-rooster | 🐓 | `game/games/animal_puzzle.js:8` (farm puzzle scene), `game/games/racing-config.js:180` (racing decor) | Farm puzzle and scenery | Its own picture, kept distinct from the approved hen (`chicken.png`): large red comb and wattle, golden-orange hackles, rich russet body, long arching deep green-black sickle tail, sturdy yellow legs | GENERATED / CANDIDATE — TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/rooster.png` | — |
 | object-tractor | 🚜 | `animal_puzzle.js`, racing decor | Farm puzzle and scenery | One shared tractor illustration | REVIEW  | — | — |
 | object-rocket | 🚀 | `animal_puzzle.js`, space game/hub | Space puzzle, page decoration, hub tile | Reuse one rocket illustration for large game artwork; UI may use SVG | REVIEW  | — | — |
 | object-planet | 🪐 | `animal_puzzle.js`, driving/space/racing decor | Puzzle and game-world object | One shared planet illustration where meaning matches | REVIEW  | — | — |
@@ -282,6 +282,7 @@ measurements only — they say nothing about how the pictures look.
 | chick.png | 1254x1254 | rgb | 100/0/0 | 0.6732 | 58.9 | painted |
 | elephant.png | 1536x1024 | rgb | 100/0/0 | 0.6596 | 102.9 | painted |
 | sheep.png | 1254x1254 | rgb | 100/0/0 | 0.4186 | 61.6 | painted |
+| rooster.png | 1024x1024 | rgb | 100/0/0 | 0.5042 | 136.4 | painted (candidate, 2026-10-22) |
 | bird.png | 1024x1024 | rgb | 100/0/0 | 0.0192 | 55.6 | painted (candidate, iteration 2, 2026-10-22) |
 | fox.png | 1254x1254 | rgb | 100/0/0 | 0.1596 | 116.9 | painted |
 | dog.png | 285x295 | rgb | 100/0/0 | 0.1145 | 105.2 | legacy raster |
@@ -306,7 +307,7 @@ Findings that still block the production step:
 3. `bundle/bear.png` is a re-save of the canonical bear (800x800, different sha256 from
    `Reference/bear.png`); the canonical file in `Reference/` stays the style anchor. Both are
    pixel-identical.
-4. The fourteen large files (800-1536 px) are the painted family; the seven small files
+4. The fifteen large files (800-1536 px) are the painted family; the seven small files
    (165-305 px) are rasterised emoji, not the painted family, so they are excluded from the
    automatic reference pick.
 5. `bone.png` has the lowest small-size contrast (36.8) and `chick.png` the second lowest (58.9)
@@ -324,6 +325,7 @@ Findings that still block the production step:
    | file | paper (corners) | subject mean RGB | subject coverage |
    |---|---|---|---|
    | bird.png (iteration 2) | 247.5/244.3/234.8 | 180.1/175.5/164.1 | 16.2% |
+   | rooster.png (candidate) | 246.8/243.3/236.5 | 163.7/121.9/97.6 | 27.2% |
    | chicken.png | 253.3/250.5/238.3 | 239.0/182.3/127.0 | 23.8% |
    | chick.png | 252.8/252.5/239.0 | 249.4/213.7/118.5 | 23.7% |
    | sheep.png | 253.0/251.3/237.0 | 237.4/202.0/157.7 | 30.9% |

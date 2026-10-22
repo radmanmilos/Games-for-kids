@@ -307,6 +307,15 @@ and long arching dark tail feathers.
 
 - Generate one subject at a time and keep it a candidate until the user reviews it.
 
+## Candidate — rooster (`animal-rooster`), generated 2026-10-22 (task 288)
+
+- [x] **Preflight.** The rooster glyph 🐓 is live in two places — `game/games/animal_puzzle.js:8` (the farm-puzzle scene) and `game/games/racing-config.js:180` (racing decor) — and a repository-wide search found **no** rooster picture in `game/` or `resources/`. The `animal-chicken` row asks to keep the rooster "distinct from rooster-specific farm puzzle/scenery use unless visual semantics are confirmed", and the user chose the rooster as its own candidate on 2026-10-22.
+- [x] **Brief written:** `prompts/rooster.md` — a proud adult rooster with a large red comb and wattle, golden-orange hackles, a rich russet body, long arching deep green-black sickle tail feathers and sturdy yellow legs; explicitly not a hen, chick, turkey, ostrich or peacock.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary) + `chicken.png` — the closest category example, which supplies the family's bird brushwork but not the hen's cream colouring or shape.
+- [x] **Generated:** `assets_work_in_progress_bundle/rooster.png` — 1024x1024 PNG, 1,509,865 bytes, fully opaque. Measured: paper 246.8/243.3/236.5 (the canonical bear's tone is 247/246/244), subject mean RGB 163.7/121.9/97.6 — a warm russet, against the hen's 239.0/182.3/127.0 cream — subject covers 27.2% of the frame (family 21-35%), small-size contrast 136.4 (the strongest in the family; the hen's is 69.7), palette-match vs the bear **0.5042**, vs the hen 0.5181, vs the sheep 0.6954 — all inside the family range.
+- [ ] **User review** — the picture has not been looked at by a human yet, so the row stays `GENERATED / CANDIDATE`. Approval, production readiness and runtime integration remain separate steps.
+
+
 
 
 
