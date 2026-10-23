@@ -362,4 +362,17 @@ Rates from the Workers AI pricing page (checked 2026-10-22): `@cf/black-forest-l
 
 **Planning number:** at ~120 neurons per candidate the free 10,000 neurons cover roughly **80 candidates per day**, so a subject can afford two or three iterations and the limit never has to shape the creative decisions. Note `flux-2-klein-9b` is priced per megapixel (1363.64 for the first MP) and would need a different estimate — 9b is ~11x the cost of a 4b candidate.
 
+## Candidate — soap (`object-soap`), generated 2026-10-23
 
+- [x] **Preflight / repository audit.** The current `main` branch WIP bundle was re-listed before documentation changes. It contains 25 PNGs, including the new `soap.png`; the repository-wide visual-file tree was also checked to look for other relevant image assets and duplicates. The wash sequence uses the soap glyph in `game/games/sequencing.js` between the water-drop and sparkle steps.
+- [x] **Brief:** one uniform rectangular bar with rounded corners, soft pastel pink, subtle matte watercolor/paper texture, and a few delicate bubbles along the edges. No face, wrapper, excessive foam, glossy plastic or dramatic lighting.
+- [x] **Generated:** `assets_work_in_progress_bundle/soap.png` was returned by image generation and is present in the current WIP directory listing.
+- [ ] **Technical QA pending.** Dimensions, alpha/background, silhouette, small-size legibility and visual-family consistency have not yet been measured and recorded here.
+- [ ] **User review pending.** Do not mark approved, production-ready or runtime-integrated until those steps actually occur.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no runtime tests, no screenshot refresh, and no offline-pack/sync-docs work; `game/` was not changed.
+
+## Next-item analysis — after soap (repository-wide check, 2026-10-23)
+
+The current bundle contains these 25 files: `apple.png`, `bear.png`, `bird.png`, `bone.png`, `cat.png`, `caterpillar.png`, `chick.png`, `chicken.png`, `cow.png`, `dog.png`, `duck.png`, `egg.png`, `elephant.png`, `fish.png`, `fox.png`, `frog.png`, `horse.png`, `lion.png`, `pig.png`, `rooster.png`, `sheep.png`, `soap.png`, `star.png`, `water-drop.png`, and `wolf.png`. The inventory has a generated-but-unreviewed `object-egg` row; its entry says the image was generated and technically measured, but human review remains unchecked. Therefore the next action should be **review `egg.png`**, not generate another image yet. This also avoids overlooking an existing candidate.
+
+After egg review, re-check the inventory and full repository again before selecting another new asset. The current repository-wide image tree includes many production sprites, screenshots, references and legacy art, so the absence of a name in the WIP bundle alone is not enough to justify a new generation.
