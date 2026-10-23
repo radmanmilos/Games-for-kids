@@ -371,8 +371,18 @@ Rates from the Workers AI pricing page (checked 2026-10-22): `@cf/black-forest-l
 - [ ] **User review pending.** Do not mark approved, production-ready or runtime-integrated until those steps actually occur.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no runtime tests, no screenshot refresh, and no offline-pack/sync-docs work; `game/` was not changed.
 
-## Next-item analysis — after soap (repository-wide check, 2026-10-23)
+## Bundle/document synchronization audit — 2026-10-23
 
-The current bundle contains these 25 files: `apple.png`, `bear.png`, `bird.png`, `bone.png`, `cat.png`, `caterpillar.png`, `chick.png`, `chicken.png`, `cow.png`, `dog.png`, `duck.png`, `egg.png`, `elephant.png`, `fish.png`, `fox.png`, `frog.png`, `horse.png`, `lion.png`, `pig.png`, `rooster.png`, `sheep.png`, `soap.png`, `star.png`, `water-drop.png`, and `wolf.png`. The inventory has a generated-but-unreviewed `object-egg` row; its entry says the image was generated and technically measured, but human review remains unchecked. Therefore the next action should be **review `egg.png`**, not generate another image yet. This also avoids overlooking an existing candidate.
+- [x] Re-read the current `main` branch WIP directory and recursive repository tree.
+- [x] The WIP directory contains **27 PNG files**. This count is only for `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/`; the repository-wide tree has many other PNGs (screenshots, app icons, legacy artwork, sprite frames and references) that are not all candidates for this inventory.
+- [x] Compared every WIP PNG filename against the WIP asset paths recorded in `ASSET_INVENTORY.md` and `STYLE_BIBLE.md`.
+- [x] Added missing inventory coverage for `sunflower.png` and `butterfly.png`; kept both as candidates, not approved or production-ready.
+- [x] Updated the acorn row to reflect that no `acorn.png` is currently present in the WIP bundle.
+- [ ] Technical QA for `sunflower.png` and `butterfly.png` is not yet recorded. The existence of a file does not mean it has been visually approved or technically measured.
+- [ ] No runtime integration, glyph swap, tests, screenshot refresh or production asset copy was performed by this documentation audit.
 
-After egg review, re-check the inventory and full repository again before selecting another new asset. The current repository-wide image tree includes many production sprites, screenshots, references and legacy art, so the absence of a name in the WIP bundle alone is not enough to justify a new generation.
+The current 27-file WIP bundle, in alphabetical order, is:
+
+`apple.png`, `bear.png`, `bird.png`, `bone.png`, `butterfly.png`, `cat.png`, `caterpillar.png`, `chick.png`, `chicken.png`, `cow.png`, `dog.png`, `duck.png`, `egg.png`, `elephant.png`, `fish.png`, `fox.png`, `frog.png`, `horse.png`, `lion.png`, `pig.png`, `rooster.png`, `sheep.png`, `soap.png`, `star.png`, `sunflower.png`, `water-drop.png`, and `wolf.png`.
+
+The WIP file list and inventory coverage are now synchronized for the files visible on `main` at audit time. This does not assert that every PNG anywhere in the repository belongs in the asset-generation inventory; screenshots, app icons, legacy illustrations, sprite frames and reference boards have different purposes.
