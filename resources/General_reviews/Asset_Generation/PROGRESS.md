@@ -72,6 +72,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-balloons` | 🎈 | `game/games/compare.js` comparison object | `prompts/balloons.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/balloons.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 47.79; palette-match 0.661; visual approval 2026-10-26 |
 | `object-season-leaf` | 🍂 | `classroom.html` seasons activity and `racing-config.js` scenery | `prompts/season-leaf.md`; bear + star | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/season-leaf.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 95.34; palette-match 0.698; visual approval 2026-10-26 |
 | `object-shell` | 🐚 | ocean, driving, Kitty and racing collectible/scenery uses | `prompts/shell.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/shell.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 39.7; palette-match 0.6028; visual approval 2026-10-26 |
+| `object-gem` | 💎 | dino/ocean collectible themes | `prompts/gem.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/gem.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 47.46; palette-match 0.0115; visual approval 2026-10-26 |
+
+## Asset update — 2026-10-26 — gem approved
+
+- [x] **Preflight.** `object-gem` is the shared `💎` collectible candidate in dino/ocean themes; existing 3D/procedural gem geometry remains separate and no matching raster asset existed.
+- [x] **Brief written:** `prompts/gem.md` — one centered upright teal faceted gemstone with broad top facet, pointed lower tip and no jewelry or scene.
+- [x] **Reference set:** `bear.png` and `star.png` as canonical style anchors, `bone.png` as the approved simple-object exemplar.
+- [x] **Generated:** `assets_work_in_progress_bundle/gem.png`, 1024x1024 RGB, opaque, 1390254 bytes.
+- [x] **Technical QA:** palette 227.57/229.98/224.62, palette-match 0.0115, small-size contrast 47.46.
+- [x] **User review: APPROVED 2026-10-26.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-26 — shell approved
 

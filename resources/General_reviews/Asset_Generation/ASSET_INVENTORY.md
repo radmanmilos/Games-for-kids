@@ -159,7 +159,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-fish | 🐟 | `adventure-modes.js`, `kitty-standalone.js`, Serbian phonics, ocean | Shared underwater decor, phonics and ocean visual | **One canonical fish asset** reused wherever suitable; no separate adventure-fish/kitty-fish files | REVIEW  | — | — |
 | object-pickaxe | ⛏ | `kitty-standalone.js` | Cave gameplay glyph | SVG or simple illustrated pickaxe if visibly used as a game object | REVIEW  | — | — |
 | object-sparkles | ✨ | `kitty-standalone.js`, `sequencing.js` | Cave/effect glyph and clean-sequence result | Prefer CSS/SVG effect; no unique PNG needed | SVG/CSS  | — | — |
-| object-gem | 💎 | dino/ocean collectible themes | Collectible | One shared gem asset | REVIEW  | — | — |
+| object-gem | 💎 | dino/ocean collectible themes | Collectible | One shared gem asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/gem.png` | — |
 | object-moon | 🌙 | classroom, driving/dino/ocean/space worlds | Moon/time/collectible motif | One shared moon illustration for gameplay objects; classroom time icon may remain UI | REVIEW  | — | — |
 | object-candy-lollipop | 🍭 | `driving.js`, `racing-config.js` | Collectible and candy scenery | One shared lollipop asset | REVIEW  | — | — |
 | object-candy-wrapped | 🍬 | `racing-config.js` | Candy-world scenery | One simple wrapped candy asset | REVIEW  | — | — |
@@ -355,6 +355,7 @@ measurements only — they say nothing about how the pictures look.
 | balloons.png | 1024x1024 | rgb | 100/0/0 | 0.661 | 47.79 | painted (approved 2026-10-26, objects batch) |
 | season-leaf.png | 1024x1024 | rgb | 100/0/0 | 0.698 | 95.34 | painted (approved 2026-10-26, objects batch; two-reference retry) |
 | shell.png | 1024x1024 | rgb | 100/0/0 | 0.6028 | 39.7 | painted (approved 2026-10-26, objects batch) |
+| gem.png | 1024x1024 | rgb | 100/0/0 | 0.0115 | 47.46 | painted (approved 2026-10-26, objects batch) |
 
 Findings that still block the production step:
 
