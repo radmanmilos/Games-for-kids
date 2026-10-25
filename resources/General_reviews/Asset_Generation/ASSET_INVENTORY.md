@@ -121,7 +121,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-astronaut | 👨‍🚀 | `animal_puzzle.js` | Space puzzle | Simple astronaut illustration | REVIEW  | — | — |
 | object-snowman | ⛄ | `animal_puzzle.js`, driving/racing decor | Winter puzzle and collectible scenery | One shared snowman illustration | REVIEW  | — | — |
 | object-sled | 🛷 | `animal_puzzle.js` | Winter puzzle | Simple sled illustration | REVIEW  | — | — |
-| animal-penguin | 🐧 | `animal_puzzle.js` | Winter puzzle | Simple penguin illustration | REVIEW  | — | — |
+| animal-penguin | 🐧 | `animal_puzzle.js` | Winter puzzle | Simple penguin illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/penguin.png` | — |
 | object-birthday-cake | 🎂 | `game/data/serbian.js`, `piano.js` | Phonics picture and song label | One shared cake illustration; piano UI may use smaller icon | REVIEW  | — | — |
 | object-bell | 🔔 | `piano.js` | Song label | Simple bell or SVG icon | REVIEW  | — | — |
 | object-balloons | 🎈 | `compare.js` | Comparison object | Simple balloon illustration | REVIEW  | — | — |
@@ -318,6 +318,7 @@ measurements only — they say nothing about how the pictures look.
 | flamingo.png | 1024x1024 | rgb | 100/0/0 | 0.0207 | 26.21 | painted (approved 2026-10-25, animals batch) |
 | rabbit.png | 1024x1024 | rgb | 100/0/0 | 0.0194 | 81.18 | painted (approved 2026-10-25, animals batch) |
 | mouse.png | 1024x1024 | rgb | 100/0/0 | 0.0141 | 62.07 | painted (approved 2026-10-25, animals batch, iteration 2: dropped squirrel ref) |
+| penguin.png | 1024x1024 | rgb | 100/0/0 | 0.0226 | 65.22 | painted (approved 2026-10-25, animals batch) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:

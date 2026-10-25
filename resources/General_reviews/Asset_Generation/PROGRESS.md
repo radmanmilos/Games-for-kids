@@ -655,4 +655,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — penguin (animal-penguin), generated + approved 2026-10-25 (animals batch)
+
+- [x] **Preflight.** The 🐧 glyph is used in `game/games/animal_puzzle.js` (winter puzzle). No penguin illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — animals** (STYLE_BIBLE.md §12): soft rounded body masses, simple believable anatomy, thick/clear legs, markings only as needed to identify the species, simple painted fur/feather suggestions.
+- [x] **Brief written:** `prompts/penguin.md` — one penguin standing in a calm friendly pose with an upright rounded body, small head, two flipper-like wings, two orange feet, classic black-and-white tuxedo pattern, beak and feet a soft muted orange, gentle face, no exaggerated expression, no accessories, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bird.png` (approved painted bird exemplar — finish and paper tone only, never its shape or its muted grey-brown colour).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,379,725 bytes, opaque. Measured: paper 233.14/227.28/215.68, palette-match vs bear 0.0226, small-size legibility proxy 65.22.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
