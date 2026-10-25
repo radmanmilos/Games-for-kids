@@ -11,12 +11,18 @@
  *
  * Usage:
  *   node tools/asset_generate.js --prompt <brief.md> --out <file.png> [--refs 2] [--dry-run]
+ *   node tools/asset_generate.js --prompt <brief.md> --out <file.png> --subject-ref <shape.png>
+ *
+ * --subject-ref sends one file as image 0 with the role *subject*: the brief tells the
+ * model to copy that file's shape and colours and to take only the rendering style
+ * from the family references. Use it when words cannot pin the silhouette (see
+ * ASSET_INVENTORY.md finding 9).
  */
 'use strict';
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { buildPool, pickReferences, pickByName } = require('./asset_refpool.js');
+const { buildPool, pickReferences, pickByName, prepareReference } = require('./asset_refpool.js');
 const { inspect } = require('./asset_qa.js');
 const { detectFormat, convertToPng } = require('./lib/imagefile.js');
 const { decodePng } = require('./lib/png.js');
@@ -40,7 +46,7 @@ function parseArgs(argv) {
   const args = argv.slice(2);
   const options = {
     prompt: null, out: null, model: DEFAULT_MODEL, refs: 2, width: 1024, height: 1024,
-    steps: 8, seed: null, creds: null, dryRun: false, refFiles: null,
+    steps: 8, seed: null, creds: null, dryRun: false, refFiles: null, subjectRef: null,
   };
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
@@ -49,6 +55,7 @@ function parseArgs(argv) {
     else if (arg === '--model') options.model = args[++i];
     else if (arg === '--refs') options.refs = Number(args[++i]);
     else if (arg === '--ref-files') options.refFiles = args[++i].split(',').map((s) => s.trim()).filter(Boolean);
+    else if (arg === '--subject-ref') options.subjectRef = args[++i].split(',').map((s) => s.trim()).filter(Boolean);
     else if (arg === '--width') options.width = Number(args[++i]);
     else if (arg === '--height') options.height = Number(args[++i]);
     else if (arg === '--steps') options.steps = Number(args[++i]);
@@ -106,15 +113,37 @@ function extractPrompt(file) {
   return at === -1 ? text : text.slice(at + marker.length);
 }
 
-/** Explain to the model which input image is which, then append the brief from file. */
+/**
+ * Explain to the model which input image is which, then append the brief from file.
+ *
+ * A reference with the role "subject" is the one the model has to draw: it is
+ * introduced first and the routing says to copy its shape and its colours while
+ * taking the rendering style from the other references. Every other reference is
+ * a style/family member: its shape must not be copied.
+ *
+ * The palette is deliberately left out of the style instruction: the approved
+ * water drop is blue, and telling the model to match its palette turned a rose
+ * pink soap into grey-green (blue plus cream paper plus rose). The subject
+ * reference owns the colour, the style references own the finish.
+ */
 function composePrompt(brief, references) {
-  const roles = references.map((entry, index) => `image ${index} = ${entry.name}`);
-  const routing = references.length === 1
-    ? `Match the art style, brushwork, palette and level of detail of ${roles[0]}.`
-    : `Match the art style, brushwork, palette and level of detail of ${roles[0]} and ${roles[1]}.`
-      + (references.length > 2
-        ? ` ${roles.slice(2).join(' and ')} show further members of the same approved family: keep their finish and detail level, but do not copy their shapes or features.`
-        : '');
+  const subjectIndexes = references
+    .map((entry, index) => (entry.role === 'subject' ? index : -1))
+    .filter((index) => index >= 0);
+  const styleRefs = references.filter((entry) => entry.role !== 'subject');
+  const styleRoles = styleRefs.map((entry) => `image ${references.indexOf(entry)} = ${entry.name}`);
+  let routing = styleRefs.length === 0
+    ? ''
+    : styleRefs.length === 1
+      ? `Match the art style, brushwork and level of detail of ${styleRoles[0]}.`
+      : `Match the art style, brushwork and level of detail of ${styleRoles[0]} and ${styleRoles[1]}.`
+        + (styleRefs.length > 2
+          ? ` ${styleRoles.slice(2).join(' and ')} show further members of the same approved family: keep their finish and detail level, but do not copy their shapes or their colours.`
+          : '');
+  if (subjectIndexes.length) {
+    const subjectRoles = subjectIndexes.map((index) => `image ${index} = ${references[index].name}`);
+    routing += ` ${subjectRoles.join(' and ')} ${subjectRoles.length > 1 ? 'are' : 'is'} the subject to draw: copy ${subjectRoles.length > 1 ? 'their' : 'its'} shape and ${subjectRoles.length > 1 ? 'their' : 'its'} colours, but replace ${subjectRoles.length > 1 ? 'their' : 'its'} own rendering style with theirs.`;
+  }
   return `${routing}\n\n${brief.trim()}`;
 }
 
@@ -197,9 +226,31 @@ async function main() {
   const options = parseArgs(process.argv);
   const brief = extractPrompt(options.prompt);
   const pool = buildPool();
-  const references = options.refFiles
+  const styleReferences = options.refFiles
     ? pickByName(pool, options.refFiles)
     : pickReferences(pool, Math.max(1, Math.min(4, options.refs)));
+  // A subject reference is a picture of the thing to draw (outside the reference
+  // pool). They go first, so the model reads them as the subject of the picture.
+  const subjectReferences = [];
+  if (options.subjectRef) {
+    for (const file of options.subjectRef) {
+      const resolved = path.resolve(file);
+      if (!fs.existsSync(resolved)) throw new Error(`--subject-ref file not found: ${resolved}`);
+      const image = decodePng(fs.readFileSync(resolved));
+      subjectReferences.push({
+        file: resolved,
+        name: path.basename(resolved),
+        role: 'subject',
+        family: 'external',
+        width: image.width,
+        height: image.height,
+        palette: null,
+        similarity: 0,
+        apiFile: prepareReference(resolved, 'subject'),
+      });
+    }
+  }
+  const references = subjectReferences.concat(styleReferences);
   if (!references.length) throw new Error('No reference images selected');
   const prompt = composePrompt(brief, references);
 

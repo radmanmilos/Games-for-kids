@@ -9,22 +9,26 @@
 - **Мачја шума (Cat Forest) 2.4.0 shipped** — commit `9a4af99`, CI `39491259589` green. CF-00…CF-21 (tasks 261–283) DONE/archived. The reference-app "look & feel" phase is parked at the user's request. **CF-22 (real-device play-test of 2.4.0) remains and belongs to the user.**
 - **Tasks 284–286 DONE (2026-10-21)** — racing3d steering, smoke hardening, de-flake.
 - **Task 287 DONE (2026-10-22, OpenCode/Big Pickle)** — Asset Generation pipeline and the `animal-bird` candidate.
-- **Task 288 DONE (2026-10-22, OpenCode/Big Pickle)** — `animal-rooster` candidate and bundle audit; rooster user-approved. See task archive and asset-generation docs.
-- **Task 289 IN PROGRESS** — asset-bundle reconciliation. On 2026-10-25, commits `20e9d59` (`acorn.png`), `c7e6500` (`mushroom.png`) and `6e2f517` (`flower.png`) were added to `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/`. The bundle now contains 30 PNGs. The inventory records all three as candidates; technical QA and user review are still pending. Egg remains a candidate awaiting user review; soap, sunflower, and butterfly also have pending QA/review records.
+- **Task 288 DONE (2026-10-22, OpenCode/Big Pickle)** — `animal-rooster` candidate and bundle audit; rooster user-approved.
+- **Task 290 DONE (2026-10-22)** — `object-water-drop`; user-approved, archived and indexed on 2026-10-25 (the bookkeeping had not reached `main`).
+- **Task 291 DONE (2026-10-25, OpenCode/Big Pickle, working tree — not committed)** — generation-process carry-over only: `tools/asset_generate.js --subject-ref` (image 0 = the *subject*: copy its shape and colours, take only the rendering style from the family references) plus finding 9 in `ASSET_INVENTORY.md`. The local 2026-10-22 soap render and `prompts/soap.md` were **discarded at the user's request**; the `soap.png` on `main` (2026-10-23 session, `38e22de`) stands.
+- **Task 289 IN PROGRESS** — asset-bundle reconciliation. Bundle holds **30 PNGs**; acorn, mushroom and flower were added on 2026-10-25, soap on 2026-10-23. **Technical QA and user review are still unrecorded** for `soap.png`, `sunflower.png`, `butterfly.png`, `acorn.png`, `mushroom.png` and `flower.png`; `egg.png` is measured but not reviewed.
 - **Pages gated on CI (task 274):** CI's `pages` job publishes `docs/` only from a green push on `main`.
 
 ## Asset-generation next steps
 
-1. **Acorn (`object-acorn`), mushroom (`object-mushroom`) and flower (`object-flower`):** all committed to the WIP bundle; inventory synchronized. Technical QA (dimensions, file size, actual alpha/background, silhouette, small-size legibility, edge quality) and user review remain unrecorded. No runtime integration.
-2. **Next candidates** are the remaining `REVIEW` rows in `ASSET_INVENTORY.md` (`animal-zebra` and others); one subject per round, user reviews each image.
-3. **Runtime integration of approved assets** is a separate future task: copy only approved assets to `game/assets/images/`, replace the appropriate glyph render sites, run relevant smokes, rebuild offline artifacts, sync docs, and refresh affected screenshots.
+1. **Technical QA pass on the six unmeasured candidates** (`soap`, `sunflower`, `butterfly`, `acorn`, `mushroom`, `flower`) with `tools/asset_qa.js`, then hand each to the user for review. No approval, production copy or runtime integration before that.
+2. **Egg review** (`egg.png`, iteration 2: 1024×1024 opaque, proxy 38.8 vs `bone.png` 36.8) — still awaiting the user's eyes.
+3. **Next candidates** are the remaining `REVIEW` rows in `ASSET_INVENTORY.md` (`animal-zebra` and others); one subject per round, user reviews each image. If words cannot pin the silhouette, use `--subject-ref`.
+4. **Runtime integration of approved assets** stays a separate future task: copy only approved assets to `game/assets/images/`, swap glyphs, run smokes, rebuild offline artifacts, sync docs, refresh screenshots.
 
 ## Validate
 
-Use `node tools/check_fast.js` → relevant `node tools/run_all.js --game <name>` / `--since HEAD` → `node tools/check_release.js` before release. No game source changed in this asset-documentation pass, so no game tests, screenshot refresh, offline build, or `sync-docs.sh` were run.
+`node tools/check_fast.js` — **8/8 green on 2026-10-25** after the tool + docs change, and it writes nothing. No `game/` source changed in this pass, so no game smokes, screenshot refresh, offline build or `sync-docs.sh` were needed.
 
 ## Rules of the road
 
 - `game/` changes ⇒ `node tools/build_offline.js` FIRST, then `tools/sync-docs.sh`, then refresh affected review screenshots. Never edit `docs/` by hand.
-- Never commit Cloudflare credentials. Never push to `main` without explicit user authorization; the user explicitly requested commit and push for this task.
+- Never commit Cloudflare credentials (`tools/vendor/` is git-ignored). Never push to `main` without the user asking.
 - Keep `resources/` and `tools/` for dev assets and tooling; `game/` must stay deployable-only.
+- Before touching a risky area read its lesson file: the table in `AGENTS.md`. Locked decisions: `project/DECISIONS.md`. Process: `project/PROCESS.md`.

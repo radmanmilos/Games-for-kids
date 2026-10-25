@@ -430,3 +430,13 @@ The WIP file list and inventory coverage are now synchronized for the files visi
 Current WIP bundle state (2026-10-25): **30 PNGs**, in alphabetical order:
 
 `acorn.png`, `apple.png`, `bear.png`, `bird.png`, `bone.png`, `butterfly.png`, `cat.png`, `caterpillar.png`, `chick.png`, `chicken.png`, `cow.png`, `dog.png`, `duck.png`, `egg.png`, `elephant.png`, `fish.png`, `flower.png`, `fox.png`, `frog.png`, `horse.png`, `lion.png`, `mushroom.png`, `pig.png`, `rooster.png`, `sheep.png`, `soap.png`, `star.png`, `sunflower.png`, `water-drop.png`, `wolf.png`.
+
+## Process reconciliation — 2026-10-25 (task 291)
+
+The local checkout had an uncommitted 2026-10-22 soap experiment (seven prompt iterations, a dedicated brief in `prompts/soap.md`, and a `soap.png` render) on top of an older `main`. The user asked to keep only what belongs to the **generation process** and to drop the soap candidate:
+
+- [x] **Discarded:** the local `soap.png` render and `prompts/soap.md` — a later session had already generated the `soap.png` now on `main` (2026-10-23 section above), so the local render is irrelevant.
+- [x] **Kept — tooling:** `tools/asset_generate.js --subject-ref <file>` plus the role routing that makes image 0 the *subject* (copy its shape and colours; take only the rendering style from the family references). This is the transferable fix from the failed iterations and is documented as finding 9 in `ASSET_INVENTORY.md`.
+- [x] **Kept — record:** the water-drop task 290 was archived and indexed (the bookkeeping had not reached `main`).
+- [ ] **Not done here:** no measurement of the candidates on `main`, no approval, no runtime integration.
+

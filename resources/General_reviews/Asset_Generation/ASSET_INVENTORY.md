@@ -352,6 +352,18 @@ Findings that still block the production step:
    family band (55-125) because a light blue on cream paper is a small luminance step, and above
    the two pale-object exemplars (`bone.png` 36.8, `egg.png` 38.8). The user approved it.
 
+9. **The references decide the form, not the words — and the shape can be sent as a reference.**
+   A brief alone could not make the soap read as a bar: with warm references (bear, star, bone)
+   it came out tan and lumpy, with the water drop in the set it came out peaked like a teardrop,
+   and with no object reference it came out an amorphous blob. The fix is to send **the subject
+   itself** as an image: `tools/asset_generate.js --subject-ref <file>` passes it as image 0 with
+   the role *subject*, and the routing tells the model to copy that file's shape and colours while
+   taking only the rendering style from the family references (paper tone, brushwork, one soft
+   highlight, one shaded side, no face). **Rule for the next subjects: if the words cannot pin the
+   form, send the form.** The soap render produced during those 2026-10-22 iterations was discarded
+   at the user's request — the `soap.png` on `main` came from a later session — so only the
+   technique and the flag were kept (task 291).
+
 ## Completion gate
 
 This inventory is **not final for generation** until:
