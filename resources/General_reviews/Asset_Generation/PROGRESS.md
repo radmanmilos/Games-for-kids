@@ -785,4 +785,17 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set. `object-needle-thread` is covered by this same asset.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — nose (object-nose), generated + approved 2026-10-25 (objects batch)
+
+- [x] **Preflight.** The 👃 glyph is used in `game/data/serbian.js` (body-part phonics picture; Serbian phonics vocabulary). No nose illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — simple objects** (STYLE_BIBLE.md §12): simplify geometry without losing defining construction; same softly painted material treatment as animals and star.
+- [x] **Iteration 1 (rejected):** too round; user wanted a real nose silhouette.
+- [x] **Iteration 2 (rejected):** too much side/profile view; user preferred the forward-facing first version.
+- [x] **Iteration 3 (rejected):** forward-facing with real silhouette, but user wanted another retry with reference photos.
+- [x] **Brief rewritten (iteration 4):** `prompts/nose.md` — used two real nose photos (`Reference/images (1).jpeg` and `Reference/images (2).jpeg`, converted to PNG) as **subject** references (copy their shape and proportions: a real nose silhouette with bridge, tip, nostrils) while `bear.png` and `bone.png` provided the painted finish. The star reference was dropped.
+- [x] **Reference set (iteration 4):** `nose-ref1.png` (subject, from images (1).jpeg) + `nose-ref2.png` (subject, from images (2).jpeg) + `bear.png` (style anchor) + `bone.png` (simple-object exemplar).
+- [x] **Generated (iteration 4, kept):** 1024x1024, 1,326,005 bytes, opaque. Measured: paper 242.86/230.99/213.84, palette-match vs bear 0.0224, small-size legibility proxy 44.5.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
