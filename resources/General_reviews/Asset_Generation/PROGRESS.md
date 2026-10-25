@@ -713,4 +713,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — pawprint (animal-pawprint), generated + approved 2026-10-25 (objects batch)
+
+- [x] **Preflight.** The 🐾 glyph is used in `game/games/sorting.js` (animal-category bin label). No paw illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — simple objects** (STYLE_BIBLE.md §12): simplify geometry without losing defining construction; same softly painted material treatment as animals and star.
+- [x] **Brief written:** `prompts/pawprint.md` — one simple paw print with four small rounded toe pads arranged in an arc above one larger rounded main pad, soft warm brown, no extra toes/claws/fur/animal, no face, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,443,467 bytes, opaque. Measured: paper 237.12/223.72/209.17, palette-match vs bear 0.0234, small-size legibility proxy 77.78.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 

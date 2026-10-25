@@ -42,7 +42,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-bone | 🦴 | `game/games/spatial.js` | Object in “Where is the bone?” spatial task | Simple bone PNG; keep silhouette clear | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bone.png` | — |
 | object-house | 🏠 | `game/games/maze.js` | Maze goal marker (“house”) | Simple cozy house PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/house.png` | — |
 | food-apple | 🍎 | `game/games/sorting.js` | Food sorting bin/item | One shared simple apple PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/apple.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
-| animal-pawprint | 🐾 | `game/games/sorting.js` | Animal-category bin label | Prefer a small paw icon (SVG or simple illustration); not necessarily watercolor | REVIEW  | — | — |
+| animal-pawprint | 🐾 | `game/games/sorting.js` | Animal-category bin label | Prefer a small paw icon (SVG or simple illustration); not necessarily watercolor | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pawprint.png` | — |
 | shape-blue-circle | 🔵 | `game/games/classroom.js` | Shape presentation | Replace emoji-like shape glyph with exact vector geometry/SVG, not generated raster art | SVG/CSS  | — | — |
 | shape-purple-square | 🟪 | `game/games/classroom.js` | Shape presentation | Use vector geometry/SVG | SVG/CSS  | — | — |
 | shape-red-triangle | 🔺 | `game/games/classroom.js` | Shape presentation | Use vector geometry/SVG | SVG/CSS  | — | — |
@@ -323,6 +323,7 @@ measurements only — they say nothing about how the pictures look.
 | bat.png | 1024x1024 | rgb | 100/0/0 | 0.0159 | 114.72 | painted (approved 2026-10-25, animals batch, iteration 4: mouse+fox+bone refs, mouse-like face + claws) |
 | monkey.png | 1024x1024 | rgb | 100/0/0 | 0.0238 | 97.23 | painted (approved 2026-10-25, animals batch) |
 | house.png | 1024x1024 | rgb | 100/0/0 | 0.0214 | 45.02 | painted (approved 2026-10-25, objects batch) |
+| pawprint.png | 1024x1024 | rgb | 100/0/0 | 0.0234 | 77.78 | painted (approved 2026-10-25, objects batch) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:
