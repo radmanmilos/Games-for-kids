@@ -502,4 +502,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — watermelon (food-watermelon), generated + approved 2026-10-25 (food batch 1)
+
+- [x] **Preflight.** The 🍉 glyph is used in `game/games/kitty-standalone.js` (Kitty collectible). No watermelon illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — food/fruit** (STYLE_BIBLE.md §12): keep the whole item readable through shape and natural color; restrained soft highlights and shaded edges to suggest roundness; preserve the real-world red/green color cue.
+- [x] **Brief written:** `prompts/watermelon.md` — one triangular watermelon slice with a curved green rind and red flesh, a handful of dark seeds, one soft highlight on the flesh, deeper shading along the rind, no face, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,365,332 bytes, opaque. Measured: paper 240.28/228.13/217.86, palette-match vs bear 0.011, small-size legibility proxy 39.66 (low — a pale red/pink on warm paper is a small luminance step, like bone/egg; the user approved it).
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 

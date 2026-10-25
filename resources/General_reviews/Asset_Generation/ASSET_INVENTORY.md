@@ -99,7 +99,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | food-grapes | 🍇 | `compare.js`/Kitty collectible themes | Comparison object and Kitty collectible | One shared grape bunch | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/grapes.png` | — |
 | food-orange | 🍊 | `compare.js` | Comparison object | Simple orange illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/orange.png` | — |
 | food-pear | 🍐 | `compare.js` | Comparison object | Simple pear illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pear.png` | — |
-| food-watermelon | 🍉 | `kitty-standalone.js` | Kitty collectible | Simple watermelon slice | REVIEW  | — | — |
+| food-watermelon | 🍉 | `kitty-standalone.js` | Kitty collectible | Simple watermelon slice | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/watermelon.png` | — |
 | food-carrot | 🥕 | `sequencing.js`, `kitty-standalone.js` | Growth sequence result and Kitty collectible | One shared carrot illustration | REVIEW  | — | — |
 | food-apple-green | 🍏 | `sequencing.js` | Unripe fruit sequence step | Separate from red apple because color conveys sequence stage | REVIEW  | — | — |
 | object-egg | 🥚 | `game/games/sequencing.js:26` (label `Јаје`, stage 1 of the egg → chick → bird sequence) and `game/games/sequencing.js:46` (label `Јаје`, stage 1 of the egg → caterpillar → butterfly sequence) | Egg-to-bird and egg-to-butterfly sequences | One shared simple egg illustration for both sequences: a smooth upright oval shell, warm cream-beige, a scatter of medium warm-brown speckles, one deeper tan shaded side — no face, no crack, no nest, no ribbon; must read at card size | GENERATED / CANDIDATE — TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/egg.png` | — |
@@ -303,6 +303,7 @@ measurements only — they say nothing about how the pictures look.
 | grapes.png | 1024x1024 | rgb | 100/0/0 | 0.0125 | 80.35 | painted (approved 2026-10-25, food batch 1) |
 | orange.png | 1024x1024 | rgb | 100/0/0 | 0.0526 | 102.83 | painted (approved 2026-10-25, food batch 1) |
 | pear.png | 1024x1024 | rgb | 100/0/0 | 0.0071 | 67.71 | painted (approved 2026-10-25, food batch 1) |
+| watermelon.png | 1024x1024 | rgb | 100/0/0 | 0.011 | 39.66 | painted (approved 2026-10-25, food batch 1) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:
