@@ -86,7 +86,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-heart | ❤️ | `game/data/serbian.js` | Word/picture for love | Simple heart shape; SVG is likely sufficient | SVG/CSS  | — | — |
 | object-nose | 👃 | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple nose illustration if the phonics picture card needs it | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/nose.png` | — |
 | object-pig-nose | 🐽 | `game/data/serbian.js` | Word for snout | Reuse pig asset only if the teaching meaning remains clear; otherwise distinct snout icon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pig-nose.png` | — |
-| object-eye | 👁️ | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple eye illustration | REVIEW  | — | — |
+| object-eye | 👁️ | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple eye illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/eye.png` | — |
 | animal-turkey | 🦃 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple turkey illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/turkey.png` | — |
 | object-ear | 👂 | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple ear illustration | REVIEW  | — | — |
 | animal-flamingo | 🦩 | `game/data/serbian.js` | Serbian phonics picture | Simple flamingo illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/flamingo.png` | — |
@@ -331,6 +331,7 @@ measurements only — they say nothing about how the pictures look.
 | screen.png | 1024x1024 | rgb | 100/0/0 | 0.0115 | 41.6 | painted (approved 2026-10-25, objects batch) |
 | needle.png | 1024x1024 | rgb | 100/0/0 | 0.0106 | 13.58 | painted (approved 2026-10-25, objects batch, iteration 2: thinner) |
 | nose.png | 1024x1024 | rgb | 100/0/0 | 0.0224 | 44.5 | painted (approved 2026-10-25, objects batch, iteration 4: subject refs from two real nose photos) |
+| eye.png | 1024x1024 | rgb | 100/0/0 | 0.0232 | 55.99 | painted (approved 2026-10-25, objects batch) |
 | pig-nose.png | 1024x1024 | rgb | 100/0/0 | 0.0093 | 36.7 | painted (approved 2026-10-25, objects batch) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 

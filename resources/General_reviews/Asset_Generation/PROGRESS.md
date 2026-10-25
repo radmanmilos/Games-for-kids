@@ -798,6 +798,16 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — eye (object-eye), generated + approved 2026-10-25 (objects batch)
+
+- [x] **Preflight.** The 👁️ glyph is used in `game/data/serbian.js` (body-part phonics picture; Serbian phonics vocabulary). No eye illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — simple objects** (STYLE_BIBLE.md §12): simplify geometry without losing defining construction; same softly painted material treatment as animals and star.
+- [x] **Brief written:** `prompts/eye.md` — one simple human eye: almond-shaped eye with a coloured iris and dark pupil, a few simple eyelashes on the upper lid, soft warm brown (or gentle blue-green) iris, soft dark brown/black pupil, soft warm cream sclera, no eyebrow/tears/glasses, no face, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,133,241 bytes, opaque. Measured: paper 240.38/231.36/220.5, palette-match vs bear 0.0232, small-size legibility proxy 55.99.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 ## Approved — pig-nose (object-pig-nose), generated + approved 2026-10-25 (objects batch)
 
 - [x] **Preflight.** The 🐽 glyph is used in `game/data/serbian.js` (word for snout; Serbian phonics vocabulary). No pig-snout illustration existed in `game/` or `resources/`, so the row was eligible for generation.
