@@ -13,19 +13,19 @@
 - **Task 290 DONE (2026-10-22)** — `object-water-drop`; user-approved, archived and indexed on 2026-10-25 (the bookkeeping had not reached `main`).
 - **Task 291 DONE (2026-10-25, OpenCode/Big Pickle)** — generation-process carry-over only: `tools/asset_generate.js --subject-ref` (image 0 = the *subject*: copy its shape and colours, take only the rendering style from the family references) plus finding 9 in `ASSET_INVENTORY.md`. The local 2026-10-22 soap render and `prompts/soap.md` were **discarded at the user's request**; the `soap.png` on `main` (2026-10-23 session, `38e22de`) stands. Committed `c10a59b`.
 - **Task 292 DONE (2026-10-25, OpenCode/Big Pickle)** — resolution pass on the nine smallest approved files (`duck`, `cow`, `fish`, `star`, `apple`, `dog`, `cat`, `bear`, `pig`): resampled to 1024x1024 with the new `tools/asset_upscale.js` (Lanczos-3, same art, no repaint), verified at correlation 0.9587-0.9995 against the originals, **user-approved**, old files removed and the `_1` copies renamed to the original names. Docs updated with the new sizes.
-- **Task 289 IN PROGRESS** — asset-bundle reconciliation. Bundle holds **65 PNGs**, including local `ear.png` (user-approved; QA recorded at 1024×1024, 770,630 bytes, opaque, contrast proxy 33.93). QA and user review remain unrecorded for `soap.png`, `sunflower.png`, `butterfly.png`, `acorn.png`, `mushroom.png` and `flower.png`; `egg.png` is measured but still awaits review. No runtime integration.
+- **Task 289 IN PROGRESS** — asset-bundle reconciliation. Bundle holds **65 PNGs**. `ear.png` is user-approved and committed in `28d9900`; technical QA has been measured for `soap.png`, `sunflower.png`, `butterfly.png`, `acorn.png` and `mushroom.png`, all awaiting user visual review. `flower.png` is already approved; `egg.png` remains measured and awaits review. No runtime integration.
 - **Pages gated on CI (task 274):** CI's `pages` job publishes `docs/` only from a green push on `main`.
 
 ## Asset-generation next steps
 
-1. **Technical QA pass on the six unmeasured candidates** (`soap`, `sunflower`, `butterfly`, `acorn`, `mushroom`, `flower`) with `tools/asset_qa.js`, then hand each to the user for review. No approval, production copy or runtime integration before that.
+1. **User visual review** of the measured candidates (`soap`, `sunflower`, `butterfly`, `acorn`, `mushroom`, `egg`). No production copy or runtime integration before approval.
 2. **Egg review** (`egg.png`, iteration 2: 1024×1024 opaque, proxy 38.8 vs `bone.png` 36.8) — still awaiting the user's eyes.
 3. **Next candidates** are the remaining `REVIEW` rows in `ASSET_INVENTORY.md` (`animal-zebra` and others); one subject per round, user reviews each image. If words cannot pin the silhouette, use `--subject-ref`.
 4. **Runtime integration of approved assets** stays a separate future task: copy only approved assets to `game/assets/images/`, swap glyphs, run smokes, rebuild offline artifacts, sync docs, refresh screenshots.
 
 ## Validate
 
-`node tools/check_fast.js` — **8/8 green locally on 2026-10-25** after trimming redundant blank lines from `AGENTS.md` to fit the enforced budget. Recent GitHub CI runs reflect the earlier over-budget commit; this local correction is uncommitted. No `game/` source changed, so no game smokes, screenshot refresh, offline build or `sync-docs.sh` were needed.
+`node tools/check_fast.js` — **8/8 green locally on 2026-10-25**. The fix for the `AGENTS.md` byte budget shipped in `28d9900`; CI `40216376927` passed its fast gate and Pages deployment. No `game/` source changed, so no game smokes, screenshot refresh, offline build or `sync-docs.sh` were needed.
 
 ## Rules of the road
 
