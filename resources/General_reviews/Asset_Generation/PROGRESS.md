@@ -512,4 +512,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — carrot (food-carrot), generated + approved 2026-10-25 (food batch 1)
+
+- [x] **Preflight.** The 🥕 glyph is used in `game/games/sequencing.js` (growth sequence result) and `game/games/kitty-standalone.js` (Kitty collectible). No carrot illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — food/fruit** (STYLE_BIBLE.md §12): keep the whole item readable through shape and natural color; restrained soft highlights and shaded edges to suggest roundness; leaves/stems few, clear, appropriately sized; preserve the real-world orange color cue.
+- [x] **Brief written:** `prompts/carrot.md` — one long tapered carrot root with a small cluster of green fronds at the top, clear unmistakable carrot orange (never brown/red/yellow/muddy), one soft highlight along the upper side, deeper orange shading along the lower side, no face, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,206,891 bytes, opaque. Measured: paper 244.48/233.16/212.64, palette-match vs bear 0.0363, small-size legibility proxy 38.7 (low — an orange subject on warm paper is a small luminance step; the user approved it).
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
