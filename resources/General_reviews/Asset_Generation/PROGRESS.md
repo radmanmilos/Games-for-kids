@@ -60,6 +60,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 |---|---|---|---|---|---|---|
 | `object-bone` | 🦴 | `game/games/spatial.js` — “Where is the bone?” task | Prompt was generated in chat; no separate prompt file verified | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bone.png` | GENERATED / USER-APPROVED CANDIDATE | User praised the result and reported adding it to the repo; production readiness, transparency, dimensions, file size, and in-game scale not independently checked |
 | `object-sailboat` | ⛵ | `game/data/serbian.js:35` — `Чамац` phonics picture | `prompts/sailboat.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sailboat.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 50.34; palette-match 0.6871; visual approval 2026-10-25 |
+| `object-sweater` | 🧥 | `game/data/serbian.js:36` — `Џемпер` phonics picture | `prompts/sweater.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sweater.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 101.25; palette-match 0.0113; visual approval 2026-10-25 |
+
+## Asset update — 2026-10-25 — sweater approved
+
+- [x] **Preflight.** `object-sweater` is the `🧥` phonics picture for `Џемпер` in `game/data/serbian.js:36`; no existing sweater asset or prompt was found.
+- [x] **Brief written:** `prompts/sweater.md` — one centered front-facing knitted pullover with crew neckline, sleeves, ribbed cuffs and hem; no person, mannequin, hood, buttons, text, or scene.
+- [x] **Reference set:** `bear.png` and `star.png` as canonical style anchors, `bone.png` as the approved simple-object exemplar.
+- [x] **Generated:** `assets_work_in_progress_bundle/sweater.png`, 1024x1024 RGB, opaque, 1384417 bytes.
+- [x] **Technical QA:** palette 212.01/214.85/207.6, palette-match 0.0113, small-size contrast 101.25.
+- [x] **User review: APPROVED 2026-10-25.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-25 — sailboat approved
 
