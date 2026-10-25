@@ -85,7 +85,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-needle | 🪡 | `game/data/serbian.js` | Serbian phonics picture | Simple needle/thread illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/needle.png` | — |
 | object-heart | ❤️ | `game/data/serbian.js` | Word/picture for love | Simple heart shape; SVG is likely sufficient | SVG/CSS  | — | — |
 | object-nose | 👃 | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple nose illustration if the phonics picture card needs it | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/nose.png` | — |
-| object-pig-nose | 🐽 | `game/data/serbian.js` | Word for snout | Reuse pig asset only if the teaching meaning remains clear; otherwise distinct snout icon | REVIEW  | — | — |
+| object-pig-nose | 🐽 | `game/data/serbian.js` | Word for snout | Reuse pig asset only if the teaching meaning remains clear; otherwise distinct snout icon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pig-nose.png` | — |
 | object-eye | 👁️ | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple eye illustration | REVIEW  | — | — |
 | animal-turkey | 🦃 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple turkey illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/turkey.png` | — |
 | object-ear | 👂 | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple ear illustration | REVIEW  | — | — |
@@ -231,7 +231,7 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | object-night-sky | 🌙 | `game/games/classroom.js` and several world configs | Time-of-day teaching and world motif | Reuse canonical moon; avoid separate duplicates | REVIEW |
 | object-cards-pattern | 🃏 | `game/pages/animal_memory.html`, `matching_game.html`, hub | Memory card-back and game tile | Design a proper card-back pattern; do not use a playing-card emoji as a large card face | REVIEW |
 | object-heart-shape | ❤️ | `game/data/serbian.js` | Serbian phonics vocabulary | SVG shape is preferable to a generated raster image | SVG/CSS |
-| object-pig-snout | 🐽 | `game/data/serbian.js` | Serbian phonics vocabulary | Pig image may not clearly teach “snout”; use a distinct crop/icon if required | REVIEW |
+| object-pig-snout | 🐽 | `game/data/serbian.js` | Serbian phonics vocabulary | Pig image may not clearly teach “snout”; use a distinct crop/icon if required | COVERED by `object-pig-nose` (`pig-nose.png`, approved 2026-10-25) |
 | object-monitor | 🖥️ | `game/data/serbian.js` | Serbian phonics vocabulary | Simple monitor illustration | REVIEW |
 | object-needle-thread | 🪡 | `game/data/serbian.js` | Serbian phonics vocabulary | Simple needle/thread illustration | COVERED by `object-needle` (`needle.png`, approved 2026-10-25) |
 | object-clock | 🕰️ | `game/games/classroom.js`, `classroom.html` | Time activity and day/night scene | Use a clear clock face; consider SVG at UI size | REVIEW |
@@ -331,6 +331,7 @@ measurements only — they say nothing about how the pictures look.
 | screen.png | 1024x1024 | rgb | 100/0/0 | 0.0115 | 41.6 | painted (approved 2026-10-25, objects batch) |
 | needle.png | 1024x1024 | rgb | 100/0/0 | 0.0106 | 13.58 | painted (approved 2026-10-25, objects batch, iteration 2: thinner) |
 | nose.png | 1024x1024 | rgb | 100/0/0 | 0.0224 | 44.5 | painted (approved 2026-10-25, objects batch, iteration 4: subject refs from two real nose photos) |
+| pig-nose.png | 1024x1024 | rgb | 100/0/0 | 0.0093 | 36.7 | painted (approved 2026-10-25, objects batch) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:

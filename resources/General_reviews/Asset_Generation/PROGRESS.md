@@ -798,4 +798,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — pig-nose (object-pig-nose), generated + approved 2026-10-25 (objects batch)
+
+- [x] **Preflight.** The 🐽 glyph is used in `game/data/serbian.js` (word for snout; Serbian phonics vocabulary). No pig-snout illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — simple objects** (STYLE_BIBLE.md §12): simplify geometry without losing defining construction; same softly painted material treatment as animals and star.
+- [x] **Brief written:** `prompts/pig-nose.md` — one simple pig snout: a rounded, slightly flattened disc with two large nostril openings, soft warm pink, no face, no extra facial features, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `pig.png` (approved painted pig exemplar — finish and paper tone only, never its shape or its pink colour).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 924,844 bytes, opaque. Measured: paper 237.46/227.04/217.02, palette-match vs bear 0.0093, small-size legibility proxy 36.7.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set. `object-pig-snout` is covered by this same asset.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
