@@ -583,4 +583,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — giraffe (animal-giraffe), generated + approved 2026-10-25 (animals batch)
+
+- [x] **Preflight.** The 🦒 glyph is used in `game/games/animal_puzzle.js` (savanna puzzle). No giraffe illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — animals** (STYLE_BIBLE.md §12): soft rounded body masses, simple believable anatomy, thick/clear legs, markings only as needed to identify the species, simple painted fur suggestions.
+- [x] **Brief written:** `prompts/giraffe.md` — one giraffe standing in a calm friendly pose with a long neck, small head with two small ossicones, rounded body, four sturdy legs, warm golden-yellow base with a few simple large irregular brown spots, gentle face, no exaggerated expression, no accessories, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `horse.png` (approved painted animal exemplar — similar hooved build, finish and paper tone only, never its shape or warm brown colour).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,406,341 bytes, opaque. Measured: paper 242.29/233.94/219.48, palette-match vs bear 0.4155 (high — warm golden palette close to bear), small-size legibility proxy 58.67.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
