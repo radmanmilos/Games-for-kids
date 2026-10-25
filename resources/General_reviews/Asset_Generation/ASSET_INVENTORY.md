@@ -48,9 +48,9 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | shape-red-triangle | 🔺 | `game/games/classroom.js` | Shape presentation | Use vector geometry/SVG | SVG/CSS  | — | — |
 | reward-star | ⭐ | `game/games/classroom.js`, `game/games/piano.js` | Shape presentation and song-chip label | Distinguish shape-learning star from reward star; use SVG for geometry, use supplied star reference only where a reward illustration is semantically correct | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/star.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
 | music-drum | 🥁 | `game/games/rhythm.js` | Four rhythm pads, each labelled with a drum emoji despite different pitches | One simple illustrated drum reused across pads; alternatively use distinct drum-size variants only if musically meaningful | REVIEW  | — | — |
-| plant-seedling | 🌱 | `game/games/sequencing.js` | Plant-growth sequence, seed step | Simple seedling PNG | REVIEW  | — | — |
+| plant-seedling | 🌱 | `game/games/sequencing.js` | Plant-growth sequence, seed step | Simple seedling PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/seedling.png` | — |
 | plant-leaves | 🌿 | `game/games/sequencing.js`, adventure world names may use similar symbols | Plant-growth sequence, plant step | One simple leafy plant PNG if visual meaning matches | REVIEW  | — | — |
-| flower | 🌼 | `game/games/sequencing.js` | Plant-growth sequence, flower step | Simple flower PNG; reuse only when meaning and scale fit | REVIEW  | — | — |
+| flower | 🌼 | `game/games/sequencing.js` | Plant-growth sequence, flower step | Simple flower PNG; reuse only when meaning and scale fit | COVERED by `object-flower` (`flower.png`, candidate pending QA/review) | — | — |
 | flower-counter | 🌸 | `game/pages/racing3d.html` | 3D Racing UI flower counter | Small flat storybook flower or a consistent icon; do not alter the 3D world model | REVIEW  | — | — |
 | celebration-confetti | 🎉 | `game/shared/celebration.js` fallback | Shared celebration overlay | Prefer a restrained celebration animation using CSS/SVG and/or approved star; avoid one large emoji glyph | REVIEW  | — | — |
 | winter-snowflake | ❄ | `game/games/animal_puzzle.js` | Winter scene decoration drawn on canvas | Simple snowflake as SVG/canvas vector; generated watercolor not needed | SVG/CSS  | — | — |
@@ -307,6 +307,7 @@ measurements only — they say nothing about how the pictures look.
 | carrot.png | 1024x1024 | rgb | 100/0/0 | 0.0363 | 38.7 | painted (approved 2026-10-25, food batch 1) |
 | apple-green.png | 1024x1024 | rgb | 100/0/0 | 0.0156 | 72.47 | painted (approved 2026-10-25, food batch 1) |
 | cheese.png | 1024x1024 | rgb | 100/0/0 | 0.0774 | 40.19 | painted (approved 2026-10-25, food batch 1, iteration 2: dropped star ref) |
+| seedling.png | 1024x1024 | rgb | 100/0/0 | 0.0136 | 29.73 | painted (approved 2026-10-25, sequencing batch) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:
