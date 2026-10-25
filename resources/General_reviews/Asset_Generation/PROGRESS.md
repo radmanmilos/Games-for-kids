@@ -452,11 +452,21 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **Not changed:** no inventory status change (the files stay `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`), no runtime integration, no glyph swap, no screenshot or offline-build work — this is the bundle artwork only.
 - [ ] **Known limit:** an upscale cannot add detail the 165-305 px source never had; the result is a smooth enlargement of the same art, which is what was asked for.
 
+## Approved — strawberry (food-strawberry), generated + approved 2026-10-25 (food batch 1)
+
+- [x] **Preflight.** The 🍓 glyph is used in `game/games/sorting.js` (sorting item) and `game/games/kitty-standalone.js` (Kitty collectible). No strawberry illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — food/fruit** (STYLE_BIBLE.md §12): keep the whole item readable through shape and natural color; restrained soft highlights and shaded edges to suggest roundness; leaves/stems/seeds few, clear, appropriately sized; preserve the real-world red color cue.
+- [x] **Brief written:** `prompts/strawberry.md` — one plump, slightly heart-shaped berry with a small cluster of short green leaves (calyx) at the top, clear unmistakable strawberry red (never brown/orange/pink/muddy/grey), one soft highlight on the upper left, deeper red shading on the lower right, a modest number of small pale-yellow seeds, no face, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form). No cool references needed: a strawberry is a warm red and sits naturally inside the family palette.
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,480,533 bytes, opaque. Measured: paper 242.01/218.99/203.98, palette-match vs bear 0.0129, small-size legibility proxy 90.11 (good — the red reads clearly at card size).
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 ## Approved — banana (food-banana), generated + approved 2026-10-25 (food batch 1)
 
 - [x] **Preflight.** The 🍌 glyph is used in `game/data/serbian.js` (Serbian phonics picture) and Kitty collectible themes. No banana illustration existed in `game/` or `resources/`, so the row was eligible for generation.
 - [x] **Category decision — food/fruit** (STYLE_BIBLE.md §12): keep the whole item readable through shape and natural color; restrained soft highlights and shaded edges to suggest roundness; preserve the real-world yellow color cue.
-- [x] **Brief written:** `prompts/food-banana.md` — one curved crescent banana, plump and rounded, warm ripe banana yellow (never beige/brown/green/grey), one soft highlight along the upper curve, deeper golden-amber shading along the inner edge, no spots/bruises/freckles, one small stem, no face, no props.
+- [x] **Brief written:** `prompts/banana.md` — one curved crescent banana, plump and rounded, warm ripe banana yellow (never beige/brown/green/grey), one soft highlight along the upper curve, deeper golden-amber shading along the inner edge, no spots/bruises/freckles, one small stem, no face, no props.
 - [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth reinforces yellow) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form). No cool references needed: a banana is a warm yellow and sits naturally inside the family palette.
 - [x] **Generated (iteration 1, kept):** 1024x1024, 862,917 bytes, opaque. Measured: paper 247.6/236/214.24, palette-match vs bear 0.0812, small-size legibility proxy 32.61 (low — a yellow subject on warm paper is a small luminance step, like bone/egg; the user approved it).
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
