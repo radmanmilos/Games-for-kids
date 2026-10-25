@@ -532,4 +532,15 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — cheese (food-cheese), generated + approved 2026-10-25 (food batch 1)
+
+- [x] **Preflight.** The 🧀 glyph is used in `game/games/spatial.js` (spatial scene / position task). No cheese illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — food/fruit** (STYLE_BIBLE.md §12): keep the whole item readable through shape and natural color; restrained soft highlights and shaded edges to suggest roundness; preserve the real-world yellow color cue.
+- [x] **Iteration 1 (rejected):** generated with bear + star + bone references. The golden-star reference's five-pointed silhouette leaked into the result and the cheese came out **star-shaped**. Colour and style were fine; shape was wrong. Iteration 1 was discarded.
+- [x] **Brief rewritten (iteration 2):** `prompts/cheese.md` — one triangular wedge slice with a curved rind, a few small round holes, clear unmistakable cheese yellow, one soft highlight on the upper left, deeper yellow-amber shading on the lower right. The golden-star reference was **dropped** (bear + bone only) and explicit anti-star / anti-burst language was added to both the shape instruction and the exclusions.
+- [x] **Reference set (iteration 2):** `bear.png` (canonical anchor) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form). Star deliberately omitted to avoid shape contamination.
+- [x] **Generated (iteration 2, kept):** 1024x1024, 1,214,424 bytes, opaque. Measured: paper 244.46/232.92/211.8, palette-match vs bear 0.0774, small-size legibility proxy 40.19.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 

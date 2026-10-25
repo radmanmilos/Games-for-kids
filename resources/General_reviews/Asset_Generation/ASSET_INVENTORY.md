@@ -203,7 +203,7 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | animal-rabbit | 🐰 | `game/games/compare.js`, `spatial.js` | Comparison pool and spatial scene | One simple rabbit illustration | REVIEW |
 | animal-baby-chick | 🐤 | `game/games/compare.js`, `spatial.js` | Comparison pool and spatial scene | Reuse chick only if visual distinction is not pedagogically needed; otherwise keep a separate canonical variant | REVIEW |
 | animal-mouse | 🐭 | `game/games/spatial.js` | Spatial scene / position task | Simple mouse illustration | REVIEW |
-| food-cheese | 🧀 | `game/games/spatial.js` | Spatial scene / position task | Simple cheese illustration | REVIEW |
+| food-cheese | 🧀 | `game/games/spatial.js` | Spatial scene / position task | Simple cheese illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/cheese.png`) |
 | object-ball | ⚽ | `game/games/spatial.js` | Spatial scene / position task | Keep a clear, simple ball illustration; SVG may be sufficient | REVIEW |
 | object-pine-tree | 🌲 | `game/games/racing-config.js` | Winter/forest scenery | Reuse tree family only if evergreen silhouette is distinct enough | REVIEW |
 | object-mountain | ⛰️ | `game/games/racing-config.js` | Racing scenery | SVG/CSS scenery shape or one simple illustration | REVIEW |
@@ -306,6 +306,7 @@ measurements only — they say nothing about how the pictures look.
 | watermelon.png | 1024x1024 | rgb | 100/0/0 | 0.011 | 39.66 | painted (approved 2026-10-25, food batch 1) |
 | carrot.png | 1024x1024 | rgb | 100/0/0 | 0.0363 | 38.7 | painted (approved 2026-10-25, food batch 1) |
 | apple-green.png | 1024x1024 | rgb | 100/0/0 | 0.0156 | 72.47 | painted (approved 2026-10-25, food batch 1) |
+| cheese.png | 1024x1024 | rgb | 100/0/0 | 0.0774 | 40.19 | painted (approved 2026-10-25, food batch 1, iteration 2: dropped star ref) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:
