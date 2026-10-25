@@ -553,4 +553,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — leaves (plant-leaves), generated + approved 2026-10-25 (sequencing batch)
+
+- [x] **Preflight.** The 🌿 glyph is used in `game/games/sequencing.js` (plant-growth sequence, plant step). No leafy-plant illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — plants/nature** (STYLE_BIBLE.md §12): gentle organic curves, simple leaf/petal groups, avoid dense botanical detail, natural colors soft but identifiable.
+- [x] **Brief written:** `prompts/leaves.md` — one small leafy plant with a short green stem and three to five simple rounded leaves, clear unmistakable plant green, one soft highlight on each leaf, deeper green shading along lower edges, no soil/pot/ground/flowers, no face, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form). The family is warm, so the green was stated explicitly.
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,380,758 bytes, opaque. Measured: paper 237.3/231.78/214.4, palette-match vs bear 0.0155, small-size legibility proxy 50.35.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
