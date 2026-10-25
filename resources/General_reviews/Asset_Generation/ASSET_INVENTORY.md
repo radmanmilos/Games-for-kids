@@ -75,7 +75,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | ID | Current glyph / visual | Confirmed source location(s) | Current purpose | Proposed treatment | Status  | Existing WIP asset file/location | Production-ready asset file/location |
 |---|---|---|---|---|---|---|---|
 | object-car | 🚗 | `game/data/serbian.js`, `game/index.html`, driving favicon | Serbian phonics object and hub tile/icon | Reuse existing driving-car illustration if visually appropriate; favicon/UI may remain icon | REVIEW  | — | — |
-| food-banana | 🍌 | `game/data/serbian.js`, Kitty collectible themes | Phonics vocabulary and collectible theme | One shared banana asset | REVIEW  | — | — |
+| food-banana | 🍌 | `game/data/serbian.js`, Kitty collectible themes | Phonics vocabulary and collectible theme | One shared banana asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/food-banana.png` | — |
 | animal-wolf | 🐺 | `game/data/serbian.js` | Serbian phonics picture | One shared simple wolf illustration; calm, readable, consistent with bear reference | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/wolf.png` | — |
 | animal-caterpillar | 🐛 | `game/data/serbian.js`, `sequencing.js` | Phonics and life-cycle sequence | One shared caterpillar asset; curved segmented body, restrained detail, readable at card size | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/caterpillar.png` | — |
 | animal-butterfly | 🦋 | `game/games/sequencing.js` (butterfly life-cycle sequence, stage 3: egg → caterpillar → butterfly) | Life-cycle sequencing | One clearly recognizable butterfly; default style guidance says no face/personification unless specifically approved | GENERATED / CANDIDATE — TECHNICAL QA AND USER REVIEW NOT RECORDED; VISUAL REVIEW REQUIRED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/butterfly.png` | — |
@@ -298,6 +298,7 @@ measurements only — they say nothing about how the pictures look.
 | egg.png | 1024x1024 | rgb | 100/0/0 | 0.0164 | 38.8 | painted (candidate, iteration 2, 2026-10-22) |
 | water-drop.png | 1024x1024 | rgb | 100/0/0 | 0.0117 | 49.2 | painted (iteration 2, 2026-10-22) |
 | apple.png | 1024x1024 | rgb | 100/0/0 | 0.0095 | 140.0 | raster-emoji art, resampled (task 292) |
+| food-banana.png | 1024x1024 | rgb | 100/0/0 | 0.0812 | 32.61 | painted (approved 2026-10-25, food batch 1) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:
