@@ -70,6 +70,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-sled` | 🛷 | `animal_puzzle.js` winter puzzle | `prompts/sled.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sled.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 81.72; palette-match 0.0137; visual approval 2026-10-26 |
 | `object-birthday-cake` | 🎂 | `game/data/serbian.js:29` phonics picture and `piano.js` birthday song label | `prompts/birthday-cake.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/birthday-cake.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 52.5; palette-match 0.0602; visual approval 2026-10-26 |
 | `object-balloons` | 🎈 | `game/games/compare.js` comparison object | `prompts/balloons.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/balloons.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 47.79; palette-match 0.661; visual approval 2026-10-26 |
+| `object-season-leaf` | 🍂 | `classroom.html` seasons activity and `racing-config.js` scenery | `prompts/season-leaf.md`; bear + star | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/season-leaf.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 95.34; palette-match 0.698; visual approval 2026-10-26 |
+
+## Asset update — 2026-10-26 — season leaf approved
+
+- [x] **Preflight.** `object-season-leaf` is the `🍂` seasonal/racing gameplay visual candidate; no suitable standalone autumn leaf asset existed.
+- [x] **Brief written:** `prompts/season-leaf.md` — one centered orange-red lobed autumn leaf with stem and simple veins; no tree, branch, leaf pile, or scene.
+- [x] **Generation:** first three-reference request timed out with no output; a targeted retry using `bear.png` and `star.png` succeeded.
+- [x] **Generated:** `assets_work_in_progress_bundle/season-leaf.png`, 1024x1024 RGB, opaque, 1147301 bytes.
+- [x] **Technical QA:** palette 244.76/226.79/216.96, palette-match 0.698, small-size contrast 95.34.
+- [x] **User review: APPROVED 2026-10-26.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-26 — balloon approved
 
