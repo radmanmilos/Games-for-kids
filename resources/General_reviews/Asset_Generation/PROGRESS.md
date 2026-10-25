@@ -492,4 +492,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — pear (food-pear), generated + approved 2026-10-25 (food batch 1)
+
+- [x] **Preflight.** The 🍐 glyph is used in `game/games/compare.js` (comparison object). No pear illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — food/fruit** (STYLE_BIBLE.md §12): keep the whole item readable through shape and natural color; restrained soft highlights and shaded edges to suggest roundness; preserve the real-world green color cue and the pear's distinct silhouette (not an apple).
+- [x] **Brief written:** `prompts/pear.md` — one pear with a heavy bulbous bottom narrowing to a slimmer neck and small stem, clear unmistakable pear green (never brown/grey/blue/muddy), one soft highlight on the upper left, deeper green shading on the lower right, no face, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form). The family is warm, so the green was stated explicitly.
+- [x] **Generated (iteration 1, kept):** 1024x1024, 898,228 bytes, opaque. Measured: paper 229.56/222.07/204.23, palette-match vs bear 0.0071, small-size legibility proxy 67.71.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
