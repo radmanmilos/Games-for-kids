@@ -201,7 +201,7 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | ID | Current glyph | Confirmed source location(s) | Current purpose | Proposed treatment | Status |
 |---|---|---|---|---|---|
 | animal-rabbit | 🐰 | `game/games/compare.js`, `spatial.js` | Comparison pool and spatial scene | One simple rabbit illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/rabbit.png`) |
-| animal-baby-chick | 🐤 | `game/games/compare.js`, `spatial.js` | Comparison pool and spatial scene | Reuse chick only if visual distinction is not pedagogically needed; otherwise keep a separate canonical variant | REVIEW |
+| animal-baby-chick | 🐤 | `game/games/compare.js`, `spatial.js` | Comparison pool and spatial scene | Reuse chick only if visual distinction is not pedagogically needed; otherwise keep a separate canonical variant | COVERED by `animal-chick` (`chick.png`, approved) — reuse chick; no separate asset |
 | animal-mouse | 🐭 | `game/games/spatial.js` | Spatial scene / position task | Simple mouse illustration | REVIEW |
 | food-cheese | 🧀 | `game/games/spatial.js` | Spatial scene / position task | Simple cheese illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/cheese.png`) |
 | object-ball | ⚽ | `game/games/spatial.js` | Spatial scene / position task | Keep a clear, simple ball illustration; SVG may be sufficient | REVIEW |
