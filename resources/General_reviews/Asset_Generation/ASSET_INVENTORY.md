@@ -110,7 +110,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-acorn | 🌰 | `game/games/sequencing.js` (tree-growth sequence, stage 1: acorn → sprout → tree) | Tree-growth sequence | One shared simple acorn illustration; recognizable nut and cap, no face or extra scene elements | GENERATED / CANDIDATE — TECHNICAL QA AND USER REVIEW NOT RECORDED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/acorn.png` | — |
 | object-sunflower | 🌻 | `game/games/sequencing.js` (sunflower sequence, stage 3) and racing decor | Plant-growth sequence and scenery | One shared sunflower illustration, reused only where meaning and scale fit | GENERATED / CANDIDATE — TECHNICAL QA AND USER REVIEW NOT RECORDED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sunflower.png` | — |
 | object-mushroom | 🍄 | `game/games/animal_puzzle.js:7` (forest puzzle), `game/games/cat_forest.js:78` (gift), `game/games/kitty-standalone.js:701` (collectible) | Forest puzzle, Cat Forest gift and Kitty collectible | One shared mushroom | GENERATED / CANDIDATE — TECHNICAL QA AND USER REVIEW NOT RECORDED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/mushroom.png` | — |
-| animal-zebra | 🦓 | `animal_puzzle.js` | Savanna puzzle | Simple zebra illustration | REVIEW  | — | — |
+| animal-zebra | 🦓 | `animal_puzzle.js` | Savanna puzzle | Simple zebra illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/zebra.png` | — |
 | animal-giraffe | 🦒 | `animal_puzzle.js` | Savanna puzzle | Simple giraffe illustration | REVIEW  | — | — |
 | animal-deer | 🦌 | `animal_puzzle.js`, racing decor | Forest puzzle and winter scenery | One shared deer illustration if appropriate | REVIEW  | — | — |
 | animal-squirrel | 🐿️ | `animal_puzzle.js` | Forest puzzle | Simple squirrel illustration | REVIEW  | — | — |
@@ -310,6 +310,7 @@ measurements only — they say nothing about how the pictures look.
 | seedling.png | 1024x1024 | rgb | 100/0/0 | 0.0136 | 29.73 | painted (approved 2026-10-25, sequencing batch) |
 | leaves.png | 1024x1024 | rgb | 100/0/0 | 0.0155 | 50.35 | painted (approved 2026-10-25, sequencing batch) |
 | tree.png | 1024x1024 | rgb | 100/0/0 | 0.0171 | 93.69 | painted (approved 2026-10-25, sequencing batch) |
+| zebra.png | 1024x1024 | rgb | 100/0/0 | 0.0185 | 98.62 | painted (approved 2026-10-25, animals batch) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:
