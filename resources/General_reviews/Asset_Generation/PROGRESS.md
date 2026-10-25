@@ -680,4 +680,17 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — bat (animal-bat), generated + approved 2026-10-25 (animals batch)
+
+- [x] **Preflight.** The 🦇 glyph is used in `game/games/racing-config.js` (night scenery). No bat illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — animals** (STYLE_BIBLE.md §12): soft rounded body masses, simple believable anatomy, thick/clear legs, markings only as needed to identify the species, simple painted fur suggestions.
+- [x] **Iteration 1 (rejected):** generated with bear + star + bird references. Body was too stocky; user asked for rounder body with smaller body and bigger wings.
+- [x] **Iteration 2 (rejected):** rounder body, but still bear-like face; user wanted mouse-like face.
+- [x] **Iteration 3 (rejected):** mouse-like face + claws, but user wanted v2's color/texture with a mouse-like head and no bear reference.
+- [x] **Brief rewritten (iteration 4):** `prompts/bat.md` — one bat with a small round compact body, tiny head with pointed ears, two large wings spread out, mouse-like face (pointed snout, tiny pointed ears, tiny nose, small dark eyes, NOT bear-like), tiny claws at the upper points of each wing, soft warm dark brown. References switched to `mouse.png` + `fox.png` + `bone.png` (most relevant approved references; bear/star dropped per user request).
+- [x] **Reference set (iteration 4):** `mouse.png` (approved painted animal — mouse-like face and small furry body, the model for the bat's head), `fox.png` (approved painted animal — small furry build and painted finish, paper tone only, never its shape or its orange colour), `bone.png` (approved simple object — rounded, simple, faceless form, finish and paper tone).
+- [x] **Generated (iteration 4, kept):** 1024x1024, 1,405,051 bytes, opaque. Measured: paper 224.83/214.24/200.71, palette-match vs bear 0.0159, small-size legibility proxy 114.72.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
