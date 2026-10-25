@@ -644,4 +644,15 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — mouse (animal-mouse), generated + approved 2026-10-25 (animals batch)
+
+- [x] **Preflight.** The 🐭 glyph is used in `game/games/spatial.js` (spatial scene / position task). No mouse illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — animals** (STYLE_BIBLE.md §12): soft rounded body masses, simple believable anatomy, thick/clear legs, markings only as needed to identify the species, simple painted fur suggestions.
+- [x] **Iteration 1 (rejected):** generated with bear + star + squirrel references. The squirrel reference leaked its bushy tail and the result came out with two tails and no visible paws. Iteration 1 was discarded.
+- [x] **Brief rewritten (iteration 2):** `prompts/mouse.md` — one mouse in a calm friendly pose with a small rounded body, pointed but soft snout, large rounded ears, two small visible front paws, two small back feet, exactly ONE long thin tail extending behind. The squirrel reference was **dropped** (bear + star + bone) and explicit "exactly ONE tail, visible paws, no bushy tail" language was added.
+- [x] **Reference set (iteration 2):** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form).
+- [x] **Generated (iteration 2, kept):** 1024x1024, 1,435,868 bytes, opaque. Measured: paper 237.18/229.48/216.15, palette-match vs bear 0.0141, small-size legibility proxy 62.07.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 

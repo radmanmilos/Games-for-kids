@@ -202,7 +202,7 @@ These are source-confirmed concepts/use sites that were not fully represented in
 |---|---|---|---|---|---|
 | animal-rabbit | 🐰 | `game/games/compare.js`, `spatial.js` | Comparison pool and spatial scene | One simple rabbit illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/rabbit.png`) |
 | animal-baby-chick | 🐤 | `game/games/compare.js`, `spatial.js` | Comparison pool and spatial scene | Reuse chick only if visual distinction is not pedagogically needed; otherwise keep a separate canonical variant | COVERED by `animal-chick` (`chick.png`, approved) — reuse chick; no separate asset |
-| animal-mouse | 🐭 | `game/games/spatial.js` | Spatial scene / position task | Simple mouse illustration | REVIEW |
+| animal-mouse | 🐭 | `game/games/spatial.js` | Spatial scene / position task | Simple mouse illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/mouse.png`) |
 | food-cheese | 🧀 | `game/games/spatial.js` | Spatial scene / position task | Simple cheese illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/cheese.png`) |
 | object-ball | ⚽ | `game/games/spatial.js` | Spatial scene / position task | Keep a clear, simple ball illustration; SVG may be sufficient | REVIEW |
 | object-pine-tree | 🌲 | `game/games/racing-config.js` | Winter/forest scenery | Reuse tree family only if evergreen silhouette is distinct enough | REVIEW |
@@ -317,6 +317,7 @@ measurements only — they say nothing about how the pictures look.
 | turkey.png | 1024x1024 | rgb | 100/0/0 | 0.0204 | 143.44 | painted (approved 2026-10-25, animals batch, iteration 2: dropped rooster ref) |
 | flamingo.png | 1024x1024 | rgb | 100/0/0 | 0.0207 | 26.21 | painted (approved 2026-10-25, animals batch) |
 | rabbit.png | 1024x1024 | rgb | 100/0/0 | 0.0194 | 81.18 | painted (approved 2026-10-25, animals batch) |
+| mouse.png | 1024x1024 | rgb | 100/0/0 | 0.0141 | 62.07 | painted (approved 2026-10-25, animals batch, iteration 2: dropped squirrel ref) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:
