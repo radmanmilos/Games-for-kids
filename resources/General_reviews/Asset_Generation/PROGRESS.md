@@ -828,3 +828,12 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — helicopter (object-helicopter), generated + approved 2026-10-25 (objects batch)
+
+- [x] **Preflight.** `game/data/serbian.js:33` uses 🚁 for the phonics word `Хеликоптер`. No helicopter image or same-named asset existed in the WIP bundle or repository.
+- [x] **Category decision — simple objects** (STYLE_BIBLE.md §12): preserve the defining helicopter construction with a softly painted, simplified finish.
+- [x] **Brief written:** `prompts/helicopter.md` — one civilian helicopter with cabin, main rotor, tail boom/rotor and landing skids; no military markings, face, people or scenery.
+- [x] **Reference set:** `bear.png` (style anchor) + `star.png` (paper/finish) + `bone.png` (simple-object finish and detail level).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,213,639 bytes, opaque. Measured: paper 238.26/234.76/222.32, palette-match vs bear 0.0126, small-size legibility proxy 44.76.
+- [x] **User review: APPROVED 2026-10-25.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.

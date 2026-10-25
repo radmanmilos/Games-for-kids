@@ -2,6 +2,10 @@
 
 Do not re-open these without new evidence (a playtest or visual proof) **and** the user's approval. Text below is moved verbatim from the files named in each heading. Add new decisions as a dated one-liner with its source.
 
+## Asset generation — reference selection (2026-10-25)
+
+- For each new asset, select the most suitable visual references already in the project’s reference folder or approved WIP bundle; the bear and star are not mandatory defaults. Choose references for the subject’s shape, palette and rendering style, distinguish subject references from style references, and record the set in that candidate’s prompt/progress entry. (Source: user, 2026-10-25.)
+
 ## Product principles (from the project brief; confirmed by the user)
 
 - Learning through play, never homework. Forgiving mechanics: no fail states, no lives, no coins or leaderboards.

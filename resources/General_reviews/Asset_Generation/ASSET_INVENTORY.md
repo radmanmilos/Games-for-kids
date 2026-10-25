@@ -90,7 +90,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | animal-turkey | 🦃 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple turkey illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/turkey.png` | — |
 | object-ear | 👂 | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple ear illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/ear.png` | — |
 | animal-flamingo | 🦩 | `game/data/serbian.js` | Serbian phonics picture | Simple flamingo illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/flamingo.png` | — |
-| object-helicopter | 🚁 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple helicopter illustration | REVIEW  | — | — |
+| object-helicopter | 🚁 | `game/data/serbian.js:33` (`Хеликоптер`) | Serbian phonics picture; Serbian phonics vocabulary | Simple helicopter illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/helicopter.png` | — |
 | object-flower | 🌼 | `game/data/serbian.js:34` (phonics word `Цвет`), `game/games/sequencing.js:18` (label `Цвет`, plant-growth step 2), maze/racing decor | Phonics picture, sequence and decor | One shared flower where the meaning and scale fit | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/flower.png` | — |
 | object-sailboat | ⛵ | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple sailboat illustration | REVIEW  | — | — |
 | object-sweater | 🧥 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple sweater illustration | REVIEW  | — | — |
@@ -333,6 +333,7 @@ measurements only — they say nothing about how the pictures look.
 | nose.png | 1024x1024 | rgb | 100/0/0 | 0.0224 | 44.5 | painted (approved 2026-10-25, objects batch, iteration 4: subject refs from two real nose photos) |
 | eye.png | 1024x1024 | rgb | 100/0/0 | 0.0232 | 55.99 | painted (approved 2026-10-25, objects batch) |
 | ear.png | 1024x1024 | rgb | 100/0/0 | 0.0169 | 33.93 | painted (approved 2026-10-25, objects batch) |
+| helicopter.png | 1024x1024 | rgb | 100/0/0 | 0.0126 | 44.76 | painted (approved 2026-10-25, objects batch) |
 | acorn.png | 1086x1448 | rgb | 100/0/0 | 0.0620 | 122.93 | painted (candidate, technical QA measured 2026-10-25; visual review pending) |
 | butterfly.png | 1448x1086 | rgb | 100/0/0 | 0.1420 | 80.09 | painted (candidate, technical QA measured 2026-10-25; visual review pending) |
 | mushroom.png | 1086x1448 | rgb | 100/0/0 | 0.0776 | 106.47 | painted (candidate, technical QA measured 2026-10-25; visual review pending) |
