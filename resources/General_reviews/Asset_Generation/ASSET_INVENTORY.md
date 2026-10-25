@@ -91,7 +91,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-ear | 👂 | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple ear illustration | REVIEW  | — | — |
 | animal-flamingo | 🦩 | `game/data/serbian.js` | Serbian phonics picture | Simple flamingo illustration | REVIEW  | — | — |
 | object-helicopter | 🚁 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple helicopter illustration | REVIEW  | — | — |
-| object-flower | 🌼 | `game/data/serbian.js`, `sequencing.js`, maze/racing decor | Phonics picture, sequence and decor | One shared flower where the meaning and scale fit | REVIEW  | — | — |
+| object-flower | 🌼 | `game/data/serbian.js:34` (phonics word `Цвет`), `game/games/sequencing.js:18` (label `Цвет`, plant-growth step 2), maze/racing decor | Phonics picture, sequence and decor | One shared flower where the meaning and scale fit | GENERATED / CANDIDATE — TECHNICAL QA AND USER REVIEW NOT RECORDED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/flower.png` | — |
 | object-sailboat | ⛵ | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple sailboat illustration | REVIEW  | — | — |
 | object-sweater | 🧥 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple sweater illustration | REVIEW  | — | — |
 | object-hat | 🎩 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple hat illustration | REVIEW  | — | — |

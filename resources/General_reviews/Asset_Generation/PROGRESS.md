@@ -416,6 +416,17 @@ The WIP file list and inventory coverage are now synchronized for the files visi
 - [ ] **User review pending.** The image is not recorded as user-approved, production-ready, or runtime-integrated.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no runtime tests, no screenshot refresh, no offline-pack build, no `sync-docs.sh`; `game/` was not changed.
 
-Current WIP bundle state (2026-10-25): **29 PNGs**, in alphabetical order:
+## Asset update — flower (object-flower), added 2026-10-25
 
-`acorn.png`, `apple.png`, `bear.png`, `bird.png`, `bone.png`, `butterfly.png`, `cat.png`, `caterpillar.png`, `chick.png`, `chicken.png`, `cow.png`, `dog.png`, `duck.png`, `egg.png`, `elephant.png`, `fish.png`, `fox.png`, `frog.png`, `horse.png`, `lion.png`, `mushroom.png`, `pig.png`, `rooster.png`, `sheep.png`, `soap.png`, `star.png`, `sunflower.png`, `water-drop.png`, `wolf.png`.
+- [x] **Repository presence verified.** Commit `6e2f517` adds `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/flower.png` to `main`.
+- [x] **File sanity checked at add time.** `PNG image data, 1448 x 1086, 8-bit/color RGB, non-interlaced`, 1.7 MB — landscape, unlike the portrait acorn/mushroom files.
+- [x] **Source use confirmed.** `game/data/serbian.js:34` (phonics word `Цвет`), `game/games/sequencing.js:18` (label `Цвет`, plant-growth step 2); also decor in maze/racing.
+- [x] **Inventory synchronized.** The `object-flower` row now points to the committed WIP file and records it as a candidate.
+- [ ] **UI counter rows untouched.** `flower-counter` and `r3d-flower-counter` (🌸, `game/pages/racing3d.html`) stay `REVIEW`: they need a small UI icon, so this landscape illustration is not assumed to fit them.
+- [ ] **Technical QA pending.** No measurement pass (alpha/background, silhouette coverage, small-size legibility, edge quality, palette match) has been recorded.
+- [ ] **User review pending.** Not recorded as user-approved, production-ready, or runtime-integrated.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no runtime tests, no screenshot refresh, no offline-pack build, no `sync-docs.sh`; `game/` was not changed.
+
+Current WIP bundle state (2026-10-25): **30 PNGs**, in alphabetical order:
+
+`acorn.png`, `apple.png`, `bear.png`, `bird.png`, `bone.png`, `butterfly.png`, `cat.png`, `caterpillar.png`, `chick.png`, `chicken.png`, `cow.png`, `dog.png`, `duck.png`, `egg.png`, `elephant.png`, `fish.png`, `flower.png`, `fox.png`, `frog.png`, `horse.png`, `lion.png`, `mushroom.png`, `pig.png`, `rooster.png`, `sheep.png`, `soap.png`, `star.png`, `sunflower.png`, `water-drop.png`, `wolf.png`.

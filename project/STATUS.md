@@ -10,12 +10,12 @@
 - **Tasks 284–286 DONE (2026-10-21)** — racing3d steering, smoke hardening, de-flake.
 - **Task 287 DONE (2026-10-22, OpenCode/Big Pickle)** — Asset Generation pipeline and the `animal-bird` candidate.
 - **Task 288 DONE (2026-10-22, OpenCode/Big Pickle)** — `animal-rooster` candidate and bundle audit; rooster user-approved. See task archive and asset-generation docs.
-- **Task 289 IN PROGRESS** — asset-bundle reconciliation. On 2026-10-25, commits `20e9d59` (`acorn.png`) and `c7e6500` (`mushroom.png`) were added to `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/`. The bundle now contains 29 PNGs. The inventory records acorn and mushroom as candidates; technical QA and user review are still pending. Egg remains a candidate awaiting user review; soap, sunflower, and butterfly also have pending QA/review records.
+- **Task 289 IN PROGRESS** — asset-bundle reconciliation. On 2026-10-25, commits `20e9d59` (`acorn.png`), `c7e6500` (`mushroom.png`) and `6e2f517` (`flower.png`) were added to `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/`. The bundle now contains 30 PNGs. The inventory records all three as candidates; technical QA and user review are still pending. Egg remains a candidate awaiting user review; soap, sunflower, and butterfly also have pending QA/review records.
 - **Pages gated on CI (task 274):** CI's `pages` job publishes `docs/` only from a green push on `main`.
 
 ## Asset-generation next steps
 
-1. **Acorn (`object-acorn`) and mushroom (`object-mushroom`):** both committed to the WIP bundle; inventory synchronized. Technical QA (dimensions, file size, actual alpha/background, silhouette, small-size legibility, edge quality) and user review remain unrecorded. No runtime integration.
+1. **Acorn (`object-acorn`), mushroom (`object-mushroom`) and flower (`object-flower`):** all committed to the WIP bundle; inventory synchronized. Technical QA (dimensions, file size, actual alpha/background, silhouette, small-size legibility, edge quality) and user review remain unrecorded. No runtime integration.
 2. **Next candidates** are the remaining `REVIEW` rows in `ASSET_INVENTORY.md` (`animal-zebra` and others); one subject per round, user reviews each image.
 3. **Runtime integration of approved assets** is a separate future task: copy only approved assets to `game/assets/images/`, replace the appropriate glyph render sites, run relevant smokes, rebuild offline artifacts, sync docs, and refresh affected screenshots.
 
