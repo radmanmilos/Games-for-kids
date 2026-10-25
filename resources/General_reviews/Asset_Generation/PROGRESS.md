@@ -403,3 +403,19 @@ The WIP file list and inventory coverage are now synchronized for the files visi
 - **Duplicate check status:** GitHub code/file search for mushroom.png returned no result. That search alone does not prove no reusable mushroom artwork exists elsewhere in the repository; a recursive visual-file audit is still required before generation.
 - **Prompt direction if preflight clears it:** a single recognizable woodland mushroom with a rounded warm red/rust cap and a short cream stem, softly painted storybook watercolor/paper texture, restrained natural shading, simple readable silhouette, no face, no surrounding grass/forest scene, no glossy 3D finish or thick outline. Final colors should be checked against the forest-puzzle palette and the existing bear/star/object references.
 - **Decision gates before generation:** (1) inspect every repository mushroom image/SVG and relevant sprite folder, (2) inspect the Kitty collectible's actual use and scale, (3) confirm whether a single mushroom can serve both contexts without semantic/layout issues, and (4) finalize the prompt and reference set. No generation has been performed for mushroom.
+
+## Asset update — mushroom (object-mushroom), added 2026-10-25
+
+*(Supersedes the "do not generate yet" recommendation above: the user supplied `mushroom.png` directly.)*
+
+- [x] **Repository presence verified.** Commit `c7e6500` adds `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/mushroom.png` to `main`.
+- [x] **File sanity checked at add time.** `PNG image data, 1086 x 1448, 8-bit/color RGB, non-interlaced`, 1.8 MB — same format/size family as `acorn.png`.
+- [x] **Source use confirmed.** `game/games/animal_puzzle.js:7` (forest puzzle animal), `game/games/cat_forest.js:78` (gift), `game/games/kitty-standalone.js:701` (Kitty collectible).
+- [x] **Inventory synchronized.** The `object-mushroom` row now points to the committed WIP file and records it as a candidate.
+- [ ] **Technical QA pending.** No measurement pass (alpha/background, silhouette coverage, small-size legibility, edge quality, palette match) has been recorded for this file.
+- [ ] **User review pending.** The image is not recorded as user-approved, production-ready, or runtime-integrated.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no runtime tests, no screenshot refresh, no offline-pack build, no `sync-docs.sh`; `game/` was not changed.
+
+Current WIP bundle state (2026-10-25): **29 PNGs**, in alphabetical order:
+
+`acorn.png`, `apple.png`, `bear.png`, `bird.png`, `bone.png`, `butterfly.png`, `cat.png`, `caterpillar.png`, `chick.png`, `chicken.png`, `cow.png`, `dog.png`, `duck.png`, `egg.png`, `elephant.png`, `fish.png`, `fox.png`, `frog.png`, `horse.png`, `lion.png`, `mushroom.png`, `pig.png`, `rooster.png`, `sheep.png`, `soap.png`, `star.png`, `sunflower.png`, `water-drop.png`, `wolf.png`.
