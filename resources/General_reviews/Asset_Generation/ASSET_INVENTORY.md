@@ -215,7 +215,7 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | object-evergreen-lantern | 🏮 | `game/games/racing-config.js` | Night scenery | Simple vector/illustration only if retained | REVIEW |
 | animal-owl | 🦉 | `game/games/racing-config.js` | Night scenery | One simple owl illustration if retained as a visible object | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/owl.png`) |
 | animal-bat | 🦇 | `game/games/racing-config.js` | Night scenery | One simple bat illustration if retained as a visible object | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/bat.png`) |
-| animal-monkey | 🐒 | `game/games/racing-config.js` | Tropical scenery | One simple monkey illustration if retained | REVIEW |
+| animal-monkey | 🐒 | `game/games/racing-config.js` | Tropical scenery | One simple monkey illustration if retained | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/monkey.png`) |
 | object-grass | 🌾 | `game/games/racing-config.js` | Farm scenery | Simple vector or shared grass/plant art | REVIEW |
 | object-spaceship | 🛸 | `game/games/racing-config.js` | Space scenery | Reuse a spaceship illustration only if visually distinct from the rocket | REVIEW |
 | object-galaxy | 🌌 | `game/games/space.js`, `racing-config.js` | Space world theme/scenery | Prefer background treatment, not a standalone object asset | REVIEW |
@@ -321,6 +321,7 @@ measurements only — they say nothing about how the pictures look.
 | penguin.png | 1024x1024 | rgb | 100/0/0 | 0.0226 | 65.22 | painted (approved 2026-10-25, animals batch) |
 | owl.png | 1024x1024 | rgb | 100/0/0 | 0.0224 | 85.74 | painted (approved 2026-10-25, animals batch; kept iteration 1 with big golden eyes) |
 | bat.png | 1024x1024 | rgb | 100/0/0 | 0.0159 | 114.72 | painted (approved 2026-10-25, animals batch, iteration 4: mouse+fox+bone refs, mouse-like face + claws) |
+| monkey.png | 1024x1024 | rgb | 100/0/0 | 0.0238 | 97.23 | painted (approved 2026-10-25, animals batch) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:

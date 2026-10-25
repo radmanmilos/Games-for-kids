@@ -693,4 +693,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — monkey (animal-monkey), generated + approved 2026-10-25 (animals batch)
+
+- [x] **Preflight.** The 🐒 glyph is used in `game/games/racing-config.js` (tropical scenery). No monkey illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — animals** (STYLE_BIBLE.md §12): soft rounded body masses, simple believable anatomy, thick/clear legs, markings only as needed to identify the species, simple painted fur suggestions.
+- [x] **Brief written:** `prompts/monkey.md` — one monkey in a calm friendly pose with a rounded body, small head, long curved tail, four paws, soft warm brown body, face a slightly lighter tan/brown with a simple muzzle, long tail a matching brown, gentle face, no exaggerated expression, no accessories, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `fox.png` (approved painted animal exemplar — small furry build, finish and paper tone only, never its shape or its orange colour).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 783,668 bytes, opaque. Measured: paper 232.98/222.28/204.9, palette-match vs bear 0.0238, small-size legibility proxy 97.23.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
