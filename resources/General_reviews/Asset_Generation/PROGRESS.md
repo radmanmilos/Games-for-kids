@@ -624,4 +624,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — flamingo (animal-flamingo), generated + approved 2026-10-25 (animals batch)
+
+- [x] **Preflight.** The 🦩 glyph is used in `game/data/serbian.js` (Serbian phonics picture; Serbian phonics vocabulary). No flamingo illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — animals** (STYLE_BIBLE.md §12): soft rounded body masses, simple believable anatomy, thick/clear legs, markings only as needed to identify the species, simple painted fur/feather suggestions.
+- [x] **Brief written:** `prompts/flamingo.md` — one flamingo standing in a calm friendly pose with a long curved S-shaped neck, small head with a downward-curved beak, rounded body, long thin legs (one slightly bent), soft muted pink body, beak a muted black/dark grey with lighter tip, gentle face, no exaggerated expression, no accessories, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `horse.png` (approved painted animal exemplar — similar hooved build, finish and paper tone only, never its shape or warm brown colour).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,128,234 bytes, opaque. Measured: paper 244.29/237.9/227.77, palette-match vs bear 0.0207, small-size legibility proxy 26.21 (low — a pale pink on warm paper is a small luminance step; the user approved it).
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 

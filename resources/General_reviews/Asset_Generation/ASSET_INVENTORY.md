@@ -89,7 +89,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-eye | 👁️ | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple eye illustration | REVIEW  | — | — |
 | animal-turkey | 🦃 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple turkey illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/turkey.png` | — |
 | object-ear | 👂 | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple ear illustration | REVIEW  | — | — |
-| animal-flamingo | 🦩 | `game/data/serbian.js` | Serbian phonics picture | Simple flamingo illustration | REVIEW  | — | — |
+| animal-flamingo | 🦩 | `game/data/serbian.js` | Serbian phonics picture | Simple flamingo illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/flamingo.png` | — |
 | object-helicopter | 🚁 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple helicopter illustration | REVIEW  | — | — |
 | object-flower | 🌼 | `game/data/serbian.js:34` (phonics word `Цвет`), `game/games/sequencing.js:18` (label `Цвет`, plant-growth step 2), maze/racing decor | Phonics picture, sequence and decor | One shared flower where the meaning and scale fit | GENERATED / CANDIDATE — TECHNICAL QA AND USER REVIEW NOT RECORDED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/flower.png` | — |
 | object-sailboat | ⛵ | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple sailboat illustration | REVIEW  | — | — |
@@ -315,6 +315,7 @@ measurements only — they say nothing about how the pictures look.
 | deer.png | 1024x1024 | rgb | 100/0/0 | 0.0215 | 65.07 | painted (approved 2026-10-25, animals batch) |
 | squirrel.png | 1024x1024 | rgb | 100/0/0 | 0.1326 | 98.06 | painted (approved 2026-10-25, animals batch) |
 | turkey.png | 1024x1024 | rgb | 100/0/0 | 0.0204 | 143.44 | painted (approved 2026-10-25, animals batch, iteration 2: dropped rooster ref) |
+| flamingo.png | 1024x1024 | rgb | 100/0/0 | 0.0207 | 26.21 | painted (approved 2026-10-25, animals batch) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:
