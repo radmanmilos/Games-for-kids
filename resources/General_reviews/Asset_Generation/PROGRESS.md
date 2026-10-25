@@ -603,4 +603,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — squirrel (animal-squirrel), generated + approved 2026-10-25 (animals batch)
+
+- [x] **Preflight.** The 🐿️ glyph is used in `game/games/animal_puzzle.js` (forest puzzle). No squirrel illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — animals** (STYLE_BIBLE.md §12): soft rounded body masses, simple believable anatomy, thick/clear legs, markings only as needed to identify the species, simple painted fur suggestions.
+- [x] **Brief written:** `prompts/squirrel.md` — one squirrel sitting upright in a calm friendly pose with a small rounded body, pointed but soft face, small rounded ears, tiny paws, big bushy tail curving up behind, warm brownish-orange body and slightly lighter fluffier tail, gentle face, no exaggerated expression, no accessories, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `fox.png` (approved painted animal exemplar — small furry build, finish and paper tone only, never its shape or its orange colour).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,748,933 bytes, opaque. Measured: paper 233.23/217.84/201.55, palette-match vs bear 0.1326, small-size legibility proxy 98.06.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
