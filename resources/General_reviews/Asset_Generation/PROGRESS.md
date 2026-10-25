@@ -634,4 +634,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — rabbit (animal-rabbit), generated + approved 2026-10-25 (animals batch)
+
+- [x] **Preflight.** The 🐰 glyph is used in `game/games/compare.js` (comparison pool) and `game/games/spatial.js` (spatial scene). No rabbit illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — animals** (STYLE_BIBLE.md §12): soft rounded body masses, simple believable anatomy, thick/clear legs, markings only as needed to identify the species, simple painted fur suggestions.
+- [x] **Brief written:** `prompts/rabbit.md` — one rabbit sitting in a calm friendly pose with a rounded body, small head, long upright ears, tiny nose, small paws, small fluffy tail, soft brownish-grey/brown body, ears with a slightly lighter inner tone, gentle face, no exaggerated expression, no accessories, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `fox.png` (approved painted animal exemplar — small furry build, finish and paper tone only, never its shape or its orange colour).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,155,606 bytes, opaque. Measured: paper 233.92/226.67/215.81, palette-match vs bear 0.0194, small-size legibility proxy 81.18.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
