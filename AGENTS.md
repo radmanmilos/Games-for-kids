@@ -56,6 +56,7 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 | edit `.github/workflows`, the offline manifest, service worker, `build_offline.js` or the Release QA gate | `project/lessons/ci-offline.md` |
 | touch `game/shared/*`, standalone boot, the kitty HUD, coloring regions or audio helpers | `project/lessons/game-runtime.md` |
 | work on racing3d (WebGL, camera, pulses, reduced motion) | `project/lessons/racing3d.md` |
+| generate or review image assets (asset_generate, asset_qa, Cloudflare Workers AI, bundle) | `project/lessons/asset-generation.md` |
 | fix a scanner alert or spawn a process from a tool | `project/lessons/security.md` |
 | rework a layout, re-add rejected scope, or change a confirmed decision | `project/DECISIONS.md` (ask the user first) |
 
