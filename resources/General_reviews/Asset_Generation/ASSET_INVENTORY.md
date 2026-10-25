@@ -56,7 +56,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | winter-snowflake | ❄ | `game/games/animal_puzzle.js` | Winter scene decoration drawn on canvas | Simple snowflake as SVG/canvas vector; generated watercolor not needed | SVG/CSS  | — | — |
 | adventure-fish | 🐟 | `game/games/adventure-modes.js` | Animated underwater decoration drawn on canvas | Small fish PNG or simple procedural fish; preserve game engine and motion | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fish.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
 | kitty-fish | 🐟 | `game/games/kitty-standalone.js` | Animated underwater decoration; Kitty character itself is out of scope | Reuse adventure-fish if visually appropriate | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fish.png` | Same file as `adventure-fish`; resampled to 1024x1024 (task 292) |
-| kitty-pickaxe | ⛏ | `game/games/kitty-standalone.js` | Cave object/effect glyph | Small pickaxe PNG only if it is a visible gameplay object; otherwise simple SVG | REVIEW  | — | — |
+| kitty-pickaxe | ⛏ | `game/games/kitty-standalone.js` | Cave object/effect glyph | Small pickaxe PNG only if it is a visible gameplay object; otherwise simple SVG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pickaxe.png` | — |
 | piano-song-star | ⭐ | `game/games/piano.js` | Song chip label for “Twinkle, Twinkle” | Prefer text label / small SVG star icon; do not automatically use reward illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/star.png` | Same file as `reward-star`; resampled to 1024x1024 (task 292) |
 | r3d-title-car | 🏎️ | `game/pages/racing3d.html` | Page title decoration | Remove glyph or use project car icon/SVG; no generated watercolor asset required by default | REVIEW  | — | — |
 | r3d-flower-counter | 🌸 | `game/pages/racing3d.html` | Flower/collectible counter | See shared flower row; keep 3D gameplay rendering unchanged | REVIEW  | — | — |
@@ -326,6 +326,7 @@ measurements only — they say nothing about how the pictures look.
 | house.png | 1024x1024 | rgb | 100/0/0 | 0.0214 | 45.02 | painted (approved 2026-10-25, objects batch) |
 | pawprint.png | 1024x1024 | rgb | 100/0/0 | 0.0234 | 77.78 | painted (approved 2026-10-25, objects batch) |
 | drum.png | 1024x1024 | rgb | 100/0/0 | 0.0201 | 81.01 | painted (approved 2026-10-25, objects batch) |
+| pickaxe.png | 1024x1024 | rgb | 100/0/0 | 0.0187 | 48.27 | painted (approved 2026-10-25, objects batch, iteration 7: subject refs from two real pickaxe photos) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:

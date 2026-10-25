@@ -743,4 +743,15 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — pickaxe (kitty-pickaxe), generated + approved 2026-10-25 (objects batch)
+
+- [x] **Preflight.** The ⛏ glyph is used in `game/games/kitty-standalone.js` (cave object/effect glyph). No pickaxe illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — simple objects** (STYLE_BIBLE.md §12): simplify geometry without losing defining construction; same softly painted material treatment as animals and star; keep important parts (handle, head) clearly separated.
+- [x] **Iterations 1-6 (rejected):** the metal head kept coming out star-like or not matching a real pickaxe. The golden-star reference was leaking its five-pointed silhouette; iterations 2-6 tried dropping the star, longer/pointier tips, and a detailed crescent description, but the shape still didn't match a real pickaxe.
+- [x] **Brief rewritten (iteration 7):** `prompts/pickaxe.md` — used two real pickaxe photos (`Reference/CK-2738_02_crkt.jpeg` and `Reference/istockphoto-967674060-612x612.jpg`, converted to PNG) as **subject** references (copy their shape and proportions: crescent head, central collar with oval hole, long pointed pick, flat adze blade, handle) while `bear.png` and `bone.png` provided the painted finish. The star reference was dropped. The prompt includes a detailed description of the pickaxe head (crescent, central collar/eye, pointed pick, flat blade, hammered texture, polished silver tips).
+- [x] **Reference set (iteration 7):** `pickaxe-ref.png` (subject, from CK-2738 photo) + `pickaxe-ref2.png` (subject, from istockphoto photo) + `bear.png` (style anchor) + `bone.png` (simple-object exemplar).
+- [x] **Generated (iteration 7, kept):** 1024x1024, 1,330,132 bytes, opaque. Measured: paper 238.94/229.56/216.71, palette-match vs bear 0.0187, small-size legibility proxy 48.27.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
