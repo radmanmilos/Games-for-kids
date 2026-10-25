@@ -64,6 +64,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-hat` | 🎩 | `game/data/serbian.js:37` — `Шешир` phonics picture | `prompts/hat.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/hat.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 91.88; palette-match 0.6907; visual approval 2026-10-25 |
 | `object-tractor` | 🚜 | `animal_puzzle.js` farm scene and `racing-config.js` farm decor | `prompts/tractor.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/tractor.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 111.85; palette-match 0.0465; red retry visually approved 2026-10-25 |
 | `object-rocket` | 🚀 | `animal_puzzle.js`, space game and hub artwork | `prompts/rocket.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/rocket.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 62.5; palette-match 0.6768; visual approval 2026-10-25 |
+| `object-planet` | 🪐 | `animal_puzzle.js`, driving/space/racing decor | `prompts/planet.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/planet.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 65.1; palette-match 0.3019; visual approval 2026-10-25 |
+
+## Asset update — 2026-10-25 — planet approved
+
+- [x] **Preflight.** `object-planet` is the emoji planet object/decor candidate in the puzzle and space/future-world uses; existing procedural planets remain separate runtime geometry, and no matching raster asset existed.
+- [x] **Brief written:** `prompts/planet.md` — one centered ringed planet with a round softly shaded body and one simple elliptical ring; no space scene or extra objects.
+- [x] **Reference set:** `bear.png` and `star.png` as canonical style anchors, `bone.png` as the approved simple-object exemplar.
+- [x] **Generated:** `assets_work_in_progress_bundle/planet.png`, 1024x1024 RGB, opaque, 1139943 bytes.
+- [x] **Technical QA:** palette 239.22/228.6/218.39, palette-match 0.3019, small-size contrast 65.1.
+- [x] **User review: APPROVED 2026-10-25.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-25 — rocket approved
 
