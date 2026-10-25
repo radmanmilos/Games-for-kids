@@ -440,3 +440,16 @@ The local checkout had an uncommitted 2026-10-22 soap experiment (seven prompt i
 - [x] **Kept — record:** the water-drop task 290 was archived and indexed (the bookkeeping had not reached `main`).
 - [ ] **Not done here:** no measurement of the candidates on `main`, no approval, no runtime integration.
 
+## Resolution pass — nine small approved files upscaled — 2026-10-25 (task 292)
+
+The user asked for the same pictures at the family resolution, **not** new artwork: "we are not expecting the image to change just the resolution to be better". The nine named files are the smallest in the bundle (165x135 up to 800x800); the family standard is 1024x1024. New `_1` copies were made beside the originals and reviewed before any swap.
+
+- [x] **Checked for a high-resolution original first.** `bear.png` is pixel-identical to `Reference/bear.png` (800x800, so no larger source exists); `star.png` is **not** the 2048x2048 `Reference/star.png` (luminance corr 0.10 at every tested scale, a different star); the seven small files have no larger copy anywhere in the repository. Re-rendering the emoji glyph was probed and rejected: Segoe UI Emoji 🦆 rendered at the bundle's own 165x135 matched `duck.png` only at corr 0.12, so it is not the same artwork and a re-render would change the picture.
+- [x] **Method — resample only, never repaint.** New tool `tools/asset_upscale.js`: Lanczos-3 in premultiplied alpha, aspect ratio preserved, the picture centred on a 1024x1024 canvas padded with its own background colour (transparent padding for `pig.png`). No crop, no recolour, no sharpening.
+- [x] **Proof it is the same picture.** Each `_1` file was scaled back to the original size and compared with the original: luminance correlation **0.9587-0.9995**, mean pixel difference **0.3-3.4**.
+- [x] **Files written:** `duck_1.png`, `cow_1.png`, `fish_1.png`, `star_1.png`, `apple_1.png`, `dog_1.png`, `cat_1.png`, `bear_1.png`, `pig_1.png` — all 1024x1024, opaque except `pig_1.png` (transparent background, picture area 1024x768).
+- [x] **User review: APPROVED 2026-10-25.** The user checked the nine `_1` files and approved them. The old files were removed, each `_1` copy was renamed to the original filename (`duck.png` … `pig.png`), so every document that references these names stays valid; `ASSET_INVENTORY.md` (facts table + row notes), `STYLE_BIBLE.md` §18.4.1 and `STATUS.md` now record the 1024x1024 sizes and the resample provenance.
+- [x] **Not changed:** no inventory status change (the files stay `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`), no runtime integration, no glyph swap, no screenshot or offline-build work — this is the bundle artwork only.
+- [ ] **Known limit:** an upscale cannot add detail the 165-305 px source never had; the result is a smooth enlargement of the same art, which is what was asked for.
+
+

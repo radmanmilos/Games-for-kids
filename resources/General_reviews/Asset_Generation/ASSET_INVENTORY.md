@@ -26,27 +26,27 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 
 | ID | Current glyph / visual | Confirmed source location(s) | Current purpose | Proposed treatment | Status  | Existing WIP asset file/location | Production-ready asset file/location |
 |---|---|---|---|---|---|---|---|
-| animal-dog | 🐶 | `game/games/animals.js`, `animal_counting.js`, `candy.js`, `spatial.js`, `sorting.js` | Animal flashcard/counting, candy game's animal set, spatial scene, sorting item | One shared simple dog PNG for all object/animal-card uses | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/dog.png` | Legacy raster (285x295), not the painted family |
-| animal-cat | 🐱 | `game/games/animals.js`, `animal_counting.js`, `sorting.js` | Animal flashcard/counting and sorting item | One shared simple cat PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cat.png` | Legacy raster (275x305), not the painted family |
-| animal-cow | 🐮 / 🐄; 🐄 | `game/games/animals.js`, `animal_counting.js`, `candy.js`, `animal_puzzle.js`, `racing-config.js`, `game/data/serbian.js`; `animal_puzzle.js`, racing decor | Animal flashcard/counting, candy set, farm puzzle/scenery, Serbian phonics; Farm puzzle and scenery | One canonical cow illustration; confirm it reads clearly at card and scenery sizes | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cow.png` | Legacy raster (190x165), not the painted family |
+| animal-dog | 🐶 | `game/games/animals.js`, `animal_counting.js`, `candy.js`, `spatial.js`, `sorting.js` | Animal flashcard/counting, candy game's animal set, spatial scene, sorting item | One shared simple dog PNG for all object/animal-card uses | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/dog.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
+| animal-cat | 🐱 | `game/games/animals.js`, `animal_counting.js`, `sorting.js` | Animal flashcard/counting and sorting item | One shared simple cat PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cat.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
+| animal-cow | 🐮 / 🐄; 🐄 | `game/games/animals.js`, `animal_counting.js`, `candy.js`, `animal_puzzle.js`, `racing-config.js`, `game/data/serbian.js`; `animal_puzzle.js`, racing decor | Animal flashcard/counting, candy set, farm puzzle/scenery, Serbian phonics; Farm puzzle and scenery | One canonical cow illustration; confirm it reads clearly at card and scenery sizes | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cow.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
 | animal-lion | 🦁 | `game/games/animals.js` | Animal flashcard | Simple lion PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/lion.png` | — |
 | animal-elephant | 🐘 | `game/games/animals.js` | Animal flashcard | Shared softly painted elephant illustration; use only where the elephant glyph represents the animal | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/elephant.png` | — |
 | animal-frog | 🐸 | `game/games/animals.js` | Animal flashcard/name mapping | Simple softly painted frog PNG; use only where the glyph represents the animal | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/frog.png` | — |
 | animal-pig | 🐷 | `game/games/animal_counting.js`, `candy.js` | Counting and candy-game set | One shared simple pig PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pig.png` | — |
-| animal-duck | 🦆 | `game/games/animal_counting.js`, `candy.js`, `spatial.js` | Counting, candy-game set, spatial scene | Simple duck in the bear's low-detail style; avoid the rejected elaborate duckling look | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/duck.png` | Legacy raster (165x135), not the painted family — a painted replacement is queued |
+| animal-duck | 🦆 | `game/games/animal_counting.js`, `candy.js`, `spatial.js` | Counting, candy-game set, spatial scene | Simple duck in the bear's low-detail style; avoid the rejected elaborate duckling look | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/duck.png` | Raster-emoji art, resampled to 1024x1024 (task 292); a painted replacement is queued |
 | animal-fox | 🦊 | Mentioned in the animals smoke-test mapping; verify runtime list in full source | Animal flashcard/name mapping | One shared simple fox PNG; confirm runtime use before integration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fox.png` | — |
 | animal-sheep | 🐑 | `game/games/animals.js:12`, `game/games/candy.js:20,33`, `game/data/serbian.js:165` (`Овца`), `game/games/animal_puzzle.js:8` (farm scene) | Animal flashcard, candy-game set, Serbian phonics, farm scene | One shared simple sheep illustration; rounded wool silhouette and restrained facial detail. Do not reuse the colouring-page sheep (`resources/coloring-redraw/Sheep.png`) — that is line art for a different purpose | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sheep.png` | — |
 | animal-horse | 🐴 | `game/games/animal_memory.js`, `candy.js`, `game/data/serbian.js` | Animal memory cards, candy-game set, Serbian number-sentence illustrations | One shared simple horse PNG; do not reuse the coloring-game SVG unless it passes finished-illustration requirements | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/horse.png` | — |
 | animal-chicken | 🐔 | `game/games/animal_counting.js`; also candy smoke-test set | Counting and candy-game set | One shared simple chicken PNG; keep distinct from rooster-specific farm puzzle/scenery use unless visual semantics are confirmed | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/chicken.png` | — |
-| animal-bear | 🐻 | `game/games/maze.js` | Maze start marker (“bear”) | Use the exact supplied bear reference if appropriate; assess scale/transparent crop | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bear.png` | Canonical style anchor (800x800), pixel-identical to `Reference/bear.png` |
+| animal-bear | 🐻 | `game/games/maze.js` | Maze start marker (“bear”) | Use the exact supplied bear reference if appropriate; assess scale/transparent crop | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bear.png` | Canonical style anchor; the bundle copy is resampled to 1024x1024 (task 292), `Reference/bear.png` stays 800x800 |
 | object-bone | 🦴 | `game/games/spatial.js` | Object in “Where is the bone?” spatial task | Simple bone PNG; keep silhouette clear | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bone.png` | — |
 | object-house | 🏠 | `game/games/maze.js` | Maze goal marker (“house”) | Simple cozy house PNG | REVIEW  | — | — |
-| food-apple | 🍎 | `game/games/sorting.js` | Food sorting bin/item | One shared simple apple PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/apple.png` | Legacy raster (265x295), not the painted family |
+| food-apple | 🍎 | `game/games/sorting.js` | Food sorting bin/item | One shared simple apple PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/apple.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
 | animal-pawprint | 🐾 | `game/games/sorting.js` | Animal-category bin label | Prefer a small paw icon (SVG or simple illustration); not necessarily watercolor | REVIEW  | — | — |
 | shape-blue-circle | 🔵 | `game/games/classroom.js` | Shape presentation | Replace emoji-like shape glyph with exact vector geometry/SVG, not generated raster art | SVG/CSS  | — | — |
 | shape-purple-square | 🟪 | `game/games/classroom.js` | Shape presentation | Use vector geometry/SVG | SVG/CSS  | — | — |
 | shape-red-triangle | 🔺 | `game/games/classroom.js` | Shape presentation | Use vector geometry/SVG | SVG/CSS  | — | — |
-| reward-star | ⭐ | `game/games/classroom.js`, `game/games/piano.js` | Shape presentation and song-chip label | Distinguish shape-learning star from reward star; use SVG for geometry, use supplied star reference only where a reward illustration is semantically correct | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/star.png` | Legacy raster (290x280), not the painted family |
+| reward-star | ⭐ | `game/games/classroom.js`, `game/games/piano.js` | Shape presentation and song-chip label | Distinguish shape-learning star from reward star; use SVG for geometry, use supplied star reference only where a reward illustration is semantically correct | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/star.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
 | music-drum | 🥁 | `game/games/rhythm.js` | Four rhythm pads, each labelled with a drum emoji despite different pitches | One simple illustrated drum reused across pads; alternatively use distinct drum-size variants only if musically meaningful | REVIEW  | — | — |
 | plant-seedling | 🌱 | `game/games/sequencing.js` | Plant-growth sequence, seed step | Simple seedling PNG | REVIEW  | — | — |
 | plant-leaves | 🌿 | `game/games/sequencing.js`, adventure world names may use similar symbols | Plant-growth sequence, plant step | One simple leafy plant PNG if visual meaning matches | REVIEW  | — | — |
@@ -54,10 +54,10 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | flower-counter | 🌸 | `game/pages/racing3d.html` | 3D Racing UI flower counter | Small flat storybook flower or a consistent icon; do not alter the 3D world model | REVIEW  | — | — |
 | celebration-confetti | 🎉 | `game/shared/celebration.js` fallback | Shared celebration overlay | Prefer a restrained celebration animation using CSS/SVG and/or approved star; avoid one large emoji glyph | REVIEW  | — | — |
 | winter-snowflake | ❄ | `game/games/animal_puzzle.js` | Winter scene decoration drawn on canvas | Simple snowflake as SVG/canvas vector; generated watercolor not needed | SVG/CSS  | — | — |
-| adventure-fish | 🐟 | `game/games/adventure-modes.js` | Animated underwater decoration drawn on canvas | Small fish PNG or simple procedural fish; preserve game engine and motion | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fish.png` | Legacy raster (280x220), not the painted family |
-| kitty-fish | 🐟 | `game/games/kitty-standalone.js` | Animated underwater decoration; Kitty character itself is out of scope | Reuse adventure-fish if visually appropriate | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fish.png` | Same file as `adventure-fish`; legacy raster (280x220) |
+| adventure-fish | 🐟 | `game/games/adventure-modes.js` | Animated underwater decoration drawn on canvas | Small fish PNG or simple procedural fish; preserve game engine and motion | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fish.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
+| kitty-fish | 🐟 | `game/games/kitty-standalone.js` | Animated underwater decoration; Kitty character itself is out of scope | Reuse adventure-fish if visually appropriate | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fish.png` | Same file as `adventure-fish`; resampled to 1024x1024 (task 292) |
 | kitty-pickaxe | ⛏ | `game/games/kitty-standalone.js` | Cave object/effect glyph | Small pickaxe PNG only if it is a visible gameplay object; otherwise simple SVG | REVIEW  | — | — |
-| piano-song-star | ⭐ | `game/games/piano.js` | Song chip label for “Twinkle, Twinkle” | Prefer text label / small SVG star icon; do not automatically use reward illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/star.png` | Same file as `reward-star`; legacy raster (290x280) |
+| piano-song-star | ⭐ | `game/games/piano.js` | Song chip label for “Twinkle, Twinkle” | Prefer text label / small SVG star icon; do not automatically use reward illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/star.png` | Same file as `reward-star`; resampled to 1024x1024 (task 292) |
 | r3d-title-car | 🏎️ | `game/pages/racing3d.html` | Page title decoration | Remove glyph or use project car icon/SVG; no generated watercolor asset required by default | REVIEW  | — | — |
 | r3d-flower-counter | 🌸 | `game/pages/racing3d.html` | Flower/collectible counter | See shared flower row; keep 3D gameplay rendering unchanged | REVIEW  | — | — |
 | r3d-world-button | 🌍 | `game/pages/racing3d.html` | World-selection UI | Consistent SVG UI icon or remove redundant decoration | UI ICON  | — | — |
@@ -275,7 +275,7 @@ measurements only — they say nothing about how the pictures look.
 
 | file | canvas | format | alpha op/tr/part % | palette-match | small contrast | family |
 |---|---|---|---|---|---|---|
-| bear.png | 800x800 | rgb | 100/0/0 | 1.0000 | 110.4 | canonical anchor |
+| bear.png | 1024x1024 | rgb | 100/0/0 | 1.0000 | 110.5 | canonical anchor (resampled 800 -> 1024, task 292) |
 | chicken.png | 1254x1254 | rgb | 100/0/0 | 0.7475 | 69.7 | painted |
 | horse.png | 1448x1086 | rgb | 100/0/0 | 0.7142 | 98.1 | painted |
 | lion.png | 1448x1086 | rgb | 100/0/0 | 0.6746 | 125.1 | painted |
@@ -286,19 +286,19 @@ measurements only — they say nothing about how the pictures look.
 | rooster.png | 1024x1024 | rgb | 100/0/0 | 0.5042 | 136.4 | painted |
 | bird.png | 1024x1024 | rgb | 100/0/0 | 0.0192 | 55.6 | painted (iteration 2, 2026-10-22) |
 | fox.png | 1254x1254 | rgb | 100/0/0 | 0.1596 | 116.9 | painted |
-| dog.png | 285x295 | rgb | 100/0/0 | 0.1145 | 105.2 | legacy raster |
-| cat.png | 275x305 | rgb | 100/0/0 | 0.0852 | 88.7 | legacy raster |
+| dog.png | 1024x1024 | rgb | 100/0/0 | 0.1125 | 104.5 | raster-emoji art, resampled (task 292) |
+| cat.png | 1024x1024 | rgb | 100/0/0 | 0.0800 | 84.3 | raster-emoji art, resampled (task 292) |
 | bone.png | 1536x1024 | rgb | 100/0/0 | 0.0798 | 36.8 | painted |
-| cow.png | 190x165 | rgb | 100/0/0 | 0.0305 | 84.9 | legacy raster |
+| cow.png | 1024x1024 | rgb | 100/0/0 | 0.0305 | 79.5 | raster-emoji art, resampled (task 292) |
 | wolf.png | 1254x1254 | rgb | 100/0/0 | 0.0291 | 106.2 | painted |
-| duck.png | 165x135 | rgb | 100/0/0 | 0.0258 | 90.7 | legacy raster |
-| fish.png | 280x220 | rgb | 100/0/0 | 0.0220 | 86.9 | legacy raster |
+| duck.png | 1024x1024 | rgb | 100/0/0 | 0.0248 | 83.1 | raster-emoji art, resampled (task 292) |
+| fish.png | 1024x1024 | rgb | 100/0/0 | 0.0194 | 75.8 | raster-emoji art, resampled (task 292) |
 | caterpillar.png | 1448x1086 | rgb | 100/0/0 | 0.0171 | 107.6 | painted |
-| star.png | 290x280 | rgb | 100/0/0 | 0.0165 | 69.4 | legacy raster |
+| star.png | 1024x1024 | rgb | 100/0/0 | 0.0161 | 68.7 | raster-emoji art, resampled (task 292) |
 | egg.png | 1024x1024 | rgb | 100/0/0 | 0.0164 | 38.8 | painted (candidate, iteration 2, 2026-10-22) |
 | water-drop.png | 1024x1024 | rgb | 100/0/0 | 0.0117 | 49.2 | painted (iteration 2, 2026-10-22) |
-| apple.png | 265x295 | rgb | 100/0/0 | 0.0091 | 146.4 | legacy raster |
-| pig.png | 1448x1086 | rgba | 0/78/22 | 0.0048 | 220.0 | painted |
+| apple.png | 1024x1024 | rgb | 100/0/0 | 0.0095 | 140.0 | raster-emoji art, resampled (task 292) |
+| pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:
 
@@ -307,11 +307,12 @@ Findings that still block the production step:
 2. **`pig.png` is the odd one out**: it has an alpha channel, yet only 0.02% of its pixels are
    fully opaque and 22% are semi-transparent — the subject is washed out edge to edge and will
    look faded once composited. It needs a fresh alpha cut-out.
-3. `bundle/bear.png` is a re-save of the canonical bear (800x800, different sha256 from
-   `Reference/bear.png`); the canonical file in `Reference/` stays the style anchor. Both are
-   pixel-identical.
-4. The seventeen large files (800-1536 px) are the painted family; the seven small files
-   (165-305 px) are rasterised emoji, not the painted family, so they are excluded from the
+3. `bundle/bear.png` was pixel-identical to the canonical bear (`Reference/bear.png`, 800x800)
+   until task 292 resampled the bundle copy to 1024x1024; the canonical file in `Reference/`
+   stays the style anchor.
+4. Every bundle file is now at least 1024 px on its long side. The seven raster-emoji files
+   (165-305 px until task 292) were resampled to 1024x1024 without redrawing them; they still
+   show emoji-style art rather than the painted family, so they stay excluded from the
    automatic reference pick.
 5. `bone.png` has the lowest small-size contrast (36.8) and `chick.png` the second lowest (58.9)
    — pale subjects on pale paper, so both need a check at real card size.

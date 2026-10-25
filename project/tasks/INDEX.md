@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **292**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **293**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -292,3 +292,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 288 | DONE | 2026-10-22 | Asset Generation candidate animal-rooster (🐓): the glyph is live in the farm puzzle… | tasks-250-299.md
 290 | DONE | 2026-10-22 | Asset Generation candidate object-water-drop (💧): the glyph is used in five places… | tasks-250-299.md
 291 | DONE | 2026-10-25 | Generation-process carry-over: tools/asset_generate.js --subject-ref <file> sends one chosen file as image 0… | tasks-250-299.md
+292 | DONE | 2026-10-25 | resolution pass, same pictures: the nine smallest approved files (duck, cow, fish, star, apple, dog, cat,… | tasks-250-299.md
