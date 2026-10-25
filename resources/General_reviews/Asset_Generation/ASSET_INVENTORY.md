@@ -87,7 +87,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-nose | 👃 | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple nose illustration if the phonics picture card needs it | REVIEW  | — | — |
 | object-pig-nose | 🐽 | `game/data/serbian.js` | Word for snout | Reuse pig asset only if the teaching meaning remains clear; otherwise distinct snout icon | REVIEW  | — | — |
 | object-eye | 👁️ | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple eye illustration | REVIEW  | — | — |
-| animal-turkey | 🦃 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple turkey illustration | REVIEW  | — | — |
+| animal-turkey | 🦃 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple turkey illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/turkey.png` | — |
 | object-ear | 👂 | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple ear illustration | REVIEW  | — | — |
 | animal-flamingo | 🦩 | `game/data/serbian.js` | Serbian phonics picture | Simple flamingo illustration | REVIEW  | — | — |
 | object-helicopter | 🚁 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple helicopter illustration | REVIEW  | — | — |
@@ -314,6 +314,7 @@ measurements only — they say nothing about how the pictures look.
 | giraffe.png | 1024x1024 | rgb | 100/0/0 | 0.4155 | 58.67 | painted (approved 2026-10-25, animals batch) |
 | deer.png | 1024x1024 | rgb | 100/0/0 | 0.0215 | 65.07 | painted (approved 2026-10-25, animals batch) |
 | squirrel.png | 1024x1024 | rgb | 100/0/0 | 0.1326 | 98.06 | painted (approved 2026-10-25, animals batch) |
+| turkey.png | 1024x1024 | rgb | 100/0/0 | 0.0204 | 143.44 | painted (approved 2026-10-25, animals batch, iteration 2: dropped rooster ref) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:

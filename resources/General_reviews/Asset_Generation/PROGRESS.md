@@ -613,4 +613,15 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — turkey (animal-turkey), generated + approved 2026-10-25 (animals batch)
+
+- [x] **Preflight.** The 🦃 glyph is used in `game/data/serbian.js` (Serbian phonics picture; Serbian phonics vocabulary). No turkey illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — animals** (STYLE_BIBLE.md §12): soft rounded body masses, simple believable anatomy, thick/clear legs, markings only as needed to identify the species, simple painted fur/feather suggestions.
+- [x] **Iteration 1 (rejected):** generated with bear + star + rooster references. The rooster reference leaked its poultry silhouette (comb, body proportions) and the result read as a rooster/chicken rather than a turkey. Colour and style were fine; shape was wrong. Iteration 1 was discarded.
+- [x] **Brief rewritten (iteration 2):** `prompts/turkey.md` — one turkey with a large fanned tail spread like an open fan, rounded body, small bare head with red wattle/snood (no comb, no crest), muted dark-brown plumage, fanned tail feathers radiating outward, muted blue-grey bare head. The rooster reference was **dropped** (bear + star + fox) and explicit anti-chicken/anti-rooster/anti-comb language was added.
+- [x] **Reference set (iteration 2):** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `fox.png` (approved painted animal exemplar — finish and paper tone only, never its shape or colour).
+- [x] **Generated (iteration 2, kept):** 1024x1024, 1,364,452 bytes, opaque. Measured: paper 215.13/202.43/187.39, palette-match vs bear 0.0204, small-size legibility proxy 143.44.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
