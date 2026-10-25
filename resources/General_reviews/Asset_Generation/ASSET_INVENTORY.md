@@ -40,7 +40,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | animal-chicken | 🐔 | `game/games/animal_counting.js`; also candy smoke-test set | Counting and candy-game set | One shared simple chicken PNG; keep distinct from rooster-specific farm puzzle/scenery use unless visual semantics are confirmed | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/chicken.png` | — |
 | animal-bear | 🐻 | `game/games/maze.js` | Maze start marker (“bear”) | Use the exact supplied bear reference if appropriate; assess scale/transparent crop | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bear.png` | Canonical style anchor; the bundle copy is resampled to 1024x1024 (task 292), `Reference/bear.png` stays 800x800 |
 | object-bone | 🦴 | `game/games/spatial.js` | Object in “Where is the bone?” spatial task | Simple bone PNG; keep silhouette clear | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bone.png` | — |
-| object-house | 🏠 | `game/games/maze.js` | Maze goal marker (“house”) | Simple cozy house PNG | REVIEW  | — | — |
+| object-house | 🏠 | `game/games/maze.js` | Maze goal marker (“house”) | Simple cozy house PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/house.png` | — |
 | food-apple | 🍎 | `game/games/sorting.js` | Food sorting bin/item | One shared simple apple PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/apple.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
 | animal-pawprint | 🐾 | `game/games/sorting.js` | Animal-category bin label | Prefer a small paw icon (SVG or simple illustration); not necessarily watercolor | REVIEW  | — | — |
 | shape-blue-circle | 🔵 | `game/games/classroom.js` | Shape presentation | Replace emoji-like shape glyph with exact vector geometry/SVG, not generated raster art | SVG/CSS  | — | — |
@@ -68,7 +68,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | r3d-restart-arrow | 🔄 | `game/pages/racing3d.html` | Restart button | SVG retry icon or text; no generated illustration | UI ICON  | — | — |
 | r3d-favicon-car | 🏎️ | `game/pages/racing3d.html` | Inline SVG favicon containing emoji text | Replace with a real SVG/project icon if desired; outside illustration batch | APP ICON  | — | — |
 | maze-start-bear | 🐻 | `game/games/maze.js` | Start marker | Same exact bear reference as animal-bear; avoid duplicate file | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bear.png` | Same file as `animal-bear` |
-| maze-goal-house | 🏠 | `game/games/maze.js` | Goal marker | Same house asset as object-house | REVIEW  | — | — |
+| maze-goal-house | 🏠 | `game/games/maze.js` | Goal marker | Same house asset as object-house | COVERED by `object-house` (`house.png`, approved) | — | — |
 
 ## Additional source-confirmed candidates from the expanded all-pages audit
 
@@ -322,6 +322,7 @@ measurements only — they say nothing about how the pictures look.
 | owl.png | 1024x1024 | rgb | 100/0/0 | 0.0224 | 85.74 | painted (approved 2026-10-25, animals batch; kept iteration 1 with big golden eyes) |
 | bat.png | 1024x1024 | rgb | 100/0/0 | 0.0159 | 114.72 | painted (approved 2026-10-25, animals batch, iteration 4: mouse+fox+bone refs, mouse-like face + claws) |
 | monkey.png | 1024x1024 | rgb | 100/0/0 | 0.0238 | 97.23 | painted (approved 2026-10-25, animals batch) |
+| house.png | 1024x1024 | rgb | 100/0/0 | 0.0214 | 45.02 | painted (approved 2026-10-25, objects batch) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:

@@ -703,4 +703,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — house (object-house), generated + approved 2026-10-25 (objects batch)
+
+- [x] **Preflight.** The 🏠 glyph is used in `game/games/maze.js` (maze goal marker, "house"); `maze-goal-house` reuses the same asset. No house illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — simple objects** (STYLE_BIBLE.md §12): simplify geometry without losing defining construction; same softly painted material treatment as animals and star; keep important parts (door, windows, roof) clearly separated.
+- [x] **Brief written:** `prompts/house.md` — one small cozy house with a rectangular body, triangular roof, small door in the center, one or two small windows, soft warm cream/beige walls, soft warm terracotta/red-brown roof, gentle warm brown door, soft light blue or warm cream windows, no chimney smoke/fence/garden/path/extra buildings, no face, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,446,953 bytes, opaque. Measured: paper 240.34/230.33/216.57, palette-match vs bear 0.0214, small-size legibility proxy 45.02.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
