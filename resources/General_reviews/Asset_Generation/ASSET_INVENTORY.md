@@ -74,7 +74,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 
 | ID | Current glyph / visual | Confirmed source location(s) | Current purpose | Proposed treatment | Status  | Existing WIP asset file/location | Production-ready asset file/location |
 |---|---|---|---|---|---|---|---|
-| object-car | 🚗 | `game/data/serbian.js`, `game/index.html`, driving favicon | Serbian phonics object and hub tile/icon | Reuse existing driving-car illustration if visually appropriate; favicon/UI may remain icon | REVIEW  | — | — |
+| object-car | 🚗 | `game/data/serbian.js:8`, `game/index.html:293`, driving favicon | Serbian phonics picture and hub tile/icon | Painted family-style car; use the existing driving-car image as a subject-shape/colour reference; favicon/UI may remain icon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/car.png` | — |
 | food-banana | 🍌 | `game/data/serbian.js`, Kitty collectible themes | Phonics vocabulary and collectible theme | One shared banana asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/banana.png` | — |
 | animal-wolf | 🐺 | `game/data/serbian.js` | Serbian phonics picture | One shared simple wolf illustration; calm, readable, consistent with bear reference | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/wolf.png` | — |
 | animal-caterpillar | 🐛 | `game/data/serbian.js`, `sequencing.js` | Phonics and life-cycle sequence | One shared caterpillar asset; curved segmented body, restrained detail, readable at card size | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/caterpillar.png` | — |
@@ -334,6 +334,7 @@ measurements only — they say nothing about how the pictures look.
 | eye.png | 1024x1024 | rgb | 100/0/0 | 0.0232 | 55.99 | painted (approved 2026-10-25, objects batch) |
 | ear.png | 1024x1024 | rgb | 100/0/0 | 0.0169 | 33.93 | painted (approved 2026-10-25, objects batch) |
 | helicopter.png | 1024x1024 | rgb | 100/0/0 | 0.0126 | 44.76 | painted (approved 2026-10-25, objects batch) |
+| car.png | 1024x1024 | rgb | 100/0/0 | 0.0158 | 82.64 | painted (approved 2026-10-25, objects batch; subject ref `driving-car.png`, style refs `helicopter.png` + `screen.png`) |
 | acorn.png | 1086x1448 | rgb | 100/0/0 | 0.0620 | 122.93 | painted (candidate, technical QA measured 2026-10-25; visual review pending) |
 | butterfly.png | 1448x1086 | rgb | 100/0/0 | 0.1420 | 80.09 | painted (candidate, technical QA measured 2026-10-25; visual review pending) |
 | mushroom.png | 1086x1448 | rgb | 100/0/0 | 0.0776 | 106.47 | painted (candidate, technical QA measured 2026-10-25; visual review pending) |

@@ -837,3 +837,13 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **Generated (iteration 1, kept):** 1024x1024, 1,213,639 bytes, opaque. Measured: paper 238.26/234.76/222.32, palette-match vs bear 0.0126, small-size legibility proxy 44.76.
 - [x] **User review: APPROVED 2026-10-25.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — car (object-car), generated + approved 2026-10-25 (objects batch)
+
+- [x] **Preflight.** `game/data/serbian.js:8` uses 🚗 for `Аутомобил`. No car asset existed in the WIP bundle. The existing `game/assets/images/driving-car.png` is a flat graphic, not the painted family style, so it was used as a subject reference rather than reused as the WIP illustration.
+- [x] **Category decision — simple objects** (STYLE_BIBLE.md §12): retain the existing car's blue colour and shape while adapting its rendering to the softly painted family style.
+- [x] **Brief written:** `prompts/car.md` — one complete blue passenger car; no driver, brand markings, road or scenery.
+- [x] **Reference set:** `driving-car.png` (subject only: shape and blue colour) + `helicopter.png` and `screen.png` (painted style only).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,501,706 bytes, opaque. Measured: paper 228.42/221.66/210.94, palette-match vs bear 0.0158, small-size legibility proxy 82.64.
+- [x] **User review: APPROVED 2026-10-25.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
