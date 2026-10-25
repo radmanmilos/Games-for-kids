@@ -774,4 +774,15 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — needle (object-needle), generated + approved 2026-10-25 (objects batch)
+
+- [x] **Preflight.** The 🪡 glyph is used in `game/data/serbian.js` (Serbian phonics picture; Serbian phonics vocabulary). No needle illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — simple objects** (STYLE_BIBLE.md §12): simplify geometry without losing defining construction; same softly painted material treatment as animals and star; keep important parts (needle, thread) clearly separated.
+- [x] **Iteration 1 (rejected):** the needle came out too thick. User asked for a thinner needle.
+- [x] **Brief rewritten (iteration 2):** `prompts/needle.md` — one very thin, slightly curved metal needle with a small eye at one end, and a short length of thread passing through the eye and trailing gently. The needle must be noticeably thinner and more slender — a delicate, fine needle, not a thick pin or rod. Painted soft muted grey-blue (metal) + soft warm cream thread.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form).
+- [x] **Generated (iteration 2, kept):** 1024x1024, 1,201,371 bytes, opaque. Measured: paper 239.08/231.82/221.16, palette-match vs bear 0.0106, small-size legibility proxy 13.58.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set. `object-needle-thread` is covered by this same asset.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
