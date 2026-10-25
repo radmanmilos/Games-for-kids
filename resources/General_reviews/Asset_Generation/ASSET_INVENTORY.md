@@ -80,7 +80,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | animal-caterpillar | 🐛 | `game/data/serbian.js`, `sequencing.js` | Phonics and life-cycle sequence | One shared caterpillar asset; curved segmented body, restrained detail, readable at card size | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/caterpillar.png` | — |
 | animal-butterfly | 🦋 | `game/games/sequencing.js` (butterfly life-cycle sequence, stage 3: egg → caterpillar → butterfly) | Life-cycle sequencing | One clearly recognizable butterfly; default style guidance says no face/personification unless specifically approved | GENERATED / CANDIDATE — TECHNICAL QA AND USER REVIEW NOT RECORDED; VISUAL REVIEW REQUIRED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/butterfly.png` | — |
 | object-tree | 🌳 | `game/data/serbian.js`, `sequencing.js`, racing decor | Phonics, tree-growth sequence, scenery | One tree illustration if scale/use match | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/tree.png` | — |
-| object-student | 🧑‍🎓 | `game/data/serbian.js` | Serbian phonics picture | Simple child/student illustration; not an existing game character | REVIEW  | — | — |
+| object-student | 🧑‍🎓 | `game/data/serbian.js` | Serbian phonics picture | Simple child/student illustration; not an existing game character | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/student.png` | — |
 | object-screen | 🖥️ | `game/data/serbian.js` | Serbian phonics picture | Simple computer monitor illustration | REVIEW  | — | — |
 | object-needle | 🪡 | `game/data/serbian.js` | Serbian phonics picture | Simple needle/thread illustration | REVIEW  | — | — |
 | object-heart | ❤️ | `game/data/serbian.js` | Word/picture for love | Simple heart shape; SVG is likely sufficient | SVG/CSS  | — | — |
@@ -327,6 +327,7 @@ measurements only — they say nothing about how the pictures look.
 | pawprint.png | 1024x1024 | rgb | 100/0/0 | 0.0234 | 77.78 | painted (approved 2026-10-25, objects batch) |
 | drum.png | 1024x1024 | rgb | 100/0/0 | 0.0201 | 81.01 | painted (approved 2026-10-25, objects batch) |
 | pickaxe.png | 1024x1024 | rgb | 100/0/0 | 0.0187 | 48.27 | painted (approved 2026-10-25, objects batch, iteration 7: subject refs from two real pickaxe photos) |
+| student.png | 1024x1024 | rgb | 100/0/0 | 0.0203 | 67.89 | painted (approved 2026-10-25, objects batch) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:
