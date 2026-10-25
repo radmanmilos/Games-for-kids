@@ -522,4 +522,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — apple-green (food-apple-green), generated + approved 2026-10-25 (food batch 1)
+
+- [x] **Preflight.** The 🍏 glyph is used in `game/games/sequencing.js` (unripe fruit sequence step). No green-apple illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — food/fruit** (STYLE_BIBLE.md §12): keep the whole item readable through shape and natural color; restrained soft highlights and shaded edges to suggest roundness; preserve the real-world green color cue and the apple's distinct round silhouette (not a pear).
+- [x] **Brief written:** `prompts/apple-green.md` — one round green (unripe) apple with a small stem and one or two small simple leaves, clear unmistakable unripe-apple green (never brown/grey/blue/muddy), one soft highlight on the upper left, deeper green shading on the lower right, no face, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form). The family is warm, so the green was stated explicitly.
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,683,618 bytes, opaque. Measured: paper 228.75/224.19/199.48, palette-match vs bear 0.0156, small-size legibility proxy 72.47.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
