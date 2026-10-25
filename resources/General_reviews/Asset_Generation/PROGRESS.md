@@ -62,6 +62,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-sailboat` | ⛵ | `game/data/serbian.js:35` — `Чамац` phonics picture | `prompts/sailboat.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sailboat.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 50.34; palette-match 0.6871; visual approval 2026-10-25 |
 | `object-sweater` | 🧥 | `game/data/serbian.js:36` — `Џемпер` phonics picture | `prompts/sweater.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sweater.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 101.25; palette-match 0.0113; visual approval 2026-10-25 |
 | `object-hat` | 🎩 | `game/data/serbian.js:37` — `Шешир` phonics picture | `prompts/hat.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/hat.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 91.88; palette-match 0.6907; visual approval 2026-10-25 |
+| `object-tractor` | 🚜 | `animal_puzzle.js` farm scene and `racing-config.js` farm decor | `prompts/tractor.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/tractor.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 111.85; palette-match 0.0465; red retry visually approved 2026-10-25 |
+
+## Asset update — 2026-10-25 — tractor approved
+
+- [x] **Preflight.** `object-tractor` is used as farm-puzzle and racing-farm decor; no existing tractor asset or prompt was found.
+- [x] **Brief written:** `prompts/tractor.md` — one isolated side-facing farm tractor with a red body, large rear wheel, smaller front wheel, seat, hood and exhaust; no scene or extra vehicles.
+- [x] **Generation:** first green candidate was rejected by the user for an incorrect five-wheel appearance; the same WIP file was regenerated with a muted red body and stricter wheel wording.
+- [x] **Reference set:** `bear.png` and `star.png` as canonical style anchors, `bone.png` as the approved simple-object exemplar.
+- [x] **Technical QA of approved retry:** `tractor.png`, 1024x1024 RGB, opaque, 1413102 bytes; palette 221.75/213.73/205.05, palette-match 0.0465, small-size contrast 111.85.
+- [x] **User review: APPROVED 2026-10-25.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-25 — hat approved
 
