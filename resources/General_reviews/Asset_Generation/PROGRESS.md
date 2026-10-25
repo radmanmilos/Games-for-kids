@@ -79,6 +79,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-cupcake` | 🧁 | `racing-config.js` candy-world scenery/decor | `prompts/cupcake.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cupcake.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 43.46; palette-match 0.0272; visual approval 2026-10-26 |
 | `object-donut` | 🍩 | `racing-config.js` candy-world scenery/decor | `prompts/donut.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/donut.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 57.29; palette-match 0.7075; visual approval 2026-10-26 |
 | `object-candy-rice` | 🍡 | `racing-config.js` candy-world scenery/decor | `prompts/dango.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/dango.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 17.96; palette-match 0.4033; visual approval 2026-10-26 |
+| `object-palm-tree` | 🌴 | driving, Kitty and racing island/tropical scenery | `prompts/palm-tree.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/palm-tree.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 71.58; palette-match 0.054; visual approval 2026-10-26 |
+
+## Asset update — 2026-10-26 — palm tree approved
+
+- [x] **Preflight.** `object-palm-tree` is the shared `🌴` tropical scenery/collectible-context candidate for driving, Kitty and racing; no matching raster asset existed.
+- [x] **Brief written:** `prompts/palm-tree.md` — one centered curved brown trunk with a crown of five broad green fronds; no island or scene.
+- [x] **Reference set:** `bear.png`, `star.png` and `bone.png` as style/detail references.
+- [x] **Generated:** `assets_work_in_progress_bundle/palm-tree.png`, 1024x1024 RGB, opaque, 1112050 bytes.
+- [x] **Technical QA:** palette 224.19/225.67/222.44, palette-match 0.054, small-size contrast 71.58.
+- [x] **User review: APPROVED 2026-10-26.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-26 — dango approved
 
