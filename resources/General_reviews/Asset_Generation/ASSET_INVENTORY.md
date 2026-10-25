@@ -112,7 +112,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-mushroom | 🍄 | `game/games/animal_puzzle.js:7` (forest puzzle), `game/games/cat_forest.js:78` (gift), `game/games/kitty-standalone.js:701` (collectible) | Forest puzzle, Cat Forest gift and Kitty collectible | One shared mushroom | GENERATED / CANDIDATE — TECHNICAL QA AND USER REVIEW NOT RECORDED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/mushroom.png` | — |
 | animal-zebra | 🦓 | `animal_puzzle.js` | Savanna puzzle | Simple zebra illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/zebra.png` | — |
 | animal-giraffe | 🦒 | `animal_puzzle.js` | Savanna puzzle | Simple giraffe illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/giraffe.png` | — |
-| animal-deer | 🦌 | `animal_puzzle.js`, racing decor | Forest puzzle and winter scenery | One shared deer illustration if appropriate | REVIEW  | — | — |
+| animal-deer | 🦌 | `animal_puzzle.js`, racing decor | Forest puzzle and winter scenery | One shared deer illustration if appropriate | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/deer.png` | — |
 | animal-squirrel | 🐿️ | `animal_puzzle.js` | Forest puzzle | Simple squirrel illustration | REVIEW  | — | — |
 | animal-rooster | 🐓 | `game/games/animal_puzzle.js:8` (farm puzzle scene), `game/games/racing-config.js:180` (racing decor) | Farm puzzle and scenery | Its own picture, kept distinct from the approved hen (`chicken.png`): large red comb and wattle, golden-orange hackles, rich russet body, long arching deep green-black sickle tail, sturdy yellow legs | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/rooster.png` | — |
 | object-tractor | 🚜 | `animal_puzzle.js`, racing decor | Farm puzzle and scenery | One shared tractor illustration | REVIEW  | — | — |
@@ -312,6 +312,7 @@ measurements only — they say nothing about how the pictures look.
 | tree.png | 1024x1024 | rgb | 100/0/0 | 0.0171 | 93.69 | painted (approved 2026-10-25, sequencing batch) |
 | zebra.png | 1024x1024 | rgb | 100/0/0 | 0.0185 | 98.62 | painted (approved 2026-10-25, animals batch) |
 | giraffe.png | 1024x1024 | rgb | 100/0/0 | 0.4155 | 58.67 | painted (approved 2026-10-25, animals batch) |
+| deer.png | 1024x1024 | rgb | 100/0/0 | 0.0215 | 65.07 | painted (approved 2026-10-25, animals batch) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:

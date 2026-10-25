@@ -593,4 +593,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — deer (animal-deer), generated + approved 2026-10-25 (animals batch)
+
+- [x] **Preflight.** The 🦌 glyph is used in `game/games/animal_puzzle.js` (forest puzzle) and racing decor. No deer illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — animals** (STYLE_BIBLE.md §12): soft rounded body masses, simple believable anatomy, thick/clear legs, markings only as needed to identify the species, simple painted fur suggestions.
+- [x] **Brief written:** `prompts/deer.md` — one deer standing in a calm friendly pose with a slender body, graceful neck, gentle head, simple branching antlers, soft warm brown body, antlers a slightly lighter tan/brown with a few smooth branches, gentle face, no exaggerated expression, no accessories, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `horse.png` (approved painted animal exemplar — similar hooved build, finish and paper tone only, never its shape or warm brown colour).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,211,963 bytes, opaque. Measured: paper 242.2/231.42/213.91, palette-match vs bear 0.0215, small-size legibility proxy 65.07.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
