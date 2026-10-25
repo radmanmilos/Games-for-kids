@@ -94,7 +94,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-flower | 🌼 | `game/data/serbian.js:34` (phonics word `Цвет`), `game/games/sequencing.js:18` (label `Цвет`, plant-growth step 2), maze/racing decor | Phonics picture, sequence and decor | One shared flower where the meaning and scale fit | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/flower.png` | — |
 | object-sailboat | ⛵ | `game/data/serbian.js:35` (`Чамац`) | Serbian phonics picture; Serbian phonics vocabulary | Simple sailboat illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sailboat.png` | — |
 | object-sweater | 🧥 | `game/data/serbian.js:36` (`Џемпер`) | Serbian phonics picture; Serbian phonics vocabulary | Simple sweater illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sweater.png` | — |
-| object-hat | 🎩 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple hat illustration | REVIEW  | — | — |
+| object-hat | 🎩 | `game/data/serbian.js:37` (`Шешир`) | Serbian phonics picture; Serbian phonics vocabulary | Simple hat illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/hat.png` | — |
 | food-strawberry | 🍓 | `game/games/sorting.js`, `kitty-standalone.js` | Sorting item and Kitty collectible | One shared strawberry illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/strawberry.png` | — |
 | food-grapes | 🍇 | `compare.js`/Kitty collectible themes | Comparison object and Kitty collectible | One shared grape bunch | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/grapes.png` | — |
 | food-orange | 🍊 | `compare.js` | Comparison object | Simple orange illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/orange.png` | — |
@@ -344,6 +344,7 @@ measurements only — they say nothing about how the pictures look.
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 | sailboat.png | 1024x1024 | rgb | 100/0/0 | 0.6871 | 50.34 | painted (approved 2026-10-25, objects batch) |
 | sweater.png | 1024x1024 | rgb | 100/0/0 | 0.0113 | 101.25 | painted (approved 2026-10-25, objects batch) |
+| hat.png | 1024x1024 | rgb | 100/0/0 | 0.6907 | 91.88 | painted (approved 2026-10-25, objects batch) |
 
 Findings that still block the production step:
 

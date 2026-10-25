@@ -61,6 +61,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-bone` | 🦴 | `game/games/spatial.js` — “Where is the bone?” task | Prompt was generated in chat; no separate prompt file verified | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bone.png` | GENERATED / USER-APPROVED CANDIDATE | User praised the result and reported adding it to the repo; production readiness, transparency, dimensions, file size, and in-game scale not independently checked |
 | `object-sailboat` | ⛵ | `game/data/serbian.js:35` — `Чамац` phonics picture | `prompts/sailboat.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sailboat.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 50.34; palette-match 0.6871; visual approval 2026-10-25 |
 | `object-sweater` | 🧥 | `game/data/serbian.js:36` — `Џемпер` phonics picture | `prompts/sweater.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sweater.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 101.25; palette-match 0.0113; visual approval 2026-10-25 |
+| `object-hat` | 🎩 | `game/data/serbian.js:37` — `Шешир` phonics picture | `prompts/hat.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/hat.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 91.88; palette-match 0.6907; visual approval 2026-10-25 |
+
+## Asset update — 2026-10-25 — hat approved
+
+- [x] **Preflight.** `object-hat` is the `🎩` phonics picture for `Шешир` in `game/data/serbian.js:37`; no existing hat asset or prompt was found.
+- [x] **Brief written:** `prompts/hat.md` — one centered brimmed hat with a rounded crown and broad curved brim; no person, mannequin, decoration, text, or scene.
+- [x] **Reference set:** `bear.png` and `star.png` as canonical style anchors, `bone.png` as the approved simple-object exemplar.
+- [x] **Generated:** `assets_work_in_progress_bundle/hat.png`, 1024x1024 RGB, opaque, 815709 bytes.
+- [x] **Technical QA:** palette 244.71/233.76/219.52, palette-match 0.6907, small-size contrast 91.88.
+- [x] **User review: APPROVED 2026-10-25.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-25 — sweater approved
 
