@@ -59,6 +59,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | Asset ID | Replaces glyph / current visual | Used by | Prompt/reference saved? | File | Status | QA / notes |
 |---|---|---|---|---|---|---|
 | `object-bone` | 🦴 | `game/games/spatial.js` — “Where is the bone?” task | Prompt was generated in chat; no separate prompt file verified | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bone.png` | GENERATED / USER-APPROVED CANDIDATE | User praised the result and reported adding it to the repo; production readiness, transparency, dimensions, file size, and in-game scale not independently checked |
+| `object-sailboat` | ⛵ | `game/data/serbian.js:35` — `Чамац` phonics picture | `prompts/sailboat.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sailboat.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 50.34; palette-match 0.6871; visual approval 2026-10-25 |
+
+## Asset update — 2026-10-25 — sailboat approved
+
+- [x] **Preflight.** `object-sailboat` is the `⛵` phonics picture for `Чамац` in `game/data/serbian.js:35`; no existing sailboat asset or prompt was found.
+- [x] **Brief written:** `prompts/sailboat.md` — one centered, clearly recognizable compact sailboat with a side-view hull, one triangular sail, short mast, and simple keel/rudder detail; no scenery, text, face, or extra objects.
+- [x] **Reference set:** `bear.png` and `star.png` as canonical style anchors, `bone.png` as the approved simple-object exemplar.
+- [x] **Generated:** `assets_work_in_progress_bundle/sailboat.png`, 1024x1024 RGB, opaque, 779921 bytes.
+- [x] **Technical QA:** palette 233.14/233.58/229.69, palette-match 0.6871, small-size contrast 50.34.
+- [x] **User review: APPROVED 2026-10-25.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Decisions / issues
 
