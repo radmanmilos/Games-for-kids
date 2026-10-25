@@ -73,6 +73,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-season-leaf` | 🍂 | `classroom.html` seasons activity and `racing-config.js` scenery | `prompts/season-leaf.md`; bear + star | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/season-leaf.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 95.34; palette-match 0.698; visual approval 2026-10-26 |
 | `object-shell` | 🐚 | ocean, driving, Kitty and racing collectible/scenery uses | `prompts/shell.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/shell.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 39.7; palette-match 0.6028; visual approval 2026-10-26 |
 | `object-gem` | 💎 | dino/ocean collectible themes | `prompts/gem.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/gem.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 47.46; palette-match 0.0115; visual approval 2026-10-26 |
+| `object-moon` | 🌙 | classroom, driving/dino/ocean/space collectible/theme uses | `prompts/moon.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/moon.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 26.03; palette-match 0.6799; visual approval 2026-10-26 |
+
+## Asset update — 2026-10-26 — moon approved
+
+- [x] **Preflight.** `object-moon` is the shared `🌙` gameplay object/theme candidate; existing 3D/procedural moon geometry and classroom toggle icon remain separate, and no matching raster asset existed.
+- [x] **Brief written:** `prompts/moon.md` — one centered broad pale-golden crescent with soft painted shading; no face or space scene.
+- [x] **Reference set:** `bear.png`, `star.png` and `bone.png` as style/detail references.
+- [x] **Generated:** `assets_work_in_progress_bundle/moon.png`, 1024x1024 RGB, opaque, 487133 bytes.
+- [x] **Technical QA:** palette 253.16/250.81/244.59, palette-match 0.6799, small-size contrast 26.03.
+- [x] **User review: APPROVED 2026-10-26.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-26 — gem approved
 
