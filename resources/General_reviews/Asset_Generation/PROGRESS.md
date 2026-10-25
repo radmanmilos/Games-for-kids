@@ -723,4 +723,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — drum (music-drum), generated + approved 2026-10-25 (objects batch)
+
+- [x] **Preflight.** The 🥁 glyph is used in `game/games/rhythm.js` (four rhythm pads, each labelled with a drum emoji despite different pitches). No drum illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — simple objects** (STYLE_BIBLE.md §12): simplify geometry without losing defining construction; same softly painted material treatment as animals and star; keep important parts (drumheads, body) clearly separated.
+- [x] **Brief written:** `prompts/drum.md` — one simple drum with a short cylindrical body, circular drumhead on top and bottom, soft warm brown (or muted terracotta) body, soft warm cream/off-white drumheads, a few simple soft lacing lines, no drumsticks/hands/stand/extra drums, no face, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 990,202 bytes, opaque. Measured: paper 234.98/219.58/202.67, palette-match vs bear 0.0201, small-size legibility proxy 81.01.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 

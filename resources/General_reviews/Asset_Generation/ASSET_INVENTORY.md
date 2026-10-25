@@ -47,7 +47,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | shape-purple-square | 🟪 | `game/games/classroom.js` | Shape presentation | Use vector geometry/SVG | SVG/CSS  | — | — |
 | shape-red-triangle | 🔺 | `game/games/classroom.js` | Shape presentation | Use vector geometry/SVG | SVG/CSS  | — | — |
 | reward-star | ⭐ | `game/games/classroom.js`, `game/games/piano.js` | Shape presentation and song-chip label | Distinguish shape-learning star from reward star; use SVG for geometry, use supplied star reference only where a reward illustration is semantically correct | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/star.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
-| music-drum | 🥁 | `game/games/rhythm.js` | Four rhythm pads, each labelled with a drum emoji despite different pitches | One simple illustrated drum reused across pads; alternatively use distinct drum-size variants only if musically meaningful | REVIEW  | — | — |
+| music-drum | 🥁 | `game/games/rhythm.js` | Four rhythm pads, each labelled with a drum emoji despite different pitches | One simple illustrated drum reused across pads; alternatively use distinct drum-size variants only if musically meaningful | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/drum.png` | — |
 | plant-seedling | 🌱 | `game/games/sequencing.js` | Plant-growth sequence, seed step | Simple seedling PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/seedling.png` | — |
 | plant-leaves | 🌿 | `game/games/sequencing.js`, adventure world names may use similar symbols | Plant-growth sequence, plant step | One simple leafy plant PNG if visual meaning matches | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/leaves.png` | — |
 | flower | 🌼 | `game/games/sequencing.js` | Plant-growth sequence, flower step | Simple flower PNG; reuse only when meaning and scale fit | COVERED by `object-flower` (`flower.png`, candidate pending QA/review) | — | — |
@@ -324,6 +324,7 @@ measurements only — they say nothing about how the pictures look.
 | monkey.png | 1024x1024 | rgb | 100/0/0 | 0.0238 | 97.23 | painted (approved 2026-10-25, animals batch) |
 | house.png | 1024x1024 | rgb | 100/0/0 | 0.0214 | 45.02 | painted (approved 2026-10-25, objects batch) |
 | pawprint.png | 1024x1024 | rgb | 100/0/0 | 0.0234 | 77.78 | painted (approved 2026-10-25, objects batch) |
+| drum.png | 1024x1024 | rgb | 100/0/0 | 0.0201 | 81.01 | painted (approved 2026-10-25, objects batch) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:
