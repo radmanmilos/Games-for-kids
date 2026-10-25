@@ -386,3 +386,20 @@ The current 27-file WIP bundle, in alphabetical order, is:
 `apple.png`, `bear.png`, `bird.png`, `bone.png`, `butterfly.png`, `cat.png`, `caterpillar.png`, `chick.png`, `chicken.png`, `cow.png`, `dog.png`, `duck.png`, `egg.png`, `elephant.png`, `fish.png`, `fox.png`, `frog.png`, `horse.png`, `lion.png`, `pig.png`, `rooster.png`, `sheep.png`, `soap.png`, `star.png`, `sunflower.png`, `water-drop.png`, and `wolf.png`.
 
 The WIP file list and inventory coverage are now synchronized for the files visible on `main` at audit time. This does not assert that every PNG anywhere in the repository belongs in the asset-generation inventory; screenshots, app icons, legacy illustrations, sprite frames and reference boards have different purposes.
+
+
+## Asset update — acorn (object-acorn), generated 2026-10-25
+
+- [x] **Repository presence verified.** Commit 20e9d5974bb11ee49c2986bc71d1aae73d8b3947 adds resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/acorn.png to main.
+- [x] **Source use confirmed.** game/games/sequencing.js uses 🌰 as stage 1 of the tree-growth sequence: acorn → sprout → tree.
+- [x] **Inventory synchronized.** The object-acorn row now points to the committed WIP file and records it as a candidate.
+- [ ] **Technical QA pending.** The exact committed PNG bytes have not been measured in this documentation pass; dimensions, file size, alpha/background, silhouette coverage, small-size legibility, and edge quality remain unverified. The generated image shown in chat has an opaque cream paper background, but that observation is not treated as a measurement of the committed file.
+- [ ] **User review pending.** The image is not recorded as user-approved, production-ready, or runtime-integrated.
+- [ ] **Not done here:** no copy into game/assets/images/, no glyph swap, no runtime tests, no screenshot refresh, no offline-pack build, and no sync-docs.sh; game/ was not changed.
+
+## Next-candidate analysis — mushroom (object-mushroom), 2026-10-25
+
+- **Recommendation: investigate mushroom next, but do not generate yet.** The inventory maps 🍄 to the forest scene in game/games/animal_puzzle.js and a Kitty collectible. A shared image could serve two contexts, but the actual Kitty render path and required scale/crop must be checked before deciding whether one asset is appropriate.
+- **Duplicate check status:** GitHub code/file search for mushroom.png returned no result. That search alone does not prove no reusable mushroom artwork exists elsewhere in the repository; a recursive visual-file audit is still required before generation.
+- **Prompt direction if preflight clears it:** a single recognizable woodland mushroom with a rounded warm red/rust cap and a short cream stem, softly painted storybook watercolor/paper texture, restrained natural shading, simple readable silhouette, no face, no surrounding grass/forest scene, no glossy 3D finish or thick outline. Final colors should be checked against the forest-puzzle palette and the existing bear/star/object references.
+- **Decision gates before generation:** (1) inspect every repository mushroom image/SVG and relevant sprite folder, (2) inspect the Kitty collectible's actual use and scale, (3) confirm whether a single mushroom can serve both contexts without semantic/layout issues, and (4) finalize the prompt and reference set. No generation has been performed for mushroom.
