@@ -63,6 +63,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-sweater` | 🧥 | `game/data/serbian.js:36` — `Џемпер` phonics picture | `prompts/sweater.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sweater.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 101.25; palette-match 0.0113; visual approval 2026-10-25 |
 | `object-hat` | 🎩 | `game/data/serbian.js:37` — `Шешир` phonics picture | `prompts/hat.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/hat.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 91.88; palette-match 0.6907; visual approval 2026-10-25 |
 | `object-tractor` | 🚜 | `animal_puzzle.js` farm scene and `racing-config.js` farm decor | `prompts/tractor.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/tractor.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 111.85; palette-match 0.0465; red retry visually approved 2026-10-25 |
+| `object-rocket` | 🚀 | `animal_puzzle.js`, space game and hub artwork | `prompts/rocket.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/rocket.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 62.5; palette-match 0.6768; visual approval 2026-10-25 |
+
+## Asset update — 2026-10-25 — rocket approved
+
+- [x] **Preflight.** `object-rocket` is used in the space puzzle, space game artwork, and hub/page decoration; no existing rocket asset or prompt was found.
+- [x] **Brief written:** `prompts/rocket.md` — one centered upright rocket with rounded nose, compact body, circular window, two fins and a restrained flame; no astronaut or space scene.
+- [x] **Reference set:** `bear.png` and `star.png` as canonical style anchors, `bone.png` as the approved simple-object exemplar.
+- [x] **Generated:** `assets_work_in_progress_bundle/rocket.png`, 1024x1024 RGB, opaque, 1124608 bytes.
+- [x] **Technical QA:** palette 246.01/237.33/234.2, palette-match 0.6768, small-size contrast 62.5.
+- [x] **User review: APPROVED 2026-10-25.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-25 — tractor approved
 
