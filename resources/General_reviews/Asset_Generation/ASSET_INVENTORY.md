@@ -96,7 +96,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-sweater | 🧥 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple sweater illustration | REVIEW  | — | — |
 | object-hat | 🎩 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple hat illustration | REVIEW  | — | — |
 | food-strawberry | 🍓 | `game/games/sorting.js`, `kitty-standalone.js` | Sorting item and Kitty collectible | One shared strawberry illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/strawberry.png` | — |
-| food-grapes | 🍇 | `compare.js`/Kitty collectible themes | Comparison object and Kitty collectible | One shared grape bunch | REVIEW  | — | — |
+| food-grapes | 🍇 | `compare.js`/Kitty collectible themes | Comparison object and Kitty collectible | One shared grape bunch | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/grapes.png` | — |
 | food-orange | 🍊 | `compare.js` | Comparison object | Simple orange illustration | REVIEW  | — | — |
 | food-pear | 🍐 | `compare.js` | Comparison object | Simple pear illustration | REVIEW  | — | — |
 | food-watermelon | 🍉 | `kitty-standalone.js` | Kitty collectible | Simple watermelon slice | REVIEW  | — | — |
@@ -300,6 +300,7 @@ measurements only — they say nothing about how the pictures look.
 | apple.png | 1024x1024 | rgb | 100/0/0 | 0.0095 | 140.0 | raster-emoji art, resampled (task 292) |
 | banana.png | 1024x1024 | rgb | 100/0/0 | 0.0812 | 32.61 | painted (approved 2026-10-25, food batch 1) |
 | strawberry.png | 1024x1024 | rgb | 100/0/0 | 0.0129 | 90.11 | painted (approved 2026-10-25, food batch 1) |
+| grapes.png | 1024x1024 | rgb | 100/0/0 | 0.0125 | 80.35 | painted (approved 2026-10-25, food batch 1) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:

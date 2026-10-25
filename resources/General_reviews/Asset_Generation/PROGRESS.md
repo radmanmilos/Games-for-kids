@@ -472,4 +472,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — grapes (food-grapes), generated + approved 2026-10-25 (food batch 1)
+
+- [x] **Preflight.** The 🍇 glyph is used in `game/games/compare.js` (comparison object) and Kitty collectible themes. No grape illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — food/fruit** (STYLE_BIBLE.md §12): keep the whole item readable through shape and natural color; restrained soft highlights and shaded edges to suggest roundness; preserve the real-world purple color cue.
+- [x] **Brief written:** `prompts/grapes.md` — one compact bunch of round plump grapes hanging from a short stem with one or two small simple leaves, clear unmistakable grape purple (never brown/muddy/grey/blue-only/red), one soft highlight per grape, deeper purple shading where they overlap, no face, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `water-drop.png` (approved simple object — cool tone reference for the blue/purple component). The family is warm, so the purple was stated explicitly.
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,188,074 bytes, opaque. Measured: paper 233.84/223.58/216.13, palette-match vs bear 0.0125, small-size legibility proxy 80.35.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
