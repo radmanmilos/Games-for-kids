@@ -65,6 +65,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-tractor` | 🚜 | `animal_puzzle.js` farm scene and `racing-config.js` farm decor | `prompts/tractor.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/tractor.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 111.85; palette-match 0.0465; red retry visually approved 2026-10-25 |
 | `object-rocket` | 🚀 | `animal_puzzle.js`, space game and hub artwork | `prompts/rocket.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/rocket.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 62.5; palette-match 0.6768; visual approval 2026-10-25 |
 | `object-planet` | 🪐 | `animal_puzzle.js`, driving/space/racing decor | `prompts/planet.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/planet.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 65.1; palette-match 0.3019; visual approval 2026-10-25 |
+| `object-astronaut` | 👨‍🚀 | `animal_puzzle.js` space puzzle | `prompts/astronaut.md`; bear + star + student | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/astronaut.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 58.92; palette-match 0.1591; visual approval 2026-10-25 |
+
+## Asset update — 2026-10-25 — astronaut approved
+
+- [x] **Preflight.** `object-astronaut` is the space-puzzle `👨‍🚀` pictograph; no existing astronaut asset or prompt was found.
+- [x] **Brief written:** `prompts/astronaut.md` — one centered child astronaut with rounded helmet, calm face, cream suit, backpack, gloves and boots; no scene or extra characters.
+- [x] **Reference set:** `bear.png` and `star.png` as canonical style anchors, `student.png` as the approved human-figure construction reference.
+- [x] **Generated:** `assets_work_in_progress_bundle/astronaut.png`, 1024x1024 RGB, opaque, 1346995 bytes.
+- [x] **Technical QA:** palette 234.43/228.96/221.67, palette-match 0.1591, small-size contrast 58.92.
+- [x] **User review: APPROVED 2026-10-25.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-25 — planet approved
 
