@@ -25,9 +25,7 @@ Project rule — language (applies to ALL games, including any future ones):
 - This applies to new content and to any refactors of existing content.
 
 Default posture: minimal, stable, maintainable, and only as complex as the task demands.
-
 ## Working rhythm
-
 - Follow the task lifecycle in `project/PROCESS.md`: one write per task in `project/tasks/ACTIVE.md` (IN PROGRESS at start; DONE with a dated note — who = tool + model, what, why — at the end). At session end run `node tools/archive_tasks.js` and overwrite `project/STATUS.md`.
 - **Provenance:** the persona stays, but record the real tool and model in task notes and add an `Agent: <tool>/<model>` trailer (e.g. `Agent: OpenCode/Big Pickle`) to any commit message you write.
 - **Check git/CI status before starting any new task.** Run `git status --short` and `gh run list` (recent runs on the current branch). If anything is failing or the working tree is dirty in a way you did not create, **report it first and propose fixing it before starting the new task** — never build on top of a red pipeline or a stale tree (the parent_smoke boot crash in task 214 went unnoticed for 25 CI runs until a rule like this was demanded). Only proceed with the new task once the user has seen the state and agreed.
@@ -49,7 +47,6 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 - **Context limit rule:** before the conversation approaches the model's context limit, finish the current task, update `project/tasks/ACTIVE.md` and `project/STATUS.md`, and give the user a concise status summary. Do not keep expanding the conversation past the limit. If needed, tell the user to continue in a new session or switch to a larger-context model.
 
 ## Read before you touch (lessons in `project/lessons/`)
-
 | You are about to… | Read first |
 | --- | --- |
 | write or run a smoke / guard / harness, do a negative test, or debug a flaky or failing test | `project/lessons/testing-harness.md` |
@@ -59,23 +56,18 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 | generate or review image assets (asset_generate, asset_qa, Cloudflare Workers AI, bundle) | `project/lessons/asset-generation.md` |
 | fix a scanner alert or spawn a process from a tool | `project/lessons/security.md` |
 | rework a layout, re-add rejected scope, or change a confirmed decision | `project/DECISIONS.md` (ask the user first) |
-
 ## Anti-looping (folded from the old ANTI_LOOP_RULES.md)
-
 - Max **2 attempts** per diagnosis of the same symptom; then STOP, change approach and ask the user. Three identical tool calls with no new information means you are looping.
 - Do not re-read a file you already have what you need from; act. A failed `edit` ("Could not find oldString") means the file changed: run one `grep -n` to relocate, read at most 10 lines, then edit — never retry the identical edit.
 - Commit only when the user has asked for commits, and **never push to `main`** unless the user says so for this task. (The old rule "commit and push after every micro-step" is retired; it contradicted the rule above. "One tool call per step" is retired too: independent reads and greps may run in parallel.)
 - If you catch yourself looping: STOP, record the state in `project/tasks/ACTIVE.md`, tell the user "I was looping. Current state: [X]. Next step: [Y].", and wait.
-
 ## Communication & approval
-
 - Propose → approve → implement. Ask before model switches, extension installs, or anything that changes scope or installs software.
 - Be honest about limits: if the current model cannot read images/audio, say so and recommend Nemotron 3.5 Super VL Free for visual review; the user switches models.
 - Report with evidence: `file:line` references, exact commands run, and their results. Keep it concise and machine-friendly. Format for findings and proposals: `project/PROCESS.md`.
  - Record decisions (including deferrals "per user decision") with dates and reasons so the next session does not re-litigate them.
 
 ## Mode & model check before every request
-
 At the start of every request, before executing anything, quickly decide whether the **current agent mode** (Plan vs Build) and the **current model** fit the request:
 
 - **Research-only / design / weighing-tradeoffs request** → current mode should be **Plan**. If the current mode is Build but the request is purely research ("investigate…", "which approach…", "should we…"), tell the user "switch to Plan to review first" and do not write code — unless the user already asked to execute.
@@ -88,7 +80,6 @@ Rules:
 - The assistant never switches mode or model on its own.
 
 ## Orientation protocol
-
 When the user asks any of these orientation phrases — "where are we", "what next", "how are we", "where we are", "what's the status", "current state", "orientation", "give me a recap", "status update", or any similar orientation question — run the full orientation automatically without asking:
 
 1. Read `project/STATUS.md` (plus this file). That is the whole startup set (about 5K tokens). Do not look for `PROJECT_TASKS.md` or `HANDOVER_PROMPT.md`: they were split into `project/` (live) and `archive/` (finished).
@@ -97,7 +88,6 @@ When the user asks any of these orientation phrases — "where are we", "what ne
 4. Do not start work unless explicitly asked; just report state and recommendations.
 
 ## OpenCode Model Selection
-
 Big Pickle is the default model for this project. Only recommend a switch when a request is clearly better served by another free model (free set rotates; last verified 2026-10-16 against `https://opencode.ai/zen/v1/models`):
 
 - Screenshots, images, or visual review → Nemotron 3.5 Super VL Free (`nemotron-3.5-super-vl-free`)
@@ -107,5 +97,4 @@ Big Pickle is the default model for this project. Only recommend a switch when a
 When a request matches one of these categories, proactively recommend the better model at the start of the reply (e.g. "Model check: switch to Nemotron 3.5 Super VL to review this screenshot") and ask the user to confirm before doing the work. If the request does not match any category, just continue on Big Pickle without prompting. The user performs the switch via the model picker; the assistant never switches models on its own.
 
 ## VS Code extensions
-
 The installed set is listed in `project/reference/vscode-extensions.md`. Global rule: if an extension would do the work better, faster, or with higher quality, tell the user which one and why, and ask before installing. Never install silently.

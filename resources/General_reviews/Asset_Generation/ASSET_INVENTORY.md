@@ -88,7 +88,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-pig-nose | 🐽 | `game/data/serbian.js` | Word for snout | Reuse pig asset only if the teaching meaning remains clear; otherwise distinct snout icon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pig-nose.png` | — |
 | object-eye | 👁️ | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple eye illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/eye.png` | — |
 | animal-turkey | 🦃 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple turkey illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/turkey.png` | — |
-| object-ear | 👂 | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple ear illustration | REVIEW  | — | — |
+| object-ear | 👂 | `game/data/serbian.js` | Body-part phonics picture; Serbian phonics vocabulary | Simple ear illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/ear.png` | — |
 | animal-flamingo | 🦩 | `game/data/serbian.js` | Serbian phonics picture | Simple flamingo illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/flamingo.png` | — |
 | object-helicopter | 🚁 | `game/data/serbian.js` | Serbian phonics picture; Serbian phonics vocabulary | Simple helicopter illustration | REVIEW  | — | — |
 | object-flower | 🌼 | `game/data/serbian.js:34` (phonics word `Цвет`), `game/games/sequencing.js:18` (label `Цвет`, plant-growth step 2), maze/racing decor | Phonics picture, sequence and decor | One shared flower where the meaning and scale fit | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/flower.png` | — |
@@ -332,6 +332,7 @@ measurements only — they say nothing about how the pictures look.
 | needle.png | 1024x1024 | rgb | 100/0/0 | 0.0106 | 13.58 | painted (approved 2026-10-25, objects batch, iteration 2: thinner) |
 | nose.png | 1024x1024 | rgb | 100/0/0 | 0.0224 | 44.5 | painted (approved 2026-10-25, objects batch, iteration 4: subject refs from two real nose photos) |
 | eye.png | 1024x1024 | rgb | 100/0/0 | 0.0232 | 55.99 | painted (approved 2026-10-25, objects batch) |
+| ear.png | 1024x1024 | rgb | 100/0/0 | 0.0169 | 33.93 | painted (approved 2026-10-25, objects batch) |
 | pig-nose.png | 1024x1024 | rgb | 100/0/0 | 0.0093 | 36.7 | painted (approved 2026-10-25, objects batch) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 

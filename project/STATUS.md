@@ -13,7 +13,7 @@
 - **Task 290 DONE (2026-10-22)** — `object-water-drop`; user-approved, archived and indexed on 2026-10-25 (the bookkeeping had not reached `main`).
 - **Task 291 DONE (2026-10-25, OpenCode/Big Pickle)** — generation-process carry-over only: `tools/asset_generate.js --subject-ref` (image 0 = the *subject*: copy its shape and colours, take only the rendering style from the family references) plus finding 9 in `ASSET_INVENTORY.md`. The local 2026-10-22 soap render and `prompts/soap.md` were **discarded at the user's request**; the `soap.png` on `main` (2026-10-23 session, `38e22de`) stands. Committed `c10a59b`.
 - **Task 292 DONE (2026-10-25, OpenCode/Big Pickle)** — resolution pass on the nine smallest approved files (`duck`, `cow`, `fish`, `star`, `apple`, `dog`, `cat`, `bear`, `pig`): resampled to 1024x1024 with the new `tools/asset_upscale.js` (Lanczos-3, same art, no repaint), verified at correlation 0.9587-0.9995 against the originals, **user-approved**, old files removed and the `_1` copies renamed to the original names. Docs updated with the new sizes.
-- **Task 289 IN PROGRESS** — asset-bundle reconciliation. Bundle holds **30 PNGs**; acorn, mushroom and flower were added on 2026-10-25, soap on 2026-10-23. **Technical QA and user review are still unrecorded** for `soap.png`, `sunflower.png`, `butterfly.png`, `acorn.png`, `mushroom.png` and `flower.png`; `egg.png` is measured but not reviewed.
+- **Task 289 IN PROGRESS** — asset-bundle reconciliation. Bundle holds **65 PNGs**, including local `ear.png` (user-approved; QA recorded at 1024×1024, 770,630 bytes, opaque, contrast proxy 33.93). QA and user review remain unrecorded for `soap.png`, `sunflower.png`, `butterfly.png`, `acorn.png`, `mushroom.png` and `flower.png`; `egg.png` is measured but still awaits review. No runtime integration.
 - **Pages gated on CI (task 274):** CI's `pages` job publishes `docs/` only from a green push on `main`.
 
 ## Asset-generation next steps
@@ -25,7 +25,7 @@
 
 ## Validate
 
-`node tools/check_fast.js` — **8/8 green on 2026-10-25** after the tool + docs change, and it writes nothing. No `game/` source changed in this pass, so no game smokes, screenshot refresh, offline build or `sync-docs.sh` were needed.
+`node tools/check_fast.js` — **8/8 green locally on 2026-10-25** after trimming redundant blank lines from `AGENTS.md` to fit the enforced budget. Recent GitHub CI runs reflect the earlier over-budget commit; this local correction is uncommitted. No `game/` source changed, so no game smokes, screenshot refresh, offline build or `sync-docs.sh` were needed.
 
 ## Rules of the road
 

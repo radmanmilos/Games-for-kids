@@ -818,4 +818,13 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set. `object-pig-snout` is covered by this same asset.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — ear (object-ear), generated + approved 2026-10-25 (objects batch)
+
+- [x] **Preflight.** The 👂 glyph is used in `game/data/serbian.js` (body-part phonics picture; Serbian phonics vocabulary). No ear illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — simple objects** (STYLE_BIBLE.md §12): simplify geometry without losing defining construction; same softly painted material treatment as animals and star.
+- [x] **Brief written:** `prompts/ear.md` — one simple human ear with a rounded outer pinna and gentle inner fold, soft warm skin tone, no face or accessories.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple form).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 770,630 bytes, opaque. Measured: paper 240.56/233.81/225.35, palette-match vs bear 0.0169, small-size legibility proxy 33.93.
+- [x] **User review: APPROVED 2026-10-25.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
