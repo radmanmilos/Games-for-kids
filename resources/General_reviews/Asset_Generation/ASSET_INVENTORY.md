@@ -124,7 +124,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | animal-penguin | 🐧 | `animal_puzzle.js` | Winter puzzle | Simple penguin illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/penguin.png` | — |
 | object-birthday-cake | 🎂 | `game/data/serbian.js:29` (`Торта`), `piano.js` | Phonics picture and song label | One shared cake illustration; piano UI may use smaller icon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/birthday-cake.png` | — |
 | object-bell | 🔔 | `piano.js` | Song label | Simple bell or SVG icon | REVIEW  | — | — |
-| object-balloons | 🎈 | `compare.js` | Comparison object | Simple balloon illustration | REVIEW  | — | — |
+| object-balloons | 🎈 | `compare.js` | Comparison object | Simple balloon illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/balloons.png` | — |
 | object-rainbow | 🌈 | `game/index.html` | Main hub title and favicon; Main hub brand/title/favicon | Small brand illustration/logo; treat as hub branding rather than game object | REVIEW  | — | — |
 | object-school | 🏫 | `game/index.html`, `classroom.html` | Hub/classroom icon | Prefer consistent small UI icon or reuse a simple school illustration | REVIEW  | — | — |
 | object-notebook | 📝 | `game/index.html` | Learning hub tile | UI icon or small illustration depending on tile style | REVIEW  | — | — |
@@ -352,6 +352,7 @@ measurements only — they say nothing about how the pictures look.
 | snowman.png | 1024x1024 | rgb | 100/0/0 | 0.0634 | 40.91 | painted (approved 2026-10-25, objects batch) |
 | sled.png | 1024x1024 | rgb | 100/0/0 | 0.0137 | 81.72 | painted (approved 2026-10-26, objects batch) |
 | birthday-cake.png | 1024x1024 | rgb | 100/0/0 | 0.0602 | 52.5 | painted (approved 2026-10-26, objects batch) |
+| balloons.png | 1024x1024 | rgb | 100/0/0 | 0.661 | 47.79 | painted (approved 2026-10-26, objects batch) |
 
 Findings that still block the production step:
 
