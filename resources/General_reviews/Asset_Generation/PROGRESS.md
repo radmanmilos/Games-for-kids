@@ -67,6 +67,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-planet` | 🪐 | `animal_puzzle.js`, driving/space/racing decor | `prompts/planet.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/planet.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 65.1; palette-match 0.3019; visual approval 2026-10-25 |
 | `object-astronaut` | 👨‍🚀 | `animal_puzzle.js` space puzzle | `prompts/astronaut.md`; bear + star + student | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/astronaut.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 58.92; palette-match 0.1591; visual approval 2026-10-25 |
 | `object-snowman` | ⛄ | `animal_puzzle.js` winter puzzle and driving/racing decor | `prompts/snowman.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/snowman.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 40.91; palette-match 0.0634; visual approval 2026-10-25 |
+| `object-sled` | 🛷 | `animal_puzzle.js` winter puzzle | `prompts/sled.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sled.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 81.72; palette-match 0.0137; visual approval 2026-10-26 |
+
+## Asset update — 2026-10-26 — sled approved
+
+- [x] **Preflight.** `object-sled` is the winter-puzzle `🛷` pictograph; no existing sled asset or prompt was found.
+- [x] **Brief written:** `prompts/sled.md` — one centered side-facing wooden sled with two curved runners, slatted seat, supports and pull rope; no snow scene.
+- [x] **Reference set:** `bear.png` and `star.png` as canonical style anchors, `bone.png` as the approved simple-object exemplar.
+- [x] **Generated:** `assets_work_in_progress_bundle/sled.png`, 1024x1024 RGB, opaque, 1373400 bytes.
+- [x] **Technical QA:** palette 229.4/221.01/212.39, palette-match 0.0137, small-size contrast 81.72.
+- [x] **User review: APPROVED 2026-10-26.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-25 — snowman approved
 

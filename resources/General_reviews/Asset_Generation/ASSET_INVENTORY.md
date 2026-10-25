@@ -120,7 +120,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-planet | 🪐 | `animal_puzzle.js`, driving/space/racing decor | Puzzle and game-world object | One shared planet illustration where meaning matches | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/planet.png` | — |
 | object-astronaut | 👨‍🚀 | `animal_puzzle.js` | Space puzzle | Simple astronaut illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/astronaut.png` | — |
 | object-snowman | ⛄ | `animal_puzzle.js`, driving/racing decor | Winter puzzle and collectible scenery | One shared snowman illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/snowman.png` | — |
-| object-sled | 🛷 | `animal_puzzle.js` | Winter puzzle | Simple sled illustration | REVIEW  | — | — |
+| object-sled | 🛷 | `animal_puzzle.js` | Winter puzzle | Simple sled illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sled.png` | — |
 | animal-penguin | 🐧 | `animal_puzzle.js` | Winter puzzle | Simple penguin illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/penguin.png` | — |
 | object-birthday-cake | 🎂 | `game/data/serbian.js`, `piano.js` | Phonics picture and song label | One shared cake illustration; piano UI may use smaller icon | REVIEW  | — | — |
 | object-bell | 🔔 | `piano.js` | Song label | Simple bell or SVG icon | REVIEW  | — | — |
@@ -350,6 +350,7 @@ measurements only — they say nothing about how the pictures look.
 | planet.png | 1024x1024 | rgb | 100/0/0 | 0.3019 | 65.1 | painted (approved 2026-10-25, objects batch) |
 | astronaut.png | 1024x1024 | rgb | 100/0/0 | 0.1591 | 58.92 | painted (approved 2026-10-25, objects batch) |
 | snowman.png | 1024x1024 | rgb | 100/0/0 | 0.0634 | 40.91 | painted (approved 2026-10-25, objects batch) |
+| sled.png | 1024x1024 | rgb | 100/0/0 | 0.0137 | 81.72 | painted (approved 2026-10-26, objects batch) |
 
 Findings that still block the production step:
 
