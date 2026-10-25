@@ -162,7 +162,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-gem | 💎 | dino/ocean collectible themes | Collectible | One shared gem asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/gem.png` | — |
 | object-moon | 🌙 | classroom, driving/dino/ocean/space worlds | Moon/time/collectible motif | One shared moon illustration for gameplay objects; classroom time icon may remain UI | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/moon.png` | — |
 | object-candy-lollipop | 🍭 | `driving.js`, `racing-config.js` | Collectible and candy scenery | One shared lollipop asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/lollipop.png` | — |
-| object-candy-wrapped | 🍬 | `racing-config.js` | Candy-world scenery | One simple wrapped candy asset | REVIEW  | — | — |
+| object-candy-wrapped | 🍬 | `racing-config.js` | Candy-world scenery | One simple wrapped candy asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/wrapped-candy.png` | — |
 | object-cupcake | 🧁 | `racing-config.js`; `game/games/racing-config.js` | Candy-world scenery; Candy world decor | One cupcake asset | REVIEW  | — | — |
 | object-donut | 🍩 | `racing-config.js`; `game/games/racing-config.js` | Candy-world scenery; Candy world decor | One donut asset | REVIEW  | — | — |
 | object-candy-rice | 🍡 | `racing-config.js`; `game/games/racing-config.js` | Candy-world scenery; Candy world decor | Simple dango/skewer asset if retained in scenery | REVIEW  | — | — |
@@ -241,7 +241,7 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | object-trash-bin | 🗑 / 🗑️ | `game/pages/coloring.html`, `parent.html` | Clear/reset controls | SVG/CSS UI icon | UI ICON |
 | object-card-stack | 🃏 | `game/index.html`, `animal_memory.html` | Memory game icon/card back | Replace card-back with a designed pattern; tile may use UI icon | REVIEW |
 | object-celebration-sparkle | ✨ / 🌟 | sequencing, Kitty, adventure and success states | Success/effect | CSS/SVG particles and approved star; no duplicate sparkle PNGs | SVG/CSS |
-| object-wrapped-candy | 🍬 | `game/games/racing-config.js` | Candy world decor | One canonical wrapped candy image only if visible enough | REVIEW |
+| object-wrapped-candy | 🍬 | `game/games/racing-config.js` | Candy world decor | One canonical wrapped candy image only if visible enough | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/wrapped-candy.png` |
 
 ## Explicit exclusions
 

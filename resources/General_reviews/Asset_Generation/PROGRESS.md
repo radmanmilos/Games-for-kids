@@ -75,6 +75,16 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-gem` | 💎 | dino/ocean collectible themes | `prompts/gem.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/gem.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 47.46; palette-match 0.0115; visual approval 2026-10-26 |
 | `object-moon` | 🌙 | classroom, driving/dino/ocean/space collectible/theme uses | `prompts/moon.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/moon.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 26.03; palette-match 0.6799; visual approval 2026-10-26 |
 | `object-candy-lollipop` | 🍭 | `driving.js` and `racing-config.js` collectible/candy scenery | `prompts/lollipop.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/lollipop.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 60.04; palette-match 0.1269; visual approval 2026-10-26 |
+| `object-candy-wrapped` / `object-wrapped-candy` | 🍬 | `racing-config.js` candy-world scenery/decor | `prompts/wrapped-candy.md`; `candy.jpeg` subject + bear + star + bone style references | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/wrapped-candy.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 84.32; palette-match 0.6687; visual approval 2026-10-26 |
+
+## Asset update — 2026-10-26 — wrapped candy approved
+
+- [x] **Preflight.** `object-candy-wrapped` and the duplicate `object-wrapped-candy` row identify the same `🍬` candy-world scenery/decor asset; the first candidate was rejected because its silhouette did not match the requested candy.
+- [x] **Brief revised:** `prompts/wrapped-candy.md` now uses `Reference/candy.jpeg` as the subject reference for the elongated diagonal candy, pink/red bands, and fan-shaped twisted ends; bear, star and bone remain style references.
+- [x] **Generated retry:** `assets_work_in_progress_bundle/wrapped-candy.png`, 1024x1024 RGB, opaque, 1367931 bytes.
+- [x] **Technical QA:** palette 243.92/223.14/222.84, palette-match 0.6687, small-size contrast 84.32.
+- [x] **User review: APPROVED 2026-10-26.** Both matching inventory rows are now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-26 — lollipop approved
 
