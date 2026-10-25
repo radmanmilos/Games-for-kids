@@ -66,6 +66,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-rocket` | 🚀 | `animal_puzzle.js`, space game and hub artwork | `prompts/rocket.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/rocket.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 62.5; palette-match 0.6768; visual approval 2026-10-25 |
 | `object-planet` | 🪐 | `animal_puzzle.js`, driving/space/racing decor | `prompts/planet.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/planet.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 65.1; palette-match 0.3019; visual approval 2026-10-25 |
 | `object-astronaut` | 👨‍🚀 | `animal_puzzle.js` space puzzle | `prompts/astronaut.md`; bear + star + student | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/astronaut.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 58.92; palette-match 0.1591; visual approval 2026-10-25 |
+| `object-snowman` | ⛄ | `animal_puzzle.js` winter puzzle and driving/racing decor | `prompts/snowman.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/snowman.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 40.91; palette-match 0.0634; visual approval 2026-10-25 |
+
+## Asset update — 2026-10-25 — snowman approved
+
+- [x] **Preflight.** `object-snowman` is the winter-puzzle and winter-decor `⛄` pictograph; no existing matching snowman asset or prompt was found.
+- [x] **Brief written:** `prompts/snowman.md` — one centered three-ball snowman with coal eyes/buttons, carrot nose, twig arms and a simple knitted hat; no winter scene.
+- [x] **Reference set:** `bear.png` and `star.png` as canonical style anchors, `bone.png` as the approved simple-object exemplar.
+- [x] **Generated:** `assets_work_in_progress_bundle/snowman.png`, 1024x1024 RGB, opaque, 1170201 bytes.
+- [x] **Technical QA:** palette 235.79/232.58/228.54, palette-match 0.0634, small-size contrast 40.91.
+- [x] **User review: APPROVED 2026-10-25.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-25 — astronaut approved
 
