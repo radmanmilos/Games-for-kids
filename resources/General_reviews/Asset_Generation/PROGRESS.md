@@ -703,6 +703,16 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — flower (flower / object-flower / flower-counter), generated + approved 2026-10-25 (objects batch)
+
+- [x] **Preflight.** The 🌼 glyph is used in `game/games/sequencing.js` (plant-growth sequence, flower step), `game/data/serbian.js:34` (phonics word `Цвет`), maze/racing decor; the 🌸 glyph is used in `game/pages/racing3d.html` (3D Racing UI flower counter). A prior `flower.png` candidate (1448x1086, pending QA/review) existed; the user asked to replace it with a new flower that also serves all flower use sites.
+- [x] **Category decision — plants/nature** (STYLE_BIBLE.md §12): gentle organic curves, simple leaf/petal groups, avoid dense botanical detail, natural colors soft but identifiable.
+- [x] **Brief written:** `prompts/flower.md` (renamed from `flower-counter.md`) — one small simple flower with five soft rounded petals around a small center, on a short stem with one or two small simple leaves, soft warm pink petals, gentle warm yellow center, soft muted green stem/leaves, no face, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,158,498 bytes, opaque. Measured: paper 243.5/234.25/220.03, palette-match vs bear 0.0226, small-size legibility proxy 29.92. Replaces the prior pending `flower.png`.
+- [x] **User review: APPROVED 2026-10-25.** `flower`, `object-flower` and `flower-counter` are now all covered by this single `flower.png`. The row statuses are updated accordingly.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 ## Approved — house (object-house), generated + approved 2026-10-25 (objects batch)
 
 - [x] **Preflight.** The 🏠 glyph is used in `game/games/maze.js` (maze goal marker, "house"); `maze-goal-house` reuses the same asset. No house illustration existed in `game/` or `resources/`, so the row was eligible for generation.
