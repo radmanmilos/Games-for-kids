@@ -161,7 +161,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-sparkles | ✨ | `kitty-standalone.js`, `sequencing.js` | Cave/effect glyph and clean-sequence result | Prefer CSS/SVG effect; no unique PNG needed | SVG/CSS  | — | — |
 | object-gem | 💎 | dino/ocean collectible themes | Collectible | One shared gem asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/gem.png` | — |
 | object-moon | 🌙 | classroom, driving/dino/ocean/space worlds | Moon/time/collectible motif | One shared moon illustration for gameplay objects; classroom time icon may remain UI | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/moon.png` | — |
-| object-candy-lollipop | 🍭 | `driving.js`, `racing-config.js` | Collectible and candy scenery | One shared lollipop asset | REVIEW  | — | — |
+| object-candy-lollipop | 🍭 | `driving.js`, `racing-config.js` | Collectible and candy scenery | One shared lollipop asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/lollipop.png` | — |
 | object-candy-wrapped | 🍬 | `racing-config.js` | Candy-world scenery | One simple wrapped candy asset | REVIEW  | — | — |
 | object-cupcake | 🧁 | `racing-config.js`; `game/games/racing-config.js` | Candy-world scenery; Candy world decor | One cupcake asset | REVIEW  | — | — |
 | object-donut | 🍩 | `racing-config.js`; `game/games/racing-config.js` | Candy-world scenery; Candy world decor | One donut asset | REVIEW  | — | — |
