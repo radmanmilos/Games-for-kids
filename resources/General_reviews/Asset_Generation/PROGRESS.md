@@ -482,4 +482,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — orange (food-orange), generated + approved 2026-10-25 (food batch 1)
+
+- [x] **Preflight.** The 🍊 glyph is used in `game/games/compare.js` (comparison object). No orange illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — food/fruit** (STYLE_BIBLE.md §12): keep the whole item readable through shape and natural color; restrained soft highlights and shaded edges to suggest roundness; preserve the real-world orange color cue.
+- [x] **Brief written:** `prompts/orange.md` — one plump slightly flattened sphere with a subtle top dimple, short stem and one or two small simple leaves, clear unmistakable orange (never brown/red/yellow/muddy), one soft highlight on the upper left, deeper orange-amber shading on the lower right, no skin pores, no face, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form). No cool references needed: an orange is a warm orange and sits naturally inside the family palette.
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,198,178 bytes, opaque. Measured: paper 238.86/218.41/194.12, palette-match vs bear 0.0526, small-size legibility proxy 102.83.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
