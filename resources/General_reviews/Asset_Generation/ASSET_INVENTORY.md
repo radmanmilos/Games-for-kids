@@ -213,7 +213,7 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | object-skis | 🎿 | `game/games/racing-config.js` | Winter scenery/collectible | Small SVG or illustration if prominent | REVIEW |
 | object-skier | ⛷️ | `game/games/racing-config.js` | Winter scenery | Likely remove if tiny decorative clutter; otherwise simple vector | REVIEW |
 | object-evergreen-lantern | 🏮 | `game/games/racing-config.js` | Night scenery | Simple vector/illustration only if retained | REVIEW |
-| animal-owl | 🦉 | `game/games/racing-config.js` | Night scenery | One simple owl illustration if retained as a visible object | REVIEW |
+| animal-owl | 🦉 | `game/games/racing-config.js` | Night scenery | One simple owl illustration if retained as a visible object | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/owl.png`) |
 | animal-bat | 🦇 | `game/games/racing-config.js` | Night scenery | One simple bat illustration if retained as a visible object | REVIEW |
 | animal-monkey | 🐒 | `game/games/racing-config.js` | Tropical scenery | One simple monkey illustration if retained | REVIEW |
 | object-grass | 🌾 | `game/games/racing-config.js` | Farm scenery | Simple vector or shared grass/plant art | REVIEW |
@@ -319,6 +319,7 @@ measurements only — they say nothing about how the pictures look.
 | rabbit.png | 1024x1024 | rgb | 100/0/0 | 0.0194 | 81.18 | painted (approved 2026-10-25, animals batch) |
 | mouse.png | 1024x1024 | rgb | 100/0/0 | 0.0141 | 62.07 | painted (approved 2026-10-25, animals batch, iteration 2: dropped squirrel ref) |
 | penguin.png | 1024x1024 | rgb | 100/0/0 | 0.0226 | 65.22 | painted (approved 2026-10-25, animals batch) |
+| owl.png | 1024x1024 | rgb | 100/0/0 | 0.0224 | 85.74 | painted (approved 2026-10-25, animals batch; kept iteration 1 with big golden eyes) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:

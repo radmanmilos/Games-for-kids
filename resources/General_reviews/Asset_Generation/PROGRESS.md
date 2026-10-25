@@ -665,4 +665,19 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — owl (animal-owl), generated + approved 2026-10-25 (animals batch)
+
+- [x] **Preflight.** The 🦉 glyph is used in `game/games/racing-config.js` (night scenery). No owl illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — animals** (STYLE_BIBLE.md §12): soft rounded body masses, simple believable anatomy, thick/clear legs, markings only as needed to identify the species, simple painted fur/feather suggestions.
+- [x] **Iteration 1 (kept):** generated with bear + star + bird references. Warm brown body, belly streaks, ear tufts, big golden eyes. The user liked the body/style but wanted smaller dark open eyes. Saved as `owl-v1.png`.
+- [x] **Iteration 2 (rejected):** small dark half-closed eyes (dropped bird ref, used bear + star + bone). Saved as `owl-v2.png`, then discarded.
+- [x] **Iteration 3 (rejected):** small dark open eyes but body drifted. Saved as `owl-v3.png`, then discarded.
+- [x] **Iteration 4 (rejected):** v1 body + small dark open eyes (bear + star + bone). Discarded.
+- [x] **Decision:** keep **iteration 1** (the original with big golden eyes) as the approved owl. The user prefers the overall look despite the larger eyes.
+- [x] **Brief written:** `prompts/owl.md` — one owl perched in a calm friendly pose with a rounded body, big round head, two small ear tufts, short hooked beak, warm brown body, belly streaks, gentle face.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bird.png` (approved painted bird exemplar — finish and paper tone only, never its shape or its muted grey-brown colour).
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,292,460 bytes, opaque. Measured: paper 233.34/222.82/206.76, palette-match vs bear 0.0224, small-size legibility proxy 85.74 (iteration 4 QA re-run).
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
