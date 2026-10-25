@@ -79,7 +79,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | animal-wolf | 🐺 | `game/data/serbian.js` | Serbian phonics picture | One shared simple wolf illustration; calm, readable, consistent with bear reference | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/wolf.png` | — |
 | animal-caterpillar | 🐛 | `game/data/serbian.js`, `sequencing.js` | Phonics and life-cycle sequence | One shared caterpillar asset; curved segmented body, restrained detail, readable at card size | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/caterpillar.png` | — |
 | animal-butterfly | 🦋 | `game/games/sequencing.js` (butterfly life-cycle sequence, stage 3: egg → caterpillar → butterfly) | Life-cycle sequencing | One clearly recognizable butterfly; default style guidance says no face/personification unless specifically approved | GENERATED / CANDIDATE — TECHNICAL QA AND USER REVIEW NOT RECORDED; VISUAL REVIEW REQUIRED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/butterfly.png` | — |
-| object-tree | 🌳 | `game/data/serbian.js`, `sequencing.js`, racing decor | Phonics, tree-growth sequence, scenery | One tree illustration if scale/use match | REVIEW  | — | — |
+| object-tree | 🌳 | `game/data/serbian.js`, `sequencing.js`, racing decor | Phonics, tree-growth sequence, scenery | One tree illustration if scale/use match | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/tree.png` | — |
 | object-student | 🧑‍🎓 | `game/data/serbian.js` | Serbian phonics picture | Simple child/student illustration; not an existing game character | REVIEW  | — | — |
 | object-screen | 🖥️ | `game/data/serbian.js` | Serbian phonics picture | Simple computer monitor illustration | REVIEW  | — | — |
 | object-needle | 🪡 | `game/data/serbian.js` | Serbian phonics picture | Simple needle/thread illustration | REVIEW  | — | — |
@@ -309,6 +309,7 @@ measurements only — they say nothing about how the pictures look.
 | cheese.png | 1024x1024 | rgb | 100/0/0 | 0.0774 | 40.19 | painted (approved 2026-10-25, food batch 1, iteration 2: dropped star ref) |
 | seedling.png | 1024x1024 | rgb | 100/0/0 | 0.0136 | 29.73 | painted (approved 2026-10-25, sequencing batch) |
 | leaves.png | 1024x1024 | rgb | 100/0/0 | 0.0155 | 50.35 | painted (approved 2026-10-25, sequencing batch) |
+| tree.png | 1024x1024 | rgb | 100/0/0 | 0.0171 | 93.69 | painted (approved 2026-10-25, sequencing batch) |
 | pig.png | 1024x1024 | rgba | 0/83/17 | 0.0059 | 163.5 | painted (resampled, task 292) |
 
 Findings that still block the production step:

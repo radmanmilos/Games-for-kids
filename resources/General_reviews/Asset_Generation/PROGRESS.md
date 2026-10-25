@@ -563,4 +563,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — tree (object-tree), generated + approved 2026-10-25 (sequencing batch)
+
+- [x] **Preflight.** The 🌳 glyph is used in `game/data/serbian.js` (phonics), `game/games/sequencing.js` (tree-growth sequence, stage 3: acorn → sprout → tree) and racing decor. No tree illustration existed in `game/` or `resources/`, so the row was eligible for generation.
+- [x] **Category decision — plants/nature** (STYLE_BIBLE.md §12): gentle organic curves, simple leaf/petal groups, avoid dense botanical detail, natural colors soft but identifiable.
+- [x] **Brief written:** `prompts/tree.md` — one simple storybook tree with a short tapered brown trunk and a rounded full green canopy, clear unmistakable tree green, one soft highlight on the upper canopy, deeper green shading along lower edges, brown trunk, no apples/fruit/birds/extra trees/ground/roots/grass, no face, no props.
+- [x] **Reference set:** `bear.png` (canonical anchor) + `star.png` (canonical secondary — golden warmth for paper/finish) + `bone.png` (approved simple-object exemplar — rounded, simple, faceless form). The family is warm, so the green was stated explicitly.
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,036,022 bytes, opaque. Measured: paper 227.83/221.1/199.47, palette-match vs bear 0.0171, small-size legibility proxy 93.69.
+- [x] **User review: APPROVED 2026-10-25.** The row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED` and the picture joins the approved set.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 
