@@ -71,6 +71,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-birthday-cake` | 🎂 | `game/data/serbian.js:29` phonics picture and `piano.js` birthday song label | `prompts/birthday-cake.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/birthday-cake.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 52.5; palette-match 0.0602; visual approval 2026-10-26 |
 | `object-balloons` | 🎈 | `game/games/compare.js` comparison object | `prompts/balloons.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/balloons.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 47.79; palette-match 0.661; visual approval 2026-10-26 |
 | `object-season-leaf` | 🍂 | `classroom.html` seasons activity and `racing-config.js` scenery | `prompts/season-leaf.md`; bear + star | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/season-leaf.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 95.34; palette-match 0.698; visual approval 2026-10-26 |
+| `object-shell` | 🐚 | ocean, driving, Kitty and racing collectible/scenery uses | `prompts/shell.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/shell.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 39.7; palette-match 0.6028; visual approval 2026-10-26 |
+
+## Asset update — 2026-10-26 — shell approved
+
+- [x] **Preflight.** `object-shell` is the shared `🐚` collectible/scenery candidate; existing 3D racing shell geometry is separate and no matching 2D raster asset existed.
+- [x] **Brief written:** `prompts/shell.md` — one centered warm cream/peach/coral seashell with a rounded spiral/fluted ridge and no beach scene.
+- [x] **Reference set:** `bear.png` and `star.png` as canonical style anchors, `bone.png` as the approved simple-object exemplar.
+- [x] **Generated:** `assets_work_in_progress_bundle/shell.png`, 1024x1024 RGB, opaque, 1278997 bytes.
+- [x] **Technical QA:** palette 245.13/235.86/226.56, palette-match 0.6028, small-size contrast 39.7.
+- [x] **User review: APPROVED 2026-10-26.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-26 — season leaf approved
 

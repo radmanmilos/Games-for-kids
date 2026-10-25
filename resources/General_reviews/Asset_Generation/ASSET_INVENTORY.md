@@ -155,7 +155,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-drum | 🥁 | `rhythm.js`, `rhythm.html`, hub | Rhythm pads and activity icon | One canonical drum illustration for prominent pads; hub/control may use icon | REVIEW  | — | — |
 | object-season-leaf | 🍂 | `classroom.html`, `racing-config.js` | Seasons activity and racing scenery | One shared leaf illustration if it is a gameplay visual; UI tile may use icon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/season-leaf.png` | — |
 | object-snowflake | ❄️ | `animal_puzzle.js`, driving/racing config | Winter decoration/collectible | SVG snowflake for tiny effects; illustration only if a large collectible | REVIEW  | — | — |
-| object-shell | 🐚 | `game/games/ocean.js`, `driving.js`, `kitty-standalone.js`, `racing-config.js` | Shared collectible and scenery | One shared shell asset across all listed uses | REVIEW  | — | — |
+| object-shell | 🐚 | `game/games/ocean.js`, `driving.js`, `kitty-standalone.js`, `racing-config.js` | Shared collectible and scenery | One shared shell asset across all listed uses | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/shell.png` | — |
 | object-fish | 🐟 | `adventure-modes.js`, `kitty-standalone.js`, Serbian phonics, ocean | Shared underwater decor, phonics and ocean visual | **One canonical fish asset** reused wherever suitable; no separate adventure-fish/kitty-fish files | REVIEW  | — | — |
 | object-pickaxe | ⛏ | `kitty-standalone.js` | Cave gameplay glyph | SVG or simple illustrated pickaxe if visibly used as a game object | REVIEW  | — | — |
 | object-sparkles | ✨ | `kitty-standalone.js`, `sequencing.js` | Cave/effect glyph and clean-sequence result | Prefer CSS/SVG effect; no unique PNG needed | SVG/CSS  | — | — |
@@ -354,6 +354,7 @@ measurements only — they say nothing about how the pictures look.
 | birthday-cake.png | 1024x1024 | rgb | 100/0/0 | 0.0602 | 52.5 | painted (approved 2026-10-26, objects batch) |
 | balloons.png | 1024x1024 | rgb | 100/0/0 | 0.661 | 47.79 | painted (approved 2026-10-26, objects batch) |
 | season-leaf.png | 1024x1024 | rgb | 100/0/0 | 0.698 | 95.34 | painted (approved 2026-10-26, objects batch; two-reference retry) |
+| shell.png | 1024x1024 | rgb | 100/0/0 | 0.6028 | 39.7 | painted (approved 2026-10-26, objects batch) |
 
 Findings that still block the production step:
 
