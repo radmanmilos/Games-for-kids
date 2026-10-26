@@ -82,6 +82,17 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-palm-tree` | 🌴 | driving, Kitty and racing island/tropical scenery | `prompts/palm-tree.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/palm-tree.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 71.58; palette-match 0.054; visual approval 2026-10-26 |
 | `object-island` | 🏝️ | dino island collectible/theme visual | `prompts/island.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/island.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 51.31; palette-match 0.6802; visual approval 2026-10-26 |
 | `object-volcano` | 🌋 | dino volcano collectible/theme visual | `prompts/volcano.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/volcano.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 166.75; palette-match 0.548; visual approval 2026-10-26 |
+| `object-cactus` | 🌵 | driving and dino desert-theme collectibles | `prompts/cactus.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cactus.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 60.11; palette-match 0.0089; visual approval 2026-10-26 |
+
+## Asset update — 2026-10-26 — cactus approved
+
+- [x] **Preflight.** `object-cactus` is the shared `🌵` desert-theme collectible candidate for driving and dino; no matching raster asset existed.
+- [x] **Brief written:** `prompts/cactus.md` — one upright rounded green saguaro with a tall central column, exactly two arms, and restrained pale spines.
+- [x] **Reference set:** `bear.png`, `star.png` and `bone.png` as style/detail references.
+- [x] **Generated:** `assets_work_in_progress_bundle/cactus.png`, 1024x1024 RGB, opaque, 1191634 bytes.
+- [x] **Technical QA:** palette 227.53/225.85/216.26, palette-match 0.0089, small-size contrast 60.11.
+- [x] **User review: APPROVED 2026-10-26.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-26 — volcano approved
 
