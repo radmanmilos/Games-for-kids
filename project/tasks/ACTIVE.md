@@ -18,4 +18,12 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
+### Task 289 handoff update — 2026-10-26
+
+Prompt coverage is complete for the approved queue through `cactus.png`. After Cloudflare recharges, retry `prompts/parrot.md` first with its documented `bear.png`, `star.png` and `bird.png` references. Do not generate rows marked `REVIEW` or visual-review-pending. Run technical QA and obtain user visual approval after each generated image.
+
+User-approved preparation scope: add briefs for 29 post-parrot candidates (20 standalone/raster candidates plus 9 possible designed assets). Briefs are prepared, not generation-approved.
+
+Next-generation instruction: process `parrot.md` and then the prepared prompts strictly one by one. For every image, run technical QA, obtain explicit user visual approval, update inventory/progress, commit with an `Agent: <tool>/<model>` trailer, and push to `main`. Do not batch-generate or perform runtime integration.
+
 - 289. IN PROGRESS (2026-10-22, OpenCode/Big Pickle; updated 2026-10-26, Codex/GPT-5) — Asset-bundle reconciliation (WIP): bundle has **91 PNGs**. The recommended queue through `cactus.png` is approved and documented. Next is `parrot.png`; `resources/General_reviews/Asset_Generation/prompts/parrot.md` is prepared with bear/star/bird references, but no PNG exists because Cloudflare returned HTTP 429/code 4006. Retry this prompt first in the next session. No runtime integration.

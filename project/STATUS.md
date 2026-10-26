@@ -29,6 +29,14 @@
 
 ## Rules of the road
 
+## Prompt handoff — 2026-10-26
+
+- Prompt coverage audit: the approved generation queue through `cactus.png` is fully prompted. The only queue asset without a PNG is `parrot.png`; its complete brief is `resources/General_reviews/Asset_Generation/prompts/parrot.md`.
+- When Cloudflare recharges, retry `parrot.md` first with `bear.png`, `star.png` and `bird.png`. Do not generate `REVIEW` or visual-review-pending rows. Technical QA and user visual approval happen after each generated image.
+- The measured `soap`, `sunflower`, `butterfly`, `acorn`, `mushroom` and `egg` files still await visual review; they are not missing prompts to generate.
+- Additional preparation requested 2026-10-26: 29 new briefs were added for the post-parrot candidate list. They are prompt-ready only; they remain subject to inventory eligibility, generation approval, one-at-a-time generation, technical QA and user visual approval.
+- Generation handoff rule: the next agent must process the prompts strictly one by one, starting with `parrot.md`, then the 29 prepared briefs in the documented order. After each approved image, update the inventory/progress records, commit the asset and documentation with an `Agent: <tool>/<model>` trailer, and push to `main` as requested by the user. Do not batch-generate, skip QA, or integrate runtime assets in this task.
+
 - `game/` changes ⇒ `node tools/build_offline.js` FIRST, then `tools/sync-docs.sh`, then refresh affected review screenshots. Never edit `docs/` by hand.
 - Never commit Cloudflare credentials (`tools/vendor/` is git-ignored). Never push to `main` without the user asking.
 - Keep `resources/` and `tools/` for dev assets and tooling; `game/` must stay deployable-only.

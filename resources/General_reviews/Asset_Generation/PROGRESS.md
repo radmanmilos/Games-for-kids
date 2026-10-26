@@ -64,6 +64,29 @@ This file is the single progress tracker for the emoticon replacement project. U
 
 Add one row per asset. Keep this table synchronized with the inventory.
 
+## Prompt coverage audit and generation handoff — 2026-10-26
+
+- All currently approved-for-generation queue entries through `cactus.png` have matching briefs in `prompts/`.
+- The only prompt without a WIP PNG is `prompts/parrot.md`. Retry it first after Cloudflare recharges, using `bear.png`, `star.png` and `bird.png`.
+- `soap`, `sunflower`, `butterfly`, `acorn`, `mushroom` and `egg` already have measured PNGs but remain visual-review-pending; they are not a generation queue.
+- Do not generate rows marked `REVIEW` or visual-review-pending. After each generated image, run technical QA and wait for user visual approval before updating inventory/status and moving on.
+- Command template: `node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/<name>.md --out resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/<name>.png --creds "tools/vendor/Cloudflare-credentials,json" --dry-run`; repeat without `--dry-run` only after preflight.
+
+## Prompt preparation batch — 2026-10-26
+
+The user requested preparatory briefs for these post-parrot candidates. These files are **prepared only**, not generated, reviewed, user-approved, production-ready or integrated:
+
+`satellite.md`, `telescope.md`, `ice-cube.md`, `comet.md`, `ball.md`, `pine-tree.md`, `mountain.md`, `beach-umbrella.md`, `surfboard.md`, `wave.md`, `skis.md`, `skier.md`, `evergreen-lantern.md`, `grass.md`, `spaceship.md`, `sun.md`, `sunrise.md`, `sunset.md`, `clock.md`, `bell.md`, `cards-pattern.md`, `school.md`, `notebook.md`, `puzzle-piece.md`, `basket.md`, `compass.md`, `pencil.md`, `medal.md`, `rainbow.md`.
+
+`bell.md` is the shared brief for both `object-bell` and `object-music-bell`. Before each future generation, re-check the current inventory row, duplicate/reuse options and whether SVG/CSS is more suitable; do not spend Cloudflare quota on rows that remain review-only or are better implemented as UI geometry.
+
+### Required generation handoff
+
+1. Start with the blocked `parrot.md` retry, then process the 29 briefs above in order, strictly one image at a time.
+2. For each candidate: preflight, dry-run, generate, run technical QA, present the image for explicit user visual approval, and only then update inventory/progress/style-bible records.
+3. After each approved candidate, commit the image and documentation and push to `main`. The commit message must include `Agent: <tool>/<model>`.
+4. Do not batch-generate, mark generated files user-approved without review, copy assets into `game/`, swap runtime glyphs, or run runtime integration as part of this generation task.
+
 | Asset ID | Replaces glyph / current visual | Used by | Prompt/reference saved? | File | Status | QA / notes |
 |---|---|---|---|---|---|---|
 | `object-bone` | 🦴 | `game/games/spatial.js` — “Where is the bone?” task | Prompt was generated in chat; no separate prompt file verified | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bone.png` | GENERATED / USER-APPROVED CANDIDATE | User praised the result and reported adding it to the repo; production readiness, transparency, dimensions, file size, and in-game scale not independently checked |
