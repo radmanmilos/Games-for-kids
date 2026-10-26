@@ -18,4 +18,4 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 289. IN PROGRESS (2026-10-22, OpenCode/Big Pickle; updated 2026-10-26, Codex/GPT-5) — Asset-bundle reconciliation (WIP): bundle has **91 PNGs**. The recommended illustration queue through `cactus.png` is approved and documented; the volcano required a taller/more-lava retry. User directed selecting references case-by-case from existing project images rather than defaulting to bear/star. Existing measured candidates awaiting visual review and runtime integration remain separate. No runtime integration.
+- 289. IN PROGRESS (2026-10-22, OpenCode/Big Pickle; updated 2026-10-26, Codex/GPT-5) — Asset-bundle reconciliation (WIP): bundle has **91 PNGs**. The recommended queue through `cactus.png` is approved and documented. Next is `parrot.png`; `resources/General_reviews/Asset_Generation/prompts/parrot.md` is prepared with bear/star/bird references, but no PNG exists because Cloudflare returned HTTP 429/code 4006. Retry this prompt first in the next session. No runtime integration.

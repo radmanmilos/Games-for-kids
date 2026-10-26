@@ -54,6 +54,14 @@ This file is the single progress tracker for the emoticon replacement project. U
 
 ## Asset status ledger
 
+### Next-session handoff — 2026-10-26
+
+- **Next asset:** `object-parrot` / `parrot.png`.
+- **Prompt already prepared:** `prompts/parrot.md`; do not rewrite it before retrying.
+- **References already selected:** `bear.png`, `star.png`, `bird.png`.
+- **Current state:** dry run passed, but both live requests returned Cloudflare HTTP 429/code 4006; no `parrot.png` was created and no inventory approval record exists yet.
+- **Resume rule:** retry the existing prompt, then run technical QA and visual review. Only after user approval update the inventory, QA table, style-bible exemplar, status, commit and push.
+
 Add one row per asset. Keep this table synchronized with the inventory.
 
 | Asset ID | Replaces glyph / current visual | Used by | Prompt/reference saved? | File | Status | QA / notes |
