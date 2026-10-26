@@ -2,7 +2,7 @@
 
 *Overwrite this file at the end of every session (never append). Budget: 6 KB, checked by `node tools/check_docs.js`.*
 
-**Last updated:** 2026-10-25 · **App version:** 2.4.0 (`game/manifest.json`) · **Repository:** https://github.com/radmanmilos/Games-for-kids
+**Last updated:** 2026-10-26 · **App version:** 2.4.0 (`game/manifest.json`) · **Repository:** https://github.com/radmanmilos/Games-for-kids
 
 ## Where we are
 
@@ -13,7 +13,7 @@
 - **Task 290 DONE (2026-10-22)** — `object-water-drop`; user-approved, archived and indexed on 2026-10-25 (the bookkeeping had not reached `main`).
 - **Task 291 DONE (2026-10-25, OpenCode/Big Pickle)** — generation-process carry-over only: `tools/asset_generate.js --subject-ref` (image 0 = the *subject*: copy its shape and colours, take only the rendering style from the family references) plus finding 9 in `ASSET_INVENTORY.md`. The local 2026-10-22 soap render and `prompts/soap.md` were **discarded at the user's request**; the `soap.png` on `main` (2026-10-23 session, `38e22de`) stands. Committed `c10a59b`.
 - **Task 292 DONE (2026-10-25, OpenCode/Big Pickle)** — resolution pass on the nine smallest approved files (`duck`, `cow`, `fish`, `star`, `apple`, `dog`, `cat`, `bear`, `pig`): resampled to 1024x1024 with the new `tools/asset_upscale.js` (Lanczos-3, same art, no repaint), verified at correlation 0.9587-0.9995 against the originals, **user-approved**, old files removed and the `_1` copies renamed to the original names. Docs updated with the new sizes.
-- **Task 289 IN PROGRESS** — asset-bundle reconciliation. Bundle holds **67 PNGs**. `ear.png` and `helicopter.png` are committed; `car.png` is user-approved and technically measured, with `driving-car.png` as its subject reference and `helicopter.png`/`screen.png` as style references. `soap.png`, `sunflower.png`, `butterfly.png`, `acorn.png` and `mushroom.png` await user visual review; `flower.png` is approved and `egg.png` remains measured awaiting review. No runtime integration. Continue one missing bundle item at a time, choosing references from existing project images for each subject rather than defaulting to bear/star.
+- **Task 289 IN PROGRESS** — asset-bundle reconciliation. Bundle holds **90 PNGs**. The current generation queue through `volcano.png` is approved and documented; the volcano required one taller/more-lava retry. Existing measured candidates (`soap.png`, `sunflower.png`, `butterfly.png`, `acorn.png`, `mushroom.png`, `egg.png`) still await visual review where noted in the inventory. No runtime integration. Continue one missing bundle item at a time, choosing references from existing project images for each subject rather than defaulting to bear/star.
 - **Pages gated on CI (task 274):** CI's `pages` job publishes `docs/` only from a green push on `main`.
 
 ## Asset-generation next steps

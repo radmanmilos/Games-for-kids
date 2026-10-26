@@ -81,6 +81,16 @@ Add one row per asset. Keep this table synchronized with the inventory.
 | `object-candy-rice` | 🍡 | `racing-config.js` candy-world scenery/decor | `prompts/dango.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/dango.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 17.96; palette-match 0.4033; visual approval 2026-10-26 |
 | `object-palm-tree` | 🌴 | driving, Kitty and racing island/tropical scenery | `prompts/palm-tree.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/palm-tree.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 71.58; palette-match 0.054; visual approval 2026-10-26 |
 | `object-island` | 🏝️ | dino island collectible/theme visual | `prompts/island.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/island.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 51.31; palette-match 0.6802; visual approval 2026-10-26 |
+| `object-volcano` | 🌋 | dino volcano collectible/theme visual | `prompts/volcano.md`; bear + star + bone | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/volcano.png` | GENERATED / USER-APPROVED CANDIDATE | 1024x1024 RGB, opaque; small-size contrast 166.75; palette-match 0.548; visual approval 2026-10-26 |
+
+## Asset update — 2026-10-26 — volcano approved
+
+- [x] **Preflight.** `object-volcano` is the `🌋` dino collectible/theme visual candidate; no matching raster asset existed.
+- [x] **Brief revised after review.** The first candidate was rejected because the cone needed to be taller with more lava; `prompts/volcano.md` now requires a noticeably tall cone, a larger lava pool and several broad lava flows.
+- [x] **Generated retry:** `assets_work_in_progress_bundle/volcano.png`, 1024x1024 RGB, opaque, 1333656 bytes.
+- [x] **Technical QA:** palette 214.4/202.58/197.52, palette-match 0.548, small-size contrast 166.75.
+- [x] **User review: APPROVED 2026-10-26.** The inventory row is now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Asset update — 2026-10-26 — island approved
 

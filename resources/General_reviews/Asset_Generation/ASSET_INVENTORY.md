@@ -168,7 +168,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-candy-rice | 🍡 | `racing-config.js`; `game/games/racing-config.js` | Candy-world scenery; Candy world decor | Simple dango/skewer asset if retained in scenery | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/dango.png` | — |
 | object-palm-tree | 🌴 | driving/Kitty/racing config | Island/tropical scenery and collectible context | One shared palm tree asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/palm-tree.png` | — |
 | object-island | 🏝️ | `dino.js`; `game/games/dino.js` | Island collectible/theme glyph; World collectible/theme glyph | Could be a simple island illustration if this glyph is visibly rendered as an object | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/island.png` | — |
-| object-volcano | 🌋 | `dino.js`; `game/games/dino.js` | Volcano collectible/theme glyph; World collectible/theme glyph | Simple volcano asset only if visibly rendered as collectible | REVIEW  | — | — |
+| object-volcano | 🌋 | `dino.js`; `game/games/dino.js` | Volcano collectible/theme glyph; World collectible/theme glyph | Simple volcano asset only if visibly rendered as collectible | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/volcano.png` | — |
 | object-cactus | 🌵 | driving/dino theme collectibles | Desert theme | One shared cactus asset | REVIEW  | — | — |
 | object-parrot | 🦜 | `dino.js`, racing decor | Tropical collectible/scenery | One shared parrot asset | REVIEW  | — | — |
 | object-butterfly | 🦋 | maze/racing decor | Garden/forest scenery | One shared butterfly asset | REVIEW  | — | — |
@@ -357,6 +357,7 @@ measurements only — they say nothing about how the pictures look.
 | shell.png | 1024x1024 | rgb | 100/0/0 | 0.6028 | 39.7 | painted (approved 2026-10-26, objects batch) |
 | gem.png | 1024x1024 | rgb | 100/0/0 | 0.0115 | 47.46 | painted (approved 2026-10-26, objects batch) |
 | moon.png | 1024x1024 | rgb | 100/0/0 | 0.6799 | 26.03 | painted (approved 2026-10-26, objects batch) |
+| volcano.png | 1024x1024 | rgb | 100/0/0 | 0.548 | 166.75 | painted (approved 2026-10-26, taller/more-lava retry) |
 
 Findings that still block the production step:
 
