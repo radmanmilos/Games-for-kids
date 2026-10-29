@@ -1168,3 +1168,12 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **Generated (iteration 2, kept):** 1024x1024, 822,917 bytes, opaque. Measured: paper 239.97/236.92/228.73, palette-match vs bear 0.1786, small-size legibility proxy 21.88 (low — a pale moon on warm paper is a small luminance step, the same class as the approved `bone` 32.61 and `egg` 39.66).
 - [x] **User review: APPROVED 2026-10-29.** The inventory row stays `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`, now with the iteration-2 measurements.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — telescope (object-telescope), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/space.js` uses `🔭` for the space/world collectible-theme glyphs; no telescope existed in the bundle, so the row was duplicate-free.
+- [x] **Iteration 1 (discarded):** prepared brief unchanged, references `bear.png` + `star.png` + `bone.png`. Generated 1024x1024, 1,404,831 bytes, palette-match 0.2327, small contrast 64.49. **User feedback: looks good, but the tube should be more like a real one — a glass lens at the wide end pointing up, and a narrow viewing end.**
+- [x] **Iteration 2 (approved):** brief rewritten as a real refractor build — two or three stepped barrel segments tapering front to back, a visible round pale blue-white glass lens seated inside the wide upper front rim with one soft highlight, a small narrow eyepiece with a dark opening at the lower rear, a simple mount and a three-legged tripod; exclusions added for camera/trumpet/plain-tube readings.
+- [x] **Generated (iteration 2, kept):** 1024x1024, 1,339,686 bytes, opaque. Measured: paper 238.93/234.83/227.59, palette-match vs bear 0.6727, small-size legibility proxy 59.74. (The PNG reached `main` in commit `790fd57` alongside the moon regeneration; approval followed the review the same day.)
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
