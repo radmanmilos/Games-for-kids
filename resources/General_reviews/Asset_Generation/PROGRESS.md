@@ -1344,3 +1344,23 @@ No runtime integration, no glyph swap, no screenshot refresh, no offline pack, n
 - [x] **music-bell (object-music-bell)** — song label. Reuses the already-approved `bell.png` instead of generating a new asset. **User review: APPROVED 2026-10-29.**
 
 No runtime integration, no glyph swap, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — playing-cards, snowflake, rock, road-barrier, galaxy (2026-10-29, task 289)
+
+- [x] **playing-cards (object-playing-cards)** — memory hub/card-back symbol. Brief unchanged. Generated 1,482,184 bytes, opaque. Measured: paper 226.31/215.28/204.97, palette-match vs bear 0.0249, small-size legibility proxy 71.15. **User review: APPROVED 2026-10-29.**
+- [x] **snowflake (object-snowflake)** — winter decoration/collectible. Brief unchanged. Generated 616,119 bytes, opaque. Measured: paper 247.12/249.51/250.68, palette-match vs bear 0.6595, small-size legibility proxy 25.07. **User review: APPROVED 2026-10-29.**
+- [x] **rock (object-rock)** — racing obstacle. Brief unchanged. Generated 1,321,573 bytes, opaque. Measured: paper 215.33/212.52/207.72, palette-match vs bear 0.5744, small-size legibility proxy 128.22. **User review: APPROVED 2026-10-29.**
+- [x] **road-barrier (object-road-barrier)** — racing obstacle. Brief unchanged. Generated 962,739 bytes, opaque. Measured: paper 231.63/228.75/225.18, palette-match vs bear 0.6722, small-size legibility proxy 58.96. **User review: APPROVED 2026-10-29.**
+- [x] **galaxy (object-galaxy)** — space world theme/scenery. Brief unchanged. Generated 1,572,066 bytes, opaque. Measured: paper 223.74/222.3/215.38, palette-match vs bear 0.0129, small-size legibility proxy 65.53. **User review: APPROVED 2026-10-29.**
+
+No runtime integration, no glyph swap, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — card-stack, celebration, meteor, night-sky, puddle (2026-10-29, task 289)
+
+- [x] **card-stack (object-card-stack)** — memory game icon/card back. Iteration 2 was rejected (sides too uniform, card face did not match the approved playing-cards). Iteration 3 used `playing-cards.png` as a subject reference so the top card matches the approved card style exactly, with a staggered/uneven stack. Generated 1,254,833 bytes, opaque. Measured: paper 238.3/231.53/224.59, palette-match vs bear 0.0086, small-size legibility proxy 60.19. **User review: APPROVED 2026-10-29.**
+- [x] **celebration (object-celebration)** — success/feedback. Iteration 1 (party popper) and iteration 2 (party horn) were rejected. Iteration 3 is a whimsical brass trumpet with confetti flying from the bell. Generated 963,696 bytes, opaque. Measured: paper 247.09/245/238.41, palette-match vs bear 0.6942, small-size legibility proxy 31.02. **User review: APPROVED 2026-10-29.**
+- [x] **meteor (object-meteor)** — space collectible/effect. Iteration 1 and 2 were rejected. Iteration 3 is an irregular gray rock with small craters and no tail, using `comet.png` as a shape reference. Generated 868,543 bytes, opaque. Measured: paper 230.29/230.5/230.13, palette-match vs bear 0.6608, small-size legibility proxy 100.16. **User review: APPROVED 2026-10-29.**
+- [x] **night-sky (object-night-sky)** — time-of-day teaching and world motif. Iteration 1 was rejected. Iteration 2 was dark but the bear reference bled in. Iteration 3 uses a dark black background with no bear reference, crescent moon and a few stars. Generated 2,018,229 bytes, opaque. Measured: paper 38.47/44.31/56.75, palette-match vs bear 0.0139, small-size legibility proxy 67.28. **User review: APPROVED 2026-10-29.**
+- [x] **puddle (object-puddle)** — racing obstacle. Iteration 1 (top-down circle) and iteration 2 (side view, plate-like) were rejected. Iteration 3 has a real puddle feel: irregular wavy edges, water on ground, splash droplets, ripple marks. Generated 1,250,834 bytes, opaque. Measured: paper 234.45/229.68/219.01, palette-match vs bear 0.0129, small-size legibility proxy 37.25. **User review: APPROVED 2026-10-29.**
+
+No runtime integration, no glyph swap, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.

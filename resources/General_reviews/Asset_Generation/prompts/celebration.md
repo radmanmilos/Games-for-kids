@@ -12,16 +12,18 @@ Canvas: square 1024×1024 WIP image, one centered celebration motif with generou
 
 Background: warm cream storybook paper; no transparency required for WIP.
 
+Iteration note (2026-10-29): iteration 1 (party popper) was not accepted. Iteration 2 (party horn with confetti) was not accepted. User feedback: **more whimsical, like a brass trumpet, with confetti flying from it.**
+
 --- prompt ---
 
-Create one clearly recognizable simple celebration motif as a standalone children's storybook illustration: a single party popper or confetti burst.
+Create one clearly recognizable simple celebration motif as a standalone children's storybook illustration: a **small brass trumpet** with confetti flying from its bell.
 
-- One small party popper (cone) in muted warm coral and cream, with a short burst of soft painted confetti pieces (small circles and ribbons in muted blue, golden yellow and coral) arcing out of the top.
-- Soft watercolor grain, rounded softened painted edges, gentle shading, no strong motion lines.
-- No text, no banners, no people, no cake, no scene.
+- **Brass trumpet:** one compact, slightly curved brass trumpet in warm golden-yellow with a soft painted shine, a rounded bell at one end and a small mouthpiece at the other, held at a slight upward angle. Muted, matte painted brass — not a shiny 3D render.
+- **Confetti:** a lively burst of small soft painted confetti pieces (circles, ribbons and tiny stars in muted blue, golden yellow, coral and cream) flying out of the bell, arcing upward and to the right, with gentle painted motion. Whimsical and light.
+- Soft watercolor grain, rounded softened painted edges, gentle shading, no strong motion lines, no strong glow.
 
 Keep the silhouette simple and readable at small size, in the Little Play family style with no heavy outline.
 
-Center the motif with comfortable padding and no cropping. It is the only subject. It must read as a small celebration popper, not a firework, explosion or star.
+Center the motif with comfortable padding and no cropping. It is the only subject. It must read as a whimsical brass trumpet with confetti, not a party horn, a firework, an explosion or a star.
 
-No fireworks, explosion, star, person, cake, banner, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra objects.
+No party horn, fireworks, explosion, star burst, person, cake, banner, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra objects.
