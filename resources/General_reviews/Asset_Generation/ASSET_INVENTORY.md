@@ -356,7 +356,7 @@ measurements only — they say nothing about how the pictures look.
 | season-leaf.png | 1024x1024 | rgb | 100/0/0 | 0.698 | 95.34 | painted (approved 2026-10-26, objects batch; two-reference retry) |
 | shell.png | 1024x1024 | rgb | 100/0/0 | 0.6028 | 39.7 | painted (approved 2026-10-26, objects batch) |
 | gem.png | 1024x1024 | rgb | 100/0/0 | 0.0115 | 47.46 | painted (approved 2026-10-26, objects batch) |
-| moon.png | 1024x1024 | rgb | 100/0/0 | 0.1786 | 21.88 | painted (approved 2026-10-29, full moon with craters, iteration 2) |
+| moon.png | 1024x1024 | rgb | 100/0/0 | 0.5837 | 64.53 | painted (approved 2026-10-29, full moon with craters, yellow-grey iteration 3) |
 | telescope.png | 1024x1024 | rgb | 100/0/0 | 0.6727 | 59.74 | painted (approved 2026-10-29, iteration 2) |
 | volcano.png | 1024x1024 | rgb | 100/0/0 | 0.548 | 166.75 | painted (approved 2026-10-26, taller/more-lava retry) |
 | cactus.png | 1024x1024 | rgb | 100/0/0 | 0.0089 | 60.11 | painted (approved 2026-10-26, desert batch) |

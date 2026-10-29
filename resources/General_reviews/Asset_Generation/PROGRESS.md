@@ -1164,9 +1164,9 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 
 - [x] **Preflight.** The row was already `GENERATED / USER-APPROVED` from the 2026-10-26 objects batch, but the user reported at play-test review that the picture reads as a young crescent moon and asked for a full moon with craters, closer to the real moon. The brief is rewritten in place (`prompts/moon.md`) and the asset regenerated as iteration 2.
 - [x] **Iteration 1 (replaced):** broad crescent moon, 1024x1024, palette-match 0.6799, small contrast 26.03.
-- [x] **Iteration 2 (approved):** brief specifies one complete round, evenly lit disc, 4-6 soft shallow craters (one larger upper-left), warm pale cream-yellow; explicitly bans crescents, shadow sides, faces and ball/cookie/cheese readings. References `bear.png` + `star.png` + `bone.png`.
-- [x] **Generated (iteration 2, kept):** 1024x1024, 822,917 bytes, opaque. Measured: paper 239.97/236.92/228.73, palette-match vs bear 0.1786, small-size legibility proxy 21.88 (low — a pale moon on warm paper is a small luminance step, the same class as the approved `bone` 32.61 and `egg` 39.66).
-- [x] **User review: APPROVED 2026-10-29.** The inventory row stays `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`, now with the iteration-2 measurements.
+- [x] **Iteration 2 (approved shape):** brief specifies one complete round, evenly lit disc, 4-6 soft shallow craters (one larger upper-left), warm pale cream-yellow; explicitly bans crescents, shadow sides, faces and ball/cookie/cheese readings. References `bear.png` + `star.png` + `bone.png`. Generated 1024x1024, 822,917 bytes, palette-match 0.1786, small contrast 21.88.
+- [x] **Iteration 3 (approved colour):** user asked for the colour to be **more yellow-grey** — the disc is now a warm dusty ochre tint dulled with mid grey (explicitly not bright cream, pure white, orange or gold); shape, craters and lighting unchanged. Generated 1024x1024, 1,308,073 bytes. Measured: paper 227.61/227.12/220.87, palette-match vs bear 0.5837, small-size legibility proxy 64.53.
+- [x] **User review: APPROVED 2026-10-29** (iteration 3). The inventory row stays `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`, now with the iteration-3 measurements.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
 ## Approved — telescope (object-telescope), generated + approved 2026-10-29 (task 289)
