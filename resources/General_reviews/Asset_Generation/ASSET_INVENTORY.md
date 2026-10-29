@@ -204,7 +204,7 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | animal-baby-chick | 🐤 | `game/games/compare.js`, `spatial.js` | Comparison pool and spatial scene | Reuse chick only if visual distinction is not pedagogically needed; otherwise keep a separate canonical variant | COVERED by `animal-chick` (`chick.png`, approved) — reuse chick; no separate asset |
 | animal-mouse | 🐭 | `game/games/spatial.js` | Spatial scene / position task | Simple mouse illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/mouse.png`) |
 | food-cheese | 🧀 | `game/games/spatial.js` | Spatial scene / position task | Simple cheese illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/cheese.png`) |
-| object-ball | ⚽ | `game/games/spatial.js` | Spatial scene / position task | Keep a clear, simple ball illustration; SVG may be sufficient | REVIEW |
+| object-ball | ⚽ | `game/games/spatial.js` | Spatial scene / position task | Keep a clear, simple ball illustration; SVG may be sufficient | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/ball.png` | — |
 | object-pine-tree | 🌲 | `game/games/racing-config.js` | Winter/forest scenery | Reuse tree family only if evergreen silhouette is distinct enough | REVIEW |
 | object-mountain | ⛰️ | `game/games/racing-config.js` | Racing scenery | SVG/CSS scenery shape or one simple illustration | REVIEW |
 | object-beach-umbrella | ⛱️ | `game/games/racing-config.js` | Beach scenery | Simple illustration only if the glyph is actually visible at meaningful size | REVIEW |
@@ -359,6 +359,7 @@ measurements only — they say nothing about how the pictures look.
 | moon.png | 1024x1024 | rgb | 100/0/0 | 0.5837 | 64.53 | painted (approved 2026-10-29, full moon with craters, yellow-grey iteration 3) |
 | telescope.png | 1024x1024 | rgb | 100/0/0 | 0.6727 | 59.74 | painted (approved 2026-10-29, iteration 2) |
 | ice-cube.png | 1024x1024 | rgb | 100/0/0 | 0.6594 | 38.48 | painted (approved 2026-10-29, iteration 1) |
+| ball.png | 1024x1024 | rgb | 100/0/0 | 0.011 | 39.94 | painted (approved 2026-10-29, iteration 1) |
 | volcano.png | 1024x1024 | rgb | 100/0/0 | 0.548 | 166.75 | painted (approved 2026-10-26, taller/more-lava retry) |
 | cactus.png | 1024x1024 | rgb | 100/0/0 | 0.0089 | 60.11 | painted (approved 2026-10-26, desert batch) |
 | parrot.png | 1024x1024 | rgb | 100/0/0 | 0.1234 | 128.63 | painted (approved 2026-10-29, Scarlet macaw, iteration 3) |

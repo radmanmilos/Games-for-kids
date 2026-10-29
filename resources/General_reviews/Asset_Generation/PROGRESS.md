@@ -1185,3 +1185,11 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **Generated (iteration 2, kept):** 1024x1024, 1,339,686 bytes, opaque. Measured: paper 238.93/234.83/227.59, palette-match vs bear 0.6727, small-size legibility proxy 59.74. (The PNG reached `main` in commit `790fd57` alongside the moon regeneration; approval followed the review the same day.)
 - [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — ball (object-ball), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/spatial.js` uses `⚽` in the spatial position task; the bundle had no ball asset (nearest is `balloons.png`, a different subject), and the prepared brief noted SVG could also be sufficient — the painted asset is preferred because it joins the shared family.
+- [x] **Brief unchanged** from the prepared version: one round cream football with a few broad muted blue-grey pentagonal patches, matte painted finish; must read as a ball, not a planet, balloon or cookie. References `bear.png` + `star.png` + `bone.png`.
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,374,115 bytes, opaque. Measured: paper 230.37/227.25/220.74, palette-match vs bear 0.011, small-size legibility proxy 39.94.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
