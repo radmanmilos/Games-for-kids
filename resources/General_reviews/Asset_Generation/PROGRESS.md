@@ -1286,3 +1286,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **Generated (iteration 3, kept):** 1024x1024, 1,576,742 bytes, opaque. Measured: paper 234.73/221.19/202.76, palette-match vs bear 0.0327, small-size legibility proxy 93.43.
 - [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — grass (object-grass), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/racing-config.js` uses `🌾` for farm scenery; the bundle had no grass PNG (only `tree.png` and `palm-tree.png`), so the row was duplicate-free.
+- [x] **Iteration 1 (discarded):** prepared brief unchanged — several broad simple green and warm-golden blades from one compact base. Generated 728,874 bytes, palette-match 0.1015, small contrast 28.97. **User feedback: just green grass, no flower and no star.**
+- [x] **Iteration 2 (discarded):** brief rewritten to plain green blades only, explicit bans on flowers, petals, buds, seed heads, star-shaped tips and berries. Generated 732,476 bytes, palette-match 0.6652, small contrast 62.02. **User feedback: thinner and more grassy.**
+- [x] **Iteration 3 (discarded):** brief rewritten around many thin slender blades (eight to twelve) with varied leaning and curving. Generated 666,166 bytes, palette-match 0.6666, small contrast 44.07. **User feedback: short grass, not tall grass.**
+- [x] **Iteration 4 (approved):** brief rewritten with a compact low tuft — blades reach only the lower third to half of the canvas height, like a clipped lawn patch, while keeping the thin-blade green character. Bans on tall blades added.
+- [x] **Generated (iteration 4, kept):** 1024x1024, 810,315 bytes, opaque. Measured: paper 217.89/218.62/207.58, palette-match vs bear 0.0016, small-size legibility proxy 69.21.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
