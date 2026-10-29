@@ -6,7 +6,15 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 (async () => {
   const h = await start({ page: '/pages/parent.html', tag: 'parent-smoke', width: 1100, height: 800 });
-  await sleep(1200);
+  /* Readiness wait, not a sleep (task 293): Page.navigate resolves when the
+     navigation commits, so the page's own inline script may not have run yet.
+     A fixed 1200 ms was enough on the dev host but not on a loaded CI runner —
+     the schedule run on 2026-10-26 read the «…» placeholder and 0 choices and
+     reported it as a gate failure. Poll the render the assertions depend on;
+     the gate checks below are unchanged, so a genuinely unrendered gate still
+     fails them. */
+  await h.waitFor(`document.querySelectorAll('.gate-choice').length === 4`,
+    { timeout: 15000, label: 'parent gate choices to render' });
 
   /* --- Parent gate (task 201, user-requested) --------------------------------
      The gate exists so a small child cannot reach «Преузми за офлајн рад» or
@@ -91,7 +99,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
      clipped (the centred-flex overflow trap) and the last action is reachable
      after scrolling. */
   const small = await start({ page: '/pages/parent.html', tag: 'parent-smallvp', width: 390, height: 480 });
-  await sleep(1000);
+  // Same readiness wait: this block calls window.__parentGate immediately, so a
+  // page load slower than a fixed sleep would throw instead of failing a check.
+  await small.waitFor(`document.querySelectorAll('.gate-choice').length === 4`,
+    { timeout: 15000, label: 'small-viewport parent gate choices to render' });
   const sSolve = await small.evalv(`String(window.__parentGate.answer())`);
   await small.tap(`.gate-choice[data-value="${sSolve}"]`);
   await sleep(200);
