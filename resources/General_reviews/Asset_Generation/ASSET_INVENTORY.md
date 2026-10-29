@@ -123,21 +123,21 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-sled | 🛷 | `animal_puzzle.js` | Winter puzzle | Simple sled illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sled.png` | — |
 | animal-penguin | 🐧 | `animal_puzzle.js` | Winter puzzle | Simple penguin illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/penguin.png` | — |
 | object-birthday-cake | 🎂 | `game/data/serbian.js:29` (`Торта`), `piano.js` | Phonics picture and song label | One shared cake illustration; piano UI may use smaller icon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/birthday-cake.png` | — |
-| object-bell | 🔔 | `piano.js` | Song label | Simple bell or SVG icon | REVIEW  | — | — |
+| object-bell | 🔔 | `piano.js` | Song label | Simple bell or SVG icon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bell.png` | - |
 | object-balloons | 🎈 | `compare.js` | Comparison object | Simple balloon illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/balloons.png` | — |
-| object-rainbow | 🌈 | `game/index.html` | Main hub title and favicon; Main hub brand/title/favicon | Small brand illustration/logo; treat as hub branding rather than game object | REVIEW  | — | — |
-| object-school | 🏫 | `game/index.html`, `classroom.html` | Hub/classroom icon | Prefer consistent small UI icon or reuse a simple school illustration | REVIEW  | — | — |
-| object-notebook | 📝 | `game/index.html` | Learning hub tile | UI icon or small illustration depending on tile style | REVIEW  | — | — |
+| object-rainbow | 🌈 | `game/index.html` | Main hub title and favicon; Main hub brand/title/favicon | Small brand illustration/logo; treat as hub branding rather than game object | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/rainbow.png` | - |
+| object-school | 🏫 | `game/index.html`, `classroom.html` | Hub/classroom icon | Prefer consistent small UI icon or reuse a simple school illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/school.png` | - |
+| object-notebook | 📝 | `game/index.html` | Learning hub tile | UI icon or small illustration depending on tile style | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/notebook.png` | - |
 | object-gamepad | 🎮 | `game/index.html` | Game hub label | UI icon, not watercolor object by default | UI ICON  | — | — |
 | object-playing-cards | 🃏 | `game/index.html`, `animal_memory.html` | Memory hub/card-back symbol | Replace card-back with a designed card pattern; hub icon can remain UI | REVIEW  | — | — |
 | object-puzzle-piece | 🧩 | `game/index.html` | Puzzle hub icon | SVG/UI icon or reuse designed puzzle-piece asset if used as a game object | REVIEW  | — | — |
 | object-scale | ⚖️ | `game/index.html` | Compare-game hub icon | SVG/UI icon | UI ICON  | — | — |
-| object-basket | 🧺 | `game/index.html` | Sorting-game hub icon | SVG/UI icon or small basket illustration if prominent | REVIEW  | — | — |
+| object-basket | 🧺 | `game/index.html` | Sorting-game hub icon | SVG/UI icon or small basket illustration if prominent | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/basket.png` | - |
 | object-calendar | 📆 | `game/index.html` | Sequencing hub icon | UI icon | UI ICON  | — | — |
-| object-compass | 🧭 | `game/index.html` | Spatial-game hub icon | UI icon or small illustration depending on visual redesign scope | REVIEW  | — | — |
-| object-pencil | ✏️ | `game/index.html`, `tracing.html`, tracing celebration | Hub, tracing intro/activity and celebration | Reuse simple pencil illustration for prominent objects; controls may use SVG | REVIEW  | — | — |
+| object-compass | 🧭 | `game/index.html` | Spatial-game hub icon | UI icon or small illustration depending on visual redesign scope | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/compass.png` | - |
+| object-pencil | ✏️ | `game/index.html`, `tracing.html`, tracing celebration | Hub, tracing intro/activity and celebration | Reuse simple pencil illustration for prominent objects; controls may use SVG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pencil.png` | - |
 | object-paint-palette | 🎨 | hub/classroom/coloring | Game hub and coloring controls | UI icon for controls; no need for multiple generated assets | UI ICON  | — | — |
-| object-medal | 🏅 | `coloring.js`, `kids_games.js`, `piano.html`; shared celebration, coloring, kids game, piano | Reward/celebration | Prefer consistent reward illustration; consider reusing the golden star for generic reward moments if semantically suitable | REVIEW  | — | — |
+| object-medal | 🏅 | `coloring.js`, `kids_games.js`, `piano.html`; shared celebration, coloring, kids game, piano | Reward/celebration | Prefer consistent reward illustration; consider reusing the golden star for generic reward moments if semantically suitable | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/medal.png` | - |
 | object-lightbulb | 💡 | `matching_game.html` | Hint button | SVG/CSS UI icon | UI ICON  | — | — |
 | object-search | 🔍 | `animals.html` | Find-animal control | SVG/CSS UI icon | UI ICON  | — | — |
 | object-trash | 🗑️ | `coloring.html`, parent page | Clear/reset controls | SVG/CSS UI icon | UI ICON  | — | — |
@@ -152,7 +152,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-celebration | 🎉 / ✨ / 🌟 | shared celebration, counting, matching, adventure, sequencing | Success/feedback and small effects | Use restrained CSS/SVG particles and the approved star where appropriate | REVIEW  | — | — |
 | object-book-picture | 🖼️ | `coloring.js` | Coloring mode toggle | UI icon | UI ICON  | — | — |
 | object-music-note | 🎵 | `piano.js`, `rhythm.js` | Music prompt/label | SVG icon or retain text symbol | UI ICON  | — | — |
-| object-drum | 🥁 | `rhythm.js`, `rhythm.html`, hub | Rhythm pads and activity icon | One canonical drum illustration for prominent pads; hub/control may use icon | REVIEW  | — | — |
+| object-drum | 🥁 | `rhythm.js`, `rhythm.html`, hub | Rhythm pads and activity icon | One canonical drum illustration for prominent pads; hub/control may use icon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/drum.png` | - |
 | object-season-leaf | 🍂 | `classroom.html`, `racing-config.js` | Seasons activity and racing scenery | One shared leaf illustration if it is a gameplay visual; UI tile may use icon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/season-leaf.png` | — |
 | object-snowflake | ❄️ | `animal_puzzle.js`, driving/racing config | Winter decoration/collectible | SVG snowflake for tiny effects; illustration only if a large collectible | REVIEW  | — | — |
 | object-shell | 🐚 | `game/games/ocean.js`, `driving.js`, `kitty-standalone.js`, `racing-config.js` | Shared collectible and scenery | One shared shell asset across all listed uses | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/shell.png` | — |
@@ -229,12 +229,12 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | object-sunrise | 🌅 | `game/games/classroom.js` | Time-of-day teaching scene | Reuse a sunrise scene only if it is a prominent teaching image | REVIEW |
 | object-sunset | 🌇 | `game/games/classroom.js` | Time-of-day teaching scene | Reuse a sunset scene only if it is a prominent teaching image | REVIEW |
 | object-night-sky | 🌙 | `game/games/classroom.js` and several world configs | Time-of-day teaching and world motif | Reuse canonical moon; avoid separate duplicates | REVIEW |
-| object-cards-pattern | 🃏 | `game/pages/animal_memory.html`, `matching_game.html`, hub | Memory card-back and game tile | Design a proper card-back pattern; do not use a playing-card emoji as a large card face | REVIEW |
+| object-cards-pattern | 🃏 | `game/pages/animal_memory.html`, `matching_game.html`, hub | Memory card-back and game tile | Design a proper card-back pattern; do not use a playing-card emoji as a large card face | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cards-pattern.png` | - |
 | object-heart-shape | ❤️ | `game/data/serbian.js` | Serbian phonics vocabulary | SVG shape is preferable to a generated raster image | SVG/CSS |
 | object-pig-snout | 🐽 | `game/data/serbian.js` | Serbian phonics vocabulary | Pig image may not clearly teach “snout”; use a distinct crop/icon if required | COVERED by `object-pig-nose` (`pig-nose.png`, approved 2026-10-25) |
 | object-monitor | 🖥️ | `game/data/serbian.js` | Serbian phonics vocabulary | Simple monitor illustration | REVIEW |
 | object-needle-thread | 🪡 | `game/data/serbian.js` | Serbian phonics vocabulary | Simple needle/thread illustration | COVERED by `object-needle` (`needle.png`, approved 2026-10-25) |
-| object-clock | 🕰️ | `game/games/classroom.js`, `classroom.html` | Time activity and day/night scene | Use a clear clock face; consider SVG at UI size | REVIEW |
+| object-clock | 🕰️ | `game/games/classroom.js`, `classroom.html` | Time activity and day/night scene | Use a clear clock face; consider SVG at UI size | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/clock.png` | - |
 | object-music-bell | 🔔 | `game/games/piano.js` | Song label | SVG or small bell illustration depending on prominence | REVIEW |
 | object-hint-bulb | 💡 | `game/pages/matching_game.html` | Hint control | SVG/CSS UI icon | UI ICON |
 | object-search-glass | 🔍 | `game/pages/animals.html` | Find-animal control | SVG/CSS UI icon | UI ICON |
@@ -371,6 +371,18 @@ measurements only — they say nothing about how the pictures look.
 | skier.png | 1024x1024 | rgb | 100/0/0 | 0.0211 | 83.5 | painted (approved 2026-10-29, iteration 3; one ski per foot, two poles) |
 | evergreen-lantern.png | 1024x1024 | rgb | 100/0/0 | 0.0327 | 93.43 | painted (approved 2026-10-29, iteration 3; family style, visible burning candle) |
 | grass.png | 1024x1024 | rgb | 100/0/0 | 0.0016 | 69.21 | painted (approved 2026-10-29, iteration 4; short thin blades) |
+| basket.png | 1024x1024 | rgb | 100/0/0 | 0.6732 | 75.75 | painted (approved 2026-10-29, iteration 1) |
+| bell.png | 1024x1024 | rgb | 100/0/0 | 0.061 | 33.51 | painted (approved 2026-10-29, iteration 1) |
+| cards-pattern.png | 1024x1024 | rgb | 100/0/0 | 0.0879 | 40.81 | painted (approved 2026-10-29, iteration 1) |
+| clock.png | 1024x1024 | rgb | 100/0/0 | 0.3072 | 64.49 | painted (approved 2026-10-29, iteration 1) |
+| compass.png | 1024x1024 | rgb | 100/0/0 | 0.633 | 63.8 | painted (approved 2026-10-29, iteration 1) |
+| drum.png | 1024x1024 | rgb | 100/0/0 | 0.0216 | 76.4 | painted (approved 2026-10-29, iteration 1) |
+| medal.png | 1024x1024 | rgb | 100/0/0 | 0.6193 | 129.6 | painted (approved 2026-10-29, iteration 1) |
+| notebook.png | 1024x1024 | rgb | 100/0/0 | 0.2006 | 74.9 | painted (approved 2026-10-29, iteration 1) |
+| pencil.png | 1024x1024 | rgb | 100/0/0 | 0.1327 | 37.45 | painted (approved 2026-10-29, iteration 1) |
+| rainbow.png | 1024x1024 | rgb | 100/0/0 | 0.0824 | 41.12 | painted (approved 2026-10-29, iteration 1) |
+| school.png | 1024x1024 | rgb | 100/0/0 | 0.4168 | 44.96 | painted (approved 2026-10-29, iteration 1) |
+| wrapped-candy.png | 1024x1024 | rgb | 100/0/0 | 0.6687 | 84.32 | painted (approved 2026-10-29, iteration 1) |
 | volcano.png | 1024x1024 | rgb | 100/0/0 | 0.548 | 166.75 | painted (approved 2026-10-26, taller/more-lava retry) |
 | cactus.png | 1024x1024 | rgb | 100/0/0 | 0.0089 | 60.11 | painted (approved 2026-10-26, desert batch) |
 | parrot.png | 1024x1024 | rgb | 100/0/0 | 0.1234 | 128.63 | painted (approved 2026-10-29, Scarlet macaw, iteration 3) |
