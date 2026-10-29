@@ -157,7 +157,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-snowflake | ❄️ | `animal_puzzle.js`, driving/racing config | Winter decoration/collectible | SVG snowflake for tiny effects; illustration only if a large collectible | REVIEW  | — | — |
 | object-shell | 🐚 | `game/games/ocean.js`, `driving.js`, `kitty-standalone.js`, `racing-config.js` | Shared collectible and scenery | One shared shell asset across all listed uses | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/shell.png` | — |
 | object-fish | 🐟 | `adventure-modes.js`, `kitty-standalone.js`, Serbian phonics, ocean | Shared underwater decor, phonics and ocean visual | **One canonical fish asset** reused wherever suitable; no separate adventure-fish/kitty-fish files | REVIEW  | — | — |
-| object-pickaxe | ⛏ | `kitty-standalone.js` | Cave gameplay glyph | SVG or simple illustrated pickaxe if visibly used as a game object | REVIEW  | — | — |
+| object-pickaxe | ⛏ | `kitty-standalone.js` | Cave gameplay glyph | SVG or simple illustrated pickaxe if visibly used as a game object | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pickaxe.png` | - |
 | object-sparkles | ✨ | `kitty-standalone.js`, `sequencing.js` | Cave/effect glyph and clean-sequence result | Prefer CSS/SVG effect; no unique PNG needed | SVG/CSS  | — | — |
 | object-gem | 💎 | dino/ocean collectible themes | Collectible | One shared gem asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/gem.png` | — |
 | object-moon | 🌙 | classroom, driving/dino/ocean/space worlds | Moon/time/collectible motif | One shared moon illustration for gameplay objects; classroom time icon may remain UI | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/moon.png` | — |
@@ -371,6 +371,9 @@ measurements only — they say nothing about how the pictures look.
 | skier.png | 1024x1024 | rgb | 100/0/0 | 0.0211 | 83.5 | painted (approved 2026-10-29, iteration 3; one ski per foot, two poles) |
 | evergreen-lantern.png | 1024x1024 | rgb | 100/0/0 | 0.0327 | 93.43 | painted (approved 2026-10-29, iteration 3; family style, visible burning candle) |
 | grass.png | 1024x1024 | rgb | 100/0/0 | 0.0016 | 69.21 | painted (approved 2026-10-29, iteration 4; short thin blades) |
+| pickaxe.png | 1024x1024 | rgb | 100/0/0 | 0.0187 | 48.27 | painted (approved 2026-10-29, reverted to previous version) |
+| season-leaf.png | 1024x1024 | rgb | 100/0/0 | 0.698 | 95.34 | painted (approved 2026-10-29, reverted to previous version) |
+| shell.png | 1024x1024 | rgb | 100/0/0 | 0.6028 | 39.7 | painted (approved 2026-10-29, reverted to previous version) |
 | basket.png | 1024x1024 | rgb | 100/0/0 | 0.6732 | 75.75 | painted (approved 2026-10-29, iteration 1) |
 | bell.png | 1024x1024 | rgb | 100/0/0 | 0.061 | 33.51 | painted (approved 2026-10-29, iteration 1) |
 | cards-pattern.png | 1024x1024 | rgb | 100/0/0 | 0.0879 | 40.81 | painted (approved 2026-10-29, iteration 1) |
