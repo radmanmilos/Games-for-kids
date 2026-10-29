@@ -130,7 +130,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-notebook | 📝 | `game/index.html` | Learning hub tile | UI icon or small illustration depending on tile style | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/notebook.png` | - |
 | object-gamepad | 🎮 | `game/index.html` | Game hub label | UI icon, not watercolor object by default | UI ICON  | — | — |
 | object-playing-cards | 🃏 | `game/index.html`, `animal_memory.html` | Memory hub/card-back symbol | Replace card-back with a designed card pattern; hub icon can remain UI | REVIEW  | — | — |
-| object-puzzle-piece | 🧩 | `game/index.html` | Puzzle hub icon | SVG/UI icon or reuse designed puzzle-piece asset if used as a game object | REVIEW  | — | — |
+| object-puzzle-piece | 🧩 | `game/index.html` | Puzzle hub icon | SVG/UI icon or reuse designed puzzle-piece asset if used as a game object | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/puzzle-piece.png` | - |
 | object-scale | ⚖️ | `game/index.html` | Compare-game hub icon | SVG/UI icon | UI ICON  | — | — |
 | object-basket | 🧺 | `game/index.html` | Sorting-game hub icon | SVG/UI icon or small basket illustration if prominent | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/basket.png` | - |
 | object-calendar | 📆 | `game/index.html` | Sequencing hub icon | UI icon | UI ICON  | — | — |
@@ -225,9 +225,9 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | object-eye-button | 👁 / 👁️ | `game/games/animal_puzzle.js` | Peek/reveal picture control | SVG/CSS icon | UI ICON |
 | object-calendar-clock | 🕰️ | `game/games/classroom.js`, `classroom.html` | Time activity icon | SVG/CSS icon or a designed clock face | UI ICON |
 | object-seasons-leaf | 🍂 | `game/pages/classroom.html`, `game/games/racing-config.js` | Seasons tile and scenery | One leaf illustration if used as scenery; tile may remain icon | REVIEW |
-| object-sun | ☀️ | `game/games/classroom.js` | Time-of-day teaching scene | SVG/canvas sun or simple illustration depending on display size | REVIEW |
-| object-sunrise | 🌅 | `game/games/classroom.js` | Time-of-day teaching scene | Reuse a sunrise scene only if it is a prominent teaching image | REVIEW |
-| object-sunset | 🌇 | `game/games/classroom.js` | Time-of-day teaching scene | Reuse a sunset scene only if it is a prominent teaching image | REVIEW |
+| object-sun | ☀️ | `game/games/classroom.js` | Time-of-day teaching scene | SVG/canvas sun or simple illustration depending on display size | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sun.png` | - |
+| object-sunrise | 🌅 | `game/games/classroom.js` | Time-of-day teaching scene | Reuse a sunrise scene only if it is a prominent teaching image | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sunrise.png` | - |
+| object-sunset | 🌇 | `game/games/classroom.js` | Time-of-day teaching scene | Reuse a sunset scene only if it is a prominent teaching image | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sunset.png` | - |
 | object-night-sky | 🌙 | `game/games/classroom.js` and several world configs | Time-of-day teaching and world motif | Reuse canonical moon; avoid separate duplicates | REVIEW |
 | object-cards-pattern | 🃏 | `game/pages/animal_memory.html`, `matching_game.html`, hub | Memory card-back and game tile | Design a proper card-back pattern; do not use a playing-card emoji as a large card face | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cards-pattern.png` | - |
 | object-heart-shape | ❤️ | `game/data/serbian.js` | Serbian phonics vocabulary | SVG shape is preferable to a generated raster image | SVG/CSS |
@@ -371,6 +371,10 @@ measurements only — they say nothing about how the pictures look.
 | skier.png | 1024x1024 | rgb | 100/0/0 | 0.0211 | 83.5 | painted (approved 2026-10-29, iteration 3; one ski per foot, two poles) |
 | evergreen-lantern.png | 1024x1024 | rgb | 100/0/0 | 0.0327 | 93.43 | painted (approved 2026-10-29, iteration 3; family style, visible burning candle) |
 | grass.png | 1024x1024 | rgb | 100/0/0 | 0.0016 | 69.21 | painted (approved 2026-10-29, iteration 4; short thin blades) |
+| puzzle-piece.png | 1024x1024 | rgb | 100/0/0 | 0.6648 | 79.32 | painted (approved 2026-10-29, iteration 2; one colour, tilted 3D) |
+| sun.png | 1024x1024 | rgb | 100/0/0 | 0.0533 | 37.5 | painted (approved 2026-10-29, iteration 2; corona) |
+| sunrise.png | 1024x1024 | rgb | 100/0/0 | 0.061 | 63.46 | painted (approved 2026-10-29, iteration 2; meadow, no star) |
+| sunset.png | 1024x1024 | rgb | 100/0/0 | 0.0191 | 66.19 | painted (approved 2026-10-29, iteration 2; low mountains) |
 | pickaxe.png | 1024x1024 | rgb | 100/0/0 | 0.0187 | 48.27 | painted (approved 2026-10-29, reverted to previous version) |
 | season-leaf.png | 1024x1024 | rgb | 100/0/0 | 0.698 | 95.34 | painted (approved 2026-10-29, reverted to previous version) |
 | shell.png | 1024x1024 | rgb | 100/0/0 | 0.6028 | 39.7 | painted (approved 2026-10-29, reverted to previous version) |

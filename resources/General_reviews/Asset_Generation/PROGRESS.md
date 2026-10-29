@@ -1320,3 +1320,12 @@ All twelve rows in `ASSET_INVENTORY.md` are `GENERATED / USER-APPROVED / TECHNIC
 - [x] **season-leaf (object-season-leaf)** — classroom/racing seasons. The freshly generated candidate (1,493,343 bytes) was rejected; restored to the previous committed version (1,147,301 bytes, small contrast 95.34, palette-match 0.698), which was already approved.
 - [x] **shell (object-shell)** — shared collectible/scenery. The freshly generated candidate (1,281,660 bytes) was rejected; restored to the previous committed version (1,278,997 bytes, small contrast 39.7, palette-match 0.6028), which was already approved.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — sun, sunrise, sunset, puzzle-piece (2026-10-29, task 289)
+
+- [x] **sun (object-sun)** — time-of-day teaching scene. Iteration 1 (rays) was rejected; iteration 2 uses a soft corona instead of straight rays. Generated 1,067,516 bytes, opaque. Measured: paper 239.06/229.9/211.97, palette-match vs bear 0.0533, small-size legibility proxy 37.5. **User review: APPROVED 2026-10-29.**
+- [x] **sunrise (object-sunrise)** — time-of-day teaching scene. Iteration 1 was rejected (star present); iteration 2 shows the sun rising from a meadow with no star. Generated 1,814,120 bytes, opaque. Measured: paper 235.45/226.06/199.88, palette-match vs bear 0.061, small-size legibility proxy 63.46. **User review: APPROVED 2026-10-29.**
+- [x] **sunset (object-sunset)** — time-of-day teaching scene. Iteration 1 was rejected (bear/star present); iteration 2 shows the sun setting between low mountains, generated with `bone.png` only. Generated 1,546,477 bytes, opaque. Measured: paper 232.85/220.72/207.43, palette-match vs bear 0.0191, small-size legibility proxy 66.19. **User review: APPROVED 2026-10-29.**
+- [x] **puzzle-piece (object-puzzle-piece)** — puzzle hub icon. Iteration 1 was rejected; iteration 2 is a single-colour standard jigsaw piece tilted in 3D space (match improved from 0.0086 to 0.6648). Generated 1,120,587 bytes, opaque. Measured: paper 237.72/217.89/215.99, palette-match vs bear 0.6648, small-size legibility proxy 79.32. **User review: APPROVED 2026-10-29.**
+
+No runtime integration, no glyph swap, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
