@@ -1151,6 +1151,14 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
 
+## Approved — ice cube (object-ice-cube), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/space.js` uses `🧊` for the space/world collectible-theme glyphs; the bundle had no ice-cube asset (nearest is `snowman.png`, a different subject).
+- [x] **Brief unchanged** from the prepared version: one chunky pale-blue cube, softly rounded corners, a few internal blue facets and gentle painted highlights, matte rather than glossy; must read as ice, not a gemstone or glass block. References `bear.png` + `star.png` + `bone.png`.
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,077,392 bytes, opaque. Measured: paper 229.93/238.65/243.9, palette-match vs bear 0.6594, small-size legibility proxy 38.48.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
 ## Approved — satellite (object-satellite), generated + approved 2026-10-29 (task 289)
 
 - [x] **Preflight.** `game/games/space.js:220` uses `🛰️` for «Свемирска станица»; the bundle held `moon.png`, `planet.png`, `rocket.png` and `star.png` but no satellite, so the row was duplicate-free.
