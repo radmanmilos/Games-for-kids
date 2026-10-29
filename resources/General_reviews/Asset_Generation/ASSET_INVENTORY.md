@@ -209,7 +209,7 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | object-mountain | ⛰️ | `game/games/racing-config.js` | Racing scenery | SVG/CSS scenery shape or one simple illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/mountain.png` | — |
 | object-beach-umbrella | ⛱️ | `game/games/racing-config.js` | Beach scenery | Simple illustration only if the glyph is actually visible at meaningful size | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/beach-umbrella.png` | — |
 | object-surfboard | 🏄 | `game/games/racing-config.js` | Beach scenery | Usually remove/replace with a simple vector; avoid unnecessary tiny art | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/surfboard.png` | — |
-| object-wave | 🌊 | `game/games/racing-config.js` | Ocean scenery | CSS/SVG wave or one simple image, depending on render scale | REVIEW |
+| object-wave | 🌊 | `game/games/racing-config.js` | Ocean scenery | CSS/SVG wave or one simple image, depending on render scale | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/wave.png` | — |
 | object-skis | 🎿 | `game/games/racing-config.js` | Winter scenery/collectible | Small SVG or illustration if prominent | REVIEW |
 | object-skier | ⛷️ | `game/games/racing-config.js` | Winter scenery | Likely remove if tiny decorative clutter; otherwise simple vector | REVIEW |
 | object-evergreen-lantern | 🏮 | `game/games/racing-config.js` | Night scenery | Simple vector/illustration only if retained | REVIEW |
@@ -365,6 +365,7 @@ measurements only — they say nothing about how the pictures look.
 | surfboard.png | 1024x1024 | rgb | 100/0/0 | 0.6759 | 14.92 | painted (approved 2026-10-29, iteration 1; low small-size contrast noted) |
 | mountain.png | 1024x1024 | rgb | 100/0/0 | 0.6595 | 103.05 | painted (approved 2026-10-29, iteration 3; one body, couple of peaks) |
 | beach-umbrella.png | 1024x1024 | rgb | 100/0/0 | 0.3345 | 39.14 | painted (approved 2026-10-29, iteration 2; no bottom handle, tilted) |
+| wave.png | 1024x1024 | rgb | 100/0/0 | 0.6681 | 67.14 | painted (approved 2026-10-29, iteration 1) |
 | volcano.png | 1024x1024 | rgb | 100/0/0 | 0.548 | 166.75 | painted (approved 2026-10-26, taller/more-lava retry) |
 | cactus.png | 1024x1024 | rgb | 100/0/0 | 0.0089 | 60.11 | painted (approved 2026-10-26, desert batch) |
 | parrot.png | 1024x1024 | rgb | 100/0/0 | 0.1234 | 128.63 | painted (approved 2026-10-29, Scarlet macaw, iteration 3) |

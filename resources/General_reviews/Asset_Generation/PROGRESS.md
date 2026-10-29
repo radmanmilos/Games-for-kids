@@ -1240,3 +1240,11 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **Generated (iteration 2, kept):** 1024x1024, 902,591 bytes, opaque. Measured: paper 241.33/234.66/226.62, palette-match vs bear 0.3345, small-size legibility proxy 39.14.
 - [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — wave (object-wave), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/racing-config.js` uses `🌊` for ocean scenery; the bundle had no wave PNG, so the row was duplicate-free. The inventory row notes CSS/SVG could serve too; the painted asset joins the family set.
+- [x] **Brief unchanged** from the prepared version: one curling blue wave with a rounded crest, a pale cream foam edge and two or three broad soft blue painted bands; must read as a wave, not a mountain, cloud or abstract swirl. References `bear.png` + `star.png` + `bone.png`.
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,125,498 bytes, opaque. Measured: paper 223.33/234.27/238.99, palette-match vs bear 0.6681, small-size legibility proxy 67.14.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
