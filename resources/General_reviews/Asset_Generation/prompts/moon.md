@@ -14,10 +14,16 @@ Canvas: square 1024×1024 WIP image, one centered object with generous padding.
 
 Background: warm cream storybook paper, softly painted and unobtrusive; no transparency required for this WIP candidate.
 
+Iteration note (2026-10-29): iteration 1 was a broad crescent moon. User feedback: it reads as a young moon — they want a **full moon with a few craters**, closer to the real moon.
+
 --- prompt ---
 
-Create one clearly recognizable simple crescent moon as a standalone children's storybook illustration. Show a single softly rounded crescent with warm pale golden-yellow shading and a few very subtle painted tonal variations. Keep the crescent broad and readable at small game-object size, matching the Little Play family style: rounded softened construction, restrained watercolor grain, gentle edge shading, muted but unmistakable colour, and no heavy outline.
+Create one clearly recognizable simple FULL moon as a standalone children's storybook illustration: a single complete round disc, not a crescent and not a partly lit sphere.
 
-Center the complete crescent with comfortable padding and no cropping. The moon is the only subject. It must read as a crescent moon, not a banana, horn, curved leaf, or abstract shape.
+Show the full circle of the moon with warm pale cream-yellow paper colour and a small number of simple soft craters — four to six rounded, shallow, slightly darker warm-grey patches of different sizes, spread gently across the disc, one larger near the upper left. Keep the craters soft and painted, not detailed or photographic, and keep the disc evenly and fully lit (no shadow side, no terminator line).
 
-No face, eyes, smile, stars, sky, clouds, planet, rocket, astronaut, text, letters, logo, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra moons.
+Match the Little Play family style: rounded softened construction, restrained watercolor grain, gentle painted edge and surface shading, muted but unmistakable colour, and no heavy outline. The disc must stay readable at small game-object size.
+
+Center the complete full moon with comfortable padding and no cropping. The moon is the only subject. It must read as a full moon, not a crescent, a ball, an egg, a cookie, or a cheese wheel.
+
+No crescent shape, no partly lit sphere, no shadow side, no face, eyes, smile, stars, sky, clouds, planet, rocket, astronaut, text, letters, logo, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra moons.
