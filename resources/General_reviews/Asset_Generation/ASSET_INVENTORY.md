@@ -208,7 +208,7 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | object-pine-tree | 🌲 | `game/games/racing-config.js` | Winter/forest scenery | Reuse tree family only if evergreen silhouette is distinct enough | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pine-tree.png` | — |
 | object-mountain | ⛰️ | `game/games/racing-config.js` | Racing scenery | SVG/CSS scenery shape or one simple illustration | REVIEW |
 | object-beach-umbrella | ⛱️ | `game/games/racing-config.js` | Beach scenery | Simple illustration only if the glyph is actually visible at meaningful size | REVIEW |
-| object-surfboard | 🏄 | `game/games/racing-config.js` | Beach scenery | Usually remove/replace with a simple vector; avoid unnecessary tiny art | REVIEW |
+| object-surfboard | 🏄 | `game/games/racing-config.js` | Beach scenery | Usually remove/replace with a simple vector; avoid unnecessary tiny art | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/surfboard.png` | — |
 | object-wave | 🌊 | `game/games/racing-config.js` | Ocean scenery | CSS/SVG wave or one simple image, depending on render scale | REVIEW |
 | object-skis | 🎿 | `game/games/racing-config.js` | Winter scenery/collectible | Small SVG or illustration if prominent | REVIEW |
 | object-skier | ⛷️ | `game/games/racing-config.js` | Winter scenery | Likely remove if tiny decorative clutter; otherwise simple vector | REVIEW |
@@ -362,6 +362,7 @@ measurements only — they say nothing about how the pictures look.
 | ball.png | 1024x1024 | rgb | 100/0/0 | 0.011 | 39.94 | painted (approved 2026-10-29, iteration 1) |
 | comet.png | 1024x1024 | rgb | 100/0/0 | 0.6713 | 28.33 | painted (approved 2026-10-29, iteration 3) |
 | pine-tree.png | 1024x1024 | rgb | 100/0/0 | 0.6633 | 162.02 | painted (approved 2026-10-29, iteration 3) |
+| surfboard.png | 1024x1024 | rgb | 100/0/0 | 0.6759 | 14.92 | painted (approved 2026-10-29, iteration 1; low small-size contrast noted) |
 | volcano.png | 1024x1024 | rgb | 100/0/0 | 0.548 | 166.75 | painted (approved 2026-10-26, taller/more-lava retry) |
 | cactus.png | 1024x1024 | rgb | 100/0/0 | 0.0089 | 60.11 | painted (approved 2026-10-26, desert batch) |
 | parrot.png | 1024x1024 | rgb | 100/0/0 | 0.1234 | 128.63 | painted (approved 2026-10-29, Scarlet macaw, iteration 3) |

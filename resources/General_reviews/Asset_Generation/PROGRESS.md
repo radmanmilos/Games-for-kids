@@ -1213,3 +1213,11 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **Generated (iteration 3, kept):** 1024x1024, 766,431 bytes, opaque. Measured: paper 216.72/220.6/216.03, palette-match vs bear 0.6633, small-size legibility proxy 162.02.
 - [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — surfboard (object-surfboard), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/racing-config.js` uses `🏄` for beach scenery; the inventory row already leaned towards a simple vector and warned against unnecessary tiny art, but the prepared brief existed and the bundle had no surfboard, so it was generated for the family set.
+- [x] **Brief unchanged** from the prepared version: one long rounded oval board with a gently pointed nose, small muted blue and coral painted bands and a short leash curl, upright and fully visible; must not read as a paddle, snowboard or skateboard. References `bear.png` + `star.png` + `bone.png`.
+- [x] **Generated (iteration 1, kept):** 1024x1024, 832,992 bytes, opaque. Measured: paper 246.33/242.58/235.29, palette-match vs bear 0.6759, small-size legibility proxy 14.92 — the lowest in the bundle so far, flagged before review as likely to read as almost blank at card size.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`. The low small-size contrast is recorded, not corrected: the brief follows the actual use (beach scenery), so nothing was repainted.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
