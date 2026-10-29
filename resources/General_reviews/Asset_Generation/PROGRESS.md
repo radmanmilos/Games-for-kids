@@ -1140,3 +1140,13 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **Generated (iteration 1, kept):** 1024x1024, 1,501,706 bytes, opaque. Measured: paper 228.42/221.66/210.94, palette-match vs bear 0.0158, small-size legibility proxy 82.64.
 - [x] **User review: APPROVED 2026-10-25.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — parrot (object-parrot), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `object-parrot` was the only approved-queue asset without a PNG (`prompts/parrot.md` had been prepared on 2026-10-26 but every live request returned Cloudflare HTTP 429/code 4006). It is used by the dino and racing tropical collectible/scenery paths; no parrot illustration existed in the bundle.
+- [x] **Iteration 1 (discarded):** brief as prepared on 2026-10-26, references `bear.png` + `star.png` + `bird.png` (3 refs). Generated 1024x1024, 1,167,195 bytes, palette-match 0.0486, small contrast 91.2. **User feedback: too much like a regular bird/canary — not obviously a parrot.**
+- [x] **Iteration 2 (discarded):** brief rewritten with parrot-specific anatomy (hooked beak ~1/4 of the head, upright chest-forward posture, long pointed tail past the feet, small rounded crest, cheek patch, 2+2 toes) and the `bird.png` reference **dropped** because its songbird construction was feeding the wrong silhouette; references `bear.png` + `star.png` (2 refs). Generated 1024x1024, 816,057 bytes, palette-match 0.6663, small contrast 82.5. **User feedback: a bit better, but go for the Scarlet macaw (Ara macao) — the default recognizable parrot.**
+- [x] **Iteration 3 (approved):** brief rewritten to the Scarlet macaw pattern — scarlet red body, bare white face patch, large ivory hooked beak, yellow wing band, blue wing tips and blue tail tip, long scarlet tail — plus explicit exclusions for green bodies, small beaks, stubby tails and songbird posture. References `bear.png` + `star.png`.
+- [x] **Generated (iteration 3, kept):** 1024x1024, 1,034,261 bytes, opaque. Measured: paper 218.16/206.9/206.9, palette-match vs bear 0.1234, small-size legibility proxy 128.63.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.

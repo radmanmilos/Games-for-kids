@@ -170,7 +170,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-island | 🏝️ | `dino.js`; `game/games/dino.js` | Island collectible/theme glyph; World collectible/theme glyph | Could be a simple island illustration if this glyph is visibly rendered as an object | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/island.png` | — |
 | object-volcano | 🌋 | `dino.js`; `game/games/dino.js` | Volcano collectible/theme glyph; World collectible/theme glyph | Simple volcano asset only if visibly rendered as collectible | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/volcano.png` | — |
 | object-cactus | 🌵 | driving/dino theme collectibles | Desert theme | One shared cactus asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cactus.png` | — |
-| object-parrot | 🦜 | `dino.js`, racing decor | Tropical collectible/scenery | One shared parrot asset | REVIEW  | — | — |
+| object-parrot | 🦜 | `dino.js`, racing decor | Tropical collectible/scenery | One shared parrot asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/parrot.png` | — |
 | object-butterfly | 🦋 | maze/racing decor | Garden/forest scenery | One shared butterfly asset | REVIEW  | — | — |
 | object-puddle | 💧 | `racing-config.js` | Racing obstacle | Use a simple shape/SVG if it is a small gameplay hazard | REVIEW  | — | — |
 | object-rock | 🪨 | `racing-config.js` | Racing obstacle | Use simple SVG/geometry if small; no generated illustration by default | REVIEW  | — | — |
@@ -359,6 +359,7 @@ measurements only — they say nothing about how the pictures look.
 | moon.png | 1024x1024 | rgb | 100/0/0 | 0.6799 | 26.03 | painted (approved 2026-10-26, objects batch) |
 | volcano.png | 1024x1024 | rgb | 100/0/0 | 0.548 | 166.75 | painted (approved 2026-10-26, taller/more-lava retry) |
 | cactus.png | 1024x1024 | rgb | 100/0/0 | 0.0089 | 60.11 | painted (approved 2026-10-26, desert batch) |
+| parrot.png | 1024x1024 | rgb | 100/0/0 | 0.1234 | 128.63 | painted (approved 2026-10-29, Scarlet macaw, iteration 3) |
 
 Findings that still block the production step:
 
