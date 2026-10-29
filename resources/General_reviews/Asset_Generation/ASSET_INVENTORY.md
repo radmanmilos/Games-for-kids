@@ -217,7 +217,7 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | animal-bat | 🦇 | `game/games/racing-config.js` | Night scenery | One simple bat illustration if retained as a visible object | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/bat.png`) |
 | animal-monkey | 🐒 | `game/games/racing-config.js` | Tropical scenery | One simple monkey illustration if retained | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/monkey.png`) |
 | object-grass | 🌾 | `game/games/racing-config.js` | Farm scenery | Simple vector or shared grass/plant art | REVIEW |
-| object-spaceship | 🛸 | `game/games/racing-config.js` | Space scenery | Reuse a spaceship illustration only if visually distinct from the rocket | REVIEW |
+| object-spaceship | 🛸 | `game/games/racing-config.js` | Space scenery | Reuse a spaceship illustration only if visually distinct from the rocket | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/spaceship.png` | — |
 | object-galaxy | 🌌 | `game/games/space.js`, `racing-config.js` | Space world theme/scenery | Prefer background treatment, not a standalone object asset | REVIEW |
 | object-meteor | 🌠 | `game/games/space.js`, `racing-config.js` | Space collectible/effect | SVG/canvas effect likely better than watercolor art | REVIEW |
 | object-lightning | ⚡ | `game/games/racing3d.mjs` | Speed-boost comment/effect label | SVG/CSS effect; not an illustration candidate unless actually rendered as a glyph | SVG/CSS |
@@ -366,6 +366,7 @@ measurements only — they say nothing about how the pictures look.
 | mountain.png | 1024x1024 | rgb | 100/0/0 | 0.6595 | 103.05 | painted (approved 2026-10-29, iteration 3; one body, couple of peaks) |
 | beach-umbrella.png | 1024x1024 | rgb | 100/0/0 | 0.3345 | 39.14 | painted (approved 2026-10-29, iteration 2; no bottom handle, tilted) |
 | wave.png | 1024x1024 | rgb | 100/0/0 | 0.6681 | 67.14 | painted (approved 2026-10-29, iteration 1) |
+| spaceship.png | 1024x1024 | rgb | 100/0/0 | 0.5714 | 63.4 | painted (approved 2026-10-29, iteration 1) |
 | volcano.png | 1024x1024 | rgb | 100/0/0 | 0.548 | 166.75 | painted (approved 2026-10-26, taller/more-lava retry) |
 | cactus.png | 1024x1024 | rgb | 100/0/0 | 0.0089 | 60.11 | painted (approved 2026-10-26, desert batch) |
 | parrot.png | 1024x1024 | rgb | 100/0/0 | 0.1234 | 128.63 | painted (approved 2026-10-29, Scarlet macaw, iteration 3) |

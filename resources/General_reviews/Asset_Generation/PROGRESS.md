@@ -1248,3 +1248,11 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **Generated (iteration 1, kept):** 1024x1024, 1,125,498 bytes, opaque. Measured: paper 223.33/234.27/238.99, palette-match vs bear 0.6681, small-size legibility proxy 67.14.
 - [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — spaceship (object-spaceship), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/racing-config.js` uses `🛸` for space scenery, and the inventory row requires the result to stay visually distinct from the existing rocket. `rocket.png` already exists in the bundle, so it was passed as a finish reference only and the brief forbids copying its silhouette.
+- [x] **Brief unchanged** from the prepared version: one flattened rounded saucer with a domed top, muted blue-grey body, warm cream underside and a few small soft teal window marks; must read as a flying saucer, not a rocket, satellite or plate. References `bear.png` + `star.png` + `rocket.png`.
+- [x] **Generated (iteration 1, kept):** 1024x1024, 1,120,435 bytes, opaque. Measured: paper 229.92/230.71/227.95, palette-match vs bear 0.5714, small-size legibility proxy 63.4.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
