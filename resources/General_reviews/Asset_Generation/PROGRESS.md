@@ -1329,3 +1329,10 @@ All twelve rows in `ASSET_INVENTORY.md` are `GENERATED / USER-APPROVED / TECHNIC
 - [x] **puzzle-piece (object-puzzle-piece)** — puzzle hub icon. Iteration 1 was rejected; iteration 2 is a single-colour standard jigsaw piece tilted in 3D space (match improved from 0.0086 to 0.6648). Generated 1,120,587 bytes, opaque. Measured: paper 237.72/217.89/215.99, palette-match vs bear 0.6648, small-size legibility proxy 79.32. **User review: APPROVED 2026-10-29.**
 
 No runtime integration, no glyph swap, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — fish and butterfly, 2026-10-29 (task 289)
+
+- [x] **fish (object-fish)** — shared underwater decor, phonics and ocean visual. Brief unchanged from the prepared version. Generated 984,593 bytes, opaque. Measured: paper 224.21/225.17/206.9, palette-match vs bear 0.02, small-size legibility proxy 75.78. **User review: APPROVED 2026-10-29.**
+- [x] **butterfly (object-butterfly)** — garden/forest scenery. Brief unchanged from the prepared version. Generated 1,848,754 bytes, opaque (1448x1086). Measured: paper 251.59/233.81/202.19, palette-match vs bear 0.142, small-size legibility proxy 80.09. **User review: APPROVED 2026-10-29.**
+
+No runtime integration, no glyph swap, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.

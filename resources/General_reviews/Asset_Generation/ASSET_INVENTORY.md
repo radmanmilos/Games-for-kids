@@ -156,7 +156,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-season-leaf | 🍂 | `classroom.html`, `racing-config.js` | Seasons activity and racing scenery | One shared leaf illustration if it is a gameplay visual; UI tile may use icon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/season-leaf.png` | — |
 | object-snowflake | ❄️ | `animal_puzzle.js`, driving/racing config | Winter decoration/collectible | SVG snowflake for tiny effects; illustration only if a large collectible | REVIEW  | — | — |
 | object-shell | 🐚 | `game/games/ocean.js`, `driving.js`, `kitty-standalone.js`, `racing-config.js` | Shared collectible and scenery | One shared shell asset across all listed uses | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/shell.png` | — |
-| object-fish | 🐟 | `adventure-modes.js`, `kitty-standalone.js`, Serbian phonics, ocean | Shared underwater decor, phonics and ocean visual | **One canonical fish asset** reused wherever suitable; no separate adventure-fish/kitty-fish files | REVIEW  | — | — |
+| object-fish | 🐟 | `adventure-modes.js`, `kitty-standalone.js`, Serbian phonics, ocean | Shared underwater decor, phonics and ocean visual | **One canonical fish asset** reused wherever suitable; no separate adventure-fish/kitty-fish files | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fish.png` | - |
 | object-pickaxe | ⛏ | `kitty-standalone.js` | Cave gameplay glyph | SVG or simple illustrated pickaxe if visibly used as a game object | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pickaxe.png` | - |
 | object-sparkles | ✨ | `kitty-standalone.js`, `sequencing.js` | Cave/effect glyph and clean-sequence result | Prefer CSS/SVG effect; no unique PNG needed | SVG/CSS  | — | — |
 | object-gem | 💎 | dino/ocean collectible themes | Collectible | One shared gem asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/gem.png` | — |
@@ -171,7 +171,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-volcano | 🌋 | `dino.js`; `game/games/dino.js` | Volcano collectible/theme glyph; World collectible/theme glyph | Simple volcano asset only if visibly rendered as collectible | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/volcano.png` | — |
 | object-cactus | 🌵 | driving/dino theme collectibles | Desert theme | One shared cactus asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cactus.png` | — |
 | object-parrot | 🦜 | `dino.js`, racing decor | Tropical collectible/scenery | One shared parrot asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/parrot.png` | — |
-| object-butterfly | 🦋 | maze/racing decor | Garden/forest scenery | One shared butterfly asset | REVIEW  | — | — |
+| object-butterfly | 🦋 | maze/racing decor | Garden/forest scenery | One shared butterfly asset | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/butterfly.png` | - |
 | object-puddle | 💧 | `racing-config.js` | Racing obstacle | Use a simple shape/SVG if it is a small gameplay hazard | REVIEW  | — | — |
 | object-rock | 🪨 | `racing-config.js` | Racing obstacle | Use simple SVG/geometry if small; no generated illustration by default | REVIEW  | — | — |
 | object-road-barrier | 🚧 | `racing-config.js` | Racing obstacle | Small barrier illustration only if emoji is actually rendered in-game | REVIEW  | — | — |
@@ -371,6 +371,8 @@ measurements only — they say nothing about how the pictures look.
 | skier.png | 1024x1024 | rgb | 100/0/0 | 0.0211 | 83.5 | painted (approved 2026-10-29, iteration 3; one ski per foot, two poles) |
 | evergreen-lantern.png | 1024x1024 | rgb | 100/0/0 | 0.0327 | 93.43 | painted (approved 2026-10-29, iteration 3; family style, visible burning candle) |
 | grass.png | 1024x1024 | rgb | 100/0/0 | 0.0016 | 69.21 | painted (approved 2026-10-29, iteration 4; short thin blades) |
+| fish.png | 1024x1024 | rgb | 100/0/0 | 0.02 | 75.78 | painted (approved 2026-10-29, iteration 1) |
+| butterfly.png | 1448x1086 | rgb | 100/0/0 | 0.142 | 80.09 | painted (approved 2026-10-29, iteration 1) |
 | puzzle-piece.png | 1024x1024 | rgb | 100/0/0 | 0.6648 | 79.32 | painted (approved 2026-10-29, iteration 2; one colour, tilted 3D) |
 | sun.png | 1024x1024 | rgb | 100/0/0 | 0.0533 | 37.5 | painted (approved 2026-10-29, iteration 2; corona) |
 | sunrise.png | 1024x1024 | rgb | 100/0/0 | 0.061 | 63.46 | painted (approved 2026-10-29, iteration 2; meadow, no star) |

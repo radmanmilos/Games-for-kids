@@ -1,19 +1,27 @@
 # object-sunrise — generation brief
 
-Replaces: `🌅` in the classroom time-of-day teaching scene.
+Replaces: sunrise scene.
 
-Inventory row: `object-sunrise` — reuse only if a prominent teaching image needs it.
+Inventory row: `object-sunrise` — simple sunrise illustration.
 
 Status: prepared brief only; not approved for generation.
 
-References: `bear.png`, `star.png`, `sun.png` for painted finish and warm palette only.
+References: `bear.png`, `star.png`, `bone.png` for painted finish only.
 
-Canvas: square 1024×1024 WIP image, compact teaching vignette with generous padding.
+Canvas: square 1024×1024 WIP image, one centered scene with generous padding.
 
-Background: warm cream storybook paper with a simple pale blue upper field; no detailed landscape.
+Background: warm cream storybook paper; no transparency required for WIP.
+
+Iteration note (2026-10-29): iteration 1 was not accepted. User feedback: **no star; the sun should be rising from a meadow.**
 
 --- prompt ---
 
-Create one simple sunrise teaching illustration for a children's storybook game. Show a low warm golden sun just rising above a simple rounded horizon shape, with a few broad muted peach and pale-blue bands suggesting early morning. Keep the scene compact, quiet and readable, with soft watercolor grain and no face. It must read as sunrise, not sunset.
+Create one simple sunrise as a standalone children's storybook illustration: a **sun rising from behind a meadow**, with no star.
 
-No buildings, trees, people, text, logo, detailed landscape, dramatic rays, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra suns.
+- **Meadow:** a low, soft silhouette of green grass and gentle rolling ground along the bottom of the image, with a few thin blades catching the light. No flowers, no trees, no buildings, no horizon line details.
+- **Sun:** a warm golden-yellow half-disc (or slightly more) just rising above the meadow line, with a soft warm glow spreading upward into the paper. The sun is a simple disc, not a star, not a sparkle, not a burst.
+- Soft watercolor grain, warm peach and golden tones, in the Little Play family style with no heavy outline.
+
+Center the whole scene with comfortable padding and no cropping. The sun and meadow are the only subjects. It must read as a sunrise over a meadow, not a sunset, not a star, not a sparkle and not an abstract glow.
+
+No star, no star shape, no sparkle, no burst, no straight rays, no pointed spikes, no mountains, no trees, no buildings, no sky details, no clouds, no text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, strong glow or extra suns.
