@@ -175,7 +175,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | object-puddle | 💧 | `racing-config.js` | Racing obstacle | Use a simple shape/SVG if it is a small gameplay hazard | REVIEW  | — | — |
 | object-rock | 🪨 | `racing-config.js` | Racing obstacle | Use simple SVG/geometry if small; no generated illustration by default | REVIEW  | — | — |
 | object-road-barrier | 🚧 | `racing-config.js` | Racing obstacle | Small barrier illustration only if emoji is actually rendered in-game | REVIEW  | — | — |
-| object-satellite | 🛰️ | `space.js`; `game/games/space.js` | Space collectible/theme glyph; World collectible/theme glyph | Simple satellite illustration if visibly rendered | REVIEW  | — | — |
+| object-satellite | 🛰️ | `space.js`; `game/games/space.js` | Space collectible/theme glyph; World collectible/theme glyph | Simple satellite illustration if visibly rendered | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/satellite.png` | — |
 | object-telescope | 🔭 | `space.js`; `game/games/space.js` | Space collectible/theme glyph; World collectible/theme glyph | Simple telescope illustration if visibly rendered | REVIEW  | — | — |
 | object-ice-cube | 🧊 | `space.js`; `game/games/space.js` | Space collectible/theme glyph; World collectible/theme glyph | Simple ice cube asset if visibly rendered | REVIEW  | — | — |
 | object-spiral | 🌀 | `space.js`; `game/games/space.js` | Space collectible/theme glyph; World collectible/theme glyph | Prefer vector effect if used as a swirl, not a physical object | SVG/CSS  | — | — |
@@ -360,6 +360,7 @@ measurements only — they say nothing about how the pictures look.
 | volcano.png | 1024x1024 | rgb | 100/0/0 | 0.548 | 166.75 | painted (approved 2026-10-26, taller/more-lava retry) |
 | cactus.png | 1024x1024 | rgb | 100/0/0 | 0.0089 | 60.11 | painted (approved 2026-10-26, desert batch) |
 | parrot.png | 1024x1024 | rgb | 100/0/0 | 0.1234 | 128.63 | painted (approved 2026-10-29, Scarlet macaw, iteration 3) |
+| satellite.png | 1024x1024 | rgb | 100/0/0 | 0.6591 | 117.22 | painted (approved 2026-10-29, iteration 2) |
 
 Findings that still block the production step:
 

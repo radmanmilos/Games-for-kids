@@ -1150,3 +1150,12 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **Generated (iteration 3, kept):** 1024x1024, 1,034,261 bytes, opaque. Measured: paper 218.16/206.9/206.9, palette-match vs bear 0.1234, small-size legibility proxy 128.63.
 - [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — satellite (object-satellite), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/space.js:220` uses `🛰️` for «Свемирска станица»; the bundle held `moon.png`, `planet.png`, `rocket.png` and `star.png` but no satellite, so the row was duplicate-free.
+- [x] **Iteration 1 (discarded):** prepared brief unchanged, references `bear.png` + `star.png` + `bone.png`. Generated 1024x1024, 1,012,749 bytes, palette-match 0.6746, small contrast 55.78. **User feedback: it looks like a ball with something strapped on it.**
+- [x] **Iteration 2 (approved):** brief rewritten for an unmistakable satellite silhouette — flat boxy/short-cylindrical body (explicitly not a ball), two large rectangular solar-panel wings with visible grid cells and booms as the widest part of the picture, top dish antenna, short antenna rod, thruster nozzle; exclusions added for spherical bodies, straps/belts/fabric, balloons. References unchanged.
+- [x] **Generated (iteration 2, kept):** 1024x1024, 966,202 bytes, opaque. Measured: paper 221.87/227.03/235.74, palette-match vs bear 0.6591, small-size legibility proxy 117.22.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
