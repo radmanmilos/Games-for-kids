@@ -1336,3 +1336,11 @@ No runtime integration, no glyph swap, no screenshot refresh, no offline pack, n
 - [x] **butterfly (object-butterfly)** — garden/forest scenery. Brief unchanged from the prepared version. Generated 1,848,754 bytes, opaque (1448x1086). Measured: paper 251.59/233.81/202.19, palette-match vs bear 0.142, small-size legibility proxy 80.09. **User review: APPROVED 2026-10-29.**
 
 No runtime integration, no glyph swap, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — reuses of existing assets, 2026-10-29 (task 289)
+
+- [x] **seasons-leaf (object-seasons-leaf)** — seasons tile and scenery. Reuses the already-approved `season-leaf.png` (1,147,301 bytes, small contrast 95.34, palette-match 0.698) instead of generating a new asset. **User review: APPROVED 2026-10-29.**
+- [x] **monitor (object-monitor)** — Serbian phonics vocabulary. Reuses the already-approved `screen.png` instead of generating a new asset. **User review: APPROVED 2026-10-29.**
+- [x] **music-bell (object-music-bell)** — song label. Reuses the already-approved `bell.png` instead of generating a new asset. **User review: APPROVED 2026-10-29.**
+
+No runtime integration, no glyph swap, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.

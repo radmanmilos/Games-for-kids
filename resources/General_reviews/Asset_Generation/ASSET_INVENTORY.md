@@ -224,7 +224,7 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | object-arrow-right | ➜ / ➡ / ➡️ | multiple game pages/modules | Next/navigation controls | One consistent SVG/CSS arrow; never generate image assets for it | UI ICON |
 | object-eye-button | 👁 / 👁️ | `game/games/animal_puzzle.js` | Peek/reveal picture control | SVG/CSS icon | UI ICON |
 | object-calendar-clock | 🕰️ | `game/games/classroom.js`, `classroom.html` | Time activity icon | SVG/CSS icon or a designed clock face | UI ICON |
-| object-seasons-leaf | 🍂 | `game/pages/classroom.html`, `game/games/racing-config.js` | Seasons tile and scenery | One leaf illustration if used as scenery; tile may remain icon | REVIEW |
+| object-seasons-leaf | 🍂 | `game/pages/classroom.html`, `game/games/racing-config.js` | Seasons tile and scenery | One leaf illustration if used as scenery; tile may remain icon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/season-leaf.png` | - | (reuses season-leaf.png)
 | object-sun | ☀️ | `game/games/classroom.js` | Time-of-day teaching scene | SVG/canvas sun or simple illustration depending on display size | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sun.png` | - |
 | object-sunrise | 🌅 | `game/games/classroom.js` | Time-of-day teaching scene | Reuse a sunrise scene only if it is a prominent teaching image | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sunrise.png` | - |
 | object-sunset | 🌇 | `game/games/classroom.js` | Time-of-day teaching scene | Reuse a sunset scene only if it is a prominent teaching image | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sunset.png` | - |
@@ -232,10 +232,10 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | object-cards-pattern | 🃏 | `game/pages/animal_memory.html`, `matching_game.html`, hub | Memory card-back and game tile | Design a proper card-back pattern; do not use a playing-card emoji as a large card face | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cards-pattern.png` | - |
 | object-heart-shape | ❤️ | `game/data/serbian.js` | Serbian phonics vocabulary | SVG shape is preferable to a generated raster image | SVG/CSS |
 | object-pig-snout | 🐽 | `game/data/serbian.js` | Serbian phonics vocabulary | Pig image may not clearly teach “snout”; use a distinct crop/icon if required | COVERED by `object-pig-nose` (`pig-nose.png`, approved 2026-10-25) |
-| object-monitor | 🖥️ | `game/data/serbian.js` | Serbian phonics vocabulary | Simple monitor illustration | REVIEW |
+| object-monitor | 🖥️ | `game/data/serbian.js` | Serbian phonics vocabulary | Simple monitor illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/screen.png` | - | (reuses screen.png)
 | object-needle-thread | 🪡 | `game/data/serbian.js` | Serbian phonics vocabulary | Simple needle/thread illustration | COVERED by `object-needle` (`needle.png`, approved 2026-10-25) |
 | object-clock | 🕰️ | `game/games/classroom.js`, `classroom.html` | Time activity and day/night scene | Use a clear clock face; consider SVG at UI size | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/clock.png` | - |
-| object-music-bell | 🔔 | `game/games/piano.js` | Song label | SVG or small bell illustration depending on prominence | REVIEW |
+| object-music-bell | 🔔 | `game/games/piano.js` | Song label | SVG or small bell illustration depending on prominence | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bell.png` | - | (reuses bell.png)
 | object-hint-bulb | 💡 | `game/pages/matching_game.html` | Hint control | SVG/CSS UI icon | UI ICON |
 | object-search-glass | 🔍 | `game/pages/animals.html` | Find-animal control | SVG/CSS UI icon | UI ICON |
 | object-trash-bin | 🗑 / 🗑️ | `game/pages/coloring.html`, `parent.html` | Clear/reset controls | SVG/CSS UI icon | UI ICON |
@@ -371,6 +371,7 @@ measurements only — they say nothing about how the pictures look.
 | skier.png | 1024x1024 | rgb | 100/0/0 | 0.0211 | 83.5 | painted (approved 2026-10-29, iteration 3; one ski per foot, two poles) |
 | evergreen-lantern.png | 1024x1024 | rgb | 100/0/0 | 0.0327 | 93.43 | painted (approved 2026-10-29, iteration 3; family style, visible burning candle) |
 | grass.png | 1024x1024 | rgb | 100/0/0 | 0.0016 | 69.21 | painted (approved 2026-10-29, iteration 4; short thin blades) |
+| season-leaf.png | 1024x1024 | rgb | 100/0/0 | 0.2525 | 90.54 | painted (approved 2026-10-29; reused for object-seasons-leaf) |
 | fish.png | 1024x1024 | rgb | 100/0/0 | 0.02 | 75.78 | painted (approved 2026-10-29, iteration 1) |
 | butterfly.png | 1448x1086 | rgb | 100/0/0 | 0.142 | 80.09 | painted (approved 2026-10-29, iteration 1) |
 | puzzle-piece.png | 1024x1024 | rgb | 100/0/0 | 0.6648 | 79.32 | painted (approved 2026-10-29, iteration 2; one colour, tilted 3D) |
