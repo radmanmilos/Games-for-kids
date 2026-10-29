@@ -1193,3 +1193,23 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **Generated (iteration 1, kept):** 1024x1024, 1,374,115 bytes, opaque. Measured: paper 230.37/227.25/220.74, palette-match vs bear 0.011, small-size legibility proxy 39.94.
 - [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — comet (object-comet), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/space.js` uses `💫`/`🌠` for the space collectible-theme glyphs and racing decor; the bundle had no comet PNG, so the row was duplicate-free.
+- [x] **Iteration 1 (discarded):** prepared brief unchanged, references `bear.png` + `star.png` + `bone.png`. Generated 1,161,787 bytes, palette-match 0.0669, small contrast 23.31. **User feedback: not good — it needs to be an almost round comet with a tail behind it.**
+- [x] **Iteration 2 (discarded):** brief rewritten — one almost perfectly round head with a soft upper-left highlight, a broad tapering tail attached behind it in pale blue-grey and warm golden bands, exclusions added for star head, rays, thread tail and fireball readings. Generated 964,317 bytes, palette-match 0.6317, small contrast 34.28. **User feedback: still not good.**
+- [x] **Iteration 3 (approved):** the user supplied subject photos (`Reference/comet-ref.png`, `Reference/comet-ref2.jpeg`), sent with role *subject* alongside `bear.png` + `star.png` for finish only. One head plus one tapering tail, and the round-head/tail geometry pinned by the photos instead of prose alone.
+- [x] **Generated (iteration 3, kept):** 1024x1024, 555,662 bytes, opaque. Measured: paper 249.12/249.3/248.34, palette-match vs bear 0.6713, small-size legibility proxy 28.33.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — pine-tree (object-pine-tree), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/racing-config.js` uses `🌲` for winter/forest scenery. The bundle already holds `tree.png` (broadleaf) and `palm-tree.png`, so this asset had to keep a distinct evergreen silhouette rather than reuse the tree family.
+- [x] **Iteration 1 (discarded):** prepared brief unchanged, references `bear.png` + `star.png` + `tree.png`. Generated 696,401 bytes, palette-match 0.0133, small contrast 98.69. **User feedback: should look more like a Christmas tree, but with no decorations.**
+- [x] **Iteration 2 (discarded):** brief rewritten around the classic stacked-tier Christmas-tree silhouette — three or four rounded overhanging tiers, full foliage, short brown trunk, and explicit bans on ornaments, lights, tinsel, gifts and star topper. Generated 820,393 bytes, palette-match 0.0967, small contrast 110.25. **User feedback: still not good.**
+- [x] **Iteration 3 (approved):** the user supplied subject photos (`Reference/pine tree -ref.jpeg`, `Reference/pine tree -ref2.jpeg`), sent with role *subject* alongside `bear.png` + `star.png` for finish only.
+- [x] **Generated (iteration 3, kept):** 1024x1024, 766,431 bytes, opaque. Measured: paper 216.72/220.6/216.03, palette-match vs bear 0.6633, small-size legibility proxy 162.02.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
