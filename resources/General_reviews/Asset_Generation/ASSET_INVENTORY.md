@@ -210,9 +210,9 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | object-beach-umbrella | ⛱️ | `game/games/racing-config.js` | Beach scenery | Simple illustration only if the glyph is actually visible at meaningful size | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/beach-umbrella.png` | — |
 | object-surfboard | 🏄 | `game/games/racing-config.js` | Beach scenery | Usually remove/replace with a simple vector; avoid unnecessary tiny art | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/surfboard.png` | — |
 | object-wave | 🌊 | `game/games/racing-config.js` | Ocean scenery | CSS/SVG wave or one simple image, depending on render scale | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/wave.png` | — |
-| object-skis | 🎿 | `game/games/racing-config.js` | Winter scenery/collectible | Small SVG or illustration if prominent | REVIEW |
-| object-skier | ⛷️ | `game/games/racing-config.js` | Winter scenery | Likely remove if tiny decorative clutter; otherwise simple vector | REVIEW |
-| object-evergreen-lantern | 🏮 | `game/games/racing-config.js` | Night scenery | Simple vector/illustration only if retained | REVIEW |
+| object-skis | 🎿 | `game/games/racing-config.js` | Winter scenery/collectible | Small SVG or illustration if prominent | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/skis.png` | — |
+| object-skier | ⛷️ | `game/games/racing-config.js` | Winter scenery | Likely remove if tiny decorative clutter; otherwise simple vector | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/skier.png` | — |
+| object-evergreen-lantern | 🏮 | `game/games/racing-config.js` | Night scenery | Simple vector/illustration only if retained | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/evergreen-lantern.png` | — |
 | animal-owl | 🦉 | `game/games/racing-config.js` | Night scenery | One simple owl illustration if retained as a visible object | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/owl.png`) |
 | animal-bat | 🦇 | `game/games/racing-config.js` | Night scenery | One simple bat illustration if retained as a visible object | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/bat.png`) |
 | animal-monkey | 🐒 | `game/games/racing-config.js` | Tropical scenery | One simple monkey illustration if retained | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED (WIP: `assets_work_in_progress_bundle/monkey.png`) |
@@ -367,6 +367,9 @@ measurements only — they say nothing about how the pictures look.
 | beach-umbrella.png | 1024x1024 | rgb | 100/0/0 | 0.3345 | 39.14 | painted (approved 2026-10-29, iteration 2; no bottom handle, tilted) |
 | wave.png | 1024x1024 | rgb | 100/0/0 | 0.6681 | 67.14 | painted (approved 2026-10-29, iteration 1) |
 | spaceship.png | 1024x1024 | rgb | 100/0/0 | 0.5714 | 63.4 | painted (approved 2026-10-29, iteration 1) |
+| skis.png | 1024x1024 | rgb | 100/0/0 | 0.1657 | 55.29 | painted (approved 2026-10-29, iteration 3; matching wooden pair) |
+| skier.png | 1024x1024 | rgb | 100/0/0 | 0.0211 | 83.5 | painted (approved 2026-10-29, iteration 3; one ski per foot, two poles) |
+| evergreen-lantern.png | 1024x1024 | rgb | 100/0/0 | 0.0327 | 93.43 | painted (approved 2026-10-29, iteration 3; family style, visible burning candle) |
 | volcano.png | 1024x1024 | rgb | 100/0/0 | 0.548 | 166.75 | painted (approved 2026-10-26, taller/more-lava retry) |
 | cactus.png | 1024x1024 | rgb | 100/0/0 | 0.0089 | 60.11 | painted (approved 2026-10-26, desert batch) |
 | parrot.png | 1024x1024 | rgb | 100/0/0 | 0.1234 | 128.63 | painted (approved 2026-10-29, Scarlet macaw, iteration 3) |

@@ -1256,3 +1256,33 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **Generated (iteration 1, kept):** 1024x1024, 1,120,435 bytes, opaque. Measured: paper 229.92/230.71/227.95, palette-match vs bear 0.5714, small-size legibility proxy 63.4.
 - [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — skis (object-skis), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/racing-config.js` uses `🎿` for winter scenery and collectibles; the bundle had no skis PNG, so the row was duplicate-free.
+- [x] **Iteration 1 (discarded):** prepared brief unchanged — two narrow skis with muted red and blue painted colour blocks, laid out straight. Generated 1,217,434 bytes, palette-match 0.6685, small contrast 53.11. **User feedback: they should look like the plain wooden skis the skier wears, shown in a skiing position.**
+- [x] **Iteration 2 (discarded):** brief rewritten to plain warm light-brown wood with grain and binding straps, standing in a three-quarter skiing stance. Generated 1,330,503 bytes, palette-match 0.0198, small contrast 60.54. **User feedback: the left ski is right, but the right ski must look the same as the left one.**
+- [x] **Iteration 3 (approved):** both skis specified as a matching pair — identical length, width, tip, tail, wood tone, grain and binding, differing only by mirrored perspective angle, with explicit bans on a colour block, stripe or shape on one ski only.
+- [x] **Generated (iteration 3, kept):** 1024x1024, 1,132,834 bytes, opaque. Measured: paper 231.17/226.18/220.29, palette-match vs bear 0.1657, small-size legibility proxy 55.29.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — skier (object-skier), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/racing-config.js` uses `⛷️` for winter scenery; the bundle had `student.png` (child figure) but no skier. `Reference/` holds no `student.png`, so the brief's reference line is satisfied from the bundle file of that name.
+- [x] **Iteration 1 (discarded):** prepared brief unchanged — child in a side-facing skiing pose with jacket, hat, skis and poles. Generated 1,340,628 bytes, palette-match 0.0129, small contrast 65.63. **User feedback: three legs — reduce to two.**
+- [x] **Iteration 2 (discarded):** brief rewritten to count the anatomy explicitly (two arms, two legs, two boots, two skis, two poles), reference set trimmed to `bear.png` + `student.png`. Generated 1,338,434 bytes, palette-match 0.4319, small contrast 89.63. **User feedback: good, but each leg must stand on its own ski and the figure must hold two poles, not one.**
+- [x] **Iteration 3 (approved):** brief now also requires one ski per foot (never both feet on one ski) and exactly two poles, one gripped in each hand.
+- [x] **Generated (iteration 3, kept):** 1024x1024, 1,332,576 bytes, opaque. Measured: paper 224.42/220.22/214.25, palette-match vs bear 0.0211, small-size legibility proxy 83.5.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — evergreen-lantern (object-evergreen-lantern), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/racing-config.js` uses `🏮` for night scenery; the bundle had no lantern PNG, so the row was duplicate-free.
+- [x] **Iteration 1 (discarded):** prepared brief unchanged — round warm-red paper lantern with vertical ribbing, golden glow, top loop and bottom tassel. Generated 1,129,441 bytes, palette-match 0.0192, small contrast 78.26. **User feedback: it must be the European kind with rectangular sides, not the round Chinese one.**
+- [x] **Iteration 2 (discarded):** brief rewritten as a European box lantern with four flat sides, thin dark metal frame, cream glass panels, small tapered metal roof and a hanging loop. Generated 853,771 bytes, palette-match 0.0834, small contrast 67.64. **User feedback: it should be more in our style, with a visible candle burning inside.**
+- [x] **Iteration 3 (approved):** brief rewritten in the Little Play painted style — rounded softened box body, warm dark-brown frame, translucent cream glass, a clearly visible cream pillar candle with a lit golden teardrop flame and a gentle painted glow, small roof and hanging loop; bans on the round paper drum, tassel and red silk shade remain.
+- [x] **Generated (iteration 3, kept):** 1024x1024, 1,576,742 bytes, opaque. Measured: paper 234.73/221.19/202.76, palette-match vs bear 0.0327, small-size legibility proxy 93.43.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
