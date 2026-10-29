@@ -1221,3 +1221,22 @@ The user asked for the same pictures at the family resolution, **not** new artwo
 - [x] **Generated (iteration 1, kept):** 1024x1024, 832,992 bytes, opaque. Measured: paper 246.33/242.58/235.29, palette-match vs bear 0.6759, small-size legibility proxy 14.92 — the lowest in the bundle so far, flagged before review as likely to read as almost blank at card size.
 - [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`. The low small-size contrast is recorded, not corrected: the brief follows the actual use (beach scenery), so nothing was repainted.
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — mountain (object-mountain), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/racing-config.js` uses `⛰️` for racing scenery; the bundle had no mountain PNG (`volcano.png` is a different landform), so the row was duplicate-free.
+- [x] **Iteration 1 (discarded):** prepared brief unchanged — one broad triangular mountain with a rounded peak, small snow cap, two or three earthy blue-grey planes. Generated 965,480 bytes, palette-match 0.6662, small contrast 91.17. **User feedback: it needs a couple of peaks, not just one.**
+- [x] **Iteration 2 (discarded):** brief rewritten as a two-peak massif joined by a saddle. Generated 998,114 bytes, palette-match 0.6587, small contrast 112.75. **User feedback: it must still read as one mountain that carries a couple of peaks, not two mountains.**
+- [x] **Iteration 3 (approved):** brief tightened to one continuous rock body with one shared base, the summits rising on the same mass — tallest near the centre, a clearly lower second summit beside it across a shallow shoulder, with explicit bans on two separate mountains and on a valley splitting the silhouette.
+- [x] **Generated (iteration 3, kept):** 1024x1024, 1,168,035 bytes, opaque. Measured: paper 224.19/227.98/230.76, palette-match vs bear 0.6595, small-size legibility proxy 103.05.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Approved — beach-umbrella (object-beach-umbrella), generated + approved 2026-10-29 (task 289)
+
+- [x] **Preflight.** `game/games/racing-config.js` uses `⛱️` for beach scenery; the bundle had no umbrella PNG, so the row was duplicate-free.
+- [x] **Iteration 1 (discarded):** prepared brief unchanged — open rounded parasol with alternating muted coral and warm cream panels, slim wooden pole, small curved tip. Generated 972,164 bytes, palette-match 0.4283, small contrast 32.62. **User feedback: the bottom handle is not needed, and the umbrella should lean as if stuck into the sand at an angle.**
+- [x] **Iteration 2 (approved):** brief rewritten — the pole still runs from the canopy centre but simply ends (no handle, hook, grip or knob, all banned explicitly), and the whole umbrella leans a few degrees to the right with a straight pole and tilting canopy.
+- [x] **Generated (iteration 2, kept):** 1024x1024, 902,591 bytes, opaque. Measured: paper 241.33/234.66/226.62, palette-match vs bear 0.3345, small-size legibility proxy 39.14.
+- [x] **User review: APPROVED 2026-10-29.** The inventory row is `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no new smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
