@@ -1,0 +1,496 @@
+From b0941fce65f39df88d018baa33593ac826e04848 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Thu, 29 Oct 2026 21:27:25 +0000
+Subject: [PATCH] Add finish-pass regeneration briefs for 10 bundle assets
+
+New briefs: cow, duck, fish, apple (raster-emoji group, enlarged low-res
+crops), plus optional cat and dog.
+Revised briefs (history kept above the prompt marker): egg (iteration 3,
+fixes the two-tone shell), skis, medal and notebook (finish-only passes
+that pin the user-approved design with --subject-ref).
+
+Review basis: all 131 files of assets_work_in_progress_bundle, background
+ignored because it is removed later. Nothing was generated; every brief
+was dry-run through tools/asset_generate.js (references resolve, 3-4 input
+images, only the prompt text is sent). Candidates are written to the
+git-ignored tools/.cache/regen/ and never over an approved file.
+
+Agent: Claude/Sonnet 5.5
+---
+ .../Asset_Generation/prompts/apple.md         | 34 ++++++++++++++
+ .../Asset_Generation/prompts/cat.md           | 34 ++++++++++++++
+ .../Asset_Generation/prompts/cow.md           | 34 ++++++++++++++
+ .../Asset_Generation/prompts/dog.md           | 34 ++++++++++++++
+ .../Asset_Generation/prompts/duck.md          | 34 ++++++++++++++
+ .../Asset_Generation/prompts/egg.md           | 41 ++++++++++++++--
+ .../Asset_Generation/prompts/fish.md          | 34 ++++++++++++++
+ .../Asset_Generation/prompts/medal.md         | 38 ++++++++++++++-
+ .../Asset_Generation/prompts/notebook.md      | 37 ++++++++++++++-
+ .../Asset_Generation/prompts/skis.md          | 47 ++++++++++++++++---
+ 10 files changed, 352 insertions(+), 15 deletions(-)
+ create mode 100644 resources/General_reviews/Asset_Generation/prompts/apple.md
+ create mode 100644 resources/General_reviews/Asset_Generation/prompts/cat.md
+ create mode 100644 resources/General_reviews/Asset_Generation/prompts/cow.md
+ create mode 100644 resources/General_reviews/Asset_Generation/prompts/dog.md
+ create mode 100644 resources/General_reviews/Asset_Generation/prompts/duck.md
+ create mode 100644 resources/General_reviews/Asset_Generation/prompts/fish.md
+
+diff --git a/resources/General_reviews/Asset_Generation/prompts/apple.md b/resources/General_reviews/Asset_Generation/prompts/apple.md
+new file mode 100644
+index 0000000..1225350
+--- /dev/null
++++ b/resources/General_reviews/Asset_Generation/prompts/apple.md
+@@ -0,0 +1,34 @@
++# food-apple — generation brief (finish pass, iteration 2)
++
++- **Replaces:** the current `apple.png` — raster-emoji art (emoji raster of 165–305 px cut from the New Illustrated Assets Board, enlarged by task 292). Original glyph: `🍎` (food sorting bin/item in `game/games/sorting.js`).
++- **Inventory row:** `food-apple` — `GENERATED / USER-APPROVED` as a picture. This brief only *proposes* a re-generation; the approved file stays until a candidate is reviewed and approved.
++- **Why this one:** **lower confidence than cow and duck; the call rests on the visual comparison, not on a number.** At full size the surface is an enlarged coloured-pencil/felt scribble with a scalloped contour and no soft highlight, unlike the smooth painted washes of `banana.png`, `pear.png`, `strawberry.png` and `apple-green.png`. In `game/games/sorting.js` it is shown beside the painted `banana.png` and `strawberry.png`, and `apple-green.png` is its direct sibling. (Metric note: the apple's contour sharpness, 15.3, is close to normal and its texture score, 3.5, is low — but smooth painted fruit such as `pear.png` at 2.5 scores just as low, so the numbers alone prove nothing here.) The red is also the fourth most saturated subject in the bundle (0.70).
++- **Category:** food / fruit. Colour distinction must be preserved (STYLE_BIBLE §12: green versus red apple).
++- **Subject reference (`--subject-ref`):** the current `apple.png` (shape, red colour, stem and leaf placement).
++- **Style references (`--ref-files`):** `bear.png`, `star.png`, `apple-green.png` — the painted sibling that sets the finish and detail level for an apple (its shape and colour must not be copied; the brief states the red explicitly).
++- **Canvas:** 1024x1024 from the API, production target 512x512 PNG
++- **Background:** plain warm off-white; cut away later, so no ground or cast shadow.
++
++```powershell
++# 1) dry run (no API call, no neurons): inspect the composed prompt and the references
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/apple.md --out tools/.cache/regen/apple.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/apple.png `
++  --ref-files bear.png,star.png,apple-green.png --dry-run
++
++# 2) generate ONE candidate (about 125 neurons) into the git-ignored staging folder, never over the approved file
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/apple.md --out tools/.cache/regen/apple.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/apple.png `
++  --ref-files bear.png,star.png,apple-green.png --creds "tools/vendor/Cloudflare-credentials,json"
++```
++
++--- prompt ---
++
++Create one standalone illustration of a single red apple for a cozy early-childhood storybook game. Match the supplied Little Play bear and golden star references: soft watercolor wash with very subtle paper/colored-pencil grain; warm natural, gently muted colors; rounded, slightly organic shapes; soft painted shading; restrained contrast; quiet handmade charm; minimal, clean details; readable silhouette at small mobile size.
++
++This is a finish pass, not a redesign: keep the subject reference's pose, proportions, markings and colours, but paint it as hand-painted watercolor on paper — crisp, softly defined painted contours, fine paper grain and gentle pigment variation visible inside every colour area, exactly like the bear reference. Not blurry, not smudged, not felt, fuzz or pencil-scribble texture, and no smooth airbrushed gradients.
++
++Keep it a single plump, rounded red apple with a slight dip at the top, a short brown stem and exactly one soft leaf-green leaf angled up and to the right. The red is a clear, warm apple red — not pink, not orange, not dark crimson — slightly deeper toward the lower edge, with one broad soft lighter patch on the upper left. Soft and matte: no glossy streak, no wet shine, no waxy look. It must stay clearly different from the green apple reference: do not make it green or yellow-green, and do not copy the green apple's two leaves. The leaf and stem are few, clear and appropriately sized.
++
++One subject only, fully visible, centered with comfortable breathing room. Plain warm off-white background with nothing on it: no ground line, no ground shadow or cast shadow, no frame, border, panel, divider line or stray mark. All shading stays inside the subject. The result must look like it belongs beside the exact reference images.
++
++No photorealism, 3D rendering, glossy plastic, vector emoji, stock-icon look, or anime styling. No thick black outline, white sticker border, glow, hard drop shadow, or dramatic lighting. No excessive gradient, tiny detail, heavy texture, decorative sparkles, or ornamental extras. No unrequested accessories. No text, labels, watermark, logo, collage, contact sheet, or multiple alternatives in one image. No bite, no worm, no face, no second apple, no basket, no tree. Do not reproduce the reference bear or the golden star; create the requested apple in the same visual family.
+diff --git a/resources/General_reviews/Asset_Generation/prompts/cat.md b/resources/General_reviews/Asset_Generation/prompts/cat.md
+new file mode 100644
+index 0000000..6d194b8
+--- /dev/null
++++ b/resources/General_reviews/Asset_Generation/prompts/cat.md
+@@ -0,0 +1,34 @@
++# animal-cat — generation brief (finish pass, iteration 2, optional)
++
++- **Replaces:** the current `cat.png` — raster-emoji art (emoji raster of 165–305 px cut from the New Illustrated Assets Board, enlarged by task 292). Original glyph: `🐱` (animal flashcard/counting, sorting item).
++- **Inventory row:** `animal-cat` — `GENERATED / USER-APPROVED` as a picture. This brief only *proposes* a re-generation; the approved file stays until a candidate is reviewed and approved.
++- **Priority: optional (lowest of the finish passes).** At full size the cat is attractive and close to the family. Measured on the subject only: contour sharpness **11.5** (bundle median 20.1; the painted, fluffy `chick.png` is 12.1) and fine texture **4.7** (the furry painted `chick.png` 8.8, `sheep.png` 10.7). So the gap is a missing fine paper grain, not a different style. Run it last and **keep the current file unless the candidate is clearly better** next to the painted animals.
++- **Category:** friendly animal (character). In `sorting.js` it is shown together with the raster `dog.png` and `apple.png`, so cat, dog and apple are best replaced as one batch.
++- **Subject reference (`--subject-ref`):** the current `cat.png` (pose, tabby markings, colours).
++- **Style references (`--ref-files`):** `bear.png`, `star.png`, `fox.png` (painted warm-orange animal, finish and detail level only; its shape and colours must not be copied).
++- **Canvas:** 1024x1024 from the API, production target 512x512 PNG
++- **Background:** plain warm off-white; cut away later. The current file carries a baked-in tan panel on both sides, so the brief forbids panels and frames.
++
++```powershell
++# 1) dry run (no API call, no neurons): inspect the composed prompt and the references
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/cat.md --out tools/.cache/regen/cat.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cat.png `
++  --ref-files bear.png,star.png,fox.png --dry-run
++
++# 2) generate ONE candidate (about 125 neurons) into the git-ignored staging folder, never over the approved file
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/cat.md --out tools/.cache/regen/cat.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cat.png `
++  --ref-files bear.png,star.png,fox.png --creds "tools/vendor/Cloudflare-credentials,json"
++```
++
++--- prompt ---
++
++Create one standalone illustration of a friendly kitten for a cozy early-childhood storybook game. Match the supplied Little Play bear and golden star references: soft watercolor wash with very subtle paper/colored-pencil grain; warm natural, gently muted colors; rounded, slightly organic shapes; soft painted shading; restrained contrast; quiet handmade charm; minimal, clean details; readable silhouette at small mobile size.
++
++This is a finish pass, not a redesign: keep the subject reference's pose, proportions, markings and colours, but paint it as hand-painted watercolor on paper — crisp, softly defined painted contours, fine paper grain and gentle pigment variation visible inside every colour area, exactly like the bear reference. Not blurry, not smudged, not felt, fuzz or pencil-scribble texture, and no smooth airbrushed gradients.
++
++Keep it a single friendly orange tabby kitten sitting upright and facing the viewer, with its tail curled up on the left: a warm orange-ginger wash with a few soft deeper-orange tabby stripes on the forehead and cheeks, a cream muzzle, chest and front paws, soft pink inside the ears, small dark calm eyes, a small brown nose, a soft smile line and a few thin warm-brown whisker strokes. Calm, kind expression. Simple painted fur suggestion only, at the same detail level as the fox reference: no individual hairs, no fluffy fringe around the outline.
++
++One subject only, fully visible, centered with comfortable breathing room. Plain warm off-white background with nothing on it: no ground line, no ground shadow or cast shadow, no frame, border, panel, divider line or stray mark. All shading stays inside the subject. The result must look like it belongs beside the exact reference images.
++
++No photorealism, 3D rendering, glossy plastic, vector emoji, stock-icon look, or anime styling. No thick black outline, white sticker border, glow, hard drop shadow, or dramatic lighting. No excessive gradient, tiny detail, heavy texture, decorative sparkles, or ornamental extras. No unrequested accessories. No text, labels, watermark, logo, collage, contact sheet, or multiple alternatives in one image. No collar, no bell, no yarn, no bowl, no second cat. Do not reproduce the reference bear or the golden star; create the requested kitten in the same visual family.
+diff --git a/resources/General_reviews/Asset_Generation/prompts/cow.md b/resources/General_reviews/Asset_Generation/prompts/cow.md
+new file mode 100644
+index 0000000..eea4b2f
+--- /dev/null
++++ b/resources/General_reviews/Asset_Generation/prompts/cow.md
+@@ -0,0 +1,34 @@
++# animal-cow — generation brief (finish pass, iteration 2)
++
++- **Replaces:** the current `cow.png` — raster-emoji art (emoji raster of 165–305 px, enlarged by task 292, never a painted family member). Original glyph: `🐮`/`🐄` (animal flashcard/counting, candy set, farm puzzle/scenery, Serbian phonics `Крава`, racing decor).
++- **Inventory row:** `animal-cow` — `GENERATED / USER-APPROVED` as a picture. This brief only *proposes* a re-generation; the approved file stays untouched until a candidate has been generated, reviewed side by side and explicitly approved (preflight §8).
++- **Why this one:** review of all 131 bundle files, measured on the subject only (background ignored, it will be cut away): contour sharpness **7.5** against a bundle median of 20.1, fine texture **2.7** against a median of 8.5 — one of the five softest contours of all 131 files. At full size the contour carries a pale halo that will survive a cut-out. It is also the most widely used of the soft files (six runtime sites: `animals.js`, `animal_counting.js`, `candy.js`, `animal_puzzle.js`, `racing-config.js`, `serbian.js`).
++- **Category:** friendly farm animal (character).
++- **Subject reference (`--subject-ref`):** the current `cow.png` — it pins the pose, the patch layout and the colours, so the approved cow stays the same cow. Only the rendering is replaced.
++- **Style references (`--ref-files`):** `bear.png` (canonical anchor), `star.png` (canonical secondary), `sheep.png` (painted farm animal, finish and detail level only). 4 images in total, the proven maximum.
++- **Canvas:** 1024x1024 from the API, production target 512x512 PNG (STYLE_BIBLE.md)
++- **Background:** plain warm off-white for the WIP bundle; the background is cut away later, so the brief forbids ground shadows, panels and marks that a cut-out would keep.
++
++```powershell
++# 1) dry run (no API call, no neurons): inspect the composed prompt and the references
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/cow.md --out tools/.cache/regen/cow.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cow.png `
++  --ref-files bear.png,star.png,sheep.png --dry-run
++
++# 2) generate ONE candidate (about 125 neurons) into the git-ignored staging folder, never over the approved file
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/cow.md --out tools/.cache/regen/cow.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cow.png `
++  --ref-files bear.png,star.png,sheep.png --creds "tools/vendor/Cloudflare-credentials,json"
++```
++
++--- prompt ---
++
++Create one standalone illustration of a friendly cow for a cozy early-childhood storybook game. Match the supplied Little Play bear and golden star references: soft watercolor wash with very subtle paper/colored-pencil grain; warm natural, gently muted colors; rounded, slightly organic shapes; soft painted shading; restrained contrast; quiet handmade charm; minimal, clean details; readable silhouette at small mobile size.
++
++This is a finish pass, not a redesign: keep the subject reference's pose, proportions, markings and colours, but paint it as hand-painted watercolor on paper — crisp, softly defined painted contours, fine paper grain and gentle pigment variation visible inside every colour area, exactly like the bear reference. Not blurry, not smudged, not felt, fuzz or pencil-scribble texture, and no smooth airbrushed gradients.
++
++Keep it a single friendly cow standing calmly in three-quarter view facing right: a plump rounded cream-white body with a few soft warm-brown patches (one large patch on the side, one over the ear and eye, a brown tuft at the end of the tail), a broad soft pink muzzle with two small nostrils, two short golden-tan horns, small ears lined with soft pink, small dark calm eyes, four short sturdy legs ending in dark brown hooves, and a small pink udder under the belly. Calm friendly expression, no exaggerated cartoon grin. Keep the same simple, rounded level of detail as the sheep reference: broad soft masses, no individual hairs, no extra spots.
++
++One subject only, fully visible, centered with comfortable breathing room. Plain warm off-white background with nothing on it: no ground line, no ground shadow or cast shadow, no frame, border, panel, divider line or stray mark. All shading stays inside the subject. The result must look like it belongs beside the exact reference images.
++
++No photorealism, 3D rendering, glossy plastic, vector emoji, stock-icon look, or anime styling. No thick black outline, white sticker border, glow, hard drop shadow, or dramatic lighting. No excessive gradient, tiny detail, heavy texture, decorative sparkles, or ornamental extras. No unrequested accessories. No text, labels, watermark, logo, collage, contact sheet, or multiple alternatives in one image. Not a dog, not a calf, no bell, no collar, no halter, no grass, no barn. Do not reproduce the reference bear or the golden star; create the requested cow in the same visual family.
+diff --git a/resources/General_reviews/Asset_Generation/prompts/dog.md b/resources/General_reviews/Asset_Generation/prompts/dog.md
+new file mode 100644
+index 0000000..05f4819
+--- /dev/null
++++ b/resources/General_reviews/Asset_Generation/prompts/dog.md
+@@ -0,0 +1,34 @@
++# animal-dog — generation brief (finish pass, iteration 2, optional)
++
++- **Replaces:** the current `dog.png` — raster-emoji art (emoji raster of 165–305 px cut from the New Illustrated Assets Board, enlarged by task 292). Original glyph: `🐶` (animal flashcard/counting, candy set, spatial scene, sorting item).
++- **Inventory row:** `animal-dog` — `GENERATED / USER-APPROVED` as a picture. This brief only *proposes* a re-generation; the approved file stays until a candidate is reviewed and approved.
++- **Priority: optional (lowest of the finish passes).** At full size the dog is attractive and close to the family. Measured on the subject only: contour sharpness **12.2** (bundle median 20.1; the painted, fluffy `chick.png` is 12.1) and fine texture **4.8** (the furry painted `chick.png` 8.8, `sheep.png` 10.7). The gap is a missing fine paper grain, not a different style. Run it last and **keep the current file unless the candidate is clearly better** next to the painted animals.
++- **Category:** friendly animal (character). Best replaced in one batch with `cat.png` and `apple.png` (all three appear together in `sorting.js`).
++- **Subject reference (`--subject-ref`):** the current `dog.png` (pose, markings, colours).
++- **Style references (`--ref-files`):** `bear.png`, `star.png`, `rabbit.png` (painted seated animal with soft fur suggestion, finish and detail level only; its shape and colours must not be copied).
++- **Canvas:** 1024x1024 from the API, production target 512x512 PNG
++- **Background:** plain warm off-white; cut away later, so no ground or cast shadow.
++
++```powershell
++# 1) dry run (no API call, no neurons): inspect the composed prompt and the references
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/dog.md --out tools/.cache/regen/dog.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/dog.png `
++  --ref-files bear.png,star.png,rabbit.png --dry-run
++
++# 2) generate ONE candidate (about 125 neurons) into the git-ignored staging folder, never over the approved file
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/dog.md --out tools/.cache/regen/dog.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/dog.png `
++  --ref-files bear.png,star.png,rabbit.png --creds "tools/vendor/Cloudflare-credentials,json"
++```
++
++--- prompt ---
++
++Create one standalone illustration of a friendly puppy for a cozy early-childhood storybook game. Match the supplied Little Play bear and golden star references: soft watercolor wash with very subtle paper/colored-pencil grain; warm natural, gently muted colors; rounded, slightly organic shapes; soft painted shading; restrained contrast; quiet handmade charm; minimal, clean details; readable silhouette at small mobile size.
++
++This is a finish pass, not a redesign: keep the subject reference's pose, proportions, markings and colours, but paint it as hand-painted watercolor on paper — crisp, softly defined painted contours, fine paper grain and gentle pigment variation visible inside every colour area, exactly like the bear reference. Not blurry, not smudged, not felt, fuzz or pencil-scribble texture, and no smooth airbrushed gradients.
++
++Keep it a single friendly puppy sitting upright and facing the viewer: a warm honey-tan body and head, a cream blaze down the forehead, a cream muzzle, chest and front paws, two floppy deep chestnut-brown ears, small dark calm eyes, a small dark-brown nose, a soft smile line, and a short chestnut tail curling up on the right. Calm, kind expression. Simple painted fur suggestion only, at the same detail level as the rabbit reference: no individual hairs, no fuzzy fringe around the outline.
++
++One subject only, fully visible, centered with comfortable breathing room. Plain warm off-white background with nothing on it: no ground line, no ground shadow or cast shadow, no frame, border, panel, divider line or stray mark. All shading stays inside the subject. The result must look like it belongs beside the exact reference images.
++
++No photorealism, 3D rendering, glossy plastic, vector emoji, stock-icon look, or anime styling. No thick black outline, white sticker border, glow, hard drop shadow, or dramatic lighting. No excessive gradient, tiny detail, heavy texture, decorative sparkles, or ornamental extras. No unrequested accessories. No text, labels, watermark, logo, collage, contact sheet, or multiple alternatives in one image. No collar, no bone, no ball, no tongue, no second dog. Do not reproduce the reference bear or the golden star; create the requested puppy in the same visual family.
+diff --git a/resources/General_reviews/Asset_Generation/prompts/duck.md b/resources/General_reviews/Asset_Generation/prompts/duck.md
+new file mode 100644
+index 0000000..ee5cbab
+--- /dev/null
++++ b/resources/General_reviews/Asset_Generation/prompts/duck.md
+@@ -0,0 +1,34 @@
++# animal-duck — generation brief (finish pass, iteration 2)
++
++- **Replaces:** the current `duck.png` — raster-emoji art (emoji raster of 165–305 px cut from a tile of the Catalog board, enlarged by task 292). Original glyph: `🦆` (counting, candy set, spatial scene).
++- **Inventory row:** `animal-duck` — `GENERATED / USER-APPROVED` as a picture; the row asks for a *simple duck in the bear's low-detail style* and warns against the rejected elaborate-duckling look. This brief keeps that simplicity. It only *proposes* a re-generation; the approved file stays until a candidate is reviewed and approved.
++- **Why this one:** measured on the subject only (background ignored): contour sharpness **8.1** against a bundle median of 20.1 and fine texture **1.5** against a median of 8.5 — the flattest subject of all 131 files (lowest texture) and among the five softest contours. Next to `chick.png` and `chicken.png` it reads as an out-of-focus toy.
++- **Category:** simple friendly bird (character). Bird lesson (STYLE_BIBLE §18.4, `bird.md`): keep the *bird* references out so the finish does not drag the shape towards a chick; the subject reference pins the duck's shape instead.
++- **Subject reference (`--subject-ref`):** the current `duck.png` (pose, rubber-duck shape, golden-yellow colour).
++- **Style references (`--ref-files`):** `bear.png`, `star.png`, `sheep.png` (a non-bird painted family member, finish and detail level only).
++- **Canvas:** 1024x1024 from the API, production target 512x512 PNG
++- **Background:** plain warm off-white; cut away later, so no ground or cast shadow.
++
++```powershell
++# 1) dry run (no API call, no neurons): inspect the composed prompt and the references
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/duck.md --out tools/.cache/regen/duck.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/duck.png `
++  --ref-files bear.png,star.png,sheep.png --dry-run
++
++# 2) generate ONE candidate (about 125 neurons) into the git-ignored staging folder, never over the approved file
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/duck.md --out tools/.cache/regen/duck.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/duck.png `
++  --ref-files bear.png,star.png,sheep.png --creds "tools/vendor/Cloudflare-credentials,json"
++```
++
++--- prompt ---
++
++Create one standalone illustration of a friendly duck for a cozy early-childhood storybook game. Match the supplied Little Play bear and golden star references: soft watercolor wash with very subtle paper/colored-pencil grain; warm natural, gently muted colors; rounded, slightly organic shapes; soft painted shading; restrained contrast; quiet handmade charm; minimal, clean details; readable silhouette at small mobile size.
++
++This is a finish pass, not a redesign: keep the subject reference's pose, proportions, markings and colours, but paint it as hand-painted watercolor on paper — crisp, softly defined painted contours, fine paper grain and gentle pigment variation visible inside every colour area, exactly like the bear reference. Not blurry, not smudged, not felt, fuzz or pencil-scribble texture, and no smooth airbrushed gradients.
++
++Keep it a single plump, friendly duck in the simple rubber-duck style of the subject reference, in side view facing right: a round golden-yellow head with one small dark calm eye, a short flat warm-orange beak, a plump rounded body with a gently lifted tail point, and one simple slightly deeper golden wing shape painted on the side. It sits on its rounded belly with no visible feet or legs. Warm golden yellow with a slightly deeper amber tone toward the belly and tail, and a soft warm-orange beak. Very low detail, like the bear: no feather lines, no layered feathers, no fluff texture. It must read as a duck and not as a chick — a broad flat beak, a body longer than it is tall, a lifted tail.
++
++One subject only, fully visible, centered with comfortable breathing room. Plain warm off-white background with nothing on it: no ground line, no ground shadow or cast shadow, no frame, border, panel, divider line or stray mark. All shading stays inside the subject. The result must look like it belongs beside the exact reference images.
++
++No photorealism, 3D rendering, glossy plastic, vector emoji, stock-icon look, or anime styling. No thick black outline, white sticker border, glow, hard drop shadow, or dramatic lighting. No excessive gradient, tiny detail, heavy texture, decorative sparkles, or ornamental extras. No unrequested accessories. No text, labels, watermark, logo, collage, contact sheet, or multiple alternatives in one image. No water, no pond, no ripples, no ducklings, no hat, no bow tie, no cheek blush. Do not reproduce the reference bear or the golden star; create the requested duck in the same visual family.
+diff --git a/resources/General_reviews/Asset_Generation/prompts/egg.md b/resources/General_reviews/Asset_Generation/prompts/egg.md
+index 3fead07..a734acc 100644
+--- a/resources/General_reviews/Asset_Generation/prompts/egg.md
++++ b/resources/General_reviews/Asset_Generation/prompts/egg.md
+@@ -10,16 +10,49 @@
+ - **Canvas:** 1024x1024 from the API, production target 512x512 PNG (STYLE_BIBLE.md)
+ - **Background:** warm off-white is acceptable for the work-in-progress bundle; transparency is a runtime requirement, not an illustration task
+ 
++## Iteration 3 (proposed 2026-10-29, from the review of all 131 bundle files)
++
++- **Status:** `egg.png` is still `GENERATED / CANDIDATE` (never approved). Iteration 2 fixed the legibility problem (small-size contrast 38.8) but **failed its own brief in a new way**: the shell came out as two zones — a speckled, darker beige upper cap and a near-white lower half — joined by a wavy, drip-like line. It reads as a dipped, half-peeled or stained egg, and the lower third is *lighter* instead of the deeper tan the brief asked for. In the two life-cycle sequences it has to stand next to `chick.png`, `bird.png` and `caterpillar.png` and read as one plain egg at card size.
++- **Cause (from the iteration 2 wording):** the sentence asked for speckles "across the upper half and the sides" and for shading "across the lower third", which the model turned into two separate zones. Iteration 3 states the opposite: one continuous shell, one smooth gradient, speckles over the whole shell, the lower part the deepest tone, and names the failure explicitly (two-tone, cap, drip edge, white patch).
++- **No subject reference:** the shape and the framing of iteration 2 were right, but a subject reference would also copy its two-tone colouring, so none is used. Same three style references as iteration 2.
++- **Candidate output:** `tools/.cache/regen/egg.png` (staging, git-ignored). It becomes `egg.png` in the bundle only after side-by-side review.
++
++```powershell
++# 1) dry run (no API call, no neurons): inspect the composed prompt and the references
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/egg.md --out tools/.cache/regen/egg.png ` `
++  --ref-files bear.png,star.png,bone.png --dry-run
++
++# 2) generate ONE candidate (about 125 neurons) into the git-ignored staging folder, never over the approved file
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/egg.md --out tools/.cache/regen/egg.png ` `
++  --ref-files bear.png,star.png,bone.png --creds "tools/vendor/Cloudflare-credentials,json"
++```
++
++### Superseded prompt (iteration 2) (kept for the record, not sent to the model)
++
++> Create one standalone illustration of a single simple egg for a cozy early-childhood storybook game. Match the supplied Little Play bear, golden star and bone references: soft watercolor wash with very subtle paper/colored-pencil grain; warm natural, gently muted colors; rounded, slightly organic shapes; soft painted shading; restrained contrast; quiet handmade charm; minimal, clean details; readable silhouette at small mobile size.
++>
++> Draw one egg shell standing upright on its narrower end, a smooth oval that is slightly taller than it is wide, with a gently rounded top and a soft shadowed underside so it sits on the ground. The shell is a warm cream-beige that is clearly a step deeper in tone than the background paper — not white, not pale yellow, not flat. Scatter a dozen soft, irregular medium warm-brown speckles across the upper half and the sides, and paint a deeper warm tan shading down one side and across the lower third, so the egg has one clearly visible shaded side and one clearly visible lit side. The picture must not look almost blank: the egg carries a clearly visible amount of tone, so it still reads when the whole picture is shrunk to a small card.
++>
++> Nothing on the shell but those speckles: no crack, no opening, no chick peeking out, no pattern, no ribbon, no basket, no nest, no straw, no leaves, no ground line, no other egg, no shell fragment.
++>
++> Keep it a simple, calm object picture with no face, no eyes and no expression. The egg must read instantly as an egg at small size and must not look like a bird, a round chick, a ball, an apple or a bone.
++>
++> One subject only, fully visible, centered with comfortable breathing room. Plain warm off-white background is acceptable. No added props or scene. The result must look like it belongs beside the exact reference images.
++>
++> No photorealism, 3D rendering, glossy plastic, vector emoji, stock-icon look, or anime styling. Not a yellow egg, not a chick, not a cracked or hatching egg, not a decorated Easter egg, not a nest, not a carton, not a bowl, not a piece of bone. No thick black outline, white sticker border, glow, hard drop shadow, or dramatic lighting. No excessive gradient, tiny detail, heavy texture, decorative sparkles, or ornamental extras. No unrequested accessories. No text, labels, watermark, logo, collage, contact sheet, or multiple alternatives in one image. Do not reproduce the reference bear, the golden star or the bone; create the requested egg in the same visual family.
++
+ --- prompt ---
+ 
+ Create one standalone illustration of a single simple egg for a cozy early-childhood storybook game. Match the supplied Little Play bear, golden star and bone references: soft watercolor wash with very subtle paper/colored-pencil grain; warm natural, gently muted colors; rounded, slightly organic shapes; soft painted shading; restrained contrast; quiet handmade charm; minimal, clean details; readable silhouette at small mobile size.
+ 
+-Draw one egg shell standing upright on its narrower end, a smooth oval that is slightly taller than it is wide, with a gently rounded top and a soft shadowed underside so it sits on the ground. The shell is a warm cream-beige that is clearly a step deeper in tone than the background paper — not white, not pale yellow, not flat. Scatter a dozen soft, irregular medium warm-brown speckles across the upper half and the sides, and paint a deeper warm tan shading down one side and across the lower third, so the egg has one clearly visible shaded side and one clearly visible lit side. The picture must not look almost blank: the egg carries a clearly visible amount of tone, so it still reads when the whole picture is shrunk to a small card.
++Draw one egg shell standing upright on its narrower end, a smooth oval slightly taller than it is wide, with a gently rounded top. The whole shell is ONE continuous warm cream-beige that is clearly a step deeper in tone than the background paper — not white, not pale yellow, not flat. Soft painted shading deepens smoothly and gradually towards one side and towards the bottom, so the egg has one clearly visible lit side (a little lighter, warm cream) and one clearly visible shaded side and underside (deeper warm tan). The lower part of the egg is its deepest tone and is never lighter than the top. There is no dividing line, no band, no cap, no second colour zone and no white patch: one egg, one colour family, one smooth gradient.
++
++Scatter a dozen soft, irregular, medium warm-brown speckles evenly over the whole shell — on the lit side, on the shaded side and on the lower half as well as the top — with none clumped into a cap and none forming a pattern. The picture must not look almost blank: the egg carries a clearly visible amount of tone, so it still reads when the whole picture is shrunk to a small card.
+ 
+-Nothing on the shell but those speckles: no crack, no opening, no chick peeking out, no pattern, no ribbon, no basket, no nest, no straw, no leaves, no ground line, no other egg, no shell fragment.
++Nothing on the shell but those speckles: no crack, no opening, no chick, no drip or wavy edge, no two-tone dipped look, no peeling, no pattern, no ribbon, no basket, no nest, no straw, no leaves, no other egg, no shell fragment.
+ 
+ Keep it a simple, calm object picture with no face, no eyes and no expression. The egg must read instantly as an egg at small size and must not look like a bird, a round chick, a ball, an apple or a bone.
+ 
+-One subject only, fully visible, centered with comfortable breathing room. Plain warm off-white background is acceptable. No added props or scene. The result must look like it belongs beside the exact reference images.
++One subject only, fully visible, centered with comfortable breathing room. Plain warm off-white background with nothing on it: no ground line, no ground shadow or cast shadow, no frame, border, panel, divider line or stray mark. All shading stays inside the subject. The result must look like it belongs beside the exact reference images.
+ 
+-No photorealism, 3D rendering, glossy plastic, vector emoji, stock-icon look, or anime styling. Not a yellow egg, not a chick, not a cracked or hatching egg, not a decorated Easter egg, not a nest, not a carton, not a bowl, not a piece of bone. No thick black outline, white sticker border, glow, hard drop shadow, or dramatic lighting. No excessive gradient, tiny detail, heavy texture, decorative sparkles, or ornamental extras. No unrequested accessories. No text, labels, watermark, logo, collage, contact sheet, or multiple alternatives in one image. Do not reproduce the reference bear, the golden star or the bone; create the requested egg in the same visual family.
++No photorealism, 3D rendering, glossy plastic, vector emoji, stock-icon look, or anime styling. No thick black outline, white sticker border, glow, hard drop shadow, or dramatic lighting. No excessive gradient, tiny detail, heavy texture, decorative sparkles, or ornamental extras. No unrequested accessories. No text, labels, watermark, logo, collage, contact sheet, or multiple alternatives in one image. Not a yellow egg, not a chick, not a cracked or hatching egg, not a painted or decorated Easter egg, not a dipped or half-peeled egg, not a nest, not a carton, not a bowl, not a piece of bone. Do not reproduce the reference bear, the golden star or the bone; create the requested egg in the same visual family.
+diff --git a/resources/General_reviews/Asset_Generation/prompts/fish.md b/resources/General_reviews/Asset_Generation/prompts/fish.md
+new file mode 100644
+index 0000000..f748260
+--- /dev/null
++++ b/resources/General_reviews/Asset_Generation/prompts/fish.md
+@@ -0,0 +1,34 @@
++# animal-fish — generation brief (finish pass, iteration 2)
++
++- **Replaces:** the current `fish.png` — raster-emoji art (emoji raster of 165–305 px cut from the New Illustrated Assets Board, enlarged by task 292). Original glyph: `🐟`/`🐠` (ocean/underwater, phonics, Kitty water scenes).
++- **Inventory row:** `animal-fish` — `GENERATED / USER-APPROVED` as a picture. This brief only *proposes* a re-generation; the approved file stays until a candidate is reviewed and approved.
++- **Why this one:** measured on the subject only: contour sharpness **10.5** against a bundle median of 20.1 (seventh softest of 131 files). At full size the fins and the tail are blurred into the body and the surface is a coarse, enlarged felt-like blotch rather than painted grain.
++- **Category:** simple friendly animal, **cool-coloured subject inside a warm family**. Lesson (`project/lessons/asset-generation.md`, water-drop iterations 1 → 2): send a cool painted reference (`elephant.png`) and state the colour explicitly, naming the greys to avoid.
++- **Subject reference (`--subject-ref`):** the current `fish.png` (body shape, fin layout, blue and yellow colours).
++- **Style references (`--ref-files`):** `bear.png`, `star.png`, `elephant.png` (cool-blue painted family member, finish and detail level only).
++- **Canvas:** 1024x1024 from the API, production target 512x512 PNG
++- **Background:** plain warm off-white; cut away later, so no water, ground or cast shadow.
++
++```powershell
++# 1) dry run (no API call, no neurons): inspect the composed prompt and the references
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/fish.md --out tools/.cache/regen/fish.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fish.png `
++  --ref-files bear.png,star.png,elephant.png --dry-run
++
++# 2) generate ONE candidate (about 125 neurons) into the git-ignored staging folder, never over the approved file
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/fish.md --out tools/.cache/regen/fish.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fish.png `
++  --ref-files bear.png,star.png,elephant.png --creds "tools/vendor/Cloudflare-credentials,json"
++```
++
++--- prompt ---
++
++Create one standalone illustration of a friendly fish for a cozy early-childhood storybook game. Match the supplied Little Play bear and golden star references: soft watercolor wash with very subtle paper/colored-pencil grain; warm natural, gently muted colors; rounded, slightly organic shapes; soft painted shading; restrained contrast; quiet handmade charm; minimal, clean details; readable silhouette at small mobile size.
++
++This is a finish pass, not a redesign: keep the subject reference's pose, proportions, markings and colours, but paint it as hand-painted watercolor on paper — crisp, softly defined painted contours, fine paper grain and gentle pigment variation visible inside every colour area, exactly like the bear reference. Not blurry, not smudged, not felt, fuzz or pencil-scribble texture, and no smooth airbrushed gradients.
++
++Keep it a single plump, friendly fish in side view facing right: a rounded oval body in a clear, cheerful turquoise-blue — a true blue-green with the blue clearly higher than the red, never grey-blue, slate, steel, dusty or muddy teal — with a lighter pale-blue belly, a soft golden-yellow rounded tail fin, a small golden-yellow fin on top and a small one underneath, one small round dark calm eye with no white glare, and one small gentle smile curve. The fins are thick, rounded and clearly separated from the body so the silhouette survives at small size. No scales, no scale pattern, no gill lines.
++
++One subject only, fully visible, centered with comfortable breathing room. Plain warm off-white background with nothing on it: no ground line, no ground shadow or cast shadow, no frame, border, panel, divider line or stray mark. All shading stays inside the subject. The result must look like it belongs beside the exact reference images.
++
++No photorealism, 3D rendering, glossy plastic, vector emoji, stock-icon look, or anime styling. No thick black outline, white sticker border, glow, hard drop shadow, or dramatic lighting. No excessive gradient, tiny detail, heavy texture, decorative sparkles, or ornamental extras. No unrequested accessories. No text, labels, watermark, logo, collage, contact sheet, or multiple alternatives in one image. No bubbles, no water, no seaweed, no coral, no second fish, no fish bowl. Do not reproduce the reference bear or the golden star; create the requested fish in the same visual family.
+diff --git a/resources/General_reviews/Asset_Generation/prompts/medal.md b/resources/General_reviews/Asset_Generation/prompts/medal.md
+index e46c8bb..da7cb27 100644
+--- a/resources/General_reviews/Asset_Generation/prompts/medal.md
++++ b/resources/General_reviews/Asset_Generation/prompts/medal.md
+@@ -12,8 +12,42 @@ Canvas: square 1024×1024 WIP image, one centered object with generous padding.
+ 
+ Background: warm cream storybook paper; no transparency required for WIP.
+ 
++## Iteration 2 — finish pass (proposed 2026-10-29, from the review of all 131 bundle files)
++
++- **Current state:** `medal.png` was **user-approved on 2026-10-29** from a single generation with the brief unchanged. This brief does **not** reopen that decision; it proposes a finish-only re-render. Keep the approved file until a candidate is reviewed side by side and explicitly approved.
++- **Why:** at 100% the medal is the most digital-looking file in the bundle: smooth gradient gold with a bevelled rim, a crisp vector-like outline around the bear emblem, no paper grain (the bear reference has a visible paper surface), and a halftone/noise hatching on the ribbon with a ragged top edge. STYLE_BIBLE §4 bans metallic shine and flat emoji/vector fills, §5 bans an outline around the whole object. The ribbon's top edge sits only 1.8% from the canvas edge (STYLE_BIBLE §10: breathing room on all sides).
++- **About the bear emblem:** the original brief asked for a plain central surface with no symbol; the generated medal instead carries a small bear — a leak from the bear reference (the same bear also shows up on `notebook.png`, `card-stack.png` and `playing-cards.png`). It was approved with the emblem, so this finish pass **keeps it**. If you would rather have the plain face of the original brief, delete the sentence about the emblem and remove "and one small seated honey-brown bear emblem" from the prompt.
++- **Reference note:** `medal.png` is eligible as an automatic style reference (rank 31 of 131 in `node tools/asset_refpool.js`, the best-ranked of the off-style files; a default `--refs 2` run sends only `bear.png` and `star.png`, so the risk is low unless a run asks for 30 or more references). The commands below pin `--ref-files` anyway.
++- **Subject reference (`--subject-ref`):** the approved `medal.png` (layout, colours, emblem).
++- **Style references (`--ref-files`):** `bear.png`, `star.png`, `bone.png` (matte simple-object exemplar).
++- **Candidate output:** `tools/.cache/regen/medal.png` (staging, git-ignored).
++
++```powershell
++# 1) dry run (no API call, no neurons): inspect the composed prompt and the references
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/medal.md --out tools/.cache/regen/medal.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/medal.png `
++  --ref-files bear.png,star.png,bone.png --dry-run
++
++# 2) generate ONE candidate (about 125 neurons) into the git-ignored staging folder, never over the approved file
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/medal.md --out tools/.cache/regen/medal.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/medal.png `
++  --ref-files bear.png,star.png,bone.png --creds "tools/vendor/Cloudflare-credentials,json"
++```
++
++### Superseded prompt (iteration 1) (kept for the record, not sent to the model)
++
++> Create one clearly recognizable simple award medal as a standalone children's storybook illustration. Show one round warm-golden medal with a short muted blue and red ribbon above it, simple gentle edge shading and one plain central surface with no symbol or text. Center the complete medal and ribbon with comfortable padding. It must read as a medal, not a coin or badge.
++>
++> No winner, person, hand, podium, number, letter, star emblem, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra medals.
++
+ --- prompt ---
+ 
+-Create one clearly recognizable simple award medal as a standalone children's storybook illustration. Show one round warm-golden medal with a short muted blue and red ribbon above it, simple gentle edge shading and one plain central surface with no symbol or text. Center the complete medal and ribbon with comfortable padding. It must read as a medal, not a coin or badge.
++Create one standalone illustration of a golden award medal on a ribbon for a cozy early-childhood storybook game. Match the supplied Little Play bear and golden star references: soft watercolor wash with very subtle paper/colored-pencil grain; warm natural, gently muted colors; rounded, slightly organic shapes; soft painted shading; restrained contrast; quiet handmade charm; minimal, clean details; readable silhouette at small mobile size.
++
++This is a finish pass, not a redesign: keep the design of the subject reference — one round golden medal hanging from a short two-tone ribbon folded into a V above it, with one small seated honey-brown bear emblem in the centre of the medal's face — but paint all of it as hand-painted watercolor on paper, not as a smooth digital gradient. The gold is soft layered washes of ochre, honey and cream with gentle pigment variation and a few broad lighter patches; the raised rim is a slightly deeper ochre band, painted rather than bevelled. Matte throughout: no metallic gradient, no bevel, no engraving, no mirror highlight, no shine.
++
++The ribbon is flat painted stripes of dusty blue and soft brick red with fine paper grain, its top edge clean and straight: no halftone dots, no hatching, no noise, no frayed or grungy edge. The bear emblem is painted the way the bear reference is painted — a honey-brown wash with visible paper grain, a cream muzzle, small dark eyes and nose, a soft blush — and is defined by its paint, with no drawn outline and no flat vector fill.
++
++One medal only, fully visible, centered, with comfortable breathing room on all four sides: the top of the ribbon must stay clearly inside the canvas with clear space above it. Plain warm off-white background with nothing on it: no ground line, no ground shadow or cast shadow, no frame, border, panel, divider line or stray mark. All shading stays inside the subject. The result must look like it belongs beside the exact reference images.
+ 
+-No winner, person, hand, podium, number, letter, star emblem, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra medals.
++No photorealism, 3D rendering, glossy plastic, vector emoji, stock-icon look, or anime styling. No thick black outline, white sticker border, glow, hard drop shadow, or dramatic lighting. No excessive gradient, tiny detail, heavy texture, decorative sparkles, or ornamental extras. No unrequested accessories. No text, labels, watermark, logo, collage, contact sheet, or multiple alternatives in one image. No person, hand, podium, number, letter, extra medals, extra emblems, star emblem or laurel wreath. Do not reproduce the reference bear itself as a large figure or the golden star; the medal carries only the small seated bear emblem of the subject reference.
+diff --git a/resources/General_reviews/Asset_Generation/prompts/notebook.md b/resources/General_reviews/Asset_Generation/prompts/notebook.md
+index 4dff4cc..8a69db9 100644
+--- a/resources/General_reviews/Asset_Generation/prompts/notebook.md
++++ b/resources/General_reviews/Asset_Generation/prompts/notebook.md
+@@ -12,8 +12,41 @@ Canvas: square 1024×1024 WIP image, one centered object with generous padding.
+ 
+ Background: warm cream storybook paper; no transparency required for WIP.
+ 
++## Iteration 2 — finish pass (proposed 2026-10-29, from the review of all 131 bundle files)
++
++- **Current state:** `notebook.png` was **user-approved on 2026-10-29** from a single generation with the brief unchanged. This brief does **not** reopen that decision; it proposes a finish-only re-render. Keep the approved file until a candidate is reviewed side by side and explicitly approved.
++- **Why:** at full size the object itself reads as a photographed product — realistic paper edges on the page block, a fabric-like cover and a studio-style soft shadow — with a painted bear on top; it is a hybrid of two finishes. Measured on the subject only: contour sharpness **7.5** against a bundle median of 20.1 (the fourth softest of 131 files). STYLE_BIBLE §4 rules out photorealistic surface simulation, §11 asks for one softness and detail density across the family. The left ear of the cover bear also came out as a pointed wedge instead of a round ear.
++- **About the bear on the cover:** the original brief asked for a plain cover; the bear is a leak from the bear reference (also on `medal.png`, `card-stack.png`, `playing-cards.png`). It was approved with the bear, so this finish pass **keeps it**. For the plain cover of the original brief, remove the bear sentences from the prompt.
++- **Subject reference (`--subject-ref`):** the approved `notebook.png` (angle, teal and cream colours, bear on the cover).
++- **Style references (`--ref-files`):** `bear.png`, `star.png`, `sailboat.png` (approved painted object with a cool body and warm accent, flat simple finish — finish and detail level only).
++- **Candidate output:** `tools/.cache/regen/notebook.png` (staging, git-ignored).
++
++```powershell
++# 1) dry run (no API call, no neurons): inspect the composed prompt and the references
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/notebook.md --out tools/.cache/regen/notebook.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/notebook.png `
++  --ref-files bear.png,star.png,sailboat.png --dry-run
++
++# 2) generate ONE candidate (about 125 neurons) into the git-ignored staging folder, never over the approved file
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/notebook.md --out tools/.cache/regen/notebook.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/notebook.png `
++  --ref-files bear.png,star.png,sailboat.png --creds "tools/vendor/Cloudflare-credentials,json"
++```
++
++### Superseded prompt (iteration 1) (kept for the record, not sent to the model)
++
++> Create one clearly recognizable simple child's notebook as a standalone storybook illustration. Show one closed rounded-corner notebook in muted teal and warm cream, with a few visible page layers and a simple plain cover. Keep it slightly angled but fully visible, with soft watercolor grain and gentle shading. It must read as a notebook, not a book, tablet or envelope.
++>
++> No writing, letters, numbers, pencil, hand, desk, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra notebooks.
++
+ --- prompt ---
+ 
+-Create one clearly recognizable simple child's notebook as a standalone storybook illustration. Show one closed rounded-corner notebook in muted teal and warm cream, with a few visible page layers and a simple plain cover. Keep it slightly angled but fully visible, with soft watercolor grain and gentle shading. It must read as a notebook, not a book, tablet or envelope.
++Create one standalone illustration of a child's notebook for a cozy early-childhood storybook game. Match the supplied Little Play bear and golden star references: soft watercolor wash with very subtle paper/colored-pencil grain; warm natural, gently muted colors; rounded, slightly organic shapes; soft painted shading; restrained contrast; quiet handmade charm; minimal, clean details; readable silhouette at small mobile size.
++
++This is a finish pass, not a redesign: keep the design of the subject reference — one closed rounded-corner notebook, slightly angled and fully visible, with a muted teal-green cover and one small seated honey-brown bear painted on the cover — but paint it as a hand-painted storybook illustration, not as a photograph of an object. The cover is a soft, gently mottled teal-green watercolor wash with visible paper grain. The page block is three or four soft cream bands along the side edges, separated by faint warm-grey lines, with no photographic paper detail. The spine is a slightly deeper teal band, and the corners are rounded.
++
++The bear on the cover is painted the way the bear reference is painted: a honey-brown wash with visible paper grain, a cream muzzle, small dark eyes and nose, a soft blush, and two round ears of the same shape. It is defined by its paint, with no drawn outline. The notebook must read as a notebook, not as a tablet, a box or an envelope.
++
++One notebook only, fully visible, centered with comfortable breathing room. Plain warm off-white background with nothing on it: no ground line, no ground shadow or cast shadow, no frame, border, panel, divider line or stray mark. All shading stays inside the subject. The result must look like it belongs beside the exact reference images.
+ 
+-No writing, letters, numbers, pencil, hand, desk, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra notebooks.
++No photorealism, 3D rendering, glossy plastic, vector emoji, stock-icon look, or anime styling. No thick black outline, white sticker border, glow, hard drop shadow, or dramatic lighting. No excessive gradient, tiny detail, heavy texture, decorative sparkles, or ornamental extras. No unrequested accessories. No text, labels, watermark, logo, collage, contact sheet, or multiple alternatives in one image. No photographic paper edges, no page curl, no fabric or leather texture, no stitching, no studio lighting, no sheen. No writing, letters, numbers, pencil, hand, desk, bookmark, elastic band, ribbon or extra notebooks. Do not reproduce the reference bear as a large figure or the golden star; the cover carries only the small seated bear of the subject reference.
+diff --git a/resources/General_reviews/Asset_Generation/prompts/skis.md b/resources/General_reviews/Asset_Generation/prompts/skis.md
+index 6b658be..f832f1f 100644
+--- a/resources/General_reviews/Asset_Generation/prompts/skis.md
++++ b/resources/General_reviews/Asset_Generation/prompts/skis.md
+@@ -14,16 +14,49 @@ Background: warm cream storybook paper; no transparency required for WIP.
+ 
+ Iteration note (2026-10-29): iteration 1 was not accepted (painted blocks, laid flat). Iteration 2 got the wooden look and the skiing stance right, but the two skis did not match — the user approved the **left** ski only, and asked that **the right ski look the same as the left one**.
+ 
++## Iteration 4 — finish pass (proposed 2026-10-29, from the review of all 131 bundle files)
++
++- **Current state:** `skis.png` was **user-approved on 2026-10-29** after three iterations about *shape* (plain wooden skis, then a matching pair). This brief does **not** reopen that decision. It proposes a finish-only re-render for family consistency; keep the approved file until a candidate is reviewed side by side and explicitly approved.
++- **Why:** at 100% the file is the only photographic object in the bundle — real wood grain, a woven fabric strap and a studio-style soft shadow — beside the hand-painted wood of the approved `sled.png`. STYLE_BIBLE §4 rules out photorealistic wood grain and 3D-rendered finish, §11 asks for the same softness, texture and detail density across the family.
++- **Reference note:** `skis.png` is eligible as an automatic style reference (rank 46 of 131 in `node tools/asset_refpool.js`; a default `--refs 2` run sends only `bear.png` and `star.png`, so the risk is low). The commands below pin `--ref-files` anyway.
++- **Subject reference (`--subject-ref`):** the approved `skis.png` pins the geometry (two identical skis, side by side, the same strap) so the three iterations of shape work are not lost.
++- **Style references (`--ref-files`):** `bear.png`, `star.png`, `sled.png` (the approved painted wood object — finish and detail level only; do not copy its shape or its red).
++- **Candidate output:** `tools/.cache/regen/skis.png` (staging, git-ignored).
++
++```powershell
++# 1) dry run (no API call, no neurons): inspect the composed prompt and the references
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/skis.md --out tools/.cache/regen/skis.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/skis.png `
++  --ref-files bear.png,star.png,sled.png --dry-run
++
++# 2) generate ONE candidate (about 125 neurons) into the git-ignored staging folder, never over the approved file
++node tools/asset_generate.js --prompt resources/General_reviews/Asset_Generation/prompts/skis.md --out tools/.cache/regen/skis.png ` `
++  --subject-ref resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/skis.png `
++  --ref-files bear.png,star.png,sled.png --creds "tools/vendor/Cloudflare-credentials,json"
++```
++
++### Superseded prompt (iteration 3) (kept for the record, not sent to the model)
++
++> Create one clearly recognizable pair of children's wooden skis as a standalone storybook illustration, shown in a skiing stance.
++>
++> - **Two identical skis:** both are the same length, the same width, the same rounded upturned tip, the same flat tail, the same plain warm light-brown wood with the same soft grain, and each carries one identical small muted brown binding strap across the middle. They are a matching pair from one workshop — a mirror of each other, never two different boards.
++> - **Skiing position:** the pair stands in a three-quarter view as if a small child were standing on them — the two skis side by side and close, both pointing the same way, tips turned up, the pure difference being their mirrored angle in perspective (one slightly nearer the viewer, one slightly ahead). Not lying flat, not crossed, not perfectly straight rails.
++> - No decoration differences at all: no colour block on one ski, no stripe on one ski, no different tip shapes, no different lengths.
++>
++> Keep the painted finish soft and matte in the Little Play family style, with gentle watercolor grain and no heavy outline.
++>
++> Center the complete pair with comfortable padding and no cropping. The skis are the only subject. They must read as a matching pair of wooden children's skis ready to ski on, not swords, boards, hockey sticks or snowboards.
++>
++> No mismatched skis, no skier, feet, boots, snow, mountain, whole or partial poles, painted colour blocks, decals, text, logo, face, scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra skis.
++
+ --- prompt ---
+ 
+-Create one clearly recognizable pair of children's wooden skis as a standalone storybook illustration, shown in a skiing stance.
++Create one standalone illustration of a pair of children's wooden skis for a cozy early-childhood storybook game. Match the supplied Little Play bear and golden star references: soft watercolor wash with very subtle paper/colored-pencil grain; warm natural, gently muted colors; rounded, slightly organic shapes; soft painted shading; restrained contrast; quiet handmade charm; minimal, clean details; readable silhouette at small mobile size.
+ 
+-- **Two identical skis:** both are the same length, the same width, the same rounded upturned tip, the same flat tail, the same plain warm light-brown wood with the same soft grain, and each carries one identical small muted brown binding strap across the middle. They are a matching pair from one workshop — a mirror of each other, never two different boards.
+-- **Skiing position:** the pair stands in a three-quarter view as if a small child were standing on them — the two skis side by side and close, both pointing the same way, tips turned up, the pure difference being their mirrored angle in perspective (one slightly nearer the viewer, one slightly ahead). Not lying flat, not crossed, not perfectly straight rails.
+-- No decoration differences at all: no colour block on one ski, no stripe on one ski, no different tip shapes, no different lengths.
++This is a finish pass, not a redesign: keep the pair exactly as arranged in the subject reference — two identical long narrow wooden skis lying side by side, parallel and close together, the same length, the same width, the same softly rounded front tip curving gently upward, the same flat tail, each with one identical small muted-brown binding strap across the middle — but paint it as hand-painted watercolor on paper, not as a photograph. The wood is soft layered washes of warm light honey-brown and pale tan, with a few soft darker brush streaks that only suggest grain; the straps are simple painted brown bands. Soft, matte, rounded painted edges, fine visible paper grain and gentle pigment variation inside the colour areas, as in the bear reference and in the painted wooden sled reference.
+ 
+-Keep the painted finish soft and matte in the Little Play family style, with gentle watercolor grain and no heavy outline.
++They must read as a matching pair of children's skis, not swords, planks, hockey sticks, snowboards or skateboards. Both skis are exactly the same: no colour block, stripe, decal or different tip on one ski only.
+ 
+-Center the complete pair with comfortable padding and no cropping. The skis are the only subject. They must read as a matching pair of wooden children's skis ready to ski on, not swords, boards, hockey sticks or snowboards.
++One pair only, fully visible, centered with comfortable breathing room. Plain warm off-white background with nothing on it: no ground line, no ground shadow or cast shadow, no frame, border, panel, divider line or stray mark. All shading stays inside the subject. The result must look like it belongs beside the exact reference images.
+ 
+-No mismatched skis, no skier, feet, boots, snow, mountain, whole or partial poles, painted colour blocks, decals, text, logo, face, scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra skis.
++No photorealism, 3D rendering, glossy plastic, vector emoji, stock-icon look, or anime styling. No thick black outline, white sticker border, glow, hard drop shadow, or dramatic lighting. No excessive gradient, tiny detail, heavy texture, decorative sparkles, or ornamental extras. No unrequested accessories. No text, labels, watermark, logo, collage, contact sheet, or multiple alternatives in one image. No real wood-grain texture, no photographic detail, no fabric weave, no stitching, no studio lighting, no specular shine, no soft photographic shadow. No skier, boots, feet, poles, snow, mountain, hands or extra skis. Do not reproduce the reference bear, the golden star or the sled; create the requested skis in the same visual family.
+-- 
+2.43.0
+

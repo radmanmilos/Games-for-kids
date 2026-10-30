@@ -18,6 +18,8 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
+- 294. IN PROGRESS (2026-10-30, OpenCode/Big Pickle) — apply the 2026-10-29 regen-prompt package to `prompts/` and regenerate the ten flagged bundle assets (cow, duck, fish, egg, skis, medal, notebook, apple, cat, dog) with `--subject-ref` finish passes. Candidates go to `tools/.cache/regen/`, never over approved files; each needs technical QA + explicit user visual approval before it replaces a bundle file. No runtime integration.
+
 ### Task 289 handoff update — 2026-10-26
 
 Prompt coverage is complete for the approved queue through `cactus.png`. After Cloudflare recharges, retry `prompts/parrot.md` first with its documented `bear.png`, `star.png` and `bird.png` references. Do not generate rows marked `REVIEW` or visual-review-pending. Run technical QA and obtain user visual approval after each generated image.
@@ -27,4 +29,4 @@ User-approved preparation scope: add briefs for 29 post-parrot candidates (20 st
 Next-generation instruction: process `parrot.md` and then the prepared prompts strictly one by one. For every image, run technical QA, obtain explicit user visual approval, update inventory/progress, commit with an `Agent: <tool>/<model>` trailer, and push to `main`. Do not batch-generate or perform runtime integration.
 
 - 293. DONE (2026-10-29, OpenCode/Big Pickle) — parent smoke gate flake seen on the scheduler run `40314102209` (`question:"…"`, `choices:0`). Cause: `Page.navigate` resolves when the navigation commits, so the gate (rendered by the page's inline script) had not run when the fixed `sleep(1200)` expired; that sleep was enough locally but not on the loaded runner. Fix: both page loads in `tools/parent_smoke.js` now readiness-wait on `document.querySelectorAll('.gate-choice').length === 4`; the assertions are unchanged. Verified 44/44 locally, and negative-tested from a file copy (gate render delayed 2.5 s → still 44/44 PASS; gate with 3 choices → FAIL with `choices:3`), `check_fast` 8/8 green.
-All prepared-brief assets are now approved. 4 REVIEW assets remain without generated PNGs (snowflake, rock, road-barrier, galaxy) � briefs exist, awaiting generation. Three more REVIEW assets (seasons-leaf, monitor, music-bell) were resolved by reusing existing PNGs. No runtime integration.
+All prepared-brief assets are now approved. 4 REVIEW assets remain without generated PNGs (snowflake, rock, road-barrier, galaxy) � briefs exist, awaiting generation. Three more REVIEW assets (seasons-leaf, monitor, music-bell) were resolved by reusing existing PNGs. No runtime integration.
