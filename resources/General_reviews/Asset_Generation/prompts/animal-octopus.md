@@ -16,11 +16,11 @@ Background: warm cream storybook paper, softly painted and unobtrusive; no trans
 
 --- prompt ---
 
-Create one clearly recognizable a friendly purple octopus with a round head, two big eyes, eight curled tentacles, cheerful expression as a standalone children's storybook illustration.
+Create one clearly recognizable a friendly purple octopus with a round head, two big simple round friendly eyes (no realistic detail), eight curled tentacles, cheerful smile as a standalone children's storybook illustration.
 
 Match the Little Play family style: rounded softened construction, restrained watercolor grain, muted storybook colours rather than neon, gentle painted shading, and no heavy outline.
 
 Center the complete subject with comfortable padding and no cropping. The subject is the only thing in the frame. It must read clearly at small size.
 
-No background scene, no multiple octopuses, no background scene, no multiple subjects, no text, letters, logo, person, hand, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
+No background scene, no multiple octopuses, no realistic eyes, no background scene, no multiple subjects, no text, letters, logo, person, hand, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
 

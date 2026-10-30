@@ -22,5 +22,5 @@ Match the Little Play family style: rounded softened construction, restrained wa
 
 Center the complete subject with comfortable padding and no cropping. The subject is the only thing in the frame. It must read clearly at small size.
 
-No lion, no tiger stripes, no spots, no collar, no background scene, no multiple cats, no background scene, no multiple subjects, no text, letters, logo, person, hand, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
+No lion, no tiger stripes, no spots, no collar, no letters, no text on forehead, no markings resembling letters, no M on forehead, no M marking, plain forehead, no background scene, no multiple cats, no background scene, no multiple subjects, no text, letters, logo, person, hand, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
 
