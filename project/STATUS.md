@@ -2,42 +2,37 @@
 
 *Overwrite this file at the end of every session (never append). Budget: 6 KB, checked by `node tools/check_docs.js`.*
 
-**Last updated:** 2026-10-26 · **App version:** 2.4.0 (`game/manifest.json`) · **Repository:** https://github.com/radmanmilos/Games-for-kids
+**Last updated:** 2026-10-30 A **App version:** 2.4.0 (`game/manifest.json`) A **Repository:** https://github.com/radmanmilos/Games-for-kids
 
 ## Where we are
 
-- **Мачја шума (Cat Forest) 2.4.0 shipped** — commit `9a4af99`, CI `39491259589` green. CF-00…CF-21 (tasks 261–283) DONE/archived. The reference-app "look & feel" phase is parked at the user's request. **CF-22 (real-device play-test of 2.4.0) remains and belongs to the user.**
-- **Tasks 284–286 DONE (2026-10-21)** — racing3d steering, smoke hardening, de-flake.
-- **Task 287 DONE (2026-10-22, OpenCode/Big Pickle)** — Asset Generation pipeline and the `animal-bird` candidate.
-- **Task 288 DONE (2026-10-22, OpenCode/Big Pickle)** — `animal-rooster` candidate and bundle audit; rooster user-approved.
-- **Task 290 DONE (2026-10-22)** — `object-water-drop`; user-approved, archived and indexed on 2026-10-25 (the bookkeeping had not reached `main`).
-- **Task 291 DONE (2026-10-25, OpenCode/Big Pickle)** — generation-process carry-over only: `tools/asset_generate.js --subject-ref` (image 0 = the *subject*: copy its shape and colours, take only the rendering style from the family references) plus finding 9 in `ASSET_INVENTORY.md`. The local 2026-10-22 soap render and `prompts/soap.md` were **discarded at the user's request**; the `soap.png` on `main` (2026-10-23 session, `38e22de`) stands. Committed `c10a59b`.
-- **Task 292 DONE (2026-10-25, OpenCode/Big Pickle)** — resolution pass on the nine smallest approved files (`duck`, `cow`, `fish`, `star`, `apple`, `dog`, `cat`, `bear`, `pig`): resampled to 1024x1024 with the new `tools/asset_upscale.js` (Lanczos-3, same art, no repaint), verified at correlation 0.9587-0.9995 against the originals, **user-approved**, old files removed and the `_1` copies renamed to the original names. Docs updated with the new sizes.
-- **Task 289 IN PROGRESS** — asset-bundle reconciliation. Bundle holds **91 PNGs**. The current generation queue through `cactus.png` is approved and documented. The next asset is `parrot.png`: its complete prompt is already prepared at `resources/General_reviews/Asset_Generation/prompts/parrot.md`, using `bear.png`, `star.png` and `bird.png` as references. No parrot PNG exists yet; the live Cloudflare request returned HTTP 429/code 4006 despite the dashboard showing remaining account usage, so the next AI should retry this exact prompt before preparing another asset. No runtime integration.
+- **Cat Forest 2.4.0 shipped** — commit `9a4af99`, CI green. Tasks 261-283 (CF-00-CF-21) DONE/archived. CF-22 (real-device play-test) remains and belongs to the user. The "look & feel" phase is parked at the user's request.
+- **Tasks 284-294 DONE** (racing3d steering, smoke hardening, de-flake, asset pipeline, resolution pass, asset bundle reconciliation through cactus/parrot handoff).
+- **Task 295 IN PROGRESS** — housekeeping: harness scratch localized to `tools/.cache/chrome` (sweep + close grace), 3 new tools (`scan_glyphs.js`, `asset_inspect.js`, `audit_bundle.js`), bundle↔inventory repaired (131 PNGs, 0 problems), glyph gap analysis (30 illustration candidates), `%TEMP%` cleaned (2050 leaked Chrome profiles removed), docs/lessons updated. CI green: `63fb8dd..2ea4d6d` pushed, runs `41049440291` / `41049455424` / `41049439668` all success.
 - **Pages gated on CI (task 274):** CI's `pages` job publishes `docs/` only from a green push on `main`.
 
-## Asset-generation next steps
+## Asset generation
 
-1. Continue the user's one-by-one sequence of assets missing from the WIP bundle. Preflight each inventory candidate and select the best-matching existing references; user reviews each generated image before its inventory approval/commit.
-2. **User visual review** of measured candidates (`soap`, `sunflower`, `butterfly`, `acorn`, `mushroom`, `egg`). No production copy or runtime integration before approval.
-3. **Egg review** (`egg.png`, iteration 2: 1024×1024 opaque, proxy 38.8 vs `bone.png` 36.8) — still awaiting the user's eyes.
-4. **Runtime integration of approved assets** stays a separate future task: copy only approved assets to `game/assets/images/`, swap glyphs, run smokes, rebuild offline artifacts, sync docs, refresh screenshots.
+- WIP bundle: **131 PNGs** under `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/`.
+- Inventory: 180 rows, 37 rows without a file, 30 illustration candidates (Cat Forest 14, ocean 6, dino 1, hibiscus 1, puzzle 4, Kitty 2, maze 2), 20 glyphs already covered by existing PNGs.
+- Next asset: `parrot.png` (prompt at `.../prompts/parrot.md`, refs `bear.png`/`star.png`/`bird.png`). No runtime integration yet.
 
 ## Validate
 
-`node tools/check_fast.js` — **8/8 green locally on 2026-10-25**. The fix for the `AGENTS.md` byte budget shipped in `28d9900`; CI `40216376927` passed its fast gate and Pages deployment. No `game/` source changed, so no game smokes, screenshot refresh, offline build or `sync-docs.sh` were needed.
+- `node tools/check_fast.js` — **8/8 green** on 2026-10-30.
+- Full battery — **36/36 tools, 1306 checks, 0 fail** (`tools/.cache/run295-full.log`, 486 s).
+- `node tools/audit_bundle.js` — PROBLEMS (0), exit 0.
+
+## Next steps
+
+1. Close task 295: mark DONE in `ACTIVE.md`, commit + push, `node tools/archive_tasks.js`.
+2. Continue the asset pipeline one asset at a time (parrot first), then runtime integration of approved assets.
+3. User visual review of measured candidates (`soap`, `sunflower`, `butterfly`, `acorn`, `mushroom`, `egg`).
 
 ## Rules of the road
 
-## Prompt handoff — 2026-10-26
-
-- Prompt coverage audit: the approved generation queue through `cactus.png` is fully prompted. The only queue asset without a PNG is `parrot.png`; its complete brief is `resources/General_reviews/Asset_Generation/prompts/parrot.md`.
-- When Cloudflare recharges, retry `parrot.md` first with `bear.png`, `star.png` and `bird.png`. Do not generate `REVIEW` or visual-review-pending rows. Technical QA and user visual approval happen after each generated image.
-- The measured `soap`, `sunflower`, `butterfly`, `acorn`, `mushroom` and `egg` files still await visual review; they are not missing prompts to generate.
-- Additional preparation requested 2026-10-26: 29 new briefs were added for the post-parrot candidate list. They are prompt-ready only; they remain subject to inventory eligibility, generation approval, one-at-a-time generation, technical QA and user visual approval.
-- Generation handoff rule: the next agent must process the prompts strictly one by one, starting with `parrot.md`, then the 29 prepared briefs in the documented order. After each approved image, update the inventory/progress records, commit the asset and documentation with an `Agent: <tool>/<model>` trailer, and push to `main` as requested by the user. Do not batch-generate, skip QA, or integrate runtime assets in this task.
-
-- `game/` changes ⇒ `node tools/build_offline.js` FIRST, then `tools/sync-docs.sh`, then refresh affected review screenshots. Never edit `docs/` by hand.
+- `game/` changes → `node tools/build_offline.js` FIRST, then `tools/sync-docs.sh`, then refresh affected review screenshots. Never edit `docs/` by hand.
 - Never commit Cloudflare credentials (`tools/vendor/` is git-ignored). Never push to `main` without the user asking.
 - Keep `resources/` and `tools/` for dev assets and tooling; `game/` must stay deployable-only.
-- Before touching a risky area read its lesson file: the table in `AGENTS.md`. Locked decisions: `project/DECISIONS.md`. Process: `project/PROCESS.md`.
+- Runtime scratch goes under git-ignored `tools/.cache/`, never system temp (task 295).
+- Before touching a risky area read its lesson file (table in `AGENTS.md`). Locked decisions: `project/DECISIONS.md`. Process: `project/PROCESS.md`.

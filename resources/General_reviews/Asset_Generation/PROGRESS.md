@@ -1380,3 +1380,28 @@ Source: the delivered `petras-world-regen-prompts-2026-10-29` package (committed
 - [x] **cat (animal-cat)** — paint the missing paper grain only; pose and tabby markings pinned. Refs bear, star, fox. Generated 1,629,364 bytes, opaque. Measured: paper 238.48/225.39/208.82, palette-match vs bear 0.0681, small-size legibility proxy 64.1. **User review: APPROVED 2026-10-30.**
 - [x] **dog (animal-dog)** — paint the missing paper grain only; pose and markings pinned. Refs bear, star, rabbit. Generated 1,696,460 bytes, opaque. Measured: paper 233.97/218.75/198.88, palette-match vs bear 0.0704, small-size legibility proxy 94.22. **User review: APPROVED 2026-10-30.**
 - [ ] **Not done here:** no copy into `game/assets/images/`, no glyph swap, no smoke, no screenshot refresh, no offline pack, no `sync-docs.sh` — `game/` was not touched.
+
+## Gap analysis — glyphs still drawn as emoji (2026-10-30, task 295)
+
+Method: `node tools/scan_glyphs.js` (new read-only tool, task 295) lists every pictographic glyph in `game/` source with counts and first locations; its `--json` output was diffed against this inventory. Result: **202 distinct glyphs**, **174 inventory rows (136 with an asset)**, **73 glyphs without a painted PNG**.
+
+Of those 73, the inventory has already decided **38 rows** — SVG/CSS shapes, UI icons, `COVERED` by another PNG (`flower-counter` → `flower.png`, `maze-goal-house` → `house.png`), or the four still-open **REVIEW** rows (`celebration-confetti`, `r3d-title-car`, `r3d-flower-counter`, `r3d-win-flag`). No generation is needed for those.
+
+The remaining gaps split into UI chrome (level picker 🌍, super ⚡, sound 🔊, book 📖, hub tiles 🔢🔤🎹🏎️, parent icons 📊📥🔄🔒🗑, classroom shapes 🔵🔺🟪 — inventory treatment already says SVG/text) and **content art that has no inventory row at all**. The content candidates, if the illustrated family is continued (no action requested; native emoji remain the settled default until the owner decides):
+
+| Theme | Glyph(s) | Use site | Note |
+| --- | --- | --- | --- |
+| Cat Forest cast | 🐈 🐈‍⬛ 🐯 🐆 | `game/games/cat_forest.js:64,67,71,72` | `cat.png` is one tabby; the ten named cats use four distinct looks (🦁 `kralj` covered by `lion.png`) |
+| Cat Forest treats | 🥛 🍗 🍣 🍪 | `cat_forest.js:57-60` | `fish` treat already covered by `fish.png` |
+| Cat Forest deco | 👑 🎀 🍀 🌷 🍽️ 🌧️ | `cat_forest.js:68,75,78,419`, `pages/cat_forest.html:90` | 🌸 accessory covered by `flower.png`; ⭐ by `star.png` |
+| Ocean | 🦀 🐬 🐙 🐋 ⚓ 💰 | `ocean.js:116,159,200,240`, `animal_puzzle.js:6` | ocean collectibles/decor are emoji drawn in canvas |
+| Dino | 🦕 | `dino.js:832` (`hero`), puzzle savanna scene | the playable hero is the emoji itself |
+| Jungle | 🌺 | `dino.js:80`, `racing-config.js:114` | only missing racing decor glyph |
+| Animal puzzle | 👦 👧 🧶 🪴 | `animal_puzzle.js:3-4` | park pair + home props; `student.png` is a different (school) child |
+| Kitty standalone | 🍙 🎁 | `kitty-standalone.js:790,818` | Japan / North-pole collectibles |
+| Maze | 🐞 🚩 | `maze.js:99,122` | garden motif + start marker (`house.png` is the goal) |
+
+Already covered semantically by an existing painted PNG (different glyph, same subject — no new asset): 🐤/🐥 → `chick.png`, 🐰 → `rabbit.png`, 🐭 → `mouse.png`, 🐠 → `fish.png`, 🦉 → `owl.png`, 🦇 → `bat.png`, 🐒 → `monkey.png`, 🧀 → `cheese.png`, ☃️/❄ → `snowman.png`/`snowflake.png`, 🪐 → `planet.png`, 🍄 → `mushroom.png`, 🐿 → `squirrel.png`, 🦌 → `deer.png`, 🌼 → `flower.png`, 🦋 → `butterfly.png`, 🚜 → `tractor.png`, 🛷 → `sled.png`, 🐧 → `penguin.png`, 👨‍🚀 → `astronaut.png`, 🦁 → `lion.png`.
+
+Distinct new illustration concepts: **30** (14 Cat Forest, 6 ocean, 2 dino/jungle, 4 puzzle, 2 Kitty, 2 maze). Each would also need a code change to draw a PNG instead of the emoji — a separate runtime task, not part of asset generation.
+

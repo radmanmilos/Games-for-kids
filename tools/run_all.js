@@ -39,7 +39,9 @@ const SMOKE_DIR = TOOLS;
    sandbox) the process can be killed outright on a usage spike, which loses the
    whole run — override with RUN_ALL_CONCURRENCY=1 or --concurrency 1. */
 const CONCURRENCY_DEFAULT = parseInt(process.env.RUN_ALL_CONCURRENCY || '4', 10) || 4;
-const TMPDIR = process.env.TMPDIR || process.env.TEMP || '/tmp';
+// Resume checkpoints (best-effort, only with --resume) live under tools/.cache
+// so run state stays inside the repo, never the system temp folder.
+const RUN_ALL_CACHE = path.join(__dirname, '.cache');
 const CHILD_TIMEOUT_MS = 300000;
 const WATCH_POLL_MS = 700;
 const LAUNCH_RETRIES = 2;
@@ -53,7 +55,7 @@ for (let i = 0; i < args.length; i++) {
   else if (a === '--list') opts.list = true;
   else if (a === '--json') opts.json = true;
   else if (a === '--sequential') opts.concurrency = 1;
-  else if (a === '--resume') opts.resume = args[i + 1] && !args[i + 1].startsWith('--') ? args[++i] : path.join(TMPDIR, 'run_all_resume');
+  else if (a === '--resume') opts.resume = args[i + 1] && !args[i + 1].startsWith('--') ? args[++i] : path.join(RUN_ALL_CACHE, 'run_all_resume');
   else if (a.startsWith('--concurrency=')) opts.concurrency = parseInt(a.split('=')[1], 10) || CONCURRENCY_DEFAULT;
   else if (a === '--concurrency') { opts.concurrency = parseInt(args[i + 1], 10) || CONCURRENCY_DEFAULT; i++; }
   else if (a.startsWith('--game=')) opts.game = a.split('=')[1];

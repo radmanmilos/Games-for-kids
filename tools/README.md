@@ -70,13 +70,14 @@ POSIX keeps the existing profile-tag kill.
 
 | File | What it is (first sentence; full text in `project/reference/tools-detail.md`) |
 | --- | --- |
-| `headless.js` | Shared harness: serves game/ over HTTP, boots headless Chrome on a unique temp profile, returns { evalv, evalp, navigate, close, port }. |
+| `headless.js` | Shared harness: serves game/ over HTTP, boots headless Chrome on a unique throwaway profile under git-ignored `tools/.cache/chrome`, returns { evalv, evalp, navigate, close, port }. |
 | `audio_buses_smoke.js` | Deterministic fake-Web-Audio checks for separate speech/music/SFX routing, Adventure music/effects, media ducking, speech completion/cancellation,… |
 | `ci_affected_matrix.js` | CI setup helper: reads push/PR event metadata to find the diff base, invokes run_all.js --affected, removes hub_smoke.js (covered by fast), and… |
 | `run_all.js` | Start here. |
 | `check_syntax.js` | Read-only node --check over every .js/.mjs in game/ + tools/, exported as runSyntax() and runnable alone. |
 | `check_fast.js` | The read-only fast gate (R5/task 165). |
 | `audit_serbian_strings.js` | Advisory scan for exact repeated child-facing Cyrillic strings in game HTML/JS outside game/data/serbian.js. |
+| `scan_glyphs.js` | Read-only audit of every pictographic glyph in game/ source (count + first locations), for the asset inventory; `--json` and `--emoji-only` flags. |
 | `short_landscape_audit.js` | V3.1 short-landscape audit (task 217), spec §11. |
 | `runtime_error_smoke.js` | R8/task 169 runtime-error gate. |
 | `guards/cdp_fail_negtest.js` | Task 177d regression test for headless.js websocket loss. |
@@ -183,9 +184,11 @@ bash tools/sync-docs.sh         # mirror game/ -> docs/ for GitHub Pages
 - Always test over HTTP, never `file://` — `file://` breaks audio and throws
   Unsafe-attempt warnings. `headless.js` serves `game/`
   automatically.
-- Each `start()` uses a fresh unique Chrome profile, so parallel harnesses
-  cannot collide; `close()` kills that run's Chrome by profile tag. If a run is
-  interrupted and a later run says "Chrome did not start", kill stale Chrome:
+- Each `start()` uses a fresh unique Chrome profile under `tools/.cache/chrome/`
+  (git-ignored), so parallel harnesses cannot collide; `close()` kills that run's
+  Chrome by profile tag and deletes the profile. A run killed before `close()`
+  leaves one behind, and the next `start()` sweeps anything older than two hours.
+  If a later run says "Chrome did not start", kill stale Chrome:
   `Get-Process chrome | Where-Object { $_.CommandLine -match 'pkv-' } | Stop-Process -Force`.
 - `celebration.js` caches its overlay element in a closure — a harness must hide
   overlays by removing the `.show` class, never by removing the element.

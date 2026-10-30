@@ -105,11 +105,13 @@ fs.chmodSync(shim, 0o755);
 
 /* Must be set before headless.js is required — CHROME is read at module load. */
 process.env.CHROME_PATH = shim;
-process.env.TMPDIR = TMP;
+/* headless.js reads PKV_PROFILE_ROOT at module load, so point it at our
+   isolated TMP dir (TMPDIR no longer governs the profile location). */
+process.env.PKV_PROFILE_ROOT = TMP;
 const h = require(HEADLESS);
 
-/* Find the one profile headless.js made under our TMPDIR, so we can kill exactly
-   the live browser by its unique --user-data-dir. */
+/* Find the one profile headless.js made under our TMP (PKV_PROFILE_ROOT), so we
+   can kill exactly the live browser by its unique --user-data-dir. */
 const findProfile = () => {
   for (const d of fs.readdirSync(TMP))
     if (d.startsWith('pkv-')) return path.join(TMP, d);

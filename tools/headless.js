@@ -1,6 +1,7 @@
 /* Shared headless-Chrome harness for the Petrin svet project (dev only).
    Serves game/ over HTTP (file:// breaks audio and throws
-   Unsafe-attempt warnings), boots headless Chrome on a UNIQUE temp profile, and
+   Unsafe-attempt warnings), boots headless Chrome on a UNIQUE throwaway profile
+   under tools/.cache/chrome (git-ignored; swept when stale), and
    exposes an evalv / navigate / close API. No deps: Node >= 22 (global fetch +
    WebSocket). Usage from a tools/*.js script:
 
@@ -12,7 +13,7 @@
      process.exit(fails ? 1 : 0);    // 'fails' is tracked here via check()
 
    Gotchas handled here:
-     - Stale Chrome processes lock their temp profile and the debug port, which
+     - Stale Chrome processes lock their throwaway profile and the debug port, which
        intermittently made Chrome "not start". Each start() uses a fresh unique
        profile, retries, and close() kills only this run's Chrome by profile tag.
        killChromeByTag() has BOTH a Windows (pwsh) and a POSIX (pkill -f on the
@@ -31,7 +32,14 @@ const fs = require('fs');
 
 const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const ROOT = path.resolve(__dirname, '..', 'game');
-const TMP = process.env.TMPDIR || process.env.TEMP || '/tmp';
+/* Chrome's throwaway profile lives inside the repo (git-ignored tools/.cache)
+   instead of the system temp folder. A run that is killed or times out never
+   reaches close(), and by task 295 those leaked profiles had piled up in %TEMP%
+   (2050 dirs, ~12 MB each). Keeping them here puts all run state in one place
+   and lets start() sweep what a crash left behind. An isolated run (for example
+   a guard negative-test) may redirect it with PKV_PROFILE_ROOT=<dir>. */
+const PROFILE_ROOT = process.env.PKV_PROFILE_ROOT || path.join(__dirname, '.cache', 'chrome');
+const PROFILE_TTL_MS = 2 * 60 * 60 * 1000;
 
 /* How long to wait for Chrome to expose its debugging port.
    This is deliberately generous. These smokes run 4-way parallel on a
@@ -375,6 +383,21 @@ async function serve() {
   };
 }
 
+/* Best-effort: remove profiles a killed/timed-out run left behind. A live run's
+   profile is minutes old, so the TTL keeps a parallel smoke's browser safe. */
+function sweepStaleProfiles() {
+  try {
+    fs.mkdirSync(PROFILE_ROOT, { recursive: true });
+    for (const name of fs.readdirSync(PROFILE_ROOT)) {
+      const dir = path.join(PROFILE_ROOT, name);
+      try {
+        if (Date.now() - fs.statSync(dir).mtimeMs > PROFILE_TTL_MS)
+          fs.rmSync(dir, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+      } catch { /* locked by a live Chrome: leave it for the next run */ }
+    }
+  } catch { /* profile cleanup must never fail a smoke */ }
+}
+
 async function start({
   page, tag = 'pkv', width = 1280, height = 800, dpr = 1,
   ignoreResourceErrors = [],
@@ -382,7 +405,8 @@ async function start({
   const srv = await serve();
   const httpPort = srv.port;
 
-  const profile = path.join(TMP, 'pkv-' + tag + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e6));
+  sweepStaleProfiles();
+  const profile = path.join(PROFILE_ROOT, 'pkv-' + tag + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e6));
   const dbgPort = await freePort();
 
   const chromeBin = findChrome();
@@ -631,7 +655,7 @@ async function start({
      is why touch_interruption_b_smoke.js intermittently exited with
      "Chrome did not start" while every one of its assertions had passed. So we
      wait for the port to go quiet, bounded, and clean up the profile dir we
-     created (it is ~20MB and would otherwise pile up in %TEMP% forever). */
+     created (it is ~12MB; start() sweeps one a crash leaves behind). */
   const close = async ({ checkErrors = true } = {}) => {
     closingDown = true;
     if (checkErrors) await checkRuntimeErrors();
@@ -650,8 +674,12 @@ async function start({
       killChromeByTag(profile);
       await waitForChromeStop();
     }
-    try { fs.rmSync(profile, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 }); }
-    catch { /* still locked; %TEMP% cleanup is not the smoke's job */ }
+    /* Chrome's crashpad helper can hold files in the profile for a few seconds
+       after the browser stops answering the debug port, so rmSync alone gave up
+       too early and left a closed run's profile behind. */
+    await sleep(1000);
+    try { fs.rmSync(profile, { recursive: true, force: true, maxRetries: 20, retryDelay: 250 }); }
+    catch { /* still locked; the next run's sweep removes it */ }
   };
   // Shut the origin down while keeping the browser alive. After this nothing can
   // come off the wire, so "it still works" proves it came from the app's own cache.
