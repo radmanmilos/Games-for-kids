@@ -18,5 +18,3 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 295. DONE (2026-10-30, OpenCode/Big Pickle) — Housekeeping: harness scratch localized to tools/.cache/chrome (sweep + close grace), 3 new tools (scan_glyphs/asset_inspect/audit_bundle), bundle↔inventory repaired (131 PNGs, 0 problems), glyph gap analysis (30 candidates), %TEMP% cleared (2050 pkv-* dirs), docs/lessons updated. CI 41049440291/41049455424/41049439668 green; full battery 36/36, 1306 checks, 0 fail.
-
