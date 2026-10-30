@@ -252,12 +252,12 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | cat-forest-black-cat | 🐈‍⬛ | `game/games/cat_forest.js:67` | Cat Forest named cat (black look) | Illustrated black cat | CANDIDATE (prompt pending) | - | - |
 | cat-forest-tiger | 🐯 | `game/games/cat_forest.js:71` | Cat Forest named cat (tiger look) | Illustrated tiger-striped cat | CANDIDATE (prompt pending) | - | - |
 | cat-forest-leopard | 🐆 | `game/games/cat_forest.js:72` | Cat Forest named cat (leopard look) | Illustrated spotted cat | CANDIDATE (prompt pending) | - | - |
-| food-milk | 🥛 | `game/games/cat_forest.js:57` | Cat Forest treat | Illustrated milk glass | CANDIDATE (prompt pending) | - | - |
+| food-milk | 🥛 | `game/games/cat_forest.js:57` | Cat Forest treat | Illustrated milk glass | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/food-milk.png` | - |
 | food-chicken-leg | 🍗 | `game/games/cat_forest.js:58` | Cat Forest treat | Illustrated chicken leg | CANDIDATE (prompt pending) | - | - |
-| food-sushi | 🍣 | `game/games/cat_forest.js:59` | Cat Forest treat | Illustrated sushi | CANDIDATE (prompt pending) | - | - |
-| food-cookie | 🍪 | `game/games/cat_forest.js:60` | Cat Forest treat | Illustrated cookie | CANDIDATE (prompt pending) | - | - |
+| food-sushi | 🍣 | `game/games/cat_forest.js:59` | Cat Forest treat | Illustrated sushi | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/food-sushi.png` | - |
+| food-cookie | 🍪 | `game/games/cat_forest.js:60` | Cat Forest treat | Illustrated cookie | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/food-cookie.png` | - |
 | object-crown | 👑 | `game/games/cat_forest.js:68,75` | Cat Forest deco | Illustrated crown | CANDIDATE (prompt pending) | - | - |
-| object-ribbon | 🎀 | `game/games/cat_forest.js:68` | Cat Forest deco | Illustrated ribbon | CANDIDATE (prompt pending) | - | - |
+| object-ribbon | 🎀 | `game/games/cat_forest.js:68` | Cat Forest deco | Illustrated ribbon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/object-ribbon.png` | - |
 | plant-clover | 🍀 | `game/games/cat_forest.js:78` | Cat Forest deco | Illustrated clover | CANDIDATE (prompt pending) | - | - |
 | flower-tulip | 🌷 | `game/games/cat_forest.js:78` | Cat Forest deco | Illustrated tulip | CANDIDATE (prompt pending) | - | - |
 | object-plate | 🍽️ | `game/pages/cat_forest.html:90` | Cat Forest deco | Illustrated plate | CANDIDATE (prompt pending) | - | - |
