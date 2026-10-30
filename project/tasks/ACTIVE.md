@@ -18,7 +18,7 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 294. IN PROGRESS (2026-10-30, OpenCode/Big Pickle) — apply the 2026-10-29 regen-prompt package to `prompts/` and regenerate the ten flagged bundle assets (cow, duck, fish, egg, skis, medal, notebook, apple, cat, dog) with `--subject-ref` finish passes. Candidates go to `tools/.cache/regen/`, never over approved files; each needs technical QA + explicit user visual approval before it replaces a bundle file. No runtime integration.
+- 294. DONE (2026-10-30, OpenCode/Big Pickle) — applied the delivered `petras-world-regen-prompts-2026-10-29` package (6 new + 4 revised briefs) and regenerated the ten flagged bundle assets as `--subject-ref` finish passes: cow, duck, fish, egg, skis, medal, notebook, apple, cat, dog. One candidate each, ~1,377 neurons, technical QA measured, **user approved all ten on 2026-10-30**; candidates copied over the bundle files, `ASSET_INVENTORY.md` rows/QA facts and `PROGRESS.md` updated. No runtime integration, no `game/` change.
 
 ### Task 289 handoff update — 2026-10-26
 

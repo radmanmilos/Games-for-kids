@@ -26,14 +26,14 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 
 | ID | Current glyph / visual | Confirmed source location(s) | Current purpose | Proposed treatment | Status  | Existing WIP asset file/location | Production-ready asset file/location |
 |---|---|---|---|---|---|---|---|
-| animal-dog | 🐶 | `game/games/animals.js`, `animal_counting.js`, `candy.js`, `spatial.js`, `sorting.js` | Animal flashcard/counting, candy game's animal set, spatial scene, sorting item | One shared simple dog PNG for all object/animal-card uses | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/dog.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
-| animal-cat | 🐱 | `game/games/animals.js`, `animal_counting.js`, `sorting.js` | Animal flashcard/counting and sorting item | One shared simple cat PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cat.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
-| animal-cow | 🐮 / 🐄; 🐄 | `game/games/animals.js`, `animal_counting.js`, `candy.js`, `animal_puzzle.js`, `racing-config.js`, `game/data/serbian.js`; `animal_puzzle.js`, racing decor | Animal flashcard/counting, candy set, farm puzzle/scenery, Serbian phonics; Farm puzzle and scenery | One canonical cow illustration; confirm it reads clearly at card and scenery sizes | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cow.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
+| animal-dog | 🐶 | `game/games/animals.js`, `animal_counting.js`, `candy.js`, `spatial.js`, `sorting.js` | Animal flashcard/counting, candy game's animal set, spatial scene, sorting item | One shared simple dog PNG for all object/animal-card uses | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/dog.png` | Painted watercolor finish pass, regenerated + user-approved 2026-10-30 (task 294) |
+| animal-cat | 🐱 | `game/games/animals.js`, `animal_counting.js`, `sorting.js` | Animal flashcard/counting and sorting item | One shared simple cat PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cat.png` | Painted watercolor finish pass, regenerated + user-approved 2026-10-30 (task 294) |
+| animal-cow | 🐮 / 🐄; 🐄 | `game/games/animals.js`, `animal_counting.js`, `candy.js`, `animal_puzzle.js`, `racing-config.js`, `game/data/serbian.js`; `animal_puzzle.js`, racing decor | Animal flashcard/counting, candy set, farm puzzle/scenery, Serbian phonics; Farm puzzle and scenery | One canonical cow illustration; confirm it reads clearly at card and scenery sizes | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cow.png` | Painted watercolor finish pass, regenerated + user-approved 2026-10-30 (task 294) |
 | animal-lion | 🦁 | `game/games/animals.js` | Animal flashcard | Simple lion PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/lion.png` | — |
 | animal-elephant | 🐘 | `game/games/animals.js` | Animal flashcard | Shared softly painted elephant illustration; use only where the elephant glyph represents the animal | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/elephant.png` | — |
 | animal-frog | 🐸 | `game/games/animals.js` | Animal flashcard/name mapping | Simple softly painted frog PNG; use only where the glyph represents the animal | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/frog.png` | — |
 | animal-pig | 🐷 | `game/games/animal_counting.js`, `candy.js` | Counting and candy-game set | One shared simple pig PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pig.png` | — |
-| animal-duck | 🦆 | `game/games/animal_counting.js`, `candy.js`, `spatial.js` | Counting, candy-game set, spatial scene | Simple duck in the bear's low-detail style; avoid the rejected elaborate duckling look | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/duck.png` | Raster-emoji art, resampled to 1024x1024 (task 292); a painted replacement is queued |
+| animal-duck | 🦆 | `game/games/animal_counting.js`, `candy.js`, `spatial.js` | Counting, candy-game set, spatial scene | Simple duck in the bear's low-detail style; avoid the rejected elaborate duckling look | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/duck.png` | Painted watercolor finish pass, regenerated + user-approved 2026-10-30 (task 294) |
 | animal-fox | 🦊 | Mentioned in the animals smoke-test mapping; verify runtime list in full source | Animal flashcard/name mapping | One shared simple fox PNG; confirm runtime use before integration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fox.png` | — |
 | animal-sheep | 🐑 | `game/games/animals.js:12`, `game/games/candy.js:20,33`, `game/data/serbian.js:165` (`Овца`), `game/games/animal_puzzle.js:8` (farm scene) | Animal flashcard, candy-game set, Serbian phonics, farm scene | One shared simple sheep illustration; rounded wool silhouette and restrained facial detail. Do not reuse the colouring-page sheep (`resources/coloring-redraw/Sheep.png`) — that is line art for a different purpose | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/sheep.png` | — |
 | animal-horse | 🐴 | `game/games/animal_memory.js`, `candy.js`, `game/data/serbian.js` | Animal memory cards, candy-game set, Serbian number-sentence illustrations | One shared simple horse PNG; do not reuse the coloring-game SVG unless it passes finished-illustration requirements | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/horse.png` | — |
@@ -41,7 +41,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | animal-bear | 🐻 | `game/games/maze.js` | Maze start marker (“bear”) | Use the exact supplied bear reference if appropriate; assess scale/transparent crop | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bear.png` | Canonical style anchor; the bundle copy is resampled to 1024x1024 (task 292), `Reference/bear.png` stays 800x800 |
 | object-bone | 🦴 | `game/games/spatial.js` | Object in “Where is the bone?” spatial task | Simple bone PNG; keep silhouette clear | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bone.png` | — |
 | object-house | 🏠 | `game/games/maze.js` | Maze goal marker (“house”) | Simple cozy house PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/house.png` | — |
-| food-apple | 🍎 | `game/games/sorting.js` | Food sorting bin/item | One shared simple apple PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/apple.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
+| food-apple | 🍎 | `game/games/sorting.js` | Food sorting bin/item | One shared simple apple PNG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/apple.png` | Painted watercolor finish pass, regenerated + user-approved 2026-10-30 (task 294) |
 | animal-pawprint | 🐾 | `game/games/sorting.js` | Animal-category bin label | Prefer a small paw icon (SVG or simple illustration); not necessarily watercolor | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pawprint.png` | — |
 | shape-blue-circle | 🔵 | `game/games/classroom.js` | Shape presentation | Replace emoji-like shape glyph with exact vector geometry/SVG, not generated raster art | SVG/CSS  | — | — |
 | shape-purple-square | 🟪 | `game/games/classroom.js` | Shape presentation | Use vector geometry/SVG | SVG/CSS  | — | — |
@@ -54,8 +54,8 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | flower-counter | 🌸 | `game/pages/racing3d.html` | 3D Racing UI flower counter | Small flat storybook flower or a consistent icon; do not alter the 3D world model | COVERED by `object-flower` (`flower.png`, approved 2026-10-25) — reuse where scale fits | — | — |
 | celebration-confetti | 🎉 | `game/shared/celebration.js` fallback | Shared celebration overlay | Prefer a restrained celebration animation using CSS/SVG and/or approved star; avoid one large emoji glyph | REVIEW  | — | — |
 | winter-snowflake | ❄ | `game/games/animal_puzzle.js` | Winter scene decoration drawn on canvas | Simple snowflake as SVG/canvas vector; generated watercolor not needed | SVG/CSS  | — | — |
-| adventure-fish | 🐟 | `game/games/adventure-modes.js` | Animated underwater decoration drawn on canvas | Small fish PNG or simple procedural fish; preserve game engine and motion | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fish.png` | Raster-emoji art, resampled to 1024x1024 (task 292); not the painted family |
-| kitty-fish | 🐟 | `game/games/kitty-standalone.js` | Animated underwater decoration; Kitty character itself is out of scope | Reuse adventure-fish if visually appropriate | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fish.png` | Same file as `adventure-fish`; resampled to 1024x1024 (task 292) |
+| adventure-fish | 🐟 | `game/games/adventure-modes.js` | Animated underwater decoration drawn on canvas | Small fish PNG or simple procedural fish; preserve game engine and motion | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fish.png` | Painted watercolor finish pass, regenerated + user-approved 2026-10-30 (task 294) |
+| kitty-fish | 🐟 | `game/games/kitty-standalone.js` | Animated underwater decoration; Kitty character itself is out of scope | Reuse adventure-fish if visually appropriate | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/fish.png` | Same file as `adventure-fish`; painted finish pass 2026-10-30 (task 294) |
 | kitty-pickaxe | ⛏ | `game/games/kitty-standalone.js` | Cave object/effect glyph | Small pickaxe PNG only if it is a visible gameplay object; otherwise simple SVG | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/pickaxe.png` | — |
 | piano-song-star | ⭐ | `game/games/piano.js` | Song chip label for “Twinkle, Twinkle” | Prefer text label / small SVG star icon; do not automatically use reward illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/star.png` | Same file as `reward-star`; resampled to 1024x1024 (task 292) |
 | r3d-title-car | 🏎️ | `game/pages/racing3d.html` | Page title decoration | Remove glyph or use project car icon/SVG; no generated watercolor asset required by default | REVIEW  | — | — |
@@ -102,7 +102,7 @@ The rows below are based on actual glyphs/emoji fields found in current `game/` 
 | food-watermelon | 🍉 | `kitty-standalone.js` | Kitty collectible | Simple watermelon slice | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/watermelon.png` | — |
 | food-carrot | 🥕 | `sequencing.js`, `kitty-standalone.js` | Growth sequence result and Kitty collectible | One shared carrot illustration | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/carrot.png` | — |
 | food-apple-green | 🍏 | `sequencing.js` | Unripe fruit sequence step | Separate from red apple because color conveys sequence stage | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/apple-green.png` | — |
-| object-egg | 🥚 | `game/games/sequencing.js:26` (label `Јаје`, stage 1 of the egg → chick → bird sequence) and `game/games/sequencing.js:46` (label `Јаје`, stage 1 of the egg → caterpillar → butterfly sequence) | Egg-to-bird and egg-to-butterfly sequences | One shared simple egg illustration for both sequences: a smooth upright oval shell, warm cream-beige, a scatter of medium warm-brown speckles, one deeper tan shaded side — no face, no crack, no nest, no ribbon; must read at card size | GENERATED / CANDIDATE — TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/egg.png` | — |
+| object-egg | 🥚 | `game/games/sequencing.js:26` (label `Јаје`, stage 1 of the egg → chick → bird sequence) and `game/games/sequencing.js:46` (label `Јаје`, stage 1 of the egg → caterpillar → butterfly sequence) | Egg-to-bird and egg-to-butterfly sequences | One shared simple egg illustration for both sequences: a smooth upright oval shell, warm cream-beige, a scatter of medium warm-brown speckles, one deeper tan shaded side — no face, no crack, no nest, no ribbon; must read at card size | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/egg.png` | Painted iteration 3, user-approved 2026-10-30 (task 294) |
 | animal-chick | 🐣 | `sequencing.js`; `sequencing.js`, `compare.js` | Egg-to-bird sequence; Egg-to-bird sequence and comparison pool | One shared simple chick illustration; clearly juvenile and distinct from adult chicken | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/chick.png` | — |
 | animal-bird | 🐦 | `game/games/sequencing.js:28` (label `Птица`), stage 3 of the egg → chick → bird sequence | Egg-to-bird sequence | One shared simple bird illustration; a generic small songbird, clearly distinct from the chick and the chicken; rounded compact body, short small beak, one simple wing, short tail, small feet, muted natural palette, tiny understated dark eye | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/bird.png` | — |
 | object-soap | 🧼 | `game/games/sequencing.js` (washing sequence, step 2) | Washing sequence | One simple, uniform rectangular bar of soft pastel-pink soap with rounded corners and a few delicate bubbles at the edges; matte watercolor/paper finish, no face or packaging | GENERATED / TECHNICAL QA MEASURED — USER VISUAL REVIEW PENDING | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/soap.png` | — |
@@ -264,7 +264,7 @@ Every final row must include:
 7. Status: AUDIT / REVIEW / APPROVED / GENERATED / QA / READY FOR IMPLEMENTATION
 8. Implementation notes and QA caveats
 
-## Technical QA facts for the work-in-progress bundle (measured 2026-10-21)
+## Technical QA facts for the work-in-progress bundle (measured 2026-10-21; rows refreshed 2026-10-30, task 294)
 
 Measured with `node tools/asset_qa.js <dir> --against Reference/bear.png`. These are objective
 measurements only — they say nothing about how the pictures look.
@@ -286,18 +286,18 @@ measurements only — they say nothing about how the pictures look.
 | rooster.png | 1024x1024 | rgb | 100/0/0 | 0.5042 | 136.4 | painted |
 | bird.png | 1024x1024 | rgb | 100/0/0 | 0.0192 | 55.6 | painted (iteration 2, 2026-10-22) |
 | fox.png | 1254x1254 | rgb | 100/0/0 | 0.1596 | 116.9 | painted |
-| dog.png | 1024x1024 | rgb | 100/0/0 | 0.1125 | 104.5 | raster-emoji art, resampled (task 292) |
-| cat.png | 1024x1024 | rgb | 100/0/0 | 0.0800 | 84.3 | raster-emoji art, resampled (task 292) |
+| dog.png | 1024x1024 | rgb | 100/0/0 | 0.0704 | 94.22 | painted (finish pass 2026-10-30, task 294) |
+| cat.png | 1024x1024 | rgb | 100/0/0 | 0.0681 | 64.1 | painted (finish pass 2026-10-30, task 294) |
 | bone.png | 1536x1024 | rgb | 100/0/0 | 0.0798 | 36.8 | painted |
-| cow.png | 1024x1024 | rgb | 100/0/0 | 0.0305 | 79.5 | raster-emoji art, resampled (task 292) |
+| cow.png | 1024x1024 | rgb | 100/0/0 | 0.0233 | 66.33 | painted (finish pass 2026-10-30, task 294) |
 | wolf.png | 1254x1254 | rgb | 100/0/0 | 0.0291 | 106.2 | painted |
-| duck.png | 1024x1024 | rgb | 100/0/0 | 0.0248 | 83.1 | raster-emoji art, resampled (task 292) |
-| fish.png | 1024x1024 | rgb | 100/0/0 | 0.0194 | 75.8 | raster-emoji art, resampled (task 292) |
+| duck.png | 1024x1024 | rgb | 100/0/0 | 0.1113 | 52.67 | painted (finish pass 2026-10-30, task 294) |
+| fish.png | 1024x1024 | rgb | 100/0/0 | 0.0403 | 63.38 | painted (finish pass 2026-10-30, task 294) |
 | caterpillar.png | 1448x1086 | rgb | 100/0/0 | 0.0171 | 107.6 | painted |
 | star.png | 1024x1024 | rgb | 100/0/0 | 0.0161 | 68.7 | raster-emoji art, resampled (task 292) |
-| egg.png | 1024x1024 | rgb | 100/0/0 | 0.0164 | 38.8 | painted (candidate, iteration 2, 2026-10-22) |
+| egg.png | 1024x1024 | rgb | 100/0/0 | 0.0164 | 40.14 | painted (approved iteration 3, 2026-10-30, task 294) |
 | water-drop.png | 1024x1024 | rgb | 100/0/0 | 0.0117 | 49.2 | painted (iteration 2, 2026-10-22) |
-| apple.png | 1024x1024 | rgb | 100/0/0 | 0.0095 | 140.0 | raster-emoji art, resampled (task 292) |
+| apple.png | 1024x1024 | rgb | 100/0/0 | 0.0217 | 118.16 | painted (finish pass 2026-10-30, task 294) |
 | banana.png | 1024x1024 | rgb | 100/0/0 | 0.0812 | 32.61 | painted (approved 2026-10-25, food batch 1) |
 | strawberry.png | 1024x1024 | rgb | 100/0/0 | 0.0129 | 90.11 | painted (approved 2026-10-25, food batch 1) |
 | grapes.png | 1024x1024 | rgb | 100/0/0 | 0.0125 | 80.35 | painted (approved 2026-10-25, food batch 1) |
@@ -367,7 +367,7 @@ measurements only — they say nothing about how the pictures look.
 | beach-umbrella.png | 1024x1024 | rgb | 100/0/0 | 0.3345 | 39.14 | painted (approved 2026-10-29, iteration 2; no bottom handle, tilted) |
 | wave.png | 1024x1024 | rgb | 100/0/0 | 0.6681 | 67.14 | painted (approved 2026-10-29, iteration 1) |
 | spaceship.png | 1024x1024 | rgb | 100/0/0 | 0.5714 | 63.4 | painted (approved 2026-10-29, iteration 1) |
-| skis.png | 1024x1024 | rgb | 100/0/0 | 0.1657 | 55.29 | painted (approved 2026-10-29, iteration 3; matching wooden pair) |
+| skis.png | 1024x1024 | rgb | 100/0/0 | 0.0298 | 53.41 | painted (finish pass 2026-10-30, task 294) |
 | skier.png | 1024x1024 | rgb | 100/0/0 | 0.0211 | 83.5 | painted (approved 2026-10-29, iteration 3; one ski per foot, two poles) |
 | evergreen-lantern.png | 1024x1024 | rgb | 100/0/0 | 0.0327 | 93.43 | painted (approved 2026-10-29, iteration 3; family style, visible burning candle) |
 | grass.png | 1024x1024 | rgb | 100/0/0 | 0.0016 | 69.21 | painted (approved 2026-10-29, iteration 4; short thin blades) |
@@ -382,7 +382,6 @@ measurements only — they say nothing about how the pictures look.
 | road-barrier.png | 1024x1024 | rgb | 100/0/0 | 0.6722 | 58.96 | painted (approved 2026-10-29, iteration 1) |
 | galaxy.png | 1024x1024 | rgb | 100/0/0 | 0.0129 | 65.53 | painted (approved 2026-10-29, iteration 1) |
 | season-leaf.png | 1024x1024 | rgb | 100/0/0 | 0.2525 | 90.54 | painted (approved 2026-10-29; reused for object-seasons-leaf) |
-| fish.png | 1024x1024 | rgb | 100/0/0 | 0.02 | 75.78 | painted (approved 2026-10-29, iteration 1) |
 | butterfly.png | 1448x1086 | rgb | 100/0/0 | 0.142 | 80.09 | painted (approved 2026-10-29, iteration 1) |
 | puzzle-piece.png | 1024x1024 | rgb | 100/0/0 | 0.6648 | 79.32 | painted (approved 2026-10-29, iteration 2; one colour, tilted 3D) |
 | sun.png | 1024x1024 | rgb | 100/0/0 | 0.0533 | 37.5 | painted (approved 2026-10-29, iteration 2; corona) |
@@ -397,8 +396,8 @@ measurements only — they say nothing about how the pictures look.
 | clock.png | 1024x1024 | rgb | 100/0/0 | 0.3072 | 64.49 | painted (approved 2026-10-29, iteration 1) |
 | compass.png | 1024x1024 | rgb | 100/0/0 | 0.633 | 63.8 | painted (approved 2026-10-29, iteration 1) |
 | drum.png | 1024x1024 | rgb | 100/0/0 | 0.0216 | 76.4 | painted (approved 2026-10-29, iteration 1) |
-| medal.png | 1024x1024 | rgb | 100/0/0 | 0.6193 | 129.6 | painted (approved 2026-10-29, iteration 1) |
-| notebook.png | 1024x1024 | rgb | 100/0/0 | 0.2006 | 74.9 | painted (approved 2026-10-29, iteration 1) |
+| medal.png | 1024x1024 | rgb | 100/0/0 | 0.0757 | 75.88 | painted (finish pass 2026-10-30, task 294) |
+| notebook.png | 1024x1024 | rgb | 100/0/0 | 0.0279 | 72.45 | painted (finish pass 2026-10-30, task 294) |
 | pencil.png | 1024x1024 | rgb | 100/0/0 | 0.1327 | 37.45 | painted (approved 2026-10-29, iteration 1) |
 | rainbow.png | 1024x1024 | rgb | 100/0/0 | 0.0824 | 41.12 | painted (approved 2026-10-29, iteration 1) |
 | school.png | 1024x1024 | rgb | 100/0/0 | 0.4168 | 44.96 | painted (approved 2026-10-29, iteration 1) |
