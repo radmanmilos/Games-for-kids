@@ -2,11 +2,10 @@
   "$schema": "https://opencode.ai/config.json",
   "model": "opencode/big-pickle",
   "mcp": {
-    "servers": {
-      "playwright": {
-        "type": "local",
-        "command": ["npx", "-y", "@playwright/mcp"]
-      }
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "-y", "@playwright/mcp"],
+      "enabled": true
     }
   }
 }
