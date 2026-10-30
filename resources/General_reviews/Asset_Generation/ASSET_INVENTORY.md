@@ -249,25 +249,25 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | object-celebration-sparkle | ✨ / 🌟 | sequencing, Kitty, adventure and success states | Success/effect | CSS/SVG particles and approved star; no duplicate sparkle PNGs | SVG/CSS |
 | object-wrapped-candy | 🍬 | `game/games/racing-config.js` | Candy world decor | One canonical wrapped candy image only if visible enough | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/wrapped-candy.png` |
 | cat-forest-tabby | 🐈 | `game/games/cat_forest.js:64` | Cat Forest named cat (tabby look) | Illustrated tabby cat for the ten named cats | CANDIDATE (prompt pending) | - | - |
-| cat-forest-black-cat | 🐈‍⬛ | `game/games/cat_forest.js:67` | Cat Forest named cat (black look) | Illustrated black cat | CANDIDATE (prompt pending) | - | - |
+| cat-forest-black-cat | 🐈‍⬛ | `game/games/cat_forest.js:67` | Cat Forest named cat (black look) | Illustrated black cat | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cat-forest-black-cat.png` | - |
 | cat-forest-tiger | 🐯 | `game/games/cat_forest.js:71` | Cat Forest named cat (tiger look) | Illustrated tiger-striped cat | CANDIDATE (prompt pending) | - | - |
-| cat-forest-leopard | 🐆 | `game/games/cat_forest.js:72` | Cat Forest named cat (leopard look) | Illustrated spotted cat | CANDIDATE (prompt pending) | - | - |
+| cat-forest-leopard | 🐆 | `game/games/cat_forest.js:72` | Cat Forest named cat (leopard look) | Illustrated spotted cat | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/cat-forest-leopard.png` | - |
 | food-milk | 🥛 | `game/games/cat_forest.js:57` | Cat Forest treat | Illustrated milk glass | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/food-milk.png` | - |
-| food-chicken-leg | 🍗 | `game/games/cat_forest.js:58` | Cat Forest treat | Illustrated chicken leg | CANDIDATE (prompt pending) | - | - |
+| food-chicken-leg | 🍗 | `game/games/cat_forest.js:58` | Cat Forest treat | Illustrated chicken leg | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/food-chicken-leg.png` | - |
 | food-sushi | 🍣 | `game/games/cat_forest.js:59` | Cat Forest treat | Illustrated sushi | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/food-sushi.png` | - |
 | food-cookie | 🍪 | `game/games/cat_forest.js:60` | Cat Forest treat | Illustrated cookie | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/food-cookie.png` | - |
 | object-crown | 👑 | `game/games/cat_forest.js:68,75` | Cat Forest deco | Illustrated crown | CANDIDATE (prompt pending) | - | - |
 | object-ribbon | 🎀 | `game/games/cat_forest.js:68` | Cat Forest deco | Illustrated ribbon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/object-ribbon.png` | - |
-| plant-clover | 🍀 | `game/games/cat_forest.js:78` | Cat Forest deco | Illustrated clover | CANDIDATE (prompt pending) | - | - |
-| flower-tulip | 🌷 | `game/games/cat_forest.js:78` | Cat Forest deco | Illustrated tulip | CANDIDATE (prompt pending) | - | - |
-| object-plate | 🍽️ | `game/pages/cat_forest.html:90` | Cat Forest deco | Illustrated plate | CANDIDATE (prompt pending) | - | - |
-| weather-rain | 🌧️ | `game/games/cat_forest.js:419` | Cat Forest deco | Illustrated rain cloud | CANDIDATE (prompt pending) | - | - |
+| plant-clover | 🍀 | `game/games/cat_forest.js:78` | Cat Forest deco | Illustrated clover | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/plant-clover.png` | - |
+| flower-tulip | 🌷 | `game/games/cat_forest.js:78` | Cat Forest deco | Illustrated tulip | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/flower-tulip.png` | - |
+| object-plate | 🍽️ | `game/pages/cat_forest.html:90` | Cat Forest deco | Illustrated plate | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/object-plate.png` | - |
+| weather-rain | 🌧️ | `game/games/cat_forest.js:419` | Cat Forest deco | Illustrated rain cloud | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/weather-rain.png` | - |
 | animal-crab | 🦀 | `game/games/ocean.js:116` | Ocean collectible/decor | Illustrated crab | CANDIDATE (prompt pending) | - | - |
-| animal-dolphin | 🐬 | `game/games/ocean.js:159` | Ocean collectible/decor | Illustrated dolphin | CANDIDATE (prompt pending) | - | - |
+| animal-dolphin | 🐬 | `game/games/ocean.js:159` | Ocean collectible/decor | Illustrated dolphin | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/animal-dolphin.png` | - |
 | animal-octopus | 🐙 | `game/games/ocean.js:200` | Ocean collectible/decor | Illustrated octopus | CANDIDATE (prompt pending) | - | - |
 | animal-whale | 🐋 | `game/games/ocean.js:240` | Ocean collectible/decor | Illustrated whale | CANDIDATE (prompt pending) | - | - |
-| object-anchor | ⚓ | `game/games/ocean.js:159` | Ocean collectible/decor | Illustrated anchor | CANDIDATE (prompt pending) | - | - |
-| object-money-bag | 💰 | `game/games/ocean.js:240` | Ocean collectible/decor | Illustrated money bag | CANDIDATE (prompt pending) | - | - |
+| object-anchor | ⚓ | `game/games/ocean.js:159` | Ocean collectible/decor | Illustrated anchor | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/object-anchor.png` | - |
+| object-money-bag | 💰 | `game/games/ocean.js:240` | Ocean collectible/decor | Illustrated money bag | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/object-money-bag.png` | - |
 | animal-dinosaur | 🦕 | `game/games/dino.js:832` | Dino playable hero | Illustrated dinosaur hero | CANDIDATE (prompt pending) | - | - |
 | flower-hibiscus | 🌺 | `game/games/dino.js:80`, `game/games/racing-config.js:114` | Jungle racing decor | Illustrated hibiscus | CANDIDATE (prompt pending) | - | - |
 | object-boy | 👦 | `game/games/animal_puzzle.js:3` | Animal puzzle park pair | Illustrated boy | CANDIDATE (prompt pending) | - | - |
