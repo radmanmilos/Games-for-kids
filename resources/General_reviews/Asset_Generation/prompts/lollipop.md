@@ -21,3 +21,4 @@ Create one clearly recognizable simple round lollipop as a standalone children's
 Center the complete lollipop with comfortable padding and no cropping. The lollipop is the only subject. It must read as a wrapped-on-a-stick candy, not a balloon, target, flower, or magnifying glass.
 
 No hand, person, wrapper, bow, pile of candy, extra lollipops, text, letters, logo, face, eyes, smile, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
+

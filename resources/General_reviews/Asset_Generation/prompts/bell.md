@@ -17,3 +17,4 @@ Background: warm cream storybook paper; no transparency required for WIP.
 Create one clearly recognizable simple handbell as a standalone children's storybook illustration. Show one rounded golden-brass bell with a small top handle, a clear flared rim and a tiny clapper underneath. Use warm muted gold and cream, soft watercolor grain, gentle painted shading and no ringing motion lines. Center the complete bell with comfortable padding. It must read as a bell, not a lamp or cup.
 
 No hand, person, music notes, sound lines, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra bells.
+

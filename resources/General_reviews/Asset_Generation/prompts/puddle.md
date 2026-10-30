@@ -25,3 +25,4 @@ Create one clearly recognizable simple puddle as a standalone children's storybo
 Center the puddle with comfortable padding and no cropping. It is the only subject. It must read as a real puddle on the ground, not a plate, a lake, a mirror or a top-down circle.
 
 No plate, no perfect oval, no smooth rim, no lake, river, rain, person, boot, reflection of a scene, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra puddles.
+

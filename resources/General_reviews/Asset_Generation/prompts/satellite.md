@@ -26,3 +26,4 @@ Colours: muted blue-grey body, deep blue solar panels with pale grid lines, warm
 Center the complete satellite with comfortable padding. It must read as a satellite, not a spaceship, rocket, airplane, drone, or a ball with straps around it.
 
 No spherical or ball-shaped body, no fabric, straps or belts wrapped around the body, no balloons, no planets, stars, sky, astronaut, rocket, text, logo, face, scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, glow or extra objects.
+

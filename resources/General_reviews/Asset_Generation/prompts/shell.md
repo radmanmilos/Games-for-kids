@@ -21,3 +21,4 @@ Create one clearly recognizable simple seashell as a standalone children's story
 Center the complete shell with comfortable padding and no cropping. The shell is the only subject. It must read as a seashell, not a snail, ear, rock, flower, or abstract spiral.
 
 No beach, sand, water, starfish, crab, person, animal, text, letters, logo, face, eyes, smile, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra shells.
+

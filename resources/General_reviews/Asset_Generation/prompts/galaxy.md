@@ -23,3 +23,4 @@ Create one clearly recognizable simple galaxy as a standalone children's storybo
 Center the galaxy with comfortable padding and no cropping. It is the only subject. It must read as a galaxy, not a swirl, a spiral or a flower.
 
 No planet, rocket, astronaut, stars scene, dark background, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, strong glow or extra galaxies.
+

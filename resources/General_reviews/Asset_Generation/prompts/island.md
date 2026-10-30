@@ -21,3 +21,4 @@ Create one clearly recognizable simple tropical island as a standalone children'
 Center the complete island with comfortable padding and no cropping. The island is the only subject. It must read as a small island, not a beach scene, puddle, hill, or cloud.
 
 No ocean horizon, waves, boats, people, animals, multiple islands, extra trees, text, letters, logo, face, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
+

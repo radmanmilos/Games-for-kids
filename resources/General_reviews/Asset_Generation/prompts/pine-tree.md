@@ -28,3 +28,4 @@ Create one clearly recognizable simple evergreen tree as a standalone children's
 Center the entire tree with comfortable padding and no cropping. The tree is the only subject. It must read as a classic layered evergreen, not a broadleaf tree, not a single sharp triangle, and not a decorated Christmas tree.
 
 No ornaments, baubles, lights, tinsel, garland, gifts, star topper, angel, snow, forest, soil, pot, animals, people, text, logo, scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra trees.
+

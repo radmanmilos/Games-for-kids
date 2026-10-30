@@ -21,3 +21,4 @@ Create one clearly recognizable simple party balloon as a standalone children's 
 Center the complete balloon and string with comfortable padding and no cropping. The balloon is the only subject. It must read as an inflated balloon, not an apple, water drop, light bulb, or abstract oval.
 
 No bunch of balloons, person, hand, party scene, confetti, gift, cake, face, eyes, smile, text, letters, logo, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra balloons.
+

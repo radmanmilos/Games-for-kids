@@ -21,3 +21,4 @@ Create one clearly recognizable simple saguaro cactus as a standalone children's
 Center the complete cactus with comfortable padding and no cropping. The cactus is the only subject. It must read as a cactus, not a tree, broccoli, coral, or generic leafy plant.
 
 No pot, soil, desert, sand, rocks, flowers, landscape, multiple cacti, people, animals, text, letters, logo, face, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
+

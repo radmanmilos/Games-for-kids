@@ -25,3 +25,4 @@ Keep the silhouette simple and readable at small size, in the Little Play family
 Center the card with comfortable padding and no cropping. It is the only subject. It must read as a playing card, not a tile, a note or a rectangle.
 
 No card front, numbers, letters, hearts, spades, clubs, diamonds, face, character, scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra cards.
+

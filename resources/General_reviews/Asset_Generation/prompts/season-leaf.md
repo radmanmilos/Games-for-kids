@@ -21,3 +21,4 @@ Create one clearly recognizable single autumn leaf as a standalone children's st
 Center the complete leaf and stem with comfortable padding and no cropping. The leaf is the only subject. It must read as an autumn leaf, not a feather, flower, leaf pile, or green plant.
 
 No tree, branch, multiple leaves, falling leaves, wind, ground, season scene, snow, text, letters, logo, face, eyes, smile, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or decorative extras.
+

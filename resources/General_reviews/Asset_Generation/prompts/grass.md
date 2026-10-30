@@ -28,3 +28,4 @@ Keep the silhouette low, soft and readable at small size, in the Little Play fam
 Center the tuft with comfortable padding and no cropping. It is the only subject. It must read as a **short** tuft of green grass, not wheat, a bush, a flower, a reed or tall grass.
 
 No tall blades, no flowers, no flower heads, no petals, no star-shaped tips, no buds, no seed heads, no berries, no insects, no field, soil, landscape, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra tufts.
+

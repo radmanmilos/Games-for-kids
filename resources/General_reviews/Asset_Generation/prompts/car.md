@@ -17,3 +17,4 @@ Keep the car clearly recognizable as a passenger automobile, not a bus or truck.
 Show one car only, fully visible and centered with comfortable breathing room. A plain warm off-white background is acceptable. No road, ground line, sky, clouds, scenery or other objects. The result must look like a painted member of the same family as the helicopter and screen references.
 
 No photorealism, 3D rendering, glossy plastic, flat vector-icon finish, stock-icon look, or anime styling. No thick black outline, white sticker border, glow, hard drop shadow, or dramatic lighting. No excessive gradients, tiny mechanical detail, heavy texture, decorative sparkles, or ornamental extras. Do not copy the helicopter's or screen's shape or palette; use them only for the painted rendering style. No text, labels, watermark, logo, collage, contact sheet, or multiple alternatives in one image.
+

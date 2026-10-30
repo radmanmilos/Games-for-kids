@@ -21,3 +21,4 @@ Create one clearly recognizable simple children's hat / šešir as a standalone 
 Center the complete hat with comfortable padding and no cropping. The hat is the only subject. It must read as a wearable brimmed hat, not a crown, helmet, cap, cowboy hat, or abstract bowl.
 
 No person, head, face, hair, mannequin, stand, hanger, feather, flower, band decoration, buckle, text, letters, logo, props, background scene, shadow scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra hats.
+

@@ -21,3 +21,4 @@ Create one clearly recognizable simple dango skewer as a standalone children's s
 Center the complete skewer with comfortable padding and no cropping. The dango skewer is the only subject. It must read as three rice dumplings on a stick, not a lollipop, kebab, snowman, or bead necklace.
 
 No sauce, plate, bowl, hand, person, restaurant, text, letters, logo, face, eyes, smile, extra dumplings, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
+

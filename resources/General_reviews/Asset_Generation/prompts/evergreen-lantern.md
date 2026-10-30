@@ -27,3 +27,4 @@ Create one clearly recognizable simple **European box lantern with a burning can
 Center the complete lantern with comfortable padding and no cropping. It is the only subject. It must read as a European box lantern holding a lit candle.
 
 No round Chinese paper body, no ribbed drum, no red silk shade, no tassel, no wax puddle, no candlestick on a pole, no street lamp, no candle outside the lantern, no night scene, trees, festival, person, text, logo, face, strong halo, glow rays, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline or extra lanterns.
+

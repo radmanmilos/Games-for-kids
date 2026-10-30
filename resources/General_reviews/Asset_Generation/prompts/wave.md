@@ -17,3 +17,4 @@ Background: warm cream storybook paper; no transparency required for WIP.
 Create one clearly recognizable simple ocean wave as a standalone children's storybook illustration. Show one curling blue wave with a rounded crest, a pale cream foam edge and two or three broad soft blue painted bands. Keep the silhouette clean and readable at small size, with gentle watercolor grain. It must read as a wave, not a mountain, cloud or abstract swirl.
 
 No ocean scene, beach, surfer, boat, fish, sun, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra waves.
+

@@ -25,3 +25,4 @@ Create one simple stack of playing cards as a standalone children's storybook il
 Center the stack with comfortable padding and no cropping. It is the only subject. It must read as a small casual stack of the approved playing cards, not a single card, a book or a tile.
 
 No card front, numbers, letters, hearts, spades, clubs, diamonds, face, character, scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra objects.
+

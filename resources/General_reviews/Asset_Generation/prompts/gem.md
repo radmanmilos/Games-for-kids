@@ -21,3 +21,4 @@ Create one clearly recognizable simple faceted gemstone as a standalone children
 Center the complete gem with comfortable padding and no cropping. The gem is the only subject. It must read as a gemstone collectible, not an ice cube, diamond ring, water drop, or abstract triangle.
 
 No ring, jewelry, crown, treasure chest, coins, stars, sparkles, text, letters, logo, face, eyes, smile, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra gems.
+

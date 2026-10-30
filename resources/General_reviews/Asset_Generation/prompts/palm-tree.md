@@ -21,3 +21,4 @@ Create one clearly recognizable simple palm tree as a standalone children's stor
 Center the complete palm tree with comfortable padding and no cropping. The tree is the only subject. It must read as a palm tree, not a fern, flower, umbrella, or generic leafy plant.
 
 No island, sand, beach, ocean, coconuts, multiple trees, scenery, people, animals, text, letters, logo, face, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
+

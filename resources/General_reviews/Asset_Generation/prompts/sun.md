@@ -25,3 +25,4 @@ Create one clearly recognizable simple sun as a standalone children's storybook 
 Center the sun with comfortable padding and no cropping. It is the only subject. It must read as a sun with a soft corona, not a star, a sparkle, a flower or a fried egg.
 
 No straight rays, no pointed spikes, no zig-zag bursts, no star shape, no face, eyes, smile, sky, clouds, landscape, text, logo, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, strong glow or extra suns.
+

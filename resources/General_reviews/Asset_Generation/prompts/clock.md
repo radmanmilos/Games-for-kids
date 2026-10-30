@@ -17,3 +17,4 @@ Background: warm cream storybook paper; no transparency required for WIP.
 Create one clearly recognizable simple analog clock as a standalone children's storybook illustration. Show one round warm cream clock face with a muted brown rim, twelve simple tick marks, two clear hands and a small central hub. Keep the hands readable and set them to 3 o'clock. Use soft watercolor grain and gentle shading, with no numerals required. Center the complete clock with comfortable padding.
 
 No pendulum, wall, room, person, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra clocks.
+

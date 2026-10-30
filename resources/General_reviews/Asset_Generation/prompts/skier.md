@@ -27,3 +27,4 @@ Create one simple friendly child skier as a standalone children's storybook illu
 Center the whole figure with comfortable padding and no cropping. The child is the only subject. It must read as a child skiing with two short skis and two poles.
 
 No third leg, no extra arm, no duplicated boot, no both feet on one ski, no missing ski, no single pole, no extra ski, no mountain, snow scene, other people, race, text, logo, exaggerated face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra equipment.
+

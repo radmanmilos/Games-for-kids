@@ -23,3 +23,4 @@ Create one clearly recognizable simple wrapped candy as a standalone children's 
 Center the complete diagonally oriented wrapped candy with comfortable padding and no cropping. The candy is the only subject. It must read as the supplied wrapped sweet, not a pillow, parcel, bow, or lollipop.
 
 No lollipop stick, unwrapped candy, pile of sweets, extra candies, person, hand, text, letters, logo, face, eyes, smile, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
+

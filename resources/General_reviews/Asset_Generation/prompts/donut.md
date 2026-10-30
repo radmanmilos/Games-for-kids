@@ -21,3 +21,4 @@ Create one clearly recognizable simple ring donut as a standalone children's sto
 Center the complete donut with comfortable padding and no cropping. The donut is the only subject. It must read as a ring donut, not a bagel, tire, cookie, or bun.
 
 No plate, fork, bakery shop, box, person, hand, text, letters, logo, face, eyes, smile, extra donuts, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
+

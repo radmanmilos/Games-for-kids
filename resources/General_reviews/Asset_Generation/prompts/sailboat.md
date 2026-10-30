@@ -21,3 +21,4 @@ Create one clearly recognizable small sailboat / boat (чамац) as a simple s
 Center the complete boat with comfortable padding and no cropping. The sailboat is the only subject. It must read as a small sailboat, not a cruise ship, speedboat, submarine, yacht, or abstract sail shape.
 
 No people, animals, water scene, waves, sky, sun, clouds, island, dock, rope clutter, flags, text, letters, logos, face, eyes, smile, decorative border, shadow scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra boats.
+

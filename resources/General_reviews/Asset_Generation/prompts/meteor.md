@@ -25,3 +25,4 @@ Create one clearly recognizable simple meteor as a standalone children's storybo
 Center the rock with comfortable padding and no cropping. It is the only subject. It must read as an irregular cratered gray meteorite, not a comet with a tail, a shooting star, a fireball or a smooth ball.
 
 No tail, no streak, no trail, no pointed rays, no star shape, no smooth sphere, no scene, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra meteors.
+

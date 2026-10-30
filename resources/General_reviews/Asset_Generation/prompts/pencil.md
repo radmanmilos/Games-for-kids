@@ -17,3 +17,4 @@ Background: warm cream storybook paper; no transparency required for WIP.
 Create one clearly recognizable simple child's pencil as a standalone storybook illustration. Show one complete yellow wooden pencil at a gentle diagonal with a sharpened graphite tip, warm pink eraser and muted metal ferrule. Use soft watercolor grain, rounded painted construction and gentle shading. Center the entire pencil with comfortable padding; it must read as a pencil, not a crayon or paintbrush.
 
 No hand, writing, paper, letters, numbers, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra pencils.
+

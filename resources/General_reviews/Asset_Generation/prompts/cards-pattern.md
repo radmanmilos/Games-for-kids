@@ -17,3 +17,4 @@ Background: warm cream paper with a simple muted coral, teal and golden pattern.
 Create one calm, repeatable children's memory-game card-back pattern as a standalone square design. Use a warm cream paper base with a simple evenly spaced arrangement of small rounded dots, leaves and tiny four-point geometric marks in muted coral, teal and golden colours. Keep the pattern balanced and low-detail so it remains clear on a card. No single large emblem, no playing-card suit, no text.
 
 No card front, numbers, letters, hearts, spades, clubs, diamonds, face, character, scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or irregular clutter.
+

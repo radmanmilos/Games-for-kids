@@ -23,3 +23,4 @@ Create one clearly recognizable simple rock as a standalone children's storybook
 Center the rock with comfortable padding and no cropping. It is the only subject. It must read as a rock, not a boulder pile, a mountain or a potato.
 
 No mountain, boulder pile, gravel, soil, grass, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra rocks.
+

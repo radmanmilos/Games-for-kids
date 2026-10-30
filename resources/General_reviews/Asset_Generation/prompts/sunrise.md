@@ -25,3 +25,4 @@ Create one simple sunrise as a standalone children's storybook illustration: a *
 Center the whole scene with comfortable padding and no cropping. The sun and meadow are the only subjects. It must read as a sunrise over a meadow, not a sunset, not a star, not a sparkle and not an abstract glow.
 
 No star, no star shape, no sparkle, no burst, no straight rays, no pointed spikes, no mountains, no trees, no buildings, no sky details, no clouds, no text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, strong glow or extra suns.
+

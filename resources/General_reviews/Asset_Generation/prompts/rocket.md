@@ -21,3 +21,4 @@ Create one clearly recognizable small friendly space rocket as a standalone chil
 Center the complete rocket with comfortable padding and no cropping. The rocket is the only subject. It must read as a simple children's rocket, not an airplane, missile, spaceship interior, or abstract capsule.
 
 No astronaut, people, animals, planet, moon, stars, clouds, sky, launchpad, smoke cloud, text, letters, logo, face, eyes, smile, background scene, shadow scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra vehicles.
+

@@ -17,3 +17,4 @@ Background: warm cream storybook paper; no transparency required for WIP.
 Create one clearly recognizable simple ice cube as a standalone children's storybook illustration. Show one chunky translucent-looking pale blue cube with softly rounded corners, a few simple internal blue facets and gentle painted highlights. Keep it matte and illustrated rather than glossy or photorealistic. Center the complete cube with comfortable padding; it must read as ice, not a blue gemstone or glass block.
 
 No drink, glass, snow scene, snowflakes, face, text, logo, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra cubes.
+

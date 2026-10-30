@@ -25,3 +25,4 @@ Create one simple night sky as a standalone children's storybook illustration on
 Center the motif with comfortable padding and no cropping. The moon and stars are the only subjects on the dark night. It must read as a night sky, not a full moon, a sun or a sparkle burst.
 
 No bear, no animal, no person, no full moon, sun, landscape, buildings, light sky, warm cream background, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, strong glow or extra objects.
+

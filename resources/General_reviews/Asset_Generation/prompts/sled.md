@@ -21,3 +21,4 @@ Create one clearly recognizable small wooden sled as a standalone children's sto
 Center the complete sled with comfortable padding and no cropping. The sled is the only subject. It must read as a winter sled, not a bench, skateboard, wagon, or chair.
 
 No snow, snowflakes, hill, person, animal, scarf, gifts, background scene, text, letters, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra sleds.
+

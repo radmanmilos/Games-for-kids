@@ -23,3 +23,4 @@ Create one clearly recognizable simple road barrier as a standalone children's s
 Center the barrier with comfortable padding and no cropping. It is the only subject. It must read as a road barrier, not a fence, a hurdle or a sign.
 
 No road, car, person, fence, hurdle, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra barriers.
+

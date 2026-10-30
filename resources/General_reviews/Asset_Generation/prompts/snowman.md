@@ -21,3 +21,4 @@ Create one clearly recognizable friendly snowman as a standalone children's stor
 Center the complete snowman with comfortable padding and no cropping. The snowman is the only subject. It must read as a snowman, not a person, statue, cloud, or pile of balls.
 
 No snow field, snowflakes, sky, trees, house, sled, people, animals, text, letters, logo, scary face, mouth, extra hats, extra snowmen, background scene, shadow scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, or strong glow.
+

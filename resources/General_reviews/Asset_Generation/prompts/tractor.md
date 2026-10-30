@@ -21,3 +21,4 @@ Create one clearly recognizable small red farm tractor as a standalone children'
 Center the complete tractor with comfortable padding and no cropping. The tractor is the only subject. It must read as a farm tractor, not a car, truck, bulldozer, tank, or toy vehicle.
 
 No fifth wheel, no third visible wheel, no extra partial wheel, no duplicate wheel, no driver, people, animals, trailer, plough, hay, crops, road, field, barn, sky, text, letters, logo, face, eyes, smile, background scene, shadow scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra vehicles.
+

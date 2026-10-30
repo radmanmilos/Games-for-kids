@@ -29,3 +29,4 @@ Keep the whole comet (round head plus broad tail) simple, wide and readable at s
 Center the complete comet with comfortable padding and no cropping. The comet is the only subject. It must read as a round comet with a tail, not a shooting star, star with rays, fireball, sparkle, tadpole or a ball with a separate rag.
 
 No star shape, no pointed rays, no star-shaped head, no narrow thread tail, no separate floating pieces, no sky, stars, planets, rocket, smoke, face, text, logo, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, strong glow or extra objects.
+

@@ -27,3 +27,4 @@ Keep the silhouette simple and readable at small size, in the Little Play family
 Center the motif with comfortable padding and no cropping. It is the only subject. It must read as a whimsical brass trumpet with confetti, not a party horn, a firework, an explosion or a star.
 
 No party horn, fireworks, explosion, star burst, person, cake, banner, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra objects.
+

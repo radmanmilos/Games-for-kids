@@ -21,3 +21,4 @@ Create one clearly recognizable friendly ringed planet as a standalone children'
 Center the complete planet with comfortable padding and no cropping. The planet is the only subject. It must read as a ringed planet, not a ball, orange, moon, or abstract circle.
 
 No space scene, stars, sky, rocket, astronaut, moon, craters, continents, text, letters, logo, face, eyes, smile, background scene, shadow scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra planets.
+

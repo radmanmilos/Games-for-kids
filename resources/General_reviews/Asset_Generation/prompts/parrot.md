@@ -31,3 +31,4 @@ Match the Little Play family style: rounded softened construction, restrained wa
 Center the complete macaw with comfortable padding and no cropping. The macaw is the only subject. It must read as a Scarlet macaw at first glance — not a canary, finch, generic songbird, chicken, duck, owl, toucan, or a plain green parrot.
 
 No green body, no small pointed beak, no short stubby tail, no horizontal songbird posture, no detailed feather-by-feather rendering, no cage, branch, perch, jungle, leaves, flowers, multiple birds, person, hand, text, letters, logo, exaggerated glossy eye, face, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
+

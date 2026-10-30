@@ -21,3 +21,4 @@ Create one clearly recognizable simple birthday cake as a standalone children's 
 Center the complete cake with comfortable padding and no cropping. The cake is the only subject. It must read as a birthday cake, not bread, a pie, a cupcake, or a stack of pancakes.
 
 No plate, fork, knife, table, presents, balloons, people, face, eyes, smile, text, letters, numbers, logo, extra cake, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or excessive decorations.
+

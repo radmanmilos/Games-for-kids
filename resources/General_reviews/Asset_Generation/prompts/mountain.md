@@ -28,3 +28,4 @@ Keep the silhouette simple, wide and readable at small scenery size, in the Litt
 Center the whole mountain with comfortable padding and no cropping. It is the only subject. It must read as **one mountain with a couple of peaks** — not a single sharp triangle, not two mountains side by side, not a volcano and not a long range.
 
 No two separate mountains, no wide valley between peaks, no mountain range, four or more peaks, sky, clouds, sun, trees, houses, people, road, snow field, text, logo, scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra objects.
+

@@ -21,3 +21,4 @@ Create one clearly recognizable simple knitted sweater / pullover as a standalon
 Center the complete sweater with comfortable padding and no cropping. The sweater is the only subject. It must read as a child-sized pullover, not a coat, jacket, hoodie, dress, scarf, or abstract shirt.
 
 No person, mannequin, hands, head, face, body, hanger, clothesline, wardrobe, buttons, zipper, hood, pocket, text, letters, logo, pattern, props, background scene, shadow scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra garments.
+

@@ -21,3 +21,4 @@ Create one clearly recognizable simple cupcake as a standalone children's storyb
 Center the complete cupcake with comfortable padding and no cropping. The cupcake is the only subject. It must read as a cupcake, not a birthday cake, ice cream cone, muffin, mushroom, or flower.
 
 No plate, fork, spoon, bakery shop, box, person, hand, text, letters, logo, face, eyes, smile, extra cupcakes, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
+

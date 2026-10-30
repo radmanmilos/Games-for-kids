@@ -21,3 +21,4 @@ Create one clearly recognizable simple volcano as a standalone children's storyb
 Center the complete volcano with comfortable padding and no cropping. The volcano is the only subject. It must read as a volcano, not a regular mountain, cone, campfire, or hill.
 
 No eruption plume, smoke cloud, ash, landscape, rocks, trees, people, animals, text, letters, logo, face, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, artificial neon glow, or extra objects.
+

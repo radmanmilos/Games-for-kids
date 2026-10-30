@@ -26,3 +26,4 @@ Create one clearly recognizable simple children's telescope as a standalone stor
 Use muted warm brown, cream and gentle blue-grey, soft watercolor grain, rounded construction and gentle shading. Center the complete telescope with comfortable padding. It must read as a real telescope, not a camera, a spyglass held by a person, a trumpet, or a plain tube with no lens.
 
 No person, hands, stars, sky, planets, text, logo, face, scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, glow, or extra objects.
+

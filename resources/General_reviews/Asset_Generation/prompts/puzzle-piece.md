@@ -27,3 +27,4 @@ Soft watercolor grain, rounded softened painted edges, in the Little Play family
 Center the piece with comfortable padding and no cropping. It is the only subject. It must read as a single tilted standard jigsaw piece in one colour, not a flat icon, not a board and not a 2D silhouette.
 
 No multiple pieces, no picture, no letters, numbers, text, logo, face, board, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, strong glow or extra objects.
+

@@ -26,3 +26,4 @@ Create one clearly recognizable simple beach umbrella as a standalone children's
 Center the complete umbrella with comfortable padding and no cropping. It is the only subject. It must read as a tilted umbrella, not a mushroom, a parasol on a stick with a hook, a lantern or a canopy.
 
 No handle, no hook, no curved grip, no knob at the bottom of the pole, no second pole, no beach, sand, ocean, chair, person, towel, text, logo, face, scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra umbrellas.
+

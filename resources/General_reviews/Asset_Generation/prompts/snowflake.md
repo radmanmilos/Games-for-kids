@@ -23,3 +23,4 @@ Create one clearly recognizable simple snowflake as a standalone children's stor
 Center the snowflake with comfortable padding and no cropping. It is the only subject. It must read as a snowflake, not a star, a sparkle or a flower.
 
 No star shape, sparkle, burst, straight spikes, sharp points, scene, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra snowflakes.
+

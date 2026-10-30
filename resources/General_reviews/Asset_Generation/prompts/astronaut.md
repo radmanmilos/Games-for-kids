@@ -21,3 +21,4 @@ Create one clearly recognizable friendly child astronaut as a standalone childre
 Center the complete astronaut with comfortable padding and no cropping. The astronaut is the only subject. It must read as a child-friendly astronaut, not a diver, robot, soldier, pilot, or generic person in a costume.
 
 No rocket, planet, stars, moon, space scene, flag, tools, weapon, text, letters, logo, exaggerated muscles, scary expression, detailed realistic face, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra characters.
+

@@ -17,3 +17,4 @@ Background: warm cream storybook paper; no transparency required for WIP.
 Create one clearly recognizable simple flying saucer spaceship as a standalone children's storybook illustration. Show one flattened rounded saucer with a domed top, a muted blue-grey body, warm cream underside and a few small soft teal window marks. Use rounded painted construction and gentle watercolor grain. Center the complete spaceship with comfortable padding. It must read as a flying saucer, not a rocket, satellite or plate.
 
 No astronaut, planet, stars, sky, rocket flame, landing scene, text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, glow or extra vehicles.
+

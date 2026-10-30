@@ -27,3 +27,4 @@ Match the Little Play family style: rounded softened construction, restrained wa
 Center the complete full moon with comfortable padding and no cropping. The moon is the only subject. It must read as a full moon, not a crescent, a ball, an egg, a cookie, or a cheese wheel.
 
 No crescent shape, no partly lit sphere, no shadow side, no face, eyes, smile, stars, sky, clouds, planet, rocket, astronaut, text, letters, logo, background scene, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra moons.
+

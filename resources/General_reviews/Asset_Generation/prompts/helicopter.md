@@ -17,3 +17,4 @@ Draw a simple, recognizable helicopter in a gentle three-quarter side view, with
 Show one helicopter only, fully visible, centered with comfortable breathing room. The background may be plain warm off-white. No ground line, sky, clouds, scenery, people, or other objects. The result must look like it belongs beside the exact reference images.
 
 No military styling, weapons, missiles, police markings, photorealism, 3D rendering, glossy plastic, vector emoji, stock-icon look, or anime styling. No thick black outline, white sticker border, glow, hard drop shadow, or dramatic lighting. No excessive gradients, tiny mechanical detail, heavy texture, decorative sparkles, or ornamental extras. No face or character features. No text, labels, watermark, logo, collage, contact sheet, or multiple alternatives in one image. Do not reproduce the reference bear, the golden star or the bone; create the requested helicopter in the same visual family.
+

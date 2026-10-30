@@ -25,3 +25,4 @@ Create one simple sunset as a standalone children's storybook illustration: a **
 Center the whole scene with comfortable padding and no cropping. The sun and the low mountains are the only subjects. It must read as a sunset between low mountains, not a sunrise, not a star, not a sparkle and not an abstract glow.
 
 No star, no star shape, no sparkle, no burst, no straight rays, no pointed spikes, no bear, no person, no trees, no buildings, no clouds, no sky details, no text, logo, face, glossy 3D rendering, photorealism, emoji/vector styling, heavy outline, strong glow or extra suns.
+
