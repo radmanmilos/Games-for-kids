@@ -16,11 +16,11 @@ Background: pure white, completely plain white background, no pillow, no bedding
 
 --- prompt ---
 
-Create one clearly recognizable a friendly long-necked sauropod dinosaur in soft green, rounded body, small head properly proportioned and aligned with the long neck and body (head sits naturally at the end of the neck in correct anatomical relation), gentle expression, NO ears, four sturdy legs of equal length and same thickness, exactly ONE long thick tail (single tail only, no second tail, no extra tails) as a standalone children's storybook illustration.
+Create one clearly recognizable a friendly long-necked sauropod dinosaur in soft green, rounded body, small head properly proportioned and aligned with the long neck and body (head sits naturally at the end of the neck in correct anatomical relation), gentle expression, NO ears, four sturdy legs of equal length and same thickness, exactly ONE tail only (a single long thick tail, no second tail, no twin tails, no extra tails) as a standalone children's storybook illustration.
 
 Match the Little Play family style: rounded softened construction, restrained watercolor grain, muted storybook colours rather than neon, gentle painted shading, and no heavy outline.
 
 Center the complete subject with comfortable padding and no cropping. The subject is the only thing in the frame. It must read clearly at small size.
 
-No fierce teeth, no pillow, no bedding, no background scene, no multiple dinosaurs, no two tails, no extra tails, no ears, no long ears, no floppy ears, four equal legs, equal leg length, no background scene, no multiple subjects, no text, letters, logo, person, hand, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
+No fierce teeth, no pillow, no bedding, no background scene, no multiple dinosaurs, no two tails, no twin tails, no extra tails, only one tail, no ears, no long ears, no floppy ears, four equal legs, equal leg length, no background scene, no multiple subjects, no text, letters, logo, person, hand, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
 
