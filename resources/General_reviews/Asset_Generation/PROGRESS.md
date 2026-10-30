@@ -1387,7 +1387,7 @@ Method: `node tools/scan_glyphs.js` (new read-only tool, task 295) lists every p
 
 Of those 73, the inventory has already decided **38 rows** — SVG/CSS shapes, UI icons, `COVERED` by another PNG (`flower-counter` → `flower.png`, `maze-goal-house` → `house.png`), or the four still-open **REVIEW** rows (`celebration-confetti`, `r3d-title-car`, `r3d-flower-counter`, `r3d-win-flag`). No generation is needed for those.
 
-The remaining gaps split into UI chrome (level picker 🌍, super ⚡, sound 🔊, book 📖, hub tiles 🔢🔤🎹🏎️, parent icons 📊📥🔄🔒🗑, classroom shapes 🔵🔺🟪 — inventory treatment already says SVG/text) and **content art that has no inventory row at all**. The content candidates, if the illustrated family is continued (no action requested; native emoji remain the settled default until the owner decides):
+The remaining gaps split into UI chrome (level picker 🌍, super ⚡, sound 🔊, book 📖, hub tiles 🔢🔤🎹🏎️, parent icons 📊📥🔄🔒🗑, classroom shapes 🔵🔺🟪 — inventory treatment already says SVG/text) and **content art that had no inventory row at all**. Those 30 content candidates (14 Cat Forest, 6 ocean, 2 dino/jungle, 4 puzzle, 2 Kitty, 2 maze) were added to `ASSET_INVENTORY.md` as `CANDIDATE (prompt pending)` rows on 2026-10-30 (task 296) so they are part of the asset generation process; native emoji remain the runtime default until a candidate is generated, approved, and integrated. Prompts for all 30 to follow.
 
 | Theme | Glyph(s) | Use site | Note |
 | --- | --- | --- | --- |

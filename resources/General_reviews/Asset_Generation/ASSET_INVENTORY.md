@@ -248,6 +248,36 @@ These are source-confirmed concepts/use sites that were not fully represented in
 | object-card-stack | 🃏 | `game/index.html`, `animal_memory.html` | Memory game icon/card back | Replace card-back with a designed pattern; tile may use UI icon | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/card-stack.png` | - |
 | object-celebration-sparkle | ✨ / 🌟 | sequencing, Kitty, adventure and success states | Success/effect | CSS/SVG particles and approved star; no duplicate sparkle PNGs | SVG/CSS |
 | object-wrapped-candy | 🍬 | `game/games/racing-config.js` | Candy world decor | One canonical wrapped candy image only if visible enough | GENERATED / USER-APPROVED / TECHNICAL QA MEASURED | `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/wrapped-candy.png` |
+| cat-forest-tabby | 🐈 | `game/games/cat_forest.js:64` | Cat Forest named cat (tabby look) | Illustrated tabby cat for the ten named cats | CANDIDATE (prompt pending) | - | - |
+| cat-forest-black-cat | 🐈‍⬛ | `game/games/cat_forest.js:67` | Cat Forest named cat (black look) | Illustrated black cat | CANDIDATE (prompt pending) | - | - |
+| cat-forest-tiger | 🐯 | `game/games/cat_forest.js:71` | Cat Forest named cat (tiger look) | Illustrated tiger-striped cat | CANDIDATE (prompt pending) | - | - |
+| cat-forest-leopard | 🐆 | `game/games/cat_forest.js:72` | Cat Forest named cat (leopard look) | Illustrated spotted cat | CANDIDATE (prompt pending) | - | - |
+| food-milk | 🥛 | `game/games/cat_forest.js:57` | Cat Forest treat | Illustrated milk glass | CANDIDATE (prompt pending) | - | - |
+| food-chicken-leg | 🍗 | `game/games/cat_forest.js:58` | Cat Forest treat | Illustrated chicken leg | CANDIDATE (prompt pending) | - | - |
+| food-sushi | 🍣 | `game/games/cat_forest.js:59` | Cat Forest treat | Illustrated sushi | CANDIDATE (prompt pending) | - | - |
+| food-cookie | 🍪 | `game/games/cat_forest.js:60` | Cat Forest treat | Illustrated cookie | CANDIDATE (prompt pending) | - | - |
+| object-crown | 👑 | `game/games/cat_forest.js:68,75` | Cat Forest deco | Illustrated crown | CANDIDATE (prompt pending) | - | - |
+| object-ribbon | 🎀 | `game/games/cat_forest.js:68` | Cat Forest deco | Illustrated ribbon | CANDIDATE (prompt pending) | - | - |
+| plant-clover | 🍀 | `game/games/cat_forest.js:78` | Cat Forest deco | Illustrated clover | CANDIDATE (prompt pending) | - | - |
+| flower-tulip | 🌷 | `game/games/cat_forest.js:78` | Cat Forest deco | Illustrated tulip | CANDIDATE (prompt pending) | - | - |
+| object-plate | 🍽️ | `game/pages/cat_forest.html:90` | Cat Forest deco | Illustrated plate | CANDIDATE (prompt pending) | - | - |
+| weather-rain | 🌧️ | `game/games/cat_forest.js:419` | Cat Forest deco | Illustrated rain cloud | CANDIDATE (prompt pending) | - | - |
+| animal-crab | 🦀 | `game/games/ocean.js:116` | Ocean collectible/decor | Illustrated crab | CANDIDATE (prompt pending) | - | - |
+| animal-dolphin | 🐬 | `game/games/ocean.js:159` | Ocean collectible/decor | Illustrated dolphin | CANDIDATE (prompt pending) | - | - |
+| animal-octopus | 🐙 | `game/games/ocean.js:200` | Ocean collectible/decor | Illustrated octopus | CANDIDATE (prompt pending) | - | - |
+| animal-whale | 🐋 | `game/games/ocean.js:240` | Ocean collectible/decor | Illustrated whale | CANDIDATE (prompt pending) | - | - |
+| object-anchor | ⚓ | `game/games/ocean.js:159` | Ocean collectible/decor | Illustrated anchor | CANDIDATE (prompt pending) | - | - |
+| object-money-bag | 💰 | `game/games/ocean.js:240` | Ocean collectible/decor | Illustrated money bag | CANDIDATE (prompt pending) | - | - |
+| animal-dinosaur | 🦕 | `game/games/dino.js:832` | Dino playable hero | Illustrated dinosaur hero | CANDIDATE (prompt pending) | - | - |
+| flower-hibiscus | 🌺 | `game/games/dino.js:80`, `game/games/racing-config.js:114` | Jungle racing decor | Illustrated hibiscus | CANDIDATE (prompt pending) | - | - |
+| object-boy | 👦 | `game/games/animal_puzzle.js:3` | Animal puzzle park pair | Illustrated boy | CANDIDATE (prompt pending) | - | - |
+| object-girl | 👧 | `game/games/animal_puzzle.js:3` | Animal puzzle park pair | Illustrated girl | CANDIDATE (prompt pending) | - | - |
+| object-yarn | 🧶 | `game/games/animal_puzzle.js:4` | Animal puzzle home prop | Illustrated yarn ball | CANDIDATE (prompt pending) | - | - |
+| object-potted-plant | 🪴 | `game/games/animal_puzzle.js:4` | Animal puzzle home prop | Illustrated potted plant | CANDIDATE (prompt pending) | - | - |
+| food-rice-ball | 🍙 | `game/games/kitty-standalone.js:790` | Kitty Japan collectible | Illustrated rice ball (onigiri) | CANDIDATE (prompt pending) | - | - |
+| object-gift | 🎁 | `game/games/kitty-standalone.js:818` | Kitty North-pole collectible | Illustrated gift box | CANDIDATE (prompt pending) | - | - |
+| animal-ladybug | 🐞 | `game/games/maze.js:99` | Maze garden motif | Illustrated ladybug | CANDIDATE (prompt pending) | - | - |
+| object-flag | 🚩 | `game/games/maze.js:122` | Maze start marker | Illustrated flag | CANDIDATE (prompt pending) | - | - |
 
 ## Explicit exclusions
 
