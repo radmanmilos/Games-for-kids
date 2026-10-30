@@ -16,7 +16,7 @@ Background: warm cream storybook paper, softly painted and unobtrusive; no trans
 
 --- prompt ---
 
-Create one clearly recognizable a cheerful wrapped gift box with a red bow on top, colourful paper, simple rounded shape as a standalone children's storybook illustration.
+Create one clearly recognizable a simple square yellow gift box with a red ribbon bow on top, flat square shape, clean minimal look as a standalone children's storybook illustration.
 
 Match the Little Play family style: rounded softened construction, restrained watercolor grain, muted storybook colours rather than neon, gentle painted shading, and no heavy outline.
 

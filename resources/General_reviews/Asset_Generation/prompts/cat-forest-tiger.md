@@ -12,7 +12,7 @@ References: bear.png (canonical painted style anchor), star.png (canonical paper
 
 Canvas: square 1024×1024 WIP image, one centered object with generous padding.
 
-Background: warm cream storybook paper, softly painted and unobtrusive; no transparency required for this WIP candidate.
+Background: pure white, completely plain white background, no pillow, no bedding, no extra elements, no scene.
 
 --- prompt ---
 
@@ -22,5 +22,5 @@ Match the Little Play family style: rounded softened construction, restrained wa
 
 Center the complete subject with comfortable padding and no cropping. The subject is the only thing in the frame. It must read clearly at small size.
 
-No lion, no leopard spots, no collar, no two-legged pose, no bipedal stance, no second tail, no double tail, no multiple tails, single tail only, no background scene, no multiple cats, no background scene, no multiple subjects, no text, letters, logo, person, hand, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
+No lion, no leopard spots, no collar, no two-legged pose, no bipedal stance, no second tail, no double tail, no multiple tails, single tail only, no pillow, no bedding, no background scene, no multiple cats, no background scene, no multiple subjects, no text, letters, logo, person, hand, glossy 3D rendering, photorealism, emoji/vector styling, heavy black outline, strong glow, or extra objects.
 
