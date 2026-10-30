@@ -18,5 +18,3 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 296. IN PROGRESS — Include the 30 new illustration concepts in the asset generation process: 30 CANDIDATE rows added to ASSET_INVENTORY.md; PROGRESS.md gap note updated. Prompts for all 30 next. (2026-10-30, OpenCode/Big Pickle)
-

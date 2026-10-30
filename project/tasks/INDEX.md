@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **296**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **297**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -296,3 +296,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 293 | DONE | 2026-10-29 | parent smoke gate flake seen on the scheduler run 40314102209 (question:"…", choices:0). Cause: Page.navigate… | tasks-250-299.md
 294 | DONE | 2026-10-30 | applied the delivered petras-world-regen-prompts-2026-10-29 package (6 new + 4 revised briefs) and… | tasks-250-299.md
 295 | DONE | 2026-10-30 | Housekeeping: harness scratch localized to tools/.cache/chrome (sweep + close grace), 3 new tools… | tasks-250-299.md
+296 | DONE | 2026-10-30 | Included the 30 new illustration concepts in the asset generation process: 30 CANDIDATE (prompt pending) rows… | tasks-250-299.md
