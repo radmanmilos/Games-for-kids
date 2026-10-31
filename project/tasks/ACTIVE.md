@@ -20,12 +20,12 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 - 298. DONE — T298: wired Art helper globally (art-registry + shared/art on 25 game pages, .art CSS in components.css), rebuilt offline inventories, synced docs (2026-10-31, OpenCode/Big Pickle).
 - 299. DONE — T299: Art smoke assertion added (art_smoke.js + check_fast coverage) (2026-10-31, OpenCode/Big Pickle)
-- 300. IN PROGRESS — T300: Bump to 2.5.0, build_offline + sync-docs, update game docs (target 2.5.0) (2026-10-31, OpenCode/Big Pickle)
-- 301. NEW — T301: Group A emoji-field render sites (animals, animal_counting, candy, sorting, spatial) (target 2.6.0) (2026-10-31, OpenCode/Big Pickle)
-- 302. NEW — T302: Group B emoji-field render sites (sequencing, animal_puzzle, maze) (target 2.6.0) (2026-10-31, OpenCode/Big Pickle)
-- 303. NEW — T303: Group C emoji-field render sites (phonics, piano, rhythm, classroom, fastcat) (target 2.6.0) (2026-10-31, OpenCode/Big Pickle)
-- 304. NEW — T304: cat_forest.html data table render via Art.fill (target 2.6.0) (2026-10-31, OpenCode/Big Pickle)
-- 305. NEW — T305: Bump to 2.6.0, build_offline + sync-docs, screenshots (target 2.6.0) (2026-10-31, OpenCode/Big Pickle)
+- 300. DONE — T300: bumped to 2.5.0, rebuilt offline inventories, synced docs (2026-10-31, OpenCode/Big Pickle)
+- 301. DONE — T301: Group A (animals, animal_counting, candy, sorting, spatial) -> Art.fill (2026-10-31, OpenCode/Big Pickle)
+- 302. DONE — T302: Group B (sequencing, animal_puzzle, maze) -> Art.fill (2026-10-31, OpenCode/Big Pickle)
+- 303. DONE — T303: Group C (phonics, piano, rhythm, classroom, fastcat) -> Art.fill (2026-10-31, OpenCode/Big Pickle)
+- 304. DONE — T304: Cat Forest data/render sites updated for Art (2026-10-31, OpenCode/Big Pickle)
+- 305. IN PROGRESS — T305: Bump to 2.6.0, build_offline + sync-docs, screenshots (target 2.6.0) (2026-10-31, OpenCode/Big Pickle)
 - 306. NEW — T306: Adventure family canvas draws (adventure.js + adventure-modes.js) (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
 - 307. NEW — T307: Dino + FastCat canvas draws (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
 - 308. NEW — T308: Kitty-standalone canvas draws (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
