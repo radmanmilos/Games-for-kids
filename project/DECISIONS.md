@@ -55,7 +55,7 @@ The Мала тркачица (Little Racer) game is fully built (Stages 1–5, 
 
 - Port of the Secret Cat Forest idea as a toddler game: feed visiting emoji cats, collect gifts that grow a forest.
 - No currency, shop, XP, levels, locks, score, counters, timers, fail states, notifications or offline earnings.
-- No visible text; Serbian Cyrillic speech and aria-labels only; emoji art only; no new assets/libraries/network.
+- No visible text; Serbian Cyrillic speech and aria-labels only; painted art allowed (emoji-only rule lifted 2026-10-31, task 296 — global replacement approved); no new assets/libraries/network beyond the shared art pipeline.
 - Day/night and rain are child-controlled toggles; they never affect rewards. Friends book shows met cats only (no counts/silhouettes).
 - Tiny save (met cats + decorations) in one localStorage key, cleared by the existing parent reset. Drag-and-drop treats in addition to tap.
 - Delivery (amends package D11, 2026-10-19): after each card/bundle is DONE and gates are green, the AI commits and pushes to `main` and verifies CI; never continue on red or dirty.
@@ -76,3 +76,12 @@ The Мала тркачица (Little Racer) game is fully built (Stages 1–5, 
 - **Screenshots (D10):** `screenshot:false` is deliberate. `tools/visual-states.json` carries real `INIT`/`PLAY` states for `cat_forest`; the flag may flip to `true` **only after** the owner has reviewed and approved baselines (the flip is the owner's action; exact commands are in `PROGRESS.md`).
 - **Accepted audit exception (CF-17, task 279):** the short-landscape audit prints one WARN, "no header text visible" — the page is deliberately wordless (TP §4, "no visible text at all"), so this WARN is correct-by-design and is not to be "fixed" by adding a heading. 0 FAIL.
 - **Documented footguns (CF-19):** a screenshot/state hook must *poll to* a named phase — a cat is `sitting` only ~5350–6250 ms, so any fixed long `step(N)` captures an empty stage. New doc: `project/games/cat-forest.md`.
+
+## Production assets — decisions (2026-10-31, task 296)
+
+- **Python in dev toolchain:** kept. cutout.py runs on Python 3.14 with pillow/numpy/scipy/scikit-image/rembg/onnxruntime (dev-time only; nothing ships in the app). A Node port would lose the ML shadow guide.
+- **Production format:** WebP lossy q85, alpha q100, 512x512 (27.5 KB mean, 3.6 MB for 131 assets, PSNR 42.7 dB median). Android transparent WebP since API 18. Hard limit 60 KB/file.
+- **Cat Forest:** painted art now allowed (emoji-only rule lifted; see line 58 edit above).
+- **Tablet target:** 13.4" panel. 512 px covers within a 1.1x enlargement; no change needed.
+- **Draft map merges:** confirmed - celebration merges celebration/star/sparkle glyphs; comet merges comet/shooting-star.
+- **Pending visual-review rows (butterfly, soap, acorn, sunflower, mushroom):** approved as-is; ship through the cutout pipeline without regeneration.
