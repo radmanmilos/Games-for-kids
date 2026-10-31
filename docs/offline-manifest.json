@@ -1476,108 +1476,108 @@
     "size": 577
   },
   "pages/animal_counting.html": {
-    "sha256": "f63a4eea1232fc95b8345309c5032c9080d4c5822169f48712cde7e1006dc41d",
-    "size": 6871
+    "sha256": "3a7a106d7d2a1bd2d8870a257336c4fa862243586cd163ba90f949bfbdae82f6",
+    "size": 6964
   },
   "pages/animal_memory.html": {
-    "sha256": "37052b1edf07ac835184c7c048aa0cf4a66b3d2e0a56687b12fc5bb420180550",
-    "size": 9120
+    "sha256": "57e799d094970cdad896a10241083c44ad7aa098f473684afe5cbd51bb58b4e5",
+    "size": 9213
   },
   "pages/animal_puzzle.html": {
-    "sha256": "eaaeaeaf7c6e98c361f8b486d7447fed76d367c899da73d3b44d48b23fc7ed68",
-    "size": 4811
+    "sha256": "07ed81deb92aca038672e6182dca1f9161709eee6084ae10b3ac89bf6c1be4b6",
+    "size": 4904
   },
   "pages/animals.html": {
-    "sha256": "c8262fe8628d476d694a6ec2f82343d37925168bdb07d70d6d759dcf10030fb5",
-    "size": 14514
+    "sha256": "09302fedeb51a1f6553efa3f8111e2f7dc59f7c1c50d7091ab5d79fc7b24a3f3",
+    "size": 14607
   },
   "pages/cat_forest.html": {
-    "sha256": "0cf80623964f928b384d76e9dd5e07c4161519e0d762601d2c5a20c4000a0790",
-    "size": 19936
+    "sha256": "f83cc91ece594f673a779421a341e98b6726177d9e4de183a79aa6b82fb0c71f",
+    "size": 20029
   },
   "pages/classroom.html": {
-    "sha256": "4b4e7a4b241a316d0d859b7eb005de43446ce2507acb2662ebfd57064bf71b1c",
-    "size": 18463
+    "sha256": "5c61c3716904ddc3e334dda74c434c2f447c59d1cc6d186c273ff59c90c98519",
+    "size": 18556
   },
   "pages/coloring.html": {
-    "sha256": "ae770ba5882afd5dcef18991e82fdac7198ec2ed2aa42223e5be22193c55da4e",
-    "size": 11214
+    "sha256": "13a0b6be5bc6f06cbac2ae356fb4d2d178133d5fe9d2d2c3556432e0fc65f6f1",
+    "size": 11307
   },
   "pages/compare.html": {
-    "sha256": "f8f4aa7a5b2622cc31f3a14da26522cd742d1fab1bd21ba50925a2da1871efef",
-    "size": 4890
+    "sha256": "591b4cc0b58f9450c47f863a196a4b62a7fafb9145ca3d9aa7f106a18ef9a464",
+    "size": 4983
   },
   "pages/dino.html": {
-    "sha256": "90065c611adf5823492c5127a19b8e37b17f27f1611dab833fbfb24b9fb28a7b",
-    "size": 4954
+    "sha256": "50fe5dd5d44f36978c6e48cadf507658934dd538976ce62d760263300f4b1f3c",
+    "size": 5047
   },
   "pages/driving.html": {
-    "sha256": "f9b4e3249aaf5e818270abd85a5c8ea41fa623de5722dc13afa39e53b92fdf52",
-    "size": 4785
+    "sha256": "edf41a7179a8ac568d2713f69eb12e9eb4f37bed7f4ffc685d9adc247ccf66fe",
+    "size": 4878
   },
   "pages/explorer.html": {
-    "sha256": "a26a739f43b998eadee596ae0f784a774c73ebf4fd35540e4c263e4d60b2437a",
-    "size": 10827
+    "sha256": "b47db0455fb83b49b805635a67704b8cd8445cc9a0e4dbcb64d4774cf474ded1",
+    "size": 10920
   },
   "pages/fastcat.html": {
-    "sha256": "a4a1cee1b5a609015af04a8e1262c724350a9b7374ecbb5d5dfc39b887bc942b",
-    "size": 13986
+    "sha256": "7f6e8b0571c50261a66901250b6bc96da276fa943f091837012efab6381fe5d2",
+    "size": 14079
   },
   "pages/matching_game.html": {
-    "sha256": "5e60419383a889dfbe5ea4f6dbdc1abb2e4e259fc45e286892f37235ecac75c6",
-    "size": 14420
+    "sha256": "fdd22178a866042d75451182bd5ad611ad842e1c8f23a4649dbbedcd4468f7c0",
+    "size": 14513
   },
   "pages/maze.html": {
-    "sha256": "0bc8256748eadd4cfc8e74f64ddad1dae05ae85dfee53abae131512e16f81104",
-    "size": 6300
+    "sha256": "96554e3cb6929c40f93da374f6d43d2997a0571fd2f1079e68348558e2d21599",
+    "size": 6393
   },
   "pages/ocean.html": {
-    "sha256": "48f3efff768d1989a4c54b701f9b406b8cc3812e4ea3f83d2a9ccd856ef40d4f",
-    "size": 5282
+    "sha256": "97f63fc7ada83bd5798ea29ccab312b5e3ba4bb2de2c5d716f26bc493ee8d907",
+    "size": 5375
   },
   "pages/parent.html": {
     "sha256": "a8bd0cfa8b4c1e46cb393379b14014afff3ccd3e25e81ce05f5dd4c7ea2f832c",
     "size": 30191
   },
   "pages/phonics.html": {
-    "sha256": "ea18c4d675e89a6cfe265b2785644142db9118ee857d53a0076170eddd5b6e8e",
-    "size": 7386
+    "sha256": "dbfcb1a0a2af92670523aacaf43f17525dd0e20f7581cf6c4b741742ee69ff88",
+    "size": 7479
   },
   "pages/piano.html": {
-    "sha256": "49625cf42bee439970a12b7543ce59115bb1b60e4d3688e762af83d410c31180",
-    "size": 12456
+    "sha256": "86e3147dcbeaaf058f2c09abbc170dff290daec9bc24ff51c2add3365d1d88c3",
+    "size": 12549
   },
   "pages/racing3d.html": {
-    "sha256": "8e5f8ce83b198dbdf9867200417dd0fe70f4f9835cf10be2872ab59a0087ae0e",
-    "size": 17912
+    "sha256": "9ded4b2469d4fe7d14c47f00e7f59c020e2b5ca4f31e4e74888af491204448c9",
+    "size": 18005
   },
   "pages/rhythm.html": {
-    "sha256": "25562b13f0f2f1b13cd09b427ccdad4c303f5718176ff9a1541552494d9fd852",
-    "size": 8436
+    "sha256": "042985295958cf1632c0eed30f21f5a3bc9e52e8f06ff0d67a7eda74e8226dea",
+    "size": 8529
   },
   "pages/sequencing.html": {
-    "sha256": "6e715bdd7fcd25c3dc9c7840adb999dbbba3588a168ab7cb9d1a8ac8d06eed8a",
-    "size": 6159
+    "sha256": "77ffb8433ee158efd6e89026e02453031391d78f16bac079907b2f26c5fa2fac",
+    "size": 6252
   },
   "pages/shapes.html": {
-    "sha256": "fa14276d4e8c8ca7eb426417f306c2417f48e11ff94b4d90d2b80ecc5c404584",
-    "size": 12048
+    "sha256": "d6b5fe3f6616268db5e243737ceeb54e833042687dbe3d3af911fc52bc0cc5a4",
+    "size": 12141
   },
   "pages/sorting.html": {
-    "sha256": "051a73044b4db46505e90ac0a6050a50d77ce0c573c89da73ae4c2e4459762bb",
-    "size": 6548
+    "sha256": "00d2ab2542602895a972bc731dc04325f82620ced8767b2179eacf6ab9006921",
+    "size": 6641
   },
   "pages/space.html": {
-    "sha256": "649eb8708bf75662d5e2cb559bd097390345280cab07a3fd3b52569d4ca3e818",
-    "size": 5284
+    "sha256": "553ab90ff34299e5518e4e67553fb0b1e2d80e6f5a3384be2b82555643955f8f",
+    "size": 5377
   },
   "pages/spatial.html": {
-    "sha256": "c545125b8ba703708c466aa17531b58ff7a8b19661f1adcbeb97d5e008f392e4",
-    "size": 6900
+    "sha256": "fdc2d2d0b85adf075c172e3fd9bd0dc50da4def29175e171d71a4a39556e9845",
+    "size": 6993
   },
   "pages/tracing.html": {
-    "sha256": "bc13619975cbb006273a4b5b7f1e219e9c5c095a68daa4a10b655758f95dab76",
-    "size": 10812
+    "sha256": "01e3ffaecd220b52ac2b879dbfe1eb9004577c0a4c33b4dafa4c33cddb22e790",
+    "size": 10905
   },
   "shared/accessibility.css": {
     "sha256": "0f4003e8e36802f811ab60049f0c6aef483795a723424f16fef649a5c34183ca",
@@ -1636,8 +1636,8 @@
     "size": 2292
   },
   "styles/components.css": {
-    "sha256": "deee5067531a35d2122b1a290e6943d302a67c08c91ac4d8870fbd568c691032",
-    "size": 11828
+    "sha256": "7554b354ea6577dd2212dc8e04c751379a1deb9506b4667b28134b015e7df4f2",
+    "size": 11966
   },
   "styles/design-tokens.css": {
     "sha256": "df799f501346a87dc731b2ba3467fcecbed0d1bf9db5acf5d57a268194683ecf",
