@@ -1,0 +1,7 @@
+{
+  "_comment": "Per-asset decisions found by reviewing all 131 bundle files on 2026-10-29. Re-check after any asset is regenerated.",
+  "mode": {
+    "ball": "classical", "eye": "classical", "flower": "classical", "snowflake": "classical"
+  },
+  "exclude": ["night-sky", "sunrise", "sunset", "galaxy", "sun", "cards-pattern"]
+}

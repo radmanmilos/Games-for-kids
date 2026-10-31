@@ -1,0 +1,762 @@
+{
+ "🐶": {
+  "asset": "animal-dog",
+  "file": "dog.png",
+  "count": 19
+ },
+ "🐱": {
+  "asset": "animal-cat",
+  "file": "cat.png",
+  "count": 28
+ },
+ "🐮": {
+  "asset": "animal-cow",
+  "file": "cow.png",
+  "count": 9
+ },
+ "🐄": {
+  "asset": "animal-cow",
+  "file": "cow.png",
+  "count": 2
+ },
+ "🦁": {
+  "asset": "animal-lion",
+  "file": "lion.png",
+  "count": 8
+ },
+ "🐘": {
+  "asset": "animal-elephant",
+  "file": "elephant.png",
+  "count": 6
+ },
+ "🐸": {
+  "asset": "animal-frog",
+  "file": "frog.png",
+  "count": 9
+ },
+ "🐷": {
+  "asset": "animal-pig",
+  "file": "pig.png",
+  "count": 7
+ },
+ "🦆": {
+  "asset": "animal-duck",
+  "file": "duck.png",
+  "count": 7
+ },
+ "🦊": {
+  "asset": "animal-fox",
+  "file": "fox.png",
+  "count": 7
+ },
+ "🐑": {
+  "asset": "animal-sheep",
+  "file": "sheep.png",
+  "count": 4
+ },
+ "🐴": {
+  "asset": "animal-horse",
+  "file": "horse.png",
+  "count": 5
+ },
+ "🐔": {
+  "asset": "animal-chicken",
+  "file": "chicken.png",
+  "count": 4
+ },
+ "🐻": {
+  "asset": "animal-bear",
+  "file": "bear.png",
+  "count": 1
+ },
+ "🦴": {
+  "asset": "object-bone",
+  "file": "bone.png",
+  "count": 1
+ },
+ "🏠": {
+  "asset": "object-house",
+  "file": "house.png",
+  "count": 1
+ },
+ "🍎": {
+  "asset": "food-apple",
+  "file": "apple.png",
+  "count": 7
+ },
+ "🐾": {
+  "asset": "animal-pawprint",
+  "file": "pawprint.png",
+  "count": 6
+ },
+ "🔵": {
+  "asset": "shape-blue-circle",
+  "file": null,
+  "count": 1
+ },
+ "🟪": {
+  "asset": "shape-purple-square",
+  "file": null,
+  "count": 1
+ },
+ "🔺": {
+  "asset": "shape-red-triangle",
+  "file": null,
+  "count": 1
+ },
+ "⭐": {
+  "asset": "reward-star",
+  "file": "star.png",
+  "count": 20
+ },
+ "🥁": {
+  "asset": "music-drum",
+  "file": "drum.png",
+  "count": 12
+ },
+ "🌱": {
+  "asset": "plant-seedling",
+  "file": "seedling.png",
+  "count": 4
+ },
+ "🌿": {
+  "asset": "plant-leaves",
+  "file": "leaves.png",
+  "count": 3
+ },
+ "🌸": {
+  "asset": "flower-counter",
+  "file": null,
+  "count": 8
+ },
+ "🎉": {
+  "asset": "object-celebration",
+  "file": "celebration.png",
+  "count": 4
+ },
+ "❄": {
+  "asset": "object-snowflake",
+  "file": "snowflake.png",
+  "count": 5
+ },
+ "🐟": {
+  "asset": "adventure-fish",
+  "file": "fish.png",
+  "count": 11
+ },
+ "⛏": {
+  "asset": "kitty-pickaxe",
+  "file": "pickaxe.png",
+  "count": 1
+ },
+ "🚗": {
+  "asset": "object-car",
+  "file": "car.png",
+  "count": 4
+ },
+ "🍌": {
+  "asset": "food-banana",
+  "file": "banana.png",
+  "count": 4
+ },
+ "🐺": {
+  "asset": "animal-wolf",
+  "file": "wolf.png",
+  "count": 1
+ },
+ "🐛": {
+  "asset": "animal-caterpillar",
+  "file": "caterpillar.png",
+  "count": 2
+ },
+ "🦋": {
+  "asset": "animal-butterfly",
+  "file": "butterfly.png",
+  "count": 5
+ },
+ "🌳": {
+  "asset": "object-tree",
+  "file": "tree.png",
+  "count": 5
+ },
+ "🧑‍🎓": {
+  "asset": "object-student",
+  "file": "student.png",
+  "count": 1
+ },
+ "🖥": {
+  "asset": "object-screen",
+  "file": "screen.png",
+  "count": 1
+ },
+ "🪡": {
+  "asset": "object-needle",
+  "file": "needle.png",
+  "count": 1
+ },
+ "❤": {
+  "asset": "object-heart",
+  "file": null,
+  "count": 3
+ },
+ "👃": {
+  "asset": "object-nose",
+  "file": "nose.png",
+  "count": 1
+ },
+ "🐽": {
+  "asset": "object-pig-nose",
+  "file": "pig-nose.png",
+  "count": 1
+ },
+ "👁": {
+  "asset": "object-eye",
+  "file": "eye.png",
+  "count": 1
+ },
+ "🦃": {
+  "asset": "animal-turkey",
+  "file": "turkey.png",
+  "count": 1
+ },
+ "👂": {
+  "asset": "object-ear",
+  "file": "ear.png",
+  "count": 1
+ },
+ "🦩": {
+  "asset": "animal-flamingo",
+  "file": "flamingo.png",
+  "count": 1
+ },
+ "🚁": {
+  "asset": "object-helicopter",
+  "file": "helicopter.png",
+  "count": 1
+ },
+ "🌼": {
+  "asset": "object-flower",
+  "file": "flower.png",
+  "count": 4
+ },
+ "⛵": {
+  "asset": "object-sailboat",
+  "file": "sailboat.png",
+  "count": 1
+ },
+ "🧥": {
+  "asset": "object-sweater",
+  "file": "sweater.png",
+  "count": 1
+ },
+ "🎩": {
+  "asset": "object-hat",
+  "file": "hat.png",
+  "count": 2
+ },
+ "🍓": {
+  "asset": "food-strawberry",
+  "file": "strawberry.png",
+  "count": 4
+ },
+ "🍇": {
+  "asset": "food-grapes",
+  "file": "grapes.png",
+  "count": 2
+ },
+ "🍊": {
+  "asset": "food-orange",
+  "file": "orange.png",
+  "count": 1
+ },
+ "🍐": {
+  "asset": "food-pear",
+  "file": "pear.png",
+  "count": 1
+ },
+ "🍉": {
+  "asset": "food-watermelon",
+  "file": "watermelon.png",
+  "count": 1
+ },
+ "🥕": {
+  "asset": "food-carrot",
+  "file": "carrot.png",
+  "count": 3
+ },
+ "🍏": {
+  "asset": "food-apple-green",
+  "file": "apple-green.png",
+  "count": 1
+ },
+ "🥚": {
+  "asset": "object-egg",
+  "file": "egg.png",
+  "count": 2
+ },
+ "🐣": {
+  "asset": "animal-chick",
+  "file": "chick.png",
+  "count": 1
+ },
+ "🐦": {
+  "asset": "animal-bird",
+  "file": "bird.png",
+  "count": 1
+ },
+ "🧼": {
+  "asset": "object-soap",
+  "file": "soap.png",
+  "count": 1
+ },
+ "💧": {
+  "asset": "object-water-drop",
+  "file": "water-drop.png",
+  "count": 5
+ },
+ "🌰": {
+  "asset": "object-acorn",
+  "file": "acorn.png",
+  "count": 1
+ },
+ "🌻": {
+  "asset": "object-sunflower",
+  "file": "sunflower.png",
+  "count": 3
+ },
+ "🍄": {
+  "asset": "object-mushroom",
+  "file": "mushroom.png",
+  "count": 3
+ },
+ "🦓": {
+  "asset": "animal-zebra",
+  "file": "zebra.png",
+  "count": 1
+ },
+ "🦒": {
+  "asset": "animal-giraffe",
+  "file": "giraffe.png",
+  "count": 1
+ },
+ "🦌": {
+  "asset": "animal-deer",
+  "file": "deer.png",
+  "count": 2
+ },
+ "🐿": {
+  "asset": "animal-squirrel",
+  "file": "squirrel.png",
+  "count": 1
+ },
+ "🐓": {
+  "asset": "animal-rooster",
+  "file": "rooster.png",
+  "count": 2
+ },
+ "🚜": {
+  "asset": "object-tractor",
+  "file": "tractor.png",
+  "count": 3
+ },
+ "🚀": {
+  "asset": "object-rocket",
+  "file": "rocket.png",
+  "count": 7
+ },
+ "🪐": {
+  "asset": "object-planet",
+  "file": "planet.png",
+  "count": 5
+ },
+ "👨‍🚀": {
+  "asset": "object-astronaut",
+  "file": "astronaut.png",
+  "count": 1
+ },
+ "⛄": {
+  "asset": "object-snowman",
+  "file": "snowman.png",
+  "count": 3
+ },
+ "🛷": {
+  "asset": "object-sled",
+  "file": "sled.png",
+  "count": 1
+ },
+ "🐧": {
+  "asset": "animal-penguin",
+  "file": "penguin.png",
+  "count": 1
+ },
+ "🎂": {
+  "asset": "object-birthday-cake",
+  "file": "birthday-cake.png",
+  "count": 2
+ },
+ "🔔": {
+  "asset": "object-bell",
+  "file": "bell.png",
+  "count": 1
+ },
+ "🎈": {
+  "asset": "object-balloons",
+  "file": "balloons.png",
+  "count": 1
+ },
+ "🌈": {
+  "asset": "object-rainbow",
+  "file": "rainbow.png",
+  "count": 2
+ },
+ "🏫": {
+  "asset": "object-school",
+  "file": "school.png",
+  "count": 3
+ },
+ "📝": {
+  "asset": "object-notebook",
+  "file": "notebook.png",
+  "count": 1
+ },
+ "🎮": {
+  "asset": "object-gamepad",
+  "file": null,
+  "count": 2
+ },
+ "🧩": {
+  "asset": "object-puzzle-piece",
+  "file": "puzzle-piece.png",
+  "count": 4
+ },
+ "⚖": {
+  "asset": "object-scale",
+  "file": null,
+  "count": 2
+ },
+ "🧺": {
+  "asset": "object-basket",
+  "file": "basket.png",
+  "count": 2
+ },
+ "📆": {
+  "asset": "object-calendar",
+  "file": null,
+  "count": 2
+ },
+ "🧭": {
+  "asset": "object-compass",
+  "file": "compass.png",
+  "count": 2
+ },
+ "✏": {
+  "asset": "object-pencil",
+  "file": "pencil.png",
+  "count": 5
+ },
+ "🎨": {
+  "asset": "object-paint-palette",
+  "file": null,
+  "count": 6
+ },
+ "🏅": {
+  "asset": "object-medal",
+  "file": "medal.png",
+  "count": 5
+ },
+ "🗑": {
+  "asset": "object-trash",
+  "file": null,
+  "count": 1
+ },
+ "📊": {
+  "asset": "object-progress-chart",
+  "file": null,
+  "count": 1
+ },
+ "📥": {
+  "asset": "object-download",
+  "file": null,
+  "count": 2
+ },
+ "🔒": {
+  "asset": "object-lock",
+  "file": null,
+  "count": 3
+ },
+ "🔊": {
+  "asset": "object-sound",
+  "file": null,
+  "count": 8
+ },
+ "🔇": {
+  "asset": "object-sound",
+  "file": null,
+  "count": 2
+ },
+ "🌍": {
+  "asset": "object-world-globe",
+  "file": null,
+  "count": 10
+ },
+ "🏁": {
+  "asset": "object-finish-flag",
+  "file": null,
+  "count": 2
+ },
+ "🔄": {
+  "asset": "object-retry",
+  "file": null,
+  "count": 1
+ },
+ "➡": {
+  "asset": "object-next-arrow",
+  "file": null,
+  "count": 1
+ },
+ "✨": {
+  "asset": "object-celebration",
+  "file": "celebration.png",
+  "count": 6
+ },
+ "🌟": {
+  "asset": "object-celebration",
+  "file": "celebration.png",
+  "count": 9
+ },
+ "🎵": {
+  "asset": "object-music-note",
+  "file": null,
+  "count": 3
+ },
+ "🍂": {
+  "asset": "object-season-leaf",
+  "file": "season-leaf.png",
+  "count": 3
+ },
+ "🐚": {
+  "asset": "object-shell",
+  "file": "shell.png",
+  "count": 8
+ },
+ "💎": {
+  "asset": "object-gem",
+  "file": "gem.png",
+  "count": 4
+ },
+ "🌙": {
+  "asset": "object-moon",
+  "file": "moon.png",
+  "count": 12
+ },
+ "🍭": {
+  "asset": "object-candy-lollipop",
+  "file": "lollipop.png",
+  "count": 3
+ },
+ "🍬": {
+  "asset": "object-candy-wrapped",
+  "file": "wrapped-candy.png",
+  "count": 2
+ },
+ "🧁": {
+  "asset": "object-cupcake",
+  "file": "cupcake.png",
+  "count": 2
+ },
+ "🍩": {
+  "asset": "object-donut",
+  "file": "donut.png",
+  "count": 1
+ },
+ "🍡": {
+  "asset": "object-candy-rice",
+  "file": "dango.png",
+  "count": 2
+ },
+ "🌴": {
+  "asset": "object-palm-tree",
+  "file": "palm-tree.png",
+  "count": 9
+ },
+ "🏝": {
+  "asset": "object-island",
+  "file": "island.png",
+  "count": 2
+ },
+ "🌋": {
+  "asset": "object-volcano",
+  "file": "volcano.png",
+  "count": 2
+ },
+ "🌵": {
+  "asset": "object-cactus",
+  "file": "cactus.png",
+  "count": 3
+ },
+ "🦜": {
+  "asset": "object-parrot",
+  "file": "parrot.png",
+  "count": 3
+ },
+ "🪨": {
+  "asset": "object-rock",
+  "file": "rock.png",
+  "count": 1
+ },
+ "🚧": {
+  "asset": "object-road-barrier",
+  "file": "road-barrier.png",
+  "count": 1
+ },
+ "🛰": {
+  "asset": "object-satellite",
+  "file": "satellite.png",
+  "count": 1
+ },
+ "🔭": {
+  "asset": "object-telescope",
+  "file": "telescope.png",
+  "count": 1
+ },
+ "🧊": {
+  "asset": "object-ice-cube",
+  "file": "ice-cube.png",
+  "count": 1
+ },
+ "🌀": {
+  "asset": "object-spiral",
+  "file": null,
+  "count": 1
+ },
+ "💫": {
+  "asset": "object-comet",
+  "file": "comet.png",
+  "count": 1
+ },
+ "🌠": {
+  "asset": "object-comet",
+  "file": "comet.png",
+  "count": 2
+ },
+ "🐰": {
+  "asset": "animal-rabbit",
+  "file": "rabbit.png",
+  "count": 3
+ },
+ "🐤": {
+  "asset": "animal-baby-chick",
+  "file": null,
+  "count": 3
+ },
+ "🐭": {
+  "asset": "animal-mouse",
+  "file": "mouse.png",
+  "count": 3
+ },
+ "🧀": {
+  "asset": "food-cheese",
+  "file": "cheese.png",
+  "count": 1
+ },
+ "⚽": {
+  "asset": "object-ball",
+  "file": "ball.png",
+  "count": 4
+ },
+ "🌲": {
+  "asset": "object-pine-tree",
+  "file": "pine-tree.png",
+  "count": 7
+ },
+ "⛰": {
+  "asset": "object-mountain",
+  "file": "mountain.png",
+  "count": 1
+ },
+ "⛱": {
+  "asset": "object-beach-umbrella",
+  "file": "beach-umbrella.png",
+  "count": 1
+ },
+ "🏄": {
+  "asset": "object-surfboard",
+  "file": "surfboard.png",
+  "count": 1
+ },
+ "🌊": {
+  "asset": "object-wave",
+  "file": "wave.png",
+  "count": 1
+ },
+ "🎿": {
+  "asset": "object-skis",
+  "file": "skis.png",
+  "count": 2
+ },
+ "⛷": {
+  "asset": "object-skier",
+  "file": "skier.png",
+  "count": 1
+ },
+ "🏮": {
+  "asset": "object-evergreen-lantern",
+  "file": "evergreen-lantern.png",
+  "count": 1
+ },
+ "🦉": {
+  "asset": "animal-owl",
+  "file": "owl.png",
+  "count": 1
+ },
+ "🦇": {
+  "asset": "animal-bat",
+  "file": "bat.png",
+  "count": 1
+ },
+ "🐒": {
+  "asset": "animal-monkey",
+  "file": "monkey.png",
+  "count": 1
+ },
+ "🌾": {
+  "asset": "object-grass",
+  "file": "grass.png",
+  "count": 1
+ },
+ "🛸": {
+  "asset": "object-spaceship",
+  "file": "spaceship.png",
+  "count": 1
+ },
+ "🌌": {
+  "asset": "object-galaxy",
+  "file": "galaxy.png",
+  "count": 4
+ },
+ "⚡": {
+  "asset": "object-lightning",
+  "file": null,
+  "count": 7
+ },
+ "🕰": {
+  "asset": "object-clock",
+  "file": "clock.png",
+  "count": 2
+ },
+ "☀": {
+  "asset": "object-sun",
+  "file": "sun.png",
+  "count": 5
+ },
+ "🌅": {
+  "asset": "object-sunrise",
+  "file": "sunrise.png",
+  "count": 1
+ },
+ "🌇": {
+  "asset": "object-sunset",
+  "file": "sunset.png",
+  "count": 1
+ }
+}
