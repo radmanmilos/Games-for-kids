@@ -25,7 +25,7 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 - 302. DONE — T302: Group B (sequencing, animal_puzzle, maze) -> Art.fill (2026-10-31, OpenCode/Big Pickle)
 - 303. DONE — T303: Group C (phonics, piano, rhythm, classroom, fastcat) -> Art.fill (2026-10-31, OpenCode/Big Pickle)
 - 304. DONE — T304: Cat Forest data/render sites updated for Art (2026-10-31, OpenCode/Big Pickle)
-- 305. IN PROGRESS — T305: Bump to 2.6.0, build_offline + sync-docs, screenshots (target 2.6.0) (2026-10-31, OpenCode/Big Pickle)
+- 305. DONE — T305: bumped to 2.6.0, rebuilt offline, synced docs (2026-10-31, OpenCode/Big Pickle)
 - 306. NEW — T306: Adventure family canvas draws (adventure.js + adventure-modes.js) (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
 - 307. NEW — T307: Dino + FastCat canvas draws (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
 - 308. NEW — T308: Kitty-standalone canvas draws (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
