@@ -25,6 +25,33 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audioBuses.play=function(){};window.audioBuses.speakWithDuck=function(t,cb){if(cb)cb();};window.celebrate=function(){}; true`;
 
+// Art.fill() renders a glyph as an <img> (with el.dataset.emoji set), so a
+// textContent read returns '' — read the glyph through this helper instead.
+const glyph = el => (el && el.dataset.emoji) ? el.dataset.emoji : (el ? el.textContent.trim() : '');
+
+// A HUD label / picker button now paints its glyph as an <img class="art"> inside
+// a <span class="lv-emoji">, so textContent alone drops it — read the text part
+// plus the glyph back (dataset.emoji when painted, else the span's own text).
+// `h` is the headless handle from start().
+const glyphText = (h, id) => h.evalv(`(function(){
+  var el = document.getElementById('${id}');
+  if (!el) return '';
+  var g = el.querySelector('.lv-emoji');
+  var t = (el.textContent || '').trim();
+  if (!g) return t;
+  // textContent already contains the glyph when no art image was painted, so
+  // only re-append it when the span holds an <img>.
+  return t + (g.querySelector('img.art') ? (g.dataset.emoji || '') : '');
+})()`);
+const glyphTextSel = (h, sel) => h.evalv(`(function(){
+  var el = document.querySelector('${sel}');
+  if (!el) return '';
+  var g = el.querySelector('.lv-emoji');
+  var t = (el.textContent || '').trim();
+  if (!g) return t;
+  return t + (g.querySelector('img.art') ? (g.dataset.emoji || '') : '');
+})()`);
+
 (async () => {
   const h = await start({ page: '/pages/fastcat.html', tag: 'fastcat-smoke', width: 844, height: 390 });
 
@@ -258,10 +285,10 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
     th.level === 0 && th.coinEmoji === '🌺' && th.musicTheme === 'fcJungle' &&
     th.coinsTotal > 30 && th.rocks > 0 && th.banners > 0 && th.puddles > 0 && th.boosts > 0,
     JSON.stringify(th));
-  const label1 = await h.evalv(`document.getElementById('level-label').textContent`);
+  const label1 = await glyphText(h, 'level-label');
   check('level label shows number + Serbian name + emoji (1 · Прашума 🌺)',
     /^1\s·\sПрашума\s🌺$/.test(label1), JSON.stringify(label1));
-  const scoreIcon1 = await h.evalv(`document.getElementById('score-count').textContent`);
+  const scoreIcon1 = await glyphText(h, 'score-count');
   check('score icon is the level pickup emoji (star coins are gone)', scoreIcon1.indexOf('🌺') === 0, JSON.stringify(scoreIcon1));
 
   // --- Play-test 8: the cave hangs a rock CEILING (no clouds) and its warm
@@ -308,10 +335,11 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   // picking Вулкан re-themes everything.
   await h.evalv(`document.getElementById('levels-btn').click(); true`);
   await sleep(60);
+  const fourth = await glyphTextSel(h, '#level-grid .level-btn[data-level="3"]');
   const menu = JSON.parse(await h.evalv(`JSON.stringify({
     shown: document.getElementById('level-modal').classList.contains('show'),
     buttons: document.querySelectorAll('#level-grid .level-btn').length,
-    fourth: (document.querySelectorAll('#level-grid .level-btn')[3] || {}).textContent || ''
+    fourth: ${JSON.stringify(fourth)},
   })`));
   check('level picker: 🌍 opens the modal with 10 open choices (names + emoji)',
     menu.shown && menu.buttons === 10 && /Вулкан/.test(menu.fourth) && /🌋/.test(menu.fourth),
@@ -321,11 +349,11 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   const vul = JSON.parse(await h.evalv(`JSON.stringify(Object.assign(window.__fc.state(), {
     modalHidden: !document.getElementById('level-modal').classList.contains('show')
   }))`));
-  const vulLabel = await h.evalv(`document.getElementById('level-label').textContent`);
+  const vulLabel = await glyphText(h, 'level-label');
   check('picking Вулкан: re-themed (🌋 pickup, fcVolcano loop, new label), modal closed, fresh run',
     vul.level === 3 && vul.coinEmoji === '🌋' && vul.musicTheme === 'fcVolcano' &&
     vul.won === false && vul.score === 0 && vul.coinsTotal > 30 && vul.modalHidden === true &&
-    /4\s·\sВулкан\s🌋/.test(vulLabel),
+    /4\s·\sВулкан\s*🌋/.test(vulLabel),
     JSON.stringify({ vul, vulLabel }));
 
   // Same deck, different seed per level → the course itself must differ.

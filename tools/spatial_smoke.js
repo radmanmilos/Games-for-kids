@@ -50,7 +50,7 @@ const MODES = [
     `document.querySelectorAll('#spatial-choices .spatial-choice').length===2 &&
      document.querySelectorAll('#spatial-choices .spatial-choice[data-correct="1"]').length===1`));
   check('the scene draws the ball it asks about', await h.evalv(
-    `[...document.querySelectorAll('#spatial-scene .sp-item')].some(el=>el.textContent==='⚽')`));
+    `[...document.querySelectorAll('#spatial-scene .sp-item')].some(el=>el.dataset.emoji==='⚽')`));
 
   /* Every mode: the words are the roadmap's pair, the marked answer matches the
      drawn scene, a wrong tap neither advances nor is punished, and a second

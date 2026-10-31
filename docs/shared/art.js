@@ -21,7 +21,7 @@
     const u = url(g);
     return u ? '<img class="art' + (cls ? ' ' + esc(cls) : '') + '" src="' + u + '" alt="" draggable="false">' : esc(g);
   }
-  const fill = (el, g, cls) => { el.innerHTML = html(g, cls); };
+  const fill = (el, g, cls) => { el.dataset.emoji = norm(g); el.innerHTML = html(g, cls); };
   const cache = new Map();
   function image(g) {
     const u = url(g); if (!u || typeof Image === 'undefined') return null;

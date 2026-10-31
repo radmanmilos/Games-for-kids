@@ -65,7 +65,7 @@ const LIT_IDX = `Array.from(document.querySelectorAll('.piano-key')).indexOf(doc
   const chips = await h.evalv(`JSON.stringify({
     n: document.querySelectorAll('#songChips .song-chip').length,
     first: document.querySelector('#songChips .song-chip').classList.contains('on'),
-    icons: Array.from(document.querySelectorAll('#songChips .song-chip')).map(c => c.textContent).join('|'),
+    icons: Array.from(document.querySelectorAll('#songChips .song-chip')).map(c => c.dataset.emoji || c.textContent).join('|'),
     labels: Array.from(document.querySelectorAll('#songChips .song-chip')).map(c => c.getAttribute('aria-label')).join('|')
   })`);
   const chipsj = JSON.parse(chips);

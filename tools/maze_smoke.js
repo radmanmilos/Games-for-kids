@@ -49,10 +49,12 @@ const STUB = `window.softPop=function(){};window.successChime=function(){};windo
   // so `:last-child` matches no stone at all and the page expression throws.
   const shape = JSON.parse(await h.evalv(`JSON.stringify((()=>{
     const stones=[...document.querySelectorAll('.maze-stone')];
+    const firstMark = stones[0].querySelector('.maze-mark');
+    const lastMark = stones[stones.length-1].querySelector('.maze-mark');
     return {
       stones: stones.length,
-      goal: (stones[stones.length-1].textContent||'').indexOf('🏠')>=0,
-      firstMark: (stones[0].textContent||'').indexOf('🚩')>=0,
+      goal: (lastMark && lastMark.dataset.emoji)==='🏠',
+      firstMark: (firstMark && (firstMark.dataset.emoji||firstMark.textContent||'')).indexOf('🚩')>=0,
       tokenAtStart: document.querySelector('.maze-token').dataset.idx,
     };
   })())`));
@@ -101,7 +103,8 @@ const STUB = `window.softPop=function(){};window.successChime=function(){};windo
   const goalLandmark = JSON.parse(await h.evalv(`JSON.stringify((()=>{
     const stones=[...document.querySelectorAll('.maze-stone')];
     const g=stones[stones.length-1];
-    return {isGoal:g.classList.contains('maze-goal'), house:(g.textContent||'').includes('🏠')};
+    const mark=g.querySelector('.maze-mark');
+    return {isGoal:g.classList.contains('maze-goal'), house:(mark?mark.dataset.emoji:'')==='🏠'};
   })())`));
   check('the destination is a distinct house landmark',
     goalLandmark.isGoal === true && goalLandmark.house === true, JSON.stringify(goalLandmark));

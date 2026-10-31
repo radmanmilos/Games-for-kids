@@ -6,7 +6,7 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 - NEW: not started
 - IN PROGRESS: being worked on (say who/what model, and the date)
-- DONE: completed (a dated note: who = tool + model, what, why)
+- DONE: completed (a dated note: who (tool + model), what, why)
 - REVERTED / FIXED / DEFERRED / ABANDONED / RETIRED: terminal or parked (the note says why)
 
 ## How to work with this file
@@ -18,18 +18,9 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 298. DONE — T298: Group A (animals, animal_counting, candy, sorting, spatial) -> Art.fill (redo after restore; surgical in-place edits, check_fast after each group, 2026-10-31, OpenCode/Big Pickle)
-- 299. DONE — T299: Group B (maze, sequencing) -> Art.fill (2026-10-31, OpenCode/Big Pickle)
-- 300. DONE — T300: Group C (phonics, piano, rhythm, classroom, fastcat) -> Art.fill (rhythm + animal_puzzle have 0 DOM sites — pre-built HTML / canvas only; 2026-10-31, OpenCode/Big Pickle)
-- 301. NEW — T301: Cat Forest data/render sites -> Art (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
+- 305. DONE — T305: CI run 41230237703 smoke fixes — 5 smokes went red when Art.fill switched textContent→innerHTML (dataset.emoji now carries the glyph); updated animals/spatial/maze/piano/fastcat smokes to read the rendered glyph, regenerated build_offline + sync-docs, check_fast 8/8 (2026-10-31, OpenCode/Big Pickle)
+- 301. NEW — T301: Cat Forest data/render sites → Art (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
 - 302. NEW — T302: bump to 2.7.0, build_offline + sync-docs, screenshots (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
-- 299. DONE — T299: Art smoke assertion added (art_smoke.js + check_fast coverage) (2026-10-31, OpenCode/Big Pickle)
-- 300. DONE — T300: bumped to 2.5.0, rebuilt offline inventories, synced docs (2026-10-31, OpenCode/Big Pickle)
-- 301. DONE — T301: Group A (animals, animal_counting, candy, sorting, spatial) -> Art.fill (2026-10-31, OpenCode/Big Pickle)
-- 302. DONE — T302: Group B (sequencing, animal_puzzle, maze) -> Art.fill (2026-10-31, OpenCode/Big Pickle)
-- 303. DONE — T303: Group C (phonics, piano, rhythm, classroom, fastcat) -> Art.fill (2026-10-31, OpenCode/Big Pickle)
-- 304. DONE — T304: Cat Forest data/render sites updated for Art (2026-10-31, OpenCode/Big Pickle)
-- 305. DONE — T305: bumped to 2.6.0, rebuilt offline, synced docs (2026-10-31, OpenCode/Big Pickle)
 - 306. NEW — T306: Adventure family canvas draws (adventure.js + adventure-modes.js) (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
 - 307. NEW — T307: Dino + FastCat canvas draws (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
 - 308. NEW — T308: Kitty-standalone canvas draws (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)

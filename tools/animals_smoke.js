@@ -18,6 +18,7 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
 
 const CLICK = sel => `document.querySelector('${sel}').click(); true`;
 
+
 const ANIMALS = ['🐶','🐱','🐮','🦁','🐘','🐸','🐷','🦆','🦊','🐑','🐴','🐔'];
 
 // V8.1: emoji → the Serbian name the flashcard must show (mirrors game/games/animals.js
@@ -59,7 +60,7 @@ const NAME_BY_EMOJI = {
     cardAria: document.getElementById('animalCard').getAttribute('aria-label')
   })`);
   const I = JSON.parse(init);
-  check('card shows an animal illustration (SVG or emoji)', I.cardHTML.includes('<svg') || ANIMALS.some(a => I.cardHTML.includes(a)), I.cardHTML.substring(0, 80));
+  check('card shows an animal illustration (img.art or emoji)', I.cardHTML.includes('<img class="art"') || ANIMALS.some(a => I.cardHTML.includes(a)), I.cardHTML.substring(0, 80));
   check('card has pastel background', I.cardBg.length > 0, I.cardBg);
   check('next button is present', I.nextVisible === true);
   check('card is keyboard accessible (role=button, tabIndex=0)', I.cardRole === 'button' && I.cardTab === 0);
@@ -68,7 +69,8 @@ const NAME_BY_EMOJI = {
   // --- V8.1 composition (spec §26) ---
   const comp = await h.evalv(`JSON.stringify((function(){
     const card = document.getElementById('animalCard');
-    const emoji = document.getElementById('animalEmoji').textContent.trim();
+    const emojiEl = document.getElementById('animalEmoji');
+    const emoji = emojiEl ? (emojiEl.dataset.emoji || (emojiEl.textContent||'').trim()) : '';
     const name = document.getElementById('animalName').textContent.trim();
     const speak = document.getElementById('animalSpeak');
     const cs = el => getComputedStyle(el);
@@ -96,7 +98,7 @@ const NAME_BY_EMOJI = {
   const second = await h.evalv(`document.getElementById('animalCard').innerHTML`);
   check('next button changes the animal', first !== second, 'changed');
 
-  const pair2 = await h.evalv(`JSON.stringify({e:document.getElementById('animalEmoji').textContent.trim(), n:document.getElementById('animalName').textContent.trim()})`);
+  const pair2 = await h.evalv(`JSON.stringify({e:(function(){var e=document.getElementById('animalEmoji');return e?(e.dataset.emoji||(e.textContent||'').trim()):''})(), n:document.getElementById('animalName').textContent.trim()})`);
   const P2 = JSON.parse(pair2);
   check('name tracks the animal after next', NAME_BY_EMOJI[P2.e] === P2.n, P2.e + ' -> ' + P2.n);
 
@@ -125,7 +127,7 @@ const NAME_BY_EMOJI = {
   await h.evalv(CLICK('#animalNext'));
   await sleep(80);
   const stable = await h.evalv(`document.getElementById('animalCard').innerHTML`);
-  check('animal stays on screen after next', stable.includes('<svg') || ANIMALS.some(a => stable.includes(a)), stable.substring(0, 80));
+  check('animal stays on screen after next', stable.includes('<img class="art"') || ANIMALS.some(a => stable.includes(a)), stable.substring(0, 80));
 
   // --- Recognition mode ---
   const toggleExists = await h.evalv(`!!document.getElementById('recogToggle')`);
