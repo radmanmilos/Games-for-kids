@@ -18,4 +18,3 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 296. IN PROGRESS — Prepare game assets from production package (petras-world-production-assets-2026-10-29) (2026-10-31, OpenCode/Big Pickle): Cut approved bundle PNGs (161 files) to 512×512 transparent WebP via cutout pipeline per PRODUCTION_ASSET_PIPELINE.md (handle overrides/exclusions), generate art registry, update docs/inventory linkage, wire shared helper art integration as specified (proposal/art.draft.js reviewed), run validation (check_fast, targeted smokes), refresh affected review screenshots. Dependencies: resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/ (all present/approved per inventory mostly; 5 items still marked VISUAL REVIEW PENDING need user confirmation), tools/cutout.py + cutout-overrides.json.
