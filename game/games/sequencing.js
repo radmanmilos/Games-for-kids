@@ -73,8 +73,9 @@
     shuffle(list).forEach(function(it){
       var card={step:it.step, placed:false, el:null};
       var c=document.createElement('button'); c.type='button'; c.className='seq-card'; c.dataset.order=String(it.step.order);
-      c.innerHTML='<span class="seq-emoji" aria-label="'+it.step.label+'">'+it.step.emoji+'</span>';
+      c.innerHTML='<span class="seq-emoji" aria-label="'+it.step.label+'"></span>';
       enableDrag(card,c); trayEl.appendChild(c); card.el=c; tray.push(card);
+      Art.fill(card.el.querySelector('.seq-emoji'), it.step.emoji);
     });
   }
 

@@ -52,13 +52,9 @@
       // pick a random animal for variety per level
       const animal = animals[Math.floor(Math.random()*animals.length)];
       screen.dataset.animal = animal.name;
-      scene.innerHTML = Array.from({length:n}).map(()=>`<div class="count-tile" data-animal="${animal.name}" role="button" tabindex="0" aria-label="Животиња за бројање">${animal.emoji}</div>`).join('');
+      scene.innerHTML = Array.from({length:n}).map(()=>`<div class="count-tile" data-animal="${animal.name}" role="button" tabindex="0" aria-label="Животиња за бројање" data-emoji="${animal.emoji}"></div>`).join('');
       let counted = 0;
       let countingDone = false;
-
-      // update score icon to game icon (same as hub)
-      const scoreIcon = screen.querySelector('.matching-icon');
-      if (scoreIcon) scoreIcon.innerText = GAME_ICON;
 
       // phase 1: tap animals to count; hide choices until all counted
       buttons.innerHTML = '';
@@ -66,6 +62,7 @@
 
       scene.querySelectorAll('.count-tile').forEach(t=>{
         t.classList.remove('counted');
+        Art.fill(t, t.dataset.emoji);
         function countOne() {
           if (countingDone || t.classList.contains('counted')) return;
           counted++;

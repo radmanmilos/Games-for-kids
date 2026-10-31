@@ -18,7 +18,11 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 298. DONE — T298: wired Art helper globally (art-registry + shared/art on 25 game pages, .art CSS in components.css), rebuilt offline inventories, synced docs (2026-10-31, OpenCode/Big Pickle).
+- 298. DONE — T298: Group A (animals, animal_counting, candy, sorting, spatial) -> Art.fill (redo after restore; surgical in-place edits, check_fast after each group, 2026-10-31, OpenCode/Big Pickle)
+- 299. DONE — T299: Group B (maze, sequencing) -> Art.fill (2026-10-31, OpenCode/Big Pickle)
+- 300. DONE — T300: Group C (phonics, piano, rhythm, classroom, fastcat) -> Art.fill (rhythm + animal_puzzle have 0 DOM sites — pre-built HTML / canvas only; 2026-10-31, OpenCode/Big Pickle)
+- 301. NEW — T301: Cat Forest data/render sites -> Art (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
+- 302. NEW — T302: bump to 2.7.0, build_offline + sync-docs, screenshots (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
 - 299. DONE — T299: Art smoke assertion added (art_smoke.js + check_fast coverage) (2026-10-31, OpenCode/Big Pickle)
 - 300. DONE — T300: bumped to 2.5.0, rebuilt offline inventories, synced docs (2026-10-31, OpenCode/Big Pickle)
 - 301. DONE — T301: Group A (animals, animal_counting, candy, sorting, spatial) -> Art.fill (2026-10-31, OpenCode/Big Pickle)

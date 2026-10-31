@@ -382,8 +382,8 @@
   const el = (id) => document.getElementById(id);
   function updateHud() {
     const lv = LEVELS[levelIdx];
-    const s = el('score-count'); if (s) s.textContent = lv.emoji + ' ' + score;
-    const lab = el('level-label'); if (lab) lab.textContent = (levelIdx + 1) + ' · ' + lv.name + ' ' + lv.emoji;
+    const s = el('score-count'); if (s) { s.innerHTML = '<span class="lv-emoji"></span> ' + score; Art.fill(s.querySelector('.lv-emoji'), lv.emoji); }
+    const lab = el('level-label'); if (lab) { lab.innerHTML = (levelIdx + 1) + ' · ' + lv.name + ' <span class="lv-emoji"></span>'; Art.fill(lab.querySelector('.lv-emoji'), lv.emoji); }
     const f = el('meter-fill'); if (f) f.style.width = Math.round(meter) + '%';
     const bar = el('meter-bar'); if (bar) bar.setAttribute('aria-valuenow', String(Math.round(meter)));
     const b = el('super-btn');
@@ -926,7 +926,8 @@
       const btn = document.createElement('button');
       btn.className = 'level-btn';
       btn.setAttribute('data-level', String(i));
-      btn.innerHTML = '<span class="lv-emoji">' + lv.emoji + '</span>' + lv.name;
+      btn.innerHTML = '<span class="lv-emoji"></span>' + lv.name;
+      Art.fill(btn.querySelector('.lv-emoji'), lv.emoji);
       btn.addEventListener('click', () => pickLevel(i));
       grid.appendChild(btn);
     });

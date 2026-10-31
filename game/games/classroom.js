@@ -101,7 +101,8 @@
     } else {
       btn.style.background = TILE_PASTELS[index % TILE_PASTELS.length];
     }
-    btn.textContent = kind === 'colors' ? '' : (item.emoji && kind === 'shapes') ? item.emoji : (item.label || item.emoji);
+    btn.textContent = kind === 'colors' ? '' : (kind === 'shapes' ? '' : (item.label || item.emoji));
+    if (kind === 'shapes' && item.emoji) Art.fill(btn, item.emoji);
     if (item.svg) btn.innerHTML = item.svg;
     btn.addEventListener('click', () => {
       if (window.popSound) window.popSound();
@@ -128,19 +129,24 @@
     const d = $('activityShowcase');
     const c = $('activityCaption');
     if (currentActivity === 'alphabet') {
-      d.innerHTML = '<div class="show-big">' + item.label + '</div><div class="show-emoji">' + item.emoji + '</div>';
+      d.innerHTML = '<div class="show-big">' + item.label + '</div><div class="show-emoji"></div>';
+      Art.fill(d.querySelector('.show-emoji'), item.emoji);
       c.textContent = item.word;
     } else if (currentActivity === 'numbers') {
       let row = '<div class="show-big">' + item.label + '</div>';
       if (item.count > 0) {
         let spans = '';
-        for (let i = 0; i < item.count; i++) spans += '<span>' + item.emoji + '</span>';
+        for (let i = 0; i < item.count; i++) spans += '<span class="show-emoji"></span>';
         row += '<div class="show-emoji-row">' + spans + '</div>';
+        d.innerHTML = row;
+        d.querySelectorAll('.show-emoji').forEach(s => Art.fill(s, item.emoji));
+      } else {
+        d.innerHTML = row;
       }
-      d.innerHTML = row;
       c.textContent = item.sentence;
     } else if (currentActivity === 'shapes' || currentActivity === 'time' || currentActivity === 'seasons') {
-      d.innerHTML = item.svg ? '<div class="show-svg">' + item.svg + '</div>' : '<div class="show-emoji">' + item.emoji + '</div>';
+      d.innerHTML = item.svg ? '<div class="show-svg">' + item.svg + '</div>' : '<div class="show-emoji"></div>';
+      if (!item.svg) Art.fill(d.querySelector('.show-emoji'), item.emoji);
       c.textContent = item.name;
     } else if (currentActivity === 'colors') {
       d.innerHTML = '<div class="show-color" style="background:' + item.hex + '"></div>';

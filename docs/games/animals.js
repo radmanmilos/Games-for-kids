@@ -21,7 +21,7 @@ const animalNames = SERBIAN.animals;
 
 function showAnimal(){
   const a = animals[animalIdx];
-  animalEmoji.textContent = a.emoji;
+  Art.fill(animalEmoji, a.emoji);
   animalName.textContent = animalNames[a.name] || a.name;
   animalCard.style.background = a.bg;
 }
@@ -99,7 +99,7 @@ function renderRecog(){
     const el = document.createElement('button');
     el.className = 'recog-choice';
     el.style.background = a.bg;
-    el.textContent = a.emoji;
+    Art.fill(el, a.emoji);
     el.setAttribute('aria-label', animalNames[a.name] || a.name);
     el.dataset.name = a.name;
     el.addEventListener('click', ()=> recogPick(a, el));

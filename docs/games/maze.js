@@ -127,7 +127,7 @@
         var goalMark = document.createElement('span');
         goalMark.className = 'maze-mark';
         goalMark.setAttribute('aria-hidden', 'true');
-        goalMark.textContent = GOAL.emoji;
+        Art.fill(goalMark, GOAL.emoji);
         stone.appendChild(goalMark);
       }
       stage.appendChild(stone);
@@ -138,7 +138,7 @@
     tokenEl.className = 'maze-token';
     tokenEl.dataset.idx = '0';
     tokenEl.setAttribute('aria-label', START.label);
-    tokenEl.textContent = START.emoji;
+    Art.fill(tokenEl, START.emoji);
     tokenEl.style.width = (100 / cols) + '%';
     tokenEl.style.height = (100 / rows) + '%';
     stage.appendChild(tokenEl);

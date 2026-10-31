@@ -122,14 +122,15 @@
       btn.dataset.key = it.key;
       btn.dataset.correct = it.isCorrect ? '1' : '0';
       btn.setAttribute('aria-label', it.obj.name);
+      btn.dataset.emoji = it.obj.emoji;
       var span = document.createElement('span');
       span.className = 'phonics-emoji';
-      span.textContent = it.obj.emoji;
       span.setAttribute('aria-hidden', 'true');
       btn.appendChild(span);
       btn.addEventListener('click', function () { onChoose(it.isCorrect, btn); });
       elObjects.appendChild(btn);
       choices.push(btn);
+      Art.fill(span, it.obj.emoji);
     });
     correctObj = c;
   }
@@ -214,7 +215,7 @@
           misses: misses,
           correctStreak: correctStreak,
           choices: Array.prototype.slice.call(elObjects.querySelectorAll('.phonics-choice')).map(function (b) {
-            return { key: b.dataset.key, correct: b.dataset.correct === '1', emoji: b.textContent.trim() };
+            return { key: b.dataset.key, correct: b.dataset.correct === '1', emoji: b.dataset.emoji || b.textContent.trim() };
           })
         };
       },

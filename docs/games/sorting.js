@@ -71,7 +71,7 @@
       span.style.background = spec.color;
     } else {
       span.classList.add('sort-emoji');
-      span.textContent = spec.emoji;
+      Art.fill(span, spec.emoji);
     }
     return span;
   }

@@ -208,11 +208,13 @@
             if (i === 0) c.classList.add('on');
             c.dataset.song = s.id;
             c.textContent = s.emoji;
-            c.setAttribute('aria-label', s.title);
-            c.addEventListener('click', () => setSong(i));
-            chipsEl.appendChild(c);
-            return c;
-        });
+c.dataset.emoji = s.emoji;
+      c.setAttribute('aria-label', s.title);
+      c.addEventListener('click', () => setSong(i));
+      chipsEl.appendChild(c);
+      return c;
+    });
+    chipsEl.querySelectorAll('.song-chip').forEach((c) => Art.fill(c, c.dataset.emoji));
 
         $('modeFree').addEventListener('click', () => setMode('free'));
         $('modeSong').addEventListener('click', () => setMode('song'));

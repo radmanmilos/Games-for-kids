@@ -151,7 +151,7 @@
         }
         const item = document.createElement('div');
         item.className = 'sp-item';
-        item.textContent = part.emoji;
+        Art.fill(item, part.emoji);
         item.style.fontSize = `min(${part.size}vmin, ${part.size * 3}px)`;
         item.style.left = part.x + '%';
         item.style.top = part.y + '%';

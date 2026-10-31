@@ -1356,8 +1356,8 @@
     "size": 58157
   },
   "games/animal_counting.js": {
-    "sha256": "565abc775f5bf60c7cc9b57a867a6befae6898362fdf71ecbd1362494dde64ff",
-    "size": 10381
+    "sha256": "0505759726b736ed5b44bac6e216171d95ee564e1d13be885181e6457fc06002",
+    "size": 10260
   },
   "games/animal_memory.js": {
     "sha256": "5f75a666f150b893bd3caf9d2ce658e5b8cad5f1741194d1fb27c5fd4762f8f0",
@@ -1368,20 +1368,20 @@
     "size": 32281
   },
   "games/animals.js": {
-    "sha256": "c821fc7e615b17a77ab5c935c7b3f6dbc860ba5c8e4840ce5feb010f80512e15",
-    "size": 5920
+    "sha256": "4d4953829d2d4cbf9068c4caa10927f178ece95616c62b79d1db0dbba4d3ff7a",
+    "size": 5914
   },
   "games/candy.js": {
-    "sha256": "6f056f0ade18ed8e618fd18a3d74eca57f49b11ef87add037f57d41be19551b8",
-    "size": 19917
+    "sha256": "eef8b50cfeadcace0447d5801f81f06f13be25d43d4a6c0108e6a9edb5ae93cd",
+    "size": 19914
   },
   "games/cat_forest.js": {
     "sha256": "601952477a298ec958cdc783933090031f3fba3811f6255b315ac97a93deaf70",
     "size": 57728
   },
   "games/classroom.js": {
-    "sha256": "1c66d776745bf67bc1c48d12683d897f0b27eff7cfb94e9a0f6c8b0f8de41fc5",
-    "size": 15431
+    "sha256": "84e25901b5a013f147b8b7dce2bd8c73870a97213fba3ac88b8f7ade75630a6f",
+    "size": 15702
   },
   "games/coloring.js": {
     "sha256": "f5b6ba59f7dc9f44828a22e3311e7f78335017676a353edd275d8795581cbaa5",
@@ -1400,8 +1400,8 @@
     "size": 17984
   },
   "games/fastcat.js": {
-    "sha256": "08cd3710278ef002f84b051ec3de489c9deab2fbcfb3c3749009e059ee344543",
-    "size": 44546
+    "sha256": "1692e943d4a9fabeff8dbc7563fbc96be65ab71cd2df7be38d3c0141c8e48967",
+    "size": 44732
   },
   "games/kids_games.js": {
     "sha256": "7c72e6835160e4302c86f019ce9e0c640e9a4e402253953048c73a9dcb4a18b8",
@@ -1412,20 +1412,20 @@
     "size": 102360
   },
   "games/maze.js": {
-    "sha256": "99e1ccd0b6d0c5681e31a079e450034675f53d80cfeff874190b6ce892c07272",
-    "size": 11108
+    "sha256": "4c2c7e9dc02cb06d1d51d3e7044c0ce25462281257fffaa23a5979d9f59ce4b1",
+    "size": 11102
   },
   "games/ocean.js": {
     "sha256": "9916c368cb6eed03e34ba1bfd535938fb5f51aae49fd96212db6f96af5665c52",
     "size": 40414
   },
   "games/phonics.js": {
-    "sha256": "8b7b45afab9097e2f2cf5a641f1258df6e070c0f2d81d245d389b0282d8f0d4a",
-    "size": 8698
+    "sha256": "85925ee752e42e0eec6832895a76ab05476daa88d07b925af73d7348601e9c75",
+    "size": 8754
   },
   "games/piano.js": {
-    "sha256": "0129fc81dbb18dcdcb095437df52e41ed116647cb9c89772abebb1eba1ec3bdf",
-    "size": 9173
+    "sha256": "fdbff613a8efff1186c48ec496172f8b4028df1019f693e8145547d1c2e4fd18",
+    "size": 9261
   },
   "games/racing-config.js": {
     "sha256": "3370e3cb1cbcf2cb3ba4ed557f983727d1b96eccdd01819926bd846096001987",
@@ -1444,24 +1444,24 @@
     "size": 6897
   },
   "games/sequencing.js": {
-    "sha256": "a9e18c6f22a964c6ad249d700249f3c85a9009954dbb89be5c49769a4878f9ce",
-    "size": 7138
+    "sha256": "a6041b4eba54e2c57cf95f0f59788bed9ecd2ed01f09c31e21d856e990638b72",
+    "size": 7189
   },
   "games/shapes.js": {
     "sha256": "b11400f93d287590ae7a02e36de70efda94884dd0a5f753dc9d8aeb20cdebfd0",
     "size": 6930
   },
   "games/sorting.js": {
-    "sha256": "75663a0f94590a3a4addb088eac55b1c146672b1b7f4c39f3c95af6349f60708",
-    "size": 10628
+    "sha256": "848430263551e0be8deba8446178832a282f772c032066cc391518c15d952252",
+    "size": 10625
   },
   "games/space.js": {
     "sha256": "3903542c53372eb4e90ad56e910d2d204e6707e1cfeecf638e192a3d6efdddd2",
     "size": 43992
   },
   "games/spatial.js": {
-    "sha256": "ad6b48158ea8d43ba0318f79e98aeab95d0ccc60a1efceeb18481047ee864955",
-    "size": 9882
+    "sha256": "c6ba6d89058feb1371b7351212395573c19d4ab24f84bcc1861231927bd941fd",
+    "size": 9879
   },
   "games/tracing.js": {
     "sha256": "78eccc1bff448a031673fd9c7a69b9fab116286123770533c344fc0340ce2e22",
@@ -1472,8 +1472,8 @@
     "size": 17613
   },
   "manifest.json": {
-    "sha256": "471a64704bae113f641060d50eff3018b55864ca06e6810da9df4ab9ef0c233a",
-    "size": 561
+    "sha256": "639c713f82a2122a332b1308b4173d9e52457f3b731fb200ded737382690ffa4",
+    "size": 576
   },
   "pages/animal_counting.html": {
     "sha256": "3a7a106d7d2a1bd2d8870a257336c4fa862243586cd163ba90f949bfbdae82f6",
