@@ -298,3 +298,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 295 | DONE | 2026-10-30 | Housekeeping: harness scratch localized to tools/.cache/chrome (sweep + close grace), 3 new tools… | tasks-250-299.md
 296 | DONE | 2026-10-30 | Included the 30 new illustration concepts in the asset generation process: 30 CANDIDATE (prompt pending) rows… | tasks-250-299.md
 297 | DONE | 2026-10-30 | Generate images for the 30 new illustration concepts, 10 at a time, starting with the Cat Forest set.… | tasks-250-299.md
+296 | DONE | 2026-10-29 | Prepare game assets from production package (petras-world-production-assets-2026-10-29) (2026-10-31,… | tasks-250-299.md
