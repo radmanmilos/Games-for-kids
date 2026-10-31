@@ -1356,8 +1356,8 @@
     "size": 58157
   },
   "games/animal_counting.js": {
-    "sha256": "b922ece6f5b684224916dafe0ad95b6fbaaacf9b76ae61369ad1accf1ce9d70f",
-    "size": 10144
+    "sha256": "565abc775f5bf60c7cc9b57a867a6befae6898362fdf71ecbd1362494dde64ff",
+    "size": 10381
   },
   "games/animal_memory.js": {
     "sha256": "5f75a666f150b893bd3caf9d2ce658e5b8cad5f1741194d1fb27c5fd4762f8f0",
@@ -1368,12 +1368,12 @@
     "size": 32281
   },
   "games/animals.js": {
-    "sha256": "4c579aab346aa96893c945b553d856033d8784c72b5134f1589a7d0587665e51",
-    "size": 5754
+    "sha256": "c821fc7e615b17a77ab5c935c7b3f6dbc860ba5c8e4840ce5feb010f80512e15",
+    "size": 5920
   },
   "games/candy.js": {
-    "sha256": "317b2688e307e6ca433c91d2c0bdb2a184153e38f6e5e6ca4573f46a04ac5dbb",
-    "size": 19356
+    "sha256": "6f056f0ade18ed8e618fd18a3d74eca57f49b11ef87add037f57d41be19551b8",
+    "size": 19917
   },
   "games/cat_forest.js": {
     "sha256": "601952477a298ec958cdc783933090031f3fba3811f6255b315ac97a93deaf70",
@@ -1412,20 +1412,20 @@
     "size": 102360
   },
   "games/maze.js": {
-    "sha256": "4476b11ead5a712caccbbc302f69af0a9a3bba5ae5967e9d70b6f81e1e0bd054",
-    "size": 10790
+    "sha256": "99e1ccd0b6d0c5681e31a079e450034675f53d80cfeff874190b6ce892c07272",
+    "size": 11108
   },
   "games/ocean.js": {
     "sha256": "9916c368cb6eed03e34ba1bfd535938fb5f51aae49fd96212db6f96af5665c52",
     "size": 40414
   },
   "games/phonics.js": {
-    "sha256": "5d326902f0f2197c1559fb40fb3a569c9ff14373ec21550761d8d134cee7df6a",
-    "size": 8468
+    "sha256": "8b7b45afab9097e2f2cf5a641f1258df6e070c0f2d81d245d389b0282d8f0d4a",
+    "size": 8698
   },
   "games/piano.js": {
-    "sha256": "84bf09977aa31b12dbd9c4b2c5a0159ff59275bf676b76b6e668597d91a532ad",
-    "size": 8947
+    "sha256": "0129fc81dbb18dcdcb095437df52e41ed116647cb9c89772abebb1eba1ec3bdf",
+    "size": 9173
   },
   "games/racing-config.js": {
     "sha256": "3370e3cb1cbcf2cb3ba4ed557f983727d1b96eccdd01819926bd846096001987",
@@ -1444,24 +1444,24 @@
     "size": 6897
   },
   "games/sequencing.js": {
-    "sha256": "e2c802adc319db2dae6443e2c516343241db58a3772646be3567c8372622309a",
-    "size": 7005
+    "sha256": "a9e18c6f22a964c6ad249d700249f3c85a9009954dbb89be5c49769a4878f9ce",
+    "size": 7138
   },
   "games/shapes.js": {
     "sha256": "b11400f93d287590ae7a02e36de70efda94884dd0a5f753dc9d8aeb20cdebfd0",
     "size": 6930
   },
   "games/sorting.js": {
-    "sha256": "dab8f4ae996914c05f0a594651c3b373ebcc8e91ca2f5fae101391061ebaf3db",
-    "size": 10303
+    "sha256": "75663a0f94590a3a4addb088eac55b1c146672b1b7f4c39f3c95af6349f60708",
+    "size": 10628
   },
   "games/space.js": {
     "sha256": "3903542c53372eb4e90ad56e910d2d204e6707e1cfeecf638e192a3d6efdddd2",
     "size": 43992
   },
   "games/spatial.js": {
-    "sha256": "f1d2ab01d70b0f0e938a8949e44a98ec14069f559e506a0ba5d7e6734df3621c",
-    "size": 9619
+    "sha256": "ad6b48158ea8d43ba0318f79e98aeab95d0ccc60a1efceeb18481047ee864955",
+    "size": 9882
   },
   "games/tracing.js": {
     "sha256": "78eccc1bff448a031673fd9c7a69b9fab116286123770533c344fc0340ce2e22",

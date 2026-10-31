@@ -1368,8 +1368,8 @@
     "size": 32281
   },
   "games/animals.js": {
-    "sha256": "4c579aab346aa96893c945b553d856033d8784c72b5134f1589a7d0587665e51",
-    "size": 5754
+    "sha256": "c821fc7e615b17a77ab5c935c7b3f6dbc860ba5c8e4840ce5feb010f80512e15",
+    "size": 5920
   },
   "games/candy.js": {
     "sha256": "6f056f0ade18ed8e618fd18a3d74eca57f49b11ef87add037f57d41be19551b8",
@@ -1472,7 +1472,7 @@
     "size": 17613
   },
   "manifest.json": {
-    "sha256": "4a8135314fce44067eb8b9d3559e71a2edd3eeebeeb27ba03ae69774bbe1aca1",
+    "sha256": "471a64704bae113f641060d50eff3018b55864ca06e6810da9df4ab9ef0c233a",
     "size": 561
   },
   "pages/animal_counting.html": {
