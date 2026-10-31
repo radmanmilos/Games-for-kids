@@ -19,8 +19,8 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 ## Open tasks
 
 - 298. DONE — T298: wired Art helper globally (art-registry + shared/art on 25 game pages, .art CSS in components.css), rebuilt offline inventories, synced docs (2026-10-31, OpenCode/Big Pickle).
-- 299. IN PROGRESS — T299: Add Art smoke assertion (Art defined, Art.url works) (target 2.5.0) (2026-10-31, OpenCode/Big Pickle)
-- 300. NEW — T300: Bump to 2.5.0, build_offline + sync-docs, update game docs (target 2.5.0) (2026-10-31, OpenCode/Big Pickle)
+- 299. DONE — T299: Art smoke assertion added (art_smoke.js + check_fast coverage) (2026-10-31, OpenCode/Big Pickle)
+- 300. IN PROGRESS — T300: Bump to 2.5.0, build_offline + sync-docs, update game docs (target 2.5.0) (2026-10-31, OpenCode/Big Pickle)
 - 301. NEW — T301: Group A emoji-field render sites (animals, animal_counting, candy, sorting, spatial) (target 2.6.0) (2026-10-31, OpenCode/Big Pickle)
 - 302. NEW — T302: Group B emoji-field render sites (sequencing, animal_puzzle, maze) (target 2.6.0) (2026-10-31, OpenCode/Big Pickle)
 - 303. NEW — T303: Group C emoji-field render sites (phonics, piano, rhythm, classroom, fastcat) (target 2.6.0) (2026-10-31, OpenCode/Big Pickle)
