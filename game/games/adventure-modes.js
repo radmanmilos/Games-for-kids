@@ -258,7 +258,8 @@
                 for (let k = 0; k < 2; k++) {
                     const fx = gx + 18 + ((k * 37 + t * 22) % Math.max(1, gapEnd - gx - 36));
                     const fy = canvas.height - 26 - ((k * 19 + Math.sin(t * 1.6 + k * 2.4) * 6) % (depth * 0.55));
-                    ctx.fillText('🐟', fx, fy);
+                    if (window.Art && window.Art.draw) window.Art.draw(ctx, '🐟', fx, fy, 22);
+                    else ctx.fillText('🐟', fx, fy);
                 }
             } else if (hazard === 'spikes') {
                 ctx.fillStyle = 'rgba(18,20,30,0.92)';

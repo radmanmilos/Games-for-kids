@@ -191,7 +191,10 @@
     ctx.beginPath(); ctx.rect(442,gy-92,16,10); ctx.stroke();
     ctx.fillStyle='rgba(255,255,255,.85)';
     ctx.font='16px sans-serif';
-    [[180,60],[330,44],[440,90],[560,60],[90,110],[260,120]].forEach(([x,y])=>ctx.fillText('❄',x,y));
+    [[180,60],[330,44],[440,90],[560,60],[90,110],[260,120]].forEach(([x,y])=>{
+      if (window.Art && window.Art.draw) window.Art.draw(ctx, '❄', x, y, 16);
+      else ctx.fillText('❄', x, y);
+    });
   }
 
   function paint(ctx, scene){
@@ -298,7 +301,9 @@
       const x=140+i*125;
       ctx.fillStyle='rgba(0,0,0,.16)';
       ctx.beginPath(); ctx.ellipse(x,gy+24,32,9,0,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle='#000'; ctx.fillText(a,x,gy+12);
+      ctx.fillStyle='#000';
+      if (window.Art && window.Art.draw) window.Art.draw(ctx, a, x, gy+12, 64);
+      else ctx.fillText(a,x,gy+12);
     });
 
     ctx.strokeStyle='#fff'; ctx.lineWidth=9;

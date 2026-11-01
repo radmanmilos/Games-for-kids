@@ -1544,15 +1544,16 @@ function drawPitHazards() {
                 const off = Math.sin(t * 2 + k) * 4;
                 ctx.fillRect(gx + 4 + off, ry, gapEnd - gx - 8, 2);
             }
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '22px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            for (let k = 0; k < 2; k++) {
-                const fx = gx + 18 + ((k * 37 + t * 22) % Math.max(1, gapEnd - gx - 36));
-                const fy = canvas.height - 26 - ((k * 19 + Math.sin(t * 1.6 + k * 2.4) * 6) % (depth * 0.55));
-                ctx.fillText('🐟', fx, fy);
-            }
+ctx.fillStyle = '#ffffff';
+                ctx.font = '22px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                for (let k = 0; k < 2; k++) {
+                    const fx = gx + 18 + ((k * 37 + t * 22) % Math.max(1, gapEnd - gx - 36));
+                    const fy = canvas.height - 26 - ((k * 19 + Math.sin(t * 1.6 + k * 2.4) * 6) % (depth * 0.55));
+                    if (window.Art && window.Art.draw) window.Art.draw(ctx, '🐟', fx, fy, 22);
+                    else ctx.fillText('🐟', fx, fy);
+                }
         } else if (hazard === 'spikes') {
             ctx.fillStyle = 'rgba(18,20,30,0.92)';
             ctx.fillRect(gx, gy, gapEnd - gx, depth);
@@ -1691,7 +1692,8 @@ function draw() {
             ctx.font = '36px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(theme.collectible, c.x, cy + 1);
+            if (window.Art && window.Art.draw) window.Art.draw(ctx, theme.collectible, c.x, cy + 1, 36);
+            else ctx.fillText(theme.collectible, c.x, cy + 1);
             drawSparkle(c.x, cy);
             ctx.restore();
         }
@@ -2294,7 +2296,8 @@ function drawGoal(type, c) {
         ctx.font = 'bold 26px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('⛏', c.x + c.width / 2, c.y + 28);
+        if (window.Art && window.Art.draw) window.Art.draw(ctx, '⛏', c.x + c.width / 2, c.y + 28, 26);
+        else ctx.fillText('⛏', c.x + c.width / 2, c.y + 28);
     } else if (type === 'cave') {
         ctx.fillStyle = '#5a4a3a';
         ctx.beginPath();

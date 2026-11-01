@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "7b731cb8b64682af3f5cece22e5e103af1c4c614",
+  "commitSha": "48d9099d824ca0008927641c6c2fb95b70214e78",
   "browser": {
     "product": "Chrome/156.0.8078.49",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-01T13:17:56.366Z",
+  "generatedAt": "2026-11-01T14:26:48.658Z",
   "pageSet": [
     "hub",
     "animals",
@@ -216,7 +216,7 @@
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 27960
+      "bytes": 27537
     },
     {
       "file": "animal_puzzle_phone-landscape.png",
@@ -225,7 +225,7 @@
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 56579
+      "bytes": 56096
     },
     {
       "file": "animal_puzzle_tablet-portrait.png",
@@ -234,7 +234,7 @@
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 69325
+      "bytes": 68445
     },
     {
       "file": "animal_puzzle_tablet-landscape.png",
@@ -243,7 +243,7 @@
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 73554
+      "bytes": 72821
     },
     {
       "file": "classroom_phone-portrait.png",
@@ -720,7 +720,7 @@
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 53504
+      "bytes": 53349
     },
     {
       "file": "driving_phone-landscape.png",
@@ -729,7 +729,7 @@
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 60646
+      "bytes": 61312
     },
     {
       "file": "driving_tablet-portrait.png",
@@ -738,7 +738,7 @@
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 81507
+      "bytes": 82668
     },
     {
       "file": "driving_tablet-landscape.png",
@@ -747,7 +747,7 @@
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 83413
+      "bytes": 84490
     },
     {
       "file": "ocean_phone-portrait.png",
@@ -756,7 +756,7 @@
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 53693
+      "bytes": 54187
     },
     {
       "file": "ocean_phone-landscape.png",
@@ -765,7 +765,7 @@
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 58611
+      "bytes": 58860
     },
     {
       "file": "ocean_tablet-portrait.png",
@@ -774,7 +774,7 @@
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 81788
+      "bytes": 82196
     },
     {
       "file": "ocean_tablet-landscape.png",
@@ -783,7 +783,7 @@
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 90521
+      "bytes": 90709
     },
     {
       "file": "dino_phone-portrait.png",
@@ -828,7 +828,7 @@
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 54765
+      "bytes": 53947
     },
     {
       "file": "space_phone-landscape.png",
@@ -837,7 +837,7 @@
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 71167
+      "bytes": 70726
     },
     {
       "file": "space_tablet-portrait.png",
@@ -846,7 +846,7 @@
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 91879
+      "bytes": 91067
     },
     {
       "file": "space_tablet-landscape.png",
@@ -855,7 +855,7 @@
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 96360
+      "bytes": 96421
     },
     {
       "file": "racing3d_phone-portrait.png",

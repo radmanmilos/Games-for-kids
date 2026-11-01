@@ -1164,7 +1164,8 @@
                     ctx.font = (cfg.pickupFontSize || 54) + 'px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    ctx.fillText(theme.collectible, c.x, cy + 1);
+                    if (window.Art && window.Art.draw) window.Art.draw(ctx, theme.collectible, c.x, cy + 1, cfg.pickupFontSize || 54);
+                    else ctx.fillText(theme.collectible, c.x, cy + 1);
                     drawSparkle(c.x, cy);
                     ctx.restore();
                 }
@@ -1268,7 +1269,8 @@
                     ctx.font = (cfg.heroFontSize || 48) + 'px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
-                    ctx.fillText(cfg.hero, 0, 0);
+                    if (window.Art && window.Art.draw) window.Art.draw(ctx, cfg.hero, 0, 0, cfg.heroFontSize || 48);
+                    else ctx.fillText(cfg.hero, 0, 0);
                 }
             }
             ctx.restore();

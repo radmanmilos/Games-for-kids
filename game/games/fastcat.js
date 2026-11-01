@@ -736,7 +736,8 @@
       ctx.fillStyle = 'rgba(255,255,255,.75)';
       ctx.fill();
       ctx.font = '22px serif';
-      ctx.fillText(lv.emoji, 0, 1);
+      if (window.Art && window.Art.draw) window.Art.draw(ctx, lv.emoji, 0, 1, 22);
+      else ctx.fillText(lv.emoji, 0, 1);
       ctx.restore();
     }
     // bolts (powerup pickups)
