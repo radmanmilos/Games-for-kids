@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **298**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **326**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -299,3 +299,11 @@ One line per task: `number | status | date | title | archive file`. Every finish
 296 | DONE | 2026-10-30 | Included the 30 new illustration concepts in the asset generation process: 30 CANDIDATE (prompt pending) rows… | tasks-250-299.md
 297 | DONE | 2026-10-30 | Generate images for the 30 new illustration concepts, 10 at a time, starting with the Cat Forest set.… | tasks-250-299.md
 296 | DONE | 2026-10-29 | Prepare game assets from production package (petras-world-production-assets-2026-10-29) (2026-10-31,… | tasks-250-299.md
+305 | DONE | 2026-10-31 | T305: CI run 41230237703 smoke fixes — 5 smokes went red when Art.fill switched textContent→innerHTML… | tasks-300-399.md
+312 | DONE | 2026-11-01 | T312: shared/celebration.js celebrate() overlay glyph -> Art.fill; navigation.js has no glyph sites… | tasks-300-399.md
+313 | DONE | 2026-11-01 | T313: compare.js cmp-item spans, kids_games.js shapes tile + count-row emojis, animal_memory.js card-front… | tasks-300-399.md
+314 | DONE | 2026-11-01 | T314: maze.js motifs + start flag, piano.js song-chip icon -> Art.fill; build_offline + sync-docs; check_fast… | tasks-300-399.md
+315 | DONE | 2026-11-01 | T315: parent.html — the only emoji there (📊 📥 🔄 🗑 🔊) have no art stem and stay opaque textContent by… | tasks-300-399.md
+317 | DONE | 2026-11-01 | T317: data/serbian.js — emoji fields already fall back correctly: Art.url() returns null for unregistered… | tasks-300-399.md
+318 | DONE | 2026-11-01 | T318: racing3d-config.js — no emoji render sites; decor glyphs are consumed by racing3d.mjs:815 as… | tasks-300-399.md
+319 | DONE | 2026-11-01 | T319: excluded assets — the 6 excluded stems (⭐ 🎉 🌵 night-sky sunrise sunset) are NOT on disk, so Art.url()… | tasks-300-399.md

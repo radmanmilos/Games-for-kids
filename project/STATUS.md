@@ -2,39 +2,43 @@
 
 *Overwrite this file at the end of every session (never append). Budget: 6 KB, checked by `node tools/check_docs.js`.*
 
-**Last updated:** 2026-10-31 **App version:** 2.4.0 (`game/manifest.json`) **Repository:** https://github.com/radmanmilos/Games-for-kids
+**Last updated:** 2026-11-01 **App version:** 2.7.0 (`game/manifest.json`) **Repository:** https://github.com/radmanmilos/Games-for-kids
 
 ## Where we are
 
-- **Cat Forest 2.4.0 shipped** — commit `9a4af99`, CI green. Tasks 261-283 (CF-00-CF-21) DONE/archived. CF-22 (real-device play-test) remains and belongs to the user. The "look & feel" phase is parked at the user's request.
-- **Tasks 284-294 DONE** (racing3d steering, smoke hardening, de-flake, asset pipeline, resolution pass, asset bundle reconciliation through cactus/parrot handoff).
-- **Task 295 DONE** (housekeeping: harness scratch localized, 3 new tools, bundle↔inventory repaired, 131 PNGs, 0 problems).
-- **Task 296 DONE** (production assets): 155 approved masters cut to 512×512 WebP (q85) via `tools/cutout.py` with overrides (4 classical, 6 excluded). Copied to `game/assets/art/` (155 files). Generated `game/data/art-registry.js` (125 glyph→stem) and `game/shared/art.js` (helper, emoji fallback; Node test 8/8). Updated `sw-cache-list.json` (417) + `offline-manifest.json` (416). `sync-docs.sh` mirrored game/→docs/. `check_fast` 8/8 green. Decisions recorded in `DECISIONS.md` (WebP q85, Cat Forest painted art allowed, 13.4" tablet, merges confirmed, 5 pending rows approved as-is). Runtime game migration (209 textContent sites) deferred to follow-up.
-- **Pages gated on CI (task 274):** CI's `pages` job publishes `docs/` only from a green push on `main`.
+- **Art migration is essentially complete.** Every emoji render site in `game/` now paints through the shared `Art` helper (`game/shared/art.js`):
+  - `Art.fill(el, g, cls)` — textContent sites → `<img class="art">` with `dataset.emoji` set (12 games + shared/celebration.js + compare/kids_games/animal_memory/maze/piano)
+  - `Art.fillAttr(el, attr, g, cls)` — CSS `::before{content:attr(data-e)}` sites (Cat Forest: cats, gifts, decor, flies, fx, plates, plate-treats, treats, trees, stars, book cats; 19 CSS sites converted in `cat_forest.html`)
+  - `Art.draw(ctx, g, x, y, size)` — canvas fillText sites (adventure, adventure-modes, kitty-standalone, animal_puzzle, fastcat)
+  - `Art.html(g, cls)` — HTML-string sites (kids_games tiles, animal_memory card fronts)
+- **Deliberately left as opaque textContent** (no art stem exists): the excluded family ⭐ 🎉 🌵 🌙 ☀️ 🌧️ 📖 ✖️ 🐾 ✨ 🐚 ⛏ ❄ 📊 📥 🔄 🗑 🔊, plus static Serbian labels.
+- **`Art.url()` returns null for unregistered glyphs** → `Art.html()` emits the escaped glyph, so `data/serbian.js` emoji fields need no change (T317).
+- **`racing3d.mjs` decor billboards** keep `fillText`: the emoji is rendered to a 128×128 canvas then wrapped in a `THREE.CanvasTexture`, so `Art.draw`'s drawImage path is not usable there (T308/T318).
+- **Committed:** `7b731cb` (T305 smoke fixes), `48d9099` (T301-T302 Cat Forest + 2.7.0), `0ca3c0e` (T306-T310 canvas), `248435c` (T312-T314). All pushed to `main`; CI green.
+- **Cat Forest smoke:** 192 checks, 0 fail. `check_fast` 8/8 green. Full screenshot battery (108 shots) refreshed under `resources/General_reviews/Screenshot_Review/` (tasks 302, 310).
+- **Tasks 298-305, 312-319 DONE/archived.** Remaining: T320-T325 (audit remaining sites, verify WebP coverage, bump 3.0.0 + full battery, final docs/DECISIONS).
 
 ## Asset generation
 
-- Production art: **155 WebP** under `game/assets/art/` (and `docs/assets/art/`), traced to approved masters in `resources/.../assets_work_in_progress_bundle/` (1024² PNG masters retained).
-- 6 masters excluded as non-cut-outs (night-sky, sunrise, sunset, galaxy, sun, cards-pattern) — ship as opaque images/CSS per pipeline spec.
-- Inventory: 180 rows. 5 previously pending (butterfly, soap, acorn, sunflower, mushroom) approved as-is.
-- Shared helper `game/shared/art.js` + registry `game/data/art-registry.js` ready; game migration pending.
-- Next: runtime migration of the 16 data-driven games + 9 canvas files + Cat Forest (separate task).
+- Production art: **155 WebP** under `game/assets/art/` (and `docs/assets/art/`).
+- `game/data/art-registry.js` — 125 + 12 (Cat Forest) = **137 glyph→stem** entries.
+- `game/shared/art.js` — `url`, `html`, `fill`, `fillAttr`, `image`, `draw`, `_BASE`. `fillAttr` keeps the attribute intact so CSS `::before` and `getAttribute(attr)` both still work.
 
 ## Validate
 
-- `node tools/check_fast.js` — **8/8 green** on 2026-10-31.
-- `node tools/audit_bundle.js` — PROBLEMS (0), exit 0 (last run task 295).
+- `node tools/check_fast.js` — **8/8 green** on 2026-11-01.
+- All affected smokes pass: animals, spatial, maze, piano, fastcat, cat_forest, compare, animal_memory.
 
 ## Next steps
 
-1. Runtime migration: wire `Art.html/fill/draw` into the 16 data-driven games by occurrence count, then 9 canvas files, then Cat Forest.
-2. CF-22 (real-device play-test) belongs to the user.
-3. User visual review of the 5 previously-pending candidates is now folded into the shipped WebPs.
+1. T320-T322: audit remaining emoji render sites, document exceptions, verify every registered glyph has a WebP.
+2. T323-T325: bump to 3.0.0, full battery (`check_release` + `play_matrix` + `axe`), full screenshot battery, archive, update `DECISIONS.md`.
 
 ## Rules of the road
 
 - `game/` changes → `node tools/build_offline.js` FIRST, then `tools/sync-docs.sh`, then refresh affected review screenshots. Never edit `docs/` by hand.
 - Never commit Cloudflare credentials (`tools/vendor/` is git-ignored). Never push to `main` without the user asking.
 - Keep `resources/` and `tools/` for dev assets and tooling; `game/` must stay deployable-only.
-- Runtime scratch goes under git-ignored `tools/.cache/`, never system temp (task 295).
+- Runtime scratch goes under git-ignored `tools/.cache/`, never system temp.
 - Before touching a risky area read its lesson file (table in `AGENTS.md`). Locked decisions: `project/DECISIONS.md`. Process: `project/PROCESS.md`.
+- **Tests must be updated to follow implementation changes** — when the rendered output changes, the assertions that read it are stale and must be updated in the same change (`project/lessons/testing-harness.md`, T305).

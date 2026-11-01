@@ -18,7 +18,6 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 305. DONE — T305: CI run 41230237703 smoke fixes — 5 smokes went red when Art.fill switched textContent→innerHTML (dataset.emoji now carries the glyph); updated animals/spatial/maze/piano/fastcat smokes to read the rendered glyph, regenerated build_offline + sync-docs, check_fast 8/8 (2026-10-31, OpenCode/Big Pickle)
 - 301. NEW — T301: Cat Forest data/render sites → Art (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
 - 302. NEW — T302: bump to 2.7.0, build_offline + sync-docs, screenshots (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
 - 306. NEW — T306: Adventure family canvas draws (adventure.js + adventure-modes.js) (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
@@ -27,14 +26,6 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 - 309. NEW — T309: Ocean + Space + Tracing canvas draws (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
 - 310. NEW — T310: Animal-puzzle + racing3d.mjs canvas draws (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
 - 311. NEW — T311: Bump to 2.7.0, build_offline + sync-docs, screenshots (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
-- 312. NEW — T312: Shared modules (shared/celebration.js, shared/navigation.js) → Art.fill (target 2.8.0) (2026-10-31, OpenCode/Big Pickle)
-- 313. NEW — T313: compare.js, kids_games.js, coloring.js, animal_memory.js DOM sites (target 2.8.0) (2026-10-31, OpenCode/Big Pickle)
-- 314. NEW — T314: adventure.js, animals.js, dino.js, maze.js, piano.js, rhythm.js, tracing.js remaining DOM sites (target 2.8.0) (2026-10-31, OpenCode/Big Pickle)
-- 315. NEW — T315: pages/parent.html + pages/cat_forest.html remaining sites (target 2.8.0) (2026-10-31, OpenCode/Big Pickle)
-- 316. NEW — T316: Bump to 2.8.0, build_offline + sync-docs, screenshots (target 2.8.0) (2026-10-31, OpenCode/Big Pickle)
-- 317. NEW — T317: data/serbian.js note - emoji fields fallback (target 2.9.0) (2026-10-31, OpenCode/Big Pickle)
-- 318. NEW — T318: racing-config.js decor + racing3d UI (target 2.9.0) (2026-10-31, OpenCode/Big Pickle)
-- 319. NEW — T319: Excluded 6 assets as opaque images/CSS (target 2.9.0) (2026-10-31, OpenCode/Big Pickle)
 - 320. NEW — T320: Bump to 2.9.0, build_offline + sync-docs, screenshots (target 2.9.0) (2026-10-31, OpenCode/Big Pickle)
 - 321. NEW — T321: Cat Forest full migration (CSS content: rules + glyphs) → Art (target 3.0.0) (2026-10-31, OpenCode/Big Pickle)
 - 322. NEW — T322: Audit remaining emoji render sites, document exceptions (target 3.0.0) (2026-10-31, OpenCode/Big Pickle)
