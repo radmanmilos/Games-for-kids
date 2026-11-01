@@ -80,6 +80,7 @@ const NON_GAME_SMOKES = new Set([
   'touch_interruption_c_smoke', 'touch_interruption_d_smoke',
   'runtime_error_smoke', 'visual_compare_smoke',
   'audio_buses_smoke',
+  'art_smoke',
 ]);
 const allSmokeNames = fs.readdirSync(path.join(ROOT, 'tools'))
   .filter(n => n.endsWith('_smoke.js'))
@@ -101,6 +102,9 @@ say(runner.includes('const BROAD = () => allSmokes();'),
   'if BROAD is gone, every game/shared/* exclusion above is unjustified');
 say(fs.existsSync(path.join(ROOT, 'tools', 'audio_buses_smoke.js')),
   'the audio_buses smoke excluded above really exists',
+  'NON_GAME_SMOKES may only exclude smokes that are present');
+say(fs.existsSync(path.join(ROOT, 'tools', 'art_smoke.js')),
+  'the art smoke excluded above really exists',
   'NON_GAME_SMOKES may only exclude smokes that are present');
 
 /* A smoke named for a game that does not exist is a stale reference. */

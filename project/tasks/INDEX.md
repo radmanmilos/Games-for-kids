@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **327**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **329**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -318,3 +318,9 @@ One line per task: `number | status | date | title | archive file`. Every finish
 316 | RETIRED | 2026-11-01 | T316 (bump to 2.8.0) is superseded: the 2.8.0 DOM segment shipped inside 2.7.0, so the boundary task was… | tasks-300-399.md
 320 | RETIRED | 2026-11-01 | T320 (bump to 2.9.0) is superseded and merged into T324: the 2.8.x/2.9.x segments already shipped in… | tasks-300-399.md
 326 | DONE | 2026-11-01 | T326: review of the 2.7.x Art migration (T298 onward) + fixes. Found and fixed 6 defects: Cat Forest… | tasks-300-399.md
+321 | DONE | 2026-11-01 | T321: Cat Forest finished — the last CSS-only glyph sites now paint too. paintStaticGlyphs() runs once after… | tasks-300-399.md
+322 | DONE | 2026-11-01 | T322: audited every remaining emoji render site in game/ (tools/.cache/emoji-audit.txt). Fixed the… | tasks-300-399.md
+323 | DONE | 2026-11-01 | T323: permanent hard-fail guard in tools/validate_pages.js (registry/metadata stage): evaluates… | tasks-300-399.md
+327 | DONE | 2026-11-01 | T327: verified T301-T311 against the code and closed the gaps. T308 had missed two canvas emoji in… | tasks-300-399.md
+324 | DONE | 2026-11-01 | T324: bumped game/manifest.json to 3.0.0; check_release green (release gate + whole battery); play_matrix 270… | tasks-300-399.md
+325 | DONE | 2026-11-01 | T325: DECISIONS.md final note added for the 3.0.0 migration; per-game docs unchanged (art swap is… | tasks-300-399.md

@@ -85,3 +85,8 @@ The Мала тркачица (Little Racer) game is fully built (Stages 1–5, 
 - **Tablet target:** 13.4" panel. 512 px covers within a 1.1x enlargement; no change needed.
 - **Draft map merges:** confirmed - celebration merges celebration/star/sparkle glyphs; comet merges comet/shooting-star.
 - **Pending visual-review rows (butterfly, soap, acorn, sunflower, mushroom):** approved as-is; ship through the cutout pipeline without regeneration.
+
+## Emoji-to-asset migration complete (2026-11-01, task 324/325, 3.0.0)
+- All registered glyphs now paint the illustrated WebP via game/shared/art.js (url/html/fill/fillAttr/image/draw), with emoji as the universal fallback. Registered-glyph coverage is a hard-fail guard in tools/validate_pages.js (registry/metadata stage).
+- Exceptions (hub/nav tile icons, shell chrome, composite sentence/HUD text, hidden legacy nodes, data fields, unregistered glyphs) are documented in project/reference/emoji-audit.md; hub/nav migration parked as task 328 pending user decision.
+- Version 3.0.0 (B bump = major release) ships the migration.
