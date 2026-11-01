@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-01T15:48:34.634Z
+- Генерисано / Generated: 2026-11-01T15:53:03.908Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -48,10 +48,10 @@
 | `driving_phone-portrait.png` | Возила | `/pages/driving.html` | 390×844 | портрет | — | 01.11.2026. 15:26:48 | 310 |
 | `driving_tablet-landscape.png` | Возила | `/pages/driving.html` | 1180×820 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
 | `driving_tablet-portrait.png` | Возила | `/pages/driving.html` | 820×1180 | портрет | — | 01.11.2026. 15:26:48 | 310 |
-| `explorer_phone-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 844×390 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
-| `explorer_phone-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 390×844 | портрет | — | 01.11.2026. 15:26:48 | 310 |
-| `explorer_tablet-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 1180×820 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
-| `explorer_tablet-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 820×1180 | портрет | — | 01.11.2026. 15:26:48 | 310 |
+| `explorer_phone-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 844×390 | пејзаж | — | 01.11.2026. 16:53:03 | 327 |
+| `explorer_phone-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 390×844 | портрет | — | 01.11.2026. 16:53:03 | 327 |
+| `explorer_tablet-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 1180×820 | пејзаж | — | 01.11.2026. 16:53:03 | 327 |
+| `explorer_tablet-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 820×1180 | портрет | — | 01.11.2026. 16:53:03 | 327 |
 | `fastcat_phone-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 844×390 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
 | `fastcat_phone-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 390×844 | портрет | — | 01.11.2026. 15:26:48 | 310 |
 | `fastcat_tablet-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 1180×820 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
@@ -80,10 +80,10 @@
 | `phonics_phone-portrait.png` | Слова и звуци | `/pages/phonics.html` | 390×844 | портрет | — | 01.11.2026. 15:26:48 | 310 |
 | `phonics_tablet-landscape.png` | Слова и звуци | `/pages/phonics.html` | 1180×820 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
 | `phonics_tablet-portrait.png` | Слова и звуци | `/pages/phonics.html` | 820×1180 | портрет | — | 01.11.2026. 15:26:48 | 310 |
-| `piano_phone-landscape.png` | Клавир | `/pages/piano.html` | 844×390 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
-| `piano_phone-portrait.png` | Клавир | `/pages/piano.html` | 390×844 | портрет | — | 01.11.2026. 15:26:48 | 310 |
-| `piano_tablet-landscape.png` | Клавир | `/pages/piano.html` | 1180×820 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
-| `piano_tablet-portrait.png` | Клавир | `/pages/piano.html` | 820×1180 | портрет | — | 01.11.2026. 15:26:48 | 310 |
+| `piano_phone-landscape.png` | Клавир | `/pages/piano.html` | 844×390 | пејзаж | — | 01.11.2026. 16:53:03 | 327 |
+| `piano_phone-portrait.png` | Клавир | `/pages/piano.html` | 390×844 | портрет | — | 01.11.2026. 16:53:03 | 327 |
+| `piano_tablet-landscape.png` | Клавир | `/pages/piano.html` | 1180×820 | пејзаж | — | 01.11.2026. 16:53:03 | 327 |
+| `piano_tablet-portrait.png` | Клавир | `/pages/piano.html` | 820×1180 | портрет | — | 01.11.2026. 16:53:03 | 327 |
 | `racing3d_phone-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 844×390 | пејзаж | — | 01.11.2026. 16:48:34 | 326 |
 | `racing3d_phone-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 390×844 | портрет | — | 01.11.2026. 16:48:34 | 326 |
 | `racing3d_tablet-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 1180×820 | пејзаж | — | 01.11.2026. 16:48:34 | 326 |

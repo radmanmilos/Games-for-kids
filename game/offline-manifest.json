@@ -1408,8 +1408,8 @@
     "size": 5268
   },
   "games/kitty-standalone.js": {
-    "sha256": "0f07dbc6fb2172b8722e49a4fafad2ca496a829e72e6900f6a16df5cbca49846",
-    "size": 102702
+    "sha256": "2f67aa1765bf6c10338f7383d343008128496863008a418dcad255dfa3286482",
+    "size": 102899
   },
   "games/maze.js": {
     "sha256": "4c2c7e9dc02cb06d1d51d3e7044c0ce25462281257fffaa23a5979d9f59ce4b1",
@@ -1424,8 +1424,8 @@
     "size": 8754
   },
   "games/piano.js": {
-    "sha256": "fdbff613a8efff1186c48ec496172f8b4028df1019f693e8145547d1c2e4fd18",
-    "size": 9261
+    "sha256": "7e943609c9a9049e27e37832a2e0df4549d201449b5cda12fa496a1492bae7fc",
+    "size": 9254
   },
   "games/racing-config.js": {
     "sha256": "3370e3cb1cbcf2cb3ba4ed557f983727d1b96eccdd01819926bd846096001987",

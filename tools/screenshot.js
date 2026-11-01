@@ -23,6 +23,12 @@
  *        node tools/screenshot.js --review=<name> [--task=<id>]
  *        node tools/screenshot.js --review=<name> --pages=animals --task=250
  *
+ *      - capture-manifest.json — a record of THE LAST capture run only: its
+ *        `pageSet`, `generatedAt` and `commitSha`. A `--pages` refresh rewrites it
+ *        for the refreshed subset (so it may list fewer pages than the folder
+ *        holds). Per-file truth is in screenshot-provenance.json + the TOC; only
+ *        `visual_compare.js` reads the manifest, and from its own baseline dir.
+ *
  * The review folder is committed like normal code (a screen change must keep its
  * screenshots fresh — see AGENTS.md rule). Use a STABLE generic name for the
  * battery (convention: `Screenshot_Review`) — later tasks re-shoot into the same

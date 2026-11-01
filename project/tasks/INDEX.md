@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **326**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **327**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -307,3 +307,14 @@ One line per task: `number | status | date | title | archive file`. Every finish
 317 | DONE | 2026-11-01 | T317: data/serbian.js — emoji fields already fall back correctly: Art.url() returns null for unregistered… | tasks-300-399.md
 318 | DONE | 2026-11-01 | T318: racing3d-config.js — no emoji render sites; decor glyphs are consumed by racing3d.mjs:815 as… | tasks-300-399.md
 319 | DONE | 2026-11-01 | T319: excluded assets — the 6 excluded stems (⭐ 🎉 🌵 night-sky sunrise sunset) are NOT on disk, so Art.url()… | tasks-300-399.md
+301 | DONE | 2026-11-01 | T301: Cat Forest render sites → Art.fillAttr (cats, accessories, gifts, fly/fx, decor, plate treats, book… | tasks-300-399.md
+302 | DONE | 2026-11-01 | T302: bump 2.7.0, build_offline, sync-docs, screenshots — shipped as commit 48d9099. (2026-11-01,… | tasks-300-399.md
+306 | DONE | 2026-11-01 | T306: adventure.js (collectible + hero) and adventure-modes.js (water-hazard fish) canvas draws → Art.draw.… | tasks-300-399.md
+307 | DONE | 2026-11-01 | T307: fastcat canvas draws (level badge) + HUD/score/level-label/picker glyphs → Art.draw / Art.fill. dino.js… | tasks-300-399.md
+308 | DONE | 2026-11-01 | T308: kitty-standalone canvas draws — water fish, collectible, shovel, cave ✨ and arch 🐚 → Art.draw (the… | tasks-300-399.md
+309 | DONE | 2026-11-01 | T309: verified ocean.js/space.js/tracing.js have no emoji canvas sites — their only fillText calls are the… | tasks-300-399.md
+310 | DONE | 2026-11-01 | T310: animal_puzzle (snow ❄ + animal row) and racing3d.mjs (collectible HUD) → Art.draw/Art.fill; the HUD… | tasks-300-399.md
+311 | DONE | 2026-11-01 | T311: bump to 2.7.0, build_offline + sync-docs + screenshots — folded into commit 0ca3c0e (T306-T310).… | tasks-300-399.md
+316 | RETIRED | 2026-11-01 | T316 (bump to 2.8.0) is superseded: the 2.8.0 DOM segment shipped inside 2.7.0, so the boundary task was… | tasks-300-399.md
+320 | RETIRED | 2026-11-01 | T320 (bump to 2.9.0) is superseded and merged into T324: the 2.8.x/2.9.x segments already shipped in… | tasks-300-399.md
+326 | DONE | 2026-11-01 | T326: review of the 2.7.x Art migration (T298 onward) + fixes. Found and fixed 6 defects: Cat Forest… | tasks-300-399.md

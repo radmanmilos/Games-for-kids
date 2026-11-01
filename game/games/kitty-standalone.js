@@ -1544,16 +1544,16 @@ function drawPitHazards() {
                 const off = Math.sin(t * 2 + k) * 4;
                 ctx.fillRect(gx + 4 + off, ry, gapEnd - gx - 8, 2);
             }
-ctx.fillStyle = '#ffffff';
-                ctx.font = '22px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                for (let k = 0; k < 2; k++) {
-                    const fx = gx + 18 + ((k * 37 + t * 22) % Math.max(1, gapEnd - gx - 36));
-                    const fy = canvas.height - 26 - ((k * 19 + Math.sin(t * 1.6 + k * 2.4) * 6) % (depth * 0.55));
-                    if (window.Art && window.Art.draw) window.Art.draw(ctx, '🐟', fx, fy, 22);
-                    else ctx.fillText('🐟', fx, fy);
-                }
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '22px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            for (let k = 0; k < 2; k++) {
+                const fx = gx + 18 + ((k * 37 + t * 22) % Math.max(1, gapEnd - gx - 36));
+                const fy = canvas.height - 26 - ((k * 19 + Math.sin(t * 1.6 + k * 2.4) * 6) % (depth * 0.55));
+                if (window.Art && window.Art.draw) window.Art.draw(ctx, '🐟', fx, fy, 22);
+                else ctx.fillText('🐟', fx, fy);
+            }
         } else if (hazard === 'spikes') {
             ctx.fillStyle = 'rgba(18,20,30,0.92)';
             ctx.fillRect(gx, gy, gapEnd - gx, depth);
@@ -2321,7 +2321,8 @@ function drawGoal(type, c) {
         ctx.font = '30px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('✨', c.x + c.width / 2, c.y + 40);
+        if (window.Art && window.Art.draw) window.Art.draw(ctx, '✨', c.x + c.width / 2, c.y + 40, 30);
+        else ctx.fillText('✨', c.x + c.width / 2, c.y + 40);
     } else if (type === 'arch') {
         ctx.fillStyle = '#7ac8e8';
         ctx.beginPath();
@@ -2348,7 +2349,8 @@ function drawGoal(type, c) {
         ctx.font = '30px "Segoe UI Emoji", "Noto Color Emoji", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('🐚', c.x + c.width / 2, c.y + 38);
+        if (window.Art && window.Art.draw) window.Art.draw(ctx, '🐚', c.x + c.width / 2, c.y + 38, 30);
+        else ctx.fillText('🐚', c.x + c.width / 2, c.y + 38);
     } else if (type === 'hut') {
         ctx.fillStyle = '#d8a868';
         ctx.beginPath();
