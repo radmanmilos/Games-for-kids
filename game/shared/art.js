@@ -1,9 +1,9 @@
-/* DRAFT / PROPOSAL ONLY. Not applied to game/, not browser-tested. Proposed location: game/shared/art.js
- *
- * One shared place that turns a glyph (e.g. the cow emoji) into the painted illustration, and falls back to the
+/* One shared place that turns a glyph (e.g. the cow emoji) into the painted illustration, and falls back to the
  * emoji itself whenever there is no image yet (so the game never shows a broken picture, online or offline).
+ * Required script on every game page (before the game script); parent.html has no glyph sites.
  *   Art.html(glyph, cls)            -> '<img ...>' string, or the escaped glyph       (innerHTML sites)
  *   Art.fill(el, glyph, cls)        -> sets el's content                              (replaces el.textContent = glyph)
+ *   Art.fillAttr(el, attr, g, cls)  -> same for CSS `::before{content:attr(attr)}` sites
  *   Art.image(glyph)                -> cached HTMLImageElement or null                (canvas preloading)
  *   Art.draw(ctx, glyph, cx, cy, s) -> drawImage centred at cx,cy, size s; else ctx.fillText fallback
  * Registry: window.ART_REGISTRY = { '🐮': 'cow', ... } generated from the inventory (see PRODUCTION_ASSET_PIPELINE.md).
@@ -24,23 +24,28 @@
   const fill = (el, g, cls) => { el.dataset.emoji = norm(g); el.innerHTML = html(g, cls); };
   /* A CSS-driven render site: the glyph lives in an attribute consumed by
      `::before{content:attr(data-e)}` (Cat Forest's cats, gifts, decor, fx).
-     When an art image exists, paint it as an <img> and EMPTY the attribute so
-     the CSS attr() stops drawing the emoji underneath it; when there is no
-     stem, leave the attribute as the glyph (the CSS draws it). dataset.emoji
-     is always set so a smoke can read the glyph back either way. */
-const fillAttr = (el, attr, g, cls) => {
+     The attribute always keeps the glyph (smokes and CSS read it back), and
+     when an art image exists the element also gets a single `<img class="art">`
+     plus `class="art-painted"`, which the page's CSS uses to switch the
+     `::before` off so the emoji never paints underneath the illustration.
+     Idempotent: re-rendering the same element replaces the image, never stacks. */
+  const fillAttr = (el, attr, g, cls) => {
     el.dataset.emoji = norm(g);
+    el.setAttribute(attr, g);
     const u = url(g);
-    if (u) {
-      // Keep the ORIGINAL glyph in the attribute (CSS `::before{content:attr(data-e)}`
-      // still draws the right emoji; the <img> paints over it). Only dataset.emoji
-      // is normalized — that is what consumers read back.
-      el.setAttribute(attr, g);
-      const kids = el.innerHTML;
-      el.innerHTML = '<img class="art' + (cls ? ' ' + esc(cls) : '') + '" src="' + u + '" alt="" draggable="false">' + kids;
-    } else {
-      el.setAttribute(attr, g);
+    const old = el.querySelector(':scope > img.art');
+    if (!u) {
+      if (old) old.remove();
+      el.classList.remove('art-painted');
+      return;
     }
+    const img = old || document.createElement('img');
+    img.className = 'art' + (cls ? ' ' + esc(cls) : '');
+    img.alt = '';
+    img.draggable = false;
+    img.src = u;
+    if (!old) el.insertBefore(img, el.firstChild); // keep existing children, listeners and order
+    el.classList.add('art-painted');
   };
   const cache = new Map();
   function image(g) {
@@ -51,7 +56,17 @@ const fillAttr = (el, attr, g, cls) => {
   function draw(ctx, g, cx, cy, size) {
     const im = image(g);
     if (im && im.complete && im.naturalWidth) { ctx.drawImage(im, cx - size / 2, cy - size / 2, size, size); return true; }
-    ctx.font = size + 'px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(g, cx, cy); return false;
+    /* Emoji fallback: keep the caller's font family/weight (call sites set an
+       emoji font before drawing) but force the requested size, and never leak
+       the align/baseline changes into the rest of the frame. */
+    const parts = /^(.*?)(\d*\.?\d+)(px|pt|em|%)\s+(.*)$/.exec(ctx.font || '');
+    ctx.save();
+    ctx.font = (parts ? parts[1] : '') + size + 'px ' + (parts ? parts[4] : 'sans-serif');
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(g, cx, cy);
+    ctx.restore();
+    return false;
   }
   root.Art = { url, html, fill, fillAttr, image, draw, _BASE: () => BASE };
 })(typeof window !== 'undefined' ? window : globalThis);

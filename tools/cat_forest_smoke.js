@@ -65,6 +65,18 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   const hook = await h.evalv(`typeof window.__catForest.state === 'function' && typeof window.__catForest.state() === 'object'`);
   check('the test hook exposes state() as a JSON-safe snapshot (TD §8)', hook === true, String(hook));
 
+  // T326: the static decor (trees, stars) paints through CSS
+  // `::before{content:attr(data-e)}`; an empty attribute renders NOTHING, so
+  // every static glyph site must carry its glyph (T301 blanked these).
+  const staticGlyphs = JSON.parse(await h.evalv(`JSON.stringify({
+    trees: [...document.querySelectorAll('.cf-tree')].map(e => e.getAttribute('data-e') || ''),
+    stars: [...document.querySelectorAll('.cf-star')].map(e => e.getAttribute('data-e') || '')
+  })`));
+  check('static decor keeps its glyph (trees + stars are not blank)',
+    staticGlyphs.trees.length > 0 && staticGlyphs.stars.length > 0 &&
+    staticGlyphs.trees.every(Boolean) && staticGlyphs.stars.every(Boolean),
+    JSON.stringify(staticGlyphs));
+
   const g = await backGeometry(h);
   check('the back control is inside the viewport and hit-testable', g.found && g.inside && g.hit, JSON.stringify(g));
   check('the back control is a comfortable tap target (>= 56px)',

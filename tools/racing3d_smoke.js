@@ -132,7 +132,11 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
         canvas: (document.querySelector('#r3d-view canvas') || {}).width || 0,
         world: document.getElementById('r3d-world').textContent,
         round: document.getElementById('r3d-round').textContent,
-        flowers: document.getElementById('r3d-flowers').textContent
+        flowers: (function () {
+            var e = document.getElementById('r3d-flower-emoji');
+            var g = e ? (e.dataset.emoji || (e.textContent || '').trim()) : '';
+            return g + ' ' + document.getElementById('r3d-flower-count').textContent;
+        })(),
     })`);
     const bj = JSON.parse(boot);
     check('canvas rendered and HUD in Serbian (Ливада, Круг 1/3, 0/12)',

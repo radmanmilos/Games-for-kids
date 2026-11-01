@@ -18,7 +18,6 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
 
 const CLICK = sel => `document.querySelector('${sel}').click(); true`;
 
-
 const ANIMALS = ['🐶','🐱','🐮','🦁','🐘','🐸','🐷','🦆','🦊','🐑','🐴','🐔'];
 
 // V8.1: emoji → the Serbian name the flashcard must show (mirrors game/games/animals.js

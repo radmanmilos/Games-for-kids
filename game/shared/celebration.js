@@ -13,7 +13,6 @@
         }
         el.textContent = emoji || '🎉';
         if (window.Art && window.Art.fill) window.Art.fill(el, emoji || '🎉');
-        else el.textContent = emoji || '🎉';
         el.classList.remove('show');
         void el.offsetWidth;
         el.classList.add('show');

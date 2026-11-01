@@ -18,6 +18,7 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
+- 326. DONE — T326: review of the 2.7.x Art migration (T298 onward) + fixes. Found and fixed 6 defects: Cat Forest trees/stars rendered BLANK (`content:attr(data-e)` with no attribute); double-paint (emoji ::before + art `<img>`) on plates/treats/cats — fixed with `art-painted::before{content:none}` and by deleting 5 leftover literal `content:"🐟"` rules; `Art.fillAttr` was non-idempotent (stacked an `<img>` per render) and rebuilt `innerHTML` (dropping children/listeners); `Art.draw` leaked font/align state and forced `sans-serif` (lost the emoji font); racing3d passed a composite `"🌸 0/12"` string to `Art.fill` (never painted) and the HUD was rebuilt with `textContent` on every pickup; `celebration.js` assigned `textContent` twice. Also removed the dead `GAME_ICON` const (its removal in the redo was a no-op — the markup already carried the same glyph) and a stray blank line in `animals_smoke`. Version → **2.7.1**; cat_forest_smoke gained a regression guard for blank static decor; racing3d_smoke reads the painted glyph. (2026-11-01, OpenCode/Big Pickle)
 - 301. NEW — T301: Cat Forest data/render sites → Art (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
 - 302. NEW — T302: bump to 2.7.0, build_offline + sync-docs, screenshots (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)
 - 306. NEW — T306: Adventure family canvas draws (adventure.js + adventure-modes.js) (target 2.7.0) (2026-10-31, OpenCode/Big Pickle)

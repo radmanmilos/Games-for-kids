@@ -202,7 +202,8 @@ function main() {
 
   /* task 258 (user): the «Поени» pill is gone — the flower counter (icon +
      n/12) is the only progress readout, so there is no scoreEl any more. */
-  const flowersEl = document.getElementById("r3d-flowers");
+  const flowerEmojiEl = document.getElementById("r3d-flower-emoji");
+  const flowerCountEl = document.getElementById("r3d-flower-count");
   const worldEl = document.getElementById("r3d-world");
   const roundEl = document.getElementById("r3d-round");
   const countdownEl = document.getElementById("r3d-countdown");
@@ -212,7 +213,8 @@ function main() {
   const restartBtn = document.getElementById("r3d-restart");
 
   worldEl.textContent = world.name;
-  if (flowersEl) Art.fill(flowersEl, world.collectible + " 0/" + FLOWER_TOTAL);
+  if (flowerEmojiEl) Art.fill(flowerEmojiEl, world.collectible);
+  if (flowerCountEl) flowerCountEl.textContent = "0/" + FLOWER_TOTAL;
   roundEl.textContent = "Круг 1/" + TOTAL_LAPS;
 
   const announce = (text) => {
@@ -1730,8 +1732,7 @@ function main() {
     f.done = true;
     f.mesh.visible = false;
     score++;
-    flowersEl.textContent =
-      world.collectible + " " + score + "/" + FLOWER_TOTAL;
+    flowerCountEl.textContent = score + "/" + FLOWER_TOTAL;
     petalBurst(f.mesh.position, [
       world.pickupColor,
       0xffffff,

@@ -81,11 +81,14 @@
   /* T301: when Art.fillAttr paints an <img class="art"> on any glyph site, the
      image must be the same size the emoji was (1em = the site's own font-size),
      and it must sit on the baseline the ::before used so hit tests and
-     geometry are unchanged. */
+     geometry are unchanged. `.art-painted` (set by fillAttr) switches the
+     ::before glyph off, so the emoji never paints underneath the image — that
+     also keeps single-cell containers (grid/flex) from growing a second row. */
   .cf-plate .art, .cf-treat .art, .cf-cat .art, .cf-cat-acc .art,
   .cf-gift .art, .cf-fly .art, .cf-decor-item .art, .cf-party .art,
   .cf-book-cat .art, .cf-book-cat-acc .art, .cf-tree .art, .cf-star .art{
     width:1em;height:1em;vertical-align:middle; display:inline-block;}
+  .art-painted::before{content:none;}
   #cf-plates{z-index:4;left:0;right:0;top:48%;transform:translateY(-50%);
     display:flex;justify-content:center;align-items:center;gap:clamp(16px,6vmin,64px);
     pointer-events:none;}
@@ -150,11 +153,6 @@
     display:grid;place-items:center;line-height:1;
     transition:transform .16s ease, box-shadow .16s ease;}
   .cf-treat::before{content:attr(data-e);font-size:clamp(30px,7vmin,60px);line-height:1;font-variant-emoji:emoji;}
-  .cf-treat[data-treat="fish"]::before{content:"🐟";}
-  .cf-treat[data-treat="milk"]::before{content:"🥛";}
-  .cf-treat[data-treat="chicken"]::before{content:"🍗";}
-  .cf-treat[data-treat="sushi"]::before{content:"🍣";}
-  .cf-treat[data-treat="cookie"]::before{content:"🍪";}
 
   /* Picture-only feedback: a selected treat lifts, the tray or the treat bounces
      when a tap cannot do anything. No red, no text, no "wrong". */
@@ -280,16 +278,16 @@
     <div id="cf-scenery" aria-hidden="true">
       <span class="cf-hill cf-hill-1"></span>
       <span class="cf-hill cf-hill-2"></span>
-      <span class="cf-tree cf-tree-1"></span>
-      <span class="cf-tree cf-tree-2"></span>
-      <span class="cf-tree cf-tree-3"></span>
+      <span class="cf-tree cf-tree-1" data-e="🌲"></span>
+      <span class="cf-tree cf-tree-2" data-e="🌲"></span>
+      <span class="cf-tree cf-tree-3" data-e="🌲"></span>
     </div>
     <div id="cf-decor" aria-hidden="true"></div>
     <div id="cf-night-tint" aria-hidden="true"></div>
     <div id="cf-stars" aria-hidden="true">
-      <span class="cf-star cf-star-1"></span>
-      <span class="cf-star cf-star-2"></span>
-      <span class="cf-star cf-star-3"></span>
+      <span class="cf-star cf-star-1" data-e="✨"></span>
+      <span class="cf-star cf-star-2" data-e="✨"></span>
+      <span class="cf-star cf-star-3" data-e="✨"></span>
     </div>
     <div id="cf-plates">
       <button class="cf-plate" data-plate="0" data-e="🍽️" aria-label="Тањир"><span class="cf-plate-treat"></span></button>

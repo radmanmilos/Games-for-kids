@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-01T14:26:48.658Z
+- Генерисано / Generated: 2026-11-01T15:48:34.634Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -24,10 +24,10 @@
 | `animals_phone-portrait.png` | Животиње | `/pages/animals.html` | 390×844 | портрет | — | 01.11.2026. 15:26:48 | 310 |
 | `animals_tablet-landscape.png` | Животиње | `/pages/animals.html` | 1180×820 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
 | `animals_tablet-portrait.png` | Животиње | `/pages/animals.html` | 820×1180 | портрет | — | 01.11.2026. 15:26:48 | 310 |
-| `cat_forest_phone-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 844×390 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
-| `cat_forest_phone-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 390×844 | портрет | — | 01.11.2026. 15:26:48 | 310 |
-| `cat_forest_tablet-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 1180×820 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
-| `cat_forest_tablet-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 820×1180 | портрет | — | 01.11.2026. 15:26:48 | 310 |
+| `cat_forest_phone-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 844×390 | пејзаж | — | 01.11.2026. 16:48:34 | 326 |
+| `cat_forest_phone-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 390×844 | портрет | — | 01.11.2026. 16:48:34 | 326 |
+| `cat_forest_tablet-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 1180×820 | пејзаж | — | 01.11.2026. 16:48:34 | 326 |
+| `cat_forest_tablet-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 820×1180 | портрет | — | 01.11.2026. 16:48:34 | 326 |
 | `classroom_phone-landscape.png` | Учионица | `/pages/classroom.html` | 844×390 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
 | `classroom_phone-portrait.png` | Учионица | `/pages/classroom.html` | 390×844 | портрет | — | 01.11.2026. 15:26:48 | 310 |
 | `classroom_tablet-landscape.png` | Учионица | `/pages/classroom.html` | 1180×820 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
@@ -84,10 +84,10 @@
 | `piano_phone-portrait.png` | Клавир | `/pages/piano.html` | 390×844 | портрет | — | 01.11.2026. 15:26:48 | 310 |
 | `piano_tablet-landscape.png` | Клавир | `/pages/piano.html` | 1180×820 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
 | `piano_tablet-portrait.png` | Клавир | `/pages/piano.html` | 820×1180 | портрет | — | 01.11.2026. 15:26:48 | 310 |
-| `racing3d_phone-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 844×390 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
-| `racing3d_phone-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 390×844 | портрет | — | 01.11.2026. 15:26:48 | 310 |
-| `racing3d_tablet-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 1180×820 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
-| `racing3d_tablet-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 820×1180 | портрет | — | 01.11.2026. 15:26:48 | 310 |
+| `racing3d_phone-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 844×390 | пејзаж | — | 01.11.2026. 16:48:34 | 326 |
+| `racing3d_phone-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 390×844 | портрет | — | 01.11.2026. 16:48:34 | 326 |
+| `racing3d_tablet-landscape.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 1180×820 | пејзаж | — | 01.11.2026. 16:48:34 | 326 |
+| `racing3d_tablet-portrait.png` | Мала тркачица 3Д | `/pages/racing3d.html` | 820×1180 | портрет | — | 01.11.2026. 16:48:34 | 326 |
 | `rhythm_phone-landscape.png` | Ритам | `/pages/rhythm.html` | 844×390 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |
 | `rhythm_phone-portrait.png` | Ритам | `/pages/rhythm.html` | 390×844 | портрет | — | 01.11.2026. 15:26:48 | 310 |
 | `rhythm_tablet-landscape.png` | Ритам | `/pages/rhythm.html` | 1180×820 | пејзаж | — | 01.11.2026. 15:26:48 | 310 |

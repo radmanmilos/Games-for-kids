@@ -28,7 +28,6 @@
       {name:'Frog', emoji:'🐸'},
       {name:'Chicken', emoji:'🐔'}
     ];
-    const GAME_ICON = '🔢';
     const numberNames = ['', ...SERBIAN.numbers.slice(1).map(number => number.name)];
     const maxLevels = 10;
     let level = 1;
