@@ -30,7 +30,14 @@
 
     var pads = Array.prototype.slice.call(set.querySelectorAll('.rhythm-pad'));
     var padEls = {};
-    pads.forEach(function (b) { padEls[Number(b.dataset.idx)] = b; });
+    pads.forEach(function (b) {
+      padEls[Number(b.dataset.idx)] = b;
+      /* T322: the drum icon on each pad is the sole content of the button and
+         was painted as raw emoji; paint the illustration over it now, reading the
+         glyph back out of the markup (Art falls back to the emoji otherwise). */
+      var g = (b.textContent || '').trim();
+      if (g && window.Art && window.Art.fill) window.Art.fill(b, g);
+    });
 
     var mode = 'echo';       /* 'echo' | 'free' */
     var phase = 'idle';      /* 'listen' | 'repeat' | 'success' | 'free' */

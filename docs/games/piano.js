@@ -219,6 +219,14 @@
         $('modeSong').addEventListener('click', () => setMode('song'));
         $('pianoPreview').addEventListener('click', () => { if (playingPreview) stopPreview(); else startPreview(); });
         $('pianoReplay').addEventListener('click', resetSong);
+
+        /* T322: the finish card's medal is the only glyph that lives in the page
+           markup and is never rewritten, so paint it once here, reading the glyph
+           back out of the markup (Art keeps the emoji when there is no asset). */
+        const finishEmoji = $('pianoFinishEmoji');
+        const finishGlyph = finishEmoji && finishEmoji.textContent.trim();
+        if (finishGlyph && window.Art && window.Art.fill) window.Art.fill(finishEmoji, finishGlyph);
+
         setMode('free');
     };
 }());

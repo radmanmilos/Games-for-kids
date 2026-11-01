@@ -1074,7 +1074,9 @@ function buildWorldsMenu() {
         const w = WORLDS[wi];
         const btn = document.createElement('button');
         btn.className = 'world-btn';
-        btn.innerHTML = '<span class="w-emoji">' + w.collectible + '</span>' + w.name;
+        btn.innerHTML = '<span class="w-emoji"></span>' + w.name;
+        if (window.Art && window.Art.fill) window.Art.fill(btn.querySelector('.w-emoji'), w.collectible);
+        else btn.querySelector('.w-emoji').textContent = w.collectible;
         btn.addEventListener('click', () => {
             playSound('pop');
             worldPos = idx;

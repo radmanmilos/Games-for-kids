@@ -46,7 +46,7 @@ const STUB = `window.__rhythmSounds=0;window.audioBuses.playTone=function(){wind
      Assert the surface is real (a drumhead + skin + rim + a clear struck ring). */
   const padLook = JSON.parse(await h.evalv(`JSON.stringify([...document.querySelectorAll('.rhythm-pad')].map(el=>{
     const cs=getComputedStyle(el);
-    return {bg:cs.backgroundImage, shadow:cs.boxShadow, text:cs.textShadow, emoji:el.textContent.trim(), label:el.getAttribute('aria-label')};
+    return {bg:cs.backgroundImage, shadow:cs.boxShadow, text:cs.textShadow, emoji:(el.dataset.emoji || el.textContent).trim(), label:el.getAttribute('aria-label')};
   }))`));
   const layers = s => (s.match(/radial-gradient/g) || []).length;
   check('every pad reads as a drum: a light drumhead over a coloured skin',

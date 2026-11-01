@@ -49,7 +49,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       gpx: Math.round(parseFloat(grid.style.width) * px),
       gh: Math.round(parseFloat(grid.style.height) * px),
       tileW: parseFloat(document.querySelector('#candyGrid .candy').style.width),
-      emoji: document.querySelector('#candyGrid .candy').textContent,
+      emoji: (document.querySelector('#candyGrid .candy').dataset.emoji || document.querySelector('#candyGrid .candy').textContent),
       vw: innerWidth, vh: innerHeight
     };
   })())`);
@@ -73,7 +73,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       tiles: document.querySelectorAll('#candyGrid .candy').length,
       bar: document.getElementById('candyBarFill').style.width,
       tileW: parseFloat(document.querySelector('#candyGrid .candy').style.width),
-      emoji: document.querySelector('#candyGrid .candy').textContent,
+      emoji: (document.querySelector('#candyGrid .candy').dataset.emoji || document.querySelector('#candyGrid .candy').textContent),
       overlay: document.getElementById('levelUpMsg').classList.contains('show'),
       overlayText: document.getElementById('levelUpText').textContent,
       gpx: Math.round(parseFloat(grid.style.width) * px),

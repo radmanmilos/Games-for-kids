@@ -103,7 +103,8 @@
       var motif = document.createElement('span');
       motif.className = 'maze-motif';
       motif.setAttribute('aria-hidden', 'true');
-      motif.textContent = MOTIFS[m];
+      if (window.Art && window.Art.fill) window.Art.fill(motif, MOTIFS[m]);
+      else motif.textContent = MOTIFS[m];
       hedgeEl.appendChild(motif);
     }
 

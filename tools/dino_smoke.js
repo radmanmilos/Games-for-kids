@@ -33,7 +33,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
       levels: window.__adv.levels.length,
       worldName: document.getElementById('adv-world-name').textContent,
       themeName: window.__adv.theme.name,
-      collectEmoji: document.getElementById('adv-collect-emoji').textContent,
+      collectEmoji: (document.getElementById('adv-collect-emoji').dataset.emoji || document.getElementById('adv-collect-emoji').textContent),
       themeCollect: window.__adv.theme.collectible,
       levelText: document.getElementById('adv-level').textContent,
       bgApplied: document.body.style.background === t.style.background,

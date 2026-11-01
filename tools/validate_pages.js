@@ -274,10 +274,42 @@ if (fs.existsSync(REGISTRY)) {
   }
 }
 
+/* ---- art registry coverage (task 323) ----
+   Art.url() maps a glyph to game/assets/art/<stem>.webp and falls back to the
+   emoji when there is no entry. A registered glyph with no file on disk would
+   therefore paint a BROKEN image instead of falling back, which is the one
+   failure mode the migration added. Fail on it; only warn about the reverse
+   (a WebP no glyph points at = dead weight in the offline cache).
+   art-registry.js is a browser global (window.ART_REGISTRY), so evaluate it
+   against a throwaway window rather than parsing the text. */
+const ART_REGISTRY = path.join(ROOT, 'game', 'data', 'art-registry.js');
+const ART_DIR = path.join(ROOT, 'game', 'assets', 'art');
+let artChecked = null;
+try {
+  const win = {};
+  new Function('window', fs.readFileSync(ART_REGISTRY, 'utf8'))(win);
+  const registry = win.ART_REGISTRY || {};
+  const stems = new Set(Object.keys(registry).map(g => registry[g]));
+  const files = new Set(fs.readdirSync(ART_DIR).filter(f => f.endsWith('.webp'))
+    .map(f => path.basename(f, '.webp')));
+  for (const stem of stems) {
+    if (!files.has(stem)) {
+      failures.push(`art registry: "${stem}" has no game/assets/art/${stem}.webp (a registered glyph would render as a broken image)`);
+    }
+  }
+  const orphans = [...files].filter(f => !stems.has(f)).sort();
+  if (orphans.length) {
+    warnings.push(`art registry: ${orphans.length} WebP(s) not referenced by ART_REGISTRY: ${orphans.join(', ')}`);
+  }
+  artChecked = { glyphs: Object.keys(registry).length, stems: stems.size, files: files.size, orphans: orphans.length };
+} catch (e) {
+  failures.push(`art registry: could not evaluate game/data/art-registry.js (${e.message})`);
+}
+
 // Output
 const asJson = process.argv.includes('--json');
 if (asJson) {
-  console.log(JSON.stringify({ failures, warnings, pagesChecked: pages.length }, null, 2));
+  console.log(JSON.stringify({ failures, warnings, pagesChecked: pages.length, artChecked }, null, 2));
 } else {
   if (failures.length) {
     console.error('FAIL:');
@@ -288,7 +320,8 @@ if (asJson) {
     for (const w of warnings) console.warn('  ' + w);
   }
   if (!failures.length) {
-    console.log(`OK: ${pages.length} pages validated, all metadata present.`);
+    console.log(`OK: ${pages.length} pages validated, all metadata present`
+      + (artChecked ? `; art registry ${artChecked.glyphs} glyphs / ${artChecked.stems} stems, all present in assets/art.` : '.'));
   }
 }
 process.exit(failures.length ? 1 : 0);

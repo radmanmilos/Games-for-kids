@@ -147,7 +147,8 @@
             theme = w;
             window.AdventureMusic.startTheme(w.music, cfg.music, () => paused);
             el('adv-level').textContent = worldPos + 1;
-            el('adv-collect-emoji').textContent = w.collectible;
+            if (window.Art && window.Art.fill) window.Art.fill(el('adv-collect-emoji'), w.collectible);
+            else el('adv-collect-emoji').textContent = w.collectible;
             el('adv-world-name').textContent = w.name;
             el('adv-win-modal').classList.remove('show');
             levelCompleted = false;
@@ -299,7 +300,9 @@
                 btn.className = 'adv-world-btn';
                 // store the world position at creation time so the button remains stable
                 btn.dataset.worldPos = idx;
-                btn.innerHTML = '<span class="adv-w-emoji">' + w.collectible + '</span>' + w.name;
+                btn.innerHTML = '<span class="adv-w-emoji"></span>' + w.name;
+                if (window.Art && window.Art.fill) window.Art.fill(btn.querySelector('.adv-w-emoji'), w.collectible);
+                else btn.querySelector('.adv-w-emoji').textContent = w.collectible;
                 btn.addEventListener('click', () => {
                     try { window.AdventureMusic.play('pop'); } catch (e) {}
                     const pos = parseInt(btn.dataset.worldPos, 10);

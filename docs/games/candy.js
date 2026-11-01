@@ -77,7 +77,7 @@ function updateLevelBar(){
 function randType(){ return Math.floor(Math.random()*candyTypes.length); }
 function applyTileVisual(el, type){
   el.classList.toggle('star', type === -1);
-  if(type === -1){ el.textContent = '⭐'; el.style.background = ''; }
+  if(type === -1){ Art.fill(el, '⭐'); el.style.background = ''; }
   else { Art.fill(el, candyTypes[type].emoji); el.style.background = candyTypes[type].color; }
 }
 
@@ -556,3 +556,12 @@ function showHintMsg(text){
 
 const hintBtn = document.getElementById('candyHintBtn');
 if(hintBtn) hintBtn.addEventListener('click', ()=>{ if(window.popSound) window.popSound(); showCandyHint(); });
+
+/* T322: two single-glyph slots live in the page markup (the progress-bar tip and
+   the level-up banner) and JS never rewrote them, so they stayed emoji. Paint
+   them once here, reading the glyph back out of the markup so the page stays the
+   one source of truth; Art keeps the text when a glyph has no illustration. */
+document.querySelectorAll('#candyBarTip, .level-up-emoji').forEach(el => {
+  const glyph = (el.textContent || '').trim();
+  if (glyph) Art.fill(el, glyph);
+});

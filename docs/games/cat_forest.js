@@ -515,6 +515,7 @@
       document.querySelectorAll('#cf-tray .cf-treat'),
       document.querySelectorAll('.cf-tree'),
       document.querySelectorAll('.cf-star'),
+      document.querySelectorAll('.cf-book-empty'),
       [els.rainBtn]
     ];
     for (var l = 0; l < lists.length; l++) {
@@ -1224,6 +1225,8 @@
       emptyEl = document.createElement('span');
       emptyEl.className = 'cf-book-empty';
       emptyEl.setAttribute('aria-hidden', 'true');
+      emptyEl.setAttribute('data-e', '🐾');
+      if (window.Art && window.Art.fillAttr) window.Art.fillAttr(emptyEl, 'data-e', '🐾');
       grid.appendChild(emptyEl);
     }
     for (i = 0; i < state.met.length; i++) {

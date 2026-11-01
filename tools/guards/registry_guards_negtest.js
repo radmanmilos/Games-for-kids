@@ -26,10 +26,12 @@ const { execFileSync } = require('child_process');
 const ROOT = path.resolve(__dirname, '..', '..');
 const REG = path.join(ROOT, 'game', 'data', 'app-registry.js');
 const INDEX = path.join(ROOT, 'game', 'index.html');
+const ART = path.join(ROOT, 'game', 'data', 'art-registry.js');
 const VALIDATOR = path.join(ROOT, 'tools', 'validate_pages.js');
 
 const regOrig = fs.readFileSync(REG, 'utf8');
 const indexOrig = fs.readFileSync(INDEX, 'utf8');
+const artOrig = fs.readFileSync(ART, 'utf8');
 
 /* A syntactically valid stand-in for the registry's last entry (which carries no
    trailing comma), so an inserted entry does not break the array. */
@@ -42,7 +44,8 @@ function insertBeforeEnd(src, entry) {
 const oceanEntry = regOrig.match(/\{ id: 'ocean',[\s\S]*?\},/)[0];
 const retiredEntry = "  { id: 'game-racing', path: 'pages/racing.html', category: 'games', title: 'Trke', smoke: null, screenshot: false, offline: false, toddler: false, route: 'game-racing', hubOrder: 12, hubGroup: 'games', back: null, start: null },\n";
 
-/* Each case: [name, apply(source) -> source, expected substring in the report] */
+/* Each case: [name, apply(source) -> source, expected substring in the report,
+   optional file to write: 'index' (default: the app registry) | 'art']. */
 const CASES = [
   // A whole second entry that reuses an existing id. The id in the copied entry
   // must match an id already in the registry, which is what makes it a duplicate.
@@ -86,7 +89,14 @@ const CASES = [
     'is still present in the registry'],
   ['retired hub button un-hidden',
     () => indexOrig.replace(/(data-go="game-racing"[^>]*?) hidden/, '$1'),
-    'has a visible hub button'],
+    'has a visible hub button',
+    'index'],
+  // task 323: a registered glyph whose WebP is missing would paint a broken
+  // image instead of falling back to the emoji, so the validator must red it.
+  ['art glyph pointing at a missing WebP',
+    () => artOrig.replace(/"🐶":\s*"dog"/, '"🐶": "no-such-stem"'),
+    'no game/assets/art/no-such-stem.webp',
+    'art'],
 ];
 
 function runValidator() {
@@ -100,16 +110,18 @@ function runValidator() {
 function restore() {
   fs.writeFileSync(REG, regOrig);
   fs.writeFileSync(INDEX, indexOrig);
+  fs.writeFileSync(ART, artOrig);
 }
 
 let bad = 0;
-for (const [name, mutate, expected] of CASES) {
+for (const [name, mutate, expected, target] of CASES) {
   let mutated;
   try { mutated = mutate(); }
   catch (e) { console.log('BAD TEST  ' + name + ': ' + e.message); bad++; continue; }
 
-  const touchesIndex = name === 'retired hub button un-hidden';
-  if (touchesIndex) fs.writeFileSync(INDEX, mutated); else fs.writeFileSync(REG, mutated);
+  if (target === 'art') fs.writeFileSync(ART, mutated);
+  else if (target === 'index') fs.writeFileSync(INDEX, mutated);
+  else fs.writeFileSync(REG, mutated);
 
   const { code, out } = runValidator();
   restore();

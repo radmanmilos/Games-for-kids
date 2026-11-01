@@ -1352,8 +1352,8 @@
     "size": 15812
   },
   "games/adventure.js": {
-    "sha256": "6948ba52f6b11f304515dd1ae61d354beb0d248cd611f21e9bb81d3c0cf23138",
-    "size": 58419
+    "sha256": "0833bde0d0c80707d6f3fdbc4934e925e48c56a798ea878d4f3d7519a1bc09c0",
+    "size": 58709
   },
   "games/animal_counting.js": {
     "sha256": "64dcc3488e29f75a7e7f30015e1c0b5979d3c31ed570b704bfcde05cd73badd1",
@@ -1372,12 +1372,12 @@
     "size": 5914
   },
   "games/candy.js": {
-    "sha256": "eef8b50cfeadcace0447d5801f81f06f13be25d43d4a6c0108e6a9edb5ae93cd",
-    "size": 19914
+    "sha256": "3816267713ace10d83a119dc8d4890c2ec23a82408c2b42433d7869856964024",
+    "size": 20395
   },
   "games/cat_forest.js": {
-    "sha256": "83a5cf21937ea52e2dccac326e9dc90906292455351a0a1a5e71ee314410c1c7",
-    "size": 59732
+    "sha256": "dadf7f071a4b1709d66f19298be1e0c37c48161d6aceac544af01a64b84a977b",
+    "size": 59922
   },
   "games/classroom.js": {
     "sha256": "84e25901b5a013f147b8b7dce2bd8c73870a97213fba3ac88b8f7ade75630a6f",
@@ -1408,12 +1408,12 @@
     "size": 5268
   },
   "games/kitty-standalone.js": {
-    "sha256": "2f67aa1765bf6c10338f7383d343008128496863008a418dcad255dfa3286482",
-    "size": 102899
+    "sha256": "78aa8ca2ddaeac9bff09aea4e0b0fc0daee6381a1b818c2426e7c3007a7cb26c",
+    "size": 103056
   },
   "games/maze.js": {
-    "sha256": "4c2c7e9dc02cb06d1d51d3e7044c0ce25462281257fffaa23a5979d9f59ce4b1",
-    "size": 11102
+    "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
+    "size": 11183
   },
   "games/ocean.js": {
     "sha256": "9916c368cb6eed03e34ba1bfd535938fb5f51aae49fd96212db6f96af5665c52",
@@ -1424,8 +1424,8 @@
     "size": 8754
   },
   "games/piano.js": {
-    "sha256": "7e943609c9a9049e27e37832a2e0df4549d201449b5cda12fa496a1492bae7fc",
-    "size": 9254
+    "sha256": "9f9a161da0038c9ceef26382288ff637ac14e1df5d2eba08add620d806f450ba",
+    "size": 9731
   },
   "games/racing-config.js": {
     "sha256": "3370e3cb1cbcf2cb3ba4ed557f983727d1b96eccdd01819926bd846096001987",
@@ -1440,8 +1440,8 @@
     "size": 103138
   },
   "games/rhythm.js": {
-    "sha256": "5ef69557e33be41bc6df7d825b0bdfab0d96a00eb44b747e4f403157d3211bd7",
-    "size": 6897
+    "sha256": "50b4b714b940445ed62dfdd750db4b4898cb35c696423bbdc9f0f46f068a7d39",
+    "size": 7264
   },
   "games/sequencing.js": {
     "sha256": "a6041b4eba54e2c57cf95f0f59788bed9ecd2ed01f09c31e21d856e990638b72",
@@ -1492,8 +1492,8 @@
     "size": 14607
   },
   "pages/cat_forest.html": {
-    "sha256": "d03a3917b56e60503f1aaec0454f2f5b9d94ba90d512b48170d4d1794fab698f",
-    "size": 20394
+    "sha256": "00252668465296fbaf60cbab91194c582d5114e54695c9718f9da8e0b92ef01e",
+    "size": 20414
   },
   "pages/classroom.html": {
     "sha256": "5c61c3716904ddc3e334dda74c434c2f447c59d1cc6d186c273ff59c90c98519",

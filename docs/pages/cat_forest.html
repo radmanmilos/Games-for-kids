@@ -233,7 +233,7 @@
   /* Empty book: a single 🐾, decorative and unclickable (PS §7). */
   .cf-book-empty{width:clamp(72px,16vmin,120px);aspect-ratio:1;display:grid;place-items:center;
     font-size:clamp(38px,11vmin,68px);line-height:1;font-variant-emoji:emoji;pointer-events:none;}
-  .cf-book-empty::before{content:"🐾";}
+  .cf-book-empty::before{content:attr(data-e);}
   #cf-book-close{position:absolute;top:2.6vmin;right:2.6vmin;pointer-events:auto;
     width:clamp(72px,9vmin,88px);aspect-ratio:1;padding:0;border:none;border-radius:50%;
     background:#fff;box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);cursor:pointer;
@@ -312,7 +312,7 @@
     <button id="cf-friends" aria-label="Мачке пријатељи"></button>
     <div id="cf-book" role="dialog" aria-modal="true" aria-label="Мачке пријатељи" hidden>
       <button id="cf-book-close" aria-label="Затвори"></button>
-      <div class="cf-book-grid"><span class="cf-book-empty"></span></div>
+      <div class="cf-book-grid"><span class="cf-book-empty" data-e="🐾"></span></div>
     </div>
   </div>
 </div>
