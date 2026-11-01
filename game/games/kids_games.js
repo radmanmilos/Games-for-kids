@@ -34,7 +34,7 @@
       title: SERBIAN.classroom.kidsTitles.shapes, dataKey: 'shapes',
       question: SERBIAN.classroom.questions.shapes,
       speakOf: it => it.name,
-      tile: it => it.svg ? '<span class="kids-shape">' + it.svg + '</span>' : '<span class="kids-glyph">' + it.emoji + '</span>',
+      tile: it => it.svg ? '<span class="kids-shape">' + it.svg + '</span>' : '<span class="kids-glyph">' + (window.Art ? window.Art.html(it.emoji) : it.emoji) + '</span>',
     },
   };
 
@@ -66,7 +66,7 @@
     let prompt = '<div class="kids-question">' + cfg.question + '</div>';
     if (cfg.countRow) {
       let spans = '';
-      for (let i = 0; i < item.count; i++) spans += '<span>' + item.emoji + '</span>';
+      for (let i = 0; i < item.count; i++) spans += '<span>' + (window.Art ? window.Art.html(item.emoji) : item.emoji) + '</span>';
       prompt += '<div class="kids-count-row">' + spans + '</div>';
     } else {
       prompt += '<div class="kids-sound">🔊</div>';

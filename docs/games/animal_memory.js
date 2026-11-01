@@ -53,10 +53,11 @@
       card.setAttribute('aria-label', 'Скривена картица');
       card.addEventListener('click', onCardClick);
       const face = emojiMap[name] || name;
+      const faceHtml = (window.Art && window.Art.html) ? window.Art.html(face) : face;
       card.innerHTML = `
         <div class="card-inner">
           <div class="card-face card-back"></div>
-          <div class="card-face card-front">${face}</div>
+          <div class="card-face card-front">${faceHtml}</div>
         </div>`;
       boardEl.appendChild(card);
     });

@@ -212,7 +212,7 @@ function main() {
   const restartBtn = document.getElementById("r3d-restart");
 
   worldEl.textContent = world.name;
-  flowersEl.textContent = world.collectible + " 0/" + FLOWER_TOTAL;
+  if (flowersEl) Art.fill(flowersEl, world.collectible + " 0/" + FLOWER_TOTAL);
   roundEl.textContent = "Круг 1/" + TOTAL_LAPS;
 
   const announce = (text) => {

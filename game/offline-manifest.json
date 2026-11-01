@@ -1360,8 +1360,8 @@
     "size": 10260
   },
   "games/animal_memory.js": {
-    "sha256": "5f75a666f150b893bd3caf9d2ce658e5b8cad5f1741194d1fb27c5fd4762f8f0",
-    "size": 6708
+    "sha256": "7e974cc4430b1c059969206b6aab604e91bc56780300468cb6318508aa6f7633",
+    "size": 6799
   },
   "games/animal_puzzle.js": {
     "sha256": "0ab1459ef82f229d17143496ff2a3f5e190c46e1fddefe89a4ab2048914ebca1",
@@ -1388,8 +1388,8 @@
     "size": 19106
   },
   "games/compare.js": {
-    "sha256": "4183533077ef7c8df791231e3eeaddde4e847d3cd1384dc04b7e736e4a27910a",
-    "size": 6645
+    "sha256": "8ab972aec8acdd240a6a71abf4973a9b186bf8d6edb4d552f73ef5aa2a52bfbc",
+    "size": 6721
   },
   "games/dino.js": {
     "sha256": "dadb80a73e6ef42642a9ca2de2f048856974ded36edd7f551d911bdc8bf00d22",
@@ -1404,8 +1404,8 @@
     "size": 44820
   },
   "games/kids_games.js": {
-    "sha256": "7c72e6835160e4302c86f019ce9e0c640e9a4e402253953048c73a9dcb4a18b8",
-    "size": 5180
+    "sha256": "722b72211553b4267bd7c657dd7210db5f53d462ca405315994b8fc3fa2e10d0",
+    "size": 5268
   },
   "games/kitty-standalone.js": {
     "sha256": "0f07dbc6fb2172b8722e49a4fafad2ca496a829e72e6900f6a16df5cbca49846",
@@ -1436,8 +1436,8 @@
     "size": 4817
   },
   "games/racing3d.mjs": {
-    "sha256": "d69ded31a4aaca82dda029a0e634e9b9fc15f0b24738a5627b8cd1fa6ff42a2e",
-    "size": 103021
+    "sha256": "c2296eb5abcbbe2e0d27d0296e4451a0a35ddb64cb0598aed9a9766251fe2241",
+    "size": 103033
   },
   "games/rhythm.js": {
     "sha256": "5ef69557e33be41bc6df7d825b0bdfab0d96a00eb44b747e4f403157d3211bd7",
@@ -1600,8 +1600,8 @@
     "size": 7318
   },
   "shared/celebration.js": {
-    "sha256": "4ca7ace1dc4924b3993c7906e46a11e808181a04bdc6ad59150e0820809a57c4",
-    "size": 1257
+    "sha256": "7f4e179fa58cba8e1bf6a96a5ce625c2bb36ffc612c065b7533a4eb8100464ef",
+    "size": 1385
   },
   "shared/feedback.js": {
     "sha256": "797eeeb14e3cbf95398f76964374aa708d5c94810a510877ffb4f2ed5e24baed",

@@ -45,7 +45,8 @@
     for (var i = 0; i < count; i++) {
       var span = document.createElement('span');
       span.className = 'cmp-item';
-      span.textContent = emoji;
+      if (window.Art && window.Art.fill) window.Art.fill(span, emoji);
+      else span.textContent = emoji;
       span.setAttribute('aria-hidden', 'true');
       el.appendChild(span);
     }
