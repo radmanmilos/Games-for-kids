@@ -503,6 +503,29 @@
     };
   }
 
+  /* T321: the static CSS-driven sites (plates, tray treats, trees, stars, rain
+     button) declare their glyph in data-e and the page's `::before{content:attr()}`
+     draws it. Paint the illustration over it once at boot when one exists;
+     `art-painted` switches the pseudo-element off (see cat_forest.html). Glyphs
+     with no art stem (✨) simply keep the emoji through the same call. */
+  function paintStaticGlyphs() {
+    if (!window.Art || !window.Art.fillAttr) return;
+    var lists = [
+      document.querySelectorAll('#cf-plates .cf-plate'),
+      document.querySelectorAll('#cf-tray .cf-treat'),
+      document.querySelectorAll('.cf-tree'),
+      document.querySelectorAll('.cf-star'),
+      [els.rainBtn]
+    ];
+    for (var l = 0; l < lists.length; l++) {
+      for (var i = 0; i < lists[l].length; i++) {
+        var el = lists[l][i];
+        var g = el && el.getAttribute('data-e');
+        if (g) window.Art.fillAttr(el, 'data-e', g);
+      }
+    }
+  }
+
   /* Plate centres in stage fractions, cached when the layout changes — never
      read inside tick() (TD §7/§10). render() projects them onto the actors. */
   function measure() {
@@ -1341,6 +1364,7 @@
     state.decor = saved.decor;
 
     cacheEls();
+    paintStaticGlyphs();
     measure();
     window.addEventListener('resize', measure);
     render();
