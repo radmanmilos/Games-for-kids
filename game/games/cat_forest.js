@@ -540,8 +540,17 @@
 
     for (var j = 0; j < els.plates.length; j++) {
       var plate = state.plates[j];
-      if (plate && plate.treat) els.plateTreats[j].setAttribute('data-treat', plate.treat);
-      else if (els.plateTreats[j]) els.plateTreats[j].removeAttribute('data-treat');
+      var pt = els.plateTreats[j];
+      if (!pt) continue;
+      if (plate && plate.treat) {
+        pt.setAttribute('data-treat', plate.treat);
+        if (window.Art && window.Art.fillAttr) window.Art.fillAttr(pt, 'data-e', plate.treat);
+        else pt.setAttribute('data-e', plate.treat);
+      } else {
+        pt.removeAttribute('data-treat');
+        pt.removeAttribute('data-e');
+        pt.innerHTML = '';
+      }
     }
 
     if (els.tray) {
@@ -615,12 +624,14 @@
     el.setAttribute('aria-label', cat ? cat.name : '');
     var body = document.createElement('span');
     body.className = 'cf-cat-body';
-    body.setAttribute('data-e', cat ? cat.emoji : '');
+    if (window.Art && window.Art.fillAttr) window.Art.fillAttr(body, 'data-e', cat ? cat.emoji : '');
+    else body.setAttribute('data-e', cat ? cat.emoji : '');
     el.appendChild(body);
     if (cat && cat.acc) {
       var acc = document.createElement('span');
       acc.className = 'cf-cat-acc';
-      acc.setAttribute('data-e', cat.acc);
+      if (window.Art && window.Art.fillAttr) window.Art.fillAttr(acc, 'data-e', cat.acc);
+      else acc.setAttribute('data-e', cat.acc);
       el.appendChild(acc);
     }
     el.addEventListener('click', function () { cuddle(c); }); // CF-09: any visible phase is a safe cuddle
@@ -768,7 +779,8 @@
     el.type = 'button';
     el.className = 'cf-gift';
     el.setAttribute('aria-label', 'Поклон');
-    el.setAttribute('data-e', g.emoji);
+    if (window.Art && window.Art.fillAttr) window.Art.fillAttr(el, 'data-e', g.emoji);
+    else el.setAttribute('data-e', g.emoji);
     el.addEventListener('click', function () { collectGift(g); });
     return el;
   }
@@ -777,7 +789,8 @@
     var el = document.createElement('span');
     el.className = 'cf-fly';
     el.setAttribute('aria-hidden', 'true');
-    el.setAttribute('data-e', emoji);
+    if (window.Art && window.Art.fillAttr) window.Art.fillAttr(el, 'data-e', emoji);
+    else el.setAttribute('data-e', emoji);
     return el;
   }
 
@@ -785,7 +798,8 @@
     var el = document.createElement('span');
     el.className = 'cf-decor-item'; // one-shot fade-in (CSS); decorative only
     el.setAttribute('aria-hidden', 'true');
-    el.setAttribute('data-e', emoji);
+    if (window.Art && window.Art.fillAttr) window.Art.fillAttr(el, 'data-e', emoji);
+    else el.setAttribute('data-e', emoji);
     return el;
   }
 
@@ -793,7 +807,8 @@
     var el = document.createElement('span');
     el.className = 'cf-party';
     el.setAttribute('aria-hidden', 'true');
-    el.setAttribute('data-e', emoji);
+    if (window.Art && window.Art.fillAttr) window.Art.fillAttr(el, 'data-e', emoji);
+    else el.setAttribute('data-e', emoji);
     return el;
   }
 
@@ -1204,12 +1219,14 @@
     el.setAttribute('aria-label', cat.name);
     var body = document.createElement('span');
     body.className = 'cf-book-cat-body';
-    body.setAttribute('data-e', cat.emoji);
+    if (window.Art && window.Art.fillAttr) window.Art.fillAttr(body, 'data-e', cat.emoji);
+    else body.setAttribute('data-e', cat.emoji);
     el.appendChild(body);
     if (cat.acc) {
       var acc = document.createElement('span');
       acc.className = 'cf-book-cat-acc';
-      acc.setAttribute('data-e', cat.acc);
+      if (window.Art && window.Art.fillAttr) window.Art.fillAttr(acc, 'data-e', cat.acc);
+      else acc.setAttribute('data-e', cat.acc);
       el.appendChild(acc);
     }
     el.addEventListener('click', function () { cuddleInBook(cat.id); });

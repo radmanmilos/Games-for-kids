@@ -1336,8 +1336,8 @@
     "size": 9925
   },
   "data/art-registry.js": {
-    "sha256": "8177962f01997db0149390958e6f403ed1dff0be6206b6a21f2effe9445cad3d",
-    "size": 2586
+    "sha256": "e012f020f9c3212bbf35f6ccbbef42d846bc3e1798327b9da2083c402f317d5b",
+    "size": 3592
   },
   "data/serbian.js": {
     "sha256": "12f7f7f12989868bc399ecbe94de2e88165e1fea452047dd097c83a3e830ceb8",
@@ -1376,8 +1376,8 @@
     "size": 19914
   },
   "games/cat_forest.js": {
-    "sha256": "601952477a298ec958cdc783933090031f3fba3811f6255b315ac97a93deaf70",
-    "size": 57728
+    "sha256": "3eea9c3ff2d3bbcc4fe4206f24f8c88d0ee211f3c9a65f78755c8e4bdc030a85",
+    "size": 58730
   },
   "games/classroom.js": {
     "sha256": "84e25901b5a013f147b8b7dce2bd8c73870a97213fba3ac88b8f7ade75630a6f",
@@ -1492,8 +1492,8 @@
     "size": 14607
   },
   "pages/cat_forest.html": {
-    "sha256": "f83cc91ece594f673a779421a341e98b6726177d9e4de183a79aa6b82fb0c71f",
-    "size": 20029
+    "sha256": "b22f436ff501aac2b949de77a2d152277060b14b458509ecd98100b36a6772d8",
+    "size": 20338
   },
   "pages/classroom.html": {
     "sha256": "5c61c3716904ddc3e334dda74c434c2f447c59d1cc6d186c273ff59c90c98519",
@@ -1588,8 +1588,8 @@
     "size": 11403
   },
   "shared/art.js": {
-    "sha256": "c8c8b04d0924b8956cf8aa84faca68df8478781a894a43dbb280891a7aeafa25",
-    "size": 2434
+    "sha256": "52654eb725d50e9196c2ce442ec97d0d1cf2dc7dcdc8def832ac56e4ee9040fd",
+    "size": 3485
   },
   "shared/audio-buses.js": {
     "sha256": "4eac8f8e712df655871b5a64193cb38fa2b84d30dc3bf90e93f4a9910a8db900",

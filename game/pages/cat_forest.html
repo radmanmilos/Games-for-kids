@@ -42,7 +42,7 @@
     background:rgba(26,18,58,.34);}
   #cf-stars{inset:0;z-index:3;pointer-events:none;opacity:0;transition:opacity .6s ease;}
   .cf-star{position:absolute;line-height:1;font-size:5vmin;font-variant-emoji:emoji;}
-  .cf-star::before{content:"✨";}
+  .cf-star::before{content:attr(data-e);}
   .cf-star-1{left:14%;top:8%;}
   .cf-star-2{left:46%;top:5%;font-size:4vmin;}
   .cf-star-3{left:70%;top:11%;}
@@ -73,29 +73,32 @@
   .cf-hill-1{left:-14vmin;right:30vmin;bottom:-20vmin;height:36vmin;}
   .cf-hill-2{left:32vmin;right:-16vmin;bottom:-24vmin;height:42vmin;background:#A9D69A;opacity:.85;}
   .cf-tree{position:absolute;line-height:1;font-size:12vmin;font-variant-emoji:emoji;}
-  .cf-tree::before{content:"🌲";}
+  .cf-tree::before{content:attr(data-e);}
   .cf-tree-1{left:2vmin;bottom:27vmin;}
   .cf-tree-2{right:3vmin;bottom:29vmin;font-size:10vmin;}
   .cf-tree-3{left:20vmin;bottom:24vmin;font-size:8vmin;}
 
-  /* ---- interactive layers: the container never blocks, only its controls do ---- */
+  /* T301: when Art.fillAttr paints an <img class="art"> on any glyph site, the
+     image must be the same size the emoji was (1em = the site's own font-size),
+     and it must sit on the baseline the ::before used so hit tests and
+     geometry are unchanged. */
+  .cf-plate .art, .cf-treat .art, .cf-cat .art, .cf-cat-acc .art,
+  .cf-gift .art, .cf-fly .art, .cf-decor-item .art, .cf-party .art,
+  .cf-book-cat .art, .cf-book-cat-acc .art, .cf-tree .art, .cf-star .art{
+    width:1em;height:1em;vertical-align:middle; display:inline-block;}
   #cf-plates{z-index:4;left:0;right:0;top:48%;transform:translateY(-50%);
     display:flex;justify-content:center;align-items:center;gap:clamp(16px,6vmin,64px);
     pointer-events:none;}
   .cf-plate{pointer-events:auto;position:relative;padding:0;border:none;background:none;cursor:pointer;
     width:clamp(72px,22vmin,132px);aspect-ratio:1;border-radius:50%;
-    display:grid;place-items:center;line-height:1;
+    display:grid;place-items:center;line-height:1;font-size:clamp(40px,14vmin,88px);
     filter:drop-shadow(0 1vmin 1.2vmin rgba(74,63,107,.16));
     transition:transform .16s ease, filter .16s ease;}
-  .cf-plate::before{content:"🍽️";font-size:clamp(40px,14vmin,88px);line-height:1;font-variant-emoji:emoji;}
+  .cf-plate::before{content:attr(data-e);}
   .cf-plate-treat{position:absolute;left:50%;top:50%;transform:translate(-50%,-64%);
     font-size:clamp(30px,9vmin,56px);line-height:1;opacity:0;font-variant-emoji:emoji;}
   .cf-plate-treat[data-treat]{opacity:1;}
-  .cf-plate-treat[data-treat="fish"]::before{content:"🐟";}
-  .cf-plate-treat[data-treat="milk"]::before{content:"🥛";}
-  .cf-plate-treat[data-treat="chicken"]::before{content:"🍗";}
-  .cf-plate-treat[data-treat="sushi"]::before{content:"🍣";}
-  .cf-plate-treat[data-treat="cookie"]::before{content:"🍪";}
+  .cf-plate-treat::before{content:attr(data-e);}
 
   #cf-cats{z-index:5;inset:0;pointer-events:none;}
 
@@ -146,7 +149,7 @@
     border-radius:50%;background:#fff;box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);cursor:pointer;
     display:grid;place-items:center;line-height:1;
     transition:transform .16s ease, box-shadow .16s ease;}
-  .cf-treat::before{font-size:clamp(30px,7vmin,60px);line-height:1;font-variant-emoji:emoji;}
+  .cf-treat::before{content:attr(data-e);font-size:clamp(30px,7vmin,60px);line-height:1;font-variant-emoji:emoji;}
   .cf-treat[data-treat="fish"]::before{content:"🐟";}
   .cf-treat[data-treat="milk"]::before{content:"🥛";}
   .cf-treat[data-treat="chicken"]::before{content:"🍗";}
@@ -289,20 +292,20 @@
       <span class="cf-star cf-star-3"></span>
     </div>
     <div id="cf-plates">
-      <button class="cf-plate" data-plate="0" aria-label="Тањир"><span class="cf-plate-treat"></span></button>
-      <button class="cf-plate" data-plate="1" aria-label="Тањир"><span class="cf-plate-treat"></span></button>
-      <button class="cf-plate" data-plate="2" aria-label="Тањир"><span class="cf-plate-treat"></span></button>
+      <button class="cf-plate" data-plate="0" data-e="🍽️" aria-label="Тањир"><span class="cf-plate-treat"></span></button>
+      <button class="cf-plate" data-plate="1" data-e="🍽️" aria-label="Тањир"><span class="cf-plate-treat"></span></button>
+      <button class="cf-plate" data-plate="2" data-e="🍽️" aria-label="Тањир"><span class="cf-plate-treat"></span></button>
     </div>
     <div id="cf-cats"></div>
     <div id="cf-gifts"></div>
     <div id="cf-fx" aria-hidden="true"></div>
     <div id="cf-rain" aria-hidden="true"></div>
     <div id="cf-tray">
-      <button class="cf-treat" data-treat="fish" aria-label="Риба" aria-pressed="false"></button>
-      <button class="cf-treat" data-treat="milk" aria-label="Млеко" aria-pressed="false"></button>
-      <button class="cf-treat" data-treat="chicken" aria-label="Пилетина" aria-pressed="false"></button>
-      <button class="cf-treat" data-treat="sushi" aria-label="Суши" aria-pressed="false"></button>
-      <button class="cf-treat" data-treat="cookie" aria-label="Колачић" aria-pressed="false"></button>
+      <button class="cf-treat" data-treat="fish" data-e="🐟" aria-label="Риба" aria-pressed="false"></button>
+      <button class="cf-treat" data-treat="milk" data-e="🥛" aria-label="Млеко" aria-pressed="false"></button>
+      <button class="cf-treat" data-treat="chicken" data-e="🍗" aria-label="Пилетина" aria-pressed="false"></button>
+      <button class="cf-treat" data-treat="sushi" data-e="🍣" aria-label="Суши" aria-pressed="false"></button>
+      <button class="cf-treat" data-treat="cookie" data-e="🍪" aria-label="Колачић" aria-pressed="false"></button>
     </div>
     <div class="cf-toggles">
       <button id="cf-daynight" aria-pressed="false" aria-label="Дан и ноћ"></button>

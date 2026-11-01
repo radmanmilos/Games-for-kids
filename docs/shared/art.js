@@ -22,6 +22,26 @@
     return u ? '<img class="art' + (cls ? ' ' + esc(cls) : '') + '" src="' + u + '" alt="" draggable="false">' : esc(g);
   }
   const fill = (el, g, cls) => { el.dataset.emoji = norm(g); el.innerHTML = html(g, cls); };
+  /* A CSS-driven render site: the glyph lives in an attribute consumed by
+     `::before{content:attr(data-e)}` (Cat Forest's cats, gifts, decor, fx).
+     When an art image exists, paint it as an <img> and EMPTY the attribute so
+     the CSS attr() stops drawing the emoji underneath it; when there is no
+     stem, leave the attribute as the glyph (the CSS draws it). dataset.emoji
+     is always set so a smoke can read the glyph back either way. */
+const fillAttr = (el, attr, g, cls) => {
+    el.dataset.emoji = norm(g);
+    const u = url(g);
+    if (u) {
+      // Keep the ORIGINAL glyph in the attribute (CSS `::before{content:attr(data-e)}`
+      // still draws the right emoji; the <img> paints over it). Only dataset.emoji
+      // is normalized — that is what consumers read back.
+      el.setAttribute(attr, g);
+      const kids = el.innerHTML;
+      el.innerHTML = '<img class="art' + (cls ? ' ' + esc(cls) : '') + '" src="' + u + '" alt="" draggable="false">' + kids;
+    } else {
+      el.setAttribute(attr, g);
+    }
+  };
   const cache = new Map();
   function image(g) {
     const u = url(g); if (!u || typeof Image === 'undefined') return null;
@@ -33,5 +53,5 @@
     if (im && im.complete && im.naturalWidth) { ctx.drawImage(im, cx - size / 2, cy - size / 2, size, size); return true; }
     ctx.font = size + 'px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(g, cx, cy); return false;
   }
-  root.Art = { url, html, fill, image, draw, _BASE: () => BASE };
+  root.Art = { url, html, fill, fillAttr, image, draw, _BASE: () => BASE };
 })(typeof window !== 'undefined' ? window : globalThis);

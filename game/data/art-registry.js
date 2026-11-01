@@ -125,3 +125,28 @@ window.ART_REGISTRY = {
   "🛸": "spaceship",
   "🕰": "clock"
 };
+
+// T301: Cat Forest glyphs — the render sites in cat_forest.js / cat_forest.html
+// paint their emoji through CSS `::before{content:attr(data-e)}`. Registering
+// them here lets Art.fill() swap the text glyph for the painted WebP (the CSS
+// attr() falls back to an empty string once data-e is gone).
+// Deliberately NOT registered (no art stem exists, stay opaque textContent):
+// ☀️, 📖, ✖️ — the same exclusion family as ⭐/🎉/🎵.
+(function () {
+  var extra = {
+    "🐈": "cat-forest-tabby",
+    "🐈‍⬛": "cat-forest-black-cat",
+    "🐯": "cat-forest-tiger",
+    "🐆": "cat-forest-leopard",
+    "👑": "object-crown",
+    "🎀": "object-ribbon",
+    "🌸": "flower-tulip",
+    "🥛": "food-milk",
+    "🍗": "food-chicken-leg",
+    "🍣": "food-sushi",
+    "🍪": "food-cookie",
+    "🍽️": "object-plate",
+    "🌧️": "weather-rain"
+  };
+  for (var k in extra) { if (Object.prototype.hasOwnProperty.call(extra, k)) window.ART_REGISTRY[k] = extra[k]; }
+})();
