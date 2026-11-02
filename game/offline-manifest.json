@@ -515,13 +515,9 @@
     "sha256": "59867d0742a67eacbcabe37a29275cbad97e20eb137f5b1edad5d1f39d6f9696",
     "size": 24200
   },
-  "assets/art/shark-generated.webp": {
-    "sha256": "b2be3efc3b48a69d0e58bc259fc5b84a66ccf658b77c9d37e7f0f567c0498d93",
-    "size": 19268
-  },
   "assets/art/shark.webp": {
-    "sha256": "0082c72216e5390e433e728fdb9340b84437ad0b63165d81564502b4f703e296",
-    "size": 1455006
+    "sha256": "3fe30bec80c5436ab0df4737755e92c6ee7f368604be044f28c13db0674b422d",
+    "size": 1324543
   },
   "assets/art/sheep.webp": {
     "sha256": "bfacc1e31d2830faebb0962d37198cf93d8f9c7fe1145f76447b09ca9aacb334",
@@ -1684,8 +1680,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "036bfca5f35f8ddf59b143a7e7aa16245e73dbe8cea0f67aaff9f3fb93ebdc85",
-    "size": 13256
+    "sha256": "e1905f01ccf852bd0d87f2b0892b17b9f93745a9e3b391f09a817f48bf784c55",
+    "size": 13219
   },
   "sw.js": {
     "sha256": "b63e67b64a1297936636d22d6ba0e0194a8148c41b17b4dd2a1c931869e77270",
