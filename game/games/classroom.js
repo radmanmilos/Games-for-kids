@@ -149,8 +149,6 @@
       d.innerHTML = item.svg ? '<div class="show-svg">' + item.svg + '</div>' : '<div class="show-emoji"></div>';
       if (!item.svg && window.Art) {
         Art.fill(d.querySelector('.show-emoji'), item.emoji);
-      } else if (!item.svg) {
-        Art.fill(d.querySelector('.show-emoji'), item.emoji);
       }
       c.textContent = item.name;
     } else if (currentActivity === 'colors') {
