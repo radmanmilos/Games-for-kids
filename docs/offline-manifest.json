@@ -1336,8 +1336,8 @@
     "size": 9925
   },
   "data/art-registry.js": {
-    "sha256": "ef9819dd81c4ef3a1847b9f9149211be6d21a956df0cbefcbf92ee21b5e35b35",
-    "size": 3744
+    "sha256": "ffe7b27ae9881b39cf8fbf78f931233682ad72b01e1d46e9351e1547aebcb221",
+    "size": 3870
   },
   "data/serbian.js": {
     "sha256": "12f7f7f12989868bc399ecbe94de2e88165e1fea452047dd097c83a3e830ceb8",
@@ -1600,8 +1600,8 @@
     "size": 7318
   },
   "shared/celebration.js": {
-    "sha256": "59a9d938bf11cb29719a372f8c7e692c2b69931a2e34f587c83565fdd4cee1d3",
-    "size": 1336
+    "sha256": "91e8b79b9dbe756753cbb82c174faa78c0fcdef52f574b257d0c5e44f814a251",
+    "size": 1341
   },
   "shared/feedback.js": {
     "sha256": "797eeeb14e3cbf95398f76964374aa708d5c94810a510877ffb4f2ed5e24baed",
