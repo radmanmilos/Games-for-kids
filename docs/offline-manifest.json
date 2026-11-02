@@ -159,6 +159,10 @@
     "sha256": "c14d438e9fc9917ba1897f9e42ff8aa7926443bd8fc5aae4c168410f00561454",
     "size": 30446
   },
+  "assets/art/crab.webp": {
+    "sha256": "556762c11a88e0aaefaa34375cf6fd7f113f088d402871d178d5bc83510085ca",
+    "size": 947095
+  },
   "assets/art/cupcake.webp": {
     "sha256": "0adfb510b6488e53db4fae071cebf0987b15e9a4c638543fd9dd77c45466b0c4",
     "size": 28070
@@ -391,6 +395,10 @@
     "sha256": "d437815adefcd9b5864be2254323beef9d10478cb643af6c76c39d54cc26d3eb",
     "size": 45118
   },
+  "assets/art/octopus.webp": {
+    "sha256": "066f815e32dfccbd8dffb3e09c1743f2e3e725abd7b2e989100cdbe27407ea3f",
+    "size": 1255671
+  },
   "assets/art/orange.webp": {
     "sha256": "5b87cb756a5fc57e20d28e12019dbdca8be50c3c63b482fee7f86762d3bd474b",
     "size": 36878
@@ -507,6 +515,10 @@
     "sha256": "59867d0742a67eacbcabe37a29275cbad97e20eb137f5b1edad5d1f39d6f9696",
     "size": 24200
   },
+  "assets/art/shark.webp": {
+    "sha256": "b2be3efc3b48a69d0e58bc259fc5b84a66ccf658b77c9d37e7f0f567c0498d93",
+    "size": 19268
+  },
   "assets/art/sheep.webp": {
     "sha256": "bfacc1e31d2830faebb0962d37198cf93d8f9c7fe1145f76447b09ca9aacb334",
     "size": 35968
@@ -559,9 +571,21 @@
     "sha256": "1030038b18c5428849f82de1d400a66ac10359f30714ed8c2f77d0e291b02544",
     "size": 26110
   },
+  "assets/art/sun.webp": {
+    "sha256": "046103d3c08dbe5630a57b099f639ad6b1d4b5d9a1f16f0ac260a69242d609f1",
+    "size": 1067516
+  },
   "assets/art/sunflower.webp": {
     "sha256": "dee2459abce98c31ec068bcfa5045b001a9b3730fb1584ec521c0f4a7c8e7675",
     "size": 30930
+  },
+  "assets/art/sunrise.webp": {
+    "sha256": "cdfa19c2dfc53859e80a9b2a5f79be057d4c866bd9f8d33a3a20dfff100805a8",
+    "size": 1814120
+  },
+  "assets/art/sunset.webp": {
+    "sha256": "9e88c3bc0208b5e9c98312852c639f502aa9dd974dacd49f88141bc7ec642417",
+    "size": 1546477
   },
   "assets/art/surfboard.webp": {
     "sha256": "124732f6ea7f7eb20e87c51b3847204cbad416f6ce06497b0723017b4925f907",
@@ -1336,8 +1360,8 @@
     "size": 9925
   },
   "data/art-registry.js": {
-    "sha256": "eefd83fcaae00d785af3b89aa81ac5c00e68faf2fbcf082192abddde7ded9842",
-    "size": 3866
+    "sha256": "ffe7b27ae9881b39cf8fbf78f931233682ad72b01e1d46e9351e1547aebcb221",
+    "size": 3870
   },
   "data/serbian.js": {
     "sha256": "12f7f7f12989868bc399ecbe94de2e88165e1fea452047dd097c83a3e830ceb8",
@@ -1656,8 +1680,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "0409043bb4fee45711010b1ca386a7d510323c66ecc2b2ec917a76b438c5d179",
-    "size": 13055
+    "sha256": "e1905f01ccf852bd0d87f2b0892b17b9f93745a9e3b391f09a817f48bf784c55",
+    "size": 13219
   },
   "sw.js": {
     "sha256": "b63e67b64a1297936636d22d6ba0e0194a8148c41b17b4dd2a1c931869e77270",
