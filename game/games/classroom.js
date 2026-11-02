@@ -30,17 +30,17 @@
   ];
 
   const TIME_SCENES = [
-    { emoji: '🌅', art: 'sunrise' },
-    { emoji: '☀️', art: 'sun' },
-    { emoji: '🌇', art: 'sunset' },
-    { emoji: '🌙', art: 'moon' },
+    { emoji: '🌅' },
+    { emoji: '☀️' },
+    { emoji: '🌇' },
+    { emoji: '🌙' },
   ];
 
   const SEASON_SCENES = [
-    { emoji: '🌸', art: 'flower' },
-    { emoji: '☀️', art: 'sun' },
-    { emoji: '🍂', art: 'leaf' },
-    { emoji: '⛄', art: 'snowman' },
+    { emoji: '🌸' },
+    { emoji: '☀️' },
+    { emoji: '🍂' },
+    { emoji: '⛄' },
   ];
 
   const WEATHER_SCENES = [
@@ -103,8 +103,8 @@
     }
     btn.textContent = kind === 'colors' ? '' : (kind === 'shapes' ? '' : (item.label || item.emoji || ''));
     if (kind === 'shapes' && item.emoji && window.Art) Art.fill(btn, item.emoji);
-    if (item.art && window.Art) { Art.fill(btn, item.art); }
     else if (item.svg) btn.innerHTML = item.svg;
+    else if (item.emoji && window.Art) Art.fill(btn, item.emoji);
     btn.addEventListener('click', () => {
       if (window.popSound) window.popSound();
       stopAutoplay();
@@ -146,10 +146,9 @@
       }
       c.textContent = item.sentence;
     } else if (currentActivity === 'shapes' || currentActivity === 'time' || currentActivity === 'seasons') {
-      d.innerHTML = item.svg ? '<div class="show-svg">' + item.svg + '</div>' : (item.art ? '<div class="show-emoji"></div>' : '<div class="show-emoji"></div>');
-      if (item.art && window.Art) { 
-        var artEl = d.querySelector('.show-emoji');
-        if (artEl) { Art.fill(artEl, item.art); }
+      d.innerHTML = item.svg ? '<div class="show-svg">' + item.svg + '</div>' : '<div class="show-emoji"></div>';
+      if (!item.svg && window.Art) {
+        Art.fill(d.querySelector('.show-emoji'), item.emoji);
       } else if (!item.svg) {
         Art.fill(d.querySelector('.show-emoji'), item.emoji);
       }
