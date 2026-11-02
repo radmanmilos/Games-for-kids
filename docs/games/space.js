@@ -874,7 +874,7 @@
             heroW: 110,
             heroH: 100,
             heroBob: 4,
-            heroRotate: -Math.PI / 2,
+            heroRotate: 0,
             offsetStartRatio: 0.16,
             speed: 4.5,
             obstacleScale: 1.15,
