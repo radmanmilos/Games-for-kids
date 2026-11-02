@@ -858,7 +858,7 @@
             heroFontSize: 84,
             heroW: 110,
             heroH: 100,
-            heroFlip: true,
+            heroFlip: false,
             heroBob: 5,
             offsetStartRatio: 0.16,
             speed: 4.5,

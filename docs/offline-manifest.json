@@ -1336,8 +1336,8 @@
     "size": 9925
   },
   "data/art-registry.js": {
-    "sha256": "e012f020f9c3212bbf35f6ccbbef42d846bc3e1798327b9da2083c402f317d5b",
-    "size": 3592
+    "sha256": "8cf4aa7044f63c558c50d75b8b2483f0dd3e70b86eaecdec1bddfd3e394e2bb6",
+    "size": 3597
   },
   "data/serbian.js": {
     "sha256": "12f7f7f12989868bc399ecbe94de2e88165e1fea452047dd097c83a3e830ceb8",
@@ -1352,8 +1352,8 @@
     "size": 15812
   },
   "games/adventure.js": {
-    "sha256": "ec4eb965cf9d27f5c9172fcccd4d7643540bcf7e874a5e899acdb3384cbf4457",
-    "size": 58967
+    "sha256": "65776e75156313a7e70c110da7401cc2920f3091d8a7c8d3141980b7c1ae99e7",
+    "size": 59051
   },
   "games/animal_counting.js": {
     "sha256": "64dcc3488e29f75a7e7f30015e1c0b5979d3c31ed570b704bfcde05cd73badd1",
@@ -1376,12 +1376,12 @@
     "size": 20395
   },
   "games/cat_forest.js": {
-    "sha256": "dadf7f071a4b1709d66f19298be1e0c37c48161d6aceac544af01a64b84a977b",
-    "size": 59922
+    "sha256": "b932169f759bc64281787c882bba0d118fd6a1e9bf036acb8ee25fe8b07ea4af",
+    "size": 60237
   },
   "games/classroom.js": {
-    "sha256": "84e25901b5a013f147b8b7dce2bd8c73870a97213fba3ac88b8f7ade75630a6f",
-    "size": 15702
+    "sha256": "26eff91925f811f43c9e666845f0efcb2618a37bdaf98b4aed9927280c6d8ea5",
+    "size": 14397
   },
   "games/coloring.js": {
     "sha256": "f5b6ba59f7dc9f44828a22e3311e7f78335017676a353edd275d8795581cbaa5",
@@ -1416,8 +1416,8 @@
     "size": 11183
   },
   "games/ocean.js": {
-    "sha256": "9916c368cb6eed03e34ba1bfd535938fb5f51aae49fd96212db6f96af5665c52",
-    "size": 40414
+    "sha256": "865a2688687d1bcd902dddb07232c97c35b9051738c30181905d506ad1cc1487",
+    "size": 40415
   },
   "games/phonics.js": {
     "sha256": "85925ee752e42e0eec6832895a76ab05476daa88d07b925af73d7348601e9c75",
@@ -1456,8 +1456,8 @@
     "size": 10625
   },
   "games/space.js": {
-    "sha256": "3903542c53372eb4e90ad56e910d2d204e6707e1cfeecf638e192a3d6efdddd2",
-    "size": 43992
+    "sha256": "e65fa439c9c0d8768084871110554569c8824d2c6b473c597e4ee30f05acafa2",
+    "size": 44030
   },
   "games/spatial.js": {
     "sha256": "c6ba6d89058feb1371b7351212395573c19d4ab24f84bcc1861231927bd941fd",

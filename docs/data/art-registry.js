@@ -118,11 +118,11 @@ window.ART_REGISTRY = {
   "🎿": "skis",
   "⛷": "skier",
   "🏮": "evergreen-lantern",
-  "🦉": "owl",
-  "🦇": "bat",
-  "🐒": "monkey",
-  "🌾": "grass",
-  "🛸": "spaceship",
+   "🦉": "owl",
+   "🦇": "bat",
+   "🐒": "monkey",
+   "🌾": "grass",
+   "🛸": "spaceship",
   "🕰": "clock"
 };
 

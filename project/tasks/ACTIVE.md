@@ -18,4 +18,10 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
+- 341. IN PROGRESS — Feedback batch 1: Classroom time/seasons art + celebrations emoticon replacement sweep (2026-11-02, Kilo/kilo-auto/free). Add painted art for classroom time-of-day scenes and seasons (generate missing via asset pipeline if absent). Sweep all celebrations to replace remaining emoticons with painted art where possible.
+- 342. NEW — Feedback batch 2: Candy/cards art usage + puzzle image art generation (2026-11-02, Kilo/kilo-auto/free). Use existing card art in candy/cards game. Replace puzzle game images with generated painted art.
+- 343. NEW — Feedback batch 3: Kitty explorer - rocket art on fast button, enemy art usage + generation (2026-11-02, Kilo/kilo-auto/free). Use rocket art for fast button, replace enemies with art where available, generate missing enemy art via pipeline.
+- 344. NEW — Feedback batch 4: Ocean - fix fish direction, enemy art + generation (2026-11-02, Kilo/kilo-auto/free). Fix fish facing direction, replace enemies with art where available, generate missing.
+- 345. NEW — Feedback batch 5: Spaceship - rotate rocket 90° to point forward, art usage + generation (2026-11-02, Kilo/kilo-auto/free). Rotate rocket to point forward, use art where available, generate missing.
+- 346. NEW — Feedback batch 6: Cat forest - remove emoticons keep only art, fix food display on plate (2026-11-02, Kilo/kilo-auto/free). Remove emoticon fallbacks keeping only painted art; fix plate display to show proper food representation/name as intended.
 - 328. DEFERRED — T328 (user input needed): migrate hub/nav tile icons and shell-chrome glyphs (back buttons, parent/progress controls, mode buttons' leading emoji) to painted art. Parked: DECISIONS.md line 16 settles native emoji animals; hub tiles and chrome are composite/branding surfaces, not play-screen artwork. Needs user decision on whether painted icons are wanted there. (2026-11-01, OpenCode/Big Pickle)

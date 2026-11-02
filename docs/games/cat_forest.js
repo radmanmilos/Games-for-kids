@@ -525,6 +525,7 @@
         if (g) window.Art.fillAttr(el, 'data-e', g);
       }
     }
+    // Also paint gift/book entries and dynamic plate content
   }
 
   /* Plate centres in stage fractions, cached when the layout changes — never
@@ -568,8 +569,14 @@
       if (!pt) continue;
       if (plate && plate.treat) {
         pt.setAttribute('data-treat', plate.treat);
-        if (window.Art && window.Art.fillAttr) window.Art.fillAttr(pt, 'data-e', plate.treat);
-        else pt.setAttribute('data-e', plate.treat);
+        // Look up treat emoji by id
+        var treatEmoji = null;
+        for (var ti = 0; ti < TREATS.length; ti++) {
+          if (TREATS[ti].id === plate.treat) { treatEmoji = TREATS[ti].emoji; break; }
+        }
+        var glyph = treatEmoji || plate.treat;
+        if (window.Art && window.Art.fillAttr) window.Art.fillAttr(pt, 'data-e', glyph);
+        else pt.setAttribute('data-e', glyph);
       } else {
         pt.removeAttribute('data-treat');
         pt.removeAttribute('data-e');

@@ -1266,6 +1266,7 @@
                     window.AdventureModes.drawDriveCar(ctx, player.width, player.height, 0);
                 }
             } else {
+                if (typeof cfg.heroRotate === 'number') ctx.rotate(cfg.heroRotate);
                 ctx.scale((cfg.heroFlip ? !player.facingRight : player.facingRight) ? 1 : -1, player.squish);
                 if (cfg.drawHero) {
                     ctx.translate(0, -3);

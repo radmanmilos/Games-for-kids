@@ -30,17 +30,17 @@
   ];
 
   const TIME_SCENES = [
-    { emoji: '🌅' },
-    { emoji: '☀️' },
-    { emoji: '🌇' },
-    { emoji: '🌙' },
+    { emoji: '🌅', art: 'sunrise' },
+    { emoji: '☀️', art: 'sun' },
+    { emoji: '🌇', art: 'sunset' },
+    { emoji: '🌙', art: 'moon' },
   ];
 
   const SEASON_SCENES = [
-    { svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#BFE9FF"/><circle cx="85" cy="15" r="10" fill="#FFD23F"/><path d="M0 65 Q25 45 50 65 T100 65 L100 100 L0 100 Z" fill="#67C971"/><circle cx="30" cy="75" r="5" fill="#FF6F91"/><circle cx="42" cy="82" r="5" fill="#FFD23F"/><circle cx="60" cy="76" r="5" fill="#FF6F91"/><circle cx="70" cy="83" r="5" fill="#FFD23F"/></svg>' },
-    { svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#7FDBFF"/><circle cx="20" cy="20" r="12" fill="#FFD23F"/><path d="M0 60 Q25 50 50 60 T100 60 L100 100 L0 100 Z" fill="#4FC3F7"/><rect x="0" y="62" width="100" height="8" fill="#7FD7FF"/><path d="M0 75 Q25 67 50 75 T100 75 L100 100 L0 100 Z" fill="#2FA6DA"/></svg>' },
-    { svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#FFF4D6"/><rect x="45" y="40" width="10" height="35" fill="#8B5E3C"/><circle cx="50" cy="25" r="22" fill="#FF8C42"/><circle cx="37" cy="38" r="14" fill="#FF6F91"/><circle cx="63" cy="38" r="14" fill="#FFD23F"/><circle cx="30" cy="78" r="4" fill="#FF8C42"/><circle cx="70" cy="82" r="4" fill="#FF6F91"/></svg>' },
-    { svg: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#E4F7FB"/><circle cx="50" cy="35" r="16" fill="#fff"/><circle cx="50" cy="60" r="13" fill="#fff"/><circle cx="50" cy="82" r="10" fill="#fff"/><circle cx="44" cy="33" r="2.5" fill="#3A3A3A"/><circle cx="56" cy="33" r="2.5" fill="#3A3A3A"/><path d="M42 42 L58 48 M42 48 L58 42" stroke="#FF8C42" stroke-width="3"/><circle cx="15" cy="20" r="5" fill="#9AA5B1"/><circle cx="85" cy="15" r="5" fill="#9AA5B1"/><circle cx="78" cy="40" r="4" fill="#9AA5B1"/></svg>' },
+    { emoji: '🌸', art: 'flower' },
+    { emoji: '☀️', art: 'sun' },
+    { emoji: '🍂', art: 'leaf' },
+    { emoji: '⛄', art: 'snowman' },
   ];
 
   const WEATHER_SCENES = [
@@ -101,9 +101,10 @@
     } else {
       btn.style.background = TILE_PASTELS[index % TILE_PASTELS.length];
     }
-    btn.textContent = kind === 'colors' ? '' : (kind === 'shapes' ? '' : (item.label || item.emoji));
-    if (kind === 'shapes' && item.emoji) Art.fill(btn, item.emoji);
-    if (item.svg) btn.innerHTML = item.svg;
+    btn.textContent = kind === 'colors' ? '' : (kind === 'shapes' ? '' : (item.label || item.emoji || ''));
+    if (kind === 'shapes' && item.emoji && window.Art) Art.fill(btn, item.emoji);
+    if (item.art && window.Art) { Art.fill(btn, item.art); }
+    else if (item.svg) btn.innerHTML = item.svg;
     btn.addEventListener('click', () => {
       if (window.popSound) window.popSound();
       stopAutoplay();
@@ -145,8 +146,13 @@
       }
       c.textContent = item.sentence;
     } else if (currentActivity === 'shapes' || currentActivity === 'time' || currentActivity === 'seasons') {
-      d.innerHTML = item.svg ? '<div class="show-svg">' + item.svg + '</div>' : '<div class="show-emoji"></div>';
-      if (!item.svg) Art.fill(d.querySelector('.show-emoji'), item.emoji);
+      d.innerHTML = item.svg ? '<div class="show-svg">' + item.svg + '</div>' : (item.art ? '<div class="show-emoji"></div>' : '<div class="show-emoji"></div>');
+      if (item.art && window.Art) { 
+        var artEl = d.querySelector('.show-emoji');
+        if (artEl) { Art.fill(artEl, item.art); }
+      } else if (!item.svg) {
+        Art.fill(d.querySelector('.show-emoji'), item.emoji);
+      }
       c.textContent = item.name;
     } else if (currentActivity === 'colors') {
       d.innerHTML = '<div class="show-color" style="background:' + item.hex + '"></div>';
