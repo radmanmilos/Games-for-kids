@@ -119,12 +119,17 @@ for (const [name, mutate, expected, target] of CASES) {
   try { mutated = mutate(); }
   catch (e) { console.log('BAD TEST  ' + name + ': ' + e.message); bad++; continue; }
 
-  if (target === 'art') fs.writeFileSync(ART, mutated);
-  else if (target === 'index') fs.writeFileSync(INDEX, mutated);
-  else fs.writeFileSync(REG, mutated);
+  let code = 0, out = '';
+  try {
+    if (target === 'art') fs.writeFileSync(ART, mutated);
+    else if (target === 'index') fs.writeFileSync(INDEX, mutated);
+    else fs.writeFileSync(REG, mutated);
 
-  const { code, out } = runValidator();
-  restore();
+    const r = runValidator();
+    code = r.code; out = r.out;
+  } finally {
+    restore();
+  }
 
   const crashed = /SyntaxError|at loadRegistry/.test(out);
   const reported = out.includes(expected);

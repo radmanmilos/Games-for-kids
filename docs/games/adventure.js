@@ -119,6 +119,8 @@
             btn.addEventListener('mousedown', start);
             btn.addEventListener('mouseup', end);
             btn.addEventListener('mouseleave', end);
+            btn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); start(e); } });
+            btn.addEventListener('keyup', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); end(e); } });
         }
 
         document.querySelectorAll('#adv-controls [data-adv]').forEach(btn => bindButton(btn, btn.dataset.adv));

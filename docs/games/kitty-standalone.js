@@ -252,11 +252,12 @@ let musicTheme = null;
 let musicStep = 0;
 let musicStepTime = 0;
 let musicTimer = null;
-let musicOn = localStorage.getItem('pkMusic') !== 'off';
+let musicOn = true;
+try { musicOn = localStorage.getItem('pkMusic') !== 'off'; } catch (e) { /* storage unavailable: music on */ }
 
 function setMusicOn(on) {
     musicOn = on;
-    localStorage.setItem('pkMusic', on ? 'on' : 'off');
+    try { localStorage.setItem('pkMusic', on ? 'on' : 'off'); } catch (e) { /* keep in-memory value */ }
     const btn = document.getElementById('music-btn');
     if (btn) {
         btn.classList.toggle('off', !on);
@@ -559,9 +560,12 @@ function bindButton(id, keyProp) {
     };
     el.addEventListener('touchstart', start, {passive: false});
     el.addEventListener('touchend', end, {passive: false});
+    el.addEventListener('touchcancel', end, {passive: false});
     el.addEventListener('mousedown', start);
     el.addEventListener('mouseup', end);
     el.addEventListener('mouseleave', end);
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); start(e); } });
+    el.addEventListener('keyup', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); end(e); } });
 }
 
 bindButton('btn-left', 'left');
@@ -2560,6 +2564,7 @@ let paused = false;
 function setPaused(p) {
     if (p === paused) return;
     paused = p;
+    if (p) { keys.left = false; keys.right = false; keys.jump = false; }
     if (!p) requestAnimationFrame(loop);
 }
 

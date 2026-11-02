@@ -2,17 +2,24 @@
 
 *Overwrite this file at the end of every session (never append). Budget: 6 KB, checked by `node tools/check_docs.js`.*
 
-**Last updated:** 2026-11-01 **App version:** 3.0.0 (`game/manifest.json`) **Repository:** https://github.com/radmanmilos/Games-for-kids
+**Last updated:** 2026-11-02 **App version:** 3.0.1 (`game/manifest.json`) **Repository:** https://github.com/radmanmilos/Games-for-kids
 
 ## Where we are
 
-- **Art migration complete (3.0.0).** Every emoji render site in `game/` now paints through the shared `Art` helper (`game/shared/art.js`): `Art.fill` (textContent), `Art.fillAttr` (CSS `::before`), `Art.draw` (canvas), `Art.html` (HTML strings). Emoji is the universal fallback; `Art.url()` returns null for unregistered glyphs.
-- **Registered-glyph coverage is a hard-fail guard** in `tools/validate_pages.js` (registry/metadata stage): 138 glyphs / 134 stems, all present in `game/assets/art/` (155 WebPs); 21 orphans warn (non-fatal).
-- **Exceptions documented** in `project/reference/emoji-audit.md`: hub/nav tile icons, shell chrome, composite sentence/HUD text, hidden legacy nodes, data fields, unregistered glyphs. Hub/nav migration parked as task 328 (user input).
-- **Committed/pushed:** `cea2591` (T322+T323), `5b3a0f7` (T321), `3e08757` (T327), `ad6caf5` (T326). CI green.
-- **check_release green** (release gate + whole battery), play_matrix 270 passed / 0 failed / 0 skipped, axe_check clean (0 serious/critical), check_fast 8/8 green.
-- **Full screenshot battery** (108 shots) refreshed under `resources/General_reviews/Screenshot_Review/`.
-- **Tasks 298-325 DONE/archived.** Remaining: 328 (deferred, user input).
+- **Code-review remediation applied (3.0.1).** Four reviews (chatGPT, Claude, DeepSeek, Grok) were compared against current HEAD `52927bb`. Findings verified against live code; DeepSeek's "stub pages" claim refuted. Applied 9 fixes + 2 decision outcomes.
+- **Fixes shipped:**
+  - T329 Explorer held input now releases on `touchcancel` and pause (port from adventure.js).
+  - T330 Shared `shuffle` replaced biased `sort()` with Fisher–Yates.
+  - T331 Music `localStorage` reads/writes now guarded (no boot crash on locked-down storage).
+  - T332 Parent gate re-rolls after a wrong answer (keeps "Покушај поново", no lockout).
+  - T333 SW fetch handler no longer caches failed HTTP responses.
+  - T334 SW install now fails safely (keeps previous working offline copy).
+  - T335 Adventure/explorer/fastcat controls now focusable + keyboard-activatable (tabindex + Enter/Space).
+  - T336 Progress dates use local calendar date instead of UTC.
+  - T337 Negative-test guards now restore mutated files via `try/finally`.
+- **Decisions recorded:** T338 (version discovery deferred — needs real-tablet test), T339 (DeepSeek Tasks 0–6 rejected; keyboard part covered by T335).
+- **Gates green:** check_fast 8/8, check_release green (all 37 smokes + guards, 1329 checks), axe_check clean (0 serious/critical).
+- **Tasks 329-340 DONE/archived.** Open: 328 (deferred, user input).
 
 ## Asset generation
 
@@ -23,7 +30,7 @@
 ## Validate
 
 - `node tools/check_fast.js` — **8/8 green**.
-- `node tools/check_release.js` — release gate green.
+- `node tools/check_release.js` — release gate green (all 37 smokes + guards).
 - All affected smokes pass.
 
 ## Rules of the road

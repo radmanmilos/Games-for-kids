@@ -8,3 +8,6 @@ Read before touching `game/shared/*`, standalone/boot detection, the kitty HUD, 
 - Cloudflare Workers serves extensionless URLs: standalone detection must strip `.html` before comparing page names. Never match `'name.html'`.
 - Coloring regions: `createColoringRegion` accepts both `r.attrs` and flat fields — never assume `attrs` is always present.
 - Kitty HUD button offsets are sacred: music 🔊 at `right:268px`, worlds 🌍 at `right:200px` — do not move them closer or they overlap.
+- Every `localStorage` access must be guarded, including preference reads at script top level; an unguarded read at load kills the whole page (task 331).
+- Never shuffle with `sort(() => Math.random() - 0.5)`; it is biased and skews answer positions (task 330).
+- Touch-interruption smokes assert crash-resistance, not that held input is released; a touch/mouse game needs `touchcancel` handling and a key reset on pause (task 329).

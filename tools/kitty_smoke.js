@@ -58,6 +58,20 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
 
   await h.evalv(`document.querySelector('.char-btn[data-character="kitty"]').click()`);
 
+  // Task 329: held input must release on touchcancel and on pause.
+  const touchCancel = await h.evalv(`(() => {
+    const btn = document.getElementById('btn-right');
+    const before = keys.right;
+    btn.dispatchEvent(new TouchEvent('touchstart', { bubbles: true, cancelable: true }));
+    const held = keys.right;
+    btn.dispatchEvent(new TouchEvent('touchcancel', { bubbles: true, cancelable: true }));
+    const released = keys.right;
+    return { before, held, released };
+  })()`);
+  check('task329: touchcancel releases held input',
+    touchCancel && touchCancel.held === true && touchCancel.released === false,
+    JSON.stringify(touchCancel));
+
   // Regression guard (2026-10-02, offline E2E P4): the three play controls and
   // the HUD labels were left in normal flow after the 100%-height canvas inside
   // #app (position:fixed; overflow:hidden), so they rendered below the fold on

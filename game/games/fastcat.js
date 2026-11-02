@@ -189,7 +189,8 @@
       seq:  [0,4,7,9,12,9,7,4, 0,4,7,9,7,4,2,4, 9,12,14,16,14,12,9,7, 4,7,9,12,14,12,9,7] }
   };
   let musicTheme = null, musicStep = 0, musicStepTime = 0, musicTimer = null;
-  let musicOn = localStorage.getItem('pkMusic') !== 'off';
+  let musicOn = true;
+  try { musicOn = localStorage.getItem('pkMusic') !== 'off'; } catch (e) { /* storage unavailable: music on */ }
 
   function fcAudioCtx() {
     try { return window.ctx ? window.ctx() : null; } catch (e) { return null; }
@@ -197,7 +198,7 @@
 
   function setMusicOn(on) {
     musicOn = on;
-    localStorage.setItem('pkMusic', on ? 'on' : 'off');
+    try { localStorage.setItem('pkMusic', on ? 'on' : 'off'); } catch (e) { /* keep in-memory value */ }
     const btn = el('music-btn');
     if (btn) btn.classList.toggle('off', !on);
     if (on) startMusic(musicTheme); else stopMusic();
@@ -439,6 +440,8 @@
     b.addEventListener('mousedown', down);
     b.addEventListener('mouseup', up);
     b.addEventListener('mouseleave', up);
+    b.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); down(e); } });
+    b.addEventListener('keyup', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); up(e); } });
   }
 
   window.addEventListener('keydown', (e) => {

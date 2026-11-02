@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **329**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **341**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -324,3 +324,15 @@ One line per task: `number | status | date | title | archive file`. Every finish
 327 | DONE | 2026-11-01 | T327: verified T301-T311 against the code and closed the gaps. T308 had missed two canvas emoji in… | tasks-300-399.md
 324 | DONE | 2026-11-01 | T324: bumped game/manifest.json to 3.0.0; check_release green (release gate + whole battery); play_matrix 270… | tasks-300-399.md
 325 | DONE | 2026-11-01 | T325: DECISIONS.md final note added for the 3.0.0 migration; per-game docs unchanged (art swap is… | tasks-300-399.md
+329 | DONE | 2026-11-02 | T329 (2026-11-02, OpenCode/Big Pickle): Explorer held input sticks after touchcancel/pause. Fixed: added… | tasks-300-399.md
+330 | DONE | 2026-11-02 | T330 (2026-11-02, OpenCode/Big Pickle): Biased sort() shuffle in shared/utils.js → Fisher–Yates. Verified by… | tasks-300-399.md
+331 | DONE | 2026-11-02 | T331 (2026-11-02, OpenCode/Big Pickle): Unguarded localStorage for music preference in fastcat.js and… | tasks-300-399.md
+332 | DONE | 2026-11-02 | T332 (2026-11-02, OpenCode/Big Pickle): Parent gate does not re-roll after wrong answer → setTimeout re-roll… | tasks-300-399.md
+333 | DONE | 2026-11-02 | T336 (2026-11-02, OpenCode/Big Pickle): Progress dates use UTC (toISOString) → local calendar date… | tasks-300-399.md
+334 | DONE | 2026-11-02 | T333 (2026-11-02, OpenCode/Big Pickle): SW fetch handler caches failed HTTP responses → added net.ok guard.… | tasks-300-399.md
+335 | DONE | 2026-11-02 | T334 (2026-11-02, OpenCode/Big Pickle): SW install swallows failure + skipWaiting → fail install, delete… | tasks-300-399.md
+336 | DONE | 2026-11-02 | T335 (2026-11-02, OpenCode/Big Pickle): Keyboard-focusable controls: added tabindex=0 to control divs in 6… | tasks-300-399.md
+337 | DONE | 2026-11-02 | T337 (2026-11-02, OpenCode/Big Pickle): Hardened negative guards (games_map, registry_guards) with… | tasks-300-399.md
+338 | DONE | 2026-11-02 | T338 (2026-11-02, OpenCode/Big Pickle): DECISION — version discovery (chatGPT B vs Claude §7). Deferred per… | tasks-300-399.md
+339 | DONE | 2026-11-02 | T339 (2026-11-02, OpenCode/Big Pickle): DECISION — DeepSeek Tasks 0-6. Rejected per recommendation: Task 0… | tasks-300-399.md
+340 | DONE | 2026-11-02 | T340 (2026-11-02, OpenCode/Big Pickle): Release wrap-up: version bump 3.0.0 → 3.0.1, check_release green (all… | tasks-300-399.md

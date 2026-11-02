@@ -119,9 +119,13 @@ say(stale.length === 0, 'no registry entry points at a missing smoke file',
    shared module silently loses coverage. This is the failure the guard is for. */
 const dinoPage = path.join(PAGES, 'dino.html');
 const dinoOrig = fs.readFileSync(dinoPage, 'utf8');
-fs.writeFileSync(dinoPage, dinoOrig.replace('games/adventure.js', 'games/adventure-DISABLED.js'));
-const after = smokesForGameFile('adventure');
-fs.writeFileSync(dinoPage, dinoOrig);
+let after = [];
+try {
+  fs.writeFileSync(dinoPage, dinoOrig.replace('games/adventure.js', 'games/adventure-DISABLED.js'));
+  after = smokesForGameFile('adventure');
+} finally {
+  fs.writeFileSync(dinoPage, dinoOrig);
+}
 const lostSmoke = !after.includes('dino_smoke');
 say(lostSmoke, 'negative control: detaching dino.html from adventure.js loses dino_smoke',
   lostSmoke ? '' : 'a broken module reference still reported full coverage - the guard cannot fail');

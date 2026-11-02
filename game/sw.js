@@ -16,20 +16,24 @@ function resolveAssets(list) {
 }
 
 self.addEventListener('install', event => {
-  // try to pre-cache the list; fallback to skip on failure
+  // Pre-cache the offline list. A failed install must NOT activate an incomplete
+  // worker, and must NOT destroy the previously working cache: throw on any
+  // required failure so the old worker + cache keep serving. skipWaiting only
+  // runs on full success.
   event.waitUntil((async () => {
     try {
       const res = await fetch(CACHE_LIST_URL);
+      if (!res.ok) throw new Error('cache list HTTP ' + res.status);
       const list = await res.json();
       const cache = await caches.open(CACHE_NAME);
       await cache.addAll(resolveAssets(list));
       console.log('SW: initial cache complete', list.length);
+      self.skipWaiting();
     } catch (e) {
       console.warn('SW: initial cache failed', e);
+      try { await caches.delete(CACHE_NAME); } catch (_) {}
+      throw e;
     }
-    // activate immediately
-    self.skipWaiting();
-
   })());
 });
 
@@ -76,8 +80,8 @@ self.addEventListener('fetch', event => {
     if (cached) return cached;
     try {
       const net = await fetch(req);
-      // update cache for future
-      try { await cache.put(req, net.clone()); } catch(_){}
+      // cache only successful responses (never poison cache with 4xx/5xx)
+      if (net.ok) { try { await cache.put(req, net.clone()); } catch(_) {} }
       return net;
     } catch (e) {
       return cached || Response.error();

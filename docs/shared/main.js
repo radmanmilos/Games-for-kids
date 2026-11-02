@@ -25,7 +25,7 @@ window.PetrinProgress = (function () {
     let current = null;
     return {
         setCurrent(id) { current = id || null; },
-        visit() { const d = read(); const day = new Date().toISOString().slice(0, 10); if (!d.firstSeen) d.firstSeen = day; d.lastSeen = day; d.visits = (d.visits || 0) + 1; write(); },
+        visit() { const d = read(); const now = new Date(); const day = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0'); if (!d.firstSeen) d.firstSeen = day; d.lastSeen = day; d.visits = (d.visits || 0) + 1; write(); },
         play(id) { if (!id) return; const d = read(); d.played[id] = (d.played[id] || 0) + 1; write(); },
         complete(id) { id = id || current; if (!id) return; const d = read(); d.completed[id] = (d.completed[id] || 0) + 1; write(); },
         snapshot() { const d = read(); return JSON.parse(JSON.stringify(d)); },

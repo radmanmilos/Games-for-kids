@@ -238,6 +238,11 @@
               void b.offsetWidth;
               b.classList.add('wrong');
               gateNote.textContent = 'Покушај поново';
+              setTimeout(function () {
+                if (!actionsEl.hidden) return;
+                newGateQuestion();
+                gateNote.textContent = 'Покушај поново';
+              }, 400);
             }
           });
           gateChoices.appendChild(b);
