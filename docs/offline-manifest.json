@@ -515,13 +515,9 @@
     "sha256": "59867d0742a67eacbcabe37a29275cbad97e20eb137f5b1edad5d1f39d6f9696",
     "size": 24200
   },
-  "assets/art/shark-generated.webp": {
-    "sha256": "b2be3efc3b48a69d0e58bc259fc5b84a66ccf658b77c9d37e7f0f567c0498d93",
-    "size": 19268
-  },
   "assets/art/shark.webp": {
-    "sha256": "0082c72216e5390e433e728fdb9340b84437ad0b63165d81564502b4f703e296",
-    "size": 1455006
+    "sha256": "3fe30bec80c5436ab0df4737755e92c6ee7f368604be044f28c13db0674b422d",
+    "size": 1324543
   },
   "assets/art/sheep.webp": {
     "sha256": "bfacc1e31d2830faebb0962d37198cf93d8f9c7fe1145f76447b09ca9aacb334",
@@ -1364,8 +1360,8 @@
     "size": 9925
   },
   "data/art-registry.js": {
-    "sha256": "ffe7b27ae9881b39cf8fbf78f931233682ad72b01e1d46e9351e1547aebcb221",
-    "size": 3870
+    "sha256": "8f64082d97d9b53840f9c76dac22799b3fbf1e13bcfc0716af138e93f81e2e7e",
+    "size": 3898
   },
   "data/serbian.js": {
     "sha256": "12f7f7f12989868bc399ecbe94de2e88165e1fea452047dd097c83a3e830ceb8",
@@ -1508,8 +1504,8 @@
     "size": 6964
   },
   "pages/animal_memory.html": {
-    "sha256": "bfb3df10d1a885bb2c8ff918a488b0eb7e4394e6bd24397649892da91aeaeb60",
-    "size": 9223
+    "sha256": "d21c9346aa0f792da51c5aa9d2b7f46d35360fedc65e2189b412111d422a8d75",
+    "size": 9264
   },
   "pages/animal_puzzle.html": {
     "sha256": "07ed81deb92aca038672e6182dca1f9161709eee6084ae10b3ac89bf6c1be4b6",
@@ -1684,8 +1680,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "036bfca5f35f8ddf59b143a7e7aa16245e73dbe8cea0f67aaff9f3fb93ebdc85",
-    "size": 13256
+    "sha256": "e1905f01ccf852bd0d87f2b0892b17b9f93745a9e3b391f09a817f48bf784c55",
+    "size": 13219
   },
   "sw.js": {
     "sha256": "b63e67b64a1297936636d22d6ba0e0194a8148c41b17b4dd2a1c931869e77270",

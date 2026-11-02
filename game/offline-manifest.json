@@ -1360,8 +1360,8 @@
     "size": 9925
   },
   "data/art-registry.js": {
-    "sha256": "ffe7b27ae9881b39cf8fbf78f931233682ad72b01e1d46e9351e1547aebcb221",
-    "size": 3870
+    "sha256": "8f64082d97d9b53840f9c76dac22799b3fbf1e13bcfc0716af138e93f81e2e7e",
+    "size": 3898
   },
   "data/serbian.js": {
     "sha256": "12f7f7f12989868bc399ecbe94de2e88165e1fea452047dd097c83a3e830ceb8",
@@ -1504,8 +1504,8 @@
     "size": 6964
   },
   "pages/animal_memory.html": {
-    "sha256": "bfb3df10d1a885bb2c8ff918a488b0eb7e4394e6bd24397649892da91aeaeb60",
-    "size": 9223
+    "sha256": "d21c9346aa0f792da51c5aa9d2b7f46d35360fedc65e2189b412111d422a8d75",
+    "size": 9264
   },
   "pages/animal_puzzle.html": {
     "sha256": "07ed81deb92aca038672e6182dca1f9161709eee6084ae10b3ac89bf6c1be4b6",
