@@ -1133,6 +1133,12 @@ document.getElementById('fun-speed-btn').addEventListener('click', () => {
     initAudio();
     setFunSpeed(!funSpeedOn);
 });
+(function(){
+  var btn = document.getElementById('fun-speed-btn');
+  if (btn && window.Art) {
+    try { Art.fill(btn, '🚀'); } catch(e) {}
+  }
+})();
 
 function stepFrame() {
     const steps = funSpeedOn ? FUN_SPEED_MULT : 1;

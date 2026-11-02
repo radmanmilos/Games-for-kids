@@ -1336,8 +1336,8 @@
     "size": 9925
   },
   "data/art-registry.js": {
-    "sha256": "8cf4aa7044f63c558c50d75b8b2483f0dd3e70b86eaecdec1bddfd3e394e2bb6",
-    "size": 3597
+    "sha256": "ef9819dd81c4ef3a1847b9f9149211be6d21a956df0cbefcbf92ee21b5e35b35",
+    "size": 3744
   },
   "data/serbian.js": {
     "sha256": "12f7f7f12989868bc399ecbe94de2e88165e1fea452047dd097c83a3e830ceb8",
@@ -1376,12 +1376,12 @@
     "size": 20395
   },
   "games/cat_forest.js": {
-    "sha256": "b932169f759bc64281787c882bba0d118fd6a1e9bf036acb8ee25fe8b07ea4af",
-    "size": 60237
+    "sha256": "d9752b3a061a30f47ec890b7c58e37aa3153d3652193fbbf2b93c6eecce301c6",
+    "size": 60232
   },
   "games/classroom.js": {
-    "sha256": "26eff91925f811f43c9e666845f0efcb2618a37bdaf98b4aed9927280c6d8ea5",
-    "size": 14397
+    "sha256": "615d833f19ea270e20e1af11f4d4a7a9dda5509b73c137739611ba5963791204",
+    "size": 14110
   },
   "games/coloring.js": {
     "sha256": "f5b6ba59f7dc9f44828a22e3311e7f78335017676a353edd275d8795581cbaa5",
@@ -1408,8 +1408,8 @@
     "size": 5268
   },
   "games/kitty-standalone.js": {
-    "sha256": "c43c4193ce1b1fe05a201b6aac0d1f681d0cce9108087725ccb206258e169da8",
-    "size": 103555
+    "sha256": "fae0b4301d4ac619fc6cc71f20b5d589e33d2ac58883063a0b63bf2be5c324cd",
+    "size": 103706
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
@@ -1516,12 +1516,12 @@
     "size": 4904
   },
   "pages/explorer.html": {
-    "sha256": "2e9518a29e0163d121adefb5dd8c8d1840519fa44086125b1f4d3e37063de738",
-    "size": 10959
+    "sha256": "291bfefe62c03549362ab55d8a41112f6acc2377b5821f759717571d074fbf92",
+    "size": 10950
   },
   "pages/fastcat.html": {
-    "sha256": "8501a34efb16c6881fc8c9d4d2cf49c9fc8cf13f70addf55ecaf7fc67521997c",
-    "size": 14105
+    "sha256": "cbe8f2dfe0d90e95c6cf96cef6dfaebd97a9f01237ea705a66d150a6c0a4d01d",
+    "size": 14166
   },
   "pages/matching_game.html": {
     "sha256": "fdd22178a866042d75451182bd5ad611ad842e1c8f23a4649dbbedcd4468f7c0",
@@ -1600,8 +1600,8 @@
     "size": 7318
   },
   "shared/celebration.js": {
-    "sha256": "ccd8cefab158267037c9850575ba6506471ad621a61413eb18a18927dd58b849",
-    "size": 1338
+    "sha256": "59a9d938bf11cb29719a372f8c7e692c2b69931a2e34f587c83565fdd4cee1d3",
+    "size": 1336
   },
   "shared/feedback.js": {
     "sha256": "797eeeb14e3cbf95398f76964374aa708d5c94810a510877ffb4f2ed5e24baed",
