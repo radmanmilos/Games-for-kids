@@ -575,8 +575,8 @@
           if (TREATS[ti].id === plate.treat) { treatEmoji = TREATS[ti].emoji; break; }
         }
         var glyph = treatEmoji || plate.treat;
+        pt.setAttribute('data-e', glyph);
         if (window.Art && window.Art.fillAttr) window.Art.fillAttr(pt, 'data-e', glyph);
-        else pt.setAttribute('data-e', glyph);
       } else {
         pt.removeAttribute('data-treat');
         pt.removeAttribute('data-e');
