@@ -16,12 +16,13 @@
   - GitHub side: secret scanning **and push protection** are now enabled; 0 open code-scanning alerts and 0 secret-scanning alerts.
   - Credential audit (2026-11-03): 0 real credential values in 581 tracked text files, 0 generic secret patterns, 0 hits across
     523 commits of history; the credentials file is git-ignored locally and 404s on the remote.
-- **Git health:** the local clone is a fresh **full** clone (9 113 objects, 1 pack, blobs included, no lazy fetch). Its git dir
-  lives outside the synced tree (`/public/Games-for-kids/.git` is a `gitdir:` pointer) because the device's file-sync layer
-  corrupts pack files under `/public` — decision recorded in `project/DECISIONS.md`. `log`, `show`, `diff`, `commit` (hook
-  fires), `push` all verified working; local `check_fast` 9/9.
-- **Asset work-in-progress bundle (task 355):** ignored via `.gitignore`; its 162 tracked files were removed from the Git
-  index while local copies were retained.
+- **Git health (tasks 354/357):** the repo is a fresh **full** clone (9 140 objects, 1 pack, 631 commits, blobs included, no
+  lazy fetch). Its git dir lives outside the synced tree (`/public/Games-for-kids/.git` is a `gitdir:` pointer) because the
+  device's file-sync layer corrupts pack files under `/public` — decision and the `.l2s.tmp_*` warning live in
+  `project/DECISIONS.md`. `log`, `show`, `diff`, `commit` (hook fires) and `push` verified; local `check_fast` 9/9.
+- **Asset WIP bundle (task 355):** untracked and `.gitignore`d, so it never enters the checkout; blobs stay in history.
+- **Credentials (task 357):** the Cloudflare pair lives in the git-ignored `tools/vendor/` and is restored by hand after a
+  fresh clone; CI runs without it (the exact-value scan then reports "none to compare").
 - **AGENTS.md size (task 356):** condensed screenshot guidance while retaining the required refresh and registry steps;
   documentation check passes and the file is 16,129 UTF-8 bytes (budget: 16,384).
 - **Open tasks:** 341–352 (feedback-batch art, Kilo-era, IN PROGRESS in `ACTIVE.md`); 328 DEFERRED (needs user input).

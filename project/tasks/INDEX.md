@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **357**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **358**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -340,3 +340,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 354 | DONE | 2026-11-03 | Clean local clone + security/privacy gate verification docs (2026-11-03, OpenCode/Big Pickle). Replaced the… | tasks-300-399.md
 355 | DONE | 2026-11-03 | Ignore the asset generation work-in-progress bundle (2026-11-03, Copilot CLI/Auto). Added the bundle path to… | tasks-300-399.md
 356 | DONE | 2026-11-03 | Bring AGENTS.md under its size budget (2026-11-03, Copilot CLI/Auto). Condensed screenshot guidance while… | tasks-300-399.md
+357 | DONE | 2026-11-03 | Fresh clone rebuild after the bundle untracking (2026-11-03, OpenCode/Big Pickle). Wiped the local checkout… | tasks-300-399.md

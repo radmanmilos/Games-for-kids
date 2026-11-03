@@ -20,7 +20,10 @@ Read before fixing a code-scanning alert or spawning a process from a tool. Each
   `.githooks/pre-commit` only runs when that clone has `core.hooksPath` set — `git config core.hooksPath .githooks`, once per
   clone, with no warning when it is missing. The file-sync layer on this device also leaves `.l2s.tmp_*` junk inside
   `.git/objects` and returns `EPERM` on pack files, so a hung `git commit` / `write-tree` / `git show` is a **clone-health**
-  symptom, not a repo one; the fix is a fresh full clone, never a workaround that skips the gate. If a commit must be published
+  symptom, not a repo one; the fix is a fresh full clone, never a workaround that skips the gate. On this device the git dir
+  therefore lives outside the synced tree (`.git` is a one-line `gitdir:` pointer into `…/cache/opencode/git-store*`), and
+  **never delete the `.l2s.tmp_*` files inside it: they share the inode with `pack-*.pack`, so removing them destroys the pack.**
+  The Cloudflare pair stays in the git-ignored `tools/vendor/` and is restored by hand after a fresh clone (CI never has it). If a commit must be published
   from an unhealthy clone, build it in a throwaway repo outside the synced tree (fetch trees only, hash the changed files in,
   `commit-tree`, thin push) and then prove it: `git hash-object` of every changed file must equal the remote blob `sha`, and CI's
   `secrets/credentials` stage must be green before the task is called done.

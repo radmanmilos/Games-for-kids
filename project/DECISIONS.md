@@ -91,16 +91,19 @@ The Мала тркачица (Little Racer) game is fully built (Stages 1–5, 
 - Exceptions (hub/nav tile icons, shell chrome, composite sentence/HUD text, hidden legacy nodes, data fields, unregistered glyphs) are documented in project/reference/emoji-audit.md; hub/nav migration parked as task 328 pending user decision.
 - Version 3.0.0 (B bump = major release) ships the migration.
 
-## Repo/git layout on this device (2026-11-03, task 354)
+## Repo/git layout on this device (2026-11-03, tasks 354/357)
 
 - **The git dir lives outside the synced tree.** The device's file-sync layer turns git pack files written under `/public`
   into `EPERM` stubs and litters `.git/objects` with `.l2s.tmp_*` copies, which makes git report `fatal: bad object HEAD` and
-  hang `commit`/`show`/`write-tree`. `/public/Games-for-kids/.git` is therefore a one-line `gitdir:` pointer to
-  `/data/data/com.foxdebug.acodefree/cache/opencode/git-store`, which holds the real git directory (`core.worktree` is set to
-  `/public/Games-for-kids`). The worktree stays where it always was.
-- **The clone is full, not partial.** 9 113 objects in 1 pack (~323 MB), blobs included, so `log`/`show`/`diff` never trigger a
-  lazy fetch. The earlier blob-less partial clone was the reason local commits hung.
-- **The 195 MB `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/` stays out of the checkout** via
-  sparse-checkout (162 skip-worktree entries) but remains in history; `git sparse-checkout disable` restores it on disk.
-- **Never "repair" this by moving or copying the git dir back under `/public`** — the pack is destroyed in transit and cannot be
-  healed. Recreate a fresh full clone outside the synced tree instead (procedure in `project/lessons/security.md`).
+  hang `commit`/`show`/`write-tree`. `/public/Games-for-kids/.git` is therefore a one-line `gitdir:` pointer into a
+  `git-store*` directory under `/data/data/com.foxdebug.acodefree/cache/opencode/`, which holds the real git directory
+  (`core.worktree` is set to `/public/Games-for-kids`). The worktree stays where it always was.
+- **The clone is full, not partial.** 9 140 objects in 1 pack (~323 MB), 631 commits, blobs included, so `log`/`show`/`diff`
+  never trigger a lazy fetch. The earlier blob-less partial clone was the reason local commits hung. The repo was wiped and
+  rebuilt from this clone on 2026-11-03 (task 357) after the bundle untracking landed.
+- **The 195 MB asset WIP bundle is no longer tracked** (task 355: removed from the index and added to `.gitignore`), so it
+  never enters the checkout and no sparse-checkout rule is needed. Its blobs remain in history.
+- **Never "repair" this by moving or copying the git dir back under `/public`**, and **never delete the `.l2s.tmp_*` files
+  inside the git dir** — they share the inode with `pack-*.pack`, so deleting them destroys the live pack. Move the git dir
+  outside first; if the pack is already damaged, recreate a fresh full clone in the non-synced location (procedure in
+  `project/lessons/security.md`).
