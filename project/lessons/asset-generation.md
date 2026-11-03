@@ -24,7 +24,7 @@ Read this before generating any image asset. It complements `resources/General_r
 
 ## Credentials
 
-Never committed. Read from (in order): env vars `CF_ACCOUNT_ID` / `CF_API_TOKEN`, a file passed via `--creds`, or the drop-in file `%TEMP%\opencode\cloudflare-creds.json` (PowerShell writes a BOM; the script strips it). In this repo the user keeps them at `tools/vendor/Cloudflare-credentials,json` (git-ignored). Pass with `--creds "tools/vendor/Cloudflare-credentials,json"`.
+Never committed. Read from (in order): env vars `CF_ACCOUNT_ID` / `CF_API_TOKEN`, a file passed via `--creds`, or the drop-in file `%TEMP%\opencode\cloudflare-creds.json` (PowerShell writes a BOM; the script strips it). In this repo the user keeps them at `tools/vendor/Cloudflare-credentials.json` (git-ignored). Pass with `--creds "tools/vendor/Cloudflare-credentials.json"`.
 
 ## Naming convention
 

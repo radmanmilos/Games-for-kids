@@ -85,6 +85,7 @@ POSIX keeps the existing profile-tag kill.
 | `validate_workflow.js` | CI-topology + publishing gate guard (R5/task 165; pages gate task 274), 21 read-only checks over .github/workflows/ci.yml: every tools/*.js the workflow invokes exists; every… |
 | `validate_generated.js` | Generated-artifact freshness (R5/task 165), the command the roadmap asked for. |
 | `check_scan_alerts.js` | Regression guard for the two GitHub code-scanning alerts (task 176). |
+| `check_secrets.js` | Read-only gate that keeps credentials, API keys and private keys out of git (task 353): path deny-list, high-confidence value patterns, and an exact-value check against the local git-ignored credential file. Runs in `check_fast`. |
 | `check_release.js` | Read-only release gate (rewritten in R5/task 165). |
 | `registry.js` | Shared app-registry loader (R7/task 167). |
 | `guards/registry_guards_negtest.js` | Negative test for the registry contract checks in validate_pages.js (R7/task 167). |

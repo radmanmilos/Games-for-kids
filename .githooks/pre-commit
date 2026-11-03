@@ -1,0 +1,13 @@
+#!/bin/sh
+# Refuse a commit that stages a credential (task 353).
+#
+# The real gate is `tools/check_secrets.js` inside `check_fast.js`, which CI
+# runs on every push/PR. This hook exists because pushing straight to `main`
+# makes a secret public BEFORE CI can go red — the local check is the only one
+# that runs early enough to matter.
+#
+# Enable once per clone:  git config core.hooksPath .githooks
+# Bypass (deliberately, never by reflex):  git commit --no-verify
+#
+# Read-only: it inspects the index + working tree and writes nothing.
+exec node tools/check_secrets.js --quiet
