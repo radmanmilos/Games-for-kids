@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **354**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **355**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -337,3 +337,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 339 | DONE | 2026-11-02 | T339 (2026-11-02, OpenCode/Big Pickle): DECISION — DeepSeek Tasks 0-6. Rejected per recommendation: Task 0… | tasks-300-399.md
 340 | DONE | 2026-11-02 | T340 (2026-11-02, OpenCode/Big Pickle): Release wrap-up: version bump 3.0.0 → 3.0.1, check_release green (all… | tasks-300-399.md
 353 | DONE | 2026-11-03 | Secret/credential gate: nothing with keys can reach main (2026-11-03, OpenCode/Big Pickle). Added… | tasks-300-399.md
+354 | DONE | 2026-11-03 | Clean local clone + security/privacy gate verification docs (2026-11-03, OpenCode/Big Pickle). Replaced the… | tasks-300-399.md

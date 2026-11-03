@@ -90,3 +90,17 @@ The Мала тркачица (Little Racer) game is fully built (Stages 1–5, 
 - All registered glyphs now paint the illustrated WebP via game/shared/art.js (url/html/fill/fillAttr/image/draw), with emoji as the universal fallback. Registered-glyph coverage is a hard-fail guard in tools/validate_pages.js (registry/metadata stage).
 - Exceptions (hub/nav tile icons, shell chrome, composite sentence/HUD text, hidden legacy nodes, data fields, unregistered glyphs) are documented in project/reference/emoji-audit.md; hub/nav migration parked as task 328 pending user decision.
 - Version 3.0.0 (B bump = major release) ships the migration.
+
+## Repo/git layout on this device (2026-11-03, task 354)
+
+- **The git dir lives outside the synced tree.** The device's file-sync layer turns git pack files written under `/public`
+  into `EPERM` stubs and litters `.git/objects` with `.l2s.tmp_*` copies, which makes git report `fatal: bad object HEAD` and
+  hang `commit`/`show`/`write-tree`. `/public/Games-for-kids/.git` is therefore a one-line `gitdir:` pointer to
+  `/data/data/com.foxdebug.acodefree/cache/opencode/git-store`, which holds the real git directory (`core.worktree` is set to
+  `/public/Games-for-kids`). The worktree stays where it always was.
+- **The clone is full, not partial.** 9 113 objects in 1 pack (~323 MB), blobs included, so `log`/`show`/`diff` never trigger a
+  lazy fetch. The earlier blob-less partial clone was the reason local commits hung.
+- **The 195 MB `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/` stays out of the checkout** via
+  sparse-checkout (162 skip-worktree entries) but remains in history; `git sparse-checkout disable` restores it on disk.
+- **Never "repair" this by moving or copying the git dir back under `/public`** — the pack is destroyed in transit and cannot be
+  healed. Recreate a fresh full clone outside the synced tree instead (procedure in `project/lessons/security.md`).
