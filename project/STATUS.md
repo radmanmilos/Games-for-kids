@@ -20,6 +20,10 @@
   lives outside the synced tree (`/public/Games-for-kids/.git` is a `gitdir:` pointer) because the device's file-sync layer
   corrupts pack files under `/public` — decision recorded in `project/DECISIONS.md`. `log`, `show`, `diff`, `commit` (hook
   fires), `push` all verified working; local `check_fast` 9/9.
+- **Asset work-in-progress bundle (task 355):** ignored via `.gitignore`; its 162 tracked files were removed from the Git
+  index while local copies were retained.
+- **AGENTS.md size (task 356):** condensed screenshot guidance while retaining the required refresh and registry steps;
+  documentation check passes and the file is 16,129 UTF-8 bytes (budget: 16,384).
 - **Open tasks:** 341–352 (feedback-batch art, Kilo-era, IN PROGRESS in `ACTIVE.md`); 328 DEFERRED (needs user input).
 
 ## Security & privacy
