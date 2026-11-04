@@ -807,7 +807,12 @@ function main() {
   if (world.decor && world.decor.length) {
     const texCache = {};
     const decorTex = (emoji) => {
-      if (!texCache[emoji]) {
+      if (texCache[emoji]) return texCache[emoji];
+      const url = (window.Art && typeof window.Art.url === 'function') ? window.Art.url(emoji) : null;
+      let tex;
+      if (url) {
+        tex = new THREE.TextureLoader().load(url);
+      } else {
         const cv = document.createElement("canvas");
         cv.width = cv.height = 128;
         const cg = cv.getContext("2d");
@@ -815,9 +820,10 @@ function main() {
         cg.textAlign = "center";
         cg.textBaseline = "middle";
         cg.fillText(emoji, 64, 66);
-        texCache[emoji] = new THREE.CanvasTexture(cv);
+        tex = new THREE.CanvasTexture(cv);
       }
-      return texCache[emoji];
+      texCache[emoji] = tex;
+      return tex;
     };
     const scaleN = base.decorScale || 1;
     for (let i = 0; i < 16; i++) {
@@ -2198,7 +2204,7 @@ function main() {
       b.setAttribute("aria-pressed", i === pendingWorld ? "true" : "false");
       b.innerHTML =
         '<span class="wc-emoji">' +
-        (wb.collectible || "🏁") +
+        ((window.Art && window.Art.html) ? window.Art.html(wb.collectible || "🏁") : (wb.collectible || "🏁")) +
         '</span><span class="wc-name">' +
         wb.name +
         "</span>";

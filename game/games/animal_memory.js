@@ -60,6 +60,8 @@
           <div class="card-face card-front">${faceHtml}</div>
         </div>`;
       boardEl.appendChild(card);
+    const back = card.querySelector('.card-back');
+    if (back && window.Art) Art.fillAttr(back, 'data-emoji', '🃏');
     });
     first = second = null; lock = false; matches = 0; moves = 0;
     updateStatus();

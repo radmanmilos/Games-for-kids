@@ -296,4 +296,5 @@
   /* The kids quiz lives in kids_games.js and used to leave by clicking its own
      #kidsBack button; there is one back control now, so it calls this instead. */
   window.classroomLeaveKids = leaveKidsGame;
+  if (window.Art) document.querySelectorAll('.a-emoji').forEach(el => Art.fill(el, (el.textContent || '').trim()));
 }());

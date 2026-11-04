@@ -1376,8 +1376,8 @@
     "size": 10230
   },
   "games/animal_memory.js": {
-    "sha256": "7e974cc4430b1c059969206b6aab604e91bc56780300468cb6318508aa6f7633",
-    "size": 6799
+    "sha256": "4d29d78cb7c55f16cb1e20cafb0aa5d0e26ab1e3100ac03feccb4fa1a2c2b197",
+    "size": 6920
   },
   "games/animal_puzzle.js": {
     "sha256": "0ab1459ef82f229d17143496ff2a3f5e190c46e1fddefe89a4ab2048914ebca1",
@@ -1396,8 +1396,8 @@
     "size": 60232
   },
   "games/classroom.js": {
-    "sha256": "666bf994b45d2f2be163d1c537a5c77025a3d221e0acd4372226a57be6fd0d49",
-    "size": 14426
+    "sha256": "a25f411b9e78d54dd6a04138f67d8358761c36071308d9532e8725436f01d6a9",
+    "size": 14542
   },
   "games/coloring.js": {
     "sha256": "f5b6ba59f7dc9f44828a22e3311e7f78335017676a353edd275d8795581cbaa5",
@@ -1452,8 +1452,8 @@
     "size": 4817
   },
   "games/racing3d.mjs": {
-    "sha256": "b8515c5d48c39d311234a62452ac4e73cd139b7b268d202916fce292b626f920",
-    "size": 103138
+    "sha256": "3eb73a983612b93363169241f7e55089ad659d367838c7eaf9dbd9192bbbcc79",
+    "size": 103445
   },
   "games/rhythm.js": {
     "sha256": "50b4b714b940445ed62dfdd750db4b4898cb35c696423bbdc9f0f46f068a7d39",
@@ -1484,8 +1484,8 @@
     "size": 17659
   },
   "index.html": {
-    "sha256": "98d7bd708eb993192d919025da10d8d11331b63555ba9c016624f8a274fbacba",
-    "size": 17656
+    "sha256": "dac73c7a43e8a032954cc566d41fbd974b9689509182812f7b3699a529795c05",
+    "size": 19070
   },
   "manifest.json": {
     "sha256": "4402de2a0b97c6158aadc87093d9e28f115f7a7101cf90fcdc4f32149ade7897",
@@ -1496,8 +1496,8 @@
     "size": 6964
   },
   "pages/animal_memory.html": {
-    "sha256": "d037b825a97969a7fa1729d472eedc3c499de7f677bc616ab04c9055ecc8fba1",
-    "size": 9223
+    "sha256": "dd77dd08f202dab51cd9d44588101ae84f99d8f0871836e378869f06554ff7f2",
+    "size": 9349
   },
   "pages/animal_puzzle.html": {
     "sha256": "07ed81deb92aca038672e6182dca1f9161709eee6084ae10b3ac89bf6c1be4b6",
@@ -1592,8 +1592,8 @@
     "size": 6993
   },
   "pages/tracing.html": {
-    "sha256": "01e3ffaecd220b52ac2b879dbfe1eb9004577c0a4c33b4dafa4c33cddb22e790",
-    "size": 10905
+    "sha256": "a5050803fa1943569855da74b1192d8086356433196d31dba300af988666e362",
+    "size": 11040
   },
   "shared/accessibility.css": {
     "sha256": "0f4003e8e36802f811ab60049f0c6aef483795a723424f16fef649a5c34183ca",

@@ -18,11 +18,6 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 359. NEW — Painted art on the last emoji surfaces: hub, classroom/tracing/matching buttons, racing3d decor (2026-11-04, OpenCode/Big Pickle)
-  - `index.html:331-339` loads no `art-registry.js`/`shared/art.js`, so all 30+ hub tiles (`:273-325`) are static emoji; `classroom.html:288-293,299-302`, `tracing.html:196-199` and `animal_memory.html:66` (card back `content:"🃏"`) hard-code glyphs; `racing3d.mjs:805-821` paints every decor billboard with `cg.fillText`, and `:2199-2205` builds world cards from raw emoji.
-  - Fix: load the art pipeline where it is missing, run the static buttons through `Art.fill`, switch racing3d decor to `Art.image()` textures (29 of 32 decor glyphs already have art) and the world cards to `Art.html`. Animal Puzzle sea scene `🐠/🐬/🦀` (`animal_puzzle.js:8`) follows the registry fixed by 358.
-  - Done when: `node tools/scan_glyphs.js` shows no child-facing glyph that has art mapped but is still rendered as text; hub/racing3d smokes green; screenshots refreshed for hub, classroom, tracing, matching, racing3d.
-
 - 360. NEW — Art-integrity gates in `check_fast` (2026-11-04, OpenCode/Big Pickle)
   - Nothing currently enforces that `game/assets/art/*.webp` really is WebP, is 512², or has alpha; nothing notices an art file with no consumer. `tools/lib/imagefile.js#detectFormat` and `tools/asset_qa.js` already measure all three facts, they are just never run over the shipped folder.
   - Add `tools/check_art.js`: format (magic bytes) + dimensions + alpha coverage for every glyph in `game/assets/art/`, registry-coverage (every mapped stem has a file, every file has a consumer) and an orphan report. Wire it as a `check_fast` stage with a failing exit code and an explicit fix message; scene backgrounds live in `game/assets/scenes/` and are exempt.

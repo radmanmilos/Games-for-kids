@@ -33,8 +33,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const toddlerClass = await h.evalv(`document.body.classList.contains('toddler')`);
   check('body has toddler class in easy mode', toddlerClass === true, toddlerClass);
 
-  const cardBack = await h.evalv(`getComputedStyle(document.querySelector('.card-back'), '::before').content`);
-  check('card back uses the game icon (🃏)', cardBack === '"🃏"', cardBack);
+  const cardBackPainted = await h.evalv(`!!document.querySelector('.card-back.art-painted') && !!document.querySelector('.card-back .art')`);
+  check('card back uses the painted game icon', cardBackPainted, cardBackPainted);
 
   // Match a pair
   const P = await h.evalv(`(() => {

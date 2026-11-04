@@ -354,3 +354,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 351 | DONE | 2026-11-04 | Ocean enemies art + generation (2026-11-02, Kilo/kilo-auto/free). Replace ocean enemies with painted art… | tasks-300-399.md
 352 | DONE | 2026-11-04 | Puzzle images art generation (2026-11-02, Kilo/kilo-auto/free). Generate painted art for animal puzzle… | tasks-300-399.md
 358 | DONE | 2026-11-04 | Re-cut shark/sun to real 512² alpha WebP (11 KB each, 74%/43% transparent) with the new… | tasks-300-399.md
+359 | DONE | 2026-11-04 | Wired painted art onto the remaining emoji surfaces: hub tiles (load art pipeline + inline paint of… | tasks-300-399.md

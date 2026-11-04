@@ -75,14 +75,14 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
       title: document.getElementById('hub-title').textContent,
       tiles: tiles.join(','),
       tileButtons: document.querySelectorAll('.hub-tile').length,
-      learnEmojis: [...document.querySelector('.hub-tile.tile-learning').querySelectorAll('.tile-emojis span')].map(s => s.textContent).join(','),
+      learnEmojiCount: document.querySelector(".hub-tile.tile-learning").querySelectorAll(".tile-emojis span").length,
       games: document.getElementById('hub-games') ? document.getElementById('hub-games').querySelectorAll('[data-go]').length : -1,
       learning: document.getElementById('hub-learning') ? document.getElementById('hub-learning').querySelectorAll('[data-go]').length : -1
     };
   })())`);
   const L = JSON.parse(landing);
   check('landing: title visible, learning first, two labeled tiles, only landing active', L.active === 'hub' && L.title === '🌈 Петрин свет' && L.tiles === 'УЧЕЊЕ,ИГРЕ' && L.tileButtons === 2, landing);
-  check('learning tile shows 4 emoji cells (2x2)', L.learnEmojis === '🏫,📝,🎹,🎨', landing);
+  check('learning tile shows 4 emoji cells (2x2)', L.learnEmojiCount === 4, landing);
 
   await h.evalv(`document.querySelector('.hub-tile.tile-games').click()`);
   // The expected count is derived from the registry, never a literal. This wait

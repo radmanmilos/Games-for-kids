@@ -329,6 +329,8 @@
 </div>
 
 <script src="data/serbian.js"></script>
+<script src="data/art-registry.js"></script>
+<script src="shared/art.js"></script>
 <script src="shared/navigation.js"></script>
 <script src="data/app-registry.js"></script>
 <script src="shared/celebration.js"></script>
@@ -337,5 +339,38 @@
 <script src="shared/utils.js"></script>
 
 <script src="shared/main.js"></script>
+<script>
+  (function () {
+    if (!window.Art) return;
+    const paintEl = (el) => {
+      const g = (el.textContent || '').trim();
+      if (g && g.length <= 4 && window.Art.url(g)) {
+        window.Art.fill(el, g);
+        return;
+      }
+      // Composite text: replace registered glyphs inline, keep the rest.
+      const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach((n) => {
+        const txt = n.nodeValue;
+        if (!txt || !txt.trim()) return;
+        const frag = document.createDocumentFragment();
+        let changed = false;
+        Array.from(txt).forEach((ch) => {
+          const u = window.Art.url(ch);
+          if (u) { const img = document.createElement('img'); img.className='art'; img.src=u; img.alt=''; img.draggable=false; frag.appendChild(img); changed = true; }
+          else frag.appendChild(document.createTextNode(ch));
+        });
+        if (changed) n.parentNode.replaceChild(frag, n);
+      });
+    };
+    document.querySelectorAll('.hub-btn, .hub-tile').forEach(paintEl);
+    document.querySelectorAll('.tile-emojis span').forEach((s) => {
+      const g = (s.textContent || '').trim();
+      if (g && window.Art.url(g)) window.Art.fill(s, g);
+    });
+  })();
+</script>
 </body>
 </html>
