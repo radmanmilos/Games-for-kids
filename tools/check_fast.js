@@ -37,6 +37,7 @@ const STAGES = [
   ['generated artifacts', 'validate_generated.js', []],
   ['offline inventory', 'validate_offline.js', ['--quiet']],
   ['docs budgets/links', 'check_docs.js', ['--quiet']],
+  ['art integrity', 'check_art.js', []],
   ['hub smoke', 'hub_smoke.js', []]
 ];
 

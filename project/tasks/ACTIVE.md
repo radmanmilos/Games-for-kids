@@ -18,11 +18,6 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 360. NEW — Art-integrity gates in `check_fast` (2026-11-04, OpenCode/Big Pickle)
-  - Nothing currently enforces that `game/assets/art/*.webp` really is WebP, is 512², or has alpha; nothing notices an art file with no consumer. `tools/lib/imagefile.js#detectFormat` and `tools/asset_qa.js` already measure all three facts, they are just never run over the shipped folder.
-  - Add `tools/check_art.js`: format (magic bytes) + dimensions + alpha coverage for every glyph in `game/assets/art/`, registry-coverage (every mapped stem has a file, every file has a consumer) and an orphan report. Wire it as a `check_fast` stage with a failing exit code and an explicit fix message; scene backgrounds live in `game/assets/scenes/` and are exempt.
-  - Done when: `node tools/check_fast.js` includes the new stage, a deliberate negative test (mutate one file, expect FAIL, restore from a copy) proves it fails, and CI's `fast` job inherits it.
-
 - 361. NEW — Animal Puzzle painted scene backgrounds (2026-11-04, OpenCode/Big Pickle)
   - Task 352 was marked DONE but `git log -- game/games/animal_puzzle.js` stops at `0ca3c0e`; no scene art exists. Scenes (`animal_puzzle.js:2-12`, `paint()` at `:200`) are canvas gradients plus procedural decor.
   - Generate 8 painted backgrounds (park, house, savanna, sea, forest, farm, space, snow) through `asset_generate.js` → bundle → `game/assets/scenes/`, wire them as the `paint()` backdrop layer with the existing gradient as fallback, keep the 64 px animal row on top.
