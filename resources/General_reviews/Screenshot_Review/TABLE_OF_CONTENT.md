@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-04T14:04:27.784Z
+- Генерисано / Generated: 2026-11-04T14:26:59.189Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -28,10 +28,10 @@
 | `cat_forest_phone-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 390×844 | портрет | — | 04.11.2026. 13:48:37 | 358 |
 | `cat_forest_tablet-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 1180×820 | пејзаж | — | 04.11.2026. 13:48:37 | 358 |
 | `cat_forest_tablet-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 820×1180 | портрет | — | 04.11.2026. 13:48:37 | 358 |
-| `classroom_phone-landscape.png` | Учионица | `/pages/classroom.html` | 844×390 | пејзаж | — | 04.11.2026. 14:53:58 | 359 |
-| `classroom_phone-portrait.png` | Учионица | `/pages/classroom.html` | 390×844 | портрет | — | 04.11.2026. 14:53:58 | 359 |
-| `classroom_tablet-landscape.png` | Учионица | `/pages/classroom.html` | 1180×820 | пејзаж | — | 04.11.2026. 14:53:58 | 359 |
-| `classroom_tablet-portrait.png` | Учионица | `/pages/classroom.html` | 820×1180 | портрет | — | 04.11.2026. 14:53:58 | 359 |
+| `classroom_phone-landscape.png` | Учионица | `/pages/classroom.html` | 844×390 | пејзаж | — | 04.11.2026. 15:26:59 | 362 |
+| `classroom_phone-portrait.png` | Учионица | `/pages/classroom.html` | 390×844 | портрет | — | 04.11.2026. 15:26:59 | 362 |
+| `classroom_tablet-landscape.png` | Учионица | `/pages/classroom.html` | 1180×820 | пејзаж | — | 04.11.2026. 15:26:59 | 362 |
+| `classroom_tablet-portrait.png` | Учионица | `/pages/classroom.html` | 820×1180 | портрет | — | 04.11.2026. 15:26:59 | 362 |
 | `coloring_phone-landscape.png` | Бојење | `/pages/coloring.html` | 844×390 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
 | `coloring_phone-portrait.png` | Бојење | `/pages/coloring.html` | 390×844 | портрет | — | 01.11.2026. 18:28:02 | 324 |
 | `coloring_tablet-landscape.png` | Бојење | `/pages/coloring.html` | 1180×820 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |

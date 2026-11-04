@@ -29,6 +29,9 @@
     { svg: SHAPE_SVGS.piramida },
   ];
 
+  /* Full-bleed scene art for glyphs that are really scenes, not cut-outs. */
+  const SCENE_IMAGES = { '🌙': '../assets/scenes/night-sky.png' };
+  const sceneImageFor = (g) => SCENE_IMAGES[g] || null;
   const TIME_SCENES = [
     { emoji: '🌅' },
     { emoji: '☀️' },
@@ -102,13 +105,21 @@
       btn.style.background = TILE_PASTELS[index % TILE_PASTELS.length];
     }
     btn.textContent = kind === 'colors' ? '' : (kind === 'shapes' ? '' : (item.label || item.emoji || ''));
-    if (kind === 'shapes' && item.emoji && window.Art) Art.fill(btn, item.emoji);
+    if (kind === 'shapes' && item.emoji && window.Art) {
+      const su = sceneImageFor(item.emoji);
+      if (su) btn.innerHTML = '<img class="art" src="' + su + '" alt="" draggable="false" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">';
+      else Art.fill(btn, item.emoji);
+    }
     else if (item.svg) btn.innerHTML = item.svg;
     /* Items that carry their own label (letters, numbers) keep it on the tile:
        the painted art belongs to the detail view, otherwise the child loses the
        letter/number and only sees a picture. Scene-only items (time, seasons)
        have no label, so their tile is the painted scene. */
-    else if (item.emoji && !item.label && window.Art) Art.fill(btn, item.emoji);
+    else if (item.emoji && !item.label && window.Art) {
+      const su = sceneImageFor(item.emoji);
+      if (su) btn.innerHTML = '<img class="art" src="' + su + '" alt="" draggable="false" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;">';
+      else Art.fill(btn, item.emoji);
+    }
     btn.addEventListener('click', () => {
       if (window.popSound) window.popSound();
       stopAutoplay();
