@@ -6,56 +6,60 @@
 
 ## Where we are
 
-- **Secrets gate shipped (task 353) and the local clone repaired (task 354).**
-  - `tools/check_secrets.js` keeps credentials, API keys and private keys out of git: path deny-list
-    (`.env`, `*credentials*.json`, `*.pem`, `id_rsa`, `.netrc`, …), high-confidence value patterns (private key blocks,
-    AWS/GitHub/Slack/OpenAI/Google shapes, JWTs, filled `api_key:`/`password:` literals) and an exact-value scan of the real
-    values in the git-ignored `tools/vendor/Cloudflare-credentials.json`. Self-tested detectors, negative-tested end to end.
-  - It runs as a `check_fast` stage (CI's `fast` job → every push/PR) **and** as the committed `.githooks/pre-commit` —
-    enable once per clone with `git config core.hooksPath .githooks`.
-  - GitHub side: secret scanning **and push protection** are now enabled; 0 open code-scanning alerts and 0 secret-scanning alerts.
-  - Credential audit (2026-11-03): 0 real credential values in 581 tracked text files, 0 generic secret patterns, 0 hits across
-    523 commits of history; the credentials file is git-ignored locally and 404s on the remote.
-- **Git health (tasks 354/357):** the repo is a fresh **full** clone (9 140 objects, 1 pack, 631 commits, blobs included, no
-  lazy fetch). Its git dir lives outside the synced tree (`/public/Games-for-kids/.git` is a `gitdir:` pointer) because the
-  device's file-sync layer corrupts pack files under `/public` — decision and the `.l2s.tmp_*` warning live in
-  `project/DECISIONS.md`. `log`, `show`, `diff`, `commit` (hook fires) and `push` verified; local `check_fast` 9/9.
-- **Asset WIP bundle (task 355):** untracked and `.gitignore`d, so it never enters the checkout; blobs stay in history.
-- **Credentials (task 357):** the Cloudflare pair lives in the git-ignored `tools/vendor/` and is restored by hand after a
-  fresh clone; CI runs without it (the exact-value scan then reports "none to compare").
-- **AGENTS.md size (task 356):** condensed screenshot guidance while retaining the required refresh and registry steps;
-  documentation check passes and the file is 16,129 UTF-8 bytes (budget: 16,384).
-- **Open tasks:** none (341–352 DONE 2026-11-04); 328 DEFERRED (needs user input).
+- **Art audit (2026-11-04, OpenCode/Big Pickle) — findings only, nothing fixed yet.** Full read-only pass over
+  `game/assets/art/` (161 files), `game/data/art-registry.js` (147 glyphs → 142 stems) and every render site (215
+  distinct pictographs). Four defect classes, now queued as tasks 358–362:
+  1. **6 files are opaque PNGs named `.webp`** — `crab`, `octopus`, `shark`, `sun`, `sunrise`, `sunset`: rgb24 1024²,
+     0% alpha, 7.6 MB of the 11.9 MB payload (commits `3a64237`/`487c1aa`/`4301b13`, tasks 350/351). Children see
+     cream squares in ocean, classroom time tiles and the cat-forest day/night toggle.
+  2. **15 painted illustrations have no consumer** — `animal-crab/-octopus/-dolphin/-whale/-dinosaur/-ladybug`,
+     `flower-hibiscus`, `lollipop`, `food-rice-ball`, `object-anchor/-flag/-gift/-money-bag`, `owl`, `plant-clover`,
+     `puzzle-piece` (+ `card-stack`, `meteor`, `puddle` genuinely redundant).
+  3. **Surfaces never wired to the pipeline** — the hub (`index.html:331-339` loads no art), classroom/tracing/matching
+     static buttons, `racing3d.mjs:805-821` decor billboards drawn with `fillText`, world picker raw emoji.
+  4. **Animal Puzzle never got scene art** — task 352 is marked DONE but `animal_puzzle.js` was last touched at
+     `0ca3c0e`; scenes are canvas gradients, the sea scene falls back to `🐠/🐬` emoji and the opaque `🦀`.
+- **Root cause:** no gate enforces format/alpha/size/consumer for `game/assets/art/`; `detectFormat` and `asset_qa`
+  can measure all of it but are never run over the shipped folder. Lesson recorded in
+  `project/lessons/asset-generation.md` ("Before a file enters `game/assets/art/`").
+- **Git health:** clean tree, in sync with `origin/main`, CI + CodeQL green, local `check_fast` 9/9.
 
-- **Feedback batch (tasks 341–352) DONE (2026-11-04, OpenCode/Big Pickle):** painted art wired across classroom/ocean/space/fastcat/animal_memory; baseline smokes green; docs + offline manifest synced.
+## Open tasks
+
+- **358** Art integrity: re-encode the 6 opaque/mislabelled assets, remap crab+octopus, register every orphaned file.
+- **359** Painted art on the last emoji surfaces: hub, classroom/tracing/matching, racing3d decor, puzzle sea.
+- **360** Art-integrity gates in `check_fast` (`tools/check_art.js`: format, size, alpha, consumer).
+- **361** Animal Puzzle painted scene backgrounds (8 scenes, `game/assets/scenes/`).
+- **362** Remaining unmapped child-facing glyphs: generate or record as accepted emoji.
+- **328** DEFERRED — hub/nav tile icons and shell-chrome glyphs; needs a user decision (see `DECISIONS.md` line 16).
+
 ## Security & privacy
 
-- Gate: `node tools/check_secrets.js` (`--quiet` for exit code only). Failing it means: remove the value, **rotate** the
-  credential (deleting a pushed commit is not enough), then re-commit — never add an allowlist entry to "fix" a finding.
+- Gate: `node tools/check_secrets.js` (`--quiet` for exit code only). A finding means: remove the value, **rotate** the
+  credential, then re-commit — never add an allowlist entry to "fix" it.
 - Server-side nets: secret scanning + push protection enabled; code-scanning 0 open.
-- `.gitignore` protects `tools/vendor/` (the Cloudflare pair) and `.env`; `docs/` is a mirror of `game/` and must never contain
+- `.gitignore` protects `tools/vendor/` (the Cloudflare pair) and `.env`; `docs/` mirrors `game/` and must never hold
   credentials.
 
 ## Asset generation
 
-- Production art: **161 WebP** under `game/assets/art/`.
-- `game/data/art-registry.js` — **154 glyph→stem** entries.
-- `game/shared/art.js` — `url`, `html`, `fill`, `fillAttr`, `image`, `draw`, `_BASE`.
+- Production art: **161 files** under `game/assets/art/`, of which **155** are real 512² alpha WebPs. Registry:
+  **147 glyphs / 142 stems**. `game/shared/art.js` exposes `url`, `html`, `fill`, `fillAttr`, `image`, `draw`, `_BASE`.
+- Cloudflare credentials are local only: `tools/vendor/Cloudflare-credentials.json` (git-ignored, restored by hand after
+  a fresh clone). Generation needs `--creds` and a user visual approval step.
 
 ## Validate
 
 - `node tools/check_fast.js` — **9/9 green** (`syntax`, registry, CI workflow, `secrets/credentials`, scan-alert guards,
   generated artifacts, offline inventory, docs, hub smoke). This is what CI's `fast` job runs.
 - `node tools/check_release.js` — release gate before a release (fast gate + full smoke battery).
-- CI on `main` is green (last run: task 354).
+- `node tools/check_art.js` — new in task 360: format/size/alpha/consumer gate for `game/assets/art/`.
 
 ## Rules of the road
 
 - `game/` changes → `node tools/build_offline.js` FIRST, then `tools/sync-docs.sh`, then refresh affected review screenshots.
   Never edit `docs/` by hand.
-- Never commit Cloudflare credentials (`tools/vendor/` is git-ignored). Never push to `main` without the user asking.
+- Never commit Cloudflare credentials. Never push to `main` without the user asking.
 - Keep `resources/` and `tools/` for dev assets and tooling; `game/` must stay deployable-only.
 - Runtime scratch goes under git-ignored `tools/.cache/`, never system temp.
-- Before touching a risky area read its lesson file (table in `AGENTS.md`). Locked decisions: `project/DECISIONS.md`.
-  Process: `project/PROCESS.md`.
 - **Tests must be updated to follow implementation changes.**

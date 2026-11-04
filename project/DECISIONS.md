@@ -107,3 +107,12 @@ The Мала тркачица (Little Racer) game is fully built (Stages 1–5, 
   inside the git dir** — they share the inode with `pack-*.pack`, so deleting them destroys the live pack. Move the git dir
   outside first; if the pack is already damaged, recreate a fresh full clone in the non-synced location (procedure in
   `project/lessons/security.md`).
+
+## Art asset layout: glyphs vs scenes (2026-11-04, task 360)
+
+- **game/assets/art/ holds glyph cut-outs only** (512x512, real alpha WebP, one file per registry stem). The new
+  `tools/check_art.js` gate enforces format, size, alpha and a registry consumer there, so anything opaque in that
+  folder is a bug by definition.
+- **Full-bleed scene art lives in `game/assets/scenes/`** and is exempt from the alpha/size/registry rules: a painted
+  background is legitimately opaque and its consumer is code (paint() in the game), not a glyph mapping. This is why the
+  classroom `sun/sunrise/sunset` scenes stay opaque as scenes while the classroom *tile* needs a transparent cut-out.

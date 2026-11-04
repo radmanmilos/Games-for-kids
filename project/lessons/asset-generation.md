@@ -56,6 +56,32 @@ Never committed. Read from (in order): env vars `CF_ACCOUNT_ID` / `CF_API_TOKEN`
 
 Never conflate: Proposed / Eligible / Approved-for-generation / Generated / Reviewed / User-approved / Production-ready / Integrated / Committed / Verified. Generated ≠ approved. No runtime integration, glyph swap, smoke, screenshot refresh, offline build, or sync-docs unless separately requested — `game/` is not touched by this pipeline.
 
+## Before a file enters `game/assets/art/` — verify, do not assume (task 358)
+
+The Workers AI endpoint returns **opaque rgb PNGs**. Renaming one to `.webp` produces a file that
+passes every review, passes `git`, and then renders as a cream square in the game. That is exactly
+what happened to `crab`, `octopus`, `shark`, `sun`, `sunrise` and `sunset` (tasks 350/351): 6 files,
+1024², rgb24, 0% alpha, 7.6 MB of an 11.9 MB payload.
+
+Every glyph asset must clear these four checks **before** it is committed, and `node tools/check_art.js`
+(task 360) enforces them in `check_fast`:
+
+1. **Magic bytes** — `require('./lib/imagefile').detectFormat(bytes).format === 'webp'`.
+   A `.webp` name is not evidence.
+2. **Canvas** — 512×512 for glyph art (1024² only in the WIP bundle).
+3. **Alpha** — corner pixels must be transparent and the background a real cut-out, not a painted
+   matte. `node tools/asset_qa.js <file>` prints `alpha opaque/transparent/partial` and `cornerA`;
+   "GENERATED / USER-APPROVED" in the inventory says nothing about alpha.
+4. **A consumer** — a registry entry (or an explicit decision that the file is scenery). An art file
+   with no consumer is dead weight in the offline manifest.
+
+Cut-outs are not a step the generator performs. There is no background remover in `tools/`; the 155
+correct files came from a one-off cutout pass (task 296). When adding art, budget for that step
+explicitly instead of assuming "generated" means "ready".
+
+Full-bleed scene art is legitimately opaque — keep it out of `game/assets/art/` (it lives in
+`game/assets/scenes/`) so the glyph alpha gate stays strict.
+
 ## Cost planning
 
 ~120 neurons per 1024×1024 candidate with 3 references. Free tier 10,000/day ≈ 80 candidates/day. The local log (`tools/.cache/asset-usage.json`) is per-run planning only; read the Cloudflare dashboard for the real total.
