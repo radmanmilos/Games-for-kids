@@ -3,6 +3,8 @@
 > **Petrin svet** is an offline-first collection of educational mini-games for young children (approximately 2–6 years old), designed to be fun, safe, simple, and frustration-free.
 >
 > **[Play Petrin svet](https://radmanmilos.github.io/Games-for-kids/)** · Static HTML/CSS/JavaScript · Serbian Cyrillic · No ads or in-app purchases
+>
+> **Product promise:** if a child is spending time in Petrin svet, that time should be well spent. The app earns that trust through its actual behaviour — meaningful play, learning, autonomy and emotional safety — not through marketing language.
 
 ---
 
@@ -28,6 +30,8 @@
 
 Petrin svet is intended to feel like a premium children's application that parents can confidently hand to their child.
 
+> **If a child is spending time in Petrin svet, that time should be well spent.**
+
 The focus is on:
 
 - Learning through play
@@ -41,6 +45,16 @@ The focus is on:
 - Instant fun
 
 This project is being built primarily for my daughter, but should be suitable for any young child.
+
+## A safe, cozy world — not a game template
+
+Petrin svet is not merely a collection of mini-games. It should become a small, safe, cozy digital world where a child can explore, play, discover, create, listen, practise and learn — while a parent can feel that the child's screen time is purposeful, age-appropriate, calm and worthwhile.
+
+- The child experiences immediate, understandable play; warmth, curiosity and gentle delight; freedom to explore without fear of failure; activities that develop real skills; simple navigation that does not require reading; consistent controls and familiar feedback; a visual world that feels coherent, crafted and cared for; and no manipulative pressure to keep playing.
+- The parent can trust that the app contains no advertising, tracking, analytics, monetization, in-app purchases or social interaction; that core functionality works offline after the offline package is prepared; that child activity is not uploaded to a server; that no external service is required during play; that the app does not ask for unnecessary permissions or personal information; that progress information is modest, local and parent-facing; and that the experience is suitable for the intended age range, subject to device context.
+- The app does not optimize for maximum session length, compulsive engagement, streaks, retention loops or reward exploitation. It optimizes for meaningful play, learning, autonomy, emotional safety and a natural stopping point.
+
+Shared shell, navigation, feedback, touch and motion language should feel related while each game keeps its own identity. Consistency is the feeling that the same thoughtful product made the games — not that every game is the same game.
 
 ---
 
