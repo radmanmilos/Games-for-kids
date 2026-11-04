@@ -31,26 +31,24 @@ const glyph = el => (el && el.dataset.emoji) ? el.dataset.emoji : (el ? el.textC
 
 // A HUD label / picker button now paints its glyph as an <img class="art"> inside
 // a <span class="lv-emoji">, so textContent alone drops it — read the text part
-// plus the glyph back (dataset.emoji when painted, else the span's own text).
+// plus the glyph in its real position (dataset.emoji when painted, else the
+// span's own text). The span sits first in "🌺 0" and last in "1 · Прашума 🌺",
+// so append-at-the-end would reorder the score icon out of place.
 // `h` is the headless handle from start().
-const glyphText = (h, id) => h.evalv(`(function(){
-  var el = document.getElementById('${id}');
+const glyphTextOf = `(function(el){
   if (!el) return '';
   var g = el.querySelector('.lv-emoji');
-  var t = (el.textContent || '').trim();
-  if (!g) return t;
-  // textContent already contains the glyph when no art image was painted, so
-  // only re-append it when the span holds an <img>.
-  return t + (g.querySelector('img.art') ? (g.dataset.emoji || '') : '');
-})()`);
-const glyphTextSel = (h, sel) => h.evalv(`(function(){
-  var el = document.querySelector('${sel}');
-  if (!el) return '';
-  var g = el.querySelector('.lv-emoji');
-  var t = (el.textContent || '').trim();
-  if (!g) return t;
-  return t + (g.querySelector('img.art') ? (g.dataset.emoji || '') : '');
-})()`);
+  if (!g) return (el.textContent || '').trim();
+  var t = g.querySelector('img.art') ? (g.dataset.emoji || '') : (g.textContent || '');
+  var clone = el.cloneNode(true);
+  var cg = clone.querySelector('.lv-emoji');
+  if (cg) cg.textContent = t;
+  var imgs = clone.querySelectorAll('img.art');
+  for (var i = 0; i < imgs.length; i++) imgs[i].parentNode.removeChild(imgs[i]);
+  return (clone.textContent || '').replace(/\\s+/g, ' ').trim();
+})`;
+const glyphText = (h, id) => h.evalv(`${glyphTextOf}(document.getElementById('${id}'))`);
+const glyphTextSel = (h, sel) => h.evalv(`${glyphTextOf}(document.querySelector('${sel}'))`);
 
 (async () => {
   const h = await start({ page: '/pages/fastcat.html', tag: 'fastcat-smoke', width: 844, height: 390 });

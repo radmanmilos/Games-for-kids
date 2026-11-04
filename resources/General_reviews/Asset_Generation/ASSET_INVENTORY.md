@@ -517,3 +517,22 @@ This inventory is **not final for generation** until:
 - duplicate concepts have been consolidated (including cow glyph variants and the repeated shell row);
 - existing image assets and the excluded Explorer/Kitty/3D Racing areas have been checked;
 - the user has approved which rows are to be illustrated, handled as SVG/CSS, or left unchanged.
+
+## Production corrections — task 358 (2026-11-04, OpenCode/Big Pickle)
+
+The 2026-10-31 cutout pass (task 296) produced 155 real 512x512 alpha WebPs. Six files added later
+(tasks 350/351, commits `3a64237` / `487c1aa` / `4301b13`) skipped that pass: they were **opaque rgb24
+PNGs renamed to `.webp`**, so the "TECHNICAL QA MEASURED" status on their rows was never true for alpha.
+Corrected here, verified with `tools/asset_qa.js` and the new `tools/asset_cutout.js`:
+
+| file | was | now |
+|---|---|---|
+| `crab.webp` | PNG 1024², rgb24, 0% alpha, 0.90 MB | deleted — `🦀` renders `animal-crab.webp` (512², 57% transparent) |
+| `octopus.webp` | PNG 1024², rgb24, 0% alpha, 1.20 MB | deleted — `🐙` renders `animal-octopus.webp` (512², 51% transparent) |
+| `shark.webp` | PNG 1024², rgb24, 0% alpha, 1.26 MB | re-cut: 512² WebP, 74% transparent, 11 KB |
+| `sun.webp` | PNG 1024², rgb24, 0% alpha, 1.02 MB | re-cut: 512² WebP, 43% transparent, 11 KB |
+| `sunrise.webp` | PNG 1024², rgb24, 0% alpha, full-bleed scene, 1.73 MB | moved to `game/assets/scenes/sunrise.png` (true extension, deliberately opaque) |
+| `sunset.webp` | PNG 1024², rgb24, 0% alpha, full-bleed scene, 1.47 MB | moved to `game/assets/scenes/sunset.png` (true extension, deliberately opaque) |
+
+Lesson recorded in `project/lessons/asset-generation.md`; the gate that prevents a repeat is
+`tools/check_art.js` (task 360).

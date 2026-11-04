@@ -90,9 +90,7 @@ window.ART_REGISTRY = {
   "🏅": "medal",
   "✨": "celebration",
   "🌟": "celebration",
-  "🌅": "sunrise",
-  "☀️": "sun",
-  "🌇": "sunset",
+  "☀": "sun",
   "🌙": "moon",
   "🌸": "flower-blossom",
   "🍂": "season-leaf",
@@ -130,13 +128,35 @@ window.ART_REGISTRY = {
   "⛷": "skier",
   "🏮": "evergreen-lantern",
    "🦈": "shark",
-   "🦀": "crab",
-   "🐙": "octopus",
+   "🦀": "animal-crab",
+   "🐙": "animal-octopus",
    "🦇": "bat",
    "🐒": "monkey",
    "🌾": "grass",
    "🛸": "spaceship",
-  "🕰": "clock"
+  "🕰": "clock",
+  /* T358: illustrations that existed in game/assets/art/ but no glyph pointed
+     at, so the child never saw them. Each stem below was already painted and
+     accepted; only the mapping was missing. */
+  "🦕": "animal-dinosaur",
+  "🐬": "animal-dolphin",
+  "🐋": "animal-whale",
+  "🐞": "animal-ladybug",
+  "🐠": "fish",
+  "🐤": "chick",
+  "🐥": "chick",
+  "🌺": "flower-hibiscus",
+  "🌷": "flower-tulip",
+  "🍀": "plant-clover",
+  "🍭": "lollipop",
+  "🍙": "food-rice-ball",
+  "🎁": "object-gift",
+  "⚓": "object-anchor",
+  "💰": "object-money-bag",
+  "🚩": "object-flag",
+  "🦉": "owl",
+  "🧩": "puzzle-piece",
+  "☃": "snowman"
 };
 
 // T301: Cat Forest glyphs — the render sites in cat_forest.js / cat_forest.html
@@ -158,8 +178,8 @@ window.ART_REGISTRY = {
     "🍗": "food-chicken-leg",
     "🍣": "food-sushi",
     "🍪": "food-cookie",
-    "🍽️": "object-plate",
-    "🌧️": "weather-rain"
+    "🍽": "object-plate",
+    "🌧": "weather-rain"
   };
   for (var k in extra) { if (Object.prototype.hasOwnProperty.call(extra, k)) window.ART_REGISTRY[k] = extra[k]; }
 })();

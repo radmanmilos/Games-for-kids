@@ -32,6 +32,11 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const api = JSON.parse(await h.evalv(`JSON.stringify({
     has: ['url','html','fill','fillAttr','image','draw'].every(k => typeof Art[k] === 'function'),
     cow: Art.url('🐮'),
+    apple: Art.url('🍎'),
+    /* T358: these glyphs carry U+FE0F at the call site and the registry ships the
+       key without it (or vice versa); both must resolve to the painted art. */
+    sunVs16: Art.url('☀️'),
+    plateVs16: Art.url('🍽️'),
     none: Art.url('🧪'),
     noneIsUnregistered: !window.ART_REGISTRY['🧪'],
     html: Art.html('🐮'),
@@ -41,6 +46,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   })`));
   check('Art exposes url/html/fill/fillAttr/image/draw', api.has === true, JSON.stringify(api.has));
   check('url() resolves a registered glyph to its WebP', /assets\/art\/cow\.webp$/.test(api.cow || ''), api.cow);
+  check('url() resolves a glyph whose call site carries U+FE0F', /assets\/art\/sun\.webp$/.test(api.sunVs16 || '') && /assets\/art\/object-plate\.webp$/.test(api.plateVs16 || ''),
+    api.sunVs16 + ' | ' + api.plateVs16);
   check('the fallback glyph used by this test really has no registry entry', api.noneIsUnregistered === true);
   check('url() returns null for a glyph with no art stem', api.none === null, String(api.none));
   check('html() emits <img class="art"> for a registered glyph',

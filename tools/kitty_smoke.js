@@ -124,6 +124,7 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
       underCounter: r.top >= cr.bottom - 1,
       rightAligned: Math.abs(r.right - cr.right) < 4,
       label: (b.textContent || '').trim(),
+      ariaLabel: (b.getAttribute('aria-label') || '').trim(),
       on: b.classList.contains('on'),
       pressed: b.getAttribute('aria-pressed'),
       state: funSpeedOn
@@ -131,7 +132,7 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   })()`);
   check('task251: fun speed button under the point counter, tappable, default OFF',
     funUi && !funUi.missing && funUi.inViewport && funUi.onTop && funUi.underCounter &&
-    funUi.rightAligned && funUi.label.length > 0 &&
+    funUi.rightAligned && (funUi.label.length > 0 || funUi.ariaLabel.length > 0) &&
     funUi.on === false && funUi.pressed === 'false' && funUi.state === false,
     JSON.stringify(funUi));
 

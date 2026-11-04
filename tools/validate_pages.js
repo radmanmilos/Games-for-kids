@@ -289,6 +289,13 @@ try {
   const win = {};
   new Function('window', fs.readFileSync(ART_REGISTRY, 'utf8'))(win);
   const registry = win.ART_REGISTRY || {};
+  /* Art looks up REG[glyph-without-U+FE0F], so a key that still contains the
+     variation selector can never match and the child keeps seeing the emoji.
+     Three such entries existed until task 358 ("☀️", "🍽️", "🌧️"). */
+  const unreachable = Object.keys(registry).filter((g) => g !== g.replace(/\uFE0F/g, ''));
+  if (unreachable.length) {
+    failures.push(`art registry: ${unreachable.length} key(s) contain U+FE0F and can never resolve (${unreachable.join(' ')}); write them without the variation selector`);
+  }
   const stems = new Set(Object.keys(registry).map(g => registry[g]));
   const files = new Set(fs.readdirSync(ART_DIR).filter(f => f.endsWith('.webp'))
     .map(f => path.basename(f, '.webp')));

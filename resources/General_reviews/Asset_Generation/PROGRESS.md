@@ -1405,3 +1405,15 @@ Already covered semantically by an existing painted PNG (different glyph, same s
 
 Distinct new illustration concepts: **30** (14 Cat Forest, 6 ocean, 2 dino/jungle, 4 puzzle, 2 Kitty, 2 maze). Each would also need a code change to draw a PNG instead of the emoji — a separate runtime task, not part of asset generation.
 
+## Task 358 — transparency/format correction (2026-11-04, OpenCode/Big Pickle)
+
+- Six files from tasks 350/351 were opaque PNG bytes under a `.webp` name (7.6 MB of 11.9 MB). `shark` and
+  `sun` were re-cut with the new `tools/asset_cutout.js` (edge flood-fill → 512² alpha WebP, 11 KB each);
+  `crab`/`octopus` were deleted in favour of the already-transparent `animal-crab`/`animal-octopus`;
+  `sunrise`/`sunset` are full-bleed scenes and moved to `game/assets/scenes/` as real `.png`.
+- The registry grew from 147 to 164 glyphs: 18 illustrations that existed but had no glyph site are now
+  reachable (🦕 🐬 🐋 🐞 🐠 🐤 🐥 🌺 🌷 🍀 🍭 🍙 🎁 ⚓ 💰 🚩 🦉 🧩 ☃), and three entries carrying U+FE0F
+  (☀️ 🍽️ 🌧️) that could never resolve were fixed in `game/shared/art.js`.
+- Not done here: runtime wiring of the remaining surfaces (task 359), the gate (360), puzzle scenes (361),
+  and the five glyphs that still have no art (362).
+

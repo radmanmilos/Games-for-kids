@@ -18,12 +18,6 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 358. NEW — Art integrity: re-encode the 6 opaque/mislabelled assets, remap crab+octopus, register every orphaned art file (2026-11-04, OpenCode/Big Pickle)
-  - `game/assets/art/{crab,octopus,shark,sun,sunrise,sunset}.webp` are PNG bytes (magic `89 50 4E 47`), rgb24 1024², 0% alpha — 7.6 MB of the 11.9 MB art payload. Re-cut them to real 512² alpha WebP. Remap `🦀→animal-crab`, `🐙→animal-octopus` (transparent, currently unused); re-cut `shark`; keep `sun/sunrise/sunset` only where a transparent cut-out is legitimate (classroom time tile, cat-forest toggle) and stop registering them where the asset is a full-bleed scene.
-  - Register the 15 orphaned art files against their live glyph sites: `🦕 animal-dinosaur`, `🌺 flower-hibiscus`, `🍭 lollipop`, `🍙 food-rice-ball`, `🎁 object-gift`, `⚓ object-anchor`, `💰 object-money-bag`, `🐋 animal-whale`, `🚩 object-flag`, `🐞 animal-ladybug`, `🍀 plant-clover`, `🌷 flower-tulip`, `🦉 owl`, `🧩 puzzle-piece`, `🐤/🐥 chick`; fold `🐠` into the existing fish stem.
-  - Why: children currently see cream squares in ocean (shark/octopus/crab), classroom time tiles and the cat-forest day/night toggle, while 15 paid-for illustrations are unreachable.
-  - Done when: `node tools/art_smoke.js` green, `detectFormat` reports webp for all 161, every glyph art file has a registry consumer, docs + offline manifest synced, review screenshots refreshed for ocean + classroom + cat_forest.
-
 - 359. NEW — Painted art on the last emoji surfaces: hub, classroom/tracing/matching buttons, racing3d decor (2026-11-04, OpenCode/Big Pickle)
   - `index.html:331-339` loads no `art-registry.js`/`shared/art.js`, so all 30+ hub tiles (`:273-325`) are static emoji; `classroom.html:288-293,299-302`, `tracing.html:196-199` and `animal_memory.html:66` (card back `content:"🃏"`) hard-code glyphs; `racing3d.mjs:805-821` paints every decor billboard with `cg.fillText`, and `:2199-2205` builds world cards from raw emoji.
   - Fix: load the art pipeline where it is missing, run the static buttons through `Art.fill`, switch racing3d decor to `Art.image()` textures (29 of 32 decor glyphs already have art) and the world cards to `Art.html`. Animal Puzzle sea scene `🐠/🐬/🦀` (`animal_puzzle.js:8`) follows the registry fixed by 358.

@@ -159,10 +159,6 @@
     "sha256": "c14d438e9fc9917ba1897f9e42ff8aa7926443bd8fc5aae4c168410f00561454",
     "size": 30446
   },
-  "assets/art/crab.webp": {
-    "sha256": "556762c11a88e0aaefaa34375cf6fd7f113f088d402871d178d5bc83510085ca",
-    "size": 947095
-  },
   "assets/art/cupcake.webp": {
     "sha256": "0adfb510b6488e53db4fae071cebf0987b15e9a4c638543fd9dd77c45466b0c4",
     "size": 28070
@@ -395,10 +391,6 @@
     "sha256": "d437815adefcd9b5864be2254323beef9d10478cb643af6c76c39d54cc26d3eb",
     "size": 45118
   },
-  "assets/art/octopus.webp": {
-    "sha256": "066f815e32dfccbd8dffb3e09c1743f2e3e725abd7b2e989100cdbe27407ea3f",
-    "size": 1255671
-  },
   "assets/art/orange.webp": {
     "sha256": "5b87cb756a5fc57e20d28e12019dbdca8be50c3c63b482fee7f86762d3bd474b",
     "size": 36878
@@ -516,8 +508,8 @@
     "size": 24200
   },
   "assets/art/shark.webp": {
-    "sha256": "3fe30bec80c5436ab0df4737755e92c6ee7f368604be044f28c13db0674b422d",
-    "size": 1324543
+    "sha256": "58dce5656a38a367d29d724fe8c7e3262eb269b02fbc01d68a20f0ac84510537",
+    "size": 11114
   },
   "assets/art/sheep.webp": {
     "sha256": "bfacc1e31d2830faebb0962d37198cf93d8f9c7fe1145f76447b09ca9aacb334",
@@ -572,20 +564,12 @@
     "size": 26110
   },
   "assets/art/sun.webp": {
-    "sha256": "046103d3c08dbe5630a57b099f639ad6b1d4b5d9a1f16f0ac260a69242d609f1",
-    "size": 1067516
+    "sha256": "e4c3728579181d1e4c17020ecf7fb87c6293db57cf0368d40a63482867466e72",
+    "size": 11318
   },
   "assets/art/sunflower.webp": {
     "sha256": "dee2459abce98c31ec068bcfa5045b001a9b3730fb1584ec521c0f4a7c8e7675",
     "size": 30930
-  },
-  "assets/art/sunrise.webp": {
-    "sha256": "cdfa19c2dfc53859e80a9b2a5f79be057d4c866bd9f8d33a3a20dfff100805a8",
-    "size": 1814120
-  },
-  "assets/art/sunset.webp": {
-    "sha256": "9e88c3bc0208b5e9c98312852c639f502aa9dd974dacd49f88141bc7ec642417",
-    "size": 1546477
   },
   "assets/art/surfboard.webp": {
     "sha256": "124732f6ea7f7eb20e87c51b3847204cbad416f6ce06497b0723017b4925f907",
@@ -1355,13 +1339,21 @@
     "sha256": "f7cee3c7533449a1505cc12cb5128b89e3d4fd3d7ea62b05f9f5464a217472ee",
     "size": 687458
   },
+  "assets/scenes/sunrise.png": {
+    "sha256": "cdfa19c2dfc53859e80a9b2a5f79be057d4c866bd9f8d33a3a20dfff100805a8",
+    "size": 1814120
+  },
+  "assets/scenes/sunset.png": {
+    "sha256": "9e88c3bc0208b5e9c98312852c639f502aa9dd974dacd49f88141bc7ec642417",
+    "size": 1546477
+  },
   "data/app-registry.js": {
     "sha256": "69f72e6d15313af2a26aada35af6dbceeb6f00aa404048d87024d17aad13a96b",
     "size": 9925
   },
   "data/art-registry.js": {
-    "sha256": "8f64082d97d9b53840f9c76dac22799b3fbf1e13bcfc0716af138e93f81e2e7e",
-    "size": 3898
+    "sha256": "6aa8f3b8003200b0a3ce56b79cf556da01aeb30e72a4bfe6be565b0c163d8e3c",
+    "size": 4534
   },
   "data/serbian.js": {
     "sha256": "12f7f7f12989868bc399ecbe94de2e88165e1fea452047dd097c83a3e830ceb8",
@@ -1612,8 +1604,8 @@
     "size": 11403
   },
   "shared/art.js": {
-    "sha256": "494435b14aa5276332e36245beacbd16aa46698fa44ed138f0e0148c1a94d0d1",
-    "size": 4068
+    "sha256": "c097b7dcc8377f59fe8204d1784499e7a4b50212f06af02946649be6a5eb57e6",
+    "size": 4439
   },
   "shared/audio-buses.js": {
     "sha256": "4eac8f8e712df655871b5a64193cb38fa2b84d30dc3bf90e93f4a9910a8db900",
@@ -1680,8 +1672,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "e1905f01ccf852bd0d87f2b0892b17b9f93745a9e3b391f09a817f48bf784c55",
-    "size": 13219
+    "sha256": "eea7cbf85a6b801d49dfca75825ff25b4c132f2ba15f176aee7bf2d1db2d51c0",
+    "size": 13168
   },
   "sw.js": {
     "sha256": "b63e67b64a1297936636d22d6ba0e0194a8148c41b17b4dd2a1c931869e77270",

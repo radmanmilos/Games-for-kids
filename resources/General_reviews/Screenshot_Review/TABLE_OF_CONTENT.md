@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-01T17:28:02.477Z
+- Генерисано / Generated: 2026-11-04T12:48:37.215Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -24,14 +24,14 @@
 | `animals_phone-portrait.png` | Животиње | `/pages/animals.html` | 390×844 | портрет | — | 01.11.2026. 18:28:02 | 324 |
 | `animals_tablet-landscape.png` | Животиње | `/pages/animals.html` | 1180×820 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
 | `animals_tablet-portrait.png` | Животиње | `/pages/animals.html` | 820×1180 | портрет | — | 01.11.2026. 18:28:02 | 324 |
-| `cat_forest_phone-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 844×390 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
-| `cat_forest_phone-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 390×844 | портрет | — | 01.11.2026. 18:28:02 | 324 |
-| `cat_forest_tablet-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 1180×820 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
-| `cat_forest_tablet-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 820×1180 | портрет | — | 01.11.2026. 18:28:02 | 324 |
-| `classroom_phone-landscape.png` | Учионица | `/pages/classroom.html` | 844×390 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
-| `classroom_phone-portrait.png` | Учионица | `/pages/classroom.html` | 390×844 | портрет | — | 01.11.2026. 18:28:02 | 324 |
-| `classroom_tablet-landscape.png` | Учионица | `/pages/classroom.html` | 1180×820 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
-| `classroom_tablet-portrait.png` | Учионица | `/pages/classroom.html` | 820×1180 | портрет | — | 01.11.2026. 18:28:02 | 324 |
+| `cat_forest_phone-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 844×390 | пејзаж | — | 04.11.2026. 13:48:37 | 358 |
+| `cat_forest_phone-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 390×844 | портрет | — | 04.11.2026. 13:48:37 | 358 |
+| `cat_forest_tablet-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 1180×820 | пејзаж | — | 04.11.2026. 13:48:37 | 358 |
+| `cat_forest_tablet-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 820×1180 | портрет | — | 04.11.2026. 13:48:37 | 358 |
+| `classroom_phone-landscape.png` | Учионица | `/pages/classroom.html` | 844×390 | пејзаж | — | 04.11.2026. 13:48:37 | 358 |
+| `classroom_phone-portrait.png` | Учионица | `/pages/classroom.html` | 390×844 | портрет | — | 04.11.2026. 13:48:37 | 358 |
+| `classroom_tablet-landscape.png` | Учионица | `/pages/classroom.html` | 1180×820 | пејзаж | — | 04.11.2026. 13:48:37 | 358 |
+| `classroom_tablet-portrait.png` | Учионица | `/pages/classroom.html` | 820×1180 | портрет | — | 04.11.2026. 13:48:37 | 358 |
 | `coloring_phone-landscape.png` | Бојење | `/pages/coloring.html` | 844×390 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
 | `coloring_phone-portrait.png` | Бојење | `/pages/coloring.html` | 390×844 | портрет | — | 01.11.2026. 18:28:02 | 324 |
 | `coloring_tablet-landscape.png` | Бојење | `/pages/coloring.html` | 1180×820 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
@@ -68,10 +68,10 @@
 | `maze_phone-portrait.png` | Путања | `/pages/maze.html` | 390×844 | портрет | — | 01.11.2026. 18:28:02 | 324 |
 | `maze_tablet-landscape.png` | Путања | `/pages/maze.html` | 1180×820 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
 | `maze_tablet-portrait.png` | Путања | `/pages/maze.html` | 820×1180 | портрет | — | 01.11.2026. 18:28:02 | 324 |
-| `ocean_phone-landscape.png` | Океан | `/pages/ocean.html` | 844×390 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
-| `ocean_phone-portrait.png` | Океан | `/pages/ocean.html` | 390×844 | портрет | — | 01.11.2026. 18:28:02 | 324 |
-| `ocean_tablet-landscape.png` | Океан | `/pages/ocean.html` | 1180×820 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
-| `ocean_tablet-portrait.png` | Океан | `/pages/ocean.html` | 820×1180 | портрет | — | 01.11.2026. 18:28:02 | 324 |
+| `ocean_phone-landscape.png` | Океан | `/pages/ocean.html` | 844×390 | пејзаж | — | 04.11.2026. 13:48:37 | 358 |
+| `ocean_phone-portrait.png` | Океан | `/pages/ocean.html` | 390×844 | портрет | — | 04.11.2026. 13:48:37 | 358 |
+| `ocean_tablet-landscape.png` | Океан | `/pages/ocean.html` | 1180×820 | пејзаж | — | 04.11.2026. 13:48:37 | 358 |
+| `ocean_tablet-portrait.png` | Океан | `/pages/ocean.html` | 820×1180 | портрет | — | 04.11.2026. 13:48:37 | 358 |
 | `parent_phone-landscape.png` | За родитеље | `/pages/parent.html` | 844×390 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
 | `parent_phone-portrait.png` | За родитеље | `/pages/parent.html` | 390×844 | портрет | — | 01.11.2026. 18:28:02 | 324 |
 | `parent_tablet-landscape.png` | За родитеље | `/pages/parent.html` | 1180×820 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |

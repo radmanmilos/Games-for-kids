@@ -21,6 +21,11 @@ Read this before generating any image asset. It complements `resources/General_r
 - `tools/asset_qa.js <file.png> --against Reference/bear.png` — technical QA (canvas, alpha, palette, palette-match, small-size legibility proxy).
 - `tools/asset_refpool.js` — builds/lists the approved reference pool (`--pick N`, `--json`).
 - `tools/asset_upscale.js` — Lanczos-3 resample to family resolution (1024²), never repaint.
+- `tools/asset_cutout.js` — the missing cut-out step: edge flood-fill matte on an opaque painted PNG, drop enclosed
+  paper specks, frame the subject, encode a 512² alpha WebP (needs `ffmpeg` with `libwebp`). Use it on every candidate
+  before it enters `game/assets/art/`; it prints format/alpha/corner evidence and exits non-zero if the result is not
+  real alpha art.
+  `node tools/asset_cutout.js <bundle>/<subject>.png --out game/assets/art/<stem>.webp`
 
 ## Credentials
 

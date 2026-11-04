@@ -10,11 +10,16 @@
  */
 (function (root) {
   'use strict';
-  const REG = root.ART_REGISTRY || {};
+  const norm = (g) => String(g).replace(/\uFE0F/g, '');
+  /* Lookup always strips the variation selector, so a hand-written key that still
+     carries U+FE0F ("☀️", "🍽️", "🌧️") could never match and silently stayed an
+     emoji. Normalise the keys once at load instead of trusting every entry. */
+  const REG = {};
+  const RAW = root.ART_REGISTRY || {};
+  for (const k in RAW) if (Object.prototype.hasOwnProperty.call(RAW, k)) REG[norm(k)] = RAW[k];
   let BASE = 'assets/art/';
   try { if (typeof document !== 'undefined' && document.currentScript && document.currentScript.src)
           BASE = new URL('../assets/art/', document.currentScript.src).href; } catch (e) { /* keep default */ }
-  const norm = (g) => String(g).replace(/\uFE0F/g, '');
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const url = (g) => { const stem = REG[norm(g)]; return stem ? BASE + stem + '.webp' : null; };
   function html(g, cls) {
