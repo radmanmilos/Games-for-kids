@@ -341,3 +341,15 @@ One line per task: `number | status | date | title | archive file`. Every finish
 355 | DONE | 2026-11-03 | Ignore the asset generation work-in-progress bundle (2026-11-03, Copilot CLI/Auto). Added the bundle path to… | tasks-300-399.md
 356 | DONE | 2026-11-03 | Bring AGENTS.md under its size budget (2026-11-03, Copilot CLI/Auto). Condensed screenshot guidance while… | tasks-300-399.md
 357 | DONE | 2026-11-03 | Fresh clone rebuild after the bundle untracking (2026-11-03, OpenCode/Big Pickle). Wiped the local checkout… | tasks-300-399.md
+341 | DONE | 2026-11-04 | Feedback batch 1: Classroom time/seasons art + celebrations emoticon replacement sweep (2026-11-02,… | tasks-300-399.md
+342 | DONE | 2026-11-04 | Feedback batch 2: Candy/cards art usage + puzzle image art generation (2026-11-02, Kilo/kilo-auto/free). Use… | tasks-300-399.md
+343 | DONE | 2026-11-04 | Feedback batch 3: Kitty explorer - rocket art on fast button, enemy art usage + generation (2026-11-02,… | tasks-300-399.md
+344 | DONE | 2026-11-04 | Feedback batch 4: Ocean - fix fish direction, enemy art + generation (2026-11-02, Kilo/kilo-auto/free). Fix… | tasks-300-399.md
+345 | DONE | 2026-11-04 | Feedback batch 5: Spaceship - rotate rocket 90° to point forward, art usage + generation (2026-11-02,… | tasks-300-399.md
+346 | DONE | 2026-11-04 | Feedback batch 6: Cat forest - remove emoticons keep only art, fix food display on plate (2026-11-02,… | tasks-300-399.md
+347 | DONE | 2026-11-04 | Classroom time-of-day art (2026-11-02, Kilo/kilo-auto/free). Map classroom time scenes (јутро/дан/вече/ноћ)… | tasks-300-399.md
+348 | DONE | 2026-11-04 | Classroom seasons art (2026-11-02, Kilo/kilo-auto/free). Map classroom seasons (пролеће/лето/јесен/зима) to… | tasks-300-399.md
+349 | DONE | 2026-11-04 | Global celebration sweep (2026-11-02, Kilo/kilo-auto/free). Audit game/shared/celebration.js and all… | tasks-300-399.md
+350 | DONE | 2026-11-04 | Kitty Explorer rocket fast button + enemies (2026-11-02, Kilo/kilo-auto/free). Wire rocket.webp art to fast… | tasks-300-399.md
+351 | DONE | 2026-11-04 | Ocean enemies art + generation (2026-11-02, Kilo/kilo-auto/free). Replace ocean enemies with painted art… | tasks-300-399.md
+352 | DONE | 2026-11-04 | Puzzle images art generation (2026-11-02, Kilo/kilo-auto/free). Generate painted art for animal puzzle… | tasks-300-399.md
