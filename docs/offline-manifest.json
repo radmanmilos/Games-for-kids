@@ -1327,6 +1327,10 @@
     "sha256": "f7cee3c7533449a1505cc12cb5128b89e3d4fd3d7ea62b05f9f5464a217472ee",
     "size": 687458
   },
+  "assets/scenes/night-sky.png": {
+    "sha256": "f0acbb0ca7d2bbf33e794cb5a024136b0b01271c06ad3b932e1993652a08fae8",
+    "size": 2018229
+  },
   "assets/scenes/scene-farm.png": {
     "sha256": "ca99d3747a8bfd0fcb83ffafd633a6e4a977019e21ca819c93567e3d114bbdaf",
     "size": 2295653
@@ -1692,8 +1696,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "7a934767b5426c724038ed35febfe2b41dcb93465a1b32d4f0bce81891df8782",
-    "size": 13360
+    "sha256": "11e627024a4f50af237a1cc657c616a227c4d69f1008f49bb90d36504ddd9bd8",
+    "size": 13393
   },
   "sw.js": {
     "sha256": "b63e67b64a1297936636d22d6ba0e0194a8148c41b17b4dd2a1c931869e77270",
