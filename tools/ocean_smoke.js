@@ -278,7 +278,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   checkRouteWired('ocean', 'game-ocean', 'pages/ocean.html',
     { back: 'ocean-back', start: 'startOcean', check });
   const ocean = fs.readFileSync(path.join(root, 'game', 'games', 'ocean.js'), 'utf8');
-  check('ocean config: heroFlip + heroBob set', ocean.includes('heroFlip: true') && ocean.includes('heroBob: 5'));
+  check('ocean config: hero flip off (fish art faces right) + heroBob set',
+    ocean.includes('heroFlip: false') && ocean.includes('heroBob: 5'));
 
   process.exit(getFails() ? 1 : 0);
 })();

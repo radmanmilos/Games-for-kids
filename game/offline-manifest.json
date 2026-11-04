@@ -1404,8 +1404,8 @@
     "size": 60232
   },
   "games/classroom.js": {
-    "sha256": "615d833f19ea270e20e1af11f4d4a7a9dda5509b73c137739611ba5963791204",
-    "size": 14110
+    "sha256": "666bf994b45d2f2be163d1c537a5c77025a3d221e0acd4372226a57be6fd0d49",
+    "size": 14426
   },
   "games/coloring.js": {
     "sha256": "f5b6ba59f7dc9f44828a22e3311e7f78335017676a353edd275d8795581cbaa5",
@@ -1424,8 +1424,8 @@
     "size": 17984
   },
   "games/fastcat.js": {
-    "sha256": "5492c5e179f7ec92fe37335d80aaf652c79a379ddaf4eabf7f5883003da9ac99",
-    "size": 45181
+    "sha256": "635e6b52c605841b3c52d41586a540f1b2a2054cdabaf2b6fbcc0773e8286532",
+    "size": 45539
   },
   "games/kids_games.js": {
     "sha256": "722b72211553b4267bd7c657dd7210db5f53d462ca405315994b8fc3fa2e10d0",
@@ -1440,8 +1440,8 @@
     "size": 11183
   },
   "games/ocean.js": {
-    "sha256": "865a2688687d1bcd902dddb07232c97c35b9051738c30181905d506ad1cc1487",
-    "size": 40415
+    "sha256": "fab2a6fc1b811886fd059142a12ef2b102898b15ce5fd638d6e48cb8d3abb0e2",
+    "size": 41378
   },
   "games/phonics.js": {
     "sha256": "85925ee752e42e0eec6832895a76ab05476daa88d07b925af73d7348601e9c75",
@@ -1480,8 +1480,8 @@
     "size": 10625
   },
   "games/space.js": {
-    "sha256": "a4ce648ee894f8251fed79f596a58b02fbdb5ac07825467b6b6d530024ada088",
-    "size": 44019
+    "sha256": "e65fa439c9c0d8768084871110554569c8824d2c6b473c597e4ee30f05acafa2",
+    "size": 44030
   },
   "games/spatial.js": {
     "sha256": "c6ba6d89058feb1371b7351212395573c19d4ab24f84bcc1861231927bd941fd",
@@ -1504,8 +1504,8 @@
     "size": 6964
   },
   "pages/animal_memory.html": {
-    "sha256": "d21c9346aa0f792da51c5aa9d2b7f46d35360fedc65e2189b412111d422a8d75",
-    "size": 9264
+    "sha256": "d037b825a97969a7fa1729d472eedc3c499de7f677bc616ab04c9055ecc8fba1",
+    "size": 9223
   },
   "pages/animal_puzzle.html": {
     "sha256": "07ed81deb92aca038672e6182dca1f9161709eee6084ae10b3ac89bf6c1be4b6",

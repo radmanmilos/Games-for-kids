@@ -104,7 +104,11 @@
     btn.textContent = kind === 'colors' ? '' : (kind === 'shapes' ? '' : (item.label || item.emoji || ''));
     if (kind === 'shapes' && item.emoji && window.Art) Art.fill(btn, item.emoji);
     else if (item.svg) btn.innerHTML = item.svg;
-    else if (item.emoji && window.Art) Art.fill(btn, item.emoji);
+    /* Items that carry their own label (letters, numbers) keep it on the tile:
+       the painted art belongs to the detail view, otherwise the child loses the
+       letter/number and only sees a picture. Scene-only items (time, seasons)
+       have no label, so their tile is the painted scene. */
+    else if (item.emoji && !item.label && window.Art) Art.fill(btn, item.emoji);
     btn.addEventListener('click', () => {
       if (window.popSound) window.popSound();
       stopAutoplay();

@@ -90,12 +90,17 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
      was kicked off; return the value once two consecutive reads agree. This is
      the `sorting` smoke's technique — a fixed `sleep(700)` for a 600 ms fade is
      a bet on the machine, a poll is an observation. */
-  const settle = async (hh, expr, { tries = 40, poll = 120 } = {}) => {
+  /* Polls until the expression stops changing (default) or, when `until` is
+     given, until the value satisfies it. The two-sample stability rule alone
+     returns the first pair of equal readings, which during a 600 ms CSS fade is
+     "0, 0" — sampled before the transition has visibly started. */
+  const settle = async (hh, expr, { tries = 40, poll = 120, until } = {}) => {
     let prev = await hh.evalv(expr);
+    if (until && until(prev)) return prev;
     for (let i = 0; i < tries; i++) {
       await sleep(poll);
       const cur = await hh.evalv(expr);
-      if (JSON.stringify(cur) === JSON.stringify(prev)) return cur;
+      if (until ? until(cur) : JSON.stringify(cur) === JSON.stringify(prev)) return cur;
       prev = cur;
     }
     return prev;
@@ -1141,11 +1146,13 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   await dnClick(h11);                       // day -> night
   const dnNight1 = await dnRead(h11);
   const dnNightL = await settle(h11, `['cf-sky-night', 'cf-night-tint', 'cf-stars']
-    .map(id => Number(getComputedStyle(document.getElementById(id)).opacity))`);  // opacity fade settled
+    .map(id => Number(getComputedStyle(document.getElementById(id)).opacity))`,
+    { until: o => o.every(v => v === 1) });  // wait for the night fade to complete
   await dnClick(h11);                       // night -> day
   const dnDay1 = await dnRead(h11);
   const dnDayL = await settle(h11, `['cf-sky-night', 'cf-night-tint', 'cf-stars']
-    .map(id => Number(getComputedStyle(document.getElementById(id)).opacity))`);
+    .map(id => Number(getComputedStyle(document.getElementById(id)).opacity))`,
+    { until: o => o.every(v => v === 0) });  // wait for the day fade to complete
   check('the toggle flips state.time, data-time, aria-pressed and the glyph, both ways (AC1)',
     dnNight1.time === 'night' && dnNight1.data === 'night' && dnNight1.pressed === 'true'
       && glyphHas(dnNight1.glyph, '🌙', '1f319')

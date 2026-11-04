@@ -976,7 +976,10 @@
     bindButton('btn-slide', 'slide');
 
     const superBtn = el('super-btn');
-    // play-test 5: pointerdown, not click — a second finger's tap must fire
+    if (superBtn && superBtn.querySelector('.super-icon')) {
+      if (window.Art && window.Art.fill) window.Art.fill(superBtn.querySelector('.super-icon'), '🚀');
+    }
+    // play-test 5: pointerdown, not click — a second finger's tap must fire","oldString":"    const superBtn = el('super-btn');\n    // play-test 5: pointerdown, not click — a second finger's tap must fire","path":"/public/Games-for-kids/game/games/fastcat.js
     // ⚡ instantly even while JUMP/SLIDE are held (click synthesis can be
     // swallowed when another touch is already active); preventDefault drops
     // the compatibility mouse events so it cannot double-fire.

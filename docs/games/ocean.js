@@ -593,15 +593,31 @@
     }
 
     // --- Underwater obstacles (fish/sharks/jellyfish/etc.) ---
+    // Painted art for the enemies that have a cutout asset; falls back to the
+    // procedural drawing until the image has loaded (or if Art is unavailable).
+    function drawEnemyArt(ctx, o, glyph) {
+        if (!window.Art || !window.Art.draw || !window.Art.image) return false;
+        const im = window.Art.image(glyph);
+        if (!im || !im.complete || !im.naturalWidth) return false;
+        const cx = o.x + o.width / 2, cy = o.y + o.height / 2;
+        const size = Math.max(o.width, o.height) * 1.15;
+        ctx.save();
+        ctx.translate(cx, cy);
+        if (o.vx < 0) ctx.scale(-1, 1);
+        const ok = window.Art.draw(ctx, glyph, 0, 0, size);
+        ctx.restore();
+        return ok;
+    }
+
     function drawObstacle(ctx, o, theme) {
         switch (o.type) {
-            case 'shark': drawShark(ctx, o); break;
-            case 'jelly': drawJelly(ctx, o); break;
+            case 'shark': if (!drawEnemyArt(ctx, o, '🦈')) drawShark(ctx, o); break;
+            case 'jelly': if (!drawEnemyArt(ctx, o, '🐙')) drawJelly(ctx, o); break;
             case 'rock': drawOceanRock(ctx, o); break;
             case 'mine': drawMine(ctx, o); break;
             case 'seaweed': drawSeaweed(ctx, o); break;
-            case 'puffer': drawPuffer(ctx, o); break;
-            case 'crab': drawCrab(ctx, o); break;
+            case 'puffer': if (!drawEnemyArt(ctx, o, '🐟')) drawPuffer(ctx, o); break;
+            case 'crab': if (!drawEnemyArt(ctx, o, '🦀')) drawCrab(ctx, o); break;
             case 'anchor': drawAnchor(ctx, o); break;
             default: drawOceanRock(ctx, o);
         }
@@ -851,6 +867,7 @@
 
     window.startOcean = function () {
         if (window.__adv) return;
+        if (window.Art && window.Art.image) ['🦈','🐙','🐟','🦀'].forEach(g => window.Art.image(g));
         AdventureEngine.create({
             id: 'ocean',
             mode: 'fly',
