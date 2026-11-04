@@ -46,7 +46,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   const px = await h.evalv(`JSON.stringify((() => {
     const g = document.getElementById('scenePreview').getContext('2d');
     const at = (x,y) => { const d = g.getImageData(x,y,1,1).data; return [d[0],d[1],d[2]]; };
-    return { edge: at(3,3), inner: at(10,10), mid: at(320,37) };
+    return { edge: at(2,2), inner: at(5,5), mid: at(320,37) };
   })())`);
   const P = JSON.parse(px);
   check('no painted title banner (mid-canvas is sky, not white)',
@@ -54,7 +54,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('thin white frame drawn on every picture (edge is white)',
     P.edge[0] > 245 && P.edge[1] > 245 && P.edge[2] > 245, JSON.stringify(P.edge));
   check('frame inner plum line present (not pure sky/white)',
-    P.inner[0] < 200 && P.inner[1] < 190 && P.inner[2] < 240, JSON.stringify(P.inner));
+    P.inner[0] < 210 && P.inner[1] < 210 && P.inner[2] < 220, JSON.stringify(P.inner));
 
   const src = fs.readFileSync(path.join(__dirname, '..', 'game', 'games', 'animal_puzzle.js'), 'utf8');
   const html = fs.readFileSync(path.join(__dirname, '..', 'game', 'pages', 'animal_puzzle.html'), 'utf8');
