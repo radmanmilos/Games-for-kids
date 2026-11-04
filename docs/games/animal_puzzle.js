@@ -12,6 +12,7 @@
   const sceneImgs = {};
   scenes.forEach((sc) => {
     const im = new Image();
+    im.onload = () => { if (window.__puzzleRepaint) window.__puzzleRepaint(); };
     im.src = '../assets/scenes/scene-' + sc.theme + '.png';
     sceneImgs[sc.theme] = im;
   });
@@ -378,6 +379,7 @@
       paint(preview.getContext('2d'), scene);
       sceneImage = preview.toDataURL('image/png');
     }
+    window.__puzzleRepaint = () => { try { drawScene(scenes[level % scenes.length]); } catch(e){} };
 
     function updateLabels(scene){
       /* V1.2 (Visual/UX plan §19): the title owns the activity name and the status
