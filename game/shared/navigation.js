@@ -12,7 +12,7 @@
         // its cache `petrin-v<version>` with no second hand-written copy. A new
         // version therefore registers a new worker URL, which is the update.
         const manifestUrl = new URL('../manifest.json', here);
-        swReady = fetch(manifestUrl.href)
+        swReady = fetch(manifestUrl.href, { cache: 'no-store' })
             .then(r => r.json())
             .then(m => (m && m.version) || null)
             .catch(() => null)

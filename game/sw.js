@@ -10,6 +10,7 @@ const CACHE_NAME = 'petrin-v' + SW_VERSION;
 const APP_ROOT = new URL('./', self.registration.scope);
 const CACHE_LIST_URL = new URL('sw-cache-list.json', APP_ROOT);
 const OFFLINE_MANIFEST_URL = new URL('offline-manifest.json', APP_ROOT);
+const MANIFEST_URL = new URL('manifest.json', APP_ROOT);
 
 function resolveAssets(list) {
   return list.map(entry => new URL(entry, APP_ROOT).href);
@@ -70,7 +71,9 @@ self.addEventListener('fetch', event => {
   // requests or development-only paths that happen to be loaded by a page.
   if (url.origin !== self.location.origin || !url.pathname.startsWith(APP_ROOT.pathname)) return;
   // Update checks must see the server's current manifest, not the cached copy.
-  if (url.href === OFFLINE_MANIFEST_URL.href && req.cache === 'no-store') {
+  const isVersionManifest = url.href === MANIFEST_URL.href && req.cache === 'no-store';
+  const isOfflineManifest = url.href === OFFLINE_MANIFEST_URL.href && req.cache === 'no-store';
+  if (isVersionManifest || isOfflineManifest) {
     event.respondWith(fetch(req));
     return;
   }

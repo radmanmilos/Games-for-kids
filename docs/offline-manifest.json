@@ -1660,8 +1660,8 @@
     "size": 665
   },
   "shared/navigation.js": {
-    "sha256": "7f9e4bb87a49c1afb9f4051ae88ad3d3e17d0002fa09901d282acc838c2cad66",
-    "size": 8520
+    "sha256": "835eb27435d9f142d706ecb5fc09442faeeb5ccdfb7e3954783c881af583b235",
+    "size": 8543
   },
   "shared/speech.js": {
     "sha256": "2c40eee8e20449f9cbec2f0a77e08f6952a83e5e35eac2d9be9ae2dade24351c",
@@ -1700,7 +1700,7 @@
     "size": 13393
   },
   "sw.js": {
-    "sha256": "b63e67b64a1297936636d22d6ba0e0194a8148c41b17b4dd2a1c931869e77270",
-    "size": 9087
+    "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",
+    "size": 9300
   }
 }
