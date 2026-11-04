@@ -19,3 +19,6 @@ Educational goals:
 - Observation
 
 ---
+
+## 2026-11-04 (OpenCode/Big Pickle)
+- Painted art wiring + baseline smoke greening (tasks 341-352). See commit dfe4155.

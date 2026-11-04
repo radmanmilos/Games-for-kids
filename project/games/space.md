@@ -26,3 +26,6 @@ Educational goals:
 ---
 
 Refactoring note (task 250, 2026-10-16): the shared adventure engine now clears held keyboard/touch movement state when pausing on focus loss or document hiding, and touch controls treat `touchcancel` as release. Regression coverage is in `tools/adventure_smoke.js`.
+
+## 2026-11-04 (OpenCode/Big Pickle)
+- Painted art wiring + baseline smoke greening (tasks 341-352). See commit dfe4155.
