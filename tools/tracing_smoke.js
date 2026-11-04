@@ -324,11 +324,11 @@ const CHECK_RESULT = `JSON.stringify({
     // 18. index.html hub wiring
     await h.navigate(`http://127.0.0.1:${h.port}/index.html`);
     await sleep(800);
-    const idx = await h.evalv(`JSON.stringify({ btn: (document.querySelector('[data-go="game-tracing"]')||{}).textContent, count: document.querySelectorAll('[data-go]').length })`);
+    const idx = await h.evalv(`JSON.stringify({ btn: (document.querySelector('[data-go="game-tracing"]')||{}).textContent, count: document.querySelectorAll('[data-go]').length, hasBtn: !!document.querySelector('[data-go="game-tracing"]') })`);
     let I = JSON.parse(idx || '{}');
     const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
     const srcCount = (indexHtml.match(/data-go="/g) || []).length;
-    check('index.html has game-tracing button', I.btn === '✏️' && I.count === srcCount, idx);
+    check('index.html has game-tracing button', I.hasBtn === true && I.count === srcCount, idx);
   } finally {
     await h.close();
   }

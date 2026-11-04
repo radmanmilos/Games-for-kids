@@ -217,7 +217,7 @@
             goalX: 6600, goalW: 240, goalDy: 70, goalH: 340
         },
         {
-            name: 'Свемирска станица', collectible: '🛰️', goal: 'finish', music: 'station', decor: 'station',
+            name: 'Свемирска станица', collectible: '🛰', goal: 'finish', music: 'station', decor: 'station',
             bgSky: '#2a3a5a', bgPage: '#2a3a5a', isNight: true, noClouds: true, noHills: true,
             obstacles: [
                 { x: 600, dy: 260, w: 90, h: 70, type: 'sat', color: '#ffd0a0' },
