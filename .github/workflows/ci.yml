@@ -71,6 +71,9 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Install ffmpeg (required by tools/check_art.js for WebP decode)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+
       - name: Fast gate (syntax, registry/metadata, CI workflow, generated
             artifacts, offline inventory, hub smoke — all read-only)
         run: node tools/check_fast.js

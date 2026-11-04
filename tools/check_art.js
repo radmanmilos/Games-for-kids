@@ -56,6 +56,17 @@ for (const f of files) {
 
 // Per-file format / size / alpha.
 fs.mkdirSync(TEMP, { recursive: true });
+
+// Probe ffmpeg up front so a missing decoder fails with an actionable message
+// instead of 154 identical "could not decode ()" lines (task 363).
+const ffProbe = spawnSync('ffmpeg', ['-version'], { encoding: 'utf8' });
+if (ffProbe.error || ffProbe.status !== 0) {
+  console.error('check_art: ffmpeg is not available on PATH (needed to decode WebP).');
+  if (ffProbe.error) console.error('  ' + (ffProbe.error.code || ffProbe.error.message) + ': ' + ffProbe.error.message);
+  else console.error('  exit ' + ffProbe.status + (ffProbe.signal ? ' signal ' + ffProbe.signal : '') + (ffProbe.stderr ? ': ' + ffProbe.stderr.trim().slice(-200) : ''));
+  console.error('Fix: install ffmpeg (with libwebp) locally, or provision it in CI (.github/workflows/ci.yml fast job).');
+  process.exit(2);
+}
 for (const f of files) {
   const full = path.join(ART_DIR, f);
   const bytes = fs.readFileSync(full);
@@ -67,8 +78,11 @@ for (const f of files) {
   // Decode via ffmpeg -> png.
   const tmpPng = path.join(TEMP, f.replace(/\.webp$/, '.png'));
   const ff = spawnSync('ffmpeg', ['-y', '-v', 'error', '-i', full, '-frames:v', '1', tmpPng], { encoding: 'utf8' });
-  if (ff.status !== 0 || !fs.existsSync(tmpPng)) {
-    fail(`game/assets/art/${f}: could not decode (${(ff.stderr || '').trim().slice(-120)})`);
+  if (ff.error || ff.status !== 0 || !fs.existsSync(tmpPng)) {
+    let detail;
+    if (ff.error) detail = 'spawn error ' + (ff.error.code || ff.error.message) + ': ' + ff.error.message;
+    else detail = 'exit ' + ff.status + (ff.signal ? ' signal ' + ff.signal : '') + ((ff.stderr || '').trim() ? ' stderr: ' + (ff.stderr || '').trim().slice(-200) : '');
+    fail(`game/assets/art/${f}: could not decode (${detail})`);
     continue;
   }
   let img;
