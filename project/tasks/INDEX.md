@@ -356,3 +356,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 358 | DONE | 2026-11-04 | Re-cut shark/sun to real 512² alpha WebP (11 KB each, 74%/43% transparent) with the new… | tasks-300-399.md
 359 | DONE | 2026-11-04 | Wired painted art onto the remaining emoji surfaces: hub tiles (load art pipeline + inline paint of… | tasks-300-399.md
 360 | DONE | 2026-11-04 | Added tools/check_art.js (format/size/alpha/consumer gate for game/assets/art/) and wired it into check_fast… | tasks-300-399.md
+361 | DONE | 2026-11-04 | Generated 8 painted scene backgrounds (park, house, savanna, sea, forest, farm, space, winter) via… | tasks-300-399.md

@@ -9,6 +9,12 @@
     {title:'Другари у свемиру', theme:'space', skyTop:'#0B1E4B', skyBottom:'#2B4B9E', hill:'#0B0F2B', ground:'#B9C6D9', groundDark:'#8FA0B8', animals:['🚀','🪐','👨‍🚀','⭐']},
     {title:'Другари на снегу', theme:'winter', skyTop:'#B8D8F0', skyBottom:'#EAF6FF', hill:'#E3F1FA', ground:'#F0F8FF', groundDark:'#D4E8F4', animals:['⛄','🛷','🐧','❄️']}
   ];
+  const sceneImgs = {};
+  scenes.forEach((sc) => {
+    const im = new Image();
+    im.src = '../assets/scenes/scene-' + sc.theme + '.png';
+    sceneImgs[sc.theme] = im;
+  });
   const GRIDS = [{rows:1,cols:2},{rows:2,cols:2},{rows:3,cols:3}];
 
   function rr(ctx,x,y,w,h,r){
@@ -199,6 +205,26 @@
 
   function paint(ctx, scene){
     const W=640, H=420, gy=280;
+    const img = (typeof sceneImgs !== 'undefined') ? sceneImgs[scene.theme] : null;
+    if (img && img.complete && img.naturalWidth) {
+      ctx.clearRect(0,0,W,H);
+      ctx.drawImage(img, 0, 0, W, H);
+      ctx.font='64px "Apple Color Emoji","Segoe UI Emoji",sans-serif';
+      ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+      scene.animals.forEach((a,i)=>{
+        const x=140+i*125;
+        ctx.fillStyle='rgba(0,0,0,.16)';
+        ctx.beginPath(); ctx.ellipse(x,gy+24,32,9,0,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle='#000';
+        if (window.Art && window.Art.draw) window.Art.draw(ctx, a, x, gy+12, 64);
+        else ctx.fillText(a,x,gy+12);
+      });
+      ctx.strokeStyle='#fff'; ctx.lineWidth=9;
+      ctx.strokeRect(4.5,4.5,W-9,H-9);
+      ctx.strokeStyle='rgba(74,63,107,.4)'; ctx.lineWidth=2;
+      ctx.strokeRect(4.5,4.5,W-9,H-9);
+      return;
+    }
     ctx.clearRect(0,0,W,H);
     const sky=ctx.createLinearGradient(0,0,0,gy);
     sky.addColorStop(0,scene.skyTop); sky.addColorStop(1,scene.skyBottom);

@@ -18,11 +18,6 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 361. NEW — Animal Puzzle painted scene backgrounds (2026-11-04, OpenCode/Big Pickle)
-  - Task 352 was marked DONE but `git log -- game/games/animal_puzzle.js` stops at `0ca3c0e`; no scene art exists. Scenes (`animal_puzzle.js:2-12`, `paint()` at `:200`) are canvas gradients plus procedural decor.
-  - Generate 8 painted backgrounds (park, house, savanna, sea, forest, farm, space, snow) through `asset_generate.js` → bundle → `game/assets/scenes/`, wire them as the `paint()` backdrop layer with the existing gradient as fallback, keep the 64 px animal row on top.
-  - Done when: each scene shows painted art, generation QA + user visual approval recorded in `ASSET_INVENTORY.md`/`PROGRESS.md`, puzzle smoke green, screenshots refreshed.
-
 - 362. NEW — Remaining unmapped child-facing glyphs: generate or accept (2026-11-04, OpenCode/Big Pickle)
   - Still no art and not deliberately excluded: `🌀` (space), `🌌` (space + racing night world), `☃️` (racing snow world), `❤️` (cat-forest match effect), `😉` (candy). Audio/UI glyphs (`🔊 🔇 🎵 🎹 🔒 📊 📥 🔄 🗑 ⬆`) and the documented exclusions (`⬛ 📖 ✖️`) stay emoji.
   - Generate the five through the pipeline, or record an explicit "accepted emoji" decision in `project/DECISIONS.md` for any the user declines.

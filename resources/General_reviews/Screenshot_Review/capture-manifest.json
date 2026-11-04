@@ -2,19 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "cfbcef5ac5f015c18d034dd8a34eea684167f301",
+  "commitSha": "7fa9c6f5e0437270737239917d5d625fda0c881b",
   "browser": {
     "product": "Chrome/156.0.8078.80",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-04T13:53:58.366Z",
+  "generatedAt": "2026-11-04T14:04:27.784Z",
   "pageSet": [
-    "hub",
-    "classroom",
-    "tracing",
-    "animal_memory",
-    "racing3d"
+    "animal_puzzle"
   ],
   "viewports": {
     "phone-portrait": {
@@ -44,184 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "hub_phone-portrait.png",
-      "page": "hub",
+      "file": "animal_puzzle_phone-portrait.png",
+      "page": "animal_puzzle",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 138085
+      "bytes": 27537
     },
     {
-      "file": "hub_phone-landscape.png",
-      "page": "hub",
+      "file": "animal_puzzle_phone-landscape.png",
+      "page": "animal_puzzle",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 260704
+      "bytes": 56096
     },
     {
-      "file": "hub_tablet-portrait.png",
-      "page": "hub",
+      "file": "animal_puzzle_tablet-portrait.png",
+      "page": "animal_puzzle",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 257001
+      "bytes": 68445
     },
     {
-      "file": "hub_tablet-landscape.png",
-      "page": "hub",
+      "file": "animal_puzzle_tablet-landscape.png",
+      "page": "animal_puzzle",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 356044
-    },
-    {
-      "file": "classroom_phone-portrait.png",
-      "page": "classroom",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 95788
-    },
-    {
-      "file": "classroom_phone-landscape.png",
-      "page": "classroom",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 78036
-    },
-    {
-      "file": "classroom_tablet-portrait.png",
-      "page": "classroom",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 253455
-    },
-    {
-      "file": "classroom_tablet-landscape.png",
-      "page": "classroom",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 210656
-    },
-    {
-      "file": "tracing_phone-portrait.png",
-      "page": "tracing",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 58072
-    },
-    {
-      "file": "tracing_phone-landscape.png",
-      "page": "tracing",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 45920
-    },
-    {
-      "file": "tracing_tablet-portrait.png",
-      "page": "tracing",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 166142
-    },
-    {
-      "file": "tracing_tablet-landscape.png",
-      "page": "tracing",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 132650
-    },
-    {
-      "file": "animal_memory_phone-portrait.png",
-      "page": "animal_memory",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 82764
-    },
-    {
-      "file": "animal_memory_phone-landscape.png",
-      "page": "animal_memory",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 54724
-    },
-    {
-      "file": "animal_memory_tablet-portrait.png",
-      "page": "animal_memory",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 95851
-    },
-    {
-      "file": "animal_memory_tablet-landscape.png",
-      "page": "animal_memory",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 95091
-    },
-    {
-      "file": "racing3d_phone-portrait.png",
-      "page": "racing3d",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 71188
-    },
-    {
-      "file": "racing3d_phone-landscape.png",
-      "page": "racing3d",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 61088
-    },
-    {
-      "file": "racing3d_tablet-portrait.png",
-      "page": "racing3d",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 52199
-    },
-    {
-      "file": "racing3d_tablet-landscape.png",
-      "page": "racing3d",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 96513
+      "bytes": 72821
     }
   ]
 }

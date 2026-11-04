@@ -1339,6 +1339,38 @@
     "sha256": "f7cee3c7533449a1505cc12cb5128b89e3d4fd3d7ea62b05f9f5464a217472ee",
     "size": 687458
   },
+  "assets/scenes/scene-farm.png": {
+    "sha256": "ca99d3747a8bfd0fcb83ffafd633a6e4a977019e21ca819c93567e3d114bbdaf",
+    "size": 2295653
+  },
+  "assets/scenes/scene-forest.png": {
+    "sha256": "8e1fc42b4a92c1c56e606ec9f8e3d1f1e731c7fc298fe7abffce9d8bed1e9477",
+    "size": 2641631
+  },
+  "assets/scenes/scene-house.png": {
+    "sha256": "9376c1f73cb4e4faa40a72c92b9e553e90b64ce9d57540f724a4b76565f18d79",
+    "size": 2401097
+  },
+  "assets/scenes/scene-park.png": {
+    "sha256": "562f34748b4b0f0031835c607eac8b682585a8139b86b57e2d32425289c27b08",
+    "size": 2047270
+  },
+  "assets/scenes/scene-savanna.png": {
+    "sha256": "09e99287b8ade952a3ca8a7f3bfc137f2b1835aa5b1ef531dde4d91f1fd47c24",
+    "size": 2132386
+  },
+  "assets/scenes/scene-sea.png": {
+    "sha256": "709a34ab8fa0dd55d3e8c83a2f1f9b8cddfbe8cd6fb38d59bfc7e6ea19096388",
+    "size": 2148709
+  },
+  "assets/scenes/scene-space.png": {
+    "sha256": "badf45d39e785da7c6414724a595feea963259d960de2ad8883b073c657696c3",
+    "size": 2632868
+  },
+  "assets/scenes/scene-winter.png": {
+    "sha256": "82eec1a5e16138c19067edf0a778307fbc57fd42552977cf3df5e6d9f3f1d0e6",
+    "size": 1651027
+  },
   "assets/scenes/sunrise.png": {
     "sha256": "cdfa19c2dfc53859e80a9b2a5f79be057d4c866bd9f8d33a3a20dfff100805a8",
     "size": 1814120
@@ -1380,8 +1412,8 @@
     "size": 6920
   },
   "games/animal_puzzle.js": {
-    "sha256": "0ab1459ef82f229d17143496ff2a3f5e190c46e1fddefe89a4ab2048914ebca1",
-    "size": 32474
+    "sha256": "301f382766404d531b5188b5bf76d01177f35bb99a84e397beab3c6d063e714c",
+    "size": 33533
   },
   "games/animals.js": {
     "sha256": "4d4953829d2d4cbf9068c4caa10927f178ece95616c62b79d1db0dbba4d3ff7a",
@@ -1672,8 +1704,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "eea7cbf85a6b801d49dfca75825ff25b4c132f2ba15f176aee7bf2d1db2d51c0",
-    "size": 13168
+    "sha256": "a1a5d6fc24d819c933913ad88b61f5183cfa51230d69505dc90d4afc917829cb",
+    "size": 13448
   },
   "sw.js": {
     "sha256": "b63e67b64a1297936636d22d6ba0e0194a8148c41b17b4dd2a1c931869e77270",

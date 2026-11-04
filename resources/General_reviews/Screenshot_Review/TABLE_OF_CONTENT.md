@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-04T13:53:58.366Z
+- Генерисано / Generated: 2026-11-04T14:04:27.784Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -16,10 +16,10 @@
 | `animal_memory_phone-portrait.png` | Памтилица | `/pages/animal_memory.html` | 390×844 | портрет | — | 04.11.2026. 14:53:58 | 359 |
 | `animal_memory_tablet-landscape.png` | Памтилица | `/pages/animal_memory.html` | 1180×820 | пејзаж | — | 04.11.2026. 14:53:58 | 359 |
 | `animal_memory_tablet-portrait.png` | Памтилица | `/pages/animal_memory.html` | 820×1180 | портрет | — | 04.11.2026. 14:53:58 | 359 |
-| `animal_puzzle_phone-landscape.png` | Слагалице | `/pages/animal_puzzle.html` | 844×390 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
-| `animal_puzzle_phone-portrait.png` | Слагалице | `/pages/animal_puzzle.html` | 390×844 | портрет | — | 01.11.2026. 18:28:02 | 324 |
-| `animal_puzzle_tablet-landscape.png` | Слагалице | `/pages/animal_puzzle.html` | 1180×820 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
-| `animal_puzzle_tablet-portrait.png` | Слагалице | `/pages/animal_puzzle.html` | 820×1180 | портрет | — | 01.11.2026. 18:28:02 | 324 |
+| `animal_puzzle_phone-landscape.png` | Слагалице | `/pages/animal_puzzle.html` | 844×390 | пејзаж | — | 04.11.2026. 15:04:27 | 361 |
+| `animal_puzzle_phone-portrait.png` | Слагалице | `/pages/animal_puzzle.html` | 390×844 | портрет | — | 04.11.2026. 15:04:27 | 361 |
+| `animal_puzzle_tablet-landscape.png` | Слагалице | `/pages/animal_puzzle.html` | 1180×820 | пејзаж | — | 04.11.2026. 15:04:27 | 361 |
+| `animal_puzzle_tablet-portrait.png` | Слагалице | `/pages/animal_puzzle.html` | 820×1180 | портрет | — | 04.11.2026. 15:04:27 | 361 |
 | `animals_phone-landscape.png` | Животиње | `/pages/animals.html` | 844×390 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
 | `animals_phone-portrait.png` | Животиње | `/pages/animals.html` | 390×844 | портрет | — | 01.11.2026. 18:28:02 | 324 |
 | `animals_tablet-landscape.png` | Животиње | `/pages/animals.html` | 1180×820 | пејзаж | — | 01.11.2026. 18:28:02 | 324 |
