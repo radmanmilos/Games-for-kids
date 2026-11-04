@@ -6,22 +6,18 @@
 
 ## Where we are
 
-- **All five art-audit tasks (358–362) shipped and pushed to main.**
-  - 358 Art integrity: 6 opaque PNGs-as-WebP fixed (shark/sun re-cut, crab/octopus remapped, sunrise/sunset moved to scenes/), 18 dangling illustrations registered, U+FE0F root cause fixed, `tools/asset_cutout.js` added.
-  - 359 Painted art on last emoji surfaces: hub, classroom/tracing buttons, animal_memory card back, racing3d decor + world cards.
-  - 360 Art-integrity gate: `tools/check_art.js` wired into `check_fast` (10 stages, all green).
-  - 361 Animal Puzzle: 8 painted scene backgrounds generated and wired with gradient fallback.
-  - 362 Orphans closed (card-stack/meteor/puddle deleted); 5 glyphs accepted as emoji.
+- **Task 363 (P0.1) DONE** — art-integrity CI failure diagnosed and fixed: root cause was ffmpeg missing from the ubuntu-24.04 runner (ENOENT with empty stderr). `tools/check_art.js` now probes ffmpeg up front with an actionable message and reports spawnSync diagnostics; `.github/workflows/ci.yml` fast job installs ffmpeg. Follow-up fixes in the same pass: puzzle frame pixel assertions (painted scenes), hub axe color-contrast, duplicate dog glyph (registry guard), space FE0F collectible, tracing button assertion. Local `check_fast` 10/10 green.
+- Follow-up CI run (push f95419a/e5e4bcf) is queued/in progress on GitHub Actions; a prior run surfaced and fixed space/tracing/puzzle/axe/registry-guard failures. Pages deploy remains gated on a fully green run.
 - Art payload: 154 glyph WebPs, 154 registry stems, 0 orphans, 0 warnings.
-- Git: clean tree, in sync with origin/main.
 
 ## Open tasks
 
 - **328** DEFERRED — hub/nav tile icons and shell-chrome glyphs; needs a user decision (see `DECISIONS.md`).
+- **364–373** NEW — audit/phase tasks from the master directive (see `ACTIVE.md`).
 
 ## Validate
 
-- `node tools/check_fast.js` — 10/10 green.
+- `node tools/check_fast.js` — 10/10 green locally.
 - `node tools/check_art.js` — 0 failures, 0 warnings.
 - `node tools/check_release.js` — release gate before a release.
 

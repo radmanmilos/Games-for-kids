@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **363**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **374**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -358,3 +358,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 360 | DONE | 2026-11-04 | Added tools/check_art.js (format/size/alpha/consumer gate for game/assets/art/) and wired it into check_fast… | tasks-300-399.md
 361 | DONE | 2026-11-04 | Generated 8 painted scene backgrounds (park, house, savanna, sea, forest, farm, space, winter) via… | tasks-300-399.md
 362 | DONE | 2026-11-04 | Closed the three orphan art files (card-stack, meteor, puddle) by deleting them, and recorded the five… | tasks-300-399.md
+363 | DONE | 2026-11-04 | P0.1 Diagnose & fix art-integrity CI failure (blocker): root cause was ffmpeg absent from ubuntu-24.04 runner… | tasks-300-399.md

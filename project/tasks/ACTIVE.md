@@ -18,7 +18,6 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 363. IN PROGRESS — P0.1 Diagnose & fix art-integrity CI failure (blocker): tools/check_art.js reports every glyph WebP undecodable in CI; capture spawnSync diagnostics, distinguish env vs corruption, fix root cause, keep gate strict (2026-11-04, Kilo/reflection/beam-free)
 - 364. NEW — P1.1 Verified repository inventory: enumerate all registry entries, map runtime files/assets/smokes/screenshots/offline deps, find unregistered pages & orphans, produce inventory matrix (2026-11-04, Kilo/reflection/beam-free)
 - 365. NEW — P1.2 Service-worker & version-discovery audit: trace version discovery + cache identity, test install/update/failure/offline recovery, add regression tests for confirmed gaps (2026-11-04, Kilo/reflection/beam-free)
 - 366. NEW — P1.3 Child-safety & privacy audit: audit network paths, permissions, storage, HTML/URL injection, parent reset; remove any unapproved runtime network surface (2026-11-04, Kilo/reflection/beam-free)
