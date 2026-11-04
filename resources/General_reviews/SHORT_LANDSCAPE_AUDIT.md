@@ -1,6 +1,6 @@
 # Short-landscape audit — 844×390 (spec §11)
 
-Generated: 2026-10-20 19:25 UTC · task 217 (V3.1) · `node tools/short_landscape_audit.js`
+Generated: 2026-11-04 18:04 UTC · task 217 (V3.1) · `node tools/short_landscape_audit.js`
 
 Every surface (hub + 24 registry apps) measured at **844×390** against the
 Master Visual/UX plan §11 checklist: header budget 56–72 px, board-first,
@@ -28,7 +28,7 @@ adjudication. The tool exits 1 while any FAIL remains.**
 | `rhythm` | Слушај, па понови | 66 | OK | 0 | 0 |
 | `spatial` | Где је лопта? | 66 | OK | 0 | 0 |
 | `maze` | Пронађи пут до куће | 90 | WARN | 0 | 1 |
-| `coloring` | Жаба | 72 | OK | 0 | 0 |
+| `coloring` | Кока | 72 | OK | 0 | 0 |
 | `tracing` | Писање | 72 | OK | 0 | 0 |
 | `piano` | Клавир | 72 | OK | 0 | 0 |
 | `shapes` | (none) | 72 | WARN | 0 | 1 |

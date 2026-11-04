@@ -18,13 +18,3 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 364. DONE — P1.1 Verified repository inventory: produced project/reference/INVENTORY_MATRIX.md (26 registry entries, 0 unregistered pages, all smoke files present; asset counts included) (2026-11-04, Kilo/reflection/beam-free)
-- 365. NEW — P1.2 Service-worker & version-discovery audit: trace version discovery + cache identity, test install/update/failure/offline recovery, add regression tests for confirmed gaps (2026-11-04, Kilo/reflection/beam-free)
-- 366. NEW — P1.3 Child-safety & privacy audit: audit network paths, permissions, storage, HTML/URL injection, parent reset; remove any unapproved runtime network surface (2026-11-04, Kilo/reflection/beam-free)
-- 367. NEW — P1.4 Accessibility audit: all registry pages; keyboard, touch, reduced motion, focus, contrast, zoom, screen-reader essentials; automated + manual evidence (2026-11-04, Kilo/reflection/beam-free)
-- 368. NEW — P1.5 Game-by-game audit: lifecycle, state, controls, audio, persistence, errors, offline, performance, learning correctness; produce game matrix (2026-11-04, Kilo/reflection/beam-free)
-- 369. NEW — P1.6 Visual audit: inspect current screenshot PNGs, regenerate stale audit reports, adjudicate warnings, page-by-page findings (2026-11-04, Kilo/reflection/beam-free)
-- 370. NEW — Phase 2 foundational reliability fixes (version discovery, SW update/rollback, offline truth, error handling, lifecycle cleanup, input/audio, data validation) (2026-11-04, Kilo/reflection/beam-free)
-- 371. NEW — Phase 3 portfolio excellence pass (per-game clarity, forgiveness, success/exit, education, controls, personality) (2026-11-04, Kilo/reflection/beam-free)
-- 372. NEW — Phase 4 visual & sensory refinement (screenshots, cozy language, clutter, readability, reduced motion, audio balance, game identity) (2026-11-04, Kilo/reflection/beam-free)
-- 373. NEW — Phase 5 documentation reconciliation & release readiness (README/ROADMAP/STATUS/guides, mirror, gates, playtesting) (2026-11-04, Kilo/reflection/beam-free)

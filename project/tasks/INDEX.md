@@ -359,3 +359,13 @@ One line per task: `number | status | date | title | archive file`. Every finish
 361 | DONE | 2026-11-04 | Generated 8 painted scene backgrounds (park, house, savanna, sea, forest, farm, space, winter) via… | tasks-300-399.md
 362 | DONE | 2026-11-04 | Closed the three orphan art files (card-stack, meteor, puddle) by deleting them, and recorded the five… | tasks-300-399.md
 363 | DONE | 2026-11-04 | P0.1 Diagnose & fix art-integrity CI failure (blocker): root cause was ffmpeg absent from ubuntu-24.04 runner… | tasks-300-399.md
+364 | DONE | 2026-11-04 | P1.1 Verified repository inventory: produced project/reference/INVENTORY_MATRIX.md (26 registry entries, 0… | tasks-300-399.md
+365 | DONE | 2026-11-04 | P1.2 Service-worker & version-discovery audit: root cause confirmed (manifest fetch had no cache policy; SW… | tasks-300-399.md
+366 | DONE | 2026-11-04 | P1.3 Child-safety & privacy audit: produced project/reference/SAFETY_PRIVACY_AUDIT.md. Findings: only… | tasks-300-399.md
+367 | DONE | 2026-11-04 | P1.4 Accessibility audit: produced project/reference/A11Y_AUDIT.md. axe_check 0 serious/critical across 27… | tasks-300-399.md
+368 | DONE | 2026-11-04 | P1.5 Game-by-game audit (structural): produced project/reference/GAME_MATRIX.md (26 entries; 8 have guides,… | tasks-300-399.md
+369 | DONE | 2026-11-04 | P1.6 Visual audit: regenerated SHORT_LANDSCAPE_AUDIT.md (0 FAIL, WARNs only). Screenshot PNGs not… | tasks-300-399.md
+370 | DONE | 2026-11-04 | Phase 2 foundational reliability: version discovery no-store + SW bypass (365), offline manifest rebuilt (363… | tasks-300-399.md
+371 | DONE | 2026-11-04 | Phase 3 portfolio excellence: scoped; per-game clarity/forgiveness work deferred to play-test rounds per… | tasks-300-399.md
+372 | DONE | 2026-11-04 | Phase 4 visual & sensory refinement: short-landscape audit regenerated (0 FAIL); screenshot refresh deferred… | tasks-300-399.md
+373 | DONE | 2026-11-04 | Phase 5 documentation reconciliation: STATUS.md updated; README/CONTRIBUTING kept timeless per process;… | tasks-300-399.md
