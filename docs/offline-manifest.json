@@ -95,10 +95,6 @@
     "sha256": "7bed78dd5edc635e3898f09e3cac3dd5f4dad887e9086ae324af744e2461a548",
     "size": 33412
   },
-  "assets/art/card-stack.webp": {
-    "sha256": "6553fcb4b6c0adc1d7f71aba224e3576463660203fcd376dbc388106c90678f7",
-    "size": 34180
-  },
   "assets/art/carrot.webp": {
     "sha256": "f1cfe36e600c0e382da09aa57b7cd60a5470cd94fe44ccf217c1f623d595b609",
     "size": 22802
@@ -311,10 +307,6 @@
     "sha256": "ec09a62fd83a67a8892e173a12cd945e6a2c2b7dab74296c594759d29038a866",
     "size": 26600
   },
-  "assets/art/meteor.webp": {
-    "sha256": "ceb29a8db12388596252ee09e699b1587435970834e3ffcdd93acec5399431c2",
-    "size": 39676
-  },
   "assets/art/monkey.webp": {
     "sha256": "a599c020caad4c96ab10720705a17acdc06cc328bef22ce158b05c3e71d64520",
     "size": 32806
@@ -450,10 +442,6 @@
   "assets/art/playing-cards.webp": {
     "sha256": "95512c388555c0a236aa71c34634251bc04ab98472693d6a512d2ec3f80e7174",
     "size": 32288
-  },
-  "assets/art/puddle.webp": {
-    "sha256": "bbd62b6d9d3acb7a67c320fb19aae436076d79677f35133c2e45b0db4edaea76",
-    "size": 21318
   },
   "assets/art/puzzle-piece.webp": {
     "sha256": "bfb6a0356bb3e70092abfc94086e512a95206461c10c2897c361cd56089c54ce",
@@ -1704,8 +1692,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "a1a5d6fc24d819c933913ad88b61f5183cfa51230d69505dc90d4afc917829cb",
-    "size": 13448
+    "sha256": "7a934767b5426c724038ed35febfe2b41dcb93465a1b32d4f0bce81891df8782",
+    "size": 13360
   },
   "sw.js": {
     "sha256": "b63e67b64a1297936636d22d6ba0e0194a8148c41b17b4dd2a1c931869e77270",

@@ -116,3 +116,10 @@ The Мала тркачица (Little Racer) game is fully built (Stages 1–5, 
 - **Full-bleed scene art lives in `game/assets/scenes/`** and is exempt from the alpha/size/registry rules: a painted
   background is legitimately opaque and its consumer is code (paint() in the game), not a glyph mapping. This is why the
   classroom `sun/sunrise/sunset` scenes stay opaque as scenes while the classroom *tile* needs a transparent cut-out.
+
+## Accepted emoji (no painted art) — task 362 (2026-11-04)
+
+The following child-facing glyphs keep their emoji rendering by explicit decision (no art generated):
+- \u{1F300} (space decor), \u{1F30C} (space/racing night world), \u2603\uFE0F (racing snow world), \u2764\uFE0F (cat-forest match effect), \u{1F609} (candy) -
+  these read as symbols/effects or are used at tiny sizes where a painted cut-out would not improve clarity.
+- Audio/UI glyphs and parent-page controls plus the documented exclusions (\u2B1B \u{1F4D6} \u2716\uFE0F) remain emoji by design.
