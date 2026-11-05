@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <img src="resources/General_reviews/Screenshot_Review/hub_tablet-landscape.png" alt="The Petrin svet home screen, showing the learning and games areas" width="900">
+  <img src="resources/General_reviews/Screenshot_Review/hub_phone-landscape.png" alt="The Petrin svet home screen, showing the learning and games areas" width="900">
 </p>
 
 <p align="center">

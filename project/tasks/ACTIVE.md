@@ -17,3 +17,5 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 4. Do **not** copy the task into README, CONTRIBUTING or STATUS. `project/STATUS.md` is overwritten at session end instead.
 
 ## Open tasks
+
+- 376. IN PROGRESS — Replace the README hub hero with the user-selected phone-landscape screenshot (2026-11-05, GitHub connector/GPT-6). Asset path verified; awaiting PR CI and merge. Local archive/check commands remain for the owner’s clone.
