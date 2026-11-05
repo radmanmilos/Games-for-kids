@@ -12,6 +12,10 @@
 - **Remaining WARNs (by design):** compare 89, sorting 92, maze 92, arcade four 83 px against the conceptual 56–72 px budget — no clipping, no FAIL, approximate metric. Plus stage-led "no header text" WARNs and the known `animal_counting` selector false positive.
 - **Next:** merge the branch, then optionally fix the audit title selector (`h2`/`.count-title`).
 
+### CI follow-up (same branch)
+
+The first CI run on this branch (`42101432563`) went red on one `compare_smoke` leg with a Chrome boot crash and **zero checks** — the documented environmental class, not a regression: its identical twin leg passed 29/29. Root cause of the twin: `run_all.js --affected` normalised names *after* the `Set` dedupe, so `compare_smoke` and `compare_smoke.js` both survived and four smokes were scheduled twice (`compare`, `hub`, `maze`, `sorting`, `sw_update`). `normalizeSmokes` now dedupes after adding the extension; `--affected` and `--since` emit 37 unique legs instead of 42 with 5 duplicates. Editing `tools/run_all.js` escalates the next CI run to the full battery by design.
+
 ## Validation
 
 - `node tools/screenshot.js --review=Screenshot_Review --pages=hub,parent,compare,sorting,maze,driving,ocean,dino,space --task=380` — 36 captures, no browser runtime errors.
