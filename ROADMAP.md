@@ -4,9 +4,10 @@
 
 ## Current plan
 
-**Visual/UX screenshot review — task 379.** Refresh the stable `Screenshot_Review` battery, capture deterministic gameplay states where supported, adjudicate the short-landscape warnings against current screenshots and source, and produce a prioritized review. No runtime changes are authorized by the review task; fixes will be proposed separately with file locations, rationale, regression risks and validation steps.
+**Visual confirmation — task 380.** The task 379 evidence pass is complete: 164 screenshots (108 default + 56 gameplay), all provenance refreshed, short-landscape audit re-run with a disposition per WARN, axe clean on 27 surfaces. Remaining work is the vision-model pass over the battery plus scoping the two actionable findings (parent gate below the fold at 844×390, short-landscape header budget).
 
-Plan: [`project/plans/visual-ux-screenshot-review-2026-11.md`](project/plans/visual-ux-screenshot-review-2026-11.md).
+- Plan: [`project/plans/visual-ux-screenshot-review-2026-11.md`](project/plans/visual-ux-screenshot-review-2026-11.md)
+- Report: [`resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md`](resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md)
 
 ## Completed plans
 

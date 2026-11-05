@@ -1,438 +1,658 @@
 {
   "hub_phone-portrait.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T18:51:05.231Z",
+    "task": "379"
   },
   "hub_phone-landscape.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T18:51:05.231Z",
+    "task": "379"
   },
   "hub_tablet-portrait.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T18:51:05.231Z",
+    "task": "379"
   },
   "hub_tablet-landscape.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T18:51:05.231Z",
+    "task": "379"
   },
   "animals_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animals_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animals_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animals_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animal_counting_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animal_counting_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animal_counting_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animal_counting_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animal_memory_phone-portrait.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animal_memory_phone-landscape.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animal_memory_tablet-portrait.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animal_memory_tablet-landscape.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animal_puzzle_phone-portrait.png": {
-    "updatedAt": "2026-11-04T14:04:27.784Z",
-    "task": "361"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animal_puzzle_phone-landscape.png": {
-    "updatedAt": "2026-11-04T14:04:27.784Z",
-    "task": "361"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animal_puzzle_tablet-portrait.png": {
-    "updatedAt": "2026-11-04T14:04:27.784Z",
-    "task": "361"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animal_puzzle_tablet-landscape.png": {
-    "updatedAt": "2026-11-04T14:04:27.784Z",
-    "task": "361"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "classroom_phone-portrait.png": {
-    "updatedAt": "2026-11-04T14:26:59.189Z",
-    "task": "362"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "classroom_phone-landscape.png": {
-    "updatedAt": "2026-11-04T14:26:59.189Z",
-    "task": "362"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "classroom_tablet-portrait.png": {
-    "updatedAt": "2026-11-04T14:26:59.189Z",
-    "task": "362"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "classroom_tablet-landscape.png": {
-    "updatedAt": "2026-11-04T14:26:59.189Z",
-    "task": "362"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "compare_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "compare_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "compare_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "compare_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "sorting_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "sorting_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "sorting_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "sorting_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "phonics_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "phonics_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "phonics_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "phonics_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "sequencing_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "sequencing_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "sequencing_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "sequencing_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "rhythm_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "rhythm_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "rhythm_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "rhythm_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "spatial_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "spatial_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "spatial_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "spatial_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "maze_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "maze_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "maze_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "maze_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "coloring_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "coloring_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "coloring_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "coloring_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "tracing_phone-portrait.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "tracing_phone-landscape.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "tracing_tablet-portrait.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "tracing_tablet-landscape.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "piano_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "piano_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "piano_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "piano_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "shapes_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "shapes_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "shapes_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "shapes_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "matching_game_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "matching_game_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "matching_game_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "matching_game_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "driving_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "driving_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "driving_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "driving_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "ocean_phone-portrait.png": {
-    "updatedAt": "2026-11-04T12:48:37.215Z",
-    "task": "358"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "ocean_phone-landscape.png": {
-    "updatedAt": "2026-11-04T12:48:37.215Z",
-    "task": "358"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "ocean_tablet-portrait.png": {
-    "updatedAt": "2026-11-04T12:48:37.215Z",
-    "task": "358"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "ocean_tablet-landscape.png": {
-    "updatedAt": "2026-11-04T12:48:37.215Z",
-    "task": "358"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "dino_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "dino_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "dino_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "dino_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "space_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "space_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "space_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "space_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "racing3d_phone-portrait.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "racing3d_phone-landscape.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "racing3d_tablet-portrait.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "racing3d_tablet-landscape.png": {
-    "updatedAt": "2026-11-04T13:53:58.366Z",
-    "task": "359"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "explorer_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "explorer_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "explorer_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "explorer_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "parent_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "parent_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "parent_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "parent_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "animals__phone-portrait__PLAY.png": {
-    "updatedAt": "2026-10-19T05:42:21.902Z",
-    "task": "255"
+    "updatedAt": "2026-11-05T18:52:24.112Z",
+    "task": "379"
   },
   "fastcat_phone-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "fastcat_phone-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "fastcat_tablet-portrait.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "fastcat_tablet-landscape.png": {
-    "updatedAt": "2026-11-01T17:28:02.477Z",
-    "task": "324"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "cat_forest_phone-portrait.png": {
-    "updatedAt": "2026-11-04T12:48:37.215Z",
-    "task": "358"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "cat_forest_phone-landscape.png": {
-    "updatedAt": "2026-11-04T12:48:37.215Z",
-    "task": "358"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "cat_forest_tablet-portrait.png": {
-    "updatedAt": "2026-11-04T12:48:37.215Z",
-    "task": "358"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
   },
   "cat_forest_tablet-landscape.png": {
-    "updatedAt": "2026-11-04T12:48:37.215Z",
-    "task": "358"
+    "updatedAt": "2026-11-05T17:53:41.575Z",
+    "task": "379"
+  },
+  "animal_puzzle__phone-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "animal_puzzle__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "animal_puzzle__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "animal_puzzle__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "classroom__phone-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "classroom__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "classroom__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "classroom__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "compare__phone-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "compare__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "compare__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "compare__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "sorting__phone-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "sorting__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "sorting__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "sorting__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "phonics__phone-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "phonics__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "phonics__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "phonics__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "spatial__phone-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "spatial__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "spatial__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "spatial__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "piano__phone-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "piano__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "piano__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "piano__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "rhythm__phone-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "rhythm__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "rhythm__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "rhythm__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "coloring__phone-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "coloring__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "coloring__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "coloring__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "shapes__phone-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "shapes__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "shapes__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "shapes__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "cat_forest__phone-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "cat_forest__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "cat_forest__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "cat_forest__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:48:22.573Z",
+    "task": "379"
+  },
+  "animals__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:52:24.112Z",
+    "task": "379"
+  },
+  "animals__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:52:24.112Z",
+    "task": "379"
+  },
+  "animals__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:52:24.112Z",
+    "task": "379"
+  },
+  "animal_counting__phone-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:52:24.112Z",
+    "task": "379"
+  },
+  "animal_counting__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:52:24.112Z",
+    "task": "379"
+  },
+  "animal_counting__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:52:24.112Z",
+    "task": "379"
+  },
+  "animal_counting__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:52:24.112Z",
+    "task": "379"
+  },
+  "animal_memory__phone-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:52:24.112Z",
+    "task": "379"
+  },
+  "animal_memory__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:52:24.112Z",
+    "task": "379"
+  },
+  "animal_memory__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-05T18:52:24.112Z",
+    "task": "379"
+  },
+  "animal_memory__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-05T18:52:24.112Z",
+    "task": "379"
   }
 }

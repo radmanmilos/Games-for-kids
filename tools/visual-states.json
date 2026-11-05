@@ -1,36 +1,36 @@
 {
-  "_comment": "Per-game deterministic state hooks for tools/screenshot.js --state=<id>. Each hook is a JavaScript expression evaluated in the page context that drives the page into a named state and returns true on success. Hooks must be deterministic — no reliance on random timing. Add new games here; screenshot.js needs no change.",
+  "_comment": "Per-game deterministic state hooks for tools/screenshot.js --state=<id>. Each hook is a JavaScript expression evaluated in the page context that drives the page into a named state and returns true on success. Hooks must be deterministic — no reliance on random timing. Add new games here; screenshot.js needs no change. A page with only INIT has no simple deterministic gameplay state (drag-only or continuous-action games), so only its default capture is part of the battery.",
   "hub": {
     "INIT": "true"
   },
   "animals": {
     "INIT": "true",
-    "PLAY": "document.querySelector('.animal-card').click(); true"
+    "PLAY": "(() => { const t = document.getElementById('recogToggle'); if (!t) return false; t.click(); return document.getElementById('recogWrap').style.display === 'flex'; })()"
   },
   "animal_counting": {
     "INIT": "true",
-    "PLAY": "document.querySelector('.counting-choice')?.click(); true"
+    "PLAY": "(() => { const t = document.querySelector('.count-tile'); if (!t) return false; t.click(); return t.classList.contains('counted'); })()"
   },
   "animal_memory": {
     "INIT": "true",
-    "PLAY": "document.querySelectorAll('.memory-card')[0].click(); true",
-    "SUCCESS": "document.querySelectorAll('.memory-card')[0].click(); document.querySelectorAll('.memory-card')[1].click(); true"
+    "PLAY": "(() => { const c = document.querySelector('.card'); if (!c) return false; c.click(); return c.classList.contains('flipped'); })()",
+    "SUCCESS": "(() => { const cards = Array.from(document.querySelectorAll('.card')); const a = cards[0]; const b = a && cards.find(c => c !== a && c.dataset.name === a.dataset.name); if (!b) return false; a.click(); b.click(); return cards.some(c => c.classList.contains('matched')); })()"
   },
   "animal_puzzle": {
     "INIT": "true",
-    "PLAY": "document.getElementById('sceneButton').click(); true"
+    "PLAY": "(() => { const b = document.getElementById('puzzlePeek'); if (!b) return false; b.click(); return document.getElementById('puzzlePreviewOverlay').hidden === false; })()"
   },
   "classroom": {
     "INIT": "true",
-    "PLAY": "document.querySelector('.class-tab[data-tab=\"shapes\"]')?.click(); true"
+    "PLAY": "(() => { const b = document.querySelector('.activity-btn[data-activity=\"shapes\"]'); if (!b) return false; b.click(); return !!document.querySelector('.class-tab'); })()"
   },
   "compare": {
     "INIT": "true",
-    "PLAY": "document.querySelector('.cmp-group').click(); true"
+    "PLAY": "(() => { const s = window.__compare && window.__compare.state(); if (!s) return false; if (s.mode === 'same') { const b = document.querySelector('.cmp-answer'); if (!b) return false; b.click(); return true; } const g = document.getElementById('cmp-group-a'); if (!g) return false; g.click(); return true; })()"
   },
   "sorting": {
     "INIT": "true",
-    "PLAY": "document.querySelector('.sort-item')?.click(); true"
+    "PLAY": "(() => { const i = document.querySelector('.sort-item'); if (!i) return false; i.click(); return i.classList.contains('sort-selected'); })()"
   },
   "cat_forest": {
     "INIT": "true",
@@ -38,67 +38,57 @@
   },
   "phonics": {
     "INIT": "true",
-    "PLAY": "document.querySelector('.phonics-choice')?.click(); true"
+    "PLAY": "(() => { const b = document.querySelector('.phonics-choice'); if (!b) return false; b.click(); return true; })()"
   },
   "sequencing": {
-    "INIT": "true",
-    "PLAY": "document.querySelector('.seq-card')?.click(); true"
+    "INIT": "true"
   },
   "shapes": {
     "INIT": "true",
-    "PLAY": "document.querySelector('.shape-choice')?.click(); true"
+    "PLAY": "(() => { const p = document.querySelector('.piece'); if (!p) return false; p.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); const s = Array.from(document.querySelectorAll('.slot')).find(x => !x.dataset.filled && x.dataset.type === p.dataset.type); if (!s) return false; s.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); return s.dataset.filled === '1'; })()"
   },
   "spatial": {
     "INIT": "true",
-    "PLAY": "document.querySelector('.spatial-choice')?.click(); true"
+    "PLAY": "(() => { const b = document.querySelector('.spatial-choice'); if (!b) return false; b.click(); return true; })()"
   },
   "maze": {
-    "INIT": "true",
-    "PLAY": "document.querySelector('.maze-token')?.click(); true"
+    "INIT": "true"
   },
   "dino": {
-    "INIT": "true",
-    "PLAY": "true"
+    "INIT": "true"
   },
   "driving": {
-    "INIT": "true",
-    "PLAY": "true"
+    "INIT": "true"
   },
   "ocean": {
-    "INIT": "true",
-    "PLAY": "true"
+    "INIT": "true"
   },
   "space": {
-    "INIT": "true",
-    "PLAY": "true"
+    "INIT": "true"
   },
   "explorer": {
-    "INIT": "true",
-    "PLAY": "true"
+    "INIT": "true"
   },
   "matching_game": {
-    "INIT": "true",
-    "PLAY": "document.querySelector('.candy')?.click(); true"
+    "INIT": "true"
   },
   "piano": {
     "INIT": "true",
-    "PLAY": "document.querySelector('.piano-key')?.click(); true"
+    "PLAY": "(() => { const k = document.querySelector('.piano-key'); if (!k) return false; k.click(); return true; })()"
   },
   "rhythm": {
     "INIT": "true",
-    "PLAY": "document.querySelector('.rhythm-pad')?.click(); true"
+    "PLAY": "(() => { const p = document.querySelector('.rhythm-pad'); if (!p) return false; p.click(); return true; })()"
   },
   "coloring": {
     "INIT": "true",
-    "PLAY": "document.querySelector('.coloring-swatch')?.click(); true"
+    "PLAY": "(() => { const s = document.querySelector('.coloring-swatch'); if (!s) return false; s.click(); return document.querySelectorAll('.coloring-swatch.selected').length > 0; })()"
   },
   "tracing": {
-    "INIT": "true",
-    "PLAY": "true"
+    "INIT": "true"
   },
   "racing3d": {
-    "INIT": "true",
-    "PLAY": "true"
+    "INIT": "true"
   },
   "parent": {
     "INIT": "true"

@@ -1,9 +1,10 @@
 # Visual/UX screenshot review — November 2026
 
 **Task:** 379  
-**Status:** IN PROGRESS  
-**Owner:** OpenAI ChatGPT / GPT-6  
-**Started:** 2026-11-05
+**Status:** DONE (mechanical evidence) — visual confirmation pending, see below  
+**Owner:** OpenAI ChatGPT / GPT-6 (plan) · OpenCode / Big Pickle (capture + docs)  
+**Started:** 2026-11-05  
+**Report:** [`resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md`](../../resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md)
 
 ## Purpose
 
@@ -46,6 +47,22 @@ The first command refreshes the 108 default-state images. The second adds named 
 - A prioritized visual/UX report with exact screenshot and source paths, child/parent impact, proposed fix, regression risk, and validation plan.
 - Separate implementation tasks only after the user reviews/approves the recommendations.
 
+## Result (2026-11-05)
+
+- Captured 108 default + 56 PLAY screenshots; all 164 provenance rows at task 379.
+- Fixed the stale `tools/visual-states.json` hooks (see the report) and made
+  `TABLE_OF_CONTENT.md` list named-state captures.
+- Re-ran the short-landscape audit: 12 OK / 15 WARN / 0 FAIL, every WARN given a
+  disposition in the report.
+- `node tools/axe_check.js`: 27 surfaces, 0 violations.
+- Prioritized findings: P1 parent gate below the fold, P2 short-landscape header budget,
+  P3 audit header selector, P4 visual confirmation.
+- No runtime UI change was made; fixes need separate approved tasks.
+
 ## Known limitations
 
-The GitHub connector can inspect files but cannot run the repository's local Node/Chromium screenshot pipeline. Until the capture commands above are run in a local clone and the resulting screenshots are committed/pushed, the visual review cannot claim a fresh 108-image baseline. Existing screenshots are useful for preliminary observations only.
+The 164 images have not been inspected by a human or vision model: the executing model
+cannot read images, so the WARN dispositions are code/measurement based. A vision-model
+pass (recommended: Nemotron 3.5 Super VL) is still required to confirm first-action
+clarity, contrast, clipping and the stage-led pages.
+

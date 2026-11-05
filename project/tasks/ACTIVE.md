@@ -18,5 +18,4 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 379. IN PROGRESS — Refresh the Screenshot_Review battery and perform an evidence-based visual/UX review across 27 surfaces and four viewport formats, adding gameplay-state captures where available (2026-11-05, GitHub connector/GPT-6). Review/documentation first; no runtime changes until findings are approved.
-
+- 380. NEW — Visually confirm the 164-image November battery with a vision model, then scope the approved P1 (parent gate below the fold at 844×390) and P2 (short-landscape header budget) fixes (2026-11-05, OpenCode/Big Pickle). Report: `resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md`.

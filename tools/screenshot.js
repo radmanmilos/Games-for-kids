@@ -152,11 +152,11 @@ function writeReviewToc({ review, generatedAt }) {
     .filter(f => f.endsWith('.png'))
     .sort()
     .map(file => {
-      const size = Object.keys(SIZES).find(s => file.endsWith('_' + s + '.png'));
-      if (!size) return null;
-      const page = file.slice(0, -(size.length + 5));
-      /* V0.1: extract state from filename `<page>__<size>__<state>.png` */
+      /* Default file: `<page>_<size>.png`. Named state (V0.1): `<page>__<size>__<state>.png`. */
       const stateMatch = file.match(/^(.+)__(.+)__(.+)\.png$/);
+      const size = stateMatch ? stateMatch[2] : Object.keys(SIZES).find(s => file.endsWith('_' + s + '.png'));
+      if (!size || !SIZES[size]) return null;
+      const page = stateMatch ? stateMatch[1] : file.slice(0, -(size.length + 5));
       const state = stateMatch ? stateMatch[3] : '—';
       const width = SIZES[size].width;
       const height = SIZES[size].height;

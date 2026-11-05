@@ -1,6 +1,6 @@
 /* short_landscape_audit.js — Visual/UX plan V3.1 (task 217).
  *
- * Opens EVERY surface (hub + all 24 registry apps) at 844×390 — the
+ * Opens EVERY surface (hub + all registry apps) at 844×390 — the
  * short-landscape viewport the spec calls first-class (§10/§11) — and checks
  * each one against the §11 checklist:
  *
@@ -309,9 +309,9 @@ function auditInPage(stageSelectors) {
   const lines = [];
   lines.push('# Short-landscape audit — 844×390 (spec §11)');
   lines.push('');
-  lines.push(`Generated: ${when} UTC · task 217 (V3.1) · \`node tools/short_landscape_audit.js\``);
+  lines.push(`Generated: ${when} UTC · \`node tools/short_landscape_audit.js\``);
   lines.push('');
-  lines.push('Every surface (hub + 24 registry apps) measured at **844×390** against the');
+  lines.push('Every surface (hub + every registry app) measured at **844×390** against the');
   lines.push('Master Visual/UX plan §11 checklist: header budget 56–72 px, board-first,');
   lines.push('no h-overflow, no clipped chrome, no title behind the back button, no');
   lines.push('unreachable control, no essential text under 12 px. Animations are paused');

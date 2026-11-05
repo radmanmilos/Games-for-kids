@@ -1,8 +1,8 @@
 # Short-landscape audit — 844×390 (spec §11)
 
-Generated: 2026-11-04 18:04 UTC · task 217 (V3.1) · `node tools/short_landscape_audit.js`
+Generated: 2026-11-05 19:03 UTC · `node tools/short_landscape_audit.js`
 
-Every surface (hub + 24 registry apps) measured at **844×390** against the
+Every surface (hub + every registry app) measured at **844×390** against the
 Master Visual/UX plan §11 checklist: header budget 56–72 px, board-first,
 no h-overflow, no clipped chrome, no title behind the back button, no
 unreachable control, no essential text under 12 px. Animations are paused

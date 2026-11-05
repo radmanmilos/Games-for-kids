@@ -100,7 +100,7 @@ POSIX keeps the existing profile-tag kill.
 | `offline_smoke.mjs` | True offline browser test (not part of the 19-tool battery). |
 | `play_matrix.mjs` | Blocking Playwright device matrix (R11/task 172): 5 viewports × Chromium/WebKit × every registry page. |
 | `axe_check.js` | Accessibility scan of the hub, every registry child and the parent surface with axe-core 4.10.2 (WCAG 2.0/2.1 A+AA). |
-| `screenshot.js` | Two modes. |
+| `screenshot.js` | Two modes: visual-regression (`tools/screenshots/current/`) and the committed UI-review battery (`resources/General_reviews/<name>/`, TOC + provenance + manifest). `--state=<id>` reads the per-page hooks in `visual-states.json` and writes `<page>__<viewport>__<state>.png`. |
 | `visual_compare.js` | Decodes PNG pixels using Node built-ins (no image dependency), checks dimensions, reports changed-pixel percentage plus average RGB-channel delta,… |
 | `visual_compare_smoke.js` | Five deterministic checks for PNG round-tripping/checksum validation, changed-pixel metrics, diff-image encoding, and dimension mismatches. |
 | `hub_smoke.js` | Canonical validation for the two-level hub (game/index.html): checks landing/sub-hub navigation, all game routes, the Explorer entry, absence of… |
