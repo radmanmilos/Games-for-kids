@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **375**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **376**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -370,3 +370,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 372 | DONE | 2026-11-04 | Phase 4 visual & sensory refinement: short-landscape audit regenerated (0 FAIL); screenshot refresh deferred… | tasks-300-399.md
 373 | DONE | 2026-11-04 | Phase 5 documentation reconciliation: STATUS.md updated; README/CONTRIBUTING kept timeless per process;… | tasks-300-399.md
 374 | DONE | 2026-11-04 | README refresh: aligned intro/vision with current product; incorporated product promise and parent-trust… | tasks-300-399.md
+375 | DONE | 2026-11-05 | Parent-first README and documentation reconciliation | tasks-300-399.md

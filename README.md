@@ -1,409 +1,198 @@
-# Petrin svet
+# 🌟 Petrin svet
 
-> **Petrin svet** is an offline-first collection of educational mini-games for young children (approximately 2–6 years old), designed to be fun, safe, simple, and frustration-free.
->
-> **[Play Petrin svet](https://radmanmilos.github.io/Games-for-kids/)** · Static HTML/CSS/JavaScript · Serbian Cyrillic · No ads or in-app purchases
->
-> **Product promise:** if a child is spending time in Petrin svet, that time should be well spent. The app earns that trust through its actual behaviour — meaningful play, learning, autonomy and emotional safety — not through marketing language.
+<p align="center">
+  <img src="game/assets/icons/icon-512.png" alt="Petrin svet app icon" width="112">
+</p>
 
----
+<p align="center">
+  <strong>A little world for meaningful screen time.</strong><br>
+  Play · Discover · Create · Learn
+</p>
 
-## Where things are
+<p align="center">
+  <a href="https://radmanmilos.github.io/Games-for-kids/"><strong>Open Petrin svet ↗</strong></a>
+  &nbsp;·&nbsp;
+  <a href="game/docs/OFFLINE_INSTALL.md">Offline guide for parents</a>
+  &nbsp;·&nbsp;
+  <a href="CONTRIBUTING.md">For contributors</a>
+</p>
 
-| Need | Go to |
-| --- | --- |
-| Rules for every AI tool (OpenCode, Codex, Copilot, Claude) | [`AGENTS.md`](AGENTS.md) |
-| Current state and candidate next work | [`project/STATUS.md`](project/STATUS.md) |
-| Open tasks / task history | [`project/tasks/ACTIVE.md`](project/tasks/ACTIVE.md), [`project/tasks/INDEX.md`](project/tasks/INDEX.md) (full text: `archive/tasks/`) |
-| Process and definition of done | [`project/PROCESS.md`](project/PROCESS.md), [`CONTRIBUTING.md`](CONTRIBUTING.md) |
-| Locked decisions (do not re-open) | [`project/DECISIONS.md`](project/DECISIONS.md) |
-| Lessons (read before touching an area) | [`project/lessons/`](project/lessons/) |
-| One doc per game | [`project/games/`](project/games/) |
-| Offline, playtesting, asset budget, setup | [`project/reference/`](project/reference/) |
-| Roadmap | [`ROADMAP.md`](ROADMAP.md) |
-| Which AI reads what (OpenCode, Codex, Copilot, Claude) | [`project/reference/ai-tools.md`](project/reference/ai-tools.md) |
-| Finished work (plans, reviews, handover logs, tasks) | `archive/` (excluded from AI search by `.ignore`) |
-| The app / its published copy | `game/` / `docs/` (byte-exact mirror, never edit by hand) |
-| Dev tooling | `tools/` (index: [`tools/README.md`](tools/README.md)) |
+<p align="center">
+  <img src="resources/General_reviews/Screenshot_Review/hub_tablet-landscape.png" alt="The Petrin svet home screen, showing the learning and games areas" width="900">
+</p>
 
-# Project Vision
-
-Petrin svet is intended to feel like a premium children's application that parents can confidently hand to their child.
+<p align="center">
+  <a href="https://github.com/radmanmilos/Games-for-kids/actions/workflows/ci.yml"><img src="https://github.com/radmanmilos/Games-for-kids/actions/workflows/ci.yml/badge.svg?branch=main" alt="Build and quality checks"></a>
+  <img src="https://img.shields.io/badge/platform-web%20%2F%20PWA-6b5b86" alt="Web and PWA">
+  <img src="https://img.shields.io/badge/language-Serbian%20Cyrillic-6b5b86" alt="Serbian Cyrillic">
+  <img src="https://img.shields.io/badge/ads-none-438b65" alt="No ads">
+</p>
 
 > **If a child is spending time in Petrin svet, that time should be well spent.**
 
-The focus is on:
-
-- Learning through play
-- Simple interactions
-- Bright and colorful design
-- No advertisements
-- No internet connection required
-- No in-app purchases
-- No difficult mechanics
-- No reading required for basic navigation
-- Instant fun
-
-This project is being built primarily for my daughter, but should be suitable for any young child.
-
-## A safe, cozy world — not a game template
-
-Petrin svet is not merely a collection of mini-games. It should become a small, safe, cozy digital world where a child can explore, play, discover, create, listen, practise and learn — while a parent can feel that the child's screen time is purposeful, age-appropriate, calm and worthwhile.
-
-- The child experiences immediate, understandable play; warmth, curiosity and gentle delight; freedom to explore without fear of failure; activities that develop real skills; simple navigation that does not require reading; consistent controls and familiar feedback; a visual world that feels coherent, crafted and cared for; and no manipulative pressure to keep playing.
-- The parent can trust that the app contains no advertising, tracking, analytics, monetization, in-app purchases or social interaction; that core functionality works offline after the offline package is prepared; that child activity is not uploaded to a server; that no external service is required during play; that the app does not ask for unnecessary permissions or personal information; that progress information is modest, local and parent-facing; and that the experience is suitable for the intended age range, subject to device context.
-- The app does not optimize for maximum session length, compulsive engagement, streaks, retention loops or reward exploitation. It optimizes for meaningful play, learning, autonomy, emotional safety and a natural stopping point.
-
-Shared shell, navigation, feedback, touch and motion language should feel related while each game keeps its own identity. Consistency is the feeling that the same thoughtful product made the games — not that every game is the same game.
+Petrin svet (Петрин свет) is an offline-first collection of playful learning, creative activities and gentle adventures for young children. It is being built with a simple ambition: to make screen time feel worthwhile to a child and easier for a parent to trust.
 
 ---
 
-# Core Design Philosophy
+## Why this project exists
 
-Every feature added to this project should follow these principles.
+Petrin svet began as a personal project for my daughter. The ambition is to make something that can be useful to other families too: not another noisy feed, not a collection of disconnected game templates, and not an app designed to keep a child tapping for as long as possible.
 
-## 1. No Frustration
+It should feel like one small, welcoming world. A child can follow curiosity, try something, make a picture, listen to a sound, solve a simple challenge or explore a playful environment. The experience should be understandable, forgiving and rewarding without turning learning into homework.
 
-Children should almost never fail.
+The quality bar is not simply “does the game run?” It is whether the activity makes sense to a young child, whether the interaction feels good, whether the visual world feels cared for, and whether the parent can understand what the app does.
 
-If something is difficult:
+## A note for parents
 
-- Make it easier.
-- Increase touch areas.
-- Assist the player.
-- Never punish mistakes.
-- Always reward interaction.
+### What children can do
 
-The child should always feel successful.
+The current app contains **25 child-facing activity pages**, grouped into learning, creativity and games. Some activities are designed for the youngest children; others are more involved and may suit an older preschooler better. The catalogue is not a formal age rating, so parents should choose activities with their own child in mind.
 
----
+### What the app deliberately does not contain
 
-## 2. Learning Through Play
+- No advertising, tracking, analytics or in-app purchases.
+- No accounts, social feeds, chat or public profiles.
+- No child progress uploaded to a cloud service.
+- No external runtime scripts or online game assets.
+- No unnecessary requests for camera, microphone, location or contacts.
+- No coins, leaderboards, streak pressure or monetized reward loops.
 
-Learning should never feel like homework.
+The runtime safety/privacy audit found only local-origin app requests for its manifests and offline operation. A small amount of progress and preference data is stored locally on the device; it is not sent to a project server.
 
-Instead, children naturally learn through interaction.
+### Language and interaction
 
-Examples:
+- Child-facing text is in Serbian Cyrillic; speech is in Serbian.
+- Basic navigation is designed to be visual and simple, without requiring a child to read a manual.
+- Touch targets and interactions are designed for small hands and tablet use.
+- Mistakes should be safe: activities favour guidance and another try over punishment or failure.
+- Sound and animation support the activity; they should not overwhelm it.
 
-### Animals
+### Offline use
 
-- Recognition
-- Vocabulary
-- Sounds
+The app can be prepared for offline use from its parent area. Once the offline copy has finished caching, the games and their local assets can be used without an internet connection. An internet connection is needed for the initial visit/offline preparation and for checking and downloading updates.
 
-### Shapes
+There is no ZIP download. Offline delivery is handled by the app's service worker.
 
-- Shape recognition
-- Dragging practice
+### The parent area
 
-### Colors
+The parent area provides practical controls and information, including connection state, app version, offline-copy readiness, a local activity summary, offline preparation, update checks and a way to clear locally stored progress.
 
-- Color recognition
+A simple multiplication question stands between the child-facing hub and these controls. It is only a **toddler speed bump**, not secure authentication or a security boundary. It should never be treated as a way to protect sensitive information.
 
-### Letters
+For step-by-step instructions, see **[Offline use — a guide for parents](game/docs/OFFLINE_INSTALL.md)**.
 
-- Pronunciation
-- Recognition
+### A responsible note
 
-### Numbers
-
-- Counting
-- Number recognition
-
-### Memory
-
-- Recall
-- Observation
-
-### Music
-
-- Cause and effect
-- Rhythm
-
-### Fine Motor Skills
-
-- Dragging
-- Tapping
-- Tracing
+Petrin svet is an independent personal project, not a formally certified educational, medical or child-safety product. Automated checks and privacy-conscious design are important, but they do not replace a parent's judgement, device-level supervision or real-world playtesting with children.
 
 ---
 
-## 3. Instant Play
+## What is inside today
 
-Navigation should always be extremely simple.
+The authoritative live catalogue is **[game/data/app-registry.js](game/data/app-registry.js)**. The list below reflects the registered activities at the time of this README update.
 
-```
-Home
+### Learning and early skills
 
-↓
+- **Учионица** — early learning activities such as the Serbian alphabet, numbers, shapes, colours, time and seasons.
+- **Бројање** and **Животиње** — number recognition, counting and animal vocabulary.
+- **Памтилица** and **Слагалице** — memory, observation and picture puzzles.
+- **Више или мање** and **Разврставање** — comparison and sorting.
+- **Слова и звуци** — letters and their sounds.
+- **Редослед**, **Ритам**, **Простор** and **Путања** — sequencing, listening, spatial understanding and simple paths.
+- **Писање**, **Клавир** and **Облици** — tracing, musical exploration and shape recognition.
 
-Choose Game
+### Creativity
 
-↓
+- **Бојење** — colour and create at the child's own pace.
 
-Play Immediately
+### Games and exploration
 
-↓
+- **Слагалица бомбона** — a playful matching game.
+- **Мала истраживачица** — a gentle exploration adventure.
+- **Возила**, **Океан**, **Дино** and **Свемир** — themed worlds to explore.
+- **Мала тркачица 3Д** and **Брзи мачак** — action and movement-based play.
+- **Мачја шума** — a quiet collecting and decorating experience.
 
-Back
-
-↓
-
-Choose Another Game
-```
-
-No complex menus.
-
-No settings screens before gameplay.
-
----
-
-## 4. Offline First
-
-Everything must work without internet.
-
-Avoid:
-
-- External APIs
-- Online assets
-- Cloud services
-
-Prefer:
-
-- Local assets
-- WebAudio
-- Vanilla JavaScript
+The catalogue will evolve, but adding more games is not the goal by itself. Existing activities should become clearer, more useful, more accessible and more delightful before the project grows just for the sake of a larger number.
 
 ---
 
-## 5. Tablet First
+## The principles behind the experience
 
-Primary platform:
-
-Android tablet
-
-Requirements:
-
-- Landscape orientation
-- Large touch targets
-- Big readable text
-- Touch-friendly UI
-- Responsive layout
-- Smooth performance
-
-Desktop support is optional.
+1. **Learning through play, never homework.** Activities should invite curiosity and practice rather than test or pressure a child.
+2. **Forgiving by design.** No lives, punishment, leaderboard or failure loop. A child should be able to try again and keep exploring.
+3. **Child-sized independence.** Clear visual navigation, large touch targets and immediate feedback make the experience easier to understand.
+4. **A calm sensory world.** Warmth, colour, sound and motion are used with restraint. Avoid flashing, unnecessary urgency and overwhelming effects.
+5. **One coherent world, not one repeated template.** Navigation, feedback and visual language should feel related, while every activity keeps its own character.
+6. **Respect for the family's device and attention.** Local assets, offline operation and no engagement tricks are part of the product, not optional extras.
+7. **Care over quantity.** New ideas must have a clear purpose and fit the experience.
 
 ---
 
-# Game Guides
+## How the app works
 
-These guides document selected games—the list is not the authoritative runtime catalogue. The public pages and routes are defined by [`game/data/app-registry.js`](game/data/app-registry.js). Each guide records behaviour, files and decisions; update the relevant guide when that game's behaviour changes, rather than duplicating details here.
+Petrin svet is deliberately simple at runtime:
 
-| Game | Doc |
+- **Static web app:** HTML, CSS and JavaScript, with no application build/bundling step.
+- **Local assets:** illustrations, fonts, sounds and other runtime files are shipped with the app.
+- **Service worker:** prepares and serves the offline copy, and supports update checks.
+- **Local progress:** small app-owned records stay in browser storage on the device.
+- **One page registry:** game/data/app-registry.js is the source of truth for public activity pages, routes and their test associations.
+- **Shared systems:** navigation, audio, speech, touch input, feedback, motion, viewport handling and artwork helpers are reused where appropriate.
+
+### How publishing works
+
+- **game/** is the single source of truth and contains everything required to run the application.
+- **docs/** is a generated mirror of **game/**; it is not edited by hand.
+- GitHub Pages is published by the **GitHub Actions workflow**, which uploads the committed docs/ mirror only after the configured CI gates have not failed.
+- Development resources and test tools are not runtime dependencies.
+
+This separation keeps the deployed app small and self-contained while allowing the project to maintain its reviews, assets, documentation and tests outside the runtime folder.
+
+## Quality, testing and what remains human
+
+The repository has automated checks for syntax, page and route metadata, offline inventories, game-specific interactions, runtime errors, offline end-to-end behaviour and serious/critical accessibility findings. The CI workflow runs the fast gate on pushes and pull requests, selects relevant smoke tests for changed code, and runs release QA when the smoke layer is active. A broader Chromium/WebKit viewport matrix is available for scheduled and manual runs.
+
+These checks are useful evidence, not a claim that every child experience is perfect. Automated accessibility scans do not replace keyboard, touch, zoom and screen-reader review. Screenshot measurements do not replace looking at the screens. Most importantly, a successful smoke test is not a substitute for observing a real child using the activity.
+
+The current audit records **0 short-landscape FAIL findings**, alongside visual WARN items that still need human adjudication. Some manual accessibility, device and game-by-game playtesting also remains. The live record is in **[project/STATUS.md](project/STATUS.md)**.
+
+---
+
+## Explore the project
+
+| If you want to understand… | Start here |
 | --- | --- |
-| 🐶 Animals | [`project/games/animals.md`](project/games/animals.md) |
-| ⭐ Shape Match | [`project/games/shape-match.md`](project/games/shape-match.md) |
-| 🐱🐶 Match Game (Candy) | [`project/games/candy-match.md`](project/games/candy-match.md) |
-| 🧭 Мала истраживачица (Little Explorer, formerly Paper Kitty Adventure) | [`project/games/little-explorer.md`](project/games/little-explorer.md) |
-| 🚗 Возила (Driving) | [`project/games/driving.md`](project/games/driving.md) |
-| 🐠 Океан (Ocean) | [`project/games/ocean.md`](project/games/ocean.md) |
-| 🦕 Дино (Dino) | [`project/games/dino.md`](project/games/dino.md) |
-| 🚀 Свемир (Space) | [`project/games/space.md`](project/games/space.md) |
-| 🏎️ Мала тркачица (Little Racer) | [`project/games/little-racer.md`](project/games/little-racer.md) |
-| 🧩 Animal Scene Puzzle | [`project/games/puzzle.md`](project/games/puzzle.md) |
-| 🔢 Animal Counting | [`project/games/counting.md`](project/games/counting.md) |
-| 🧠 Animal Memory | [`project/games/memory.md`](project/games/memory.md) |
-| 🎨 Coloring | [`project/games/coloring.md`](project/games/coloring.md) |
-| 🏫 Учионица (Classroom) | [`project/games/classroom.md`](project/games/classroom.md) |
+| The live app | [Petrin svet](https://radmanmilos.github.io/Games-for-kids/) |
+| Offline setup and updates for parents | [game/docs/OFFLINE_INSTALL.md](game/docs/OFFLINE_INSTALL.md) |
+| Current verified state and remaining work | [project/STATUS.md](project/STATUS.md) |
+| The full list of pages and routes | [game/data/app-registry.js](game/data/app-registry.js) |
+| Product decisions that should not be casually changed | [project/DECISIONS.md](project/DECISIONS.md) |
+| Rules for AI coding agents | [AGENTS.md](AGENTS.md) |
+| Development setup, checks and CI | [CONTRIBUTING.md](CONTRIBUTING.md) |
+| Task process and definition of done | [project/PROCESS.md](project/PROCESS.md) |
+| Game-specific behaviour notes | [project/games/](project/games/) |
+| Visual review screenshots | [resources/General_reviews/Screenshot_Review/TABLE_OF_CONTENT.md](resources/General_reviews/Screenshot_Review/TABLE_OF_CONTENT.md) |
+| Test tools and harnesses | [tools/README.md](tools/README.md) |
+| Design, learning and technical references | [project/reference/](project/reference/) |
 
-# Deployment (GitHub Pages)
+## Repository map
 
-The live site is served by GitHub Pages from the **`docs/` folder on the `main` branch** — so the site updates on every push to `main`. Site URL: **https://radmanmilos.github.io/Games-for-kids/**
+| Folder | Purpose |
+| --- | --- |
+| **game/** | Complete, deployable application — the runtime source of truth |
+| **docs/** | Generated copy of game/, used as the GitHub Pages deployment artifact |
+| **resources/** | Development resources: visual reviews, screenshots, references, prototypes and asset work |
+| **tools/** | Development, validation, screenshot and test tooling |
+| **project/** | Current status, tasks, decisions, lessons, game notes and reference documentation |
+| **archive/** | Historical tasks, plans and reviews |
 
-- **`game/` is the single source of truth.** `docs/` is just the published copy — never edit `docs/` directly.
-- **When `game/` changes, replace the ENTIRE `docs/` content with the new `game/` content.** Run `tools/sync-docs.sh` (deletes `docs/` and copies `game/` into it), then commit and push — the site is live.
-- One-time setup (already done): Settings → Pages → **Source: `Deploy from a branch`** → `main` → `/docs`. No build step (plain static HTML; the app uses only relative paths, so it works under the `/Games-for-kids/` subpath).
-- The earlier GitHub Actions workflow (`.github/workflows/deploy.yml`, deploy `game/` → `gh-pages`) was **abandoned** — GitHub Pages refused to deploy from `game/`, so it was removed per user decision. Keep it that way: no workflow, `docs/` mirror only.
-- Local preview: use Live Server on `game/` over HTTP — never `file://` (breaks audio and throws Unsafe-attempt warnings).
+## Run it locally
 
-## Offline installation
+Serve the **game/** folder over HTTP using VS Code Live Server or another local static web server. Do not open index.html directly with file://: browser security rules prevent some application features, including service-worker behaviour, from working correctly.
 
-The app supports offline use through its service worker. In the parent area, a caregiver can use **«📥 Преузми за офлајн рад»** to cache the files the application needs, then use the update check to identify changed content. Caregiver instructions are in [`game/docs/OFFLINE_INSTALL.md`](game/docs/OFFLINE_INSTALL.md); the technical mechanism and its validation are documented in [`project/reference/OFFLINE.md`](project/reference/OFFLINE.md).
-
-**There is no ZIP download.** Offline delivery is handled by the service worker. After runtime changes, regenerate the published mirror from `game/` with `tools/sync-docs.sh`; never edit `docs/` directly. The offline inventories have their own generation and validation steps—follow the reference guide rather than editing generated files by hand.
-
----
-
-# Navigation Model
-
-The hub opens learning and game sub-hubs, which launch standalone game pages. The shared navigation system in `game/shared/navigation.js` handles registered `data-go` routes. The current route/page list is maintained in one place: [`game/data/app-registry.js`](game/data/app-registry.js). Do not maintain a second hand-written route list in documentation or runtime code.
-
-# Game Runtime and Shared Systems
-
-Games are standalone pages, with shared startup and navigation helpers. The exact pages, routes, boot functions and smoke-test associations are defined in [`game/data/app-registry.js`](game/data/app-registry.js); the registry is the source of truth, not an illustrative file tree in this README.
-
-Shared systems include:
-
-- **Navigation:** `game/shared/navigation.js` and `game/shared/main.js`.
-- **Audio and speech:** reuse the existing shared helpers; do not create duplicate audio contexts or one-off systems without a demonstrated need.
-- **Sound effects and celebrations:** reuse the established shared effects where appropriate.
-- **Utilities:** reuse existing randomization, shuffle, animation and touch helpers when they fit.
-
-For a particular game's files and behavior, consult its guide in [`project/games/`](project/games/). For test harnesses and validation commands, start with [`tools/README.md`](tools/README.md) and [`CONTRIBUTING.md`](CONTRIBUTING.md).
-
-# Fonts
-
-Main UI
-
-- Fredoka
-
-Fredoka is bundled locally (`game/assets/fonts/fredoka-latin.woff2` and `game/assets/fonts/fredoka-latin-ext.woff2`); runtime font loading must not require external network requests.
+The app itself does not need a package installation or compilation step. Development and validation tools use Node.js; see [CONTRIBUTING.md](CONTRIBUTING.md) for the supported workflow and checks.
 
 ---
 
-# Project Folder Structure
-
-- `game/` — the deployable app (plain HTML/CSS/JS, no build step). It must run standalone and never depend on `resources/` or `tools/`. Pages and routes: `game/data/app-registry.js`.
-- `docs/` — byte-exact mirror of `game/`, served by GitHub Pages. Regenerate with `tools/sync-docs.sh`; never edit by hand.
-- `tools/` — Node smokes, guards, checks and screenshot tooling.
-- `resources/` — development workspace: reviews, screenshots, prototypes, the asset-generation project.
-- `project/` — live docs: status, tasks, decisions, lessons, per-game docs, reference.
-- `archive/` — finished work, kept for reference.
-
-The older, detailed folder trees are in `project/reference/folder-structure.md`.
-
-# Development Workflow
-
-Always follow this workflow.
-
-1. Store working files inside `resources/`. Test harnesses go in `tools/` (see `tools/README.md`).
-2. Develop and test features (headless runs go through `tools/headless.js` — unique Chrome profile per run).
-3. Copy or generate only required runtime files into `game/`.
-4. Ensure `game/` is always fully playable without relying on `resources/` or `tools/`.
-
-The contents of the `game/` folder should always be enough to launch and play the application independently.
-
----
-
-# Architecture
-
-The app is plain HTML, CSS and JavaScript and requires no build step. The main runtime areas are:
-
-- `game/index.html` and `game/pages/` — hub and standalone pages.
-- `game/data/app-registry.js` — authoritative public page/route registry.
-- `game/games/` and `game/shared/` — game implementations and shared systems.
-- `game/assets/` — local runtime assets.
-
-The full current folder reference is [`project/reference/folder-structure.md`](project/reference/folder-structure.md). Avoid copying a complete file tree into this README: it becomes stale as the app evolves.
-
-# Current Development State
-
-The current project status and user-approved candidate next work are recorded in [`project/STATUS.md`](project/STATUS.md). The roadmap is [`ROADMAP.md`](ROADMAP.md); completed plans are archived and should not be presented as open work. The public page catalogue is in [`game/data/app-registry.js`](game/data/app-registry.js).
-
-Do not infer that a feature is planned, approved, complete or tested from an old README list or archived plan. Check the current status, active tasks and locked decisions before proposing work.
-
-# User Experience Guidelines
-
-Everything should feel alive.
-
-Buttons bounce.
-
-Cards wiggle.
-
-Rewards sparkle.
-
-Objects squish.
-
-Animations should be playful but calm.
-
-Avoid:
-
-- Flashing effects
-- Loud sounds
-- Time pressure
-- Punishing gameplay
-
----
-
-# Accessibility
-
-Always design for young children.
-
-Requirements:
-
-- Large buttons
-- Large text
-- High contrast
-- Friendly colors
-- Forgiving touch areas
-- No precision required
-
----
-
-# Performance Goals
-
-Target inexpensive Android tablets.
-
-Goals:
-
-- 60 FPS
-- Low memory usage
-- Minimal garbage collection
-- Efficient rendering
-- Minimal unnecessary DOM updates
-
----
-
-# Coding Guidelines
-
-Use:
-
-- Vanilla HTML
-- Vanilla CSS
-- Vanilla JavaScript
-
-Avoid unnecessary libraries.
-
-Prefer:
-
-- Small functions
-- Modular code
-- Readable code
-- Maintainable architecture
-
-Never optimize at the expense of readability unless necessary.
-
----
-
-# AI Development Rules
-
-**Binding instructions:** [`AGENTS.md`](AGENTS.md) is the primary rule source for AI coding tools. Follow [`project/PROCESS.md`](project/PROCESS.md) for task lifecycle and approval, [`project/STATUS.md`](project/STATUS.md) for the current snapshot, [`project/tasks/ACTIVE.md`](project/tasks/ACTIVE.md) for open tasks, and [`project/DECISIONS.md`](project/DECISIONS.md) for locked decisions. This section is a project-principles summary, not a replacement for those documents; if wording conflicts, follow the authoritative instructions and current project records.
-
-When working on this project:
-
-1. Never break existing games.
-2. Keep the UI consistent.
-3. Reuse shared systems whenever possible.
-4. Keep everything toddler-friendly.
-5. Maintain offline compatibility.
-6. Prioritize fun over complexity.
-7. Every interaction should provide immediate visual and/or audio feedback.
-8. Never introduce ads, analytics, tracking, or monetization.
-9. Keep the `game/` folder clean and deployable.
-10. Use the `resources/` folder for development assets only; test tooling goes in `tools/` (never deployed).
-11. Modularize new code whenever practical.
-12. Preserve backwards compatibility with existing mini-games.
-13. All text shown to the child in the games must be in Serbian, written in Serbian Cyrillic; all speech (speech synthesis) must be in Serbian. Applies to all games and any refactors.
-
----
-
-# Long-Term Vision
-
-Petrin svet should become a polished collection of educational mini-games that children can safely explore for hours.
-
-Every game should plug into the main application, reuse shared systems, and maintain a consistent design language.
-
-The finished application should feel like a premium offline children's learning app rather than a collection of separate HTML pages.
-
----
+**Petrin svet is a work in progress.** The ambition is steady: build a thoughtful, beautiful and dependable little world in which a child's time is respected — and a parent can see why.
