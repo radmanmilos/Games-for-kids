@@ -1,21 +1,30 @@
 # Petrin svet — Status
 
-*Overwritten 2026-11-05. App version: 3.0.1. Repository: https://github.com/radmanmilos/Games-for-kids.*
+*Overwritten 2026-11-06. App version: 3.0.1. Repository: https://github.com/radmanmilos/Games-for-kids.*
 
-**Main:** `36c51d063ab7ac3b15a1cca067cb99e933d38e44` (PR #16 merged).
-**Working branch:** `review/comprehensive-visual-ux-task-382` (review report and task-record closeout only).
+**Main:** \`983f7b4a3cc4b16d41747614c3dc5b963c992c5f\` (PR #17 merged).
+**Current documentation branch:** \`docs/visual-ux-continuation-task-383\`.
+**Task:** 383 IN PROGRESS — current-state reconciliation and continuation plan.
 
 ## Current state
 
-- **Task 381 archived.** PR #15 implementation is on main; PR #16 reconciled the task record. Its Fast gate passed (run `42125558561`); Extended matrix and Release QA were skipped.
-- **Task 382 review completed.** The report is in `resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md`. All 108 default and 56 available PLAY screenshots were visually inspected across four viewports. Main hub was visually reviewed; Games and Learning sub-hubs were source-reviewed only because the screenshot battery does not capture those internal screens. This evidence gap is explicitly recorded.
-- **Highest-priority finding:** Classroom's six activity tabs overflow phone portrait and landscape, clipping tabs and creating horizontal page scrolling. Other findings cover Coloring phone-landscape control crowding, Phonics retry feedback colour, Cat Forest PLAY clustering, Animal Counting stage balance, Spatial feedback spacing, and Compare's sparse portrait composition.
-- **No runtime or child-visible files changed.** This PR contains review documentation and task records only; findings are proposals, not implementation approval.
-- **Archive records:** Tasks 381 and 382 were moved into `archive/tasks/tasks-300-399.md` and indexed; next task number is 383. The archive script was not executable in this remote-only session, so the records were updated to its documented format. User-reported local `node tools/check_docs.js` result before this review was OK (5 budgets, 48 live docs links); not rerun by ChatGPT.
+- The 2026-10-07 visual/UX master plan's V0–V23 phases are recorded complete in Tasks 216–240. Do not reopen them as an untouched backlog.
+- Task 379 refreshed the stable screenshot battery (108 default + 56 PLAY); Task 382 reviewed the 164 available captures and documented the new findings in \`resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md\`.
+- The two internal child sub-hubs (\`#hub-games\`, \`#hub-learning\`) remain a screenshot coverage gap; they were source-reviewed only.
+- Current main CI run #516 (run \`42129112023\`) completed successfully: Fast gate, CodeQL and Pages deployment succeeded. Extended device matrix and Release QA were skipped.
+- \`project/STATUS.md\` was stale at the previous commit; this snapshot now records the verified main SHA.
+- A current continuation plan and numbered proposed tasks 383–398 are being published on the documentation branch. Only Task 383 is in progress; later tasks are NEW proposals and require approval before implementation.
+- Highest-priority current visual task: Classroom's six category tabs overflow on phone widths. Phonics retry feedback uses success green. Coloring and Cat Forest findings remain investigation-first; Animal Counting and Spatial are composition/spacing follow-ups; Compare remains playtest-gated.
+- The current \`GAME_MATRIX.md\` guide-doc metadata is inconsistent with its own guide list and the live \`project/games/\` directory; Task 393 will reconcile it.
 
 ## Project invariants
 
-- `game/` is the deployable source of truth; `docs/` is its generated mirror.
-- `resources/` contains review/development material; `tools/` contains validation tooling.
-- Preserve Serbian Cyrillic child-facing text, offline-first operation, child privacy, and each game's distinct identity.
+- \`game/\` is the deployable source of truth; \`docs/\` is its generated mirror.
+- \`resources/\` contains review/development material; \`tools/\` contains validation tooling.
+- Preserve Serbian Cyrillic child-facing text, Serbian speech, offline-first operation, child privacy, and each game's distinct identity.
+- No ads, tracking, analytics, monetization, accounts or mandatory network dependency.
 - Never claim manual child/family playtesting without evidence.
+
+## Verification limits
+
+This remote documentation session did not run local Node checks, browser/screenshot capture, smoke tests, offline E2E or physical-device playtesting. The latest verified CI result is the successful main run above; its Extended and Release QA jobs were skipped.
