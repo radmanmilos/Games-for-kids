@@ -18,4 +18,4 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 376. IN PROGRESS — Replace the README hub hero with the user-selected phone-landscape screenshot (2026-11-05, GitHub connector/GPT-6). Verify the asset path and keep the README reference repository-relative.
+- 376. DONE — 2026-11-05, GitHub connector/GPT-6: replaced the README hero screenshot with the owner-selected phone-landscape capture and verified the referenced asset exists on main; this honours the requested README presentation. Local archive/check commands remain for the owner’s clone.
