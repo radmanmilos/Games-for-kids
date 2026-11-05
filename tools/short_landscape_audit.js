@@ -103,8 +103,11 @@ function auditInPage(stageSelectors) {
   /* Title — the header's job (§11.1), so it must be visible and never under
      the back button (§11.3 "a title behind a button"). Prompt-led learning
      pages (§23 instruction zone) head the screen with their prompt instead of
-     an h1, so `#*-prompt` / `#world-name` count as header text too. */
-  const title = Array.from(document.querySelectorAll('.ps-title, h1, #adv-title, #classroomTitle, #pianoTitle, [id$="-prompt"], #world-name')).find(vis) || null;
+     an h1, so `#*-prompt` / `#world-name` count as header text too.
+     Animal Counting's visible h2 uses the explicit .count-title class; keep
+     this targeted rather than accepting every h2 (which may be a modal or
+     secondary heading, not the page's title). */
+  const title = Array.from(document.querySelectorAll('.ps-title, h1, .count-title, #adv-title, #classroomTitle, #pianoTitle, [id$="-prompt"], #world-name')).find(vis) || null;
   if (!title) {
     push(warns, 'no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate');
   } else {
