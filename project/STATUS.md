@@ -7,7 +7,7 @@
 ## Current snapshot
 
 - **Task 375 DONE** — parent-first README rehaul and documentation reconciliation. Existing app icon and hub screenshot reused; no runtime changes.
-- **Task 376 DONE (PR #9 pending)** — README hero now references the owner-selected `resources/General_reviews/Screenshot_Review/hub_phone-landscape.png`. The image path was verified in the main Git tree. This is a user-requested README exception to the normal no-per-task README rule.
+- **Task 376 IN PROGRESS (PR #9 pending)** — README hero now references the owner-selected `resources/General_reviews/Screenshot_Review/hub_phone-landscape.png`. The image path was verified in the main Git tree. This is a user-requested README exception to the normal no-per-task README rule.
 - **Runtime inventory:** 26 registered entries (25 child-facing pages + parent page); all registered pages and referenced smoke files exist. See project/reference/INVENTORY_MATRIX.md.
 - **Assets:** 154 glyph WebPs and 11 scene assets. The art-integrity checker now diagnoses missing decoder tooling; CI provisions ffmpeg.
 - **Version discovery:** task 365 added cache: 'no-store' for manifest discovery and service-worker bypass for the no-store manifest requests. Deeper lifecycle scenarios remain future validation.
