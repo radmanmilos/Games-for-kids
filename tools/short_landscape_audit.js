@@ -109,7 +109,7 @@ function auditInPage(stageSelectors) {
      secondary heading, not the page's title). */
   const title = Array.from(document.querySelectorAll('.ps-title, h1, .count-title, #adv-title, #classroomTitle, #pianoTitle, [id$="-prompt"], #world-name')).find(vis) || null;
   if (!title) {
-    push(warns, 'no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate');
+    push(warns, 'no header text visible (.ps-title / h1 / .count-title / #*-prompt) — stage-led page? adjudicate');
   } else {
     const tr = R(title);
     if (!inside(tr)) push(fails, 'title clipped: ' + desc(title) + ' ' + JSON.stringify({ l: Math.round(tr.left), t: Math.round(tr.top), r: Math.round(tr.right), b: Math.round(tr.bottom) }));
