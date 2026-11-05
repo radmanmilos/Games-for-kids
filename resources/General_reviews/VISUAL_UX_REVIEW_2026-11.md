@@ -174,3 +174,135 @@ The audit's title selector now explicitly includes `.count-title`, which matches
 - Header-budget WARNs retained as advisory: `compare` 89 px, `sorting` 92 px, `maze` 92 px, and `driving` / `ocean` / `dino` / `space` 83 px. The task-380 audit recorded 0 FAIL and no clipping for these surfaces; the 56–72 px budget is conceptual, so no layout changes are justified by the metric alone.
 
 **Verification status:** the refreshed `resources/General_reviews/SHORT_LANDSCAPE_AUDIT.md` is generated at 2026-11-05 21:34 UTC and records 27 surfaces, 13 OK / 14 WARN / 0 FAIL. It confirms that Animal Counting's title is detected; its remaining WARN is the borderline header-budget measurement (rounded to 72 px in the report). The audit was therefore rerun and the selector correction is evidenced, but the total WARN count does not decrease. No child-visible screen changed, so screenshot refresh is not applicable. The retained WARNs remain subject to a future visual/tablet play-test; source review is not a substitute for that.
+
+
+## Comprehensive visual/UX review — task 382 (2026-11-05)
+
+### Coverage and evidence
+
+- Visually inspected all **108 default screenshots** (27 surfaces × 4 viewports) and all **56 available PLAY screenshots** (14 surfaces × 4 viewports) in **resources/General_reviews/Screenshot_Review/**.
+- The four viewport sizes are phone portrait (390×844), phone landscape (844×390), tablet portrait (820×1180), and tablet landscape (1180×820).
+- The main landing hub (hub) is included in the 108 default captures and was reviewed at all four sizes.
+- Important coverage gap: the **Games sub-hub** (#hub-games) and **Learning sub-hub** (#hub-learning) are internal screens in **game/index.html**, but **tools/screenshot.js** registers only the landing screen as hub. The screenshot battery therefore contains no dedicated images of those two sub-hubs. Their markup and responsive CSS were reviewed, but their visual appearance has **not** been verified from screenshots. The Classroom activity hub is a separate page and its captures were reviewed.
+- PLAY captures are deterministic visual states, not a substitute for hands-on playtesting. No physical-device or child/family playtest was performed in this review.
+
+### Overall visual direction
+
+The project has a recognisable cozy shell: warm cream surfaces, plum typography, rounded white/cream cards, soft depth shadows, and a consistent blue back control. Learning pages mostly share this language, while the driving/adventure pages retain their own stronger world palettes. That is the right balance: keep navigation, spacing, controls, and feedback consistent without flattening every game's identity.
+
+The main landing hub is clear and welcoming. The two large group tiles have visible Serbian labels and distinct colours; the parent lock is unobtrusive and separated from child navigation. No clipping or obvious hierarchy failure was seen in its four captures.
+
+The most important cross-screen concern is **responsive navigation inside the Classroom activity screen**. Other findings are narrower polish items. Do not redesign clean, intentionally minimal stage-led games merely to fill whitespace.
+
+### Prioritised findings
+
+#### P1 — Classroom activity tabs overflow on phone widths
+
+- **Evidence:** classroom__phone-portrait__PLAY.png and classroom__phone-landscape__PLAY.png. The six activity tabs extend beyond the viewport; the first/last tabs are clipped and a horizontal page scrollbar is visible.
+- **Location:** game/pages/classroom.html:127-138 (.class-tabs is an intrinsic-width, absolutely positioned flex row with no wrapping or bounded scroll region).
+- **Child impact:** some activities are partially hidden, and the horizontal scrollbar is not an obvious child-facing navigation affordance. This makes category discovery and switching unreliable on phones.
+- **Recommended fix:** constrain the tab rail to the safe viewport width and make the rail itself horizontally scrollable with clear edge affordance, or use a deliberate two-row layout at narrow widths. Do not allow the whole page to scroll horizontally. Keep all six categories reachable and preserve large touch targets.
+- **Regression risks / validation:** a second row may steal vertical room from the activity; a scroll rail may hide the final tab. Check all four viewport sizes, all six tabs, keyboard focus, and that the activity title/content remain unobstructed.
+
+#### P2 — Coloring controls are crowded in phone landscape
+
+- **Evidence:** coloring__phone-landscape__PLAY.png. In the 844×390 free-colouring state, the clear action appears to intrude into the rightmost palette swatch's space. The portrait and tablet captures are materially cleaner.
+- **Location:** game/pages/coloring.html:67-69 (.coloring-tools), 104-108 (.coloring-palette), and 133-142 (.coloring-clear-btn).
+- **Child impact:** palette selection and clearing are adjacent enough to risk a mistaken tap; the palette also feels compressed against the drawing stage.
+- **Recommended fix:** verify the actual bounding boxes before changing code. If the overlap is confirmed, reserve a dedicated clear-button row or reduce the palette column count only at the short-landscape breakpoint. Preserve the existing swatch hit area and keep the drawing surface dominant.
+- **Regression risks / validation:** a new row can reduce canvas height. Recheck free and guided modes at 844×390 and all other viewports; confirm the clear action never intersects a swatch or drawable region.
+
+#### P2 — Phonics uses success green for “Покушај поново”
+
+- **Evidence:** all four phonics PLAY captures show the retry feedback in green.
+- **Location:** game/pages/phonics.html:48 assigns var(--green) to #phonics-feedback for every state; game/games/phonics.js:170-174 writes “Покушај поново” in the wrong-answer branch without changing the feedback state.
+- **Child impact:** the same green semantic cue is used for success (“Браво!”) and an incorrect answer. A young child may read the retry state as success.
+- **Recommended fix:** give the feedback an explicit wrong-state class and a gentle warm/coral or plum treatment; keep green for success. The miss should remain kind and non-punitive.
+- **Regression risks / validation:** ensure the state resets between rounds and does not leave a stale wrong colour after the next correct answer. Test correct and incorrect choices at all four sizes.
+
+#### P2 — Cat Forest's first feeding station is visually crowded
+
+- **Evidence:** all four cat_forest PLAY captures show the cats, fish, and another food item clustered around the first plate, while the other two stations are empty.
+- **Location:** Cat Forest PLAY scene; no source-level defect is asserted from the screenshot alone.
+- **Child impact:** overlapping characters/food make it harder to parse which cat and item belong to the feeding station. The repeated cluster is visually heavier than the otherwise calm scene.
+- **Recommended investigation:** verify whether this is the intended deterministic start state or a transient/drag state. If it represents normal play, separate the cat idle positions from the food/plate hit areas and introduce the food only when the child selects it.
+- **Regression risks / validation:** do not move characters in a way that breaks drag targets or the scene's balance. Verify normal play, the seeded screenshot state, and all four viewports before changing positions.
+
+#### P2 — Animal Counting stage is visually under-filled
+
+- **Evidence:** the four animal_counting PLAY captures show a very large white stage with only two small animal cards near its centre; the contrast between the empty board and tiny subjects is strongest in phone landscape.
+- **Location:** game/pages/animal_counting.html:64-90; .count-choice already has a 64 px minimum at the short-height breakpoint.
+- **Child impact:** the task can feel visually lost in the board, and the animals do not command enough attention relative to the available stage.
+- **Recommended fix:** enlarge the visible animal artwork/cards and improve the stage's visual balance without shrinking the existing touch target. A subtle warm stage treatment is preferable to adding decorative clutter.
+- **Regression risks / validation:** keep counting quantities unambiguous and preserve the 64 px touch floor. Recheck all four viewports and higher-count rounds, not only the two-animal seed.
+
+#### P3 — Spatial success feedback is too close to the answer controls in phone landscape
+
+- **Evidence:** spatial__phone-landscape__PLAY.png; “Браво!” sits against the lower shadow edge of the answer buttons. Portrait and tablet compositions have more breathing room.
+- **Location:** game/pages/spatial.html:51-73, 82-86; the feedback region has a fixed minimum height but no explicit separation from the answer row.
+- **Child impact:** the feedback and button chrome visually merge at the shortest viewport.
+- **Recommended fix:** add a small responsive gap or reserve a distinct feedback band below the answers at short heights.
+- **Validation:** check both correct and wrong feedback states at 844×390 and confirm the message never touches the button shadow.
+
+#### P3 — Compare remains deliberately sparse
+
+- **Evidence:** compare_phone-portrait.png, compare_tablet-portrait.png, and the matching PLAY captures. The two answer cards are clear but occupy a relatively small central portion of the available portrait space.
+- **Child impact:** not a blocker; the task is easy to understand, but the visual focus could be stronger.
+- **Recommended improvement:** consider a modest portrait-only increase to the comparison cards and animal illustrations. Keep the generous spacing that makes “which has more?” easy to scan.
+- **Validation:** preserve side-by-side comparison and ensure neither card becomes cramped at 390×844.
+
+#### P3 — Icon-only Games and Learning sub-hubs need a discoverability check
+
+- **Evidence:** source review only; no dedicated sub-hub screenshots exist in the current battery.
+- **Location:** game/index.html sections #hub-games and #hub-learning. Both use circular icon buttons with accessible labels, but no visible captions.
+- **Child impact:** aria-label helps assistive technology but is not visible to a child. Children who do not yet recognise a particular emoji may not know which game/activity a tile opens.
+- **Recommended improvement:** once screenshots are captured, assess whether short Serbian captions should be shown beneath icons, at least on larger screens or as a consistent label treatment. Do not add labels blindly: the grids contain 11 visible game tiles and 14 learning tiles, so captions must not make short-landscape layouts crowded.
+- **Validation:** capture both sub-hubs at all four sizes first; check label readability, grid density, scrolling, and whether every tile remains reachable.
+
+### Per-surface review notes
+
+| Surface | Visual/UX assessment |
+|---|---|
+| Main hub (hub) | Clear two-choice hierarchy, friendly tile scale, visible labels, discreet parent lock. Strongest overall entry point. |
+| Games sub-hub (#hub-games) | Source-reviewed only. 11 visible circular game icons; labels are accessible but not visible. Needs screenshot verification at four sizes. |
+| Learning sub-hub (#hub-learning) | Source-reviewed only. 14 circular learning icons; likely relies on scrolling at narrow widths. Needs screenshot verification and a child discoverability check. |
+| Animals | PLAY choice cards are large and easy to scan; simple two-choice recognition is appropriate. |
+| Animal Counting | Large unused stage and small-looking animal cards; P2 above. The existing 64 px minimum touch target must be preserved. |
+| Animal Memory | Card faces/backs are clear; difficulty controls remain visually separate and reachable in all four PLAY captures. |
+| Animal Puzzle | Scene preview is warm and recognisable; prompt and progress are clear. Portrait intentionally leaves breathing room, not a blocker. |
+| Classroom | Activity grid and prompt panel are readable; six category tabs overflow on phone sizes (P1 above). |
+| Coloring | Reference and drawing card establish a clear task; phone-landscape palette/clear crowding needs geometry verification (P2 above). |
+| Compare | Task is instantly understandable and success state is clear; portrait scale is conservative (P3 above). |
+| Dino | World/character selection modal has a clear focal point; dimmed background is appropriate for a modal. |
+| Driving | Large directional controls and a distinct road scene; no screenshot-level blocker found. |
+| Explorer | Scene-led composition preserves its character identity; keep its distinct art rather than forcing the shared learning-card style. |
+| Fastcat | HUD-led runner screen is intentionally sparse; no clipping or dominant control collision seen in the available captures. |
+| Matching Game | Board-led screen is clear without a large page title; the board is the focal point, which is appropriate for this game. |
+| Maze | Grid and controls are easy to identify; retain the stage-led presentation. |
+| Ocean | Calm water scene and large controls preserve the exploratory feel; no screenshot-level blocker found. |
+| Parent | Adult controls are visually separated from child navigation; the gate remains prominent after task 380. |
+| Phonics | Letter and two picture choices are clear; retry feedback colour is misleading (P2 above). |
+| Piano | Keys are large and easy to target, but a large vertical band remains unused between mode controls and keyboard. Low priority; consider using some space to enlarge/reposition the keyboard only if key targets remain comfortable. |
+| Racing 3D | World-selection modal is visually focused; portrait orientation prompt is expected and clearly dominates the screen. |
+| Rhythm | Four drum pads and the mode selector are well separated; simple and readable. |
+| Sequencing | Three numbered slots and three image tiles form a clear visual sequence; no blocker found. |
+| Shapes | Large, distinct shape silhouettes and a calm stage; the minimalism is purposeful and effective. |
+| Sorting | Category cards and draggable colour tokens are easy to distinguish; no blocker found. |
+| Space | Distinct dark space palette is cohesive with the adventure identity; controls remain large and readable. |
+| Spatial | Scene and two answer choices are clear; success feedback needs a little more separation in phone landscape (P3 above). |
+| Tracing | Four large activity circles and clear letter/drawing cue; strong, readable entry screen. |
+| Cat Forest | Gentle scene palette, but the PLAY state is crowded around the first station (P2 above). |
+
+### Design-system recommendations
+
+1. **Keep the shell consistent, not every game's artwork identical.** Shared back buttons, card depth, typography, spacing, and success/error semantics should feel related; each game's world can keep its own art direction.
+2. **Use semantic feedback consistently.** Green means success; retry/miss feedback should use a gentle but distinct warm cue. Never rely on text alone when the colour contradicts the message.
+3. **Protect child touch targets while improving visual scale.** Where a stage looks empty, enlarge the artwork or composition first; do not solve whitespace by shrinking hit areas.
+4. **Treat phone landscape as a first-class layout.** It is where fixed tab rails and side-by-side action rows are most likely to collide. Every horizontal control group needs a deliberate wrap/scroll rule.
+5. **Do not fill whitespace automatically.** Minimal stage-led games (Shapes, Sorting, Sequencing, Rhythm) benefit from calm, uncluttered composition. Add scale or decoration only when it improves task comprehension.
+
+### Review conclusion and boundaries
+
+The current visual language is cohesive at the shared-shell level and has a warm, recognisable identity. The review found **one high-priority responsive navigation issue** (Classroom tabs) and several medium/low-priority feedback, spacing, and composition improvements. No runtime implementation changes are included in this review.
+
+The Games and Learning sub-hubs remain a documented visual-evidence gap: their markup/CSS was reviewed, but their screenshots are absent from Screenshot_Review. A future screenshot refresh should add those two internal states before any pixel-level conclusion is made about their actual appearance.
