@@ -18,5 +18,5 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 378. IN PROGRESS — Replace the README hero with the owner-selected meadow illustration already added to resources/General_reviews/Repo images/ (2026-11-05, GitHub connector/GPT-6). README-only presentation change; preserve the existing screenshot asset.
+- 379. IN PROGRESS — Refresh the Screenshot_Review battery and perform an evidence-based visual/UX review across 27 surfaces and four viewport formats, adding gameplay-state captures where available (2026-11-05, GitHub connector/GPT-6). Review/documentation first; no runtime changes until findings are approved.
 
