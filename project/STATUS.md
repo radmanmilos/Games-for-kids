@@ -22,6 +22,11 @@
 - The extended Chromium/WebKit × viewport matrix was skipped in these runs; it is reserved for scheduled/manual execution.
 - The previous art-integrity blocker was traced to ffmpeg being absent on the GitHub runner. The workflow now installs it and the checker reports startup/spawn diagnostics.
 
+## CI evidence on this branch
+
+- **Run #485** (PR #8, head a4cc041): fast gate passed all 10 stages; all 27 smoke jobs passed after one rerun; Release QA passed offline E2E, axe accessibility report and all three negative-test guards. The extended Chromium/WebKit matrix was skipped (scheduled/manual only).
+- **Known smoke-test flake:** the first dino_smoke attempt failed on the randomly selected “Ледено доба” world because the assertion compares Art.fill's variation-selector-normalized dataset glyph with the original theme emoji. The retry passed. No game or smoke code was changed in this documentation task; track a deterministic assertion correction separately.
+
 ## Remaining review work
 
 1. Human review of the 15 short-landscape WARN findings; some may be intentional stage-led or wordless screens, but each needs an explicit decision.
