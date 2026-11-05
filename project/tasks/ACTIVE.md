@@ -18,3 +18,4 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
+- 381. IN PROGRESS — Correct short-landscape audit title detection and adjudicate remaining WARNs (2026-11-05, ChatGPT/GPT-6).
