@@ -44,7 +44,11 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     });
   })()`);
   const bj = JSON.parse(boot);
-  check('engine: ground mode, 10 levels, HUD matches theme, 3-button layout', bj.mode === 'ground' && bj.levels === 10 && bj.worldName === bj.themeName && bj.collectEmoji === bj.themeCollect && bj.levelText === '1' && bj.controls === 'left,right,jump', boot);
+  // Art.fill stores a variation-selector-normalized glyph in dataset.emoji,
+  // while theme data may retain U+FE0F (for example ❄️). Compare the same
+  // canonical form on both sides so the randomized starting world cannot flake.
+  const normalizeEmoji = value => String(value).replace(/\uFE0F/g, '');
+  check('engine: ground mode, 10 levels, HUD matches theme, 3-button layout', bj.mode === 'ground' && bj.levels === 10 && bj.worldName === bj.themeName && normalizeEmoji(bj.collectEmoji) === normalizeEmoji(bj.themeCollect) && bj.levelText === '1' && bj.controls === 'left,right,jump', boot);
   check('page chrome: title, back button, canvas, body bg applied', bj.bgApplied === true && bj.canvas === 1 && bj.heroW === 110, boot);
   check('ground controls: left/right in the D-pad cluster, jump on its own', bj.pad === 'left,right' && bj.controls.indexOf('jump') !== -1, boot);
 
