@@ -18,5 +18,5 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 376. DONE — Replaced the README hub hero with the owner-selected phone-landscape screenshot; PR #9 merged to main (2026-11-05, GitHub connector/GPT-6). Local archive/check commands remain for the owner’s clone.
-- 377. IN PROGRESS — Make the Dino smoke collectible-emoji assertion normalization-safe (2026-11-05, GitHub connector/GPT-6). Test-only correction; no game runtime changes.
+- 378. IN PROGRESS — Replace the README hero with the owner-selected meadow illustration already added to resources/General_reviews/Repo images/ (2026-11-05, GitHub connector/GPT-6). README-only presentation change; preserve the existing screenshot asset.
+

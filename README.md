@@ -18,7 +18,7 @@
 </p>
 
 <p align="center">
-  <img src="resources/General_reviews/Screenshot_Review/hub_phone-landscape.png" alt="The Petrin svet home screen, showing the learning and games areas" width="900">
+  <img src="resources/General_reviews/Repo%20images/learn-and-play-meadow-hero.jpg" alt="Learn & Play — the Little Explorer reading in a meadow beside Kitty playing, with the Petrin svet school in the background" width="900">
 </p>
 
 <p align="center">
