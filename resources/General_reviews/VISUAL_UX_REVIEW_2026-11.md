@@ -143,4 +143,22 @@ No runtime files were changed during task 380. The findings above are proposed s
 - **Parent gate:** move the multiplication question immediately below the page heading and ahead of status/progress. Keep the scrollable parent card and technical information; tighten gate rhythm only at heights ≤420px. Add an 844×390 smoke assertion that all four answers are in the initial viewport.
 - **Short-landscape headers:** reduce prompt typography and outer stack gaps on Compare, Sorting and Maze only at heights ≤560px. In the shared adventure shell, shorten the title band and raise the back control while retaining its 64px accessible target. No gameplay targets or stage objects are reduced.
 
-**Status:** source changes prepared on `fix/visual-ux-priorities-task-380`; not yet tested locally, screenshot-refreshed, merged or production-verified. CI and local screenshot/audit commands remain required.
+### Result (validated locally, 2026-11-05)
+
+| Check | Result |
+|---|---|
+| `node tools/screenshot.js --review=Screenshot_Review --pages=hub,parent,compare,sorting,maze,driving,ocean,dino,space --task=380` | 36 PNGs refreshed, provenance now task 380 for those pages, no browser runtime errors |
+| `node tools/short_landscape_audit.js` | 27 surfaces · **13 OK · 14 WARN · 0 FAIL** |
+| `node tools/check_docs.js` | OK (5 budgets, 48 links) |
+| `node tools/run_all.js --since 208f9fb` | all affected smokes pass (parent 46/46 after the assertion fix below) |
+| `node tools/validate_offline.js` | all 10 inventory checks pass (manifest rebuilt + `docs/` re-synced) |
+
+Outcome against the findings above:
+
+- **P1 hub learning tile — fixed.** The art-painting pass no longer walks the tile label, and the four `.tile-emojis span` cells are explicit centred grid cells. Hub screenshots refreshed at all four viewports; `hub_smoke` asserts four visible glyphs plus the intact `УЧЕЊЕ` label.
+- **P1 parent gate — fixed.** The gate now sits directly under the heading, ahead of status/progress. `parent` is **OK** in the audit (was WARN) and all four answers are inside the initial 844×390 viewport.
+- **P2 short-landscape headers — partly improved, WARNs remain by design.** compare 83→89, sorting 88→92, maze 90→92, arcade four unchanged at 83 px. The three learning pages grew because the new `#app{gap:1.2vmin;padding:2vmin 3vmin}` short-height rule shifts the vertically-centred stack down while the prompt line still starts under the back button; the arcade four are pinned by `.ps-header` height. These are approximate-metric WARNs with no clipping and no FAIL — the spec budget is conceptual, so they are recorded rather than chased further. A future task can reclaim the last ~17–20 px by moving the prompt out of the top band.
+- **P3 audit selector — still open.** `animal_counting`'s visible `h2.count-title` is not counted by the audit's `.ps-title / h1 / #*-prompt / #world-name` selector, so its WARN remains a false positive. Not fixed here to keep the change scoped.
+- **P4 visual confirmation — done for the changed surfaces.** GPT-6's image pass (above) plus the refreshed captures cover hub, parent and the six short-landscape pages. The rest of the battery keeps its task-379 review.
+
+**Parent smoke assertion fix:** `tools/parent_smoke.js` hit-tested `#reset-progress` without scrolling, which only passed while the actions happened to be above the fold. With the gate first (the whole point of this task) the button sits at y≈807 in an 800 px viewport, so the check failed on a correct page. The check now calls `scrollIntoView({block:'center'})` before the hit-test — same pattern as the existing small-viewport block — and asserts reachability rather than accidental first-screen position.

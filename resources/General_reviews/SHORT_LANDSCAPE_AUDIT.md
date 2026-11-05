@@ -1,6 +1,6 @@
 # Short-landscape audit — 844×390 (spec §11)
 
-Generated: 2026-11-05 19:03 UTC · `node tools/short_landscape_audit.js`
+Generated: 2026-11-05 20:03 UTC · `node tools/short_landscape_audit.js`
 
 Every surface (hub + every registry app) measured at **844×390** against the
 Master Visual/UX plan §11 checklist: header budget 56–72 px, board-first,
@@ -21,13 +21,13 @@ adjudication. The tool exits 1 while any FAIL remains.**
 | `animal_memory` | Памтилица животиња | 62 | OK | 0 | 0 |
 | `animal_puzzle` | Слагалица | 72 | OK | 0 | 0 |
 | `classroom` | Учионица | 72 | OK | 0 | 0 |
-| `compare` | Где има више? | 83 | WARN | 0 | 1 |
-| `sorting` | Разврстај! | 88 | WARN | 0 | 1 |
+| `compare` | Где има више? | 89 | WARN | 0 | 1 |
+| `sorting` | Разврстај! | 92 | WARN | 0 | 1 |
 | `phonics` | (none) | 66 | WARN | 0 | 1 |
 | `sequencing` | Постави у редослед! | 66 | OK | 0 | 0 |
 | `rhythm` | Слушај, па понови | 66 | OK | 0 | 0 |
 | `spatial` | Где је лопта? | 66 | OK | 0 | 0 |
-| `maze` | Пронађи пут до куће | 90 | WARN | 0 | 1 |
+| `maze` | Пронађи пут до куће | 92 | WARN | 0 | 1 |
 | `coloring` | Кока | 72 | OK | 0 | 0 |
 | `tracing` | Писање | 72 | OK | 0 | 0 |
 | `piano` | Клавир | 72 | OK | 0 | 0 |
@@ -41,9 +41,9 @@ adjudication. The tool exits 1 while any FAIL remains.**
 | `explorer` | Свет | 64 | OK | 0 | 0 |
 | `fastcat` | (none) | 64 | WARN | 0 | 1 |
 | `cat_forest` | (none) | 66 | WARN | 0 | 1 |
-| `parent` | 🔒 За родитеље | 72 | WARN | 0 | 1 |
+| `parent` | 🔒 За родитеље | 72 | OK | 0 | 0 |
 
-**Summary:** 27 surfaces · 12 OK · 15 WARN · 0 FAIL · 0 error · 0 individual failures.
+**Summary:** 27 surfaces · 13 OK · 14 WARN · 0 FAIL · 0 error · 0 individual failures.
 
 ## Warnings — adjudicate
 
@@ -57,11 +57,11 @@ adjudication. The tool exits 1 while any FAIL remains.**
 
 ### `compare`
 
-- WARN: header budget: top chrome reaches 83px (spec §11.1: 56–72px)
+- WARN: header budget: top chrome reaches 89px (spec §11.1: 56–72px)
 
 ### `sorting`
 
-- WARN: header budget: top chrome reaches 88px (spec §11.1: 56–72px)
+- WARN: header budget: top chrome reaches 92px (spec §11.1: 56–72px)
 
 ### `phonics`
 
@@ -69,7 +69,7 @@ adjudication. The tool exits 1 while any FAIL remains.**
 
 ### `maze`
 
-- WARN: header budget: top chrome reaches 90px (spec §11.1: 56–72px)
+- WARN: header budget: top chrome reaches 92px (spec §11.1: 56–72px)
 
 ### `shapes`
 
@@ -102,10 +102,6 @@ adjudication. The tool exits 1 while any FAIL remains.**
 ### `cat_forest`
 
 - WARN: no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate
-
-### `parent`
-
-- WARN: control needs scrolling to reach: button.gate-choice
 
 ## Notes
 

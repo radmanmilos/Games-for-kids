@@ -375,3 +375,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 377 | DONE | 2026-11-05 | Make the Dino smoke collectible-emoji assertion normalization-safe | tasks-300-399.md
 378 | DONE | 2026-11-05 | Replace the README hero with the owner-selected meadow illustration | tasks-300-399.md
 379 | DONE | 2026-11-05 | Refreshed the Screenshot_Review battery (108 default + 56 PLAY = 164 images, all provenance at 379), repaired… | tasks-300-399.md
+380 | DONE | 2026-11-05 | Hub learning tile restored (art pass no longer walks the tile label; four centred glyph cells + intact УЧЕЊЕ… | tasks-300-399.md

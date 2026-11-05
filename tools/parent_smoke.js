@@ -67,6 +67,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     gateHidden: document.getElementById('parentGate').hidden,
     resetHit: (() => {
       const el = document.getElementById('reset-progress');
+      // Task 380 put the gate first, so at 1100x800 the unlocked actions start
+      // below the fold. Reveal the control the way a parent would (the page is
+      // scrollable by design) and then hit-test it where it actually sits.
+      el.scrollIntoView({ block: 'center' });
       const r = el.getBoundingClientRect();
       const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
       return hit === el || el.contains(hit);

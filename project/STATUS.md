@@ -6,15 +6,24 @@
 
 ## Current state
 
-- **Task 379 — merged.** Main contains 108 default + 56 PLAY screenshots (164 total), all with task-379 provenance. The short-landscape audit reports 12 OK / 15 WARN / 0 FAIL.
-- **PR #13 — merged.** Visual confirmation report and task-380 scope merged as `d82a0d286a4ab5e2091f68afd9e1ecb28a3cfe51`; CI passed.
-- **Task 380 — in progress.** Implementing the approved hub learning tile, parent gate first-viewport, and short-landscape header fixes. Source changes are on the task branch; screenshot refresh and local validation remain pending.
-- **Validation boundary:** GPT-6 used GitHub source inspection and screenshot review. It cannot run the repository's local Node/Chromium commands in this environment. Do not mark task 380 DONE until CI, local smokes, short-landscape audit and affected screenshot refresh are verified.
+- **Tasks 379 / PR #13 — merged.** 164-image battery (108 default + 56 PLAY), all provenance at task 379; visual confirmation report merged as `d82a0d2`; CI green.
+- **Task 380 — DONE, on the branch, not yet merged.** Hub learning tile restored (art pass no longer walks the tile label; four centred glyph cells + intact `УЧЕЊЕ` label), parent multiplication gate moved directly under the heading so all four answers fit the first 844×390 viewport, and compare/sorting/maze + shared adventure headers compacted at short heights without shrinking any touch target.
+- **Evidence:** 36 PNGs refreshed for the 9 affected pages with provenance at task 380; short-landscape audit **13 OK / 14 WARN / 0 FAIL** (parent moved WARN→OK); `check_docs` OK; affected smoke battery green; offline manifest rebuilt and `docs/` re-synced.
+- **Remaining WARNs (by design):** compare 89, sorting 92, maze 92, arcade four 83 px against the conceptual 56–72 px budget — no clipping, no FAIL, approximate metric. Plus stage-led "no header text" WARNs and the known `animal_counting` selector false positive.
+- **Next:** merge the branch, then optionally fix the audit title selector (`h2`/`.count-title`).
+
+## Validation
+
+- `node tools/screenshot.js --review=Screenshot_Review --pages=hub,parent,compare,sorting,maze,driving,ocean,dino,space --task=380` — 36 captures, no browser runtime errors.
+- `node tools/short_landscape_audit.js` — 0 FAIL.
+- `node tools/check_docs.js` — OK (5 budgets, 48 links).
+- `node tools/run_all.js --since 208f9fb` — all affected smokes pass (parent 46/46).
+- `node tools/validate_offline.js` — all 10 inventory checks pass.
 
 ## Project invariants
 
 - `game/` is the deployable source of truth; `docs/` is its generated mirror.
 - `resources/` contains review/development material; `tools/` contains validation tooling.
 - Preserve Serbian Cyrillic child-facing text, offline-first operation, child privacy, and each game's distinct identity.
-- Keep all child touch targets large; this task does not reduce interactive target sizes.
+- Keep all child touch targets large; task 380 did not reduce any interactive target size.
 - No manual child/family playtesting is claimed without evidence.
