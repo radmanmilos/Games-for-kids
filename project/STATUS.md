@@ -2,11 +2,12 @@
 
 *Overwrite this file at the end of every session (never append). Budget: 6 KB, checked by node tools/check_docs.js.*
 
-**Last updated:** 2026-11-05 **App version:** 3.0.1 (game/manifest.json) **Repository:** https://github.com/radmanmilos/Games-for-kids **Working branch:** docs/readme-parent-first-2026-11-05 (based on main f9d2188)
+**Last updated:** 2026-11-05 **App version:** 3.0.1 (game/manifest.json) **Repository:** https://github.com/radmanmilos/Games-for-kids **Working branch:** docs/readme-phone-landscape-hero-task-376 (based on main 185b041)
 
 ## Current snapshot
 
-- **Task 375 DONE** — parent-first README rehaul and documentation reconciliation. Existing app icon and hub screenshot reused; no new assets or runtime changes.
+- **Task 375 DONE** — parent-first README rehaul and documentation reconciliation. Existing app icon and hub screenshot reused; no runtime changes.
+- **Task 376 DONE (PR #9 pending)** — README hero now references the owner-selected `resources/General_reviews/Screenshot_Review/hub_phone-landscape.png`. The image path was verified in the main Git tree. This is a user-requested README exception to the normal no-per-task README rule.
 - **Runtime inventory:** 26 registered entries (25 child-facing pages + parent page); all registered pages and referenced smoke files exist. See project/reference/INVENTORY_MATRIX.md.
 - **Assets:** 154 glyph WebPs and 11 scene assets. The art-integrity checker now diagnoses missing decoder tooling; CI provisions ffmpeg.
 - **Version discovery:** task 365 added cache: 'no-store' for manifest discovery and service-worker bypass for the no-store manifest requests. Deeper lifecycle scenarios remain future validation.
@@ -17,6 +18,7 @@
 
 ## CI evidence on main
 
+- **Run #487** — merge commit 185b041, fast gate and all listed smoke jobs succeeded; extended Chromium/WebKit matrix skipped; overall run completed successfully.
 - **Run #483** — commit 2378ed2, full fast + smoke matrix + Release QA + Pages deployment: all completed jobs succeeded.
 - **Run #484** — commit f9d2188, documentation-only: fast gate and Pages deployment succeeded; smoke and release jobs were skipped by the diff-driven workflow.
 - The extended Chromium/WebKit × viewport matrix was skipped in these runs; it is reserved for scheduled/manual execution.
@@ -24,6 +26,7 @@
 
 ## CI evidence on this branch
 
+- **Run #488** (PR #9, task 376): in progress at the time of this status update; do not treat as green until GitHub reports completion.
 - **Run #485** (PR #8, head a4cc041): fast gate passed all 10 stages; all 27 smoke jobs passed after one rerun; Release QA passed offline E2E, axe accessibility report and all three negative-test guards. The extended Chromium/WebKit matrix was skipped (scheduled/manual only).
 - **Known smoke-test flake:** the first dino_smoke attempt failed on the randomly selected “Ледено доба” world because the assertion compares Art.fill's variation-selector-normalized dataset glyph with the original theme emoji. The retry passed. No game or smoke code was changed in this documentation task; track a deterministic assertion correction separately.
 
