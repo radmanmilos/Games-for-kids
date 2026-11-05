@@ -28,6 +28,20 @@ The product target remains **coherent without becoming uniform**: a warm, famili
 
 **This is a plan and task proposal, not approval to implement every item.** Runtime tasks remain NEW until explicitly selected and approved under \`AGENTS.md\` and \`project/PROCESS.md\`.
 
+## 1.1 Historical project-source reconciliation
+
+The user-provided \`Game Integration Strategy.txt\` is the project's early concept/architecture brief, not a current implementation checklist. Its enduring principles still align with the repository: young-child-first play, low-friction navigation, offline operation, large touch targets, shared navigation/audio/speech/utilities, vanilla web technologies, and a strict split between development resources and the deployable \`game/\` application.
+
+Its specific proposal to embed a standalone Paper Kitty game as one \`#game-paperkitty\` screen in a single main-menu document is **superseded by the current architecture**. The current app has a central \`game/data/app-registry.js\`, registered page routes, \`game/pages/\`, \`game/games/\` and shared runtime modules. Historical task records also show the shared adventure engine and subsequent HUD integration work (Tasks 60, 79, 130 and 220). Therefore “integrate Paper Kitty” is not a new task to reopen. Verify the live registry and current game modules for any future adventure work.
+
+The original brief's \`resources/\` development-workspace and \`game/\` deployable-output boundary remains current and is independently reflected in the repository's project architecture rules. Never make the runtime depend on files that exist only under \`resources/\`.
+
+The user-provided \`Games for kids Review (1).txt\` describes why the 2026-10-07 master visual/UX plan was created and identifies it as the detailed implementation handoff. The repository copy of that plan is the specification being reconciled here; the task ledger, current code, current screenshots and current CI are the evidence for present status.
+
+The user-provided \`PROJECT_RULE_EVIDENCE_AND_VERIFICATION(1).md\` is treated as a governing rule: report proposed, in-progress, committed, repository-verified, tested and approved as distinct states. This plan and its future tasks follow that distinction.
+
+The user-provided \`Mandatory_Asset_Generation_Preflight_Rule(1).md\` is also governing. No new asset generation is proposed here. Any future art request must inspect the current repository's style bible, inventory and progress ledger, prove eligibility and approval, search for reusable assets and CSS/SVG alternatives, define the brief and inspect the actual output before claiming acceptance.
+
 ## 2. Verified repository baseline
 
 ### 2.1 Git and CI
