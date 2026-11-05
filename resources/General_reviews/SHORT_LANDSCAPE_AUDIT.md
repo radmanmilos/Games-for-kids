@@ -1,6 +1,6 @@
 # Short-landscape audit — 844×390 (spec §11)
 
-Generated: 2026-11-05 20:03 UTC · `node tools/short_landscape_audit.js`
+Generated: 2026-11-05 21:34 UTC · `node tools/short_landscape_audit.js`
 
 Every surface (hub + every registry app) measured at **844×390** against the
 Master Visual/UX plan §11 checklist: header budget 56–72 px, board-first,
@@ -17,7 +17,7 @@ adjudication. The tool exits 1 while any FAIL remains.**
 |---|---|---:|---|---:|---:|
 | `hub` | 🌈 Петрин свет | 65 | OK | 0 | 0 |
 | `animals` | (none) | 72 | WARN | 0 | 1 |
-| `animal_counting` | (none) | 72 | WARN | 0 | 1 |
+| `animal_counting` | Изброј животиње | 72 | WARN | 0 | 1 |
 | `animal_memory` | Памтилица животиња | 62 | OK | 0 | 0 |
 | `animal_puzzle` | Слагалица | 72 | OK | 0 | 0 |
 | `classroom` | Учионица | 72 | OK | 0 | 0 |
@@ -49,11 +49,11 @@ adjudication. The tool exits 1 while any FAIL remains.**
 
 ### `animals`
 
-- WARN: no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate
+- WARN: no header text visible (.ps-title / h1 / .count-title / #*-prompt) — stage-led page? adjudicate
 
 ### `animal_counting`
 
-- WARN: no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate
+- WARN: header budget: top chrome reaches 72px (spec §11.1: 56–72px)
 
 ### `compare`
 
@@ -65,7 +65,7 @@ adjudication. The tool exits 1 while any FAIL remains.**
 
 ### `phonics`
 
-- WARN: no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate
+- WARN: no header text visible (.ps-title / h1 / .count-title / #*-prompt) — stage-led page? adjudicate
 
 ### `maze`
 
@@ -73,11 +73,11 @@ adjudication. The tool exits 1 while any FAIL remains.**
 
 ### `shapes`
 
-- WARN: no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate
+- WARN: no header text visible (.ps-title / h1 / .count-title / #*-prompt) — stage-led page? adjudicate
 
 ### `matching_game`
 
-- WARN: no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate
+- WARN: no header text visible (.ps-title / h1 / .count-title / #*-prompt) — stage-led page? adjudicate
 
 ### `driving`
 
@@ -97,11 +97,11 @@ adjudication. The tool exits 1 while any FAIL remains.**
 
 ### `fastcat`
 
-- WARN: no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate
+- WARN: no header text visible (.ps-title / h1 / .count-title / #*-prompt) — stage-led page? adjudicate
 
 ### `cat_forest`
 
-- WARN: no header text visible (.ps-title / h1 / #*-prompt) — stage-led page? adjudicate
+- WARN: no header text visible (.ps-title / h1 / .count-title / #*-prompt) — stage-led page? adjudicate
 
 ## Notes
 

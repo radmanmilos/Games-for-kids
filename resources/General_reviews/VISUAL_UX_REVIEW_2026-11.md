@@ -162,3 +162,15 @@ Outcome against the findings above:
 - **P4 visual confirmation — done for the changed surfaces.** GPT-6's image pass (above) plus the refreshed captures cover hub, parent and the six short-landscape pages. The rest of the battery keeps its task-379 review.
 
 **Parent smoke assertion fix:** `tools/parent_smoke.js` hit-tested `#reset-progress` without scrolling, which only passed while the actions happened to be above the fold. With the gate first (the whole point of this task) the button sits at y≈807 in an 800 px viewport, so the check failed on a correct page. The check now calls `scrollIntoView({block:'center'})` before the hit-test — same pattern as the existing small-viewport block — and asserts reachability rather than accidental first-screen position.
+
+### Task 381 — short-landscape title-selector follow-up (2026-11-05)
+
+The audit's title selector now explicitly includes `.count-title`, which matches the visible `h2.count-title` created by `game/games/animal_counting.js:10`. This is intentionally a targeted selector rather than generic `h2`, so modal or secondary headings cannot accidentally satisfy the page-title check.
+
+**Adjudication of the task-380 baseline (27 surfaces, 13 OK / 14 WARN / 0 FAIL):**
+
+- `animal_counting`: the selector false positive is resolved; the generated 21:34 UTC report now identifies `Изброј животиње` as the title. The surface remains WARN because the measured top chrome exceeds the 72 px threshold slightly (the report rounds the displayed measurement to 72 px), so the remaining warning is a header-budget measurement, not a missing-title warning.
+- No-title WARNs retained as intentional stage-led layouts: `animals` (default flashcard; recognition prompt exists only in PLAY mode), `phonics` (letter is the prompt), `shapes` (puzzle stage), `matching_game` (match-3 board), `fastcat` (runner HUD), and `cat_forest` (scene-led play).
+- Header-budget WARNs retained as advisory: `compare` 89 px, `sorting` 92 px, `maze` 92 px, and `driving` / `ocean` / `dino` / `space` 83 px. The task-380 audit recorded 0 FAIL and no clipping for these surfaces; the 56–72 px budget is conceptual, so no layout changes are justified by the metric alone.
+
+**Verification status:** the refreshed `resources/General_reviews/SHORT_LANDSCAPE_AUDIT.md` is generated at 2026-11-05 21:34 UTC and records 27 surfaces, 13 OK / 14 WARN / 0 FAIL. It confirms that Animal Counting's title is detected; its remaining WARN is the borderline header-budget measurement (rounded to 72 px in the report). The audit was therefore rerun and the selector correction is evidenced, but the total WARN count does not decrease. No child-visible screen changed, so screenshot refresh is not applicable. The retained WARNs remain subject to a future visual/tablet play-test; source review is not a substitute for that.
