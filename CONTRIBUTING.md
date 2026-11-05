@@ -64,20 +64,18 @@ Consequences for contributors:
 
 See [`project/PROCESS.md`](project/PROCESS.md) (one write per task, archived at session end). Rules for AI agents: [`AGENTS.md`](AGENTS.md). Lessons from past incidents: [`project/lessons/`](project/lessons/).
 
-## Docs mirror (publishing to GitHub Pages)
+## Docs mirror and GitHub Pages
 
-`game/` is the single source of truth. `docs/` is the published copy served by GitHub Pages from the `main` branch.
+game/ is the source of truth; docs/ is its generated mirror. After any game/ change, run:
 
-Every time `game/` changes, replace the entire `docs/` content with the new `game/` content:
+    node tools/sync-docs.sh
+    node tools/check_fast.js
 
-```bash
-bash tools/sync-docs.sh
-git add docs/
-git commit -m "sync docs/"
-git push
-```
+Review and commit both folders. Never edit docs/ directly.
 
-The site updates on push to `main`. Do not edit `docs/` directly.
+GitHub Pages uses Actions: the pages job in .github/workflows/ci.yml publishes docs/ only on pushes to main after CI gates pass. Branch pushes and PRs do not publish. Docs-only changes skip smoke/release jobs by design; fast still runs.
+
+Live site: https://radmanmilos.github.io/Games-for-kids/
 
 ## Project rules
 
