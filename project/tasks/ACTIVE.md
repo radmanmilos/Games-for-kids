@@ -18,4 +18,4 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 380. IN PROGRESS — Visually review the task-379 screenshot battery across phone-landscape defaults and PLAY states, inspect key portrait/tablet compositions and scope the next approved UX fixes (2026-11-05, OpenAI GPT-6). No runtime changes until findings are approved.
+- 380. IN PROGRESS — Fix the hub learning tile artwork/label layout, bring the parent multiplication gate into the first 844×390 viewport, and compact short-landscape prompt/adventure headers without shrinking touch targets (2026-11-05, GitHub connector/GPT-6). Refresh affected screenshots and run hub/parent smokes plus the short-landscape audit before completion. Report: `resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md`.

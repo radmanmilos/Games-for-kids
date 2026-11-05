@@ -76,13 +76,19 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
       tiles: tiles.join(','),
       tileButtons: document.querySelectorAll('.hub-tile').length,
       learnEmojiCount: document.querySelector(".hub-tile.tile-learning").querySelectorAll(".tile-emojis span").length,
+      learnLabel: document.querySelector(".hub-tile.tile-learning .tile-label").textContent.trim(),
+      learnCellsVisible: [...document.querySelectorAll(".hub-tile.tile-learning .tile-emojis span")].every(s => {
+        const r = s.getBoundingClientRect();
+        return r.width > 0 && r.height > 0 && (s.textContent.trim().length > 0 || !!s.querySelector("img.art"));
+      }),
       games: document.getElementById('hub-games') ? document.getElementById('hub-games').querySelectorAll('[data-go]').length : -1,
       learning: document.getElementById('hub-learning') ? document.getElementById('hub-learning').querySelectorAll('[data-go]').length : -1
     };
   })())`);
   const L = JSON.parse(landing);
   check('landing: title visible, learning first, two labeled tiles, only landing active', L.active === 'hub' && L.title === '🌈 Петрин свет' && L.tiles === 'УЧЕЊЕ,ИГРЕ' && L.tileButtons === 2, landing);
-  check('learning tile shows 4 emoji cells (2x2)', L.learnEmojiCount === 4, landing);
+  check('learning tile shows 4 visible emoji cells (2x2)', L.learnEmojiCount === 4 && L.learnCellsVisible, landing);
+  check('learning tile label remains in its label element', L.learnLabel === 'УЧЕЊЕ', landing);
 
   await h.evalv(`document.querySelector('.hub-tile.tile-games').click()`);
   // The expected count is derived from the registry, never a literal. This wait

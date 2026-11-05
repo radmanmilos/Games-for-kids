@@ -80,7 +80,11 @@
     /* task 255: bubble chrome from components.css (.ps-btn--icon + --secondary). */
     .retry-btn{position:absolute;top:2.6vmin;right:2.6vmin;font-size:5vmin;}
     #maze-feedback{min-height:6vmin;font-size:4.4vmin;font-weight:700;color:var(--green);text-align:center}
-    @media (min-width:800px){#maze-prompt{font-size:36px}.maze-mark{font-size:34px}.maze-goal .maze-mark{font-size:40px}.maze-motif{font-size:20px}.maze-token{font-size:44px}#maze-feedback{font-size:28px}}
+    @media (max-height:560px){
+    #app{gap:1.2vmin;padding:2vmin 3vmin;}
+    #maze-prompt{font-size:4.2vmin;}
+  }
+  @media (min-width:800px){#maze-prompt{font-size:36px}.maze-mark{font-size:34px}.maze-goal .maze-mark{font-size:40px}.maze-motif{font-size:20px}.maze-token{font-size:44px}#maze-feedback{font-size:28px}}
   </style>
 </head>
 <body>

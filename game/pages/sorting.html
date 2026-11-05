@@ -52,6 +52,10 @@
   /* Desktop sizes need desktop HEIGHT too: an 844x390 short-landscape window
      is 800px+ wide but only 390 tall, and the 112px items + 230px baskets
      overflowed the fold (V3.1 audit FAIL: sort-item bottom 413 > 390). */
+  @media (max-height:560px){
+    #app{gap:1.2vmin;padding:2vmin 3vmin;}
+    #sort-prompt{font-size:4.2vmin;}
+  }
   @media (min-width:800px) and (min-height:600px){
     #sort-prompt{font-size:42px}
     .sort-basket{max-width:340px;min-height:230px}

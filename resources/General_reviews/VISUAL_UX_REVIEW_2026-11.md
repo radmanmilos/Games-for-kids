@@ -135,3 +135,12 @@ The short-landscape WARN dispositions remain code/measurement based; the image p
 ### Review boundary
 
 No runtime files were changed during task 380. The findings above are proposed scopes; implementation tasks should be created only after owner review/approval. Local browser interactions and physical-device playtesting were not performed by GPT-6 in this session.
+
+
+## Approved implementation — task 380 (2026-11-05)
+
+- **Hub learning tile:** limit the art-painting pass to actual glyph controls (`.hub-btn` and `.tile-emoji`) and keep the four `.tile-emojis span` cells as explicit centered grid cells. The composite text walker no longer traverses the parent tile label. Add smoke assertions for four visible glyph cells and the intact `УЧЕЊЕ` label.
+- **Parent gate:** move the multiplication question immediately below the page heading and ahead of status/progress. Keep the scrollable parent card and technical information; tighten gate rhythm only at heights ≤420px. Add an 844×390 smoke assertion that all four answers are in the initial viewport.
+- **Short-landscape headers:** reduce prompt typography and outer stack gaps on Compare, Sorting and Maze only at heights ≤560px. In the shared adventure shell, shorten the title band and raise the back control while retaining its 64px accessible target. No gameplay targets or stage objects are reduced.
+
+**Status:** source changes prepared on `fix/visual-ux-priorities-task-380`; not yet tested locally, screenshot-refreshed, merged or production-verified. CI and local screenshot/audit commands remain required.
