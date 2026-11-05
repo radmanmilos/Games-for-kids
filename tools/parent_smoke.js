@@ -67,6 +67,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     gateHidden: document.getElementById('parentGate').hidden,
     resetHit: (() => {
       const el = document.getElementById('reset-progress');
+      // Task 380 put the gate first, so at 1100x800 the unlocked actions start
+      // below the fold. Reveal the control the way a parent would (the page is
+      // scrollable by design) and then hit-test it where it actually sits.
+      el.scrollIntoView({ block: 'center' });
       const r = el.getBoundingClientRect();
       const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
       return hit === el || el.contains(hit);
@@ -134,6 +138,23 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('small viewport: the last parent action is reachable after scrolling',
     smallAfter.reachable === true && smallAfter.bottom <= smallAfter.vh + 1, JSON.stringify(smallAfter));
   await small.close();
+
+  // Short landscape: the multiplication gate must precede status/progress so
+  // the parent can answer without scrolling at the first supported landscape size.
+  const landscape = await start({ page: '/pages/parent.html', tag: 'parent-landscape-gate', width: 844, height: 390 });
+  await landscape.waitFor(`document.querySelectorAll('.gate-choice').length === 4`,
+    { timeout: 15000, label: 'landscape parent gate choices to render' });
+  const landscapeGate = JSON.parse(await landscape.evalv(`JSON.stringify((() => {
+    const gate = document.getElementById('parentGate').getBoundingClientRect();
+    const choices = [...document.querySelectorAll('.gate-choice')].map(el => el.getBoundingClientRect());
+    return { top: Math.round(gate.top), bottom: Math.round(gate.bottom), vh: innerHeight,
+      choicesInside: choices.every(r => r.top >= 0 && r.bottom <= innerHeight),
+      gateVisible: gate.width > 0 && gate.height > 0 };
+  })())`));
+  check('844x390: parent multiplication gate and all four answers are visible without scrolling',
+    landscapeGate.gateVisible && landscapeGate.top >= 0 && landscapeGate.bottom <= landscapeGate.vh && landscapeGate.choicesInside,
+    JSON.stringify(landscapeGate));
+  await landscape.close();
 
   // R12 parent surface: offline download, update check, reset progress, audio test,
   // plus the facts the roadmap requires — version and offline status.

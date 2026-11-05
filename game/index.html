@@ -110,6 +110,8 @@
     display:grid; grid-template-columns:1fr 1fr; gap:.4em;
     font-size: clamp(30px, 9.5vmin, 88px); line-height:1; text-align:center;
   }
+  .hub-tile .tile-emojis span{display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;}
+  .hub-tile .tile-emojis .art{width:1em;height:1em;}
   .hub-tile .tile-label{ font-size: clamp(30px, 7.5vmin, 72px); font-weight:700; letter-spacing:.05em; text-shadow:0 3px 0 rgba(0,0,0,.18); }
   .hub-tile.tile-games{ background: radial-gradient(circle at 35% 30%, #FF9FB6, var(--pink)); }
   .hub-tile.tile-learning{ background: radial-gradient(circle at 35% 30%, #A5E5A0, var(--green)); }
@@ -366,7 +368,7 @@
         if (changed) n.parentNode.replaceChild(frag, n);
       });
     };
-    document.querySelectorAll('.hub-btn, .hub-tile').forEach(paintEl);
+    document.querySelectorAll('.hub-btn, .hub-tile .tile-emoji').forEach(paintEl);
     document.querySelectorAll('.tile-emojis span').forEach((s) => {
       const g = (s.textContent || '').trim();
       if (g && window.Art.url(g)) window.Art.fill(s, g);

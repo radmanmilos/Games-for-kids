@@ -18,4 +18,3 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 380. IN PROGRESS — Visually review the task-379 screenshot battery across phone-landscape defaults and PLAY states, inspect key portrait/tablet compositions and scope the next approved UX fixes (2026-11-05, OpenAI GPT-6). No runtime changes until findings are approved.

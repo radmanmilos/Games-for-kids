@@ -35,6 +35,10 @@
   @keyframes cmp-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-1.4vmin)}75%{transform:translateX(1.4vmin)}}
   @keyframes cmp-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
   @media (prefers-reduced-motion: reduce){.cmp-wrong,.cmp-hint{animation:none}}
+  @media (max-height:560px){
+    #app{gap:1.2vmin;padding:2vmin 3vmin;}
+    #compare-prompt{font-size:4.2vmin;}
+  }
   @media (min-width:800px){
     #compare-prompt{font-size:44px}
     .cmp-item{font-size:56px}

@@ -1508,8 +1508,8 @@
     "size": 17659
   },
   "index.html": {
-    "sha256": "183981f85e69a69233cd8234b4bf678134b78aeeb4df0e3969c8ff024f9e8458",
-    "size": 19175
+    "sha256": "776da92855a4d599a005364f16d3ed6a369bd1d081dc397eb542ea49887b5cea",
+    "size": 19352
   },
   "manifest.json": {
     "sha256": "4402de2a0b97c6158aadc87093d9e28f115f7a7101cf90fcdc4f32149ade7897",
@@ -1544,8 +1544,8 @@
     "size": 11307
   },
   "pages/compare.html": {
-    "sha256": "591b4cc0b58f9450c47f863a196a4b62a7fafb9145ca3d9aa7f106a18ef9a464",
-    "size": 4983
+    "sha256": "2b6ead2998fe86d48e15e139a7df7c1f38e1b039977cf33a216e8ee15623ec1e",
+    "size": 5099
   },
   "pages/dino.html": {
     "sha256": "2065656eea8cde30f71b6e4a03cd9942b4defaa61039f9335278701d3aa45c11",
@@ -1568,16 +1568,16 @@
     "size": 14513
   },
   "pages/maze.html": {
-    "sha256": "96554e3cb6929c40f93da374f6d43d2997a0571fd2f1079e68348558e2d21599",
-    "size": 6393
+    "sha256": "cce1a2901b48da8c0d5c871fa236bc8147ada986317f184be5fbcd19a01d95c2",
+    "size": 6506
   },
   "pages/ocean.html": {
     "sha256": "4f4a9a3c37ffca771616247e61df7e6bc846dd0fb28ae74a9e64e3d787740c70",
     "size": 5427
   },
   "pages/parent.html": {
-    "sha256": "b0b96c95337b5e788a6a47a74b2484226476ef69bb944c6a30420c4e9216764a",
-    "size": 30405
+    "sha256": "4d63303107ed6aeb210ca6a8fd58ccfadee34b6a3e935e7368b4bdc1a5cf59c0",
+    "size": 30749
   },
   "pages/phonics.html": {
     "sha256": "dbfcb1a0a2af92670523aacaf43f17525dd0e20f7581cf6c4b741742ee69ff88",
@@ -1604,8 +1604,8 @@
     "size": 12141
   },
   "pages/sorting.html": {
-    "sha256": "00d2ab2542602895a972bc731dc04325f82620ced8767b2179eacf6ab9006921",
-    "size": 6641
+    "sha256": "5d11dcab560686bf05e95e00d8b7bc7bbeeeb46e904ec935d21d05a1453cccc4",
+    "size": 6754
   },
   "pages/space.html": {
     "sha256": "f5a3e3dcfa1ebb1b32a54b84717896c9508110fa3b3bd85b4aed41a6437def49",
@@ -1624,8 +1624,8 @@
     "size": 3580
   },
   "shared/adventure.css": {
-    "sha256": "666134dfe3950fae2a1916f5a7f3202025ebea426b8910df7cf746fe505e7d8d",
-    "size": 11403
+    "sha256": "0b0523f37fba9f6d25373513d1cfac4deefc71c8cd4bad08f26fb71dc90b0b96",
+    "size": 11569
   },
   "shared/art.js": {
     "sha256": "c097b7dcc8377f59fe8204d1784499e7a4b50212f06af02946649be6a5eb57e6",

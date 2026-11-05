@@ -233,13 +233,19 @@ function smokesForGitDiff(since) {
    registry's `app.smoke`), while smokes from tools/ edits and the battery carry
    `.js`. The list that feeds a runner and CI's matrix must be the real file
    names, so every mapped name is normalised and dropped if no such file exists
-   (withExt + existsSync). */
+   (withExt + existsSync). Dedupe AFTER normalisation: `compare_smoke` and
+   `compare_smoke.js` are two different Set members that name the same file, and
+   leaving both in put the same smoke in the CI matrix twice (run 42101432563:
+   duplicate `compare`/`maze`/`sorting`/`sw_update` legs, one of which flaked on
+   a Chrome boot crash while its twin passed). */
 function withExt(n) { return /\.(js|mjs)$/.test(n) ? n : n + '.js'; }
 function normalizeSmokes(set) {
-  return [...set]
-    .map(withExt)
-    .filter(n => fs.existsSync(path.join(SMOKE_DIR, n)))
-    .sort();
+  const files = new Set();
+  for (const n of set) {
+    const f = withExt(n);
+    if (fs.existsSync(path.join(SMOKE_DIR, f))) files.add(f);
+  }
+  return [...files].sort();
 }
 
 /* Changes to the harness, matrix selector, pipeline, or release-only checks
