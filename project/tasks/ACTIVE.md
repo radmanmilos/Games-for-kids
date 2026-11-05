@@ -18,4 +18,4 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 381. DONE (2026-11-05, ChatGPT/GPT-6) — Corrected short-landscape audit title detection, adjudicated remaining WARNs, merged PR #15, and verified post-merge Fast gate success.
+- 382. IN PROGRESS — Comprehensive visual/UX review of the main hub, Games hub, Learning hub, and all game default/PLAY screenshots across four viewports (2026-11-05, ChatGPT/GPT-6).
