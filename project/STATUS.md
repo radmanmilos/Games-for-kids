@@ -9,10 +9,10 @@
 
 - **Task 380 — merged.** PR #14 merge commit is main HEAD. Main CI run `42106982211` completed successfully.
 - **Task 381 — IN PROGRESS.** Correcting the short-landscape audit's title selector and documenting the disposition of remaining WARNs.
-- **Verified baseline:** `resources/General_reviews/SHORT_LANDSCAPE_AUDIT.md` was generated at 2026-11-05 20:03 UTC: 27 surfaces, 13 OK / 14 WARN / 0 FAIL. The report is pre-task-381.
+- **Verified audit rerun:** `resources/General_reviews/SHORT_LANDSCAPE_AUDIT.md` was regenerated at 2026-11-05 21:34 UTC: 27 surfaces, 13 OK / 14 WARN / 0 FAIL. It now detects the Animal Counting title (`Изброј животиње`); the surface remains WARN for the header-budget threshold, with the displayed 72 px value rounded.
 - **Root cause:** the selector omitted the visible `.count-title` heading created in `game/games/animal_counting.js:10`. The selector change is targeted; generic `h2` is deliberately not accepted.
 - **WARN disposition:** six no-title screens are intentionally stage-led (animals, phonics, shapes, matching_game, fastcat, cat_forest). Seven remaining header-budget WARNs are advisory measurements; task-380 recorded no clipping and no FAIL for them. Details are in `resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md`.
-- **Pending verification:** rerun `node tools/short_landscape_audit.js` locally to confirm the expected 14 OK / 13 WARN / 0 FAIL. This environment has no local repository checkout/browser harness, so that command has not been run here.
+- **Audit verification:** the committed 21:34 UTC audit report evidences a fresh local run and confirms the selector fix. The total remains 13 OK / 14 WARN / 0 FAIL because Animal Counting still crosses the header-budget threshold slightly; this is not a missing-title false positive. The assistant did not independently execute the local command. `node tools/check_docs.js` remains unverified in this environment.
 - No child-visible screens changed; no screenshot refresh is required. No game/runtime files changed.
 
 ## Project invariants
