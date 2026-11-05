@@ -71,6 +71,15 @@ match only recognised `<page>_<size>.png`, so every state capture was silently o
 
 ## Prioritized findings
 
+### P1 — Hub learning tile is visually blank / label displaced (new visual finding)
+
+The task-379 default captures show the green learning tile on the hub without its icon or label at `hub_phone-landscape.png` (844×390) and `hub_phone-portrait.png` (390×844). At both tablet sizes, the green tile remains blank while the `УЧЕЊЕ` label appears detached near the lower edge of the screen (`hub_tablet-portrait.png`, `hub_tablet-landscape.png`). The adjacent pink `ИГРЕ` tile renders normally. This is a high-impact navigation clarity issue: the first screen presents a large, unlabeled green control beside a clearly labeled games control.
+
+- **Evidence:** all four task-379 hub default screenshots; source markup in `game/index.html:275-276` includes `.tile-emojis` and `.tile-label` inside `.hub-tile.tile-learning`; the tile's styles are at `game/index.html:95-116` and art-painting pass at `game/index.html:343-374`.
+- **Proposed investigation:** inspect the post-`Art.fill` DOM/layout and computed sizing for `.tile-emojis`, `.tile-label`, and `.hub-tile.tile-learning`; confirm whether the composite art-painting pass or flex sizing causes the icon/label to escape the tile. Keep the existing artwork and two-tile navigation concept.
+- **Fix direction:** keep the icon cluster and `УЧЕЊЕ` label visibly grouped inside the green tile at all four supported viewport sizes; add screenshot assertions/visual regression coverage for this tile.
+- **Validation:** refresh all four hub screenshots; verify label and icons remain inside the green tile at 390×844, 844×390, 820×1180 and 1180×820; run `node tools/check_fast.js`, `node tools/check_docs.js`, and the hub smoke.
+
 ### P1 — Parent gate is below the fold at 844×390 (actionable)
 
 `game/pages/parent.html:115-155` puts the «Статус» and «Напредак» sections before
@@ -100,12 +109,20 @@ stage height on the shortest viewport.
 The audit does not count `h2` (or `.count-title`), producing WARN #2 above. Either widen
 the selector or document the exception; leaving it creates a permanent false WARN.
 
-### P4 — Visual confirmation pending (not a defect)
+### Visual confirmation — GPT-6 image review (2026-11-05)
 
-The 164 images have not been inspected by a human or vision model in this session — Big
-Pickle cannot read images. The WARN dispositions above are code/measurement based. A
-vision-model pass should confirm: first-action clarity, text contrast, clipping, and the
-`INIT`-only stage-led pages listed in the table.
+I visually inspected all 27 phone-landscape default screenshots and all 14 phone-landscape PLAY captures, plus targeted phone-portrait and tablet screenshots for the hub, parent, compare, maze, sorting and coloring surfaces. This is a broad visual pass, not a pixel-by-pixel inspection of all 164 files; tablet/portrait PLAY variants and the remaining non-landscape defaults still need a dedicated pass.
+
+Additional observations:
+
+- `hub`: the learning tile is blank and its label is displaced outside the tile at all four default viewports (P1 above).
+- `parent`: the phone-portrait gate is visible without scrolling; the 844×390 landscape capture shows status and progress panels before the gate, with the answer choices below the fold. This is a viewport-specific issue, not a general parent-page failure.
+- `compare`: portrait composition is very sparse, with a small central task cluster and large unused vertical bands. Not a blocker; consider increasing the task-card scale/using the available height if it remains comfortable for children.
+- `animal_counting`: the landscape stage is visually very empty and the animal targets are small relative to the large white board. Review target scale and board balance in the next visual pass; no functional defect established.
+- `coloring`: portrait layout separates drawing area and palette cleanly; landscape compresses the palette against the drawing card. Verify touch targets and ensure the palette does not cover drawable content during interaction.
+- `cat_forest`: the PLAY capture shows several characters/treats clustered at the first feeding position. Confirm the seeded state is representative and that visitors do not visually overlap during normal play.
+
+The short-landscape WARN dispositions remain code/measurement based; the image pass confirms the parent-gate and header-height concerns visually. The 0-violation axe result is automated accessibility evidence, not a substitute for child usability testing.
 
 ## Limitations
 
@@ -113,3 +130,8 @@ vision-model pass should confirm: first-action clarity, text contrast, clipping,
   screenshots only and still needs eyes.
 - `capture-manifest.json` records the last capture run only (by design); per-file truth is
   `screenshot-provenance.json` + `TABLE_OF_CONTENT.md`.
+
+
+### Review boundary
+
+No runtime files were changed during task 380. The findings above are proposed scopes; implementation tasks should be created only after owner review/approval. Local browser interactions and physical-device playtesting were not performed by GPT-6 in this session.

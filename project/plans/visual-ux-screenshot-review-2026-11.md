@@ -1,7 +1,7 @@
 # Visual/UX screenshot review — November 2026
 
 **Task:** 379  
-**Status:** DONE (mechanical evidence) — visual confirmation pending, see below  
+**Status:** DONE (task 379 evidence); task 380 visual review in progress  
 **Owner:** OpenAI ChatGPT / GPT-6 (plan) · OpenCode / Big Pickle (capture + docs)  
 **Started:** 2026-11-05  
 **Report:** [`resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md`](../../resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md)
@@ -59,10 +59,9 @@ The first command refreshes the 108 default-state images. The second adds named 
   P3 audit header selector, P4 visual confirmation.
 - No runtime UI change was made; fixes need separate approved tasks.
 
-## Known limitations
+## Task 380 visual review progress (2026-11-05)
 
-The 164 images have not been inspected by a human or vision model: the executing model
-cannot read images, so the WARN dispositions are code/measurement based. A vision-model
-pass (recommended: Nemotron 3.5 Super VL) is still required to confirm first-action
-clarity, contrast, clipping and the stage-led pages.
+GPT-6 visually inspected all 27 phone-landscape default captures and all 14 phone-landscape PLAY captures, plus targeted portrait/tablet screenshots for hub, parent, compare, maze, sorting and coloring. This confirmed a new P1 hub issue: the learning tile is blank and its label is displaced outside the tile in all four default viewport captures. The parent gate below-fold issue is confirmed specifically at 844×390; portrait parent layout keeps the gate visible.
+
+Further review notes and exact proposed fixes are in `resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md`. The 164-file set has not yet been inspected image-by-image across all formats; tablet/portrait PLAY variants and the remaining screens need a dedicated pass. No runtime files were changed.
 

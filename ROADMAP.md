@@ -4,17 +4,14 @@
 
 ## Current plan
 
-**Visual confirmation — task 380.** The task 379 evidence pass is complete: 164 screenshots (108 default + 56 gameplay), all provenance refreshed, short-landscape audit re-run with a disposition per WARN, axe clean on 27 surfaces. Remaining work is the vision-model pass over the battery plus scoping the two actionable findings (parent gate below the fold at 844×390, short-landscape header budget).
+**Task 380 — visual confirmation and fix scoping.** Review the refreshed 164-image battery, prioritise the hub learning-tile rendering issue and the parent gate's short-landscape visibility, and prepare separate implementation tasks only after owner approval. The header-height WARNs remain lower priority.
 
-- Plan: [`project/plans/visual-ux-screenshot-review-2026-11.md`](project/plans/visual-ux-screenshot-review-2026-11.md)
-- Report: [`resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md`](resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md)
+Report: [`resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md`](resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md).
 
-## Completed plans
+## Candidate work after task 380
 
-- Fresh Elevation / learning roadmap R0–R27b (archived in `archive/plans/`).
-- Visual/UX plan V0–V23 (38/38, tasks 216–240; archived).
-- racing3d game and tuning (tasks 242–249; archived).
-
-## Candidate work after the current plan
-
-Reassess the current learning-content backlog and racing3d play-test tuning only after the screenshot review identifies the highest-value next step and the user confirms its scope.
+- Implement the hub learning tile visual fix (P1), after approval.
+- Reorder/compact the parent gate for short landscape (P1), after approval.
+- Compact short-landscape headers on compare, sorting, maze and shared arcade shell (P2), after approval.
+- Correct the short-landscape audit title selector for `h2`/`.count-title` (tool-quality follow-up).
+- Revisit lower-priority game-specific visual observations in the review report.
