@@ -1,21 +1,19 @@
 # Roadmap
 
-*Updated 2026-10-13. Current state: [`project/STATUS.md`](project/STATUS.md). Open tasks: [`project/tasks/ACTIVE.md`](project/tasks/ACTIVE.md).*
+*Updated 2026-11-05. Current state: [`project/STATUS.md`](project/STATUS.md). Open tasks: [`project/tasks/ACTIVE.md`](project/tasks/ACTIVE.md).*
 
-## Where we are
+## Current plan
 
-**No plan is open.** Everything planned so far is finished and archived in [`archive/plans/`](archive/plans/):
+**Visual/UX screenshot review — task 379.** Refresh the stable `Screenshot_Review` battery, capture deterministic gameplay states where supported, adjudicate the short-landscape warnings against current screenshots and source, and produce a prioritized review. No runtime changes are authorized by the review task; fixes will be proposed separately with file locations, rationale, regression risks and validation steps.
 
-- Fresh Elevation / learning roadmap R0–R27b (the previous version of this file is `archive/plans/ROADMAP_2026-10-05.md`)
-- Visual/UX plan V0–V23 (38/38, tasks 216–240)
-- racing3d game and tuning (tasks 242–249)
+Plan: [`project/plans/visual-ux-screenshot-review-2026-11.md`](project/plans/visual-ux-screenshot-review-2026-11.md).
 
-## Candidate next work (the user decides)
+## Completed plans
 
-1. Emoticon-replacement asset project: `resources/General_reviews/Asset_Generation/` (Phase 1, inventory awaiting approval). Open question: native emoji are currently the settled choice.
-2. racing3d further play-test tuning.
-3. "Tier A" learning content: see `project/reference/LEARNING_ROADMAP_REVIEW.md` and verify what is still open first.
+- Fresh Elevation / learning roadmap R0–R27b (archived in `archive/plans/`).
+- Visual/UX plan V0–V23 (38/38, tasks 216–240; archived).
+- racing3d game and tuning (tasks 242–249; archived).
 
-## How a new plan starts
+## Candidate work after the current plan
 
-Write it as `project/plans/<name>.md`, add its tasks to `project/tasks/ACTIVE.md`, and link it here. When it is finished, move it to `archive/plans/` and note that here.
+Reassess the current learning-content backlog and racing3d play-test tuning only after the screenshot review identifies the highest-value next step and the user confirms its scope.

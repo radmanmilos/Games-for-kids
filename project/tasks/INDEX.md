@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **379**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **380**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -373,3 +373,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 375 | DONE | 2026-11-05 | Parent-first README and documentation reconciliation | tasks-300-399.md
 376 | DONE | 2026-11-05 | Replace the README hub hero with the owner-selected phone-landscape screenshot | tasks-300-399.md
 377 | DONE | 2026-11-05 | Make the Dino smoke collectible-emoji assertion normalization-safe | tasks-300-399.md
+378 | DONE | 2026-11-05 | Replace the README hero with the owner-selected meadow illustration | tasks-300-399.md
