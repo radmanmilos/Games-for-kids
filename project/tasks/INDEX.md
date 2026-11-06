@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **399**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **400**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -390,3 +390,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 394 | DONE | 2026-11-06 | Complete phased game-by-game lifecycle/state/input/audio/learning/performance audit for all 26 surfaces (25… | tasks-300-399.md
 395 | DONE | 2026-11-06 | Verified service-worker update and offline recovery lifecycle end-to-end: tools/sw_update_smoke.js ALL PASSED… | tasks-300-399.md
 397 | DONE | 2026-11-06 | Audit learning quality, Serbian Cyrillic text, Serbian speech and content integrity: all child-facing text… | tasks-300-399.md
+399 | DONE | 2026-11-06 | Reconcile project status and art inventory against verified repository and CI evidence | tasks-300-399.md
