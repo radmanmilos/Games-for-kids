@@ -1512,12 +1512,12 @@
     "size": 19352
   },
   "manifest.json": {
-    "sha256": "efb372832afa368d3ee9a7c95ef25d2057b29586c66bc0dbd65a7dd3c3c627c4",
+    "sha256": "40de3b7cc2d2ee2f7db9e513ceb33b8c9252904561d49248a9b32d692c40711b",
     "size": 576
   },
   "pages/animal_counting.html": {
-    "sha256": "3a7a106d7d2a1bd2d8870a257336c4fa862243586cd163ba90f949bfbdae82f6",
-    "size": 6964
+    "sha256": "9107c99164fb09338703016dfa3a0118e2bf0bce9bf4de891e61180b2fb41c28",
+    "size": 7042
   },
   "pages/animal_memory.html": {
     "sha256": "dd77dd08f202dab51cd9d44588101ae84f99d8f0871836e378869f06554ff7f2",

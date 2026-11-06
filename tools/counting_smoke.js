@@ -180,6 +180,36 @@ const COUNT_ALL = `(function(){
     check(`V11 ${v.name}: answer choices meet the 64px touch floor`, G.minChoice >= 64, geo);
   }
 
+  /* Task 389: animal tiles must be large enough to command the stage even at
+     small counts (they were as small as 43 px on phone landscape). Reset the
+     scene to a small count (no flex shrink) and measure at all four viewports;
+     floors match the new clamp() minima. */
+  const TILE_FLOORS = [
+    { name: '390x844 phone-portrait', width: 390, height: 844, minTile: 60, mobile: true },
+    { name: '844x390 phone-landscape', width: 844, height: 390, minTile: 50, mobile: true },
+    { name: '820x1180 tablet-portrait', width: 820, height: 1180, minTile: 100, mobile: false },
+    { name: '1180x820 desktop', width: 1180, height: 820, minTile: 100, mobile: false }
+  ];
+  for (const v of TILE_FLOORS) {
+    await h.c.send('Emulation.setDeviceMetricsOverride', { width: v.width, height: v.height, deviceScaleFactor: 1, mobile: v.mobile });
+    await sleep(150);
+    await h.evalv(`(function(){
+      const scene=document.getElementById('countScene');
+      scene.innerHTML='';
+      for(let i=0;i<3;i++){const t=document.createElement('div');t.className='count-tile';t.setAttribute('data-animal','Dog');scene.appendChild(t);}
+    })()`);
+    await sleep(100);
+    const g = JSON.parse(await h.evalv(`JSON.stringify((() => {
+      const tiles = document.querySelectorAll('#countScene .count-tile');
+      const t = tiles[0];
+      if (!t) return { tileCount: 0, tileW: 0 };
+      const b = t.getBoundingClientRect();
+      return { tileCount: tiles.length, tileW: Math.round(b.width), tileH: Math.round(b.height) };
+    })())`));
+    check(`task 389 ${v.name}: animal tile is enlarged (>= ${v.minTile}px), not a tiny stamp`,
+      g.tileCount === 3 && g.tileW >= v.minTile, JSON.stringify(g));
+  }
+
   await h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);
   process.exit(getFails() ? 1 : 0);

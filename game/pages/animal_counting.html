@@ -47,12 +47,13 @@ body{font-family:Fredoka, sans-serif;background:var(--cream);margin:0;height:100
   .count-scene{box-sizing:border-box;width:100%;min-height:clamp(110px,26vmin,220px);
     display:flex;flex-wrap:wrap;align-content:center;justify-content:center;
     gap:clamp(6px,1.6vmin,12px);padding:clamp(8px,2vmin,16px);border-radius:16px;
-    background:rgba(255,255,255,0.95);box-shadow:0 2vmin 4vmin rgba(0,0,0,.08)}
-  /* animal tile visuals follow matching_game color patterns */
+    background:#FFF9F0;box-shadow:0 2vmin 4vmin rgba(0,0,0,.08)}
+  /* animal tile visuals follow matching_game color patterns — larger so even a
+     small count commands the stage; never shrinks below a comfortable size */
   .count-scene .count-tile{display:flex;align-items:center;justify-content:center;
-    width:clamp(52px,15vmin,104px);height:clamp(52px,15vmin,104px);border-radius:12px;
+    width:clamp(60px,16vmin,104px);height:clamp(60px,16vmin,104px);border-radius:12px;
     background:linear-gradient(#fff,#fff);box-shadow:0 1.2vmin 0 rgba(0,0,0,.06);
-    font-size:clamp(28px,8.4vmin,58px);cursor:pointer;transition:transform .15s ease}
+    font-size:clamp(30px,9vmin,64px);cursor:pointer;transition:transform .15s ease}
   .count-scene .count-tile.counted{transform:scale(0.85);opacity:0.6;box-shadow:0 0 0 3px var(--green)}
   .count-scene .count-tile[data-animal="Dog"]{background:radial-gradient(circle at 35% 30%, #FFF3B0, #FFD23F 55%, #FFB800);}
   .count-scene .count-tile[data-animal="Cat"]{background:radial-gradient(circle at 35% 30%, #FFB6D0,#FF7FA8);}
@@ -86,7 +87,7 @@ body{font-family:Fredoka, sans-serif;background:var(--cream);margin:0;height:100
     .count-title{font-size:clamp(16px,4.4vmin,22px)}
     .count-info{font-size:clamp(12px,3vmin,16px)}
     .count-scene{min-height:0;padding:clamp(6px,1.4vmin,10px)}
-    .count-scene .count-tile{width:clamp(40px,11vmin,64px);height:clamp(40px,11vmin,64px);font-size:clamp(22px,6.4vmin,34px)}
+    .count-scene .count-tile{width:clamp(52px,13vmin,72px);height:clamp(52px,13vmin,72px);font-size:clamp(26px,7vmin,40px)}
     .count-choice{min-width:64px;min-height:64px;font-size:clamp(20px,4.6vmin,26px)}
     .count-result{font-size:clamp(14px,3.6vmin,20px)}
   }
