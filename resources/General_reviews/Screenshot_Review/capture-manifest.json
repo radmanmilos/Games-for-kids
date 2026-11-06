@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "0314cedb5277105b61d680def5755413207ca23b",
+  "commitSha": "4c839ccbbdbee4530dc0a15b85bcda2ae02a16a5",
   "browser": {
     "product": "Chrome/156.0.8078.80",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-06T12:43:51.459Z",
+  "generatedAt": "2026-11-06T12:53:29.444Z",
   "pageSet": [
-    "animal_counting"
+    "spatial"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,48 +40,48 @@
   },
   "screenshots": [
     {
-      "file": "animal_counting__phone-portrait__PLAY.png",
-      "page": "animal_counting",
+      "file": "spatial__phone-portrait__PLAY.png",
+      "page": "spatial",
       "size": "phone-portrait",
       "state": [
         "PLAY"
       ],
       "width": 390,
       "height": 844,
-      "bytes": 23261
+      "bytes": 27687
     },
     {
-      "file": "animal_counting__phone-landscape__PLAY.png",
-      "page": "animal_counting",
+      "file": "spatial__phone-landscape__PLAY.png",
+      "page": "spatial",
       "size": "phone-landscape",
       "state": [
         "PLAY"
       ],
       "width": 844,
       "height": 390,
-      "bytes": 18587
+      "bytes": 28967
     },
     {
-      "file": "animal_counting__tablet-portrait__PLAY.png",
-      "page": "animal_counting",
+      "file": "spatial__tablet-portrait__PLAY.png",
+      "page": "spatial",
       "size": "tablet-portrait",
       "state": [
         "PLAY"
       ],
       "width": 820,
       "height": 1180,
-      "bytes": 45607
+      "bytes": 44697
     },
     {
-      "file": "animal_counting__tablet-landscape__PLAY.png",
-      "page": "animal_counting",
+      "file": "spatial__tablet-landscape__PLAY.png",
+      "page": "spatial",
       "size": "tablet-landscape",
       "state": [
         "PLAY"
       ],
       "width": 1180,
       "height": 820,
-      "bytes": 44766
+      "bytes": 43775
     }
   ]
 }

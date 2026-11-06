@@ -71,6 +71,14 @@
 
     #spatial-feedback{min-height:6vmin;font-size:4.4vmin;font-weight:700;color:var(--green);text-align:center}
     @media (min-width:800px){#spatial-prompt{font-size:40px}.spatial-choice{font-size:34px;min-width:230px;min-height:104px}#spatial-feedback{font-size:28px}}
+    /* Task 390: on short landscapes the success/try-again feedback ran into the
+       answer buttons. Shrink the fixed-ratio stage a little so the whole stage
+       (prompt, scene, choices, feedback) fits the viewport and the feedback
+       naturally sits below the choices with its existing gap instead of
+       overlapping them. */
+    @media (max-height: 520px) {
+      #spatial-scene { width: min(52vmin, 210px); }
+    }
     @media (prefers-reduced-motion: reduce){.spatial-choice{transition:none}.spatial-choice:active{transform:none}.spatial-choice.spatial-wrong{animation:none}}
   </style>
 </head>

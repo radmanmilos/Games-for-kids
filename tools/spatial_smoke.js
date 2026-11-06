@@ -177,6 +177,25 @@ const MODES = [
   check('V5.1 grammar: all four §23 regions present on spatial', lsj.found.every(Boolean), JSON.stringify(lsj));
   check('V5.1 grammar: instruction + stage-mat render a real box; no h-overflow; non-vacuous', lsj.visible && lsj.overflow && lsj.bogus === false, JSON.stringify(lsj));
 
+  /* Task 390: on short landscapes the success feedback must never touch the
+     answer buttons. Drive a correct answer at 844x390 and measure the gap. */
+  await h.c.send('Emulation.setDeviceMetricsOverride', { width: 844, height: 390, deviceScaleFactor: 1, mobile: true });
+  await sleep(150);
+  await h.evalv(`window.__spatial.setRound(0)`);
+  const correctKey390 = (await state()).correct;
+  await h.tap(`#spatial-choice-${correctKey390}`);
+  await sleep(60);
+  const gap = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const fb = document.getElementById('spatial-feedback');
+    const ba = document.getElementById('spatial-choice-a').getBoundingClientRect();
+    const bb = document.getElementById('spatial-choice-b').getBoundingClientRect();
+    const f = fb.getBoundingClientRect();
+    const maxBot = Math.max(ba.bottom, bb.bottom);
+    return { gap: Math.round(f.top - maxBot), fbTop: Math.round(f.top), btnBot: Math.round(maxBot), fbText: fb.textContent };
+  })())`));
+  check('task 390: at 844x390 the success feedback does not touch the answer buttons',
+    gap.gap > 0 && gap.fbText === 'Браво!', JSON.stringify(gap));
+
   await h.close();
   console.log(`\n${getFails() === 0 ? 'ALL' : 'SOME'} CHECKS ${getFails() === 0 ? 'PASSED' : 'FAILED'} (${getFails()} fail)`);
   process.exit(getFails() ? 1 : 0);

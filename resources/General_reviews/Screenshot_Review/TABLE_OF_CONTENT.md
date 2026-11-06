@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-06T12:43:51.459Z
+- Генерисано / Generated: 2026-11-06T12:53:29.444Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -168,14 +168,14 @@
 | `space_phone-portrait.png` | Свемир | `/pages/space.html` | 390×844 | портрет | — | 05.11.2026. 21:02:59 | 380 |
 | `space_tablet-landscape.png` | Свемир | `/pages/space.html` | 1180×820 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |
 | `space_tablet-portrait.png` | Свемир | `/pages/space.html` | 820×1180 | портрет | — | 05.11.2026. 21:02:59 | 380 |
-| `spatial__phone-landscape__PLAY.png` | Простор | `/pages/spatial.html` | 844×390 | пејзаж | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `spatial__phone-portrait__PLAY.png` | Простор | `/pages/spatial.html` | 390×844 | портрет | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `spatial__tablet-landscape__PLAY.png` | Простор | `/pages/spatial.html` | 1180×820 | пејзаж | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `spatial__tablet-portrait__PLAY.png` | Простор | `/pages/spatial.html` | 820×1180 | портрет | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `spatial_phone-landscape.png` | Простор | `/pages/spatial.html` | 844×390 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
-| `spatial_phone-portrait.png` | Простор | `/pages/spatial.html` | 390×844 | портрет | — | 05.11.2026. 18:53:41 | 379 |
-| `spatial_tablet-landscape.png` | Простор | `/pages/spatial.html` | 1180×820 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
-| `spatial_tablet-portrait.png` | Простор | `/pages/spatial.html` | 820×1180 | портрет | — | 05.11.2026. 18:53:41 | 379 |
+| `spatial__phone-landscape__PLAY.png` | Простор | `/pages/spatial.html` | 844×390 | пејзаж | PLAY | 06.11.2026. 13:53:29 | 390 |
+| `spatial__phone-portrait__PLAY.png` | Простор | `/pages/spatial.html` | 390×844 | портрет | PLAY | 06.11.2026. 13:53:29 | 390 |
+| `spatial__tablet-landscape__PLAY.png` | Простор | `/pages/spatial.html` | 1180×820 | пејзаж | PLAY | 06.11.2026. 13:53:29 | 390 |
+| `spatial__tablet-portrait__PLAY.png` | Простор | `/pages/spatial.html` | 820×1180 | портрет | PLAY | 06.11.2026. 13:53:29 | 390 |
+| `spatial_phone-landscape.png` | Простор | `/pages/spatial.html` | 844×390 | пејзаж | — | 06.11.2026. 13:53:28 | 390 |
+| `spatial_phone-portrait.png` | Простор | `/pages/spatial.html` | 390×844 | портрет | — | 06.11.2026. 13:53:28 | 390 |
+| `spatial_tablet-landscape.png` | Простор | `/pages/spatial.html` | 1180×820 | пејзаж | — | 06.11.2026. 13:53:28 | 390 |
+| `spatial_tablet-portrait.png` | Простор | `/pages/spatial.html` | 820×1180 | портрет | — | 06.11.2026. 13:53:28 | 390 |
 | `tracing_phone-landscape.png` | Писање | `/pages/tracing.html` | 844×390 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
 | `tracing_phone-portrait.png` | Писање | `/pages/tracing.html` | 390×844 | портрет | — | 05.11.2026. 18:53:41 | 379 |
 | `tracing_tablet-landscape.png` | Писање | `/pages/tracing.html` | 1180×820 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
