@@ -2,15 +2,14 @@
 
 *Overwritten 2026-11-06. App version: 3.0.7. Repository: https://github.com/radmanmilos/Games-for-kids.*
 
-**Main baseline:** `b59211402af6af507e8516a99c25c141aea1804e` (short SHA `b592114`). This is the latest main commit verified for this status snapshot.
+**Main baseline:** `a11c919ab52e945184183e5554f579a53f478435` (short SHA `a11c919`), the merge commit for PR #20.
 
 ## Current repository and CI state
 
-- Default branch: `main`; the verified baseline had no open pull requests.
-- Latest main CI run: [#536](https://github.com/radmanmilos/Games-for-kids/actions/runs/42257567335) — overall **success**.
-- Setup, Fast gate, and GitHub Pages deployment succeeded.
-- Extended Chromium/WebKit matrix, smoke matrix, and Release QA were **skipped** in that run; they must not be described as passing.
-- Task 399 is a docs-only reconciliation in progress on branch `docs/task-399-status-art-inventory`. It does not change runtime code or assets.
+- Default branch: `main`; PR #20 merged successfully into this baseline.
+- PR #20 validation on its head commit: Fast gate and CodeQL succeeded; Extended matrix, smoke matrix, and Release QA were skipped. [PR workflow](https://github.com/radmanmilos/Games-for-kids/actions/runs/42280008388).
+- The post-merge main CI run was still in progress when this snapshot was prepared; its final result must be checked before claiming main CI is green.
+- Task 399 is complete and archived. PR #20 changed documentation only; no runtime code or assets changed.
 
 ## Current project state
 
@@ -34,7 +33,7 @@ Do not mark these four tasks complete without the missing real-world evidence.
 
 ## Art inventory
 
-`resources/General_reviews/ART_INVENTORY.md` is being reconciled in Task 399 against the current runtime, registry, and asset tree:
+`resources/General_reviews/ART_INVENTORY.md` was reconciled in Task 399 against the current runtime, registry, and asset tree:
 
 - Cat Forest's cuddle heart is registered as `object-heart` and the painted `game/assets/art/object-heart.webp` exists.
 - Classroom sunrise and sunset use existing full-bleed `sunrise.png` and `sunset.png` scene assets via `SCENE_IMAGES`; they are not missing standalone emoji illustrations.
@@ -55,4 +54,4 @@ This status snapshot was checked against GitHub repository, branch, file, commit
 
 ## Task tracking
 
-Task 399 remains IN PROGRESS until its documentation changes are reviewed and the repository's normal task-end archival/check process can be run. The next task number remains 399 until the task is archived in `project/tasks/INDEX.md`.
+Task 399 is archived in `archive/tasks/tasks-300-399.md`; the next task number is 400. The repository's local `node tools/archive_tasks.js` and `node tools/check_docs.js` commands were not run in this environment; the task archive/index were updated to the script's documented format, but those local checks remain unverified.
