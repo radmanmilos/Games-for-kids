@@ -193,14 +193,13 @@ These are in `game/data/art-registry.js` and `Art.fill()`/`Art.draw()` can swap 
 
 These appear in game code but are NOT in `game/data/art-registry.js`. `Art.fill()` falls back to showing the raw emoji.
 
-| Game | Emoji | Where used | Needed art stem (suggested) |
-|------|-------|------------|----------------------------|
-| Cat Forest | 🙀 | `CATS[senka].emoji` — weary cat face for night cat `Сенка` | `cat-forest-weary-cat` |
-| Cat Forest | ❤️ | Cuddle hearts (CF-09 `spawnFx(pos, '❤️', ...)`) | `object-heart` |
-| Classroom Time | 🌅 | `TIME_SCENES[0]` — sunrise (scene image added, registry entry missing) | `scene-sunrise` |
-| Classroom Time | 🌇 | `TIME_SCENES[2]` — sunset (scene image added, registry entry missing) | `scene-sunset` |
+| Game | Emoji | Where used | Status | Needed art stem (suggested) |
+|------|-------|------------|--------|----------------------------|
+| Cat Forest | ❤️ | Cuddle hearts (CF-09 `spawnFx(pos, '❤️', ...)`) | **Being generated** — user has an art generation process defined | `object-heart` |
+| Classroom Time | 🌅 | `TIME_SCENES[0]` — sunrise | ✅ PNG exists at `assets/scenes/sunrise.png`; added to `classroom.js` `SCENE_IMAGES` | scene-sunrise (already in scenes/) |
+| Classroom Time | 🌇 | `TIME_SCENES[2]` — sunset | ✅ PNG exists at `assets/scenes/sunset.png`; added to `classroom.js` `SCENE_IMAGES` | scene-sunset (already in scenes/) |
 
-> Note: Scene images `sunrise.png` and `sunset.png` were added to `game/assets/scenes/` and referenced in `classroom.js` `SCENE_IMAGES`, but the emoji glyphs `🌅`/`🌇` are not yet in `art-registry.js`. Add them so `Art.fill()` can swap the text glyph for the painted illustration on non-scene render sites.
+> **Cat Forest night cat `Сенка` (Senka):** Her emoji is `🐈‍⬛` (black cat), which IS already registered in `art-registry.js` → `cat-forest-black-cat`. The art file `game/assets/art/cat-forest-black-cat.webp` already exists. No new art needed for Senka. The earlier `🙀` listing was incorrect — Senka does not use `🙀`.
 
 ---
 
