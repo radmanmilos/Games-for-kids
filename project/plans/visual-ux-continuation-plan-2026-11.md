@@ -66,6 +66,8 @@ The November 4 master audit's red art-integrity run refers to an older commit an
 
 ### 2.3 Documentation drift
 
+This subsection is the 2026-11-06 investigation snapshot. Task 383 itself resolved both items: `project/STATUS.md` was refreshed and the GAME_MATRIX reconciliation is registered as Task 393.
+
 \`project/STATUS.md\` is stale: it identifies \`36c51d063ab7ac3b15a1cca067cb99e933d38e44\` (PR #16) as main, while the verified main ref is \`983f7b4a3cc4b16d41747614c3dc5b963c992c5f\` (PR #17).
 
 \`project/reference/GAME_MATRIX.md\` also needs reconciliation. Its table's Guide doc column marks fewer guides than the same file's “Guide docs present” list, and the live \`project/games/\` directory contains 16 guide files. The registry has 25 activity pages plus the parent surface. The matrix must be rebuilt from the current registry and actual file paths before its counts are relied upon.
@@ -198,7 +200,7 @@ Task 398 should measure representative activities on the intended modest Android
 
 ## 6. Ordered task plan
 
-All task numbers below are reserved in \`project/tasks/ACTIVE.md\`. Only Task 383 is in progress as part of this documentation handoff. The remaining tasks are NEW proposals and require explicit selection/approval before implementation.
+All task numbers below are reserved in \`project/tasks/ACTIVE.md\`. Task 383 (this documentation handoff) is DONE and archived. Tasks 384–398 are NEW proposals and require explicit selection/approval before implementation.
 
 | Task | Priority | Scope | Dependency / acceptance |
 |---:|---|---|---|

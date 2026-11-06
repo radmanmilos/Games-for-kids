@@ -18,7 +18,6 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 383. IN PROGRESS — Reconcile the completed visual/UX master plan with current main; publish a verified continuation plan and numbered backlog (2026-11-06, GitHub connector/GPT-6). Documentation-only; no runtime changes.
 - 384. NEW — Add deterministic screenshot coverage for the internal Games and Learning sub-hubs at all four viewports; inspect discoverability and grid reachability.
 - 385. NEW — Fix Classroom category-tab overflow on phone widths; keep all six tabs reachable without page-level horizontal scrolling.
 - 386. NEW — Give Phonics retry feedback an explicit gentle non-success state; preserve green for correct answers and reset state between rounds.

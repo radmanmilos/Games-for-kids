@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **383**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **399**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -378,3 +378,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 380 | DONE | 2026-11-05 | Hub learning tile restored (art pass no longer walks the tile label; four centred glyph cells + intact УЧЕЊЕ… | tasks-300-399.md
 381 | DONE | 2026-11-05 | Correct short-landscape audit title detection and adjudicate remaining WARNs | tasks-300-399.md
 382 | DONE | 2026-11-05 | Comprehensive visual/UX review of hubs and games across available default/PLAY screenshots | tasks-300-399.md
+383 | DONE | 2026-11-06 | Reconcile the completed visual/UX master plan with current main; publish a verified continuation plan and… | tasks-300-399.md
