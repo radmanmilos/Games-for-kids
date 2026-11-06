@@ -363,6 +363,10 @@
     "sha256": "218a767b83e163b18a0b8e51fdf6976815e37395ba69468fb3b1d2586b1c11f0",
     "size": 25614
   },
+  "assets/art/object-heart.webp": {
+    "sha256": "d9fbd9cf604a0457c240002719ce025e85ea9a37956f1183ec46f2adde4ea090",
+    "size": 19594
+  },
   "assets/art/object-money-bag.webp": {
     "sha256": "4ecb85f86b6bdb498b10da21aa7a027d938c605490bb4510844743f8c0175e16",
     "size": 36576
@@ -1376,8 +1380,8 @@
     "size": 9917
   },
   "data/art-registry.js": {
-    "sha256": "55b32e1a503e76081ead801fbf0bc36223b6ed971b1bb20638fa23008ee9bdb9",
-    "size": 4517
+    "sha256": "f0e2d1274a17ae348a640b850fcddd245979f442b9245caa9c2f0909b7b21bec",
+    "size": 4542
   },
   "data/serbian.js": {
     "sha256": "12f7f7f12989868bc399ecbe94de2e88165e1fea452047dd097c83a3e830ceb8",
@@ -1696,8 +1700,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "11e627024a4f50af237a1cc657c616a227c4d69f1008f49bb90d36504ddd9bd8",
-    "size": 13393
+    "sha256": "5f9d620632ef4ccac8c560d97283b681f38652b5f3de2f9b5ac0ce6645bb8aa1",
+    "size": 13427
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",

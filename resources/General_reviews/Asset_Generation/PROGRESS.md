@@ -1417,3 +1417,16 @@ Distinct new illustration concepts: **30** (14 Cat Forest, 6 ocean, 2 dino/jungl
 - Not done here: runtime wiring of the remaining surfaces (task 359), the gate (360), puzzle scenes (361),
   and the five glyphs that still have no art (362).
 
+## Asset update — 2026-11-06 — heart approved
+
+- [x] **Preflight.** `object-heart-cuddle` is the `❤️` Cat Forest cuddle/tap feedback glyph rendered via `spawnFx()` → `makeFxEl()` → `Art.fillAttr()` on canvas. No painted art existed; the raw emoji was drawn as canvas text.
+- [x] **Brief written:** `resources/General_reviews/Asset_Generation/prompts/heart.md` — one bright red soft watercolor heart, centered, breathing room, plain background.
+- [x] **Reference set:** `bear.png`, `star.png` (canonical style anchors).
+- [x] **Generated:** `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/heart.png`, 1024x1024 RGB, opaque, 1157413 bytes. Two generations (first neutral tone, second bright red per user review).
+- [x] **Technical QA:** palette 241.17/204.85/200.36, palette-match vs bear 0.0083 (expected — red vs brown).
+- [x] **User review: APPROVED.** Bright red confirmed.
+- [x] **Cut-out:** `node tools/asset_cutout.js .../heart.png --out game/assets/art/object-heart.webp` — 512² alpha WebP, 19 KB, corners transparent, alpha 49.14/50.17/0.69%.
+- [x] **Registry entry:** `"❤️": "object-heart"` added to `game/data/art-registry.js`. `makeFxEl()` in `cat_forest.js` calls `Art.fillAttr()` which now swaps the `❤️` emoji for the painted WebP image and hides the `::before` pseudo-element via `art-painted`.
+- [x] **Inventory row:** `ASSET_INVENTORY.md` `object-heart-cuddle` row now `GENERATED / USER-APPROVED / TECHNICAL QA MEASURED`.
+- [x] **Offline pack:** `node tools/build_offline.js` regenerated `game/offline-manifest.json`; `bash tools/sync-docs.sh` synced `docs/`; `node tools/check_fast.js` 10/10 green.
+
