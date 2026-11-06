@@ -2,7 +2,7 @@
 
 *Overwritten 2026-11-06. App version: 3.0.7. Repository: https://github.com/radmanmilos/Games-for-kids.*
 
-**Main:** `778e772` (archive + status); CI green for 388/389/390; Task 393/394/395/397 pushed in archive commit.
+**Main:** `db005f3` (playtest fixes + art inventory); CI green for all pushed commits.
 
 ## Current state
 
@@ -20,7 +20,26 @@ Tasks 388–398 processing status:
 - **397 DONE, pushed** (`778e772` archive) — All child-facing text Cyrillic; Serbian speech mapped to audio assets; no Latin content.
 - **398 LIMITED** — Modest-Android performance needs real device. Verifiable: no runtime errors, offline resilience, check_fast/release green.
 
-**Next task number: 399.** Remaining open tasks (391, 392, 396, 398) are all LIMITED/ASSESSED — each requires a real device or child/family playtest to complete, and must be reported as limited, never claimed complete.
+## Playtest fixes (this session, pushed as `db005f3`)
+
+Real-device playtest feedback was addressed across multiple games:
+
+- **Cat Forest:** `.art-painted::before{content:none !important}` — stops doubled emoticons where painted art is shown.
+- **Animal Counting:** celebration uses `Art.fill()` instead of `🎉` emoticon; auto-advances to next level 2.5s after correct answer (Next button still works manually).
+- **Space:** rocket rotation `Math.PI/2` (was `-Math.PI/2`) — now points right.
+- **Classroom Time:** added sunrise/sunset scene images (`sunrise.png`, `sunset.png`) alongside night-sky.png.
+- **Classroom Numbers:** detail-view emoji rows now smaller (8vmin) and wrap (max-width:42vmin) so higher counts fit on screen.
+- **Games hub:** `.hub-btn{ line-height:1; overflow:hidden; }` — multi-emoji buttons no longer spill outside.
+- **Matching:** `.candy .art` fills the cell (width/height 100%, object-fit:cover).
+- **Puzzle:** scene images drawn with aspect-ratio-preserving cover (no distortion); emoticon overlays removed from puzzle pieces.
+
+Ran `build_offline.js` + `sync-docs.sh` + `check_fast.js` (10/10 green). All game smoke tests pass individually.
+
+Art inventory: `resources/General_reviews/ART_INVENTORY.md` — lists every emoji/glyph used in games, cross-referenced against `art-registry.js`. 4 emojis need new art: 🙀, ❤️, 🌅, 🌇.
+
+## Next task number: 399
+
+Remaining open tasks (391, 392, 396, 398) are all LIMITED/ASSESSED — each requires a real device or child/family playtest to complete, and must be reported as limited, never claimed complete.
 
 ## Project invariants
 
