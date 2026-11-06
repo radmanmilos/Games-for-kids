@@ -652,6 +652,7 @@ const WORLDS = [
     walker: 'hedgehog',
     bgSky: '#00003c', groundColor: '#cc5500', hillColor: '#882200', pipeColor: '#387800',
     stairColor: '#994000',
+    scene: 'autumn',
     isNight: true, decor: 'leaves', noClouds: false,
     stairs: [{x:2900,peak:3,w:56,h:40},{x:5400,peak:4,w:56,h:40}],
     grounds: [{x:0,w:1100},{x:1400,w:900},{x:2700,w:1000},{x:4100,w:900},{x:5400,w:1400}],

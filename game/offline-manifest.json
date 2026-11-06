@@ -1335,6 +1335,10 @@
     "sha256": "f0acbb0ca7d2bbf33e794cb5a024136b0b01271c06ad3b932e1993652a08fae8",
     "size": 2018229
   },
+  "assets/scenes/scene-autumn.png": {
+    "sha256": "edd9c995e6b146736974a4082266fcffb6a1331044b1abd2d039846925593b04",
+    "size": 1640655
+  },
   "assets/scenes/scene-farm.png": {
     "sha256": "ca99d3747a8bfd0fcb83ffafd633a6e4a977019e21ca819c93567e3d114bbdaf",
     "size": 2295653
@@ -1460,8 +1464,8 @@
     "size": 5268
   },
   "games/kitty-standalone.js": {
-    "sha256": "d4c955a55ec1d7aa244b5a84e32216c70991258ffeca90e4194636d82267ec5a",
-    "size": 104900
+    "sha256": "06aa8e491d550601852c6cf5e2b0f0356382eba895ae9bcda66b27b2ad906664",
+    "size": 104921
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
@@ -1708,8 +1712,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "1618abcb900023bdda2d9bc9d34252d34565980818aa6e387d7a8a601b9d7cd8",
-    "size": 13499
+    "sha256": "d07f2ad9d5142e800849f59b8be95a9efbc7f19bd4e5a8bd3a13aa7bc0ed3dd2",
+    "size": 13535
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",
