@@ -30,7 +30,7 @@
   ];
 
   /* Full-bleed scene art for glyphs that are really scenes, not cut-outs. */
-  const SCENE_IMAGES = { '🌙': '../assets/scenes/night-sky.png' };
+  const SCENE_IMAGES = { '🌅': '../assets/scenes/sunrise.png', '🌇': '../assets/scenes/sunset.png', '🌙': '../assets/scenes/night-sky.png' };
   const sceneImageFor = (g) => SCENE_IMAGES[g] || null;
   const TIME_SCENES = [
     { emoji: '🌅' },
@@ -153,7 +153,7 @@
       if (item.count > 0) {
         let spans = '';
         for (let i = 0; i < item.count; i++) spans += '<span class="show-emoji"></span>';
-        row += '<div class="show-emoji-row">' + spans + '</div>';
+        row += '<div class="show-emoji-row numbers">' + spans + '</div>';
         d.innerHTML = row;
         d.querySelectorAll('.show-emoji').forEach(s => Art.fill(s, item.emoji));
       } else {

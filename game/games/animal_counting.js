@@ -39,6 +39,7 @@
     const scoreEl = screen.querySelector('#countScoreValue');
     const levelEl = screen.querySelector('#countLevel');
     const nextBtn = screen.querySelector('#countNext');
+    let advanceTimer = null;
 
     function renderLevel() {
       levelEl.innerText = level;
@@ -169,6 +170,8 @@
           }
         });
         nextBtn.style.display = 'inline-block';
+        if (advanceTimer) clearTimeout(advanceTimer);
+        advanceTimer = setTimeout(() => { nextBtn.click(); }, 2500);
       } else {
         result.innerText = SERBIAN.retry[0];
         if(typeof gentleMiss === 'function') gentleMiss();
@@ -176,6 +179,7 @@
     }
 
     nextBtn.addEventListener('click', ()=>{
+      if (advanceTimer) { clearTimeout(advanceTimer); advanceTimer = null; }
       if(typeof popSound === 'function') popSound();
       level += 1;
       if (level > maxLevels) {
@@ -193,7 +197,6 @@
     });
 
     // celebrate element: attach to the scene's parent container so it sits between tiles and the Next button
-    const celebrateHtml = '<div id="countCelebrate" class="celebrate">🎉</div>';
     const sceneContainer = scene.parentElement; // the column container
     if (sceneContainer) sceneContainer.style.position = sceneContainer.style.position || 'relative';
     // insert celebrate element before the Next button so it occupies its own space between choices and next
@@ -202,13 +205,16 @@
       if (nextBtn && nextBtn.parentElement === sceneContainer) {
         // insert before nextBtn
         sceneContainer.insertBefore(
-          (function(){ const d=document.createElement('div'); d.id='countCelebrate'; d.className='celebrate'; d.innerText='🎉'; return d; })(),
+          (function(){ const d=document.createElement('div'); d.id='countCelebrate'; d.className='celebrate'; return d; })(),
           nextBtn
         );
       } else if (sceneContainer) {
-        sceneContainer.insertAdjacentHTML('beforeend', celebrateHtml);
+        sceneContainer.insertAdjacentHTML('beforeend', '<div id="countCelebrate" class="celebrate"></div>');
       }
     }
+    // paint celebration art instead of a bare emoticon
+    const celebEl = document.getElementById('countCelebrate');
+    if (celebEl && window.Art) window.Art.fill(celebEl, '🎉');
 
     // initial render
     renderLevel();

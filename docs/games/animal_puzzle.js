@@ -209,17 +209,13 @@
     const img = (typeof sceneImgs !== 'undefined') ? sceneImgs[scene.theme] : null;
     if (img && img.complete && img.naturalWidth) {
       ctx.clearRect(0,0,W,H);
-      ctx.drawImage(img, 0, 0, W, H);
-      ctx.font='64px "Apple Color Emoji","Segoe UI Emoji",sans-serif';
-      ctx.textAlign='center'; ctx.textBaseline='alphabetic';
-      scene.animals.forEach((a,i)=>{
-        const x=140+i*125;
-        ctx.fillStyle='rgba(0,0,0,.16)';
-        ctx.beginPath(); ctx.ellipse(x,gy+24,32,9,0,0,Math.PI*2); ctx.fill();
-        ctx.fillStyle='#000';
-        if (window.Art && window.Art.draw) window.Art.draw(ctx, a, x, gy+12, 64);
-        else ctx.fillText(a,x,gy+12);
-      });
+      /* Draw the scene image covering the piece while preserving aspect ratio,
+         so puzzle pieces are never stretched/distorted. */
+      const scale = Math.max(W / img.naturalWidth, H / img.naturalHeight);
+      const dw = img.naturalWidth * scale;
+      const dh = img.naturalHeight * scale;
+      ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight,
+        (W - dw) / 2, (H - dh) / 2, dw, dh);
       ctx.strokeStyle='#fff'; ctx.lineWidth=9;
       ctx.strokeRect(4.5,4.5,W-9,H-9);
       ctx.strokeStyle='rgba(74,63,107,.4)'; ctx.lineWidth=2;
@@ -320,18 +316,6 @@
     else if(scene.theme==='forest') paintForestDecor(ctx,gy);
     else if(scene.theme==='farm') paintFarmDecor(ctx,gy);
     else if(scene.theme==='winter') paintWinterDecor(ctx,gy);
-
-    ctx.textAlign='center';
-    ctx.textBaseline='alphabetic';
-    ctx.font='64px "Apple Color Emoji","Segoe UI Emoji",sans-serif';
-    scene.animals.forEach((a,i)=>{
-      const x=140+i*125;
-      ctx.fillStyle='rgba(0,0,0,.16)';
-      ctx.beginPath(); ctx.ellipse(x,gy+24,32,9,0,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle='#000';
-      if (window.Art && window.Art.draw) window.Art.draw(ctx, a, x, gy+12, 64);
-      else ctx.fillText(a,x,gy+12);
-    });
 
     ctx.strokeStyle='#fff'; ctx.lineWidth=9;
     ctx.strokeRect(4.5,4.5,W-9,H-9);

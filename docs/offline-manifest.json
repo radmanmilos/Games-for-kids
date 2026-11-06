@@ -1396,16 +1396,16 @@
     "size": 59051
   },
   "games/animal_counting.js": {
-    "sha256": "64dcc3488e29f75a7e7f30015e1c0b5979d3c31ed570b704bfcde05cd73badd1",
-    "size": 10230
+    "sha256": "67ad67f8edd689cb89ee5e2e99233318c375259a59fd7e93e1263602869267eb",
+    "size": 10578
   },
   "games/animal_memory.js": {
     "sha256": "4d29d78cb7c55f16cb1e20cafb0aa5d0e26ab1e3100ac03feccb4fa1a2c2b197",
     "size": 6920
   },
   "games/animal_puzzle.js": {
-    "sha256": "876a9ac9bb27bf3f3267674a96f7748b558c5f75d92a95b82b4bfec22c11fe7b",
-    "size": 33715
+    "sha256": "163e7275c4923069b53b1049a9feabfa0604c9c76947d118e7462386ebeb7dd7",
+    "size": 33157
   },
   "games/animals.js": {
     "sha256": "4d4953829d2d4cbf9068c4caa10927f178ece95616c62b79d1db0dbba4d3ff7a",
@@ -1420,8 +1420,8 @@
     "size": 61500
   },
   "games/classroom.js": {
-    "sha256": "3dbe4ee96a4c78cdec25a98a308e7084245d6367c640962408bc59464363b8f3",
-    "size": 15199
+    "sha256": "12d741c329ab9e7f85439dc1fd9136b740910f36e7ea6f363657deb7093f6713",
+    "size": 15286
   },
   "games/coloring.js": {
     "sha256": "f5b6ba59f7dc9f44828a22e3311e7f78335017676a353edd275d8795581cbaa5",
@@ -1496,8 +1496,8 @@
     "size": 10625
   },
   "games/space.js": {
-    "sha256": "23cfad91927be398e98f16fd2856a39dd303a3b714355375cb2e13ff1e773ddf",
-    "size": 44027
+    "sha256": "33e6880dab33ff7ccdc69b7d68921cbf08c226f334c1f15071a59903f1c7f8f0",
+    "size": 44026
   },
   "games/spatial.js": {
     "sha256": "c6ba6d89058feb1371b7351212395573c19d4ab24f84bcc1861231927bd941fd",
@@ -1508,8 +1508,8 @@
     "size": 17659
   },
   "index.html": {
-    "sha256": "776da92855a4d599a005364f16d3ed6a369bd1d081dc397eb542ea49887b5cea",
-    "size": 19352
+    "sha256": "97e966ecca4876958c50cc369f5e2dc107fc9220dac348ea91ea7e525fda15f2",
+    "size": 19388
   },
   "manifest.json": {
     "sha256": "52d933cb1fa7c4c91c80904b25e609e092e9be28c90f92ba5ef8234e0522c7e7",
@@ -1532,12 +1532,12 @@
     "size": 14607
   },
   "pages/cat_forest.html": {
-    "sha256": "41cc451aeb795cfe77a05b866f4a5ca4b208bef7d975ea2dc326fff346ac6396",
-    "size": 20405
+    "sha256": "f8794f9acb656a572d35253d01c9c77114e226ddedbcac94d697b3d62e1400d2",
+    "size": 20416
   },
   "pages/classroom.html": {
-    "sha256": "fd6458124c16f72591e991603707fd097520997b35bbcc4313c5bd80768b484a",
-    "size": 18655
+    "sha256": "7a9245cc1193d5c9a3ff7662399632a9cbb144269138954d2ee044cd913d2b16",
+    "size": 18772
   },
   "pages/coloring.html": {
     "sha256": "31857c0867d3ad21ca624436f4aaa593efc9fc418f785ffe7afaa866dfaca9d5",
@@ -1564,8 +1564,8 @@
     "size": 14166
   },
   "pages/matching_game.html": {
-    "sha256": "fdd22178a866042d75451182bd5ad611ad842e1c8f23a4649dbbedcd4468f7c0",
-    "size": 14513
+    "sha256": "7a73924813a6c965f45915665cc74ef9db993d377e3fb28d019b9385d3f4f49a",
+    "size": 14608
   },
   "pages/maze.html": {
     "sha256": "cce1a2901b48da8c0d5c871fa236bc8147ada986317f184be5fbcd19a01d95c2",
