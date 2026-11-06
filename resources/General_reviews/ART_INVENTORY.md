@@ -203,17 +203,26 @@ These appear in game code but are NOT in `game/data/art-registry.js`. `Art.fill(
 
 ---
 
-## 3. Emojis WITH art but drawn via CSS/text instead of Art.fill() (⚠️ upgrade opportunity)
+## 3. Emojis WITH art and correctly rendered via Art.fill() (✅ already correct)
 
-These have art in the registry, but the game renders them as CSS `::before` content or canvas `fillText` instead of calling `Art.fill()`/`Art.draw()`. The child sees the raw emoji, not the painted illustration.
+These emojis have painted WebP art in `game/data/art-registry.js` AND are rendered through `Art.fill()`/`Art.draw()` — no action needed:
 
-| Game | Emoji | Where used | Current rendering | Fix |
-|------|-------|------------|-------------------|-----|
-| Spatial | 🌳 | `sp-tree` part in `spatial.js` scene parts | CSS `.sp-tree::before` (green blob, not the painted tree art) | Use `Art.draw()` or `Art.fill()` for tree parts |
-| Spatial | 🍎 | Apple part in `spatial.js` scene parts | CSS/canvas text glyph | Use `Art.draw()` for apple |
-| Spatial | Other part emojis | Various scene parts (basket, nest, house, fence, etc.) | Canvas `fillText` emoji | Use `Art.draw()` where art exists |
+| Game | Emoji | Stem | Art file | Where used |
+|------|-------|------|----------|------------|
+| Spatial | ⚽ | ball | assets/art/ball.webp | Ball in updown/insideoutside/nearfar scenes |
+| Spatial | 🍎 | apple | assets/art/apple.webp | Apple in updown scene |
+| Spatial | 🦆 | duck | assets/art/duck.webp | Duck in insideoutside scene |
+| Spatial | 🐰 | rabbit | assets/art/rabbit.webp | Rabbit in insideoutside scene |
+| Spatial | 🐤 | chick | assets/art/chick.webp | Chick in insideoutside scene |
+| Spatial | 🐱 | cat | assets/art/cat.webp | Cat in leftright/frontbehind scenes |
+| Spatial | 🐶 | dog | assets/art/dog.webp | Dog in leftright scene |
+| Spatial | 🦴 | bone | assets/art/bone.webp | Bone in leftright scene |
+| Spatial | 🐭 | mouse | assets/art/mouse.webp | Mouse in leftright/frontbehind scenes |
+| Spatial | 🧀 | cheese | assets/art/cheese.webp | Cheese in leftright scene |
+| Spatial | 🧶 | object-yarn | assets/art/object-yarn.webp | Yarn in nearfar scene |
+| Spatial | 🦊 | fox | assets/art/fox.webp | Fox in frontbehind scene |
 
-> The spatial scene parts are drawn on a canvas (`spatial.js` `drawScene`). Each part has an `emoji` property that is drawn with `ctx.fillText`. Even when the emoji exists in `art-registry.js` (e.g. 🌳 → `tree`), the canvas draws the text glyph instead of the painted WebP. To upgrade: replace `ctx.fillText(a, ...)` with `window.Art.draw(ctx, a, x, y, size)`.
+All Spatial scene parts use `Art.fill(item, part.emoji)` (spatial.js:154), which swaps the emoji glyph for the painted WebP illustration when a registry entry exists.
 
 ---
 
