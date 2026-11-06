@@ -2,55 +2,57 @@
 
 *Overwritten 2026-11-06. App version: 3.0.7. Repository: https://github.com/radmanmilos/Games-for-kids.*
 
-**Main:** `db005f3` (playtest fixes + art inventory); CI green for all pushed commits.
+**Main baseline:** `b59211402af6af507e8516a99c25c141aea1804e` (short SHA `b592114`). This is the latest main commit verified for this status snapshot.
 
-## Current state
+## Current repository and CI state
 
-Tasks 388–398 processing status:
+- Default branch: `main`; the verified baseline had no open pull requests.
+- Latest main CI run: [#536](https://github.com/radmanmilos/Games-for-kids/actions/runs/42257567335) — overall **success**.
+- Setup, Fast gate, and GitHub Pages deployment succeeded.
+- Extended Chromium/WebKit matrix, smoke matrix, and Release QA were **skipped** in that run; they must not be described as passing.
+- Task 399 is a docs-only reconciliation in progress on branch `docs/task-399-status-art-inventory`. It does not change runtime code or assets.
 
-- **388 DONE, pushed** (`0314ced`) — Cat Forest cat lift scales with cat/plate/stage size; 12px gap, 0% overlap at all 5 viewports.
-- **389 DONE, pushed** (`4c839cc`) — Animal Counting tiles enlarged; 64px choice floor preserved.
-- **390 DONE, pushed** (`5209f4c`) — Spatial feedback no longer collides with answer buttons on phone landscape (gap -13px → +11px).
-- **391 ASSESSED (limited)** — Compare portrait measured (groups 138×129px on 390x844; sparse central cluster, not a blocker). No code change: requires child/device feedback before subjective composition change. 8 screenshots; compare_smoke 29/0.
-- **392 LIMITED** — Playtesting Sessions A–D need a real device. Automated foundation: offline_smoke 25/25, check_release green. Sessions A/B/D unperformed.
-- **393 DONE, pushed** (`778e772` archive) — GAME_MATRIX reconciled with registry; screenshot flags flipped for 8 pages; guide-doc lists rebuilt.
-- **394 DONE, pushed** (`778e772` archive) — Full per-game audit in project/reference/GAME_AUDIT.md (26 surfaces × 9 dimensions).
-- **395 DONE, pushed** (`778e772` archive) — sw_update_smoke 14/14, offline_smoke 25/25; cache policy preserved.
-- **396 LIMITED** — Manual a11y/input needs real device. Automated: axe_check 0 violations; touch_interruption a-d 156/0.
-- **397 DONE, pushed** (`778e772` archive) — All child-facing text Cyrillic; Serbian speech mapped to audio assets; no Latin content.
-- **398 LIMITED** — Modest-Android performance needs real device. Verifiable: no runtime errors, offline resilience, check_fast/release green.
+## Current project state
 
-## Playtest fixes (this session, pushed as `db005f3`)
+Completed and archived on the verified main baseline:
 
-Real-device playtest feedback was addressed across multiple games:
+- **383** — Reconciled the completed visual/UX master plan and published the verified continuation plan.
+- **384–390** — Added Games/Learning sub-hub screenshot coverage and addressed the verified Classroom, Phonics, Coloring, Cat Forest, Animal Counting, and Spatial findings. Screenshot updates are recorded in the task archive.
+- **393** — Reconciled GAME_MATRIX with the live registry, smoke/offline/screenshot flags, and game-guide mappings.
+- **394** — Completed the phased game-by-game lifecycle/state/input/audio/learning/performance audit.
+- **395** — Recorded service-worker update and offline-recovery verification.
+- **397** — Audited child-facing Serbian Cyrillic text, Serbian speech, and learning content.
 
-- **Cat Forest:** `.art-painted::before{content:none !important}` — stops doubled emoticons where painted art is shown.
-- **Animal Counting:** celebration uses `Art.fill()` instead of `🎉` emoticon; auto-advances to next level 2.5s after correct answer (Next button still works manually).
-- **Space:** rocket rotation `Math.PI/2` (was `-Math.PI/2`) — now points right.
-- **Classroom Time:** added sunrise/sunset scene images (`sunrise.png`, `sunset.png`) alongside night-sky.png.
-- **Classroom Numbers:** detail-view emoji rows now smaller (8vmin) and wrap (max-width:42vmin) so higher counts fit on screen.
-- **Games hub:** `.hub-btn{ line-height:1; overflow:hidden; }` — multi-emoji buttons no longer spill outside.
-- **Matching:** `.candy .art` fills the cell (width/height 100%, object-fit:cover).
-- **Puzzle:** scene images drawn with aspect-ratio-preserving cover (no distortion); emoticon overlays removed from puzzle pieces.
+Still open and correctly limited pending real-device or child/family evidence:
 
-Ran `build_offline.js` + `sync-docs.sh` + `check_fast.js` (10/10 green). All game smoke tests pass individually.
+- **391 — LIMITED:** Compare portrait composition was measured; a subjective layout change awaits child/device feedback.
+- **392 — LIMITED:** Portfolio playtesting Sessions A–D require a real device and child/family observer. Automated evidence is recorded in the task archive, but the real-device sessions remain unperformed.
+- **396 — LIMITED:** Manual accessibility and input-interruption checks on actual devices remain outstanding.
+- **398 — LIMITED:** Performance and resilience measurements on representative modest Android hardware remain outstanding.
 
-Art inventory: `resources/General_reviews/ART_INVENTORY.md` — lists every emoji/glyph used in games, cross-referenced against `art-registry.js`. 4 emojis need new art: 🙀, ❤️, 🌅, 🌇.
+Do not mark these four tasks complete without the missing real-world evidence.
 
-## Next task number: 399
+## Art inventory
 
-Remaining open tasks (391, 392, 396, 398) are all LIMITED/ASSESSED — each requires a real device or child/family playtest to complete, and must be reported as limited, never claimed complete.
+`resources/General_reviews/ART_INVENTORY.md` is being reconciled in Task 399 against the current runtime, registry, and asset tree:
+
+- Cat Forest's cuddle heart is registered as `object-heart` and the painted `game/assets/art/object-heart.webp` exists.
+- Classroom sunrise and sunset use existing full-bleed `sunrise.png` and `sunset.png` scene assets via `SCENE_IMAGES`; they are not missing standalone emoji illustrations.
+- The previous `🙀` entry is stale; it does not appear in the searched game source.
+- Spatial scene parts already use `Art.fill(item, part.emoji)`; no Spatial art-rendering upgrade is outstanding.
 
 ## Project invariants
 
-- `game/` is the deployable source of truth; `docs/` is its generated mirror (regenerated via `build_offline.js` + `sync-docs.sh`, verified by `check_fast.js`).
+- `game/` is the deployable source of truth; `docs/` is its generated mirror.
 - `resources/` contains review/development material; `tools/` contains validation tooling.
 - Preserve Serbian Cyrillic child-facing text, Serbian speech, offline-first operation, child privacy, and each game's distinct identity.
-- No ads, tracking, analytics, monetization, accounts or mandatory network dependency.
+- No ads, tracking, analytics, monetization, accounts, or mandatory network dependency.
 - Never claim manual child/family playtesting without evidence.
 
 ## Verification limits
 
-- Fast gate (`node tools/check_fast.js`) 10/10 green after each task; per-task validation logs in `tools/.cache/task<N>-validation.md`.
-- Full smoke battery (`node tools/run_all.js` per-game): all 37 tools pass individually. Release gate (`node tools/check_release.js`) green.
-- Tasks 392/396/398 require real devices — report as limited, never claim complete.
+This status snapshot was checked against GitHub repository, branch, file, commit, and Actions data. No local checkout was available to this assistant, so `git status --short`, local task archival, `node tools/check_docs.js`, and other local scripts were not run here. The current main CI result above is the verified CI evidence; skipped jobs remain unverified.
+
+## Task tracking
+
+Task 399 remains IN PROGRESS until its documentation changes are reviewed and the repository's normal task-end archival/check process can be run. The next task number remains 399 until the task is archived in `project/tasks/INDEX.md`.
