@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "14c9984ac864b05b9cf006ffc5f4955a5e4bc71d",
+  "commitSha": "1500a09ca8f2ac4fa7c4024ed4166aa72a7b0451",
   "browser": {
     "product": "Chrome/156.0.8078.80",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-06T23:32:08.283Z",
+  "generatedAt": "2026-11-06T23:38:27.022Z",
   "pageSet": [
     "explorer"
   ],
@@ -55,7 +55,7 @@
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 35967
+      "bytes": 35960
     },
     {
       "file": "explorer_tablet-portrait.png",
@@ -64,7 +64,7 @@
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 74292
+      "bytes": 74291
     },
     {
       "file": "explorer_tablet-landscape.png",

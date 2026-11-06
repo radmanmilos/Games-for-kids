@@ -682,6 +682,7 @@ const WORLDS = [
     walker: 'snowman',
     bgSky: '#a0c0f8', groundColor: '#f8f8f8', hillColor: '#c0d8f8', pipeColor: '#3888c8',
     stairColor: '#d8e0f0',
+    scene: 'winter-explorer',
     isNight: false, decor: 'snow', noClouds: false,
     stairs: [{x:2650,peak:3,w:56,h:40},{x:5300,peak:4,w:56,h:40}],
     grounds: [{x:0,w:1000},{x:1300,w:950},{x:2600,w:950},{x:3900,w:1000},{x:5200,w:1500}],

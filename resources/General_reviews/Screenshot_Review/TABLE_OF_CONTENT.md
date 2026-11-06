@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-06T23:32:08.283Z
+- Генерисано / Generated: 2026-11-06T23:38:27.022Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -80,10 +80,10 @@
 | `driving_phone-portrait.png` | Возила | `/pages/driving.html` | 390×844 | портрет | — | 05.11.2026. 21:02:59 | 380 |
 | `driving_tablet-landscape.png` | Возила | `/pages/driving.html` | 1180×820 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |
 | `driving_tablet-portrait.png` | Возила | `/pages/driving.html` | 820×1180 | портрет | — | 05.11.2026. 21:02:59 | 380 |
-| `explorer_phone-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 844×390 | пејзаж | — | 07.11.2026. 00:32:08 | 419 |
-| `explorer_phone-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 390×844 | портрет | — | 07.11.2026. 00:32:08 | 419 |
-| `explorer_tablet-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 1180×820 | пејзаж | — | 07.11.2026. 00:32:08 | 419 |
-| `explorer_tablet-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 820×1180 | портрет | — | 07.11.2026. 00:32:08 | 419 |
+| `explorer_phone-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 844×390 | пејзаж | — | 07.11.2026. 00:38:27 | 420 |
+| `explorer_phone-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 390×844 | портрет | — | 07.11.2026. 00:38:27 | 420 |
+| `explorer_tablet-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 1180×820 | пејзаж | — | 07.11.2026. 00:38:27 | 420 |
+| `explorer_tablet-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 820×1180 | портрет | — | 07.11.2026. 00:38:27 | 420 |
 | `fastcat_phone-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 844×390 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
 | `fastcat_phone-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 390×844 | портрет | — | 05.11.2026. 18:53:41 | 379 |
 | `fastcat_tablet-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 1180×820 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
