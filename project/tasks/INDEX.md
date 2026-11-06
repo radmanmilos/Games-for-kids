@@ -379,3 +379,10 @@ One line per task: `number | status | date | title | archive file`. Every finish
 381 | DONE | 2026-11-05 | Correct short-landscape audit title detection and adjudicate remaining WARNs | tasks-300-399.md
 382 | DONE | 2026-11-05 | Comprehensive visual/UX review of hubs and games across available default/PLAY screenshots | tasks-300-399.md
 383 | DONE | 2026-11-06 | Reconcile the completed visual/UX master plan with current main; publish a verified continuation plan and… | tasks-300-399.md
+384 | DONE | 2026-11-06 | Add deterministic screenshot coverage for the internal Games and Learning sub-hubs at all four viewports;… | tasks-300-399.md
+385 | DONE | 2026-11-06 | Fix Classroom category-tab overflow on phone widths; keep all six tabs reachable without page-level… | tasks-300-399.md
+386 | DONE | 2026-11-06 | Give Phonics retry feedback an explicit gentle non-success state; preserve green for correct answers and… | tasks-300-399.md
+387 | DONE | 2026-11-06 | Verify Coloring clear-button and palette geometry in phone landscape; change layout only if a real collision… | tasks-300-399.md
+388 | DONE | 2026-11-06 | Fix Cat Forest feeding-station crowding on short stages: the cat lift was a fixed stage fraction (CAT_LIFT =… | tasks-300-399.md
+389 | DONE | 2026-11-06 | Improve Animal Counting stage balance and artwork scale without reducing the existing 64px answer-target… | tasks-300-399.md
+390 | DONE | 2026-11-06 | Separate Spatial feedback from answer controls at short landscape (implemented only after confirming the… | tasks-300-399.md
