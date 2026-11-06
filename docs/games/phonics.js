@@ -95,6 +95,13 @@
       b.classList.remove('phonics-wrong', 'phonics-hint', 'phonics-correct', 'phonics-glow-all');
     });
     if (elFeedback) elFeedback.textContent = '';
+    setFeedbackState(null);
+  }
+
+  function setFeedbackState(kind) {
+    if (!elFeedback) return;
+    elFeedback.classList.toggle('phonics-feedback-good', kind === 'good');
+    elFeedback.classList.toggle('phonics-feedback-retry', kind === 'retry');
   }
 
   function findCorrectBtn() {
@@ -161,6 +168,7 @@
       if (window.successChime) window.successChime();
       if (window.speakSr) window.speakSr('praise');
       if (elFeedback) elFeedback.textContent = 'Браво!';
+      setFeedbackState('good');
       correctStreak++;
       if (correctStreak >= 3) {
         correctStreak = 0;
@@ -170,6 +178,7 @@
     } else {
       if (window.gentleMiss) window.gentleMiss();
       if (elFeedback) elFeedback.textContent = 'Покушај поново';
+      setFeedbackState('retry');
       btn.classList.add('phonics-wrong');
       setTimeout(function () { btn.classList.remove('phonics-wrong'); }, 500);
       misses++;

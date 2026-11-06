@@ -222,6 +222,27 @@ const STUB = `window.speech={speak:function(){},cancel:function(){}};window.audi
   check('V18: a correct tap gives immediate success feedback (choice ring + letter settles green + Браво!)',
     suc.ok && suc.ring && suc.good && stanza.hasGoodRule && String(suc.fb).includes('Браво'), JSON.stringify(suc));
 
+  // Task 386: a miss must not reuse the success green. The retry text carries its
+  // own calm plum state, green stays reserved for a correct answer, and both
+  // classes clear when the next round starts.
+  const fb = JSON.parse(await h.evalv(`JSON.stringify((() => {
+    const el = document.getElementById('phonics-feedback');
+    const green = getComputedStyle(el).color;
+    window.__phonics.goToRound(7);
+    const afterReset = { text: el.textContent, good: el.classList.contains('phonics-feedback-good'), retry: el.classList.contains('phonics-feedback-retry') };
+    document.querySelector('.phonics-choice[data-correct="0"]').click();
+    const miss = { retry: el.classList.contains('phonics-feedback-retry'), good: el.classList.contains('phonics-feedback-good'), text: el.textContent, color: getComputedStyle(el).color };
+    document.querySelector('.phonics-choice[data-correct="1"]').click();
+    const hit = { good: el.classList.contains('phonics-feedback-good'), retry: el.classList.contains('phonics-feedback-retry'), color: getComputedStyle(el).color };
+    return { green, afterReset, miss, hit };
+  })())`));
+  check('V18: a miss shows the calm retry state, not success green, and resets between rounds',
+    fb.afterReset.text === '' && !fb.afterReset.good && !fb.afterReset.retry &&
+    fb.miss.retry === true && fb.miss.good === false && String(fb.miss.text).includes('Покушај') &&
+    fb.miss.color !== fb.green && fb.miss.color === 'rgb(74, 63, 107)', JSON.stringify(fb));
+  check('V18: a correct answer after a miss switches the feedback back to green',
+    fb.hit.good === true && fb.hit.retry === false && fb.hit.color === fb.green, JSON.stringify(fb.hit));
+
   await h.close();
 
   // V18: the whole composition — letter, its speaker cue, the choices and the

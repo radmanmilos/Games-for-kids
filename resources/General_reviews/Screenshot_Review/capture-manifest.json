@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "d3db1e12b5d1814c70bfb9728397bfdfc316a049",
+  "commitSha": "ec4e09c71d4d85af138254217205b52b4ec64fbb",
   "browser": {
     "product": "Chrome/156.0.8078.80",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-06T11:57:44.104Z",
+  "generatedAt": "2026-11-06T12:01:48.408Z",
   "pageSet": [
-    "classroom"
+    "phonics"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,48 +40,48 @@
   },
   "screenshots": [
     {
-      "file": "classroom__phone-portrait__PLAY.png",
-      "page": "classroom",
+      "file": "phonics__phone-portrait__PLAY.png",
+      "page": "phonics",
       "size": "phone-portrait",
       "state": [
         "PLAY"
       ],
       "width": 390,
       "height": 844,
-      "bytes": 39625
+      "bytes": 38057
     },
     {
-      "file": "classroom__phone-landscape__PLAY.png",
-      "page": "classroom",
+      "file": "phonics__phone-landscape__PLAY.png",
+      "page": "phonics",
       "size": "phone-landscape",
       "state": [
         "PLAY"
       ],
       "width": 844,
       "height": 390,
-      "bytes": 37146
+      "bytes": 51711
     },
     {
-      "file": "classroom__tablet-portrait__PLAY.png",
-      "page": "classroom",
+      "file": "phonics__tablet-portrait__PLAY.png",
+      "page": "phonics",
       "size": "tablet-portrait",
       "state": [
         "PLAY"
       ],
       "width": 820,
       "height": 1180,
-      "bytes": 74442
+      "bytes": 84962
     },
     {
-      "file": "classroom__tablet-landscape__PLAY.png",
-      "page": "classroom",
+      "file": "phonics__tablet-landscape__PLAY.png",
+      "page": "phonics",
       "size": "tablet-landscape",
       "state": [
         "PLAY"
       ],
       "width": 1180,
       "height": 820,
-      "bytes": 69271
+      "bytes": 84465
     }
   ]
 }

@@ -42,7 +42,11 @@
   .phonics-choice.phonics-wrong{animation:phon-shake .4s ease;border:3px solid var(--pink);}
   .phonics-choice.phonics-hint{animation:phon-pulse .8s ease-in-out 2;border:3px solid var(--green);}
   .phonics-emoji{font-size:12vmin;line-height:1;pointer-events:none;}
-  #phonics-feedback{min-height:6vmin;font-size:4vmin;font-weight:700;color:var(--green);text-align:center;}
+  #phonics-feedback{min-height:6vmin;font-size:4vmin;font-weight:700;color:var(--plum-soft);text-align:center;}
+  /* Task 386: success is green; a retry is its own calm plum state, never the
+     success colour, so a miss cannot read as praise. */
+  #phonics-feedback.phonics-feedback-good{color:var(--green);}
+  #phonics-feedback.phonics-feedback-retry{color:var(--plum);}
   @keyframes phon-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-1.6vmin)}75%{transform:translateX(1.6vmin)}}
   @keyframes phon-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
   @media (prefers-reduced-motion: reduce){.phonics-wrong,.phonics-hint,.phonics-glow-all,#phonics-speaker.phonics-speaker-live{animation:none}.phonics-letter-live,.phonics-good{transition:none}}

@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-06T11:57:44.104Z
+- Генерисано / Generated: 2026-11-06T12:01:48.408Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -108,14 +108,14 @@
 | `parent_phone-portrait.png` | За родитеље | `/pages/parent.html` | 390×844 | портрет | — | 05.11.2026. 21:02:59 | 380 |
 | `parent_tablet-landscape.png` | За родитеље | `/pages/parent.html` | 1180×820 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |
 | `parent_tablet-portrait.png` | За родитеље | `/pages/parent.html` | 820×1180 | портрет | — | 05.11.2026. 21:02:59 | 380 |
-| `phonics__phone-landscape__PLAY.png` | Слова и звуци | `/pages/phonics.html` | 844×390 | пејзаж | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `phonics__phone-portrait__PLAY.png` | Слова и звуци | `/pages/phonics.html` | 390×844 | портрет | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `phonics__tablet-landscape__PLAY.png` | Слова и звуци | `/pages/phonics.html` | 1180×820 | пејзаж | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `phonics__tablet-portrait__PLAY.png` | Слова и звуци | `/pages/phonics.html` | 820×1180 | портрет | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `phonics_phone-landscape.png` | Слова и звуци | `/pages/phonics.html` | 844×390 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
-| `phonics_phone-portrait.png` | Слова и звуци | `/pages/phonics.html` | 390×844 | портрет | — | 05.11.2026. 18:53:41 | 379 |
-| `phonics_tablet-landscape.png` | Слова и звуци | `/pages/phonics.html` | 1180×820 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
-| `phonics_tablet-portrait.png` | Слова и звуци | `/pages/phonics.html` | 820×1180 | портрет | — | 05.11.2026. 18:53:41 | 379 |
+| `phonics__phone-landscape__PLAY.png` | Слова и звуци | `/pages/phonics.html` | 844×390 | пејзаж | PLAY | 06.11.2026. 13:01:48 | 386 |
+| `phonics__phone-portrait__PLAY.png` | Слова и звуци | `/pages/phonics.html` | 390×844 | портрет | PLAY | 06.11.2026. 13:01:48 | 386 |
+| `phonics__tablet-landscape__PLAY.png` | Слова и звуци | `/pages/phonics.html` | 1180×820 | пејзаж | PLAY | 06.11.2026. 13:01:48 | 386 |
+| `phonics__tablet-portrait__PLAY.png` | Слова и звуци | `/pages/phonics.html` | 820×1180 | портрет | PLAY | 06.11.2026. 13:01:48 | 386 |
+| `phonics_phone-landscape.png` | Слова и звуци | `/pages/phonics.html` | 844×390 | пејзаж | — | 06.11.2026. 13:01:43 | 386 |
+| `phonics_phone-portrait.png` | Слова и звуци | `/pages/phonics.html` | 390×844 | портрет | — | 06.11.2026. 13:01:43 | 386 |
+| `phonics_tablet-landscape.png` | Слова и звуци | `/pages/phonics.html` | 1180×820 | пејзаж | — | 06.11.2026. 13:01:43 | 386 |
+| `phonics_tablet-portrait.png` | Слова и звуци | `/pages/phonics.html` | 820×1180 | портрет | — | 06.11.2026. 13:01:43 | 386 |
 | `piano__phone-landscape__PLAY.png` | Клавир | `/pages/piano.html` | 844×390 | пејзаж | PLAY | 05.11.2026. 19:48:22 | 379 |
 | `piano__phone-portrait__PLAY.png` | Клавир | `/pages/piano.html` | 390×844 | портрет | PLAY | 05.11.2026. 19:48:22 | 379 |
 | `piano__tablet-landscape__PLAY.png` | Клавир | `/pages/piano.html` | 1180×820 | пејзаж | PLAY | 05.11.2026. 19:48:22 | 379 |

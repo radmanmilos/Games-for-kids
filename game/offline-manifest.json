@@ -1460,8 +1460,8 @@
     "size": 41378
   },
   "games/phonics.js": {
-    "sha256": "85925ee752e42e0eec6832895a76ab05476daa88d07b925af73d7348601e9c75",
-    "size": 8754
+    "sha256": "7b2f16bf0b370d1b32b663cc225e574815d16c4d87b228ba8c5cbf13e8fecb65",
+    "size": 9069
   },
   "games/piano.js": {
     "sha256": "9f9a161da0038c9ceef26382288ff637ac14e1df5d2eba08add620d806f450ba",
@@ -1512,7 +1512,7 @@
     "size": 19352
   },
   "manifest.json": {
-    "sha256": "e922b9d452ab8c20b068416d8de8efd4ba40c22f41019eed667f56ff0acef13e",
+    "sha256": "878292aae8aab0e1b6d1321f221c4f5db9b9cd22cabbbcb5e6aff5d30924f5cf",
     "size": 576
   },
   "pages/animal_counting.html": {
@@ -1580,8 +1580,8 @@
     "size": 30749
   },
   "pages/phonics.html": {
-    "sha256": "dbfcb1a0a2af92670523aacaf43f17525dd0e20f7581cf6c4b741742ee69ff88",
-    "size": 7479
+    "sha256": "3fcafba05dde07cb57a0b3055f46ddab4b5c2cc6c4425a95e83a6dc98760f0a3",
+    "size": 7745
   },
   "pages/piano.html": {
     "sha256": "86e3147dcbeaaf058f2c09abbc170dff290daec9bc24ff51c2add3365d1d88c3",
