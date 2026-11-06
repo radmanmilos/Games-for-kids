@@ -134,6 +134,40 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
   const back2 = await h.evalv(`document.querySelector('.screen.active').id`);
   check('learning back button returns to landing', back2 === 'hub', back2);
 
+  // Task 384: both sub-hubs must stay usable on a phone — no horizontal
+  // overflow, child-sized targets, and every visible tile reachable after a
+  // scroll (the learning grid is taller than a 390x844 fold by one row).
+  await h.c.send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
+  for (const id of ['hub-games', 'hub-learning']) {
+    await h.evalv(`window.goTo(${JSON.stringify(id)}); true`);
+    await sleep(150);
+    const geom = JSON.parse(await h.evalv(`JSON.stringify((function(){
+      const screen = document.getElementById('${id}');
+      const cs = getComputedStyle(screen);
+      const overflows = screen.scrollHeight > screen.clientHeight + 1;
+      const userScrollable = cs.overflowY === 'auto' || cs.overflowY === 'scroll';
+      screen.scrollTop = screen.scrollHeight;
+      const tiles = [...screen.querySelectorAll('.hub-grid .hub-btn')].filter(t => t.getBoundingClientRect().width > 0);
+      const boxes = tiles.map(t => t.getBoundingClientRect());
+      return {
+        n: tiles.length,
+        minSide: Math.round(Math.min(...boxes.map(b => Math.min(b.width, b.height)))),
+        unreachable: boxes.filter(b => b.top < 0 || b.bottom > window.innerHeight + 1).length,
+        outsideX: boxes.filter(b => b.left < 0 || b.right > window.innerWidth).length,
+        docScrollW: document.documentElement.scrollWidth,
+        iw: window.innerWidth,
+        overflows, userScrollable,
+        scrollReachable: !overflows || userScrollable
+      };
+    })())`));
+    check(id + ': phone grid reachable (no horizontal overflow, ≥44px targets, all tiles on screen after scroll)',
+      geom.n > 0 && geom.outsideX === 0 && geom.docScrollW <= geom.iw && geom.minSide >= 44 &&
+      geom.unreachable === 0 && geom.scrollReachable, JSON.stringify(geom));
+  }
+  await h.c.send('Emulation.setDeviceMetricsOverride', { width: 1100, height: 700, deviceScaleFactor: 1, mobile: false });
+  await h.evalv(`window.goTo('hub'); true`);
+  await sleep(150);
+
   const html = fs.readFileSync(path.join(__dirname, '..', 'game', 'index.html'), 'utf8');
   check(`all ${ALL_LIVE_ROUTES.length} child routes still wired (data-go present)`, ALL_LIVE_ROUTES.every(id => html.includes(`data-go="${id}"`)), ALL_LIVE_ROUTES.join(','));
   // The retired routes are named in ONE place (tools/registry.js). Each must still be

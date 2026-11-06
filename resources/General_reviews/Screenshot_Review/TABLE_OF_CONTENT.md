@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-06T12:01:48.408Z
+- Генерисано / Generated: 2026-11-06T12:03:32.710Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -88,6 +88,14 @@
 | `fastcat_phone-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 390×844 | портрет | — | 05.11.2026. 18:53:41 | 379 |
 | `fastcat_tablet-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 1180×820 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
 | `fastcat_tablet-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 820×1180 | портрет | — | 05.11.2026. 18:53:41 | 379 |
+| `hub-games_phone-landscape.png` | Игре — под-хаб | `/index.html` | 844×390 | пејзаж | — | 06.11.2026. 13:03:32 | 384 |
+| `hub-games_phone-portrait.png` | Игре — под-хаб | `/index.html` | 390×844 | портрет | — | 06.11.2026. 13:03:32 | 384 |
+| `hub-games_tablet-landscape.png` | Игре — под-хаб | `/index.html` | 1180×820 | пејзаж | — | 06.11.2026. 13:03:32 | 384 |
+| `hub-games_tablet-portrait.png` | Игре — под-хаб | `/index.html` | 820×1180 | портрет | — | 06.11.2026. 13:03:32 | 384 |
+| `hub-learning_phone-landscape.png` | Учење — под-хаб | `/index.html` | 844×390 | пејзаж | — | 06.11.2026. 13:03:32 | 384 |
+| `hub-learning_phone-portrait.png` | Учење — под-хаб | `/index.html` | 390×844 | портрет | — | 06.11.2026. 13:03:32 | 384 |
+| `hub-learning_tablet-landscape.png` | Учење — под-хаб | `/index.html` | 1180×820 | пејзаж | — | 06.11.2026. 13:03:32 | 384 |
+| `hub-learning_tablet-portrait.png` | Учење — под-хаб | `/index.html` | 820×1180 | портрет | — | 06.11.2026. 13:03:32 | 384 |
 | `hub_phone-landscape.png` | Петрин свет — почетна | `/index.html` | 844×390 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |
 | `hub_phone-portrait.png` | Петрин свет — почетна | `/index.html` | 390×844 | портрет | — | 05.11.2026. 21:02:59 | 380 |
 | `hub_tablet-landscape.png` | Петрин свет — почетна | `/index.html` | 1180×820 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |

@@ -654,5 +654,37 @@
   "animal_memory__tablet-landscape__PLAY.png": {
     "updatedAt": "2026-11-05T18:52:24.112Z",
     "task": "379"
+  },
+  "hub-games_phone-portrait.png": {
+    "updatedAt": "2026-11-06T12:03:32.710Z",
+    "task": "384"
+  },
+  "hub-games_phone-landscape.png": {
+    "updatedAt": "2026-11-06T12:03:32.710Z",
+    "task": "384"
+  },
+  "hub-games_tablet-portrait.png": {
+    "updatedAt": "2026-11-06T12:03:32.710Z",
+    "task": "384"
+  },
+  "hub-games_tablet-landscape.png": {
+    "updatedAt": "2026-11-06T12:03:32.710Z",
+    "task": "384"
+  },
+  "hub-learning_phone-portrait.png": {
+    "updatedAt": "2026-11-06T12:03:32.710Z",
+    "task": "384"
+  },
+  "hub-learning_phone-landscape.png": {
+    "updatedAt": "2026-11-06T12:03:32.710Z",
+    "task": "384"
+  },
+  "hub-learning_tablet-portrait.png": {
+    "updatedAt": "2026-11-06T12:03:32.710Z",
+    "task": "384"
+  },
+  "hub-learning_tablet-landscape.png": {
+    "updatedAt": "2026-11-06T12:03:32.710Z",
+    "task": "384"
   }
 }

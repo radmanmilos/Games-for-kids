@@ -2,15 +2,16 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "ec4e09c71d4d85af138254217205b52b4ec64fbb",
+  "commitSha": "d81da6f55324d340871f50d7ce7aefd0ba1e7e7a",
   "browser": {
     "product": "Chrome/156.0.8078.80",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-06T12:01:48.408Z",
+  "generatedAt": "2026-11-06T12:03:32.710Z",
   "pageSet": [
-    "phonics"
+    "hub-games",
+    "hub-learning"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,48 +41,76 @@
   },
   "screenshots": [
     {
-      "file": "phonics__phone-portrait__PLAY.png",
-      "page": "phonics",
+      "file": "hub-games_phone-portrait.png",
+      "page": "hub-games",
       "size": "phone-portrait",
-      "state": [
-        "PLAY"
-      ],
+      "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 38057
+      "bytes": 114653
     },
     {
-      "file": "phonics__phone-landscape__PLAY.png",
-      "page": "phonics",
+      "file": "hub-games_phone-landscape.png",
+      "page": "hub-games",
       "size": "phone-landscape",
-      "state": [
-        "PLAY"
-      ],
+      "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 51711
+      "bytes": 105897
     },
     {
-      "file": "phonics__tablet-portrait__PLAY.png",
-      "page": "phonics",
+      "file": "hub-games_tablet-portrait.png",
+      "page": "hub-games",
       "size": "tablet-portrait",
-      "state": [
-        "PLAY"
-      ],
+      "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 84962
+      "bytes": 322164
     },
     {
-      "file": "phonics__tablet-landscape__PLAY.png",
-      "page": "phonics",
+      "file": "hub-games_tablet-landscape.png",
+      "page": "hub-games",
       "size": "tablet-landscape",
-      "state": [
-        "PLAY"
-      ],
+      "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 84465
+      "bytes": 325419
+    },
+    {
+      "file": "hub-learning_phone-portrait.png",
+      "page": "hub-learning",
+      "size": "phone-portrait",
+      "state": null,
+      "width": 390,
+      "height": 844,
+      "bytes": 116039
+    },
+    {
+      "file": "hub-learning_phone-landscape.png",
+      "page": "hub-learning",
+      "size": "phone-landscape",
+      "state": null,
+      "width": 844,
+      "height": 390,
+      "bytes": 94528
+    },
+    {
+      "file": "hub-learning_tablet-portrait.png",
+      "page": "hub-learning",
+      "size": "tablet-portrait",
+      "state": null,
+      "width": 820,
+      "height": 1180,
+      "bytes": 339997
+    },
+    {
+      "file": "hub-learning_tablet-landscape.png",
+      "page": "hub-learning",
+      "size": "tablet-landscape",
+      "state": null,
+      "width": 1180,
+      "height": 820,
+      "bytes": 282086
     }
   ]
 }

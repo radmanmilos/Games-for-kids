@@ -55,6 +55,13 @@ const REVIEW_ROOT = path.join(ROOT, 'resources', 'General_reviews');
 const ALL_PAGES = { hub: '/index.html' };
 for (const app of registryAll()) ALL_PAGES[app.id] = app.url;
 
+/* Task 384: the two internal hub sub-views are screens inside /index.html, not
+   separate pages, so they are captured by opening them through the same
+   `data-go` button a child taps. */
+const HUB_SUBVIEWS = { 'hub-games': 'hub-games', 'hub-learning': 'hub-learning' };
+for (const id of Object.keys(HUB_SUBVIEWS)) ALL_PAGES[id] = '/index.html';
+const HUB_TITLES = { 'hub-games': 'Игре — под-хаб', 'hub-learning': 'Учење — под-хаб' };
+
 /* The screenshot-enabled subset — the historical visual-regression input set. */
 const PAGES = { hub: '/index.html' };
 for (const app of registryAll()) {
@@ -147,7 +154,9 @@ function writeReviewToc({ review, generatedAt }) {
   const byId = new Map(registryAll().map(a => [a.id, a]));
   const known = page => (page === 'hub'
     ? { title: 'Петрин свет — почетна', url: '/index.html' }
-    : byId.get(page) || { title: page, url: '/' + page });
+    : HUB_TITLES[page]
+      ? { title: HUB_TITLES[page], url: '/index.html' }
+      : byId.get(page) || { title: page, url: '/' + page });
   const rows = fs.readdirSync(dir)
     .filter(f => f.endsWith('.png'))
     .sort()
@@ -276,6 +285,20 @@ function writeReviewToc({ review, generatedAt }) {
         await h.sleep(250);
         const frames = await h.evalv('window.__visualAdvance(60)');
         if (frames !== 60) throw new Error(`${page} advanced ${frames} visual frames, expected 60`);
+
+        /* Task 384: open an internal hub sub-view through the child-facing tile
+           before capturing, so the shot shows real navigation, not a forced state. */
+        if (HUB_SUBVIEWS[page]) {
+          const applied = await h.evalv(`(() => {
+            const tile = document.querySelector('[data-go="${HUB_SUBVIEWS[page]}"]');
+            if (!tile) return false;
+            tile.click();
+            return true;
+          })()`);
+          if (applied !== true) throw new Error(`Could not open ${page} from the landing hub`);
+          await h.evalv('window.__visualAdvance(10)');
+          await h.sleep(150);
+        }
 
         /* V0.1: optional gameplay-state capture. `--state=<id>` drives the page into a
    named, deterministic state before the shot, and the filename becomes
