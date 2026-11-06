@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-06T12:12:35.645Z
+- Генерисано / Generated: 2026-11-06T12:35:10.662Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -40,14 +40,14 @@
 | `animals_phone-portrait.png` | Животиње | `/pages/animals.html` | 390×844 | портрет | — | 05.11.2026. 18:53:41 | 379 |
 | `animals_tablet-landscape.png` | Животиње | `/pages/animals.html` | 1180×820 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
 | `animals_tablet-portrait.png` | Животиње | `/pages/animals.html` | 820×1180 | портрет | — | 05.11.2026. 18:53:41 | 379 |
-| `cat_forest__phone-landscape__PLAY.png` | Мачја шума | `/pages/cat_forest.html` | 844×390 | пејзаж | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `cat_forest__phone-portrait__PLAY.png` | Мачја шума | `/pages/cat_forest.html` | 390×844 | портрет | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `cat_forest__tablet-landscape__PLAY.png` | Мачја шума | `/pages/cat_forest.html` | 1180×820 | пејзаж | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `cat_forest__tablet-portrait__PLAY.png` | Мачја шума | `/pages/cat_forest.html` | 820×1180 | портрет | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `cat_forest_phone-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 844×390 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
-| `cat_forest_phone-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 390×844 | портрет | — | 05.11.2026. 18:53:41 | 379 |
-| `cat_forest_tablet-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 1180×820 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
-| `cat_forest_tablet-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 820×1180 | портрет | — | 05.11.2026. 18:53:41 | 379 |
+| `cat_forest__phone-landscape__PLAY.png` | Мачја шума | `/pages/cat_forest.html` | 844×390 | пејзаж | PLAY | 06.11.2026. 13:35:10 | 388 |
+| `cat_forest__phone-portrait__PLAY.png` | Мачја шума | `/pages/cat_forest.html` | 390×844 | портрет | PLAY | 06.11.2026. 13:35:10 | 388 |
+| `cat_forest__tablet-landscape__PLAY.png` | Мачја шума | `/pages/cat_forest.html` | 1180×820 | пејзаж | PLAY | 06.11.2026. 13:35:10 | 388 |
+| `cat_forest__tablet-portrait__PLAY.png` | Мачја шума | `/pages/cat_forest.html` | 820×1180 | портрет | PLAY | 06.11.2026. 13:35:10 | 388 |
+| `cat_forest_phone-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 844×390 | пејзаж | — | 06.11.2026. 13:35:09 | 388 |
+| `cat_forest_phone-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 390×844 | портрет | — | 06.11.2026. 13:35:09 | 388 |
+| `cat_forest_tablet-landscape.png` | Мачја шума | `/pages/cat_forest.html` | 1180×820 | пејзаж | — | 06.11.2026. 13:35:09 | 388 |
+| `cat_forest_tablet-portrait.png` | Мачја шума | `/pages/cat_forest.html` | 820×1180 | портрет | — | 06.11.2026. 13:35:09 | 388 |
 | `classroom__phone-landscape__PLAY.png` | Учионица | `/pages/classroom.html` | 844×390 | пејзаж | PLAY | 06.11.2026. 12:57:44 | 385 |
 | `classroom__phone-portrait__PLAY.png` | Учионица | `/pages/classroom.html` | 390×844 | портрет | PLAY | 06.11.2026. 12:57:44 | 385 |
 | `classroom__tablet-landscape__PLAY.png` | Учионица | `/pages/classroom.html` | 1180×820 | пејзаж | PLAY | 06.11.2026. 12:57:44 | 385 |

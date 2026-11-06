@@ -44,6 +44,9 @@ so a fixed long step overshoots to an empty stage).
 ## Wiring and persistence
 
 Plate states are `empty` → `treat` (placed) → `occupied` (cat seated); never `filled`.
+The seated cat is lifted above its plate so the treat stays visible; the lift scales with the
+measured cat/plate/stage sizes (task 388) so a short phone-landscape stage no longer crowds
+the first feeding station. A 12 px gap is kept between the cat's feet and the plate's top edge.
 Speech goes through `window.audioBuses.speakWithDuck`/`window.speech` and is best-effort (R3) — the
 game is fully playable silently. Save is one key `catForestSave` = `{v:1, met:[ids], decor:[{e,s}]}`;
 cats on stage, plates, selection, clock and weather are transient by design. `parent.html`'s existing

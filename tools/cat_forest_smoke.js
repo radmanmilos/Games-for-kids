@@ -179,6 +179,45 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     check(`${vp.name}: every aria-label is Cyrillic (no Latin letters)`, m.latin.length === 0, m.latin.join(' | '));
     check(`${vp.name}: decorative layers are aria-hidden and unclickable`, m.decor.every(d => d.ok),
       JSON.stringify(m.decor));
+
+    /* Task 388: the seated cat must not cover its plate or its plate-treat on
+       any viewport. Drive the seeded PLAY state to a sitting cat on plate 0
+       and measure the boxes (the lift scales with cat/plate/stage size). */
+    // Wait for the engine to boot in this fresh session (the static tray has 5
+    // treats immediately, so that is not a boot signal).
+    let booted = false;
+    for (let i = 0; i < 20 && !booted; i++) {
+      booted = await hv.evalv('!!window.__catForest');
+      if (!booted) await sleep(100);
+    }
+    const seated = await hv.evalv(`(() => {
+      const hk = window.__catForest;
+      hk.reset();
+      hk.pause(true);
+      hk.seed(7);
+      hk.place('fish', 0);
+      let g = 0;
+      while (g++ < 400 && !hk.state().cats.some(c => c.phase === 'sitting')) hk.step(50);
+      const catEl = document.querySelector('.cf-cat');
+      const plateEl = document.querySelector('.cf-plate');
+      const treatEl = document.querySelector('.cf-plate-treat');
+      if (!catEl || !plateEl || !treatEl) return { ok: false, why: 'missing node' };
+      const box = el => { const b = el.getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom, w: b.width, h: b.height }; };
+      const cat = box(catEl);
+      const plate = box(plateEl);
+      const treat = box(treatEl);
+      const ov = (a,b) => Math.max(0, Math.min(a.r,b.r)-Math.max(a.l,b.l)) * Math.max(0, Math.min(a.b,b.b)-Math.max(a.t,b.t));
+      return {
+        catCoversPlatePct: Math.round(ov(cat, plate) / (plate.w * plate.h) * 100),
+        catCoversTreatPct: Math.round(ov(cat, treat) / (treat.w * treat.h) * 100),
+        catVsTreat: Math.round(ov(cat, treat)),
+        gapPlateTopPx: Math.round(plate.t - cat.b)
+      };
+    })()`);
+    check(`${vp.name}: the seated cat does not cover its plate or the treat (task 388)`,
+      seated.ok !== false && seated.catCoversPlatePct === 0 && seated.catCoversTreatPct === 0 && seated.gapPlateTopPx > 0,
+      JSON.stringify(seated));
+
     await hv.close();
   }
 

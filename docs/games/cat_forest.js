@@ -226,7 +226,15 @@
      EDGE_FRAC/CAT_LIFT are stage fractions kept out of CF, whose key set the
      smoke pins (PS §6). */
   var EDGE_FRAC = 0.08; // how far past the stage edge a walk starts/ends
-  var CAT_LIFT = 0.10;  // the cat sits this far above its plate so the treat shows
+  var CAT_LIFT = 0.10;  // fallback lift (stage fraction) until a cat box is measured
+  var LIFT_GAP = 12;    // px of air between the cat's feet and the plate's top edge
+  /* Measured geometry (px) — cached on resize and whenever a cat box first
+     appears, so the lift scales with the actual cat/plate/stage sizes instead
+     of a fixed fraction that is too small on short stages (task 388). */
+  var catH = 0;   // measured height of a cat button
+  var plateH = 0; // measured height of a plate
+  var stageH = 0; // measured stage height
+  var liftFrac = CAT_LIFT; // lift as a stage fraction, recomputed from catH/plateH/stageH
   var BOB_PX = 6;       // walking-bob amplitude; forced to 0 under reduced motion
   var uidSeq = 0;
 
@@ -534,6 +542,8 @@
     if (!els || !els.stage) return;
     var sr = els.stage.getBoundingClientRect();
     if (!sr.width || !sr.height) return;
+    stageH = sr.height;
+    plateH = 0;
     var plates = [];
     for (var i = 0; i < els.plates.length; i++) {
       var pr = els.plates[i].getBoundingClientRect();
@@ -541,7 +551,11 @@
         x: (pr.left + pr.width / 2 - sr.left) / sr.width,
         y: (pr.top + pr.height / 2 - sr.top) / sr.height
       });
+      plateH = Math.max(plateH, pr.height);
     }
+    var catNode = els.cats.querySelector('.cf-cat');
+    catH = catNode ? catNode.getBoundingClientRect().height : 0;
+    liftFrac = stageH ? (plateH / 2 + catH / 2 + LIFT_GAP) / stageH : CAT_LIFT;
     geom = { plates: plates };
   }
 
@@ -643,7 +657,7 @@
     } else {
       x = plate.x;
     }
-    return { x: x, y: plate.y - CAT_LIFT }; // lifted so the treat on the plate stays visible
+    return { x: x, y: plate.y - liftFrac }; // lifted so the treat on the plate stays visible
   }
 
   function makeCatEl(c) {
@@ -680,10 +694,19 @@
         delete catEls[uid];
       }
     }
+    // Create/append any missing cat elements first so their boxes can be
+    // measured — the lift (catH/plateH/stageH) only becomes exact once a cat
+    // node exists in the layout. Positioning happens after re-measure() below.
     for (i = 0; i < state.cats.length; i++) {
       var c = state.cats[i];
       var el = catEls[c.uid];
       if (!el) { el = makeCatEl(c); catEls[c.uid] = el; els.cats.appendChild(el); }
+    }
+    // Re-measure now that cat boxes exist so liftFrac uses a real catH.
+    measure();
+    for (i = 0; i < state.cats.length; i++) {
+      var c = state.cats[i];
+      var el = catEls[c.uid];
       var pos = catPos(c);
       el.style.left = (pos.x * 100) + '%';
       el.style.top = (pos.y * 100) + '%';
