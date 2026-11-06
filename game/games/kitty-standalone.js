@@ -525,6 +525,7 @@ const ctx = canvas.getContext('2d');
 let coinCount = 0;
 let maxExploredX = 0;
 let worldLoaded = false;
+let sceneImg = null;
 
 function resizeCanvas() {
     const oldH = canvas.height;
@@ -605,6 +606,7 @@ const WORLDS = [
     walker: 'ladybug',
     bgSky: '#5c94fc', groundColor: '#70c838', hillColor: '#00a800', pipeColor: '#00a800',
     stairColor: '#4f9a24',
+    scene: 'spring',
     isNight: false, decor: null, noClouds: false,
     stairs: [{x:2450,peak:3,w:56,h:40},{x:4000,peak:4,w:56,h:40}],
     grounds: [{x:0,w:500},{x:800,w:450},{x:1500,w:500},{x:2300,w:450},{x:3100,w:500},{x:3900,w:500},{x:4700,w:900}],
@@ -1053,6 +1055,11 @@ function loadWorld() {
         phase: Math.random() * Math.PI * 2,
         y: groundY - WALKER_FOOT[w.walker]
     }));
+    // Scene background image for Little Explorer redesign (opaque scene art)
+    if (theme.scene && (!sceneImg || !sceneImg.src)) {
+        sceneImg = new Image();
+        sceneImg.src = '../assets/scenes/scene-' + theme.scene + '.png';
+    }
     worldLoaded = true;
 }
 
@@ -1586,41 +1593,57 @@ function drawPitHazards() {
 }
 
 function draw() {
-    // Sky Background
-    ctx.fillStyle = theme.bgSky;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     const t = Date.now() / 1000;
 
     ctx.save();
     ctx.translate(-cameraX, 0);
 
-    // Night Sky Stars
-    if (theme.isNight) {
-        ctx.fillStyle = "#ffffff";
-        for (let sx = 100; sx < 7000; sx += 400) {
-            ctx.fillRect(sx, 40, 4, 4);
-            ctx.fillRect(sx + 120, 90, 4, 4);
+    // Scene background (Little Explorer redesign) — tiled horizontally, sky area only.
+    // Falls back to the original procedural sky for worlds without a scene asset.
+    if (sceneImg && sceneImg.complete && sceneImg.naturalWidth > 0) {
+        const sceneW = sceneImg.naturalWidth;
+        const sceneH = sceneImg.naturalHeight;
+        const drawH = Math.min(sceneH, groundY);
+        const startX = Math.floor(cameraX / sceneW) * sceneW;
+        for (let sx = startX - sceneW; sx < cameraX + canvas.width; sx += sceneW) {
+            ctx.drawImage(sceneImg, sx, 0, sceneW, drawH);
         }
-    }
+        if (sceneH < groundY) {
+            ctx.fillStyle = theme.bgSky;
+            ctx.fillRect(0, sceneH, canvas.width, groundY - sceneH);
+        }
+    } else {
+        // Sky Background
+        ctx.fillStyle = theme.bgSky;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Distant Hills
-    ctx.fillStyle = theme.hillColor;
-    for (let hx = 300; hx < 7200; hx += 800) {
-        ctx.beginPath();
-        ctx.arc(hx, canvas.height, 280, Math.PI, 0);
-        ctx.fill();
-    }
+        // Night Sky Stars
+        if (theme.isNight) {
+            ctx.fillStyle = "#ffffff";
+            for (let sx = 100; sx < 7000; sx += 400) {
+                ctx.fillRect(sx, 40, 4, 4);
+                ctx.fillRect(sx + 120, 90, 4, 4);
+            }
+        }
 
-    // Clouds
-    if (!theme.noClouds) {
-        ctx.fillStyle = theme.isNight ? "rgba(255, 255, 255, 0.3)" : "#ffffff";
-        for (let cx = 200; cx < 7200; cx += 550) {
+        // Distant Hills
+        ctx.fillStyle = theme.hillColor;
+        for (let hx = 300; hx < 7200; hx += 800) {
             ctx.beginPath();
-            ctx.arc(cx, 80, 45, 0, Math.PI * 2);
-            ctx.arc(cx + 40, 70, 55, 0, Math.PI * 2);
-            ctx.arc(cx + 80, 80, 45, 0, Math.PI * 2);
+            ctx.arc(hx, canvas.height, 280, Math.PI, 0);
             ctx.fill();
+        }
+
+        // Clouds
+        if (!theme.noClouds) {
+            ctx.fillStyle = theme.isNight ? "rgba(255, 255, 255, 0.3)" : "#ffffff";
+            for (let cx = 200; cx < 7200; cx += 550) {
+                ctx.beginPath();
+                ctx.arc(cx, 80, 45, 0, Math.PI * 2);
+                ctx.arc(cx + 40, 70, 55, 0, Math.PI * 2);
+                ctx.arc(cx + 80, 80, 45, 0, Math.PI * 2);
+                ctx.fill();
+            }
         }
     }
 

@@ -42,6 +42,21 @@ Only where relevant (enemy directional states, walker animation):
 - Enforced by `tools/asset_cutout.js` + `tools/check_art.js` (magic bytes = webp, canvas 512×512, alpha corners transparent, consumer exists).
 - Scenes: opaque, no transparency requirement.
 
+## 4.5 Depth & 2D platformer constraints (scenes)
+
+Little Explorer is a side-scrolling 2D platformer. `draw()` layers: sky → distant hills (semicircles at `canvas.height` bottom) → clouds → pit hazards → **platforms at `groundY = canvas.height - 100`** → pipes → enemies → collectibles → goal → hero → particles → ceiling → decor.
+
+Scene backgrounds must therefore be **sky/distant-only**:
+
+- **No baked ground line** — platforms are procedural at `groundY`; a baked ground would collide with gameplay geometry.
+- **No baked platforms, hazards, enemies, or collectibles** — all are drawn/procedural on top.
+- **Distant/low-contrast elements only** — hills, trees, clouds high on the horizon; soft so gameplay elements (hero, platforms, enemies) read clearly in front.
+- **Clear negative space in the lower portion** — around the gameplay plane so platforms and the hero stand out.
+- **Sky-dominant composition** — the scene fills the screen behind everything but should not compete with gameplay for visual attention.
+- **Seamless horizontal continuation** — the world scrolls via `cameraX`; the scene must tile/continue horizontally without obvious seams.
+- No ground/platforms baked into the scene; collision uses explicit rects, never image alpha bounds.
+
+
 ---
 
 ## 5. Compression & size
