@@ -17,7 +17,7 @@ The hub carries **two button sets** — "За малишане" (the 4 learn-and
 
 Every activity has an autoplay button (▶) that walks through the tiles one by one, advancing only after the spoken word finishes plus a short pause, so the child has time to repeat. No celebration icon — the goal is to learn and repeat the words. All text is Serbian Cyrillic, and all speech is Serbian (pre-generated MP3 assets).
 
-**Category tabs (Phase 2, GAME-CLASS-001, task 120):** the learn-and-repeat activities now carry a visual category tab bar — Азбука / Бројеви / Облици / Боје — so the child can jump between content areas without going back to the hub; the active tab always matches the open activity.
+**Category tabs (Phase 2, GAME-CLASS-001, task 120):** the learn-and-repeat activities now carry a visual category tab bar — Азбука / Бројеви / Облици / Боје / Време / Годишња доба — so the child can jump between content areas without going back to the hub; the active tab always matches the open activity. The rail is centered, capped at `94vw` and wraps onto a second row on narrow screens (task 385), so all six categories stay visible and tappable without page-level horizontal scrolling on phones.
 
 Educational goals:
 
@@ -32,3 +32,6 @@ Educational goals:
 
 ## 2026-11-04 (OpenCode/Big Pickle)
 - Painted art wiring + baseline smoke greening (tasks 341-352). See commit dfe4155.
+
+## 2026-11-06 (OpenCode/Big Pickle)
+- Task 385: the category tab rail now wraps inside `94vw` and its pills never break their labels, so all six tabs stay on screen at phone widths (previously the 492px rail was clipped in a 390px viewport). `classroom_smoke.js` guards the phone geometry.

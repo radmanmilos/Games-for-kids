@@ -259,6 +259,25 @@ const CLICK = sel => `document.querySelector('${sel}').click(); true`;
   check('phone: activity tiles disjoint (no grid crowding/overlap)', tiles.n > 0 && tiles.worst === 0 && tiles.clip === 0, JSON.stringify(tiles));
   check('phone: tile widths come from the grid, not the 64px button floor', tiles.maxW < 64, JSON.stringify(tiles));
 
+  // Task 385: all six category tabs must fit the phone width. Before the fix the
+  // rail was 492px wide in a 390px viewport, clipping the first and last tab.
+  const tabGeom = JSON.parse(await h2.evalv(`JSON.stringify((function(){
+    const rail = document.querySelector('.class-tabs').getBoundingClientRect();
+    const tabs = [...document.querySelectorAll('.class-tab')].map(t => t.getBoundingClientRect());
+    return {
+      iw: window.innerWidth,
+      docScrollW: document.documentElement.scrollWidth,
+      railLeft: rail.left, railRight: rail.right,
+      minTabH: Math.min(...tabs.map(t => t.height)),
+      clipped: tabs.filter(t => t.left < 0 || t.right > window.innerWidth).length,
+      n: tabs.length
+    };
+  })())`));
+  check('phone: category tab rail fits the viewport (no clipping, no page scroll)',
+    tabGeom.n === 6 && tabGeom.clipped === 0 && tabGeom.docScrollW <= tabGeom.iw &&
+    tabGeom.railLeft >= 0 && tabGeom.railRight <= tabGeom.iw && tabGeom.minTabH >= 44,
+    JSON.stringify(tabGeom));
+
   // (b) kids numbers: a worst-case emoji count row must not clip the prompt.
   await h2.evalv(`window._origNums = window.classroomData.numbers; window.classroomData.numbers = window._origNums.filter(n => n.count >= 10); true`);
   await h2.evalv(CLICK('#classroom-back'));

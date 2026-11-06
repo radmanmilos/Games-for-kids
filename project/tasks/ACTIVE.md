@@ -19,7 +19,7 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 ## Open tasks
 
 - 384. NEW — Add deterministic screenshot coverage for the internal Games and Learning sub-hubs at all four viewports; inspect discoverability and grid reachability.
-- 385. NEW — Fix Classroom category-tab overflow on phone widths; keep all six tabs reachable without page-level horizontal scrolling.
+- 385. DONE — Fix Classroom category-tab overflow on phone widths; keep all six tabs reachable without page-level horizontal scrolling (2026-11-06, OpenCode/Big Pickle). Rails was clipped in phone portrait (492px rail in a 390px viewport at 844px tablet portrait too); `.class-tabs` now uses `width:max-content; max-width:94vw; flex-wrap:wrap; justify-content:center` and `.class-tab{white-space:nowrap}` so it wraps to a second row instead of overflowing. Verified 390×844 / 844×390 / 820×1180 / 1180×820 / 1280×800: 0 clipped tabs, no page horizontal scroll, 64px tab height kept, no overlap with the activity grid, keyboard order intact. New `classroom_smoke.js` guard (negative-tested: fails on the old CSS) and 8 refreshed review screenshots (task 385). Version 3.0.1 → 3.0.2.
 - 386. NEW — Give Phonics retry feedback an explicit gentle non-success state; preserve green for correct answers and reset state between rounds.
 - 387. NEW — Verify Coloring clear-button and palette geometry in phone landscape; change layout only if a real collision or unsafe proximity is measured.
 - 388. NEW — Reproduce Cat Forest feeding-station crowding in the seeded PLAY state and normal play; change actor layout only if representative.

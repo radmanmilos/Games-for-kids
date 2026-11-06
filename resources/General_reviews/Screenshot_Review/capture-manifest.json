@@ -2,23 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "9f0a49aeabe00175c6bddb69d73f08227edf0ac3",
+  "commitSha": "d3db1e12b5d1814c70bfb9728397bfdfc316a049",
   "browser": {
     "product": "Chrome/156.0.8078.80",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-05T20:02:59.164Z",
+  "generatedAt": "2026-11-06T11:57:44.104Z",
   "pageSet": [
-    "hub",
-    "parent",
-    "compare",
-    "sorting",
-    "maze",
-    "driving",
-    "ocean",
-    "dino",
-    "space"
+    "classroom"
   ],
   "viewports": {
     "phone-portrait": {
@@ -48,328 +40,48 @@
   },
   "screenshots": [
     {
-      "file": "hub_phone-portrait.png",
-      "page": "hub",
+      "file": "classroom__phone-portrait__PLAY.png",
+      "page": "classroom",
       "size": "phone-portrait",
-      "state": null,
+      "state": [
+        "PLAY"
+      ],
       "width": 390,
       "height": 844,
-      "bytes": 67937
+      "bytes": 39625
     },
     {
-      "file": "hub_phone-landscape.png",
-      "page": "hub",
+      "file": "classroom__phone-landscape__PLAY.png",
+      "page": "classroom",
       "size": "phone-landscape",
-      "state": null,
+      "state": [
+        "PLAY"
+      ],
       "width": 844,
       "height": 390,
-      "bytes": 53094
+      "bytes": 37146
     },
     {
-      "file": "hub_tablet-portrait.png",
-      "page": "hub",
+      "file": "classroom__tablet-portrait__PLAY.png",
+      "page": "classroom",
       "size": "tablet-portrait",
-      "state": null,
+      "state": [
+        "PLAY"
+      ],
       "width": 820,
       "height": 1180,
-      "bytes": 139326
+      "bytes": 74442
     },
     {
-      "file": "hub_tablet-landscape.png",
-      "page": "hub",
+      "file": "classroom__tablet-landscape__PLAY.png",
+      "page": "classroom",
       "size": "tablet-landscape",
-      "state": null,
+      "state": [
+        "PLAY"
+      ],
       "width": 1180,
       "height": 820,
-      "bytes": 139453
-    },
-    {
-      "file": "parent_phone-portrait.png",
-      "page": "parent",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 33583
-    },
-    {
-      "file": "parent_phone-landscape.png",
-      "page": "parent",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 26077
-    },
-    {
-      "file": "parent_tablet-portrait.png",
-      "page": "parent",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 49635
-    },
-    {
-      "file": "parent_tablet-landscape.png",
-      "page": "parent",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 39100
-    },
-    {
-      "file": "compare_phone-portrait.png",
-      "page": "compare",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 15239
-    },
-    {
-      "file": "compare_phone-landscape.png",
-      "page": "compare",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 18163
-    },
-    {
-      "file": "compare_tablet-portrait.png",
-      "page": "compare",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 23852
-    },
-    {
-      "file": "compare_tablet-landscape.png",
-      "page": "compare",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 22993
-    },
-    {
-      "file": "sorting_phone-portrait.png",
-      "page": "sorting",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 24405
-    },
-    {
-      "file": "sorting_phone-landscape.png",
-      "page": "sorting",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 22577
-    },
-    {
-      "file": "sorting_tablet-portrait.png",
-      "page": "sorting",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 44890
-    },
-    {
-      "file": "sorting_tablet-landscape.png",
-      "page": "sorting",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 45681
-    },
-    {
-      "file": "maze_phone-portrait.png",
-      "page": "maze",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 28005
-    },
-    {
-      "file": "maze_phone-landscape.png",
-      "page": "maze",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 29491
-    },
-    {
-      "file": "maze_tablet-portrait.png",
-      "page": "maze",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 41015
-    },
-    {
-      "file": "maze_tablet-landscape.png",
-      "page": "maze",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 39507
-    },
-    {
-      "file": "driving_phone-portrait.png",
-      "page": "driving",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 53300
-    },
-    {
-      "file": "driving_phone-landscape.png",
-      "page": "driving",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 61055
-    },
-    {
-      "file": "driving_tablet-portrait.png",
-      "page": "driving",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 82563
-    },
-    {
-      "file": "driving_tablet-landscape.png",
-      "page": "driving",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 84382
-    },
-    {
-      "file": "ocean_phone-portrait.png",
-      "page": "ocean",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 53856
-    },
-    {
-      "file": "ocean_phone-landscape.png",
-      "page": "ocean",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 58862
-    },
-    {
-      "file": "ocean_tablet-portrait.png",
-      "page": "ocean",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 82005
-    },
-    {
-      "file": "ocean_tablet-landscape.png",
-      "page": "ocean",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 92708
-    },
-    {
-      "file": "dino_phone-portrait.png",
-      "page": "dino",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 43562
-    },
-    {
-      "file": "dino_phone-landscape.png",
-      "page": "dino",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 43121
-    },
-    {
-      "file": "dino_tablet-portrait.png",
-      "page": "dino",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 56542
-    },
-    {
-      "file": "dino_tablet-landscape.png",
-      "page": "dino",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 55383
-    },
-    {
-      "file": "space_phone-portrait.png",
-      "page": "space",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 53783
-    },
-    {
-      "file": "space_phone-landscape.png",
-      "page": "space",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 70329
-    },
-    {
-      "file": "space_tablet-portrait.png",
-      "page": "space",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 90973
-    },
-    {
-      "file": "space_tablet-landscape.png",
-      "page": "space",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 96255
+      "bytes": 69271
     }
   ]
 }

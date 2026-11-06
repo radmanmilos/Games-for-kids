@@ -126,12 +126,13 @@
   /* ---------- CATEGORY TABS ---------- */
   .class-tabs{
     position:absolute; top:14vmin; left:50%; transform:translateX(-50%);
-    display:flex; gap:1.5vmin; z-index:15;
+    display:flex; flex-wrap:wrap; justify-content:center; gap:1.5vmin;
+    width:max-content; max-width:94vw; z-index:15;
   }
   .class-tab{
     border:none; border-radius:999px; cursor:pointer;
     font:600 clamp(11px,2vmin,18px)/1 'Fredoka',sans-serif;
-    padding:1.2vmin 2.4vmin;
+    padding:1.2vmin 2.4vmin; white-space:nowrap;
     background:#fff; color:var(--plum-soft);
     box-shadow:0 .6vmin 0 rgba(0,0,0,.1);
     transition:transform .12s ease,background .2s,color .2s;
