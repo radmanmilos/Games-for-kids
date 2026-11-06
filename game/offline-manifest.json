@@ -1367,6 +1367,10 @@
     "sha256": "3d89067f6008a630d55a74e13da58a38fba881d6ea807bc509ef9885be0544e5",
     "size": 798480
   },
+  "assets/scenes/scene-summer.png": {
+    "sha256": "7e0c6dcf95b0d19bc2fb7b8b219014000cfefde30db7e95a77ea4498d44e9026",
+    "size": 1449471
+  },
   "assets/scenes/scene-winter.png": {
     "sha256": "82eec1a5e16138c19067edf0a778307fbc57fd42552977cf3df5e6d9f3f1d0e6",
     "size": 1651027
@@ -1456,8 +1460,8 @@
     "size": 5268
   },
   "games/kitty-standalone.js": {
-    "sha256": "527538e899be83ac48fc146b4bfcb57b342427316a624d9406a7e1592c513799",
-    "size": 104879
+    "sha256": "d4c955a55ec1d7aa244b5a84e32216c70991258ffeca90e4194636d82267ec5a",
+    "size": 104900
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
@@ -1704,8 +1708,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "298c45d0a62b938be9d77ff4112d553299c5ede7d18f84f0a5e9a53632ea1468",
-    "size": 13463
+    "sha256": "1618abcb900023bdda2d9bc9d34252d34565980818aa6e387d7a8a601b9d7cd8",
+    "size": 13499
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",

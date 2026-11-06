@@ -18,6 +18,9 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
+- 416. DONE — Generate Summer background: `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/scenes/scene-summer.png` (2048×592 wide horizontal strip, opaque RGB, 1.45MB, only star.png as reference). QA passes technically; palette 242/196/105 (warm golden sunset, distinct from Spring).
+- 417. DONE — QA + user visual review: Summer scene APPROVED by user at `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/scenes/scene-summer.png` (2048×592 wide horizontal strip, opaque RGB).
+- 418. IN PROGRESS — Autumn background brief + preflight: write Autumn brief following scene-summer.md convention; run mandatory preflight dry-run.
 - 415. DONE — Spring pilot review: 4 viewport screenshots captured (390×844, 844×390, 820×1180, 1180×820) via `tools/screenshot.js --review=Screenshot_Review --pages=explorer --task=415`; no browser runtime errors; kitty_smoke.js 38/38 pass; check_fast.js 10/10 green. User-approved Spring scene integrated. Pilot PASSED — ready for Phase 4 mass production (task 416: Summer).
 - 414. DONE — Integrate Spring scene into `draw()`: added `sceneImg` variable, `scene: 'spring'` to Spring world entry, scene image loading in `loadWorld()`, replaced procedural sky/hills/clouds with tiled scene image after `ctx.translate(-cameraX, 0)` in `draw()`. Copied `scene-spring.png` to `game/assets/scenes/`. All 38 `kitty_smoke.js` checks pass; collision/gameplay unchanged.
 - 413. DONE — QA + user visual review: Spring scene APPROVED by user at `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/scenes/scene-spring.png` (2048×592 wide horizontal strip, opaque RGB).

@@ -629,6 +629,7 @@ const WORLDS = [
     walker: 'bee',
     bgSky: '#fc7438', groundColor: '#f8b800', hillColor: '#d88000', pipeColor: '#00a800',
     stairColor: '#c89100',
+    scene: 'summer',
     isNight: false, decor: null, noClouds: false,
     stairs: [{x:2450,peak:3,w:56,h:40},{x:4300,peak:4,w:56,h:40}],
     grounds: [{x:0,w:600},{x:900,w:400},{x:1550,w:500},{x:2400,w:500},{x:3250,w:450},{x:4050,w:800},{x:5100,w:700}],
