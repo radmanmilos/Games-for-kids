@@ -169,6 +169,7 @@ These are in `game/data/art-registry.js` and `Art.fill()`/`Art.draw()` can swap 
 | 🦉 | owl | assets/art/owl.webp |
 | 🧩 | puzzle-piece | assets/art/puzzle-piece.webp |
 | ☃ | snowman | assets/art/snowman.webp |
+| ❤️ (registry key: ❤) | object-heart | assets/art/object-heart.webp |
 
 **Cat Forest extras (lines 169-181 of art-registry.js):**
 | Emoji | Stem | File |
@@ -189,17 +190,17 @@ These are in `game/data/art-registry.js` and `Art.fill()`/`Art.draw()` can swap 
 
 ---
 
-## 2. Emojis USED in games but WITHOUT painted art (❌ needs new art)
+## 2. Scene symbols backed by dedicated scene backgrounds (not painted emoji cut-outs)
 
-These appear in game code but are NOT in `game/data/art-registry.js`. `Art.fill()` falls back to showing the raw emoji.
+These Classroom Time symbols select full-bleed PNG scene images through `SCENE_IMAGES` in `game/games/classroom.js`. They are intentionally handled as scene backgrounds rather than entries in `game/data/art-registry.js`.
 
-| Game | Emoji | Where used | Status | Needed art stem (suggested) |
-|------|-------|------------|--------|----------------------------|
-| Cat Forest | ❤️ | Cuddle hearts (CF-09 `spawnFx(pos, '❤️', ...)`) | **Being generated** — user has an art generation process defined | `object-heart` |
-| Classroom Time | 🌅 | `TIME_SCENES[0]` — sunrise | ✅ PNG exists at `assets/scenes/sunrise.png`; added to `classroom.js` `SCENE_IMAGES` | scene-sunrise (already in scenes/) |
-| Classroom Time | 🌇 | `TIME_SCENES[2]` — sunset | ✅ PNG exists at `assets/scenes/sunset.png`; added to `classroom.js` `SCENE_IMAGES` | scene-sunset (already in scenes/) |
+| Game | Symbol | Scene image | Runtime mapping |
+|------|--------|-------------|-----------------|
+| Classroom Time | 🌅 | `assets/scenes/sunrise.png` | `SCENE_IMAGES['🌅']` |
+| Classroom Time | 🌇 | `assets/scenes/sunset.png` | `SCENE_IMAGES['🌇']` |
+| Classroom Time | 🌙 | `assets/scenes/night-sky.png` | `SCENE_IMAGES['🌙']` |
 
-> **Cat Forest night cat `Сенка` (Senka):** Her emoji is `🐈‍⬛` (black cat), which IS already registered in `art-registry.js` → `cat-forest-black-cat`. The art file `game/assets/art/cat-forest-black-cat.webp` already exists. No new art needed for Senka. The earlier `🙀` listing was incorrect — Senka does not use `🙀`.
+These assets already exist and are referenced by the runtime. They do not need separate emoji WebP art or registry entries. The previously reported `🙀` item was a stale documentation entry: the searched game source does not use it. Cat Forest's Senka uses `🐈‍⬛`, which is registered as `cat-forest-black-cat` and has its own painted WebP asset.
 
 ---
 
@@ -248,14 +249,13 @@ These are PNG scene backdrops, not emoji glyphs:
 
 ## 5. Summary
 
-- **Art already exists:** ~120 emoji glyphs have painted WebP art in `game/assets/art/`
-- **Art missing (needs commissioning):** 4 emoji glyphs — 🙀, ❤️, 🌅, 🌇
-- **Art exists but not used via Art.fill():** Spatial scene parts (🌳, 🍎, and others) drawn as canvas text instead of painted illustration
-- **Scene backdrops:** 10 PNG files in `game/assets/scenes/`
+- **Painted glyph art:** registry-backed WebP illustrations are listed in section 1; the Cat Forest heart is included as `object-heart.webp`.
+- **Outstanding commissions among the items previously flagged:** none. The old `🙀` entry was not present in the searched game source; the heart already has registered WebP art; sunrise and sunset already have dedicated PNG scene backgrounds.
+- **Scene backdrops:** 10 PNG files are listed in section 4.
+- **Spatial rendering:** already uses `Art.fill(item, part.emoji)` (`game/games/spatial.js:154`); no canvas-text upgrade is outstanding.
 
 ## Recommended next steps
 
-1. Commission painted WebP art for: 🙀 (weary cat), ❤️ (heart), 🌅 (sunrise scene), 🌇 (sunset scene)
-2. Register 🌅 and 🌇 in `game/data/art-registry.js` pointing to the scene images
-3. Upgrade `spatial.js` to use `Art.draw()` for scene parts that have art in the registry
-4. Verify all `Art.fill()` calls have a matching registry entry (the registry throws if a glyph has no art — it falls back to text, which is safe)
+1. Keep this inventory synchronized when new child-facing symbols or art assets are added.
+2. Before commissioning art, confirm the symbol is used in runtime code and that no suitable registered illustration or dedicated scene asset already exists.
+3. When adding a painted glyph, verify its registry mapping, runtime render path, and matching `game/assets/art/<stem>.webp` file. `Art.fill()` safely falls back to the text glyph when no art mapping is available.
