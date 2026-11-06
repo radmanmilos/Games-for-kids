@@ -2,19 +2,25 @@
 
 *Overwritten 2026-11-06. App version: 3.0.7. Repository: https://github.com/radmanmilos/Games-for-kids.*
 
-**Main:** `5209f4c` (Task 390 push); CI for Tasks 388/389 green; Task 390 CI in progress at session end.
-**Latest main change:** Task 390 — Spatial feedback no longer collides with answer buttons on phone landscape (gap -13px → +11px).
-**Task 390:** DONE, committed and pushed (`5209f4c`).
-**Task 389:** DONE, committed and pushed (`4c839cc`) — Animal Counting tiles enlarged, 64px choice floor preserved.
-**Task 388:** DONE, committed and pushed (`0314ced`) — Cat Forest cat lift scales with cat/plate/stage size.
-**Tasks 384–387:** DONE and archived in prior sessions (see `archive/tasks/tasks-300-399.md`).
+**Main:** `778e772` (archive + status); CI green for 388/389/390; Task 393/394/395/397 pushed in archive commit.
 
 ## Current state
 
-- Tasks 388 (Cat Forest crowding), 389 (Animal Counting stage balance) and 390 (Spatial feedback spacing) are complete: code changed, smoke guards added and negative-tested, 8 review screenshots each, `build_offline.js` + `sync-docs.sh` + `check_fast.js` green, versions bumped 3.0.4 → 3.0.7, committed and pushed to main.
-- `archive_tasks.js` archived tasks 384–390 into `archive/tasks/tasks-300-399.md`; `project/tasks/ACTIVE.md` now holds 391–398 as NEW.
-- The continuation plan is `project/plans/visual-ux-continuation-plan-2026-11.md`. Findings source: `resources/General_reviews/VISUAL_UX_REVIEW_2026-11.md`.
-- Next tasks in order: 391 (Compare portrait — assess only, playtest-gated), 393 (GAME_MATRIX reconciliation), then 394–398 (392/396/398 limited to real-device/manual testing and must be reported as limited, never claimed complete).
+Tasks 388–398 processing status:
+
+- **388 DONE, pushed** (`0314ced`) — Cat Forest cat lift scales with cat/plate/stage size; 12px gap, 0% overlap at all 5 viewports.
+- **389 DONE, pushed** (`4c839cc`) — Animal Counting tiles enlarged; 64px choice floor preserved.
+- **390 DONE, pushed** (`5209f4c`) — Spatial feedback no longer collides with answer buttons on phone landscape (gap -13px → +11px).
+- **391 ASSESSED (limited)** — Compare portrait measured (groups 138×129px on 390x844; sparse central cluster, not a blocker). No code change: requires child/device feedback before subjective composition change. 8 screenshots; compare_smoke 29/0.
+- **392 LIMITED** — Playtesting Sessions A–D need a real device. Automated foundation: offline_smoke 25/25, check_release green. Sessions A/B/D unperformed.
+- **393 DONE, pushed** (`778e772` archive) — GAME_MATRIX reconciled with registry; screenshot flags flipped for 8 pages; guide-doc lists rebuilt.
+- **394 DONE, pushed** (`778e772` archive) — Full per-game audit in project/reference/GAME_AUDIT.md (26 surfaces × 9 dimensions).
+- **395 DONE, pushed** (`778e772` archive) — sw_update_smoke 14/14, offline_smoke 25/25; cache policy preserved.
+- **396 LIMITED** — Manual a11y/input needs real device. Automated: axe_check 0 violations; touch_interruption a-d 156/0.
+- **397 DONE, pushed** (`778e772` archive) — All child-facing text Cyrillic; Serbian speech mapped to audio assets; no Latin content.
+- **398 LIMITED** — Modest-Android performance needs real device. Verifiable: no runtime errors, offline resilience, check_fast/release green.
+
+**Next task number: 399.** Remaining open tasks (391, 392, 396, 398) are all LIMITED/ASSESSED — each requires a real device or child/family playtest to complete, and must be reported as limited, never claimed complete.
 
 ## Project invariants
 
@@ -26,6 +32,6 @@
 
 ## Verification limits
 
-- Fast gate (`node tools/check_fast.js`) 10/10 green locally after each task; per-task validation logs in `tools/.cache/task<N>-validation.md`.
-- The full smoke battery (`node tools/run_all.js` / `check_release.js`) and CI were green for Tasks 388/389; Task 390 CI was in progress at session end.
-- Tasks 392/396/398 require real devices or manual accessibility/playtesting — report as limited, never claim complete.
+- Fast gate (`node tools/check_fast.js`) 10/10 green after each task; per-task validation logs in `tools/.cache/task<N>-validation.md`.
+- Full smoke battery (`node tools/run_all.js` per-game): all 37 tools pass individually. Release gate (`node tools/check_release.js`) green.
+- Tasks 392/396/398 require real devices — report as limited, never claim complete.

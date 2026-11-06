@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "4c839ccbbdbee4530dc0a15b85bcda2ae02a16a5",
+  "commitSha": "778e772cea141340f4f0ae7448597ee12c42bb17",
   "browser": {
     "product": "Chrome/156.0.8078.80",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-06T12:53:29.444Z",
+  "generatedAt": "2026-11-06T14:47:17.662Z",
   "pageSet": [
-    "spatial"
+    "compare"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,48 +40,48 @@
   },
   "screenshots": [
     {
-      "file": "spatial__phone-portrait__PLAY.png",
-      "page": "spatial",
+      "file": "compare__phone-portrait__PLAY.png",
+      "page": "compare",
       "size": "phone-portrait",
       "state": [
         "PLAY"
       ],
       "width": 390,
       "height": 844,
-      "bytes": 27687
+      "bytes": 17755
     },
     {
-      "file": "spatial__phone-landscape__PLAY.png",
-      "page": "spatial",
+      "file": "compare__phone-landscape__PLAY.png",
+      "page": "compare",
       "size": "phone-landscape",
       "state": [
         "PLAY"
       ],
       "width": 844,
       "height": 390,
-      "bytes": 28967
+      "bytes": 22025
     },
     {
-      "file": "spatial__tablet-portrait__PLAY.png",
-      "page": "spatial",
+      "file": "compare__tablet-portrait__PLAY.png",
+      "page": "compare",
       "size": "tablet-portrait",
       "state": [
         "PLAY"
       ],
       "width": 820,
       "height": 1180,
-      "bytes": 44697
+      "bytes": 27916
     },
     {
-      "file": "spatial__tablet-landscape__PLAY.png",
-      "page": "spatial",
+      "file": "compare__tablet-landscape__PLAY.png",
+      "page": "compare",
       "size": "tablet-landscape",
       "state": [
         "PLAY"
       ],
       "width": 1180,
       "height": 820,
-      "bytes": 43775
+      "bytes": 27074
     }
   ]
 }

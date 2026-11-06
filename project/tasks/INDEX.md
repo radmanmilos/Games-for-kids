@@ -386,3 +386,7 @@ One line per task: `number | status | date | title | archive file`. Every finish
 388 | DONE | 2026-11-06 | Fix Cat Forest feeding-station crowding on short stages: the cat lift was a fixed stage fraction (CAT_LIFT =… | tasks-300-399.md
 389 | DONE | 2026-11-06 | Improve Animal Counting stage balance and artwork scale without reducing the existing 64px answer-target… | tasks-300-399.md
 390 | DONE | 2026-11-06 | Separate Spatial feedback from answer controls at short landscape (implemented only after confirming the… | tasks-300-399.md
+393 | DONE | 2026-11-06 | Reconciled GAME_MATRIX with the live registry, smoke/offline/screenshot flags, and game-guide mappings:… | tasks-300-399.md
+394 | DONE | 2026-11-06 | Complete phased game-by-game lifecycle/state/input/audio/learning/performance audit for all 26 surfaces (25… | tasks-300-399.md
+395 | DONE | 2026-11-06 | Verified service-worker update and offline recovery lifecycle end-to-end: tools/sw_update_smoke.js ALL PASSED… | tasks-300-399.md
+397 | DONE | 2026-11-06 | Audit learning quality, Serbian Cyrillic text, Serbian speech and content integrity: all child-facing text… | tasks-300-399.md
