@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-06T12:03:32.710Z
+- Генерисано / Generated: 2026-11-06T12:12:35.645Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -56,14 +56,14 @@
 | `classroom_phone-portrait.png` | Учионица | `/pages/classroom.html` | 390×844 | портрет | — | 06.11.2026. 12:57:30 | 385 |
 | `classroom_tablet-landscape.png` | Учионица | `/pages/classroom.html` | 1180×820 | пејзаж | — | 06.11.2026. 12:57:30 | 385 |
 | `classroom_tablet-portrait.png` | Учионица | `/pages/classroom.html` | 820×1180 | портрет | — | 06.11.2026. 12:57:30 | 385 |
-| `coloring__phone-landscape__PLAY.png` | Бојење | `/pages/coloring.html` | 844×390 | пејзаж | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `coloring__phone-portrait__PLAY.png` | Бојење | `/pages/coloring.html` | 390×844 | портрет | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `coloring__tablet-landscape__PLAY.png` | Бојење | `/pages/coloring.html` | 1180×820 | пејзаж | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `coloring__tablet-portrait__PLAY.png` | Бојење | `/pages/coloring.html` | 820×1180 | портрет | PLAY | 05.11.2026. 19:48:22 | 379 |
-| `coloring_phone-landscape.png` | Бојење | `/pages/coloring.html` | 844×390 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
-| `coloring_phone-portrait.png` | Бојење | `/pages/coloring.html` | 390×844 | портрет | — | 05.11.2026. 18:53:41 | 379 |
-| `coloring_tablet-landscape.png` | Бојење | `/pages/coloring.html` | 1180×820 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
-| `coloring_tablet-portrait.png` | Бојење | `/pages/coloring.html` | 820×1180 | портрет | — | 05.11.2026. 18:53:41 | 379 |
+| `coloring__phone-landscape__PLAY.png` | Бојење | `/pages/coloring.html` | 844×390 | пејзаж | PLAY | 06.11.2026. 13:12:35 | 387 |
+| `coloring__phone-portrait__PLAY.png` | Бојење | `/pages/coloring.html` | 390×844 | портрет | PLAY | 06.11.2026. 13:12:35 | 387 |
+| `coloring__tablet-landscape__PLAY.png` | Бојење | `/pages/coloring.html` | 1180×820 | пејзаж | PLAY | 06.11.2026. 13:12:35 | 387 |
+| `coloring__tablet-portrait__PLAY.png` | Бојење | `/pages/coloring.html` | 820×1180 | портрет | PLAY | 06.11.2026. 13:12:35 | 387 |
+| `coloring_phone-landscape.png` | Бојење | `/pages/coloring.html` | 844×390 | пејзаж | — | 06.11.2026. 13:12:31 | 387 |
+| `coloring_phone-portrait.png` | Бојење | `/pages/coloring.html` | 390×844 | портрет | — | 06.11.2026. 13:12:31 | 387 |
+| `coloring_tablet-landscape.png` | Бојење | `/pages/coloring.html` | 1180×820 | пејзаж | — | 06.11.2026. 13:12:31 | 387 |
+| `coloring_tablet-portrait.png` | Бојење | `/pages/coloring.html` | 820×1180 | портрет | — | 06.11.2026. 13:12:31 | 387 |
 | `compare__phone-landscape__PLAY.png` | Више или мање | `/pages/compare.html` | 844×390 | пејзаж | PLAY | 05.11.2026. 19:48:22 | 379 |
 | `compare__phone-portrait__PLAY.png` | Више или мање | `/pages/compare.html` | 390×844 | портрет | PLAY | 05.11.2026. 19:48:22 | 379 |
 | `compare__tablet-landscape__PLAY.png` | Више или мање | `/pages/compare.html` | 1180×820 | пејзаж | PLAY | 05.11.2026. 19:48:22 | 379 |

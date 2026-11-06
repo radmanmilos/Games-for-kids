@@ -24,3 +24,5 @@ Educational goals:
 ---
 
 Refactoring note (task 250, 2026-10-16): restarting during the completion transition cancels pending scene/reward timers and invalidates callbacks from the previous round, preventing stale work from changing the restarted scene.
+
+Palette sizing (task 387, 2026-11-06): one `--swatch: clamp(48px, 9vmin, 72px)` token now feeds both the palette grid tracks and the swatch size, so the 64px global button floor can no longer make the circles overlap each other (they did by ~23px on phones) or spill over the clear button in phone landscape. Phones get 48px targets, tablets/desktop keep 72px.

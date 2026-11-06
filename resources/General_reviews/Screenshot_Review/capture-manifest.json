@@ -2,16 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "d81da6f55324d340871f50d7ce7aefd0ba1e7e7a",
+  "commitSha": "7cfc728c90e7bdb33e3a53d0ade6f99fd5c3840c",
   "browser": {
     "product": "Chrome/156.0.8078.80",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-06T12:03:32.710Z",
+  "generatedAt": "2026-11-06T12:12:35.645Z",
   "pageSet": [
-    "hub-games",
-    "hub-learning"
+    "coloring"
   ],
   "viewports": {
     "phone-portrait": {
@@ -41,76 +40,48 @@
   },
   "screenshots": [
     {
-      "file": "hub-games_phone-portrait.png",
-      "page": "hub-games",
+      "file": "coloring__phone-portrait__PLAY.png",
+      "page": "coloring",
       "size": "phone-portrait",
-      "state": null,
+      "state": [
+        "PLAY"
+      ],
       "width": 390,
       "height": 844,
-      "bytes": 114653
+      "bytes": 55413
     },
     {
-      "file": "hub-games_phone-landscape.png",
-      "page": "hub-games",
+      "file": "coloring__phone-landscape__PLAY.png",
+      "page": "coloring",
       "size": "phone-landscape",
-      "state": null,
+      "state": [
+        "PLAY"
+      ],
       "width": 844,
       "height": 390,
-      "bytes": 105897
+      "bytes": 50795
     },
     {
-      "file": "hub-games_tablet-portrait.png",
-      "page": "hub-games",
+      "file": "coloring__tablet-portrait__PLAY.png",
+      "page": "coloring",
       "size": "tablet-portrait",
-      "state": null,
+      "state": [
+        "PLAY"
+      ],
       "width": 820,
       "height": 1180,
-      "bytes": 322164
+      "bytes": 98678
     },
     {
-      "file": "hub-games_tablet-landscape.png",
-      "page": "hub-games",
+      "file": "coloring__tablet-landscape__PLAY.png",
+      "page": "coloring",
       "size": "tablet-landscape",
-      "state": null,
+      "state": [
+        "PLAY"
+      ],
       "width": 1180,
       "height": 820,
-      "bytes": 325419
-    },
-    {
-      "file": "hub-learning_phone-portrait.png",
-      "page": "hub-learning",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 116039
-    },
-    {
-      "file": "hub-learning_phone-landscape.png",
-      "page": "hub-learning",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 94528
-    },
-    {
-      "file": "hub-learning_tablet-portrait.png",
-      "page": "hub-learning",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 339997
-    },
-    {
-      "file": "hub-learning_tablet-landscape.png",
-      "page": "hub-learning",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 282086
+      "bytes": 89847
     }
   ]
 }

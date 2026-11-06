@@ -199,6 +199,43 @@ const STUB = `window.speech={speak:function(t,cb){if(cb)cb();},cancel:function()
   const staleTransition = JSON.parse(await h.evalv(`JSON.stringify({ scene:coloringSceneIdx, busy:coloringBusy, rewardHidden:document.getElementById('coloringReward').hidden })`));
   check('coloring: canceled callback cannot change the restarted round', staleTransition.scene === 0 && staleTransition.busy === false && staleTransition.rewardHidden, JSON.stringify(staleTransition));
 
+  // Task 387: a review of the 844x390 free-mode capture flagged the clear
+  // action as intruding into the palette. Measured instead of assumed: enter
+  // free mode (clear becomes visible), select a swatch (it scales up 1.15) and
+  // require a real gap — no overlap with the palette or any swatch, and the
+  // control still on screen.
+  await h.c.send('Emulation.setDeviceMetricsOverride', { width: 844, height: 390, deviceScaleFactor: 1, mobile: true });
+  await sleep(200);
+  const freeAlready = await h.evalv(`document.getElementById('coloringModeToggle').classList.contains('free')`);
+  if (!freeAlready) await h.evalv(`document.getElementById('coloringModeToggle').click(); true`);
+  await h.evalv(`document.querySelector('#coloringPalette .coloring-swatch').click(); true`);
+  await sleep(400);
+  const landGeom = JSON.parse(await h.evalv(`JSON.stringify((function(){
+    var clear = document.getElementById('coloringClear').getBoundingClientRect();
+    var pal = document.getElementById('coloringPalette').getBoundingClientRect();
+    var sw = [].slice.call(document.querySelectorAll('#coloringPalette .coloring-swatch')).map(function(s){ return s.getBoundingClientRect(); });
+    function ov(a,b){ return Math.max(0,Math.min(a.right,b.right)-Math.max(a.left,b.left)) * Math.max(0,Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)); }
+    var worstPair = 0;
+    for (var i = 0; i < sw.length; i++) for (var j = i + 1; j < sw.length; j++) worstPair = Math.max(worstPair, ov(sw[i], sw[j]));
+    return {
+      iw: innerWidth, ih: innerHeight,
+      clear: { l: Math.round(clear.left), t: Math.round(clear.top), r: Math.round(clear.right), b: Math.round(clear.bottom) },
+      clearInViewport: clear.top >= -1 && clear.bottom <= innerHeight + 1 && clear.left >= -1 && clear.right <= innerWidth + 1,
+      clearVsPalette: ov(clear, pal),
+      clearVsSwatch: sw.reduce(function(m,b){ return Math.max(m, ov(clear,b)); }, 0),
+      swatchVsSwatch: Math.round(worstPair),
+      minSwatch: Math.round(Math.min.apply(null, sw.map(function(b){ return Math.min(b.width,b.height); }))),
+      docScrollW: document.documentElement.scrollWidth
+    };
+  })())`));
+  check('phone landscape: clear action never collides with the palette or a swatch',
+    landGeom.clearInViewport && landGeom.clearVsPalette === 0 && landGeom.clearVsSwatch === 0 &&
+    landGeom.minSwatch >= 44 && landGeom.docScrollW <= landGeom.iw, JSON.stringify(landGeom));
+  check('phone landscape: palette swatches never overlap each other',
+    landGeom.swatchVsSwatch === 0, JSON.stringify({ swatchVsSwatch: landGeom.swatchVsSwatch, minSwatch: landGeom.minSwatch }));
+  await h.c.send('Emulation.setDeviceMetricsOverride', { width: 1024, height: 800, deviceScaleFactor: 1, mobile: false });
+  await sleep(150);
+
   // Static checks
   const root = path.join(__dirname, '..');
   const indexHtml = fs.readFileSync(path.join(root, 'game', 'index.html'), 'utf8');
