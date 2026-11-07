@@ -207,6 +207,11 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   check('task429: approved painted art is used for mouse, bat, penguin, snowman, crab and Spring goal',
     artReuseOk, JSON.stringify(artReuseCalls || []));
 
+  const walkerFootAnchors = await h.evalv('({ snowman: WALKER_FOOT.snowman, crab: WALKER_FOOT.crab })');
+  const walkerFootOk = walkerFootAnchors && walkerFootAnchors.snowman === 18 && walkerFootAnchors.crab === 16;
+  check('task429: approved snowman/crab art anchors align their sprite feet with the ground',
+    walkerFootOk, JSON.stringify(walkerFootAnchors || {}));
+
   // Task 90: death sound is character-aware (cat.ogg for the kitty, "Јао!"
   // speech for the explorer girl) and the kitty is the default character.
   const deathSound = await h.evalv(`(() => {
