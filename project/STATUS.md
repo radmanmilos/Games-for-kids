@@ -2,43 +2,44 @@
 
 **Last verified:** 2026-11-07  
 **Repository:** radmanmilos/Games-for-kids  
-**Main baseline:** e604c324d17d064680a5c3ea2efa25b0a743775d  
-**Current work branch:** fix/explorer-scene-selection-task-429 (based on the verified main baseline)
+**Main HEAD:** beb4683811ac210463167b348f783bdba100aa17 (merge of PR #22)  
+**Current documentation branch:** docs/explorer-post-merge-status-429
 
-## Repository and CI
+## Repository and verification
 
-- Main was cleanly addressable at the baseline commit above; no open pull requests were present at the start of this review.
-- Latest main Actions run checked: 42369993270. Fast Gate and Pages succeeded. Extended Matrix, Smoke Matrix, and Release QA were skipped; skipped jobs are not passed jobs.
-- PR #21 (Task 399 archive/handover) is closed and was not merged. Its cancelled checks are not evidence of a merge. This branch reconciles the task archive against the current main state.
-- GitHub connector access does not expose a local working tree, so no local git status, browser playtest, or local script execution is claimed.
-- PR #22 is open (https://github.com/radmanmilos/Games-for-kids/pull/22) on this branch; it has not been merged. First PR Fast run 42372167787 failed because the engine edit had not yet been mirrored into docs/games/kitty-standalone.js and game/offline-manifest.json had stale hash/size metadata. This branch now synchronizes both generated outputs, and direct file checks confirm docs/games/kitty-standalone.js exactly matches game/games/kitty-standalone.js and the offline manifest SHA-256/size match the canonical source bytes. No new CI run is attached to the latest head yet, so CI verification remains pending.
+- PR #22, `fix(explorer): switch world scenes and reuse approved art`, is merged. Merge commit: `beb4683811ac210463167b348f783bdba100aa17`.
+- The merged Little Explorer engine and generated docs mirror are byte-for-byte identical at the fetched repository contents (same Git blob SHA `a62f07ed54d0c0a6d6f095dc40554a14e1cf012c`).
+- `tools/kitty_smoke.js` contains the all-world scene mapping regression and approved-art reuse checks. These tests have not been executed in this session.
+- The available GitHub workflow lookup returned no PR-triggered runs for the merge commit. This does not establish that no other Actions run exists; post-merge CI status remains unverified here.
+- No local checkout, local test execution, browser playtest, or real-device test is available through this session. Do not describe those checks as passed.
 
 ## Task tracking
 
-- Task 429 — IN PROGRESS: Little Explorer environment-art audit/integration, scene-switch fix, approved-art reuse, 18 terrain/pipe candidates, and real PLAY screenshot review.
-- Task 415 — LIMITED: four Explorer viewport screenshots show the character-selection surface, not gameplay. Real PLAY-state screenshots are still required.
-- Completed tasks 399–414 and 420–428 are archived in this branch. The next task number is 430.
-- Other open/limited tasks remain: 391 (compare portrait feedback), 392 (real-device playtesting), 396 (accessibility/input interruption), 398 (modest Android performance), 415, and 429.
+- Task 429 remains IN PROGRESS. The scene-switch fix and reuse of approved art were merged via PR #22; remaining work is terrain/pipe art generation and integration, platform art planning, remaining enemies/walkers/goals, and real PLAY-state visual review.
+- Task 415 remains LIMITED: the earlier four Explorer screenshots showed the character-selection surface rather than gameplay. Fresh PLAY-state captures are still required.
+- Tasks 399–414 and 420–428 were archived by PR #22. The next task number remains 430.
+- Other open/limited tasks: 391 (compare portrait feedback), 392 (real-device playtesting), 396 (accessibility/input interruption), 398 (modest Android performance), 415, and 429.
 
-## Little Explorer — verified state
+## Little Explorer — merged implementation
 
-- All 11 world background images exist under game/assets/scenes/. They are single horizontally tiled images, not multi-layer parallax backgrounds.
-- The previous loadWorld() logic only assigned sceneImg while it was empty; this could leave the first world image selected after later world changes. The current branch tracks sceneSrc and updates the image source on each world change. A smoke regression test iterates all 11 world definitions.
-- Approved existing art is now reused for mouse, bat, penguin, snowman, crab, and the Spring goal house. Collectibles already use the approved ART_REGISTRY; the water hazard fish accent also uses existing art. Procedural fallbacks remain while images load.
-- Terrain and pipes remain procedural. Task 429 has 18 user-authorized candidates (8 terrain, 10 pipe); all 18 prompts now use the required brief metadata and prompt marker, but local WIP/duplicate checks and final preflight remain incomplete and Cloudflare quota is exhausted. Four additional prompt files — terrain-summer-top, terrain-savanna-top, terrain-water-top, and pipe-japan — are not in the 18-item list; their status in the gitignored local WIP bundle is unknown and must be checked before generating them.
-- Static/moving platform art remains outstanding. Remaining new enemy art: mole, piranha, snake, oni, scorpion. Remaining walker art: bee, hedgehog, worm, spider, meerkat, panda, seal, scarab; the existing ladybug asset is only a candidate, not approved for Explorer reuse. Remaining goal structures: mine, cave, submarine, hut, torii, igloo, pyramid. The Spring house is reused; other seasonal house goals remain procedural.
+- All 11 world background images exist under `game/assets/scenes/`. They are single horizontally tiled images, not multi-layer parallax backgrounds.
+- `loadWorld()` now tracks `sceneSrc` and updates the cached image source when the active world changes. The smoke test contains a regression that iterates all 11 worlds.
+- Approved existing art is reused for mouse, bat, penguin, snowman, crab, and the Spring goal house. Existing collectibles and the water-hazard fish accent already use approved art. Procedural fallbacks remain while images load.
+- Terrain and pipes remain procedural. Task 429 has 18 user-authorized candidates (8 terrain, 10 pipe); all 18 prompts have the required brief metadata and exact `--- prompt ---` marker. Local WIP/duplicate checks and final preflight remain incomplete.
+- Four additional prompt files — `terrain-summer-top`, `terrain-savanna-top`, `terrain-water-top`, and `pipe-japan` — are outside the 18-item list. Their status in the gitignored local WIP bundle is unknown; verify locally before generating them.
+- Remaining art families: static/moving platforms; enemies mole, piranha, snake, oni, scorpion; walkers bee, hedgehog, worm, spider, meerkat, panda, seal, scarab; and goal structures mine, cave, submarine, hut, torii, igloo, pyramid. Ladybug remains a candidate, not approved for Explorer reuse. Spring house is integrated; other seasonal house goals remain procedural.
 - Hazards and decorative particles remain procedural by design. Collectibles require no new generation.
 
-## Visual QA and remaining risks
+## Visual QA and performance
 
-- The current four Explorer screenshots are baseline viewport captures of the character-selection surface. They do not show the new environment in play; refresh screenshots with PLAY states after the scene-switch fix.
-- Direct spot-checks of scene assets included Spring, Water, Egypt, and North Pole. The Water scene has a visually strong seabed/seaweed band near its lower edge; verify it does not compete with actual gameplay terrain before considering visual QA complete.
-- Background images are approximately 2048×592 and add meaningful offline payload. Recheck total size, load time, memory, and frame time on modest Android hardware (Task 398 remains open).
-- No physics, collision geometry, enemy AI, spawn timing, platform movement, camera, controls, progression, HUD, or player sprites were changed.
+- Earlier screenshot review found only character-selection captures for Explorer, not PLAY-state evidence. Capture gameplay in all relevant world/viewport combinations before declaring environment visual QA complete.
+- The Water scene has a visually strong seabed/seaweed band near its lower edge; inspect it against the actual gameplay plane.
+- Backgrounds are approximately 2048×592 and add offline payload. Measure load time, memory, and frame time on modest Android hardware (Task 398).
+- No physics, collision geometry, enemy AI, spawn timing, platform movement, camera, controls, progression, HUD, or player sprites were changed in PR #22.
 
 ## Generation limitation
 
-- The project generator uses the Cloudflare-backed local pipeline and then performs cutout / technical QA before production WebP integration. The quota was reported exhausted at 10,000/10,000.
-- Cloudflare credentials and the local WIP asset bundle are gitignored and are not available through this GitHub-only session. No generation call was made and no new binary art was created.
-- ChatGPT ImageGen produces rendered image output but is not a drop-in replacement for the project's local PNG → cutout/QA → 512×512 alpha WebP pipeline, and its rendered output cannot be committed into this repository from this session.
-- Smoke regression checks were added but have not been run locally. PR CI results must be checked before describing them as passed.
+- The project uses the Cloudflare-backed local generation pipeline followed by cutout and technical QA to produce 512×512 alpha WebP assets.
+- Cloudflare quota was reported exhausted at 10,000/10,000. Local credentials and the gitignored WIP bundle are unavailable in this GitHub-only session. No new art was generated or integrated.
+- ChatGPT ImageGen is not a drop-in replacement for the project pipeline. Do not substitute it for production assets without explicit approval.
+- Generation preflight, local WIP duplicate checks, smoke execution, and in-game visual review remain outstanding.
