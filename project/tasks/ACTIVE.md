@@ -18,7 +18,7 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 429. IN PROGRESS (2026-11-07, ChatGPT/GPT-6) — Little Explorer environment-art audit/integration: fix world scene switching, reuse approved art, prepare 18 terrain/pipe candidates (4 extra prompts require local WIP verification), and complete in-game PLAY screenshot review; generation is Cloudflare-quota blocked.
+- 429. IN PROGRESS (2026-11-07, ChatGPT/GPT-6) — Little Explorer environment-art audit/integration: fix world scene switching, reuse approved art, normalize 18 terrain/pipe prompts (4 extra prompts require local WIP verification), and complete in-game PLAY screenshot review; generation is Cloudflare-quota blocked.
 - 415. LIMITED (2026-11-07, ChatGPT/GPT-6) — Spring pilot screenshot review incomplete: four viewport captures show the character-selection surface, not in-game PLAY states; capture and review real gameplay after scene-switch fix.
 - 391. ASSESSED (limited) — Compare portrait scale measured at all four viewports.
 - 392. LIMITED — Portfolio playtesting Sessions A–D require a real device.
