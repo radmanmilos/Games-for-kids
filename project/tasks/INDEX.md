@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **399**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **430**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -390,3 +390,28 @@ One line per task: `number | status | date | title | archive file`. Every finish
 394 | DONE | 2026-11-06 | Complete phased game-by-game lifecycle/state/input/audio/learning/performance audit for all 26 surfaces (25… | tasks-300-399.md
 395 | DONE | 2026-11-06 | Verified service-worker update and offline recovery lifecycle end-to-end: tools/sw_update_smoke.js ALL PASSED… | tasks-300-399.md
 397 | DONE | 2026-11-06 | Audit learning quality, Serbian Cyrillic text, Serbian speech and content integrity: all child-facing text… | tasks-300-399.md
+399 | DONE | - | Baseline record: repo HEAD a11c919 → 616f7a1 (committed), all tasks 388–398 terminal. | tasks-300-399.md
+400 | DONE | - | Source audit: explorer.html + kitty-standalone.js render pipeline, WORLDS registry, draw functions,… | tasks-400-499.md
+401 | DONE | - | Asset map: resources/General_reviews/Asset_Generation/EXPLORER_ASSET_MAP.md — 11 worlds × every visual… | tasks-400-499.md
+402 | DONE | - | Screenshot audit: resources/General_reviews/Screenshot_Review/TABLE_OF_CONTENT.md — explorer has 4 viewport… | tasks-400-499.md
+403 | DONE | - | Environment-art addendum: resources/General_reviews/Asset_Generation/EXPLORER_STYLE_ADDENDUM.md — shared art… | tasks-400-499.md
+404 | DONE | - | World palette sheets: resources/General_reviews/Asset_Generation/EXPLORER_PALETTES.md — one sheet per 11… | tasks-400-499.md
+405 | DONE | - | Asset-family technical contract: resources/General_reviews/Asset_Generation/EXPLORER_TECHNICAL_CONTRACT.md —… | tasks-400-499.md
+406 | DONE | - | Asset inventory: appended "Little Explorer — World Environment (proposed, Phase 1 task 406)" section to… | tasks-400-499.md
+407 | DONE | - | Renderer integration design: resources/General_reviews/Asset_Generation/EXPLORER_INTEGRATION.md — data-driven… | tasks-400-499.md
+408 | DONE | - | Asset loading / registry plan: resources/General_reviews/Asset_Generation/EXPLORER_LOADING.md — registry… | tasks-400-499.md
+409 | DONE | - | Gameplay entity ↔ visual asset mapping: resources/General_reviews/Asset_Generation/EXPLORER_MAPPING.md —… | tasks-400-499.md
+410 | DONE | - | Performance and fallback strategy: resources/General_reviews/Asset_Generation/EXPLORER_PERFORMANCE.md —… | tasks-400-499.md
+411 | DONE | - | Spring background brief: resources/General_reviews/Asset_Generation/prompts/scene-spring.md; mandatory… | tasks-400-499.md
+412 | DONE | - | Generate Spring background: first run (1024×1024 square with bear — WRONG, deleted). Second run:… | tasks-400-499.md
+413 | DONE | - | QA + user visual review: Spring scene APPROVED by user at… | tasks-400-499.md
+414 | DONE | - | Integrate Spring scene into draw(): added sceneImg variable, scene: 'spring' to Spring world entry, scene… | tasks-400-499.md
+420 | DONE | - | Integrate Winter scene into draw(): added scene: 'winter-explorer' to Winter world entry (filename suffix… | tasks-400-499.md
+421 | DONE | - | Underground background brief + generation + user approval:… | tasks-400-499.md
+422 | DONE | - | Cave background generated:… | tasks-400-499.md
+423 | DONE | - | Water background generated:… | tasks-400-499.md
+424 | DONE | - | Savanna background generated:… | tasks-400-499.md
+425 | DONE | - | Japan background generated:… | tasks-400-499.md
+426 | DONE | - | North Pole background generated:… | tasks-400-499.md
+427 | DONE | - | Egypt background generated:… | tasks-400-499.md
+428 | DONE | - | Integrate all remaining 7 scenes into draw(): added scene field to… | tasks-400-499.md

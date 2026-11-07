@@ -3,7 +3,7 @@
 **Project:** Little Play / Petrin svet — Мала истраживачица (Little Explorer)
 **Scope:** Registry and loading behaviour that resolves world backgrounds, terrain tiles, platforms, entrances, enemies, hazards, collectibles, goals, and decor to visual assets. Design doc only — no `game/` changes, no asset generation.
 **Relationship:** Implements the mapping from `EXPLORER_INTEGRATION.md` and the contract from `EXPLORER_TECHNICAL_CONTRACT.md`.
-**Status:** Proposed — Gate 2 acceptance pending before implementing a full world.
+**Status:** Partially implemented (verified 2026-11-07). All 11 scene images are loaded from WORLDS[].scene; this branch fixes source switching on world changes. Other art families remain in progress.
 
 ---
 
@@ -60,10 +60,10 @@ Add Little Explorer stems to `ART_REGISTRY` only when the corresponding asset is
 | spring | scene-spring | enemy-mouse | walker-ladybug | goal-house | collectible-strawberry |
 | summer | scene-summer | enemy-mouse | walker-bee | goal-house | collectible-watermelon |
 | autumn | scene-autumn | enemy-mouse | walker-hedgehog | goal-house | collectible-apple |
-| winter | scene-winter | enemy-mouse | walker-snowman | goal-house | collectible-carrot |
+| winter | scene-winter-explorer | enemy-mouse | walker-snowman | goal-house | collectible-carrot |
 | underground | scene-underground | enemy-mole | walker-worm | goal-mine | collectible-mushroom |
 | cave | scene-cave | enemy-bat | walker-spider | goal-cave | collectible-grapes |
-| water | scene-sea | enemy-piranha | walker-crab | goal-submarine | collectible-shell |
+| water | scene-water | enemy-piranha | walker-crab | goal-submarine | collectible-shell |
 | savanna | scene-savanna | enemy-snake | walker-meerkat | goal-hut | collectible-banana |
 | japan | scene-japan | enemy-oni | walker-panda | goal-torii | collectible-rice-ball |
 | northpole | scene-northpole | enemy-penguin | walker-seal | goal-igloo | collectible-gift |
@@ -83,3 +83,11 @@ Add Little Explorer stems to `ART_REGISTRY` only when the corresponding asset is
 ## 6. Gate 2
 
 Asset loading / registry approach confirmed; combined with `EXPLORER_INTEGRATION.md`, the design preserves collision and gameplay independently from artwork before implementing a full world (Phase 3 Spring).
+
+
+## Verified runtime state — 2026-11-07
+
+- loadWorld() derives the next local scene path from the active world's scene key and updates the cached sceneImg only when that path changes.
+- draw() tiles the loaded scene horizontally at world scroll speed. This is a single-layer background; parallax is not implemented.
+- The renderer uses approved ART_REGISTRY art for collectibles and the fish hazard accent, plus the newly reused Explorer enemy/walker/Spring-goal assets. Missing images fall back to the existing procedural drawings.
+- Terrain, moving platforms, and pipes remain procedural until their approved assets are generated and integrated.
