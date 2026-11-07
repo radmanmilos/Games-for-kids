@@ -525,6 +525,7 @@ const ctx = canvas.getContext('2d');
 let coinCount = 0;
 let maxExploredX = 0;
 let worldLoaded = false;
+let sceneImg = null;
 
 function resizeCanvas() {
     const oldH = canvas.height;
@@ -605,6 +606,7 @@ const WORLDS = [
     walker: 'ladybug',
     bgSky: '#5c94fc', groundColor: '#70c838', hillColor: '#00a800', pipeColor: '#00a800',
     stairColor: '#4f9a24',
+    scene: 'spring',
     isNight: false, decor: null, noClouds: false,
     stairs: [{x:2450,peak:3,w:56,h:40},{x:4000,peak:4,w:56,h:40}],
     grounds: [{x:0,w:500},{x:800,w:450},{x:1500,w:500},{x:2300,w:450},{x:3100,w:500},{x:3900,w:500},{x:4700,w:900}],
@@ -627,6 +629,7 @@ const WORLDS = [
     walker: 'bee',
     bgSky: '#fc7438', groundColor: '#f8b800', hillColor: '#d88000', pipeColor: '#00a800',
     stairColor: '#c89100',
+    scene: 'summer',
     isNight: false, decor: null, noClouds: false,
     stairs: [{x:2450,peak:3,w:56,h:40},{x:4300,peak:4,w:56,h:40}],
     grounds: [{x:0,w:600},{x:900,w:400},{x:1550,w:500},{x:2400,w:500},{x:3250,w:450},{x:4050,w:800},{x:5100,w:700}],
@@ -649,6 +652,7 @@ const WORLDS = [
     walker: 'hedgehog',
     bgSky: '#00003c', groundColor: '#cc5500', hillColor: '#882200', pipeColor: '#387800',
     stairColor: '#994000',
+    scene: 'autumn',
     isNight: true, decor: 'leaves', noClouds: false,
     stairs: [{x:2900,peak:3,w:56,h:40},{x:5400,peak:4,w:56,h:40}],
     grounds: [{x:0,w:1100},{x:1400,w:900},{x:2700,w:1000},{x:4100,w:900},{x:5400,w:1400}],
@@ -678,6 +682,7 @@ const WORLDS = [
     walker: 'snowman',
     bgSky: '#a0c0f8', groundColor: '#f8f8f8', hillColor: '#c0d8f8', pipeColor: '#3888c8',
     stairColor: '#d8e0f0',
+    scene: 'winter-explorer',
     isNight: false, decor: 'snow', noClouds: false,
     stairs: [{x:2650,peak:3,w:56,h:40},{x:5300,peak:4,w:56,h:40}],
     grounds: [{x:0,w:1000},{x:1300,w:950},{x:2600,w:950},{x:3900,w:1000},{x:5200,w:1500}],
@@ -706,6 +711,7 @@ const WORLDS = [
     walker: 'worm',
     bgSky: '#3a2a1a', groundColor: '#8a5a33', hillColor: '#6b4526', pipeColor: '#7a4f2a',
     stairColor: '#6b4526',
+    scene: 'underground',
     isNight: false, decor: null, noClouds: true, ceiling: true, ceilingColor: '#5a3f28',
     stairs: [{x:1300,peak:3,w:44,h:40},{x:3900,peak:4,w:44,h:40}],
     grounds: [{x:0,w:400},{x:600,w:350},{x:1150,w:400},{x:1700,w:350},{x:2250,w:400},{x:2800,w:350},{x:3350,w:400},{x:3900,w:350},{x:4450,w:1100}],
@@ -729,6 +735,7 @@ const WORLDS = [
     walker: 'spider',
     bgSky: '#2a2a3a', groundColor: '#5a4a3a', hillColor: '#453a2e', pipeColor: '#5c5246',
     stairColor: '#453a2e',
+    scene: 'cave',
     isNight: true, decor: null, noClouds: true, ceiling: true, ceilingColor: '#3a3340',
     stairs: [{x:1200,peak:3,w:44,h:40},{x:3850,peak:4,w:44,h:40}],
     grounds: [{x:0,w:380},{x:550,w:350},{x:1100,w:400},{x:1650,w:350},{x:2200,w:400},{x:2750,w:350},{x:3300,w:400},{x:3850,w:350},{x:4400,w:1000}],
@@ -752,6 +759,7 @@ const WORLDS = [
     walker: 'crab',
     bgSky: '#1a6a9a', groundColor: '#d9b98a', hillColor: '#1a5a8a', pipeColor: '#3a8ac0',
     stairColor: '#b09868',
+    scene: 'water',
     isNight: false, decor: 'bubbles', noClouds: true,
     stairs: [{x:2150,peak:3,w:56,h:40},{x:4500,peak:4,w:56,h:40}],
     grounds: [{x:0,w:500},{x:750,w:450},{x:1400,w:450},{x:2100,w:500},{x:2850,w:450},{x:3600,w:500},{x:4400,w:1100}],
@@ -774,6 +782,7 @@ const WORLDS = [
     walker: 'meerkat',
     bgSky: '#f8d870', groundColor: '#e0a860', hillColor: '#c89050', pipeColor: '#a87830',
     stairColor: '#bd8a44',
+    scene: 'savanna',
     isNight: false, decor: null, noClouds: false,
     stairs: [{x:2900,peak:3,w:56,h:40},{x:5700,peak:4,w:56,h:40}],
     grounds: [{x:0,w:1100},{x:1400,w:1100},{x:2800,w:1100},{x:4200,w:1100},{x:5600,w:1400}],
@@ -795,6 +804,7 @@ const WORLDS = [
     walker: 'panda',
     bgSky: '#f8a0c0', groundColor: '#e0707f', hillColor: '#c85a6a', pipeColor: '#b05060',
     stairColor: '#b84f5e',
+    scene: 'japan',
     isNight: false, decor: 'petals', noClouds: false,
     stairs: [{x:2600,peak:3,w:56,h:40},{x:5300,peak:4,w:56,h:40}],
     grounds: [{x:0,w:950},{x:1250,w:900},{x:2500,w:950},{x:3800,w:1000},{x:5100,w:1600}],
@@ -823,6 +833,7 @@ const WORLDS = [
     walker: 'seal',
     bgSky: '#b8d8f0', groundColor: '#f0f8fc', hillColor: '#c8e0f0', pipeColor: '#a0c0d8',
     stairColor: '#d0e4f0',
+    scene: 'northpole',
     isNight: false, decor: 'snow', noClouds: false,
     stairs: [{x:3000,peak:3,w:56,h:40},{x:5800,peak:4,w:56,h:40}],
     grounds: [{x:0,w:1200},{x:1500,w:1100},{x:2900,w:1100},{x:4300,w:1100},{x:5700,w:1400}],
@@ -844,6 +855,7 @@ const WORLDS = [
     walker: 'scarab',
     bgSky: '#f8d878', groundColor: '#e8c878', hillColor: '#d0a860', pipeColor: '#b89038',
     stairColor: '#c8a758',
+    scene: 'egypt',
     isNight: false, decor: null, noClouds: false,
     stairs: [{x:2950,peak:3,w:56,h:40},{x:5750,peak:4,w:56,h:40}],
     grounds: [{x:0,w:1150},{x:1450,w:1100},{x:2850,w:1100},{x:4250,w:1100},{x:5650,w:1400}],
@@ -1053,6 +1065,11 @@ function loadWorld() {
         phase: Math.random() * Math.PI * 2,
         y: groundY - WALKER_FOOT[w.walker]
     }));
+    // Scene background image for Little Explorer redesign (opaque scene art)
+    if (theme.scene && (!sceneImg || !sceneImg.src)) {
+        sceneImg = new Image();
+        sceneImg.src = '../assets/scenes/scene-' + theme.scene + '.png';
+    }
     worldLoaded = true;
 }
 
@@ -1586,41 +1603,57 @@ function drawPitHazards() {
 }
 
 function draw() {
-    // Sky Background
-    ctx.fillStyle = theme.bgSky;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     const t = Date.now() / 1000;
 
     ctx.save();
     ctx.translate(-cameraX, 0);
 
-    // Night Sky Stars
-    if (theme.isNight) {
-        ctx.fillStyle = "#ffffff";
-        for (let sx = 100; sx < 7000; sx += 400) {
-            ctx.fillRect(sx, 40, 4, 4);
-            ctx.fillRect(sx + 120, 90, 4, 4);
+    // Scene background (Little Explorer redesign) — tiled horizontally, sky area only.
+    // Falls back to the original procedural sky for worlds without a scene asset.
+    if (sceneImg && sceneImg.complete && sceneImg.naturalWidth > 0) {
+        const sceneW = sceneImg.naturalWidth;
+        const sceneH = sceneImg.naturalHeight;
+        const drawH = Math.min(sceneH, groundY);
+        const startX = Math.floor(cameraX / sceneW) * sceneW;
+        for (let sx = startX - sceneW; sx < cameraX + canvas.width; sx += sceneW) {
+            ctx.drawImage(sceneImg, sx, 0, sceneW, drawH);
         }
-    }
+        if (sceneH < groundY) {
+            ctx.fillStyle = theme.bgSky;
+            ctx.fillRect(0, sceneH, canvas.width, groundY - sceneH);
+        }
+    } else {
+        // Sky Background
+        ctx.fillStyle = theme.bgSky;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Distant Hills
-    ctx.fillStyle = theme.hillColor;
-    for (let hx = 300; hx < 7200; hx += 800) {
-        ctx.beginPath();
-        ctx.arc(hx, canvas.height, 280, Math.PI, 0);
-        ctx.fill();
-    }
+        // Night Sky Stars
+        if (theme.isNight) {
+            ctx.fillStyle = "#ffffff";
+            for (let sx = 100; sx < 7000; sx += 400) {
+                ctx.fillRect(sx, 40, 4, 4);
+                ctx.fillRect(sx + 120, 90, 4, 4);
+            }
+        }
 
-    // Clouds
-    if (!theme.noClouds) {
-        ctx.fillStyle = theme.isNight ? "rgba(255, 255, 255, 0.3)" : "#ffffff";
-        for (let cx = 200; cx < 7200; cx += 550) {
+        // Distant Hills
+        ctx.fillStyle = theme.hillColor;
+        for (let hx = 300; hx < 7200; hx += 800) {
             ctx.beginPath();
-            ctx.arc(cx, 80, 45, 0, Math.PI * 2);
-            ctx.arc(cx + 40, 70, 55, 0, Math.PI * 2);
-            ctx.arc(cx + 80, 80, 45, 0, Math.PI * 2);
+            ctx.arc(hx, canvas.height, 280, Math.PI, 0);
             ctx.fill();
+        }
+
+        // Clouds
+        if (!theme.noClouds) {
+            ctx.fillStyle = theme.isNight ? "rgba(255, 255, 255, 0.3)" : "#ffffff";
+            for (let cx = 200; cx < 7200; cx += 550) {
+                ctx.beginPath();
+                ctx.arc(cx, 80, 45, 0, Math.PI * 2);
+                ctx.arc(cx + 40, 70, 55, 0, Math.PI * 2);
+                ctx.arc(cx + 80, 80, 45, 0, Math.PI * 2);
+                ctx.fill();
+            }
         }
     }
 

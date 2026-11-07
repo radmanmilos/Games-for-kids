@@ -519,6 +519,76 @@ This inventory is **not final for generation** until:
 - existing image assets and the excluded Explorer/Kitty/3D Racing areas have been checked;
 - the user has approved which rows are to be illustrated, handled as SVG/CSS, or left unchanged.
 
+## Little Explorer — World Environment (proposed, Phase 1 task 406)
+
+Rows below are the Little Explorer world-redesign asset candidates extracted from
+`game/games/kitty-standalone.js` (`WORLDS[11]` + `draw()` pipeline) per
+`EXPLORER_ASSET_MAP.md`. All are **PROPOSED** only — distinguished from
+`APPROVED FOR GENERATION` rows; no generation is authorized until Gate 1
+(art direction + palettes + technical contract accepted). Hero sprites and HUD
+are out of scope (unchanged). Scenes are opaque (`game/assets/scenes/`); glyphs
+are 512×512 alpha WebP (`game/assets/art/`).
+
+| ID | Current glyph / visual | Confirmed source location(s) | Current purpose | Proposed treatment | Status |
+|---|---|---|---|---|---|
+| env-spring-bg | procedural sky/hills/clouds | `game/games/kitty-standalone.js` WORLDS[0] + `draw()` | Spring background | Opaque scene art (`game/assets/scenes/scene-spring.png`), parallax layers | USER-APPROVED / TECHNICAL QA MEASURED — `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/scenes/scene-spring.png` (2048×592 opaque RGB, 798KB, sky-dominant horizontal strip, star.png style reference only); production destination `game/assets/scenes/scene-spring.png` |
+| env-summer-bg | procedural sky/hills/clouds | `game/games/kitty-standalone.js` WORLDS[1] + `draw()` | Summer background | Opaque scene art (`game/assets/scenes/scene-summer.png`) | USER-APPROVED / TECHNICAL QA MEASURED — `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/scenes/scene-summer.png` (2048×592 opaque RGB, 1.45MB, warm golden sunset sky-dominant horizontal strip, star.png style reference only); production destination `game/assets/scenes/scene-summer.png` |
+| env-autumn-bg | procedural sky/hills/clouds/stars | `game/games/kitty-standalone.js` WORLDS[2] + `draw()` | Autumn background | Opaque scene art (`game/assets/scenes/scene-autumn.png`), night variant | USER-APPROVED / TECHNICAL QA MEASURED — `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/scenes/scene-autumn.png` (2048×592 opaque RGB, 1.64MB, deep muted night sky with faint stars/haze, star.png style reference only); production destination `game/assets/scenes/scene-autumn.png` |
+| env-winter-bg | procedural sky/hills/clouds | `game/games/kitty-standalone.js` WORLDS[3] + `draw()` | Winter background | Opaque scene art (`game/assets/scenes/scene-winter-explorer.png`) | USER-APPROVED / TECHNICAL QA MEASURED — `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/scenes/scene-winter-explorer.png` (2048×592 opaque RGB, 1.17MB, cool blue-white winter sky, star.png style reference only; filename suffix -explorer avoids clash with existing 1024x1024 scene-winter.png used by animal_puzzle.js); production destination `game/assets/scenes/scene-winter-explorer.png` |
+| env-underground-bg | procedural sky/hills + rock ceiling | `game/games/kitty-standalone.js` WORLDS[4] + `draw()` | Underground background | Opaque scene art (`game/assets/scenes/scene-underground.png`) | USER-APPROVED / TECHNICAL QA MEASURED — `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/scenes/scene-underground.png` (2048×592 opaque RGB, 1.74MB, subterranean earth brown, no sky visible, star.png style reference only); production destination `game/assets/scenes/scene-underground.png` |
+| env-cave-bg | procedural sky/hills/stars + rock ceiling | `game/games/kitty-standalone.js` WORLDS[5] + `draw()` | Cave background | Opaque scene art (`game/assets/scenes/scene-cave.png`) | USER-APPROVED / TECHNICAL QA MEASURED — `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/scenes/scene-cave.png` (2048×592 opaque RGB, 1.56MB, cool cave-grey subterranean, no sky visible, star.png style reference only); production destination `game/assets/scenes/scene-cave.png` |
+| env-water-bg | procedural sky/hills | `game/games/kitty-standalone.js` WORLDS[6] + `draw()` | Water background | Opaque scene art (`game/assets/scenes/scene-water.png`) | USER-APPROVED / TECHNICAL QA MEASURED — `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/scenes/scene-water.png` (2048×592 opaque RGB, 908KB, deep aquatic blue, star.png style reference only); production destination `game/assets/scenes/scene-water.png` |
+| env-savanna-bg | procedural sky/hills/clouds | `game/games/kitty-standalone.js` WORLDS[7] + `draw()` | Savanna background | Opaque scene art (`game/assets/scenes/scene-savanna.png`) | USER-APPROVED / TECHNICAL QA MEASURED — `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/scenes/scene-savanna.png` (2048×592 opaque RGB, 1.77MB, warm golden grassland, star.png style reference only); production destination `game/assets/scenes/scene-savanna.png` |
+| env-japan-bg | procedural sky/hills/clouds | `game/games/kitty-standalone.js` WORLDS[8] + `draw()` | Japan background | Opaque scene art (`game/assets/scenes/scene-japan.png`) | USER-APPROVED / TECHNICAL QA MEASURED — `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/scenes/scene-japan.png` (2048×592 opaque RGB, 1.53MB, soft cherry-pink, star.png style reference only); production destination `game/assets/scenes/scene-japan.png` |
+| env-northpole-bg | procedural sky/hills/clouds | `game/games/kitty-standalone.js` WORLDS[9] + `draw()` | North Pole background | Opaque scene art (`game/assets/scenes/scene-northpole.png`) | USER-APPROVED / TECHNICAL QA MEASURED — `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/scenes/scene-northpole.png` (2048×592 opaque RGB, 1.03MB, cool polar ice, star.png style reference only); production destination `game/assets/scenes/scene-northpole.png` |
+| env-egypt-bg | procedural sky/hills/clouds | `game/games/kitty-standalone.js` WORLDS[10] + `draw()` | Egypt background | Opaque scene art (`game/assets/scenes/scene-egypt.png`) | USER-APPROVED / TECHNICAL QA MEASURED — `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/scenes/scene-egypt.png` (2048×592 opaque RGB, 943KB, warm sandstone desert, star.png style reference only); production destination `game/assets/scenes/scene-egypt.png` |
+| env-terrain-family | ground/floats/stairs fill + stitch | `game/games/kitty-standalone.js` `platforms` build + `draw()` static platforms | All worlds terrain | Transparent glyph tile family (top/side, corner/end-cap variants) per world palette | PROPOSED |
+| env-platform-family | moving-platform fill + stitch | `game/games/kitty-standalone.js` `movingPlatforms` + `draw()` | All worlds platforms | Transparent glyph family distinct from background | PROPOSED |
+| env-pipe-family | pipe spawner | `game/games/kitty-standalone.js` `pipes` + `draw()` pipes | All worlds entrances | World-themed transparent glyph, clear emergence point, collision-preserving | PROPOSED |
+| env-enemy-mouse | procedural pop-out mouse | `drawEnemy('mouse')` | Spring/Summer/Autumn/Winter pipe enemy | Transparent glyph, friendly silhouette | PROPOSED |
+| env-enemy-mole | procedural pop-out mole | `drawEnemy('mole')` | Underground pipe enemy | Transparent glyph | PROPOSED |
+| env-enemy-bat | procedural pop-out bat | `drawEnemy('bat')` | Cave pipe enemy | Transparent glyph | PROPOSED |
+| env-enemy-piranha | procedural pop-out piranha | `drawEnemy('piranha')` | Water pipe enemy | Transparent glyph | PROPOSED |
+| env-enemy-snake | procedural pop-out snake | `drawEnemy('snake')` | Savanna pipe enemy | Transparent glyph | PROPOSED |
+| env-enemy-oni | procedural pop-out oni | `drawEnemy('oni')` | Japan pipe enemy | Transparent glyph | PROPOSED |
+| env-enemy-penguin | procedural pop-out penguin | `drawEnemy('penguin')` | North Pole pipe enemy | Transparent glyph | PROPOSED |
+| env-enemy-scorpion | procedural pop-out scorpion | `drawEnemy('scorpion')` | Egypt pipe enemy | Transparent glyph | PROPOSED |
+| env-walker-ladybug | procedural walker | `drawWalker('ladybug')` | Spring ground walker | Transparent glyph ≤48 px | PROPOSED |
+| env-walker-bee | procedural walker | `drawWalker('bee')` | Summer ground walker | Transparent glyph ≤48 px | PROPOSED |
+| env-walker-hedgehog | procedural walker | `drawWalker('hedgehog')` | Autumn ground walker | Transparent glyph ≤48 px | PROPOSED |
+| env-walker-snowman | procedural walker | `drawWalker('snowman')` | Winter ground walker | Transparent glyph ≤48 px | PROPOSED |
+| env-walker-worm | procedural walker | `drawWalker('worm')` | Underground ground walker | Transparent glyph ≤48 px | PROPOSED |
+| env-walker-spider | procedural walker | `drawWalker('spider')` | Cave ground walker | Transparent glyph ≤48 px | PROPOSED |
+| env-walker-crab | procedural walker | `drawWalker('crab')` | Water ground walker | Transparent glyph ≤48 px | PROPOSED |
+| env-walker-meerkat | procedural walker | `drawWalker('meerkat')` | Savanna ground walker | Transparent glyph ≤48 px | PROPOSED |
+| env-walker-panda | procedural walker | `drawWalker('panda')` | Japan ground walker | Transparent glyph ≤48 px | PROPOSED |
+| env-walker-seal | procedural walker | `drawWalker('seal')` | North Pole ground walker | Transparent glyph ≤48 px | PROPOSED |
+| env-walker-scarab | procedural walker | `drawWalker('scarab')` | Egypt ground walker | Transparent glyph ≤48 px | PROPOSED |
+| env-hazard-water | water gradient + 🐟 | `drawPitHazards('water')` | Spring/Summer/Japan pits | Retain procedural gradient; 🐟 via existing fish glyph | PROPOSED |
+| env-hazard-lava | lava gradient + bubbles | `drawPitHazards('lava')` | Underground/Cave pits | Retain procedural gradient | PROPOSED |
+| env-hazard-spikes | spikes triangles | `drawPitHazards('spikes')` | Autumn/Winter/Water/Savanna/NorthPole/Egypt pits | Retain procedural, preserve collision bounds | PROPOSED |
+| env-collectible-strawberry | 🍓 on coin | `WORLDS[0].collectible` + `draw()` coins | Spring collectible | Reuse existing strawberry glyph where scale fits | PROPOSED |
+| env-collectible-watermelon | 🍉 on coin | `WORLDS[1].collectible` | Summer collectible | Existing watermelon glyph | PROPOSED |
+| env-collectible-apple | 🍎 on coin | `WORLDS[2].collectible` | Autumn collectible | Existing apple glyph | PROPOSED |
+| env-collectible-carrot | 🥕 on coin | `WORLDS[3].collectible` | Winter collectible | Existing carrot glyph | PROPOSED |
+| env-collectible-mushroom | 🍄 on coin | `WORLDS[4].collectible` | Underground collectible | Existing mushroom glyph | PROPOSED |
+| env-collectible-grapes | 🍇 on coin | `WORLDS[5].collectible` | Cave collectible | Existing grapes glyph | PROPOSED |
+| env-collectible-shell | 🐚 on coin | `WORLDS[6].collectible` | Water collectible | Existing shell glyph | PROPOSED |
+| env-collectible-banana | 🍌 on coin | `WORLDS[7].collectible` | Savanna collectible | Existing banana glyph | PROPOSED |
+| env-collectible-rice-ball | 🍙 on coin | `WORLDS[8].collectible` | Japan collectible | Existing food-rice-ball glyph | PROPOSED |
+| env-collectible-gift | 🎁 on coin | `WORLDS[9].collectible` | North Pole collectible | Existing object-gift glyph | PROPOSED |
+| env-collectible-palm-tree | 🌴 on coin | `WORLDS[10].collectible` | Egypt collectible | Existing palm-tree glyph | PROPOSED |
+| env-goal-house | house building | `drawGoal('house')` | Spring/Summer/Autumn/Winter goal | Transparent glyph goal landmark | PROPOSED |
+| env-goal-mine | mine arch | `drawGoal('mine')` | Underground goal | Transparent glyph goal landmark | PROPOSED |
+| env-goal-cave | cave arch | `drawGoal('cave')` | Cave goal | Transparent glyph goal landmark | PROPOSED |
+| env-goal-arch | arch | `drawGoal('arch')` | (unused) goal | Transparent glyph goal landmark | PROPOSED |
+| env-goal-hut | hut | `drawGoal('hut')` | Savanna goal | Transparent glyph goal landmark | PROPOSED |
+| env-goal-torii | torii | `drawGoal('torii')` | Japan goal | Transparent glyph goal landmark | PROPOSED |
+| env-goal-igloo | igloo | `drawGoal('igloo')` | North Pole goal | Transparent glyph goal landmark | PROPOSED |
+| env-goal-pyramid | pyramid | `drawGoal('pyramid')` | Egypt goal | Transparent glyph goal landmark | PROPOSED |
+| env-goal-submarine | submarine | `drawGoal('submarine')` | Water goal | Transparent glyph goal landmark | PROPOSED |
+
+
 ## Production corrections — task 358 (2026-11-04, OpenCode/Big Pickle)
 
 The 2026-10-31 cutout pass (task 296) produced 155 real 512x512 alpha WebPs. Six files added later
