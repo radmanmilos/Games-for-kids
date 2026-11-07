@@ -11,6 +11,7 @@
 - Latest main Actions run checked: 42369993270. Fast Gate and Pages succeeded. Extended Matrix, Smoke Matrix, and Release QA were skipped; skipped jobs are not passed jobs.
 - PR #21 (Task 399 archive/handover) is closed and was not merged. Its cancelled checks are not evidence of a merge. This branch reconciles the task archive against the current main state.
 - GitHub connector access does not expose a local working tree, so no local git status, browser playtest, or local script execution is claimed.
+- PR #22 is open (https://github.com/radmanmilos/Games-for-kids/pull/22), head c6eacfcebe0e54b3602cbc9c260fc79afc2949ba; associated CI run 42371943370 was in progress at the time of this status update. The PR has not been merged.
 
 ## Task tracking
 
