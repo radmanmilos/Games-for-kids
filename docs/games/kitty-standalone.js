@@ -526,6 +526,7 @@ let coinCount = 0;
 let maxExploredX = 0;
 let worldLoaded = false;
 let sceneImg = null;
+let sceneSrc = null;
 
 function resizeCanvas() {
     const oldH = canvas.height;
@@ -891,7 +892,7 @@ let worldPos = 0;
 // than the kitty (48px tall).
 const WALKER_FOOT = {
     ladybug: 10, bee: 10, hedgehog: 14, snowman: 18, worm: 10,
-    spider: 8, crab: 10, meerkat: 15, panda: 14, seal: 13, scarab: 9
+    spider: 8, crab: 16, meerkat: 15, panda: 14, seal: 13, scarab: 9
 };
 
 let player, platforms, movingPlatforms, pipes, coins, goal, particles, mice, walkers, theme, levelCompleted, stairSteps, groundY = 0;
@@ -1065,10 +1066,18 @@ function loadWorld() {
         phase: Math.random() * Math.PI * 2,
         y: groundY - WALKER_FOOT[w.walker]
     }));
-    // Scene background image for Little Explorer redesign (opaque scene art)
-    if (theme.scene && (!sceneImg || !sceneImg.src)) {
-        sceneImg = new Image();
-        sceneImg.src = '../assets/scenes/scene-' + theme.scene + '.png';
+    // Select the active world's scene on every world load. Reuse one Image
+    // object; changing its local src uses the browser cache and avoids
+    // allocating images in the frame loop.
+    const nextSceneSrc = theme.scene ? '../assets/scenes/scene-' + theme.scene + '.png' : null;
+    if (nextSceneSrc !== sceneSrc) {
+        sceneSrc = nextSceneSrc;
+        if (sceneSrc) {
+            if (!sceneImg) sceneImg = new Image();
+            sceneImg.src = sceneSrc;
+        } else {
+            sceneImg = null;
+        }
     }
     worldLoaded = true;
 }
@@ -1800,8 +1809,21 @@ function drawCeiling() {
     }
 }
 
+// Draw an approved, already-registered storybook asset when it has loaded.
+// Until then, retain the existing procedural fallback so the game never
+// shows a missing or invisible gameplay object.
+function drawExplorerArt(glyph, cx, cy, size) {
+    if (!window.Art || !window.Art.image || !window.Art.draw) return false;
+    const image = window.Art.image(glyph);
+    if (!image || !image.complete || image.naturalWidth <= 0) return false;
+    return window.Art.draw(ctx, glyph, cx, cy, size);
+}
+
 // --- Enemy drawings (same pop-out mechanic, themed look) ---
 function drawEnemy(type) {
+    if (type === 'mouse' && drawExplorerArt('🐭', 0, 0, 40)) return;
+    if (type === 'bat' && drawExplorerArt('🦇', 0, 0, 40)) return;
+    if (type === 'penguin' && drawExplorerArt('🐧', 0, 0, 40)) return;
     if (type === 'mouse') {
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
@@ -2017,6 +2039,8 @@ function drawEnemy(type) {
 // separate from the pipe pop-out art. All are smaller than the kitty (48px).
 // Drawn facing right; the caller flips with ctx.scale(dir, 1).
 function drawWalker(type) {
+    if (type === 'snowman' && drawExplorerArt('⛄', 0, 0, 36)) return;
+    if (type === 'crab' && drawExplorerArt('🦀', 0, 0, 32)) return;
     if (type === 'ladybug') {
         ctx.fillStyle = '#e52521';
         ctx.beginPath();
@@ -2277,6 +2301,10 @@ function drawWalker(type) {
 
 // --- Theme goal buildings (paper style) ---
 function drawGoal(type, c) {
+    // The Spring pilot reuses the approved painted house. Other seasonal
+    // worlds keep their existing fallback until their distinct goals are ready.
+    if (type === 'house' && theme && theme.scene === 'spring' &&
+        drawExplorerArt('🏠', c.x + c.width / 2, c.y + c.height / 2, Math.min(c.width, c.height))) return;
     if (type === 'house') {
         ctx.fillStyle = '#f8edeb';
         ctx.fillRect(c.x, c.y + 38, c.width, c.height - 38);
