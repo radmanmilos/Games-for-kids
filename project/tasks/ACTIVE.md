@@ -14,12 +14,12 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 1. **Start:** add `- N. NEW — <title> (<date>, <tool/model>)` at the top of *Open tasks*. N = the "next task number" in `INDEX.md`. Flip it to IN PROGRESS when you start.
 2. **Finish:** mark it DONE with a dated note: who (tool + model), what, why. Keep the entry short; put long reasoning in the entry only if a future session needs it.
 3. **End of session:** run `node tools/archive_tasks.js`. It moves DONE / FIXED / REVERTED / ABANDONED / RETIRED entries to `archive/tasks/` and adds their `INDEX.md` lines. (`--dry-run` shows what would move.)
-4. Do **not** copy the task into README, CONTRIBUTING or STATUS. `project/STATUS.md` is overwritten at session end instead.
+4. **Do** not copy the task into README, CONTRIBUTING or STATUS. `project/STATUS.md` is overwritten at session end instead.
 
 ## Open tasks
 
-- 429. IN PROGRESS (2026-11-07, ChatGPT/GPT-6) — Little Explorer environment-art audit/integration: fix world scene switching, reuse approved art, normalize 18 terrain/pipe prompts (4 extra prompts require local WIP verification), and complete in-game PLAY screenshot review; generation is Cloudflare-quota blocked.
-- 415. LIMITED (2026-11-07, ChatGPT/GPT-6) — Spring pilot screenshot review incomplete: four viewport captures show the character-selection surface, not in-game PLAY states; capture and review real gameplay after scene-switch fix.
+- 429. IN PROGRESS (2026-11-07, ChatGPT/GPT-6) — PR #22 merged: world scene switching and approved-art reuse are integrated; finish terrain/pipe art after local WIP preflight and quota recovery, plan remaining art families, and review real PLAY-state screenshots.
+- 415. LIMITED (2026-11-07, ChatGPT/GPT-6) — Spring pilot screenshot review incomplete: existing four viewport captures show the character-selection surface, not in-game PLAY states; capture and review real gameplay.
 - 391. ASSESSED (limited) — Compare portrait scale measured at all four viewports.
 - 392. LIMITED — Portfolio playtesting Sessions A–D require a real device.
 - 396. LIMITED — Manual accessibility and input-interruption checks require a real device.
