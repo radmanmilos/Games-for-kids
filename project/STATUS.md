@@ -2,8 +2,8 @@
 
 **Last verified:** 2026-11-07  
 **Repository:** radmanmilos/Games-for-kids  
-**Main HEAD:** beb4683811ac210463167b348f783bdba100aa17 (merge of PR #22)  
-**Current documentation branch:** docs/explorer-post-merge-status-429
+**Main HEAD:** 5605c700e949becde084db3427245b6d8e788373 (merge of PR #23)  
+**Current documentation branch:** docs/explorer-gate1-preflight-429
 
 ## Repository and verification
 
@@ -25,7 +25,7 @@
 - All 11 world background images exist under `game/assets/scenes/`. They are single horizontally tiled images, not multi-layer parallax backgrounds.
 - `loadWorld()` now tracks `sceneSrc` and updates the cached image source when the active world changes. The smoke test contains a regression that iterates all 11 worlds.
 - Approved existing art is reused for mouse, bat, penguin, snowman, crab, and the Spring goal house. Existing collectibles and the water-hazard fish accent already use approved art. Procedural fallbacks remain while images load.
-- Terrain and pipes remain procedural. Task 429 has 18 user-authorized candidates (8 terrain, 10 pipe); all 18 prompts have the required brief metadata and exact `--- prompt ---` marker. Local WIP/duplicate checks and final preflight remain incomplete.
+- Terrain and pipes remain procedural. Task 429 has 18 item-level user-authorized candidates (8 terrain, 10 pipe); all 18 prompts have the required brief metadata and exact `--- prompt ---` marker. However, the shared Explorer art-direction addendum, world palettes, and technical contract still explicitly say **Gate 1 acceptance pending**. Item-level authorization does not waive that project-wide gate. Do not generate until Gate 1 is accepted, the current bear/star references and WIP bundle are inspected, and duplicate/preflight checks are complete.
 - Four additional prompt files — `terrain-summer-top`, `terrain-savanna-top`, `terrain-water-top`, and `pipe-japan` — are outside the 18-item list. Their status in the gitignored local WIP bundle is unknown; verify locally before generating them.
 - Remaining art families: static/moving platforms; enemies mole, piranha, snake, oni, scorpion; walkers bee, hedgehog, worm, spider, meerkat, panda, seal, scarab; and goal structures mine, cave, submarine, hut, torii, igloo, pyramid. Ladybug remains a candidate, not approved for Explorer reuse. Spring house is integrated; other seasonal house goals remain procedural.
 - Hazards and decorative particles remain procedural by design. Collectibles require no new generation.
@@ -42,4 +42,4 @@
 - The project uses the Cloudflare-backed local generation pipeline followed by cutout and technical QA to produce 512×512 alpha WebP assets.
 - Cloudflare quota was reported exhausted at 10,000/10,000. Local credentials and the gitignored WIP bundle are unavailable in this GitHub-only session. No new art was generated or integrated.
 - ChatGPT ImageGen is not a drop-in replacement for the project pipeline. Do not substitute it for production assets without explicit approval.
-- Generation preflight, local WIP duplicate checks, smoke execution, and in-game visual review remain outstanding.
+- Generation preflight, Gate 1 acceptance, local WIP duplicate checks, smoke execution, and in-game visual review remain outstanding. The four extra prompts (`terrain-summer-top`, `terrain-savanna-top`, `terrain-water-top`, `pipe-japan`) are old-format drafts without the normalized brief header/marker and are not part of the 18 authorized candidates; do not silently add them to the batch.

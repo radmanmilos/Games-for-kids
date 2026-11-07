@@ -18,7 +18,7 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 429. IN PROGRESS (2026-11-07, ChatGPT/GPT-6) — PR #22 merged: world scene switching and approved-art reuse are integrated; finish terrain/pipe art after local WIP preflight and quota recovery, plan remaining art families, and review real PLAY-state screenshots.
+- 429. IN PROGRESS (2026-11-07, ChatGPT/GPT-6) — PR #22 merged: world scene switching and approved-art reuse are integrated; terrain/pipe generation is blocked by pending Gate 1 acceptance (style addendum, palettes, technical contract), local WIP/reference inspection, and quota recovery; then plan remaining art families and review real PLAY-state screenshots.
 - 415. LIMITED (2026-11-07, ChatGPT/GPT-6) — Spring pilot screenshot review incomplete: existing four viewport captures show the character-selection surface, not in-game PLAY states; capture and review real gameplay.
 - 391. ASSESSED (limited) — Compare portrait scale measured at all four viewports.
 - 392. LIMITED — Portfolio playtesting Sessions A–D require a real device.
