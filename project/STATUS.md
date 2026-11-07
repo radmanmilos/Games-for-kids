@@ -16,7 +16,7 @@
 
 - Task 429 — IN PROGRESS: Little Explorer environment-art audit/integration, scene-switch fix, approved-art reuse, 18 terrain/pipe candidates, and real PLAY screenshot review.
 - Task 415 — LIMITED: four Explorer viewport screenshots show the character-selection surface, not gameplay. Real PLAY-state screenshots are still required.
-- Completed tasks 399–414 and 416–428 are archived in this branch. The next task number is 430.
+- Completed tasks 399–414 and 420–428 are archived in this branch. The next task number is 430.
 - Other open/limited tasks remain: 391 (compare portrait feedback), 392 (real-device playtesting), 396 (accessibility/input interruption), 398 (modest Android performance), 415, and 429.
 
 ## Little Explorer — verified state
