@@ -102,3 +102,21 @@ Reuse existing glyphs where scale fits the 36 px coin render; no new asset requi
 Everything listed as "Retained procedural" above has a documented reason (plan §8.6: simple effects, tiny particles, repeated low-detail elements, dynamic geometry). No `drawX` call site is left unmapped without a documented retention reason.
 
 Gate 2: this mapping (with EXPLORER_INTEGRATION.md + EXPLORER_LOADING.md) confirmed to preserve collision/gameplay before Phase 3 Spring implementation.
+
+
+## Verified runtime mapping — 2026-11-07 (Task 429)
+
+| Element | Current runtime art | Status |
+|---|---|---|
+| World backgrounds | game/assets/scenes/scene-*.png; keys use scene-water and scene-winter-explorer | 11 images integrated; single tiled layer; world-switch source fix in Task 429 |
+| Collectibles | Existing ART_REGISTRY glyphs via Art.draw | Already integrated; no new generation required |
+| Water hazard fish accent | Existing fish.webp via Art.draw | Already integrated; water body remains procedural |
+| Mouse / Bat / Penguin | mouse.webp, bat.webp, penguin.webp | Reused approved assets |
+| Snowman / Crab | snowman.webp, animal-crab.webp | Reused approved assets |
+| Spring goal | house.webp | Reused approved asset for Spring only |
+| Terrain / pipes | No production art in tracked game/assets/art/ | 18 user-authorized candidates blocked by Cloudflare quota; 4 extra prompts need local WIP audit |
+| Static / moving platforms | Procedural fills and stitch line | Separate platform family still needs a brief |
+| Remaining enemies / walkers | Procedural | Missing art or existing candidate review |
+| Other goal structures | Procedural | Mine, cave, submarine, hut, torii, igloo, pyramid still need art direction/assets |
+
+The Explorer and Kitty player sprite sets, collision boxes, movement, enemy AI, pipe spawn timing, platform movement, camera, controls, progression, and HUD remain unchanged. Existing art is used only when its image has loaded; procedural fallback remains during loading.

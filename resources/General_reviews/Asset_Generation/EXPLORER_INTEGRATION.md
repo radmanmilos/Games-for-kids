@@ -3,7 +3,7 @@
 **Project:** Little Play / Petrin svet — Мала истраживачица (Little Explorer)
 **Scope:** Data-driven mapping layer in `game/games/kitty-standalone.js` `draw()` that resolves world/element IDs to visual assets, while keeping gameplay, collision, physics, camera, and world dimensions unchanged.
 **Relationship:** Companion to `EXPLORER_STYLE_ADDENDUM.md`, `EXPLORER_PALETTES.md`, `EXPLORER_TECHNICAL_CONTRACT.md`, `EXPLORER_ASSET_MAP.md`. No `game/` changes in this task; design doc only.
-**Status:** Proposed — Gate 2 acceptance pending before implementing a full world.
+**Status:** Partially implemented; current code and remaining work reconciled 2026-11-07. Background scene art and selected approved glyph reuse are in runtime; terrain/platform/pipe and remaining enemy/goal families are not complete.
 
 ---
 
@@ -122,3 +122,12 @@ Collectible × world: strawberry/watermelon/apple/carrot/mushroom/grapes/shell/b
 ## 8. Gate 2
 
 Integration design confirmed to preserve collision and gameplay independently from artwork before implementing a full world (Phase 3 Spring). The design doc must be reviewed/accepted by the user; no `game/` edits or asset generation until Gate 2.
+
+
+## Verified current implementation — 2026-11-07
+
+- Backgrounds: 11 opaque scene images are present and selected per world; they are horizontally tiled as one layer. Multi-layer parallax remains future work.
+- Scene switching: fixed in Task 429. The prior code only assigned sceneImg while empty, so the first loaded world image could persist. sceneSrc now tracks the selected path and updates on world changes.
+- Reused art now integrated: mouse, bat, penguin, snowman, crab, and Spring house. Collectibles and the water-fish accent already used approved registry assets.
+- Still procedural: all terrain/static platforms, moving platforms, all pipes/entrances, remaining enemies/walkers, and all goal structures except the Spring house.
+- The current four Explorer screenshots are character-picker captures, not PLAY-state screenshots; visual gameplay QA remains outstanding.

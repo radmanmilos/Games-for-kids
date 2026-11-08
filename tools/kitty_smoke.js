@@ -139,6 +139,79 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   const bootName = await h.evalv('document.getElementById("world-name").textContent');
   check('boot: world HUD renders after choosing the kitty', typeof bootName === 'string' && bootName.length > 0, bootName);
 
+  // Task 429: each world must select its own scene image when loadWorld runs.
+  // This catches a stale global Image source surviving a world transition.
+  const sceneSelection = await h.evalv(`(() => {
+    const savedOrder = worldOrder.slice();
+    const savedPos = worldPos;
+    const rows = [];
+    worldOrder = WORLDS.map((_, i) => i);
+    for (let i = 0; i < WORLDS.length; i++) {
+      worldPos = i;
+      loadWorld();
+      rows.push({
+        name: WORLDS[i].name,
+        scene: WORLDS[i].scene,
+        src: sceneImg ? sceneImg.getAttribute('src') : null
+      });
+    }
+    worldOrder = savedOrder;
+    worldPos = savedPos;
+    loadWorld();
+    return rows;
+  })()`);
+  const sceneSelectionOk = Array.isArray(sceneSelection) && sceneSelection.length === 11 &&
+    sceneSelection.every(row => row.scene &&
+      row.src === '../assets/scenes/scene-' + row.scene + '.png');
+  check('task429: loadWorld selects the matching scene image for all 11 worlds',
+    sceneSelectionOk, JSON.stringify(sceneSelection || []));
+
+  const reusableArtUrls = await h.evalv(`['🐭', '🦇', '🐧', '⛄', '🦀', '🏠'].map(g => Art.url(g))`);
+  const reusableArtStems = ['mouse.webp', 'bat.webp', 'penguin.webp', 'snowman.webp', 'animal-crab.webp', 'house.webp'];
+  const reusableArtOk = Array.isArray(reusableArtUrls) && reusableArtUrls.length === reusableArtStems.length &&
+    reusableArtUrls.every((url, i) => typeof url === 'string' && url.endsWith('/assets/art/' + reusableArtStems[i]));
+  check('task429: approved Explorer reuse assets resolve through ART_REGISTRY',
+    reusableArtOk, JSON.stringify(reusableArtUrls || []));
+
+  const artReuseCalls = await h.evalv(`(() => {
+    const oldImage = Art.image;
+    const oldDraw = Art.draw;
+    const oldTheme = theme;
+    const calls = [];
+    Art.image = () => ({ complete: true, naturalWidth: 512 });
+    Art.draw = (context, glyph, cx, cy, size) => {
+      calls.push({ glyph, size });
+      return true;
+    };
+    try {
+      drawEnemy('mouse');
+      drawEnemy('bat');
+      drawEnemy('penguin');
+      drawWalker('snowman');
+      drawWalker('crab');
+      theme = WORLDS.find(w => w.scene === 'spring');
+      drawGoal('house', { x: 0, y: 0, width: 220, height: 220 });
+    } finally {
+      Art.image = oldImage;
+      Art.draw = oldDraw;
+      theme = oldTheme;
+    }
+    return calls;
+  })()`);
+  const expectedArtCalls = [
+    { glyph: '🐭', size: 40 }, { glyph: '🦇', size: 40 }, { glyph: '🐧', size: 40 },
+    { glyph: '⛄', size: 36 }, { glyph: '🦀', size: 32 }, { glyph: '🏠', size: 220 }
+  ];
+  const artReuseOk = Array.isArray(artReuseCalls) && artReuseCalls.length === expectedArtCalls.length &&
+    artReuseCalls.every((call, i) => call.glyph === expectedArtCalls[i].glyph && call.size === expectedArtCalls[i].size);
+  check('task429: approved painted art is used for mouse, bat, penguin, snowman, crab and Spring goal',
+    artReuseOk, JSON.stringify(artReuseCalls || []));
+
+  const walkerFootAnchors = await h.evalv('({ snowman: WALKER_FOOT.snowman, crab: WALKER_FOOT.crab })');
+  const walkerFootOk = walkerFootAnchors && walkerFootAnchors.snowman === 18 && walkerFootAnchors.crab === 16;
+  check('task429: approved snowman/crab art anchors align their sprite feet with the ground',
+    walkerFootOk, JSON.stringify(walkerFootAnchors || {}));
+
   // Task 90: death sound is character-aware (cat.ogg for the kitty, "Јао!"
   // speech for the explorer girl) and the kitty is the default character.
   const deathSound = await h.evalv(`(() => {
