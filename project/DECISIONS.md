@@ -124,9 +124,10 @@ The following child-facing glyphs keep their emoji rendering by explicit decisio
   these read as symbols/effects or are used at tiny sizes where a painted cut-out would not improve clarity.
 - Audio/UI glyphs and parent-page controls plus the documented exclusions (\u2B1B \u{1F4D6} \u2716\uFE0F) remain emoji by design.
 
-## Little Explorer Gate 2 — batch 1 terrain approved (2026-11-08, task 432)
+## Little Explorer Gate 2 — approval batches (2026-11-08, task 432)
 
-- **The project owner approved all 18 READY FOR REVIEW terrain candidates** (batch 1, `resources/General_reviews/Little_explorer_assets/Little_Explorer_Asset_Review_Package/REVIEW/BATCH_1_01_TERRAIN_TILES.md`), blanket, no conditions, via OpenCode session on 2026-11-08.
+- **Batch 1 (terrain) — approved:** the project owner approved all 18 READY FOR REVIEW terrain candidates (`REVIEW/BATCH_1_01_TERRAIN_TILES.md`), blanket, no conditions, via OpenCode session on 2026-11-08.
+- **Batch 2 (platforms) — approved:** the project owner approved all 11 candidates (`REVIEW/BATCH_2_02_PLATFORMS.md`), blanket, no conditions, same session/date. Approval covers the art only — bridges/crate/spring have no approved runtime consumer yet (Gate 3 decides mapping).
 - **Excluded and still unapproved:** the 3 NEEDS WORK crops (merged strip `terrain_tiles_candidate_01`, edge contamination `04`, detached fragment `11`) — they need pixel-level recrop before they can re-enter an approval batch.
 - Evidence recorded per row in `REVIEW/TABLE_OF_CONTENT.csv` (`approval_evidence`) and in the batch doc section 7. Approval covers the exact crop versions only; any material alteration requires re-approval (guide section 9).
 - Approval does **not** waive the still-pending Gate 1 acceptance of `EXPLORER_STYLE_ADDENDUM.md` / `EXPLORER_TECHNICAL_CONTRACT.md` / `EXPLORER_PALETTES.md`, and authorizes no `game/` changes until Gate 3 technical QA passes.

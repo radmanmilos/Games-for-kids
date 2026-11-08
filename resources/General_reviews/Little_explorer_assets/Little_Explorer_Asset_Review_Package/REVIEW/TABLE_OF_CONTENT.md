@@ -31,7 +31,7 @@
 | Family folder | Candidate files | Reviewed | APPROVED | READY FOR REVIEW | NEEDS WORK | REJECTED | Current status |
 |---|---:|---:|---:|---:|---:|---:|---|
 | `01_TERRAIN_TILES/` | 21 | 21 | 18 | 0 | 3 | 0 | Gate 2 batch 1 APPROVED 2026-11-08 (3 NEEDS WORK still excluded) |
-| `02_PLATFORMS/` | 11 | 11 | 0 | 11 | 0 | 0 | Gate 1 review complete (task 431) |
+| `02_PLATFORMS/` | 11 | 11 | 11 | 0 | 0 | 0 | Gate 2 batch 2 APPROVED 2026-11-08 |
 | `03_PIPES_AND_ENTRANCES/` | 8 | 8 | 0 | 8 | 0 | 0 | Gate 1 review complete (task 431) |
 | `04_ENEMIES_AND_WALKERS/` | 17 | 17 | 0 | 14 | 0 | 3 | Gate 1 review complete (task 431) |
 | `05_COLLECTIBLES_AND_ITEMS/` | 15 | 15 | 0 | 10 | 0 | 5 | Gate 1 audit complete (task 431) |
@@ -42,7 +42,7 @@
 | `REVIEW/` | 9 review sheets + CSV | — | — | — | — | — | Review index |
 | `00_SOURCE_ATLASES/` | 2 originals | — | — | — | — | — | Preserved unchanged |
 
-**Counts:** 116 candidate files total; 116 reviewed (Gate 1 pass, task 431); 18 APPROVED (terrain batch 1, 2026-11-08); 72 READY FOR REVIEW; 3 NEEDS WORK (terrain 01/04/11 — need pixel recrop); 23 REJECTED (5 header-label false positives, 1 cross-family duplicate, 6 no-Explorer-consumer art, 11 reference-only backgrounds); 0 technically ready; 0 integrated.
+**Counts:** 116 candidate files total; 116 reviewed (Gate 1 pass, task 431); 29 APPROVED (batches 1–2, 2026-11-08); 61 READY FOR REVIEW; 3 NEEDS WORK (terrain 01/04/11 — need pixel recrop); 23 REJECTED (5 header-label false positives, 1 cross-family duplicate, 6 no-Explorer-consumer art, 11 reference-only backgrounds); 0 technically ready; 0 integrated.
 
 **REJECTED breakdown (23):** 5 header-label false positives (`enemies_01`, `goals_01`, `hazards_01`, `decorations_01`, `collectibles_01`); 1 cross-family duplicate (`hazards_10` = `platforms_09`); 6 no-Explorer-consumer art (`enemies_15` frog, `enemies_16` snail, `collectibles_12/13/14/15` potion/chest/key/music notes); 11 backgrounds as reference-only material, not an art-quality judgment (excluded from Gate 2 batches per guide §12).
 
