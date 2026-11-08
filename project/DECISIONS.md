@@ -123,3 +123,11 @@ The following child-facing glyphs keep their emoji rendering by explicit decisio
 - \u{1F300} (space decor), \u{1F30C} (space/racing night world), \u2603\uFE0F (racing snow world), \u2764\uFE0F (cat-forest match effect), \u{1F609} (candy) -
   these read as symbols/effects or are used at tiny sizes where a painted cut-out would not improve clarity.
 - Audio/UI glyphs and parent-page controls plus the documented exclusions (\u2B1B \u{1F4D6} \u2716\uFE0F) remain emoji by design.
+
+## Little Explorer Gate 2 — batch 1 terrain approved (2026-11-08, task 432)
+
+- **The project owner approved all 18 READY FOR REVIEW terrain candidates** (batch 1, `resources/General_reviews/Little_explorer_assets/Little_Explorer_Asset_Review_Package/REVIEW/BATCH_1_01_TERRAIN_TILES.md`), blanket, no conditions, via OpenCode session on 2026-11-08.
+- **Excluded and still unapproved:** the 3 NEEDS WORK crops (merged strip `terrain_tiles_candidate_01`, edge contamination `04`, detached fragment `11`) — they need pixel-level recrop before they can re-enter an approval batch.
+- Evidence recorded per row in `REVIEW/TABLE_OF_CONTENT.csv` (`approval_evidence`) and in the batch doc section 7. Approval covers the exact crop versions only; any material alteration requires re-approval (guide section 9).
+- Approval does **not** waive the still-pending Gate 1 acceptance of `EXPLORER_STYLE_ADDENDUM.md` / `EXPLORER_TECHNICAL_CONTRACT.md` / `EXPLORER_PALETTES.md`, and authorizes no `game/` changes until Gate 3 technical QA passes.
+- Backgrounds stay excluded from approval batches entirely (reference-only crops; runtime scenes already exist).
