@@ -1673,10 +1673,13 @@ function draw() {
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(p.x - 4, p.y - 4, p.width + 8, p.height + 8);
 
-        ctx.fillStyle = p.color;
-        ctx.fillRect(p.x, p.y, p.width, p.height);
-
-        drawPaperStitchLine(p.x + 10, p.y + p.height / 2, p.x + p.width - 10, p.y + p.height / 2);
+        if (theme.scene === 'spring' && window.Art && window.Art.draw(ctx, '🍃', p.x + p.width / 2, p.y + p.height / 2, p.height)) {
+            // spring terrain glyph drawn (pilot Gate 4)
+        } else {
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x, p.y, p.width, p.height);
+            drawPaperStitchLine(p.x + 10, p.y + p.height / 2, p.x + p.width - 10, p.y + p.height / 2);
+        }
     });
 
     // Draw Moving Platforms
@@ -1695,14 +1698,16 @@ function draw() {
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(pipe.x - 4, pipe.y - 4, pipe.width + 8, pipe.height + 8);
 
-        ctx.fillStyle = theme.pipeColor;
-        ctx.fillRect(pipe.x, pipe.y, pipe.width, pipe.height);
-
-        ctx.fillRect(pipe.x - 6, pipe.y, pipe.width + 12, 24);
-
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-        ctx.fillRect(pipe.x + 6, pipe.y + 24, 8, pipe.height - 24);
-        ctx.fillRect(pipe.x, pipe.y, 8, 24);
+        if (theme.scene === 'spring' && window.Art && window.Art.draw(ctx, '🚰', pipe.x + pipe.width / 2, pipe.y + pipe.height / 2, pipe.width)) {
+            // spring pipe glyph drawn (pilot Gate 4)
+        } else {
+            ctx.fillStyle = theme.pipeColor;
+            ctx.fillRect(pipe.x, pipe.y, pipe.width, pipe.height);
+            ctx.fillRect(pipe.x - 6, pipe.y, pipe.width + 12, 24);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.fillRect(pipe.x + 6, pipe.y + 24, 8, pipe.height - 24);
+            ctx.fillRect(pipe.x, pipe.y, 8, 24);
+        }
     });
 
     // Draw enemies only while they are above the pipe.
