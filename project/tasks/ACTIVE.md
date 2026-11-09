@@ -18,7 +18,6 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 
 ## Open tasks
 
-- 434. DONE (2026-11-09, OpenCode/Big Pickle) — Gate 4 pilot: terrain-spring-top + pipe-spring generated via Cloudflare flux-2-klein-4b, cut out to 512x512 real-alpha WebP (15 KB / 6 KB, both ≤60 KB), added to art-registry.js (🍃→terrain-spring-top, 🚰→pipe-spring), integrated into kitty-standalone.js draw() — spring platforms/pipes use Art.draw with fillRect fallback for non-spring worlds.
 - 435. NEW — Gate 5: family rollout (pipes, enemies/walkers, goals) (2026-11-08, OpenCode/Nemotron-3.5-Super-VL)
 - 436. NEW — Gate 6: 11-world regression, screenshots, docs sync, commit (2026-11-08, OpenCode/Nemotron-3.5-Super-VL)
 - 429. IN PROGRESS (2026-11-07, ChatGPT/GPT-6) — Umbrella: Little Explorer environment-art integration. Execution decomposed into Gates 0–6 (tasks 430–436). Generation blocked until Gate 1 acceptance is documented; item-level authorization does not waive the gate.

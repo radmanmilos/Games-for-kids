@@ -419,3 +419,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 431 | DONE | 2026-11-08 | Gate 1 review of all 9 families (116/116 candidates) completed in guide §6.1 order. Outcome: 90 READY FOR… | tasks-400-499.md
 432 | DONE | 2026-11-09 | Gate 2 complete: all 8 batches recorded, CSV 91/0/3/22. Batch 1-6 previously recorded; batch 7 (15… | tasks-400-499.md
 433 | DONE | 2026-11-09 | Gate 3 complete: all 11 world backgrounds regenerated via Cloudflare flux-2-klein-4b, QA-verified (2048x592,… | tasks-400-499.md
+434 | DONE | 2026-11-09 | Gate 4 pilot: terrain-spring-top + pipe-spring generated via Cloudflare flux-2-klein-4b, cut out to 512x512… | tasks-400-499.md

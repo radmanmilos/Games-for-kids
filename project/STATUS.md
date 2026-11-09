@@ -2,7 +2,7 @@
 
 **Last verified:** 2026-11-09  
 **Repository:** radmanmilos/Games-for-kids  
-**Current branch:** `feature/little-explorer-art-integration` at `97205cc` (pushed, secrets gate 4/4)  
+**Current branch:** `feature/little-explorer-art-integration` at `8838e93` (pushed, secrets gate 4/4)  
 **Main HEAD:** 5605c700e949becde084db3427245b6d8e788373 (merge of PR #23)
 
 ## Repository and verification
@@ -13,23 +13,24 @@
 
 ## Task tracking
 
-- Task 429 (umbrella, Little Explorer env-art integration): IN PROGRESS. Gates 0–3 complete (tasks 430–433 archived).
-- Task 430 (Gate 0): DONE. Repo verified, branch created, package tree verified.
-- Task 431 (Gate 1 review): DONE. All 116 candidates reviewed across 9 families.
-- Task 432 (Gate 2): DONE. All 8 batches approved — CSV 91 APPROVED / 0 READY / 3 NEEDS WORK / 22 REJECTED (116 total). Backgrounds excluded from approval batches (reference-only).
-- Task 433 (Gate 3): DONE. All 11 world backgrounds regenerated via Cloudflare flux-2-klein-4b, QA-verified (2048×592, opaque PNG), integrated into `game/assets/scenes/scene-<world>.png` replacing all 11 existing scenes. Originals SHA256-backed to `%TEMP%\opencode\scenes_backup_before_gate3\`.
-- Task 434 (Gate 4): NEW — pilot integration (one terrain + one platform in one world).
-- Tasks 435–436: NEW — family rollout, 11-world regression, screenshots, docs sync.
+- Task 429 (umbrella, Little Explorer env-art integration): IN PROGRESS. Gates 0–4 complete (tasks 430–434 archived).
+- Tasks 430–433: DONE and archived (Gate 0 repo verify, Gate 1 review, Gate 2 batch approvals 91/0/3/22, Gate 3 background integration).
+- Task 434 (Gate 4 pilot): DONE — terrain-spring-top + pipe-spring glyphs generated, cut out to 512×512 WebP (15 KB / 6 KB), added to art-registry.js, integrated into kitty-standalone.js draw() with fillRect fallback for non-spring worlds.
+- Task 435: NEW — Gate 5: family rollout (pipes, enemies/walkers, goals).
+- Task 436: NEW — Gate 6: 11-world regression, screenshots, docs sync, commit.
 - Other open/limited tasks: 391, 392, 396, 398, 415.
 
 ## Little Explorer — merged implementation
 
-- All 11 world background images under `game/assets/scenes/` have been replaced with newly generated storybook-painted backgrounds (2048×592, opaque PNG, seamless horizontal tiling, sky-dominant, no baked gameplay elements, no bear/star content).
+- All 11 world background images under `game/assets/scenes/` replaced with newly generated storybook-painted backgrounds (2048×592, opaque PNG, seamless horizontal tiling, sky-dominant, no baked gameplay elements, no bear/star content).
+- Two pilot glyphs integrated into `game/assets/art/`: `terrain-spring-top.webp` (15 KB) and `pipe-spring.webp` (6 KB), both real-alpha WebP ≤60 KB.
+- `art-registry.js` extended: 🍃 → terrain-spring-top, 🚰 → pipe-spring.
+- `kitty-standalone.js draw()` modified: spring static platforms use `Art.draw(ctx, '🍃', ...)` with fillRect fallback; spring pipes use `Art.draw(ctx, '🚰', ...)` with fillRect fallback; non-spring worlds unchanged.
 - `loadWorld()` tracks `sceneSrc` and updates the cached image source when the active world changes (`kitty-standalone.js:1072`).
 - Approved existing art is reused for mouse, bat, penguin, snowman, crab, and the Spring goal house. Existing collectibles and the water-hazard fish accent already use approved art.
-- Terrain and pipes remain procedural.
+- Terrain and pipes remain procedural outside the spring pilot.
 - Hazards and decorative particles remain procedural by design.
-- No physics, collision geometry, enemy AI, spawn timing, platform movement, camera, controls, progression, HUD, or player sprites were changed.
+- No physics, collision geometry, enemy AI, spawn timing, platform movement, camera, controls, progression, HUD, or player sprites were changed beyond the pilot glyph draw calls.
 
 ## Visual QA and performance
 
@@ -38,7 +39,7 @@
 
 ## Generation pipeline
 
-- Cloudflare credentials staged at `%TEMP%\opencode\cloudflare-creds.json` (never in repo). `tools/asset_generate.js` uses `flux-2-klein-4b` (~219 neurons per 2048×592 scene).
-- ~4,355 of 10,000 free neurons used today (25 runs).
+- Cloudflare credentials staged at `%TEMP%\opencode\cloudflare-creds.json` (never in repo). `tools/asset_generate.js` uses `flux-2-klein-4b` (~110 neurons per 1024×1024 glyph, ~219 per 2048×592 scene).
+- ~4,592 of 10,000 free neurons used today (27 runs).
 - Background candidates copied to `resources/General_reviews/Asset_Generation/Reference/` as style references for future generations.
-- Gate 1 style-addendum/palettes/technical-contract accepted before generation. Gate 2 complete. Gate 3 complete.
+- Gate 1 style-addendum/palettes/technical-contract accepted before generation. Gate 2 complete. Gate 3 complete. Gate 4 complete.
