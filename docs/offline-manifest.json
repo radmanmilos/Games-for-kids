@@ -1,4 +1,12 @@
 {
+  "assets/art/acorn.webp": {
+    "sha256": "ea49ef5307f10205cfe6b2d822c9cc6d72ed9001686b7cbc431830b18ac7b881",
+    "size": 28646
+  },
+  "assets/art/animal-crab.webp": {
+    "sha256": "54add05f3b8ae1d2b6d9dc2bc10a1cedcbf0b8aeb11717202b3924cf1d1fd229",
+    "size": 36018
+  },
   "assets/art/animal-dinosaur.webp": {
     "sha256": "7693a8dea0b8a4c21ef342cd5315281211e9e02823198546d07ee9299e93ee8d",
     "size": 21898
@@ -6,6 +14,10 @@
   "assets/art/animal-dolphin.webp": {
     "sha256": "a3323f871a49ceaa1411073e87ed598a4284ffad55808fa7e469978f1778397a",
     "size": 24404
+  },
+  "assets/art/animal-ladybug.webp": {
+    "sha256": "1f85196c5150df1e1e88798eafdca5950addad26afce41b0af240f119901b35e",
+    "size": 32864
   },
   "assets/art/animal-octopus.webp": {
     "sha256": "acc32cd3b0fcfdd6aa3dec1a1091c240ad0021a46a140c551b5a0efa536fced8",
@@ -35,9 +47,17 @@
     "sha256": "95ddd8c06f1de29072a618e7529edb99671a7f6520ff92ca5931ff99b043b8e1",
     "size": 14984
   },
+  "assets/art/banana.webp": {
+    "sha256": "8f7a372248c0e0526dba24c5676e3868309e164bff6b4b7fd62b797a3603e003",
+    "size": 17734
+  },
   "assets/art/basket.webp": {
     "sha256": "b5e3cdc7a5961b2f2a03f461756cbf55516126a5da83bba506cc7e770fdc1028",
     "size": 25550
+  },
+  "assets/art/bat.webp": {
+    "sha256": "e1ff0f41711d5c85d8fc3cd9ea8edf32618891d7037296cfcd3516df4e6f2b4a",
+    "size": 30444
   },
   "assets/art/beach-umbrella.webp": {
     "sha256": "2a336e322e4cf7d335043a0e339fa0e9220d00f400ef720e9b0b92d66a2487f3",
@@ -66,6 +86,10 @@
   "assets/art/butterfly.webp": {
     "sha256": "d770115fe1fea666004571f1ad288764465dd8497f3a7fac09785bb6e0014e9c",
     "size": 40180
+  },
+  "assets/art/cactus.webp": {
+    "sha256": "6c73cda63d5237c676c67d2cf6680d2ea0364ea0514252564dc14b70bea50cf6",
+    "size": 26222
   },
   "assets/art/car.webp": {
     "sha256": "7bed78dd5edc635e3898f09e3cac3dd5f4dad887e9086ae324af744e2461a548",
@@ -118,6 +142,10 @@
   "assets/art/clock.webp": {
     "sha256": "500f0190c511a3f5371846f9f62d2973d9b7cf9ceba53a4210a105e200828c75",
     "size": 26292
+  },
+  "assets/art/collectible-01.webp": {
+    "sha256": "57a0bed1cc5328f55e41e711e2da4b820f74af535a6e1b68caef85e003e1d7b4",
+    "size": 10110
   },
   "assets/art/collectible-02.webp": {
     "sha256": "4639b4437bac09a8b80cc6cd6a4ec1e0c8cc87f4754597dc7a48560dae13ce0b",
@@ -179,6 +207,10 @@
     "sha256": "396e40477549d78998e75324b2a8e522e97599ace6386094442a5b85eedf9431",
     "size": 15526
   },
+  "assets/art/collectible-daisy.webp": {
+    "sha256": "636bdfd15dcea929c3bcba86d60b38171c303ad1e9134533eac8b28765f23ce3",
+    "size": 12202
+  },
   "assets/art/collectible-gift.webp": {
     "sha256": "4704f3c5eee35593c1c0202be3ef78bca66dd21be544cc42b6abf4eb286ea19d",
     "size": 15592
@@ -194,6 +226,10 @@
   "assets/art/collectible-star.webp": {
     "sha256": "608baab8c9020a5ae882788a1863887f8988314ed1602d4c375bd2063ac1d4c2",
     "size": 12684
+  },
+  "assets/art/collectible-strawberry.webp": {
+    "sha256": "9d6514073ebd56e96b0468b9cf90dba53eb69ea74ab6fa49713e3868e39cc780",
+    "size": 12660
   },
   "assets/art/collectible-submarine.webp": {
     "sha256": "36f476b90b2ae1b543ff833dec674afb54ed849282dcd99b198f7b7bbce6ceb8",
@@ -211,6 +247,10 @@
     "sha256": "86cb7f53eb051d83de5499ed60471d2d0d7e56cf783c500f36d82b97b8daf002",
     "size": 14710
   },
+  "assets/art/compass.webp": {
+    "sha256": "f4f80bd9ecd327b50153f4534ac10267f8c461a13128df5db35b72398e813de4",
+    "size": 31212
+  },
   "assets/art/cow.webp": {
     "sha256": "c14d438e9fc9917ba1897f9e42ff8aa7926443bd8fc5aae4c168410f00561454",
     "size": 30446
@@ -222,6 +262,10 @@
   "assets/art/dango.webp": {
     "sha256": "08dc8f47cbb45d0d723dc442f22e6c4a11bdd8b9af110662569e314846542d6b",
     "size": 13918
+  },
+  "assets/art/decor-01.webp": {
+    "sha256": "9772d57bcd2c81e51dd18f7b1eb68c79e8c3f1fd098edc6c55c3b24f4de305c5",
+    "size": 10224
   },
   "assets/art/decor-02.webp": {
     "sha256": "4b86abda01e8a1bcba5aac658b39ea65ca860456c640071f691356d290bce38c",
@@ -314,6 +358,10 @@
   "assets/art/elephant.webp": {
     "sha256": "eff4ff5860a7fe88ee6fbbd92eed8d17bf1d4bcda816c4b607b46e8674efc835",
     "size": 20334
+  },
+  "assets/art/enemy-01.webp": {
+    "sha256": "045ba9c655f9a73f4f60a937889ac2080e2f3d7393c18c25d0285f8393a5ab1e",
+    "size": 10342
   },
   "assets/art/enemy-02.webp": {
     "sha256": "3fbe58e4bf7d8c1d40a4c596d87d3be9ca1c10b9db56e1f3282112346fb18eec",
@@ -427,9 +475,17 @@
     "sha256": "b0da90f303795e1b6da1f78be58d265790fa90d98b138a67d6fab913a9dc50dc",
     "size": 20828
   },
+  "assets/art/flower-hibiscus.webp": {
+    "sha256": "5d72ad62d5fbd244f3d0dd813db5008764440fa0135c5a0e37489474ca053053",
+    "size": 42510
+  },
   "assets/art/flower-tulip.webp": {
     "sha256": "b915ce1a1c603589579fee5830b2db00228273e669e30db2d2f501f4075b7708",
     "size": 21478
+  },
+  "assets/art/flower.webp": {
+    "sha256": "c3915bf283ebd1d8c427318d20e7b5349b769367faf0d221e172806599a93a38",
+    "size": 23580
   },
   "assets/art/food-chicken-leg.webp": {
     "sha256": "1c12ac2d5780e0c0fc4bd3c70ab609a6e3014eeae2bee49b05c575adb9234667",
@@ -459,9 +515,33 @@
     "sha256": "1018db9d8ba2239dbe38e55919e1ce9472ab30d5a95a2ded254ccae91a0b387f",
     "size": 42904
   },
+  "assets/art/gem.webp": {
+    "sha256": "d2f784c2d4bae38d3ec91fe8287a2289528d28a448d12f7c19c19b95867fc0cb",
+    "size": 28004
+  },
   "assets/art/giraffe.webp": {
     "sha256": "dce5e2c6fa3d29943a777cca49254ead06ba6e4bb45e44917f1617ca1c962f3b",
     "size": 26940
+  },
+  "assets/art/goal-01.webp": {
+    "sha256": "bebb2c8bddcdd17a046b2f8b6c0838ba1cb9aca3beaf88bec05574d72c2dad6b",
+    "size": 9124
+  },
+  "assets/art/goal-02.webp": {
+    "sha256": "2e47b9a23a41021bc2121b4c152b357da56add78ce40e04357ff631f7839185a",
+    "size": 38466
+  },
+  "assets/art/goal-03.webp": {
+    "sha256": "018c558dba3aea2b857a187a2da6120fd1daf82cc11ca4e0f09041e080a42594",
+    "size": 38870
+  },
+  "assets/art/goal-04.webp": {
+    "sha256": "8d55b2cd1764f8ce528d440be03f9b13584a0f5a6bde35e973f0a08230076182",
+    "size": 38218
+  },
+  "assets/art/goal-05.webp": {
+    "sha256": "3eae4aa493cc459443f6139fe5bc16fc710ec811f7ad4f1722518631d6eeefb8",
+    "size": 41006
   },
   "assets/art/goal-cave.webp": {
     "sha256": "3763c46a626da82cb86730a5b95576348f3358700c53b672eea3f453d8d3c4f2",
@@ -490,6 +570,18 @@
   "assets/art/goal-submarine.webp": {
     "sha256": "063ed001e94d7f3aab60c3fb7fef61b35f4df5a85704794c73f1441d5677b10a",
     "size": 9846
+  },
+  "assets/art/goal-torii.webp": {
+    "sha256": "3eae4aa493cc459443f6139fe5bc16fc710ec811f7ad4f1722518631d6eeefb8",
+    "size": 41006
+  },
+  "assets/art/grapes.webp": {
+    "sha256": "2afd1f63beaed609c36d8c17f40caa9156eef61ba6cf1e4aee10cb662577420e",
+    "size": 28832
+  },
+  "assets/art/grass.webp": {
+    "sha256": "af72bc6b2a18bf98dc0d1a208b85274fb713d41648a4bf595f3919eee793f1b8",
+    "size": 42988
   },
   "assets/art/hat.webp": {
     "sha256": "29fa990915764e93912279f06d506109d493148e8ed2d2e72d19f289f6f9e88c",
@@ -543,6 +635,10 @@
     "sha256": "bb23a3e4648a962e4957a4f1891539010b3f1005bc3176151cd2048b361e4399",
     "size": 19746
   },
+  "assets/art/hazard-barrel.webp": {
+    "sha256": "407323000749b358c99a140c9ed89c78d1d638220c2d000d9147122c306cc55f",
+    "size": 15590
+  },
   "assets/art/hazard-cloud.webp": {
     "sha256": "d809d18d6454b306a083b357b2688df9254a7b2329efc61d53d97083f03ea6c4",
     "size": 7160
@@ -562,6 +658,10 @@
   "assets/art/hazard-rock.webp": {
     "sha256": "6ac34d5161d19b8f3fcbbf000ab306a5ad3b14e3b82903f4563c41b91907af5a",
     "size": 11074
+  },
+  "assets/art/hazard-spiked-ball.webp": {
+    "sha256": "3af5f33de6f83d1d10ce9191bbeebb7e3d0644c5e873dbdbff3a1a66f0921d46",
+    "size": 11286
   },
   "assets/art/hazard-spikes.webp": {
     "sha256": "87da3631cb0cb23d422af3da84e62b8544cbf381417795ac0f9ef7a067310b00",
@@ -583,9 +683,21 @@
     "sha256": "28617595313a0171995e4773f931a8cb8b1365e1796868eba2aec066afe97939",
     "size": 38564
   },
+  "assets/art/house.webp": {
+    "sha256": "0ea13106982275dda311ea66ea1d2f8b3e242fed8c612f0343d4d6571f31d96c",
+    "size": 23594
+  },
+  "assets/art/ice-cube.webp": {
+    "sha256": "b374affc65767a50da52f1732c303d21714c33f55746f1d7fa09f027ecf079c0",
+    "size": 26674
+  },
   "assets/art/island.webp": {
     "sha256": "853e20f64828538d9967cabe6285ed43e1f8b258840393f0db80ab9cc06fa92f",
     "size": 26894
+  },
+  "assets/art/leaves.webp": {
+    "sha256": "f5d8bde4c92ee708ab2136140914f68e2621263f8fd93751b5a8a084c13fca81",
+    "size": 28880
   },
   "assets/art/lion.webp": {
     "sha256": "16bc4a9a1575ca541c63a6dc1dd96c03c1b906576e2a834ef5ffefaa0ea9181a",
@@ -610,6 +722,18 @@
   "assets/art/mountain.webp": {
     "sha256": "7dcc6f99376f52fc53c8c8d075941046097a6a910ff2d317fb92df477f182a68",
     "size": 21964
+  },
+  "assets/art/mouse.webp": {
+    "sha256": "07f55a0897e99a634082d9210ceca6906f7377d99f8e160c8f4ad370f571195f",
+    "size": 42900
+  },
+  "assets/art/mushroom.webp": {
+    "sha256": "bce709bc4e60144e7ee3bf1622da2fca83f14f32046464c0aea5b16c7c1c98e8",
+    "size": 39388
+  },
+  "assets/art/needle.webp": {
+    "sha256": "ee96b1733de7437c459bb07cc60bd1ba79444d1683ae1d9ebd6e5bbb56ac1662",
+    "size": 20836
   },
   "assets/art/nose.webp": {
     "sha256": "04e9d18b8dabd5c77e361bcc4aa9bf169b62a280e3c33392aa25c0c0d603c18b",
@@ -667,9 +791,17 @@
     "sha256": "d437815adefcd9b5864be2254323beef9d10478cb643af6c76c39d54cc26d3eb",
     "size": 45118
   },
+  "assets/art/orange.webp": {
+    "sha256": "5b87cb756a5fc57e20d28e12019dbdca8be50c3c63b482fee7f86762d3bd474b",
+    "size": 36878
+  },
   "assets/art/owl.webp": {
     "sha256": "e5807941c709fede13f0e85f4dbe64c2deca09226978b2aaf647f7259c790c42",
     "size": 30110
+  },
+  "assets/art/palm-tree.webp": {
+    "sha256": "c426be3e42fa0fe1f7a446a4a2b89135a3e0e83493a317c312667303e25b43ee",
+    "size": 27876
   },
   "assets/art/parrot.webp": {
     "sha256": "92ebd663994891aea327320ead83546001fa13051216f42957b0d60edef9f9f1",
@@ -679,9 +811,17 @@
     "sha256": "acf6d196b1d6fb211f4161ea275b99d8b7ef22d622eac615faeacb533b581b8c",
     "size": 41380
   },
+  "assets/art/pear.webp": {
+    "sha256": "139d7fe442c6f2b104d4e752db7d952bb884207540ddbef50021eb8111bcf90d",
+    "size": 14970
+  },
   "assets/art/pencil.webp": {
     "sha256": "fa1970b77af38ad356e0602e7e939755438523ad78a2ca57986efe7e2be0c4ee",
     "size": 23032
+  },
+  "assets/art/penguin.webp": {
+    "sha256": "b6d5c4044e55a22bac0cb3287781e203ed086ebcf381e552178a76d35414911f",
+    "size": 26758
   },
   "assets/art/pickaxe.webp": {
     "sha256": "24d44c4f14f5e2e39a21b5e5ffb1f1d112d133a53dd50fb2a7cad8d069fd5b9e",
@@ -694,6 +834,10 @@
   "assets/art/pig.webp": {
     "sha256": "f3176e9573e029b04181d495579785fe9e8b2c28a706e90b68636b4374990623",
     "size": 38118
+  },
+  "assets/art/pine-tree.webp": {
+    "sha256": "184fdb3245d481e3a7f84403196ac62b7f0388b8f48fe45c2f48eb904bd2aa76",
+    "size": 36210
   },
   "assets/art/pipe-01.webp": {
     "sha256": "efdf870d311ca8065bebe05ed54ff190d551ae26f617e3c33f9c1c29d413ab06",
@@ -727,9 +871,33 @@
     "sha256": "efba3a6bdfe2f7e383fa61a3a1f41929442eb0734d20711cdcca5494be254898",
     "size": 20088
   },
+  "assets/art/pipe-autumn.webp": {
+    "sha256": "efa4f764de30068dbd4d82c7f9ec80eeb0714584f39922bb5d842c4acfdaa4aa",
+    "size": 13536
+  },
+  "assets/art/pipe-cave.webp": {
+    "sha256": "8984cf447d6d65d2365784763d3932cdcfed4346d209f57649486dec54600928",
+    "size": 12318
+  },
   "assets/art/pipe-egypt.webp": {
     "sha256": "fe6aef5ffe4be06823632e1b9a8d1b6d550da8a49239e0942266cc27328c27c8",
     "size": 6856
+  },
+  "assets/art/pipe-japan.webp": {
+    "sha256": "3e8decd9d73a7ccda292cbb701af33d5047cb59aca3d08e39212af8fd713ab1c",
+    "size": 2508
+  },
+  "assets/art/pipe-northpole.webp": {
+    "sha256": "65361608a2d611dbdec444c48a55b1512ffa39adc57f3de2ccee8038be72df4b",
+    "size": 6820
+  },
+  "assets/art/pipe-savanna.webp": {
+    "sha256": "021d1c8ad6c1972f7f5e94f97f63217225451afc20dfd5148f1d47a93f28b572",
+    "size": 10268
+  },
+  "assets/art/pipe-spring.webp": {
+    "sha256": "866f5068a22658c95bb01d2ed30f6107256992464d01a628df07f943eff9e472",
+    "size": 6538
   },
   "assets/art/pipe-underground.webp": {
     "sha256": "56e28c37d6f48c58e7a85ee399ea39467b68da37c4882927926eadf4fc2afba7",
@@ -746,6 +914,10 @@
   "assets/art/planet.webp": {
     "sha256": "01105dd0d34b21d3aa99a2d3634401777f605d0a2d29c805bc282f4abf22d7a5",
     "size": 19326
+  },
+  "assets/art/plant-clover.webp": {
+    "sha256": "303a0e89b07cc6314d13d457f2b9932480fddb21e13517e752d0a1b41c9228ff",
+    "size": 31380
   },
   "assets/art/platform-01.webp": {
     "sha256": "f9c15e88c8d71ce7d2f532622438b3d4811a3ee832fd7061cc28ba409889db69",
@@ -795,6 +967,10 @@
     "sha256": "95512c388555c0a236aa71c34634251bc04ab98472693d6a512d2ec3f80e7174",
     "size": 32288
   },
+  "assets/art/puzzle-piece.webp": {
+    "sha256": "bfb6a0356bb3e70092abfc94086e512a95206461c10c2897c361cd56089c54ce",
+    "size": 28986
+  },
   "assets/art/rabbit.webp": {
     "sha256": "f864b22260a6b04fa49631a01515367d1baf51309772073957a7aeee0f101274",
     "size": 22952
@@ -806,6 +982,10 @@
   "assets/art/road-barrier.webp": {
     "sha256": "62e537db3fd10d9eff3b35c4bf1f1975fdbaf135f1724f72e8171da67d65c55e",
     "size": 26220
+  },
+  "assets/art/rock.webp": {
+    "sha256": "880d2157f2f2d6af89be1bdb71f636e80abb29f2d5548c09b337ae2aff798b1b",
+    "size": 30796
   },
   "assets/art/rocket.webp": {
     "sha256": "2d8137c610b5116d5db99344373464d81cce4d63181b2c34caf214ad7a7e0bee",
@@ -819,9 +999,25 @@
     "sha256": "8c26de2aa56d332ac0721220bb2b5436600efbaa7cdf6959569e5f02716b6f8a",
     "size": 22676
   },
+  "assets/art/satellite.webp": {
+    "sha256": "f61f6a3f7389cf4bc4754c59e2349cc9a57545b0ac6842b0f4138b54471dca18",
+    "size": 37926
+  },
+  "assets/art/school.webp": {
+    "sha256": "ef3f2c94852066b5710486d573bd112b6aad6b1a92dad1d28f0ca0f1770e81d8",
+    "size": 32554
+  },
   "assets/art/screen.webp": {
     "sha256": "aa6d3b322f2cf07f9b7b3efb2e40ea6352907797793dbe39b4985dbf7b87af14",
     "size": 27622
+  },
+  "assets/art/season-leaf.webp": {
+    "sha256": "6937d93d35b190e3c7fb85a430411323c96ad97ef16de8e31fb6907402451010",
+    "size": 24126
+  },
+  "assets/art/seedling.webp": {
+    "sha256": "59867d0742a67eacbcabe37a29275cbad97e20eb137f5b1edad5d1f39d6f9696",
+    "size": 24200
   },
   "assets/art/shark.webp": {
     "sha256": "58dce5656a38a367d29d724fe8c7e3262eb269b02fbc01d68a20f0ac84510537",
@@ -847,6 +1043,14 @@
     "sha256": "300758d87e7b40b51a402b65d6b397e5472280bef172f86bdb9cb0555bd88d99",
     "size": 28028
   },
+  "assets/art/snowflake.webp": {
+    "sha256": "d874d2f1fa1e03afa830f607452fd8e13957e294411c931db8635c77141201f5",
+    "size": 57768
+  },
+  "assets/art/snowman.webp": {
+    "sha256": "bb20d68a1e310a5017bcdbebe390d80c0814a016ec3c9e0a027f9d76608acc31",
+    "size": 26380
+  },
   "assets/art/soap.webp": {
     "sha256": "08b9ceef5bb79440c47cbba76fa4a1421a8aac09415ae8fc9a048b45c676ca38",
     "size": 19828
@@ -855,9 +1059,17 @@
     "sha256": "c51d42ab5178c80753c0f50c60eea52c259aea0605710d690b7bf8002d9e879d",
     "size": 20160
   },
+  "assets/art/squirrel.webp": {
+    "sha256": "de19fb6e88cc81088d4a36237d5f844107896dbfe14eae1a0ede20a8db665e58",
+    "size": 40908
+  },
   "assets/art/star.webp": {
     "sha256": "c893da1e53a52a1f5f6d18a872f7efd6be90d9a176e5dcb232276ab37a14d3f7",
     "size": 21828
+  },
+  "assets/art/strawberry.webp": {
+    "sha256": "90405879c53218cfd9d344732fe01e4fdf2cee3fea0f2e75b6fa163a52434f00",
+    "size": 34650
   },
   "assets/art/student.webp": {
     "sha256": "1030038b18c5428849f82de1d400a66ac10359f30714ed8c2f77d0e291b02544",
@@ -867,6 +1079,10 @@
     "sha256": "e4c3728579181d1e4c17020ecf7fb87c6293db57cf0368d40a63482867466e72",
     "size": 11318
   },
+  "assets/art/sunflower.webp": {
+    "sha256": "dee2459abce98c31ec068bcfa5045b001a9b3730fb1584ec521c0f4a7c8e7675",
+    "size": 30930
+  },
   "assets/art/surfboard.webp": {
     "sha256": "124732f6ea7f7eb20e87c51b3847204cbad416f6ce06497b0723017b4925f907",
     "size": 11660
@@ -874,6 +1090,10 @@
   "assets/art/sweater.webp": {
     "sha256": "338b2853a9f9a14ecf8b599e06c1a453c638fb27ff1f025f4a0b02234a0ac830",
     "size": 24142
+  },
+  "assets/art/telescope.webp": {
+    "sha256": "b04a6dbbd54b564a4ce11bb0d5c6b0d4492e4f8ee66543c1bfdfd68b5c3f4d65",
+    "size": 31708
   },
   "assets/art/terrain-autumn-top.webp": {
     "sha256": "347a58ac6b180ff75f7e7600e3b3280c946049ad5a118e942b24445bb8d88740",
@@ -995,6 +1215,10 @@
     "sha256": "1e94668481c75f521dab76aed7f1de2fb6ea87a4ae66bacb0eb2b1745c12f532",
     "size": 33084
   },
+  "assets/art/tree.webp": {
+    "sha256": "901647a70ad71a6d58bcc9695cd45e9ea76d09fcda19968ef865a9c44f959936",
+    "size": 20732
+  },
   "assets/art/turkey.webp": {
     "sha256": "4cacd10396e2d467094c8f05fb261fdefacfaae61a27150c3f3f51c3544de64e",
     "size": 36822
@@ -1031,6 +1255,10 @@
     "sha256": "7a1103b16004c8f02a44d5ab8d4c0c5fd9d14d72bb71776a56cae6f513ba5587",
     "size": 11194
   },
+  "assets/art/walker-seal.webp": {
+    "sha256": "cf7b284482e28e06ae882cb15b8a347a7d5a64ae8cf528031e673a5f9dd068bb",
+    "size": 22096
+  },
   "assets/art/walker-snowman.webp": {
     "sha256": "7da122a882eac920a88ae267389b5846dbf04ed3837a0f050ccdac9baa9b06e3",
     "size": 8854
@@ -1046,6 +1274,14 @@
   "assets/art/water-drop.webp": {
     "sha256": "a1e0e2a20228ac155745937238cca0bf915b6e0e167af2249fdb06630e9a2f2d",
     "size": 19630
+  },
+  "assets/art/watermelon.webp": {
+    "sha256": "04d9147ec1007ace60d2f6eec15e82ef998b7a8ee751b305e97d7fadb87d3143",
+    "size": 23278
+  },
+  "assets/art/wave.webp": {
+    "sha256": "0a3210083288f8d79cd1b50ff381a3f407179884e4be3803efe030e48abc4db6",
+    "size": 29368
   },
   "assets/art/weather-rain.webp": {
     "sha256": "71f7b341b6aa2d2b4a78e70d6b39acab181781eef387e192dd5b03c96d4f413f",
@@ -1864,8 +2100,8 @@
     "size": 9917
   },
   "data/art-registry.js": {
-    "sha256": "4384b7a2dd637fb7f9ec377ad72e696fb21522685981360e9c9e530f8d6637cf",
-    "size": 9069
+    "sha256": "b746be54ac05a725e6efe8087afbc7b0e23ab33e81e6df874cb6adad7e5ce494",
+    "size": 4544
   },
   "data/serbian.js": {
     "sha256": "12f7f7f12989868bc399ecbe94de2e88165e1fea452047dd097c83a3e830ceb8",
@@ -1936,8 +2172,8 @@
     "size": 5268
   },
   "games/kitty-standalone.js": {
-    "sha256": "10525f680b9c06b5ace7d5c6fd7c5644aba76889429483caf8adcd1de1bf5c6c",
-    "size": 109158
+    "sha256": "228c5765c354a7f24bbb86bbb4e2f4e178ab54ce79f5ee062a50d27f8404d6f0",
+    "size": 110642
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
@@ -2116,8 +2352,8 @@
     "size": 11569
   },
   "shared/art.js": {
-    "sha256": "c097b7dcc8377f59fe8204d1784499e7a4b50212f06af02946649be6a5eb57e6",
-    "size": 4439
+    "sha256": "f746048899f5fcfb1eb125798640470b721fedcce2a596467f6dfd501c6f06ae",
+    "size": 4581
   },
   "shared/audio-buses.js": {
     "sha256": "4eac8f8e712df655871b5a64193cb38fa2b84d30dc3bf90e93f4a9910a8db900",
@@ -2184,8 +2420,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "e42bc6e878ca741f99499ccaacbc3aa71e195391ded85f08bc634933d1da2741",
-    "size": 17754
+    "sha256": "7767eb92a645079f8abd8056cf25aa646848aafb4af9503c13627bbb43322f0f",
+    "size": 19567
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",
