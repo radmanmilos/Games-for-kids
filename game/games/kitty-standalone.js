@@ -1668,28 +1668,39 @@ function draw() {
 
     drawPitHazards();
 
-    // Draw Static Platforms
-    const TERRAIN_GLYPHS = {
-        'spring': '🍃',
-        'summer': '🌞',
-        'autumn': '🎃',
-        'winter-explorer': '☃',
-        'underground': '🌑',
-        'cave': '🏔',
-        'water': '💦',
-        'savanna': '🐪',
-        'japan': '🎎',
-        'northpole': '🦭',
-        'egypt': '🐫'
+    // Draw Static Platforms (explorer stems bypass emoji registry to avoid cross-game collisions)
+    const TERRAIN_STEMS = {
+        'spring': 'terrain-spring-top',
+        'summer': 'terrain-summer-top',
+        'autumn': 'terrain-autumn-top',
+        'winter-explorer': 'terrain-winter-explorer-top',
+        'underground': 'terrain-underground-top',
+        'cave': 'terrain-cave-top',
+        'water': 'terrain-water-top',
+        'savanna': 'terrain-savanna-top',
+        'japan': 'terrain-japan-top',
+        'northpole': 'terrain-northpole-top',
+        'egypt': 'terrain-egypt-top'
     };
     platforms.forEach(p => {
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(p.x - 4, p.y - 4, p.width + 8, p.height + 8);
 
-        const terrainGlyph = TERRAIN_GLYPHS[theme.scene];
-        if (terrainGlyph && window.Art && window.Art.draw(ctx, terrainGlyph, p.x + p.width / 2, p.y + p.height / 2, p.height)) {
-            // terrain glyph drawn
-        } else {
+        const terrainStem = TERRAIN_STEMS[theme.scene];
+        let drewTerrain = false;
+        if (terrainStem && window.Art && window.Art.imageStem) {
+            const im = window.Art.imageStem(terrainStem);
+            if (im && im.complete && im.naturalWidth > 0) {
+                // Tile the terrain art across the platform top so wide grounds don't show one tiny centered sprite.
+                const tile = Math.max(24, p.height);
+                for (let tx = p.x; tx < p.x + p.width; tx += tile) {
+                    const tw = Math.min(tile, p.x + p.width - tx);
+                    ctx.drawImage(im, 0, 0, im.naturalWidth * (tw / tile), im.naturalHeight, tx, p.y, tw, p.height);
+                }
+                drewTerrain = true;
+            }
+        }
+        if (!drewTerrain) {
             ctx.fillStyle = p.color;
             ctx.fillRect(p.x, p.y, p.width, p.height);
             drawPaperStitchLine(p.x + 10, p.y + p.height / 2, p.x + p.width - 10, p.y + p.height / 2);
@@ -1707,27 +1718,34 @@ function draw() {
         drawPaperStitchLine(mp.x + 10, mp.y + mp.height / 2, mp.x + mp.width - 10, mp.y + mp.height / 2);
     });
 
-    // Draw themed "spawner" pipes
-    const PIPE_GLYPHS = {
-        'spring': '🚰',
-        'autumn': '🍁',
-        'cave': '🪨',
-        'egypt': '🏜',
-        'japan': '🏯',
-        'northpole': '🧊',
-        'savanna': '🌾',
-        'underground': '🕳',
-        'water': '🌊',
-        'winter-explorer': '❄',
-        'winter': '❄'
+    // Draw themed "spawner" pipes (explorer stems bypass emoji registry)
+    const PIPE_STEMS = {
+        'spring': 'pipe-spring',
+        'autumn': 'pipe-autumn',
+        'cave': 'pipe-cave',
+        'egypt': 'pipe-egypt',
+        'japan': 'pipe-japan',
+        'northpole': 'pipe-northpole',
+        'savanna': 'pipe-savanna',
+        'underground': 'pipe-underground',
+        'water': 'pipe-water',
+        'winter-explorer': 'pipe-winter',
+        'winter': 'pipe-winter'
     };
     pipes.forEach(pipe => {
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(pipe.x - 4, pipe.y - 4, pipe.width + 8, pipe.height + 8);
-        const pipeGlyph = PIPE_GLYPHS[theme.scene];
-        if (pipeGlyph && window.Art && window.Art.draw(ctx, pipeGlyph, pipe.x + pipe.width / 2, pipe.y + pipe.height / 2, pipe.width)) {
-            // pipe glyph drawn
-        } else {
+        const pipeStem = PIPE_STEMS[theme.scene];
+        let drewPipe = false;
+        if (pipeStem && window.Art && window.Art.imageStem) {
+            const im = window.Art.imageStem(pipeStem);
+            if (im && im.complete && im.naturalWidth > 0) {
+                // Draw pipe art to the actual pipe rect (body + cap region) for correct placement.
+                ctx.drawImage(im, pipe.x - 6, pipe.y - 4, pipe.width + 12, pipe.height + 4);
+                drewPipe = true;
+            }
+        }
+        if (!drewPipe) {
             ctx.fillStyle = theme.pipeColor;
             ctx.fillRect(pipe.x, pipe.y, pipe.width, pipe.height);
             ctx.fillRect(pipe.x - 6, pipe.y, pipe.width + 12, 24);
@@ -1841,26 +1859,25 @@ function drawCeiling() {
     }
 }
 
-// Draw an approved, already-registered storybook asset when it has loaded.
-// Until then, retain the existing procedural fallback so the game never
-// shows a missing or invisible gameplay object.
-function drawExplorerArt(glyph, cx, cy, size) {
-    if (!window.Art || !window.Art.image || !window.Art.draw) return false;
-    const image = window.Art.image(glyph);
+// Draw an approved, already-registered explorer asset by stem when loaded.
+// Using stems (not emoji registry) keeps shared glyphs from colliding across games.
+function drawExplorerArt(stem, cx, cy, size) {
+    if (!window.Art || !window.Art.imageStem || !window.Art.drawStem) return false;
+    const image = window.Art.imageStem(stem);
     if (!image || !image.complete || image.naturalWidth <= 0) return false;
-    return window.Art.draw(ctx, glyph, cx, cy, size);
+    return window.Art.drawStem(ctx, stem, cx, cy, size);
 }
 
 // --- Enemy drawings (same pop-out mechanic, themed look) ---
 function drawEnemy(type) {
-    if (type === 'mouse' && drawExplorerArt('🐭', 0, 0, 40)) return;
-    if (type === 'bat' && drawExplorerArt('🦇', 0, 0, 40)) return;
-    if (type === 'penguin' && drawExplorerArt('🐧', 0, 0, 40)) return;
-    if (type === 'mole' && drawExplorerArt('🐹', 0, 0, 40)) return;
-    if (type === 'piranha' && drawExplorerArt('🐡', 0, 0, 40)) return;
-    if (type === 'snake' && drawExplorerArt('🐍', 0, 0, 40)) return;
-    if (type === 'oni' && drawExplorerArt('👹', 0, 0, 40)) return;
-    if (type === 'scorpion' && drawExplorerArt('🦂', 0, 0, 40)) return;
+    if (type === 'mouse' && drawExplorerArt('enemy-mouse', 0, 0, 40)) return;
+    if (type === 'bat' && drawExplorerArt('enemy-bat', 0, 0, 40)) return;
+    if (type === 'penguin' && drawExplorerArt('enemy-penguin', 0, 0, 40)) return;
+    if (type === 'mole' && drawExplorerArt('enemy-mole', 0, 0, 40)) return;
+    if (type === 'piranha' && drawExplorerArt('enemy-piranha', 0, 0, 40)) return;
+    if (type === 'snake' && drawExplorerArt('enemy-snake', 0, 0, 40)) return;
+    if (type === 'oni' && drawExplorerArt('enemy-oni', 0, 0, 40)) return;
+    if (type === 'scorpion' && drawExplorerArt('enemy-scorpion', 0, 0, 40)) return;
     if (type === 'mouse') {
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
@@ -2076,16 +2093,17 @@ function drawEnemy(type) {
 // separate from the pipe pop-out art. All are smaller than the kitty (48px).
 // Drawn facing right; the caller flips with ctx.scale(dir, 1).
 function drawWalker(type) {
-    if (type === 'snowman' && drawExplorerArt('⛄', 0, 0, 36)) return;
-    if (type === 'crab' && drawExplorerArt('🦀', 0, 0, 32)) return;
-    if (type === 'ladybug' && drawExplorerArt('🐞', 0, 0, 32)) return;
-    if (type === 'bee' && drawExplorerArt('🐝', 0, 0, 32)) return;
-    if (type === 'hedgehog' && drawExplorerArt('🦔', 0, 0, 36)) return;
-    if (type === 'worm' && drawExplorerArt('🪱', 0, 0, 32)) return;
-    if (type === 'spider' && drawExplorerArt('🕷', 0, 0, 32)) return;
-    if (type === 'meerkat' && drawExplorerArt('🐿', 0, 0, 32)) return;
-    if (type === 'panda' && drawExplorerArt('🐼', 0, 0, 36)) return;
-    if (type === 'scarab' && drawExplorerArt('🪲', 0, 0, 32)) return;
+    if (type === 'snowman' && drawExplorerArt('walker-snowman', 0, 0, 36)) return;
+    if (type === 'crab' && drawExplorerArt('walker-crab', 0, 0, 32)) return;
+    if (type === 'ladybug' && drawExplorerArt('walker-ladybug', 0, 0, 32)) return;
+    if (type === 'bee' && drawExplorerArt('walker-bee', 0, 0, 32)) return;
+    if (type === 'hedgehog' && drawExplorerArt('walker-hedgehog', 0, 0, 36)) return;
+    if (type === 'worm' && drawExplorerArt('walker-worm', 0, 0, 32)) return;
+    if (type === 'spider' && drawExplorerArt('walker-spider', 0, 0, 32)) return;
+    if (type === 'meerkat' && drawExplorerArt('walker-meerkat', 0, 0, 32)) return;
+    if (type === 'panda' && drawExplorerArt('walker-panda', 0, 0, 36)) return;
+    if (type === 'scarab' && drawExplorerArt('walker-scarab', 0, 0, 32)) return;
+    // seal: procedural fallback (no walker-seal art yet)
     if (type === 'ladybug') {
         ctx.fillStyle = '#e52521';
         ctx.beginPath();
@@ -2346,22 +2364,23 @@ function drawWalker(type) {
 
 // --- Theme goal buildings (paper style) ---
 function drawGoal(type, c) {
-    const GOAL_GLYPHS = {
-        'house': '🏡',
-        'mine': '🧱',
-        'cave': '🌄',
-        'submarine': '🚢',
-        'hut': '🛖',
-        'igloo': '🏕',
-        'pyramid': '🏛'
+    const GOAL_STEMS = {
+        'house': 'goal-house',
+        'mine': 'goal-mine',
+        'cave': 'goal-cave',
+        'submarine': 'goal-submarine',
+        'hut': 'goal-hut',
+        'igloo': 'goal-igloo',
+        'torii': 'house',
+        'pyramid': 'goal-pyramid'
     };
-    const goalGlyph = GOAL_GLYPHS[type];
-    if (goalGlyph && !(type === 'house' && theme && theme.scene === 'spring') &&
-        drawExplorerArt(goalGlyph, c.x + c.width / 2, c.y + c.height / 2, Math.min(c.width, c.height))) return;
+    const goalStem = GOAL_STEMS[type];
+    if (goalStem && !(type === 'house' && theme && theme.scene === 'spring') &&
+        drawExplorerArt(goalStem, c.x + c.width / 2, c.y + c.height / 2, Math.min(c.width, c.height))) return;
     // The Spring pilot reuses the approved painted house. Other seasonal
     // worlds keep their existing fallback until their distinct goals are ready.
     if (type === 'house' && theme && theme.scene === 'spring' &&
-        drawExplorerArt('🏠', c.x + c.width / 2, c.y + c.height / 2, Math.min(c.width, c.height))) return;
+        drawExplorerArt('house', c.x + c.width / 2, c.y + c.height / 2, Math.min(c.width, c.height))) return;
     if (type === 'house') {
         ctx.fillStyle = '#f8edeb';
         ctx.fillRect(c.x, c.y + 38, c.width, c.height - 38);

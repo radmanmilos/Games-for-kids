@@ -170,17 +170,17 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   const reusableArtStems = ['mouse.webp', 'bat.webp', 'penguin.webp', 'snowman.webp', 'animal-crab.webp', 'house.webp'];
   const reusableArtOk = Array.isArray(reusableArtUrls) && reusableArtUrls.length === reusableArtStems.length &&
     reusableArtUrls.every((url, i) => typeof url === 'string' && url.endsWith('/assets/art/' + reusableArtStems[i]));
-  check('task429: approved Explorer reuse assets resolve through ART_REGISTRY',
+  check('task429: shared emojis still resolve through ART_REGISTRY (no cross-game collision)',
     reusableArtOk, JSON.stringify(reusableArtUrls || []));
 
   const artReuseCalls = await h.evalv(`(() => {
-    const oldImage = Art.image;
-    const oldDraw = Art.draw;
+    const oldImageStem = Art.imageStem;
+    const oldDrawStem = Art.drawStem;
     const oldTheme = theme;
     const calls = [];
-    Art.image = () => ({ complete: true, naturalWidth: 512 });
-    Art.draw = (context, glyph, cx, cy, size) => {
-      calls.push({ glyph, size });
+    Art.imageStem = () => ({ complete: true, naturalWidth: 512 });
+    Art.drawStem = (context, stem, cx, cy, size) => {
+      calls.push({ stem, size });
       return true;
     };
     try {
@@ -192,19 +192,19 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
       theme = WORLDS.find(w => w.scene === 'spring');
       drawGoal('house', { x: 0, y: 0, width: 220, height: 220 });
     } finally {
-      Art.image = oldImage;
-      Art.draw = oldDraw;
+      Art.imageStem = oldImageStem;
+      Art.drawStem = oldDrawStem;
       theme = oldTheme;
     }
     return calls;
   })()`);
   const expectedArtCalls = [
-    { glyph: '🐭', size: 40 }, { glyph: '🦇', size: 40 }, { glyph: '🐧', size: 40 },
-    { glyph: '⛄', size: 36 }, { glyph: '🦀', size: 32 }, { glyph: '🏠', size: 220 }
+    { stem: 'enemy-mouse', size: 40 }, { stem: 'enemy-bat', size: 40 }, { stem: 'enemy-penguin', size: 40 },
+    { stem: 'walker-snowman', size: 36 }, { stem: 'walker-crab', size: 32 }, { stem: 'house', size: 220 }
   ];
   const artReuseOk = Array.isArray(artReuseCalls) && artReuseCalls.length === expectedArtCalls.length &&
-    artReuseCalls.every((call, i) => call.glyph === expectedArtCalls[i].glyph && call.size === expectedArtCalls[i].size);
-  check('task429: approved painted art is used for mouse, bat, penguin, snowman, crab and Spring goal',
+    artReuseCalls.every((call, i) => call.stem === expectedArtCalls[i].stem && call.size === expectedArtCalls[i].size);
+  check('task429: explorer uses stem-based art for mouse, bat, penguin, snowman, crab and Spring goal',
     artReuseOk, JSON.stringify(artReuseCalls || []));
 
   const walkerFootAnchors = await h.evalv('({ snowman: WALKER_FOOT.snowman, crab: WALKER_FOOT.crab })');

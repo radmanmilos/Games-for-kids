@@ -21,7 +21,8 @@
   try { if (typeof document !== 'undefined' && document.currentScript && document.currentScript.src)
           BASE = new URL('../assets/art/', document.currentScript.src).href; } catch (e) { /* keep default */ }
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  const url = (g) => { const stem = REG[norm(g)]; return stem ? BASE + stem + '.webp' : null; };
+  const stemUrl = (stem) => stem ? BASE + stem + '.webp' : null;
+  const url = (g) => stemUrl(REG[norm(g)]);
   function html(g, cls) {
     const u = url(g);
     return u ? '<img class="art' + (cls ? ' ' + esc(cls) : '') + '" src="' + u + '" alt="" draggable="false">' : esc(g);
@@ -53,25 +54,26 @@
     el.classList.add('art-painted');
   };
   const cache = new Map();
-  function image(g) {
-    const u = url(g); if (!u || typeof Image === 'undefined') return null;
+  function imageStem(stem) {
+    const u = stemUrl(stem); if (!u || typeof Image === 'undefined') return null;
     if (!cache.has(u)) { const im = new Image(); im.src = u; cache.set(u, im); }
     return cache.get(u);
   }
-  function draw(ctx, g, cx, cy, size) {
-    const im = image(g);
+  function image(g) { return imageStem(REG[norm(g)]); }
+  function drawWithImage(ctx, im, fallbackText, cx, cy, size) {
     if (im && im.complete && im.naturalWidth) { ctx.drawImage(im, cx - size / 2, cy - size / 2, size, size); return true; }
-    /* Emoji fallback: keep the caller's font family/weight (call sites set an
-       emoji font before drawing) but force the requested size, and never leak
-       the align/baseline changes into the rest of the frame. */
     const parts = /^(.*?)(\d*\.?\d+)(px|pt|em|%)\s+(.*)$/.exec(ctx.font || '');
     ctx.save();
     ctx.font = (parts ? parts[1] : '') + size + 'px ' + (parts ? parts[4] : 'sans-serif');
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(g, cx, cy);
+    ctx.fillText(fallbackText, cx, cy);
     ctx.restore();
     return false;
   }
-  root.Art = { url, html, fill, fillAttr, image, draw, _BASE: () => BASE };
+  function draw(ctx, g, cx, cy, size) { return drawWithImage(ctx, image(g), g, cx, cy, size); }
+  function drawStem(ctx, stem, cx, cy, size, fallbackText) {
+    return drawWithImage(ctx, imageStem(stem), fallbackText || '', cx, cy, size);
+  }
+  root.Art = { url, stemUrl, html, fill, fillAttr, image, imageStem, draw, drawStem, _BASE: () => BASE };
 })(typeof window !== 'undefined' ? window : globalThis);
