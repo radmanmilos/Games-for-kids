@@ -1,0 +1,1 @@
+A side-scrolling 2D platformer collectible gift box, yellow with red ribbon, gentle rounded shapes, child-friendly painted illustration matching star reference. Collectible fills most of the frame, clear silhouette, readable at small size, no bear, no characters, no animals, no objects, no sky line baked in. The gift box is a collectible item.

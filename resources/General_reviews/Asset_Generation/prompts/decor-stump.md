@@ -1,0 +1,1 @@
+A side-scrolling 2D platformer decor for autumn level: complete tree stump (cut log with roots, grass at base), single object, clean silhouette, child-friendly painted illustration matching star reference. Decor fills most of the frame, no bear, no characters, no animals, no objects, no sky line baked in. The stump is a scenery object.

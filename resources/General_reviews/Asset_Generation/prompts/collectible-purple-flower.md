@@ -1,0 +1,1 @@
+A side-scrolling 2D platformer collectible flower, complete purple flower, gentle rounded shapes, child-friendly painted illustration matching star reference. Collectible fills most of the frame, clear silhouette, readable at small size, no bear, no characters, no animals, no objects, no sky line baked in. The purple flower is a collectible item.

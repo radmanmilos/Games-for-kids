@@ -1,0 +1,1 @@
+A side-scrolling 2D platformer decor for all levels: complete wooden signpost (two-post frame, blank board), single object, clean silhouette, child-friendly painted illustration matching star reference. Decor fills most of the frame, no bear, no characters, no animals, no objects, no sky line baked in. The signpost is a scenery object.

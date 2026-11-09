@@ -1669,12 +1669,26 @@ function draw() {
     drawPitHazards();
 
     // Draw Static Platforms
+    const TERRAIN_GLYPHS = {
+        'spring': '🍃',
+        'summer': '🌞',
+        'autumn': '🎃',
+        'winter-explorer': '☃',
+        'underground': '🌑',
+        'cave': '🏔',
+        'water': '💦',
+        'savanna': '🐪',
+        'japan': '🎎',
+        'northpole': '🦭',
+        'egypt': '🐫'
+    };
     platforms.forEach(p => {
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(p.x - 4, p.y - 4, p.width + 8, p.height + 8);
 
-        if (theme.scene === 'spring' && window.Art && window.Art.draw(ctx, '🍃', p.x + p.width / 2, p.y + p.height / 2, p.height)) {
-            // spring terrain glyph drawn (pilot Gate 4)
+        const terrainGlyph = TERRAIN_GLYPHS[theme.scene];
+        if (terrainGlyph && window.Art && window.Art.draw(ctx, terrainGlyph, p.x + p.width / 2, p.y + p.height / 2, p.height)) {
+            // terrain glyph drawn
         } else {
             ctx.fillStyle = p.color;
             ctx.fillRect(p.x, p.y, p.width, p.height);
@@ -1694,12 +1708,25 @@ function draw() {
     });
 
     // Draw themed "spawner" pipes
+    const PIPE_GLYPHS = {
+        'spring': '🚰',
+        'autumn': '🍁',
+        'cave': '🪨',
+        'egypt': '🏜',
+        'japan': '🏯',
+        'northpole': '🧊',
+        'savanna': '🌾',
+        'underground': '🕳',
+        'water': '🌊',
+        'winter-explorer': '❄',
+        'winter': '❄'
+    };
     pipes.forEach(pipe => {
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(pipe.x - 4, pipe.y - 4, pipe.width + 8, pipe.height + 8);
-
-        if (theme.scene === 'spring' && window.Art && window.Art.draw(ctx, '🚰', pipe.x + pipe.width / 2, pipe.y + pipe.height / 2, pipe.width)) {
-            // spring pipe glyph drawn (pilot Gate 4)
+        const pipeGlyph = PIPE_GLYPHS[theme.scene];
+        if (pipeGlyph && window.Art && window.Art.draw(ctx, pipeGlyph, pipe.x + pipe.width / 2, pipe.y + pipe.height / 2, pipe.width)) {
+            // pipe glyph drawn
         } else {
             ctx.fillStyle = theme.pipeColor;
             ctx.fillRect(pipe.x, pipe.y, pipe.width, pipe.height);
@@ -1829,6 +1856,11 @@ function drawEnemy(type) {
     if (type === 'mouse' && drawExplorerArt('🐭', 0, 0, 40)) return;
     if (type === 'bat' && drawExplorerArt('🦇', 0, 0, 40)) return;
     if (type === 'penguin' && drawExplorerArt('🐧', 0, 0, 40)) return;
+    if (type === 'mole' && drawExplorerArt('🐹', 0, 0, 40)) return;
+    if (type === 'piranha' && drawExplorerArt('🐡', 0, 0, 40)) return;
+    if (type === 'snake' && drawExplorerArt('🐍', 0, 0, 40)) return;
+    if (type === 'oni' && drawExplorerArt('👹', 0, 0, 40)) return;
+    if (type === 'scorpion' && drawExplorerArt('🦂', 0, 0, 40)) return;
     if (type === 'mouse') {
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
@@ -2046,6 +2078,14 @@ function drawEnemy(type) {
 function drawWalker(type) {
     if (type === 'snowman' && drawExplorerArt('⛄', 0, 0, 36)) return;
     if (type === 'crab' && drawExplorerArt('🦀', 0, 0, 32)) return;
+    if (type === 'ladybug' && drawExplorerArt('🐞', 0, 0, 32)) return;
+    if (type === 'bee' && drawExplorerArt('🐝', 0, 0, 32)) return;
+    if (type === 'hedgehog' && drawExplorerArt('🦔', 0, 0, 36)) return;
+    if (type === 'worm' && drawExplorerArt('🪱', 0, 0, 32)) return;
+    if (type === 'spider' && drawExplorerArt('🕷', 0, 0, 32)) return;
+    if (type === 'meerkat' && drawExplorerArt('🐿', 0, 0, 32)) return;
+    if (type === 'panda' && drawExplorerArt('🐼', 0, 0, 36)) return;
+    if (type === 'scarab' && drawExplorerArt('🪲', 0, 0, 32)) return;
     if (type === 'ladybug') {
         ctx.fillStyle = '#e52521';
         ctx.beginPath();
@@ -2306,6 +2346,18 @@ function drawWalker(type) {
 
 // --- Theme goal buildings (paper style) ---
 function drawGoal(type, c) {
+    const GOAL_GLYPHS = {
+        'house': '🏡',
+        'mine': '🧱',
+        'cave': '🌄',
+        'submarine': '🚢',
+        'hut': '🛖',
+        'igloo': '🏕',
+        'pyramid': '🏛'
+    };
+    const goalGlyph = GOAL_GLYPHS[type];
+    if (goalGlyph && !(type === 'house' && theme && theme.scene === 'spring') &&
+        drawExplorerArt(goalGlyph, c.x + c.width / 2, c.y + c.height / 2, Math.min(c.width, c.height))) return;
     // The Spring pilot reuses the approved painted house. Other seasonal
     // worlds keep their existing fallback until their distinct goals are ready.
     if (type === 'house' && theme && theme.scene === 'spring' &&

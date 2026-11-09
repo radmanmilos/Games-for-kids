@@ -1,0 +1,1 @@
+A side-scrolling 2D platformer decor for all levels: complete wooden fence (vertical planks, horizontal rails), single object, clean edges, child-friendly painted illustration matching star reference. Decor fills most of the frame, no bear, no characters, no animals, no objects, no sky line baked in. The fence is a scenery object.

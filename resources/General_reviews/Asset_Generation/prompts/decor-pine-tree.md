@@ -1,0 +1,1 @@
+A side-scrolling 2D platformer decor for winter level: complete pine/fir tree (conifer, brown trunk), single object, clean silhouette, gentle rounded shapes, child-friendly painted illustration matching star reference. Decor fills most of the frame, no bear, no characters, no animals, no objects, no sky line baked in. The pine tree is a scenery object.

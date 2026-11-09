@@ -1,0 +1,1 @@
+A side-scrolling 2D platformer decor for japan level: complete stone lantern/lamp post (grey stone, glowing window, Japanese tōrō style), single object, clean silhouette, child-friendly painted illustration matching star reference. Decor fills most of the frame, no bear, no characters, no animals, no objects, no sky line baked in. The lantern is a scenery object.

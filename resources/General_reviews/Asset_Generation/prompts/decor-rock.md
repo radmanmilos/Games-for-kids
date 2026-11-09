@@ -1,0 +1,1 @@
+A side-scrolling 2D platformer decor for all levels: complete grey boulder with grass tufts at base, single object, clean silhouette, gentle rounded shapes, child-friendly painted illustration matching star reference. Decor fills most of the frame, no bear, no characters, no animals, no objects, no sky line baked in. The boulder is a scenery object.

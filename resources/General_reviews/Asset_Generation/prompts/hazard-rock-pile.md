@@ -1,0 +1,1 @@
+A side-scrolling 2D platformer hazard for all levels: complete rock/boulder pile, grey boulders stacked together, gentle rounded shapes, child-friendly painted illustration matching star reference. Hazard fills most of the frame, clear silhouette, readable at small size, no bear, no characters, no animals, no objects, no sky line baked in. The rock pile is a hazard object.
