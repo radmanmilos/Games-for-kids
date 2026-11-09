@@ -33,7 +33,7 @@
 | `01_TERRAIN_TILES/` | 21 | 21 | 18 | 0 | 3 | 0 | Gate 2 batch 1 APPROVED 2026-11-08 (3 NEEDS WORK still excluded) |
 | `02_PLATFORMS/` | 11 | 11 | 11 | 0 | 0 | 0 | Gate 2 batch 2 APPROVED 2026-11-08 |
 | `03_PIPES_AND_ENTRANCES/` | 8 | 8 | 7 | 0 | 0 | 1 | Gate 2 batch 3 MIXED final 2026-11-08/09 (01+02+05+07+08 regenerated versions + 03 + 06 approved; 04 rejected; Option C regeneration complete) |
-| `04_ENEMIES_AND_WALKERS/` | 17 | 17 | 0 | 14 | 0 | 3 | Gate 1 review complete (task 431) |
+| `04_ENEMIES_AND_WALKERS/` | 17 | 17 | 12 | 0 | 2 | 3 | Gate 2 batch 4 MIXED final 2026-11-09 (12 approved; 10/17 needs work — defects; 01/15/16 rejected) |
 | `05_COLLECTIBLES_AND_ITEMS/` | 15 | 15 | 0 | 10 | 0 | 5 | Gate 1 audit complete (task 431) |
 | `06_GOALS_AND_STRUCTURES/` | 5 | 5 | 0 | 4 | 0 | 1 | Gate 1 review complete (task 431) |
 | `07_DECORATIONS_AND_NATURE/` | 16 | 16 | 0 | 15 | 0 | 1 | Gate 1 review complete (task 431) |
@@ -42,7 +42,7 @@
 | `REVIEW/` | 9 review sheets + CSV | — | — | — | — | — | Review index |
 | `00_SOURCE_ATLASES/` | 2 originals | — | — | — | — | — | Preserved unchanged |
 
-**Counts:** 116 candidate files total; 116 reviewed (Gate 1 pass, task 431); 36 APPROVED (batches 1–3 incl. regenerated pipes 01+02+05+07+08, 2026-11-08/09); 53 READY FOR REVIEW; 3 NEEDS WORK (terrain 01/04/11 pixel recrop); 24 REJECTED (5 header-label false positives, 1 cross-family duplicate, 6 no-Explorer-consumer art, 1 pipe style/design fail, 11 reference-only backgrounds); 0 technically ready; 0 integrated.
+**Counts:** 116 candidate files total; 116 reviewed (Gate 1 pass, task 431); 48 APPROVED (batches 1–4: terrain 18, platforms 11, pipes 7 incl. regenerated 01+02+05+07+08, enemies/walkers 12, 2026-11-08/09); 39 READY FOR REVIEW; 5 NEEDS WORK (terrain 01/04/11 pixel recrop; enemies 10 snowman recrop + 17 ladybug eyes fix); 24 REJECTED (5 header-label false positives, 1 cross-family duplicate, 6 no-Explorer-consumer art, 1 pipe style/design fail, 11 reference-only backgrounds — incl. 2 enemies confirmed rejected 2026-11-09 with added owner reasons); 0 technically ready; 0 integrated.
 
 **REJECTED breakdown (23):** 5 header-label false positives (`enemies_01`, `goals_01`, `hazards_01`, `decorations_01`, `collectibles_01`); 1 cross-family duplicate (`hazards_10` = `platforms_09`); 6 no-Explorer-consumer art (`enemies_15` frog, `enemies_16` snail, `collectibles_12/13/14/15` potion/chest/key/music notes); 11 backgrounds as reference-only material, not an art-quality judgment (excluded from Gate 2 batches per guide §12).
 
