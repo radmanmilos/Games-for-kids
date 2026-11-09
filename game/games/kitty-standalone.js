@@ -2103,7 +2103,7 @@ function drawWalker(type) {
     if (type === 'meerkat' && drawExplorerArt('walker-meerkat', 0, 0, 32)) return;
     if (type === 'panda' && drawExplorerArt('walker-panda', 0, 0, 36)) return;
     if (type === 'scarab' && drawExplorerArt('walker-scarab', 0, 0, 32)) return;
-    // seal: procedural fallback (no walker-seal art yet)
+    if (type === 'seal' && drawExplorerArt('walker-seal', 0, 0, 36)) return;
     if (type === 'ladybug') {
         ctx.fillStyle = '#e52521';
         ctx.beginPath();
@@ -2371,7 +2371,7 @@ function drawGoal(type, c) {
         'submarine': 'goal-submarine',
         'hut': 'goal-hut',
         'igloo': 'goal-igloo',
-        'torii': 'house',
+        'torii': 'goal-torii',
         'pyramid': 'goal-pyramid'
     };
     const goalStem = GOAL_STEMS[type];
