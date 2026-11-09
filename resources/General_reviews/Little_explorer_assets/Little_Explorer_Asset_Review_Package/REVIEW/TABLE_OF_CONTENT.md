@@ -37,12 +37,12 @@
 | `05_COLLECTIBLES_AND_ITEMS/` | 15 | 15 | 0 | 10 | 0 | 5 | Gate 1 audit complete (task 431) |
 | `06_GOALS_AND_STRUCTURES/` | 5 | 5 | 4 | 0 | 0 | 1 | Gate 2 batch 5 final 2026-11-09 (02/03/04 approved flipped left per owner condition; 05 approved as extracted; 01 header label rejected) |
 | `07_DECORATIONS_AND_NATURE/` | 16 | 16 | 0 | 15 | 0 | 1 | Gate 1 review complete (task 431) |
-| `08_HAZARDS_AND_EFFECTS/` | 12 | 12 | 0 | 10 | 0 | 2 | Gate 1 audit complete (task 431) |
+| `08_HAZARDS_AND_EFFECTS/` | 12 | 12 | 10 | 0 | 0 | 2 | Gate 2 batch 6 final 2026-11-09 (02–09/11/12 approved with §6 notes as conditions; 01 label + 10 duplicate rejected) |
 | `09_BACKGROUND_SCENES/` | 11 | 11 | 0 | 0 | 0 | 11 | Gate 1 audit complete — reference only, excluded from approval batches (task 431) |
 | `REVIEW/` | 9 review sheets + CSV | — | — | — | — | — | Review index |
 | `00_SOURCE_ATLASES/` | 2 originals | — | — | — | — | — | Preserved unchanged |
 
-**Counts:** 116 candidate files total; 116 reviewed (Gate 1 pass, task 431); 56 APPROVED (batches 1–5: terrain 18, platforms 11, pipes 7 incl. regenerated 01+02+05+07+08, enemies/walkers 16 incl. regenerated 10/15/16/17 side-view versions, goals 4 incl. 3 owner-condition flips, 2026-11-08/09); 35 READY FOR REVIEW; 3 NEEDS WORK (terrain 01/04/11 pixel recrop); 22 REJECTED (5 header-label false positives, 1 cross-family duplicate, 4 no-Explorer-consumer art, 1 pipe style/design fail, 11 reference-only backgrounds; enemies frog/snail re-opened and approved as regenerated versions 2026-11-09); 0 technically ready; 0 integrated.
+**Counts:** 116 candidate files total; 116 reviewed (Gate 1 pass, task 431); 66 APPROVED (batches 1–6: terrain 18, platforms 11, pipes 7 incl. regenerated 01+02+05+07+08, enemies/walkers 16 incl. regenerated 10/15/16/17 side-view versions, goals 4 incl. 3 owner-condition flips, hazards 10, 2026-11-08/09); 25 READY FOR REVIEW; 3 NEEDS WORK (terrain 01/04/11 pixel recrop); 22 REJECTED (5 header-label false positives, 1 cross-family duplicate, 4 no-Explorer-consumer art, 1 pipe style/design fail, 11 reference-only backgrounds; enemies frog/snail re-opened and approved as regenerated versions 2026-11-09); 0 technically ready; 0 integrated.
 
 **REJECTED breakdown (22):** 5 header-label false positives (`enemies_01`, `goals_01`, `hazards_01`, `decorations_01`, `collectibles_01`); 1 cross-family duplicate (`hazards_10` = `platforms_09`); 4 no-Explorer-consumer art (`collectibles_12/13/14/15` potion/chest/key/music notes — `enemies_15` frog and `enemies_16` snail were re-opened by the owner, regenerated and approved 2026-11-09, so they are no longer rejected); 1 pipe style/design fail; 11 backgrounds as reference-only material, not an art-quality judgment (excluded from Gate 2 batches per guide §12).
 
