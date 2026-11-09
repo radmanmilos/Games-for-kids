@@ -2,7 +2,7 @@
 
 **Last verified:** 2026-11-09  
 **Repository:** radmanmilos/Games-for-kids  
-**Current branch:** `feature/little-explorer-art-integration` at `8838e93` (pushed, secrets gate 4/4)  
+**Current branch:** `feature/little-explorer-art-integration` at `4797199` → bumped to version `3.0.8` for service-worker cache bust (uncommitted, see below)  
 **Main HEAD:** 5605c700e949becde084db3427245b6d8e788373 (merge of PR #23)
 
 ## Repository and verification
