@@ -156,7 +156,9 @@ window.ART_REGISTRY = {
   "🦉": "owl",
   "🧩": "puzzle-piece",
   "☃": "snowman",
-  "❤": "object-heart"
+  "❤": "object-heart",
+  "🍃": "terrain-spring-top",
+  "🚰": "pipe-spring"
 };
 
 // T301: Cat Forest glyphs — the render sites in cat_forest.js / cat_forest.html

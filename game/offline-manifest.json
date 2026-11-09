@@ -435,6 +435,10 @@
     "sha256": "184fdb3245d481e3a7f84403196ac62b7f0388b8f48fe45c2f48eb904bd2aa76",
     "size": 36210
   },
+  "assets/art/pipe-spring.webp": {
+    "sha256": "866f5068a22658c95bb01d2ed30f6107256992464d01a628df07f943eff9e472",
+    "size": 6538
+  },
   "assets/art/planet.webp": {
     "sha256": "01105dd0d34b21d3aa99a2d3634401777f605d0a2d29c805bc282f4abf22d7a5",
     "size": 19326
@@ -574,6 +578,10 @@
   "assets/art/telescope.webp": {
     "sha256": "b04a6dbbd54b564a4ce11bb0d5c6b0d4492e4f8ee66543c1bfdfd68b5c3f4d65",
     "size": 31708
+  },
+  "assets/art/terrain-spring-top.webp": {
+    "sha256": "59c4c9eb41444ef9d74f2bfef756ea24e549e6c931d86ed228efc21231c10914",
+    "size": 15766
   },
   "assets/art/tractor.webp": {
     "sha256": "1e94668481c75f521dab76aed7f1de2fb6ea87a4ae66bacb0eb2b1745c12f532",
@@ -1336,16 +1344,16 @@
     "size": 2018229
   },
   "assets/scenes/scene-autumn.png": {
-    "sha256": "edd9c995e6b146736974a4082266fcffb6a1331044b1abd2d039846925593b04",
-    "size": 1640655
+    "sha256": "10b0702e7b550a34b90217ec57a43d0b04f683643041d61ef52648f92af3fc20",
+    "size": 2336057
   },
   "assets/scenes/scene-cave.png": {
-    "sha256": "98e63015d4042376d77e9328e026711d1e59cee85559d4b87c8b24b2d74d1471",
-    "size": 1564096
+    "sha256": "b15da35e2a76bc4fdd5b46559e54b5f7f7c46ab45ef625479b07392e4d6ebc0b",
+    "size": 1145032
   },
   "assets/scenes/scene-egypt.png": {
-    "sha256": "86f9be8dcebf52ff82deab72175ef460960c7d3f5dd86ec881473b1fd0eedc68",
-    "size": 942530
+    "sha256": "ea5fc361c6970c02bd24078fdd13ec613939582c3252b7803ab2aedb6ab6eb99",
+    "size": 1047674
   },
   "assets/scenes/scene-farm.png": {
     "sha256": "ca99d3747a8bfd0fcb83ffafd633a6e4a977019e21ca819c93567e3d114bbdaf",
@@ -1360,20 +1368,20 @@
     "size": 2401097
   },
   "assets/scenes/scene-japan.png": {
-    "sha256": "4423a769ca50fe918c03b898ca162a361686c758a5b7a9d26164caf738f3eb28",
-    "size": 1532764
+    "sha256": "7dd1c6a06997945807bb02ce0ac57cfa19d9c03b53fde22fc3b833ec5e3c0fdc",
+    "size": 740268
   },
   "assets/scenes/scene-northpole.png": {
-    "sha256": "7df2b641c4a41140e7f9b55374e89e818f649bc026a164d02020f2a09bd0a6b0",
-    "size": 1025045
+    "sha256": "a143525e04d324acfd01d074523445b359e602c0fa3f17534ef9c4368cedcc0c",
+    "size": 577362
   },
   "assets/scenes/scene-park.png": {
     "sha256": "562f34748b4b0f0031835c607eac8b682585a8139b86b57e2d32425289c27b08",
     "size": 2047270
   },
   "assets/scenes/scene-savanna.png": {
-    "sha256": "cb0a381335cf8bab9d1176fa760522810310be6791d835ecbb72c638bbe1f99c",
-    "size": 1774125
+    "sha256": "2e4fdc8f67eb2489d8ca7ddbbdb6c8a76dedff60d76abb60539c9ba4f530288a",
+    "size": 751570
   },
   "assets/scenes/scene-sea.png": {
     "sha256": "709a34ab8fa0dd55d3e8c83a2f1f9b8cddfbe8cd6fb38d59bfc7e6ea19096388",
@@ -1384,24 +1392,24 @@
     "size": 2632868
   },
   "assets/scenes/scene-spring.png": {
-    "sha256": "3d89067f6008a630d55a74e13da58a38fba881d6ea807bc509ef9885be0544e5",
-    "size": 798480
+    "sha256": "2eda9fc90f4bbe880c09b73bf2b098b107b3fb149c9fa98ee06a93f847d1d104",
+    "size": 1454800
   },
   "assets/scenes/scene-summer.png": {
-    "sha256": "7e0c6dcf95b0d19bc2fb7b8b219014000cfefde30db7e95a77ea4498d44e9026",
-    "size": 1449471
+    "sha256": "bcea1ceee65995a81ad6e61ffb02a326f3c033437037357dbb138bae15a83c11",
+    "size": 1650600
   },
   "assets/scenes/scene-underground.png": {
-    "sha256": "e8e3b81ed5a7b1d9cb47e9a4c7d491c74f822cc4f7c7880666a3f81071cb9286",
-    "size": 1736838
+    "sha256": "a013a402cd70bad8417c968917739eea440c586f3999ac12aacb2f143b2b8edd",
+    "size": 1106991
   },
   "assets/scenes/scene-water.png": {
-    "sha256": "fb9f76cd45f0e04424eb8220bd9ed690e2337bb524f5d9194fe2058b70f5722d",
-    "size": 908384
+    "sha256": "04b66ef592dc29f18750fa9683e18c3aa1e98ff585dfa8c71baec9b229b95f14",
+    "size": 801475
   },
   "assets/scenes/scene-winter-explorer.png": {
-    "sha256": "a8229fbbe42a419768e6defacbd627cdc2fd4d3808e531f37b107ac88a6471ee",
-    "size": 1166124
+    "sha256": "6a06828caa91d1a3b96666c23f71958e2ac018df55f5ca586ce85fb71d0a4aec",
+    "size": 1224500
   },
   "assets/scenes/scene-winter.png": {
     "sha256": "82eec1a5e16138c19067edf0a778307fbc57fd42552977cf3df5e6d9f3f1d0e6",
@@ -1420,8 +1428,8 @@
     "size": 9917
   },
   "data/art-registry.js": {
-    "sha256": "f0e2d1274a17ae348a640b850fcddd245979f442b9245caa9c2f0909b7b21bec",
-    "size": 4542
+    "sha256": "acb00da53cc0c9c7d1ecf64b9930e4e90a942f5782e94a0ea5ce8c77830bc839",
+    "size": 4599
   },
   "data/serbian.js": {
     "sha256": "12f7f7f12989868bc399ecbe94de2e88165e1fea452047dd097c83a3e830ceb8",
@@ -1492,8 +1500,8 @@
     "size": 5268
   },
   "games/kitty-standalone.js": {
-    "sha256": "1b9277c5c95dd5b1bddf8daac04ba873dace0b8e26262c771ca73c8ac2ec3ce7",
-    "size": 106593
+    "sha256": "1723045c00aeafa58b73525e36744809c5f31c0e9e04a000767825c1ec4ab944",
+    "size": 107075
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
@@ -1740,8 +1748,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "30e2ae05c4418c1e2f270765fa22e4b553f9f53dfb6d98b68394f2ef838b1e6a",
-    "size": 13799
+    "sha256": "7dfd49cd3c2cb9b8f18827638eee9368acb85e84e547eeea5736b36e9e1d75b9",
+    "size": 13872
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",

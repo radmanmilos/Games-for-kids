@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **430**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **437**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -415,3 +415,8 @@ One line per task: `number | status | date | title | archive file`. Every finish
 426 | DONE | - | North Pole background generated:… | tasks-400-499.md
 427 | DONE | - | Egypt background generated:… | tasks-400-499.md
 428 | DONE | - | Integrate all remaining 7 scenes into draw(): added scene field to… | tasks-400-499.md
+430 | DONE | 2026-11-08 | Gate 0 verified: repo root E:\GitHub\Games for kids; branch feature/little-explorer-art-integration created… | tasks-400-499.md
+431 | DONE | 2026-11-08 | Gate 1 review of all 9 families (116/116 candidates) completed in guide §6.1 order. Outcome: 90 READY FOR… | tasks-400-499.md
+432 | DONE | 2026-11-09 | Gate 2 complete: all 8 batches recorded, CSV 91/0/3/22. Batch 1-6 previously recorded; batch 7 (15… | tasks-400-499.md
+433 | DONE | 2026-11-09 | Gate 3 complete: all 11 world backgrounds regenerated via Cloudflare flux-2-klein-4b, QA-verified (2048x592,… | tasks-400-499.md
+434 | DONE | 2026-11-09 | Gate 4 pilot: terrain-spring-top + pipe-spring generated via Cloudflare flux-2-klein-4b, cut out to 512x512… | tasks-400-499.md
