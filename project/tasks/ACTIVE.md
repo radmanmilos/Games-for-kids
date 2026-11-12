@@ -17,7 +17,6 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 4. **Do** not copy the task into README, CONTRIBUTING or STATUS. `project/STATUS.md` is overwritten at session end instead.
 
 ## Open tasks
-
 - 435. NEW — Gate 5: family rollout (pipes, enemies/walkers, goals) (2026-11-08, OpenCode/Nemotron-3.5-Super-VL)
 - 436. NEW — Gate 6: 11-world regression, screenshots, docs sync, commit (2026-11-08, OpenCode/Nemotron-3.5-Super-VL)
 - 437. NEW — Little Explorer full review + gameplay screenshots all worlds (2026-11-09, OpenCode/Big Pickle) — capture character-selection + in-game PLAY states for ALL 11 worlds (spring, summer, autumn, winter-explorer, underground, cave, water, savanna, japan, northpole, egypt) at 4 viewports: phone portrait (390×844), phone landscape (844×390), tablet (1024×800), desktop (1280×720). Verify art alignment (backgrounds, platforms, pipes, collectibles, goal, hero, enemies) and Serbian UI text readability. Output to resources/General_reviews/Screenshot_Review/. Output per-world contact sheets + per-viewport grid. Also verify Gate 5 art (terrain, pipes, enemies, walkers, goals, collectibles, hazards, decor) renders correctly in-game.
@@ -36,7 +35,6 @@ Only **NEW / IN PROGRESS / DEFERRED** tasks live here (budget: 20 KB, checked by
 - 450. NEW — Art reorganization Phase 3: cut out + QA all new assets (asset_cutout.js → 512×512 WebP ≤60 KB, asset_qa.js verification)
 - 451. NEW — Art reorganization Phase 4: regenerate sw-cache-list.json + offline-manifest.json, sync docs/ mirror
 - 452. NEW — Art reorganization Phase 5: run full validation (check_fast.js + check_release.js + game smokes)
-- 429. DONE (2026-11-09, OpenCode/Big Pickle) — Umbrella: Little Explorer environment-art integration. Gates 0–4 complete: Gate 0 verified, Gate 1 accepted (style addendum/palettes/technical contract), Gate 2 all batches approved (91/0/3/22), Gate 3 backgrounds integrated (11 worlds), Gate 4 pilot (spring terrain+pipe) complete.
 - 415. LIMITED (2026-11-07, ChatGPT/GPT-6) — Spring pilot screenshot review incomplete: existing four viewport captures show the character-selection surface, not in-game PLAY states; capture and review real gameplay.
 - 391. ASSESSED (limited) — Compare portrait scale measured at all four viewports.
 - 392. LIMITED — Portfolio playtesting Sessions A–D require a real device.

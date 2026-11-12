@@ -11,3 +11,8 @@ Read before touching `game/shared/*`, standalone/boot detection, the kitty HUD, 
 - Every `localStorage` access must be guarded, including preference reads at script top level; an unguarded read at load kills the whole page (task 331).
 - Never shuffle with `sort(() => Math.random() - 0.5)`; it is biased and skews answer positions (task 330).
 - Touch-interruption smokes assert crash-resistance, not that held input is released; a touch/mouse game needs `touchcancel` handling and a key reset on pause (task 329).
+- Never leave an opaque outline `fillRect` underneath transparent art; the white paper-outline belongs only in the procedural fallback branch (task 453; guarded by a smoke).
+- The Explorer canvas is never cleared. Anything not repainted every frame (below `groundY`) keeps the very first fallback frame forever and bleeds through the soft edges of ground tiles. A full-canvas repaint is guarded by the poison-canvas smoke (task 453).
+- After `ctx.translate(-cameraX, 0)`, `fillRect(0, ...)` is **world** space: a full-screen fill must start at `cameraX`.
+- Glyph art is a padded 512x512 canvas. Measure the visible box (`stemBox`) before tiling it or standing it on a floor; drawing the whole canvas leaves gaps and floating sprites. `stemBox` is cached per stem, so tests that stub `Art.imageStem` must clear `stemBoxCache`.
+- A smoke that proves only 'draw() does not throw' lets visibly broken screens pass; assert what is drawn (draw-call spies, poison canvas). Scenes are not edge-matched: do not claim seamless tiling without measuring (mirrored tiles are seamless by construction).
