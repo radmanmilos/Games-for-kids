@@ -34,3 +34,10 @@ Educational goals:
 - Cause and effect
 
 ---
+
+## Rendering notes (task 453, 2026-11-10)
+
+- Scene art is scaled to `groundY` at its true aspect and tiled in world space; every second tile is mirrored so the loop is seamless. The scene's bottom row is continued below the ground line so ground-tile edges blend with the painting.
+- Ground, pipes, goals and moving platforms are drawn by their **visible bounds** (`stemBox`, `tileStem`, `drawGoalArt`), top edge flush with the hitbox. Per-world stems live in the module-level `TERRAIN_STEMS` / `PIPE_STEMS`; moving platforms use `platform-07`.
+- Interim art: japan ground reuses `terrain-spring-top`, winter ground uses `terrain-tile-16` (the `terrain-*-top` star-shaped files are in `resources/Little_Explorer_unused_art/`). `walker-*` sprites still carry a baked ground strip; `WALKER_FOOT` is hand-tuned to the padded art.
+- The canvas is 1:1 with CSS pixels (no `devicePixelRatio` scaling): sprites are upscaled on 2x tablet screens. Deliberate trade-off for performance; profile on the target tablet before changing.
