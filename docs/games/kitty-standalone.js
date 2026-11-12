@@ -1134,7 +1134,6 @@ function closeWorldsMenu() {
 document.getElementById('worlds-btn').addEventListener('click', openWorldsMenu);
 document.getElementById('worlds-close').addEventListener('click', closeWorldsMenu);
 document.getElementById('music-btn').addEventListener('click', () => setMusicOn(!musicOn));
-document.getElementById('music-btn').textContent = musicOn ? '🔊' : '🔇';
 document.getElementById('music-btn').classList.toggle('off', !musicOn);
 
 // --- Task 251: "fun speed" toggle (under the point counter) ---
@@ -1611,6 +1610,80 @@ function drawPitHazards() {
     }
 }
 
+// Explorer glyph art is 512x512 with transparent padding. Measure the visible subject once per
+// stem so tiles abut, pipes stand on the floor and nothing floats inside its own padding.
+const stemBoxCache = {};
+function stemBox(stem, im) {
+    if (stemBoxCache[stem]) return stemBoxCache[stem];
+    const full = { x: 0, y: 0, w: im.naturalWidth, h: im.naturalHeight || im.naturalWidth };
+    try {
+        const c = document.createElement('canvas');
+        c.width = full.w; c.height = full.h;
+        const g = c.getContext('2d', { willReadFrequently: true });
+        g.drawImage(im, 0, 0);
+        const d = g.getImageData(0, 0, c.width, c.height).data;
+        let x0 = c.width, y0 = c.height, x1 = -1, y1 = -1;
+        for (let y = 0; y < c.height; y++) {
+            for (let x = 0; x < c.width; x++) {
+                if (d[(y * c.width + x) * 4 + 3] > 24) {
+                    if (x < x0) x0 = x; if (x > x1) x1 = x;
+                    if (y < y0) y0 = y; if (y > y1) y1 = y;
+                }
+            }
+        }
+        stemBoxCache[stem] = x1 < 0 ? full : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
+    } catch (e) {
+        stemBoxCache[stem] = full; // e.g. tainted canvas: fall back to the padded canvas
+    }
+    return stemBoxCache[stem];
+}
+
+// Ground cap art per world, and the themed spawner pipe per world (stems bypass the emoji registry).
+const TERRAIN_STEMS = {
+    'spring': 'terrain-spring-top',
+    'summer': 'terrain-summer-top',
+    'autumn': 'terrain-autumn-top',
+    'winter-explorer': 'terrain-tile-16',   // icy snow block (the *-explorer-top art is a star shape)
+    'underground': 'terrain-underground-top',
+    'cave': 'terrain-cave-top',
+    'water': 'terrain-water-top',
+    'savanna': 'terrain-savanna-top',
+    'japan': 'terrain-spring-top',          // terrain-japan-top is a star shape: reuse the grass cap
+    'northpole': 'terrain-northpole-top',
+    'egypt': 'terrain-egypt-top'
+};
+const PIPE_STEMS = {
+    'spring': 'pipe-03',
+    'summer': 'pipe-03',
+    'autumn': 'pipe-04',
+    'winter-explorer': 'pipe-06',
+    'underground': 'pipe-02',
+    'cave': 'pipe-01',
+    'water': 'pipe-08',
+    'savanna': 'pipe-05',
+    'japan': 'pipe-07',
+    'northpole': 'pipe-06',
+    'egypt': 'pipe-05'
+};
+const MOVING_PLATFORM_STEM = 'platform-07'; // wooden bridge: reads as different from the ground
+
+// Tile a stem's visible subject across a rect: centre 60% (drops the rounded shoulders so repeats
+// read as continuous), true aspect ratio, top edge flush. Returns false until the art is loaded.
+function tileStem(stem, x, y, w, h) {
+    if (!stem || !window.Art || !window.Art.imageStem) return false;
+    const im = window.Art.imageStem(stem);
+    if (!im || !im.complete || im.naturalWidth <= 0) return false;
+    const box = stemBox(stem, im);
+    const cx = box.x + box.w * 0.2;
+    const cw = box.w * 0.6;
+    const tileW = Math.max(16, Math.round(h * cw / box.h));
+    for (let tx = x; tx < x + w; tx += tileW) {
+        const tw = Math.min(tileW, x + w - tx);
+        ctx.drawImage(im, cx, box.y, cw * (tw / tileW), box.h, tx, y, tw, h);
+    }
+    return true;
+}
+
 function draw() {
     const t = Date.now() / 1000;
 
@@ -1620,16 +1693,32 @@ function draw() {
     // Scene background (Little Explorer redesign) — tiled horizontally, sky area only.
     // Falls back to the original procedural sky for worlds without a scene asset.
     if (sceneImg && sceneImg.complete && sceneImg.naturalWidth > 0) {
-        const sceneW = sceneImg.naturalWidth;
-        const sceneH = sceneImg.naturalHeight;
-        const drawH = Math.min(sceneH, groundY);
-        const startX = Math.floor(cameraX / sceneW) * sceneW;
-        for (let sx = startX - sceneW; sx < cameraX + canvas.width; sx += sceneW) {
-            ctx.drawImage(sceneImg, sx, 0, sceneW, drawH);
-        }
-        if (sceneH < groundY) {
-            ctx.fillStyle = theme.bgSky;
-            ctx.fillRect(0, sceneH, canvas.width, groundY - sceneH);
+        // Scale the scene (keeping its aspect ratio) so it exactly covers the sky area
+        // [0, groundY]: no flat colour band on tall screens, no vertical squash on short ones.
+        const scale = groundY / sceneImg.naturalHeight;
+        const drawW = Math.ceil(sceneImg.naturalWidth * scale);
+        const firstTile = Math.floor(cameraX / drawW);
+        const below = canvas.height - groundY;
+        const nh = sceneImg.naturalHeight;
+        const nw = sceneImg.naturalWidth;
+        for (let i = firstTile; i * drawW < cameraX + canvas.width; i++) {
+            const sx = i * drawW;
+            ctx.save();
+            if (i % 2 !== 0) {
+                // Every second tile is mirrored, so the join is seamless by construction
+                // (the generated scenes are not edge-matched and showed a hard seam).
+                ctx.translate(sx + drawW, 0);
+                ctx.scale(-1, 1);
+            } else {
+                ctx.translate(sx, 0);
+            }
+            ctx.drawImage(sceneImg, 0, 0, drawW, groundY);
+            // The canvas is never cleared and the scene only covers [0, groundY]. Continue the scene's
+            // own bottom row down behind the ground, so the soft edges and seams of the ground tiles
+            // blend with the painting instead of the first fallback frame (sky blue / green hills),
+            // which used to stay underneath forever and show as blue/green fringe lines.
+            if (below > 0) ctx.drawImage(sceneImg, 0, nh - 2, nw, 2, 0, groundY, drawW, below);
+            ctx.restore();
         }
     } else {
         // Sky Background
@@ -1669,38 +1758,10 @@ function draw() {
     drawPitHazards();
 
     // Draw Static Platforms (explorer stems bypass emoji registry to avoid cross-game collisions)
-    const TERRAIN_STEMS = {
-        'spring': 'terrain-spring-top',
-        'summer': 'terrain-summer-top',
-        'autumn': 'terrain-autumn-top',
-        'winter-explorer': 'terrain-winter-explorer-top',
-        'underground': 'terrain-underground-top',
-        'cave': 'terrain-cave-top',
-        'water': 'terrain-water-top',
-        'savanna': 'terrain-savanna-top',
-        'japan': 'terrain-japan-top',
-        'northpole': 'terrain-northpole-top',
-        'egypt': 'terrain-egypt-top'
-    };
     platforms.forEach(p => {
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(p.x - 4, p.y - 4, p.width + 8, p.height + 8);
-
-        const terrainStem = TERRAIN_STEMS[theme.scene];
-        let drewTerrain = false;
-        if (terrainStem && window.Art && window.Art.imageStem) {
-            const im = window.Art.imageStem(terrainStem);
-            if (im && im.complete && im.naturalWidth > 0) {
-                // Tile the terrain art across the platform top so wide grounds don't show one tiny centered sprite.
-                const tile = Math.max(24, p.height);
-                for (let tx = p.x; tx < p.x + p.width; tx += tile) {
-                    const tw = Math.min(tile, p.x + p.width - tx);
-                    ctx.drawImage(im, 0, 0, im.naturalWidth * (tw / tile), im.naturalHeight, tx, p.y, tw, p.height);
-                }
-                drewTerrain = true;
-            }
-        }
-        if (!drewTerrain) {
+        if (!tileStem(TERRAIN_STEMS[theme.scene], p.x, p.y, p.width, p.height)) {
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(p.x - 4, p.y - 4, p.width + 8, p.height + 8);
             ctx.fillStyle = p.color;
             ctx.fillRect(p.x, p.y, p.width, p.height);
             drawPaperStitchLine(p.x + 10, p.y + p.height / 2, p.x + p.width - 10, p.y + p.height / 2);
@@ -1709,43 +1770,34 @@ function draw() {
 
     // Draw Moving Platforms
     movingPlatforms.forEach(mp => {
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(mp.x - 4, mp.y - 4, mp.width + 8, mp.height + 8);
-
-        ctx.fillStyle = mp.color;
-        ctx.fillRect(mp.x, mp.y, mp.width, mp.height);
-
-        drawPaperStitchLine(mp.x + 10, mp.y + mp.height / 2, mp.x + mp.width - 10, mp.y + mp.height / 2);
+        if (!tileStem(MOVING_PLATFORM_STEM, mp.x, mp.y, mp.width, mp.height)) {
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(mp.x - 4, mp.y - 4, mp.width + 8, mp.height + 8);
+            ctx.fillStyle = mp.color;
+            ctx.fillRect(mp.x, mp.y, mp.width, mp.height);
+            drawPaperStitchLine(mp.x + 10, mp.y + mp.height / 2, mp.x + mp.width - 10, mp.y + mp.height / 2);
+        }
     });
 
     // Draw themed "spawner" pipes (explorer stems bypass emoji registry)
-    const PIPE_STEMS = {
-        'spring': 'pipe-spring',
-        'autumn': 'pipe-autumn',
-        'cave': 'pipe-cave',
-        'egypt': 'pipe-egypt',
-        'japan': 'pipe-japan',
-        'northpole': 'pipe-northpole',
-        'savanna': 'pipe-savanna',
-        'underground': 'pipe-underground',
-        'water': 'pipe-water',
-        'winter-explorer': 'pipe-winter',
-        'winter': 'pipe-winter'
-    };
     pipes.forEach(pipe => {
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(pipe.x - 4, pipe.y - 4, pipe.width + 8, pipe.height + 8);
         const pipeStem = PIPE_STEMS[theme.scene];
         let drewPipe = false;
         if (pipeStem && window.Art && window.Art.imageStem) {
             const im = window.Art.imageStem(pipeStem);
             if (im && im.complete && im.naturalWidth > 0) {
-                // Draw pipe art to the actual pipe rect (body + cap region) for correct placement.
-                ctx.drawImage(im, pipe.x - 6, pipe.y - 4, pipe.width + 12, pipe.height + 4);
+                // Fit the visible pipe to the hitbox height (top flush, standing on the floor),
+                // keeping its true aspect ratio and centring it on the hitbox.
+                const box = stemBox(pipeStem, im);
+                const dh = pipe.height + 4;
+                const dw = Math.round(dh * box.w / box.h);
+                ctx.drawImage(im, box.x, box.y, box.w, box.h, pipe.x + pipe.width / 2 - dw / 2, pipe.y - 4, dw, dh);
                 drewPipe = true;
             }
         }
         if (!drewPipe) {
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(pipe.x - 4, pipe.y - 4, pipe.width + 8, pipe.height + 8);
             ctx.fillStyle = theme.pipeColor;
             ctx.fillRect(pipe.x, pipe.y, pipe.width, pipe.height);
             ctx.fillRect(pipe.x - 6, pipe.y, pipe.width + 12, 24);
@@ -2363,6 +2415,21 @@ function drawWalker(type) {
 
 
 // --- Theme goal buildings (paper style) ---
+// Goals rest on the ground. The art is a padded square, so work out where that square must be
+// drawn (through the shared Art.drawStem) for the *visible* subject to fit the goal rect,
+// bottom-aligned; the submarine hovers instead.
+function drawGoalArt(stem, c, hover) {
+    if (!window.Art || !window.Art.imageStem || !window.Art.drawStem) return false;
+    const im = window.Art.imageStem(stem);
+    if (!im || !im.complete || im.naturalWidth <= 0) return false;
+    const box = stemBox(stem, im);
+    const k = Math.min(c.width / box.w, c.height / box.h);
+    const side = Math.max(im.naturalWidth, im.naturalHeight || im.naturalWidth) * k;
+    const left = c.x + (c.width - box.w * k) / 2 - box.x * k;
+    const top = (hover ? c.y + (c.height - box.h * k) / 2 : c.y + c.height - box.h * k) - box.y * k;
+    return window.Art.drawStem(ctx, stem, left + side / 2, top + side / 2, side);
+}
+
 function drawGoal(type, c) {
     const GOAL_STEMS = {
         'house': 'goal-house',
@@ -2376,11 +2443,11 @@ function drawGoal(type, c) {
     };
     const goalStem = GOAL_STEMS[type];
     if (goalStem && !(type === 'house' && theme && theme.scene === 'spring') &&
-        drawExplorerArt(goalStem, c.x + c.width / 2, c.y + c.height / 2, Math.min(c.width, c.height))) return;
+        drawGoalArt(goalStem, c, type === 'submarine')) return;
     // The Spring pilot reuses the approved painted house. Other seasonal
     // worlds keep their existing fallback until their distinct goals are ready.
     if (type === 'house' && theme && theme.scene === 'spring' &&
-        drawExplorerArt('house', c.x + c.width / 2, c.y + c.height / 2, Math.min(c.width, c.height))) return;
+        drawGoalArt('house', c, false)) return;
     if (type === 'house') {
         ctx.fillStyle = '#f8edeb';
         ctx.fillRect(c.x, c.y + 38, c.width, c.height - 38);
