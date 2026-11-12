@@ -178,6 +178,10 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
     const oldDrawStem = Art.drawStem;
     const oldTheme = theme;
     const calls = [];
+    // stemBox() caches the measured subject per stem. This test swaps in a fake padded image, so
+    // start from an empty cache (else a real measured 'house' box changes the expected size) and
+    // leave it empty so the fake box never leaks into real drawing.
+    for (const k in stemBoxCache) delete stemBoxCache[k];
     Art.imageStem = () => ({ complete: true, naturalWidth: 512 });
     Art.drawStem = (context, stem, cx, cy, size) => {
       calls.push({ stem, size });
@@ -195,6 +199,7 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
       Art.imageStem = oldImageStem;
       Art.drawStem = oldDrawStem;
       theme = oldTheme;
+      for (const k in stemBoxCache) delete stemBoxCache[k];
     }
     return calls;
   })()`);
@@ -206,6 +211,67 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
     artReuseCalls.every((call, i) => call.stem === expectedArtCalls[i].stem && call.size === expectedArtCalls[i].size);
   check('task429: explorer uses stem-based art for mouse, bat, penguin, snowman, crab and Spring goal',
     artReuseOk, JSON.stringify(artReuseCalls || []));
+
+  // Rendering guards (task 430). The suite used to prove only "draw() does not throw", so a screen
+  // full of white boxes, a squashed background and an overwritten icon all passed. Assert what is drawn.
+  const musicBtnSvg = await h.evalv(`(() => {
+    const b = document.getElementById('music-btn');
+    return !!(b && b.querySelector('svg'));
+  })()`);
+  check('task453: music button keeps its shared SVG icon (not overwritten by an emoji)',
+    musicBtnSvg === true, String(musicBtnSvg));
+
+  const sceneCover = await h.evalp(`(async () => {
+    loadWorld();
+    if (!sceneImg.complete) await new Promise(r => { sceneImg.onload = r; sceneImg.onerror = r; });
+    const calls = [];
+    const orig = ctx.drawImage.bind(ctx);
+    ctx.drawImage = function (img, ...a) { if (img === sceneImg) calls.push(a); return orig(img, ...a); };
+    try { draw(); } finally { ctx.drawImage = orig; }
+    const want = sceneImg.naturalWidth * groundY / sceneImg.naturalHeight;
+    const sky = calls.filter(a => a.length === 4);       // (x, y, w, h): the sky draw
+    const strip = calls.filter(a => a.length === 8);     // bottom row continued below the ground
+    return { n: calls.length, sky: sky.length, strip: strip.length, groundY, canvasH: canvas.height,
+      allCoverSky: sky.length > 0 && sky.every(a => a[3] === groundY && Math.abs(a[2] - want) <= 1),
+      stripBelowGround: canvas.height <= groundY ||
+        (strip.length > 0 && strip.every(a => a[5] === groundY && a[7] === canvas.height - groundY)) };
+  })()`);
+  check('task453: scene art covers the whole sky area at its true aspect (no flat band, no squash)',
+    sceneCover && sceneCover.allCoverSky === true && sceneCover.stripBelowGround === true, JSON.stringify(sceneCover));
+
+  const whiteUnderArt = await h.evalp(`(async () => {
+    loadWorld();
+    for (const stem of [TERRAIN_STEMS[theme.scene], PIPE_STEMS[theme.scene], MOVING_PLATFORM_STEM]) {
+      const im = Art.imageStem(stem);
+      if (!im.complete) await new Promise(r => { im.onload = r; im.onerror = r; });
+    }
+    let white = 0;
+    const orig = ctx.fillRect.bind(ctx);
+    ctx.fillRect = function (...a) { if (String(ctx.fillStyle).toLowerCase() === '#ffffff') white++; return orig(...a); };
+    try { draw(); } finally { ctx.fillRect = orig; }
+    return { white, platforms: platforms.length, moving: movingPlatforms.length, pipes: pipes.length };
+  })()`);
+  check('task453: no white paper-outline is filled under loaded terrain, moving-platform or pipe art',
+    whiteUnderArt && whiteUnderArt.white === 0, JSON.stringify(whiteUnderArt));
+
+  const staleCanvas = await h.evalp(`(async () => {
+    loadWorld();
+    for (const stem of [TERRAIN_STEMS[theme.scene], PIPE_STEMS[theme.scene], MOVING_PLATFORM_STEM]) {
+      const im = Art.imageStem(stem);
+      if (!im.complete) await new Promise(r => { im.onload = r; im.onerror = r; });
+    }
+    if (!sceneImg.complete) await new Promise(r => { sceneImg.onload = r; sceneImg.onerror = r; });
+    // Poison the whole canvas, draw one frame, and count what survives: every pixel must be repainted.
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = '#ff00ff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height); ctx.restore();
+    draw();
+    const d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let stale = 0;
+    for (let i = 0; i < d.length; i += 4) { if (d[i] > 250 && d[i + 1] < 5 && d[i + 2] > 250) stale++; }
+    return { stale, w: canvas.width, h: canvas.height, groundY };
+  })()`);
+  check('task453: every canvas pixel is repainted each frame (no stale fallback frame under the ground)',
+    staleCanvas && staleCanvas.stale === 0, JSON.stringify(staleCanvas));
 
   const walkerFootAnchors = await h.evalv('({ snowman: WALKER_FOOT.snowman, crab: WALKER_FOOT.crab })');
   const walkerFootOk = walkerFootAnchors && walkerFootAnchors.snowman === 18 && walkerFootAnchors.crab === 16;
