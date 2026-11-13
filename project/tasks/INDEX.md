@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **455**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **456**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -423,3 +423,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 429 | DONE | 2026-11-09 | Umbrella: Little Explorer environment-art integration. Gates 0–4 complete: Gate 0 verified, Gate 1 accepted… | tasks-400-499.md
 453 | DONE | 2026-11-10 | Little Explorer render review + fixes, verified in headless Chromium at 4 viewports x 11 worlds. Fixed in… | tasks-400-499.md
 454 | DONE | 2026-11-12 | Claude review follow-up: T1 Japan/Winter ground caps, T2 walker plank removal + WALKER_FOOT recompute, T3 art… | tasks-400-499.md
+455 | DONE | 2026-11-10 | Independent review of the task 454 follow-up, verified in headless Chromium (task 454's own report was made… | tasks-400-499.md

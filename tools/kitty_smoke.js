@@ -273,10 +273,29 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   check('task453: every canvas pixel is repainted each frame (no stale fallback frame under the ground)',
     staleCanvas && staleCanvas.stale === 0, JSON.stringify(staleCanvas));
 
-  const walkerFootAnchors = await h.evalv('({ snowman: WALKER_FOOT.snowman, crab: WALKER_FOOT.crab })');
-  const walkerFootOk = walkerFootAnchors && walkerFootAnchors.snowman === 18 && walkerFootAnchors.crab === 16;
-  check('task429: approved snowman/crab art anchors align their sprite feet with the ground',
+  const walkerFootAnchors = await h.evalv('({ snowman: WALKER_FOOT.snowman })');
+  const walkerFootOk = walkerFootAnchors && walkerFootAnchors.snowman === 18;
+  check('task429: approved snowman art anchor aligns its sprite feet with the ground',
     walkerFootOk, JSON.stringify(walkerFootAnchors || {}));
+
+  // Data-driven (task 455): a cleaned walker's WALKER_FOOT must follow from its sprite's real bounds,
+  // foot = size/2 - bottomPad * size/512, instead of a pinned magic number that silently goes stale
+  // when a sprite is edited (the crab's baked ground band made its old value 16; clean it is 6).
+  const walkerFootMeasured = await h.evalp(`(async () => {
+    const sizes = { crab: 32, ladybug: 32, bee: 32, meerkat: 32, worm: 32 };
+    const out = {};
+    for (const [type, size] of Object.entries(sizes)) {
+      const im = Art.imageStem('walker-' + type);
+      if (!im.complete) await new Promise(r => { im.onload = r; im.onerror = r; });
+      const box = stemBox('walker-' + type, im);
+      const bottomPad = im.naturalHeight - (box.y + box.h);
+      out[type] = { foot: WALKER_FOOT[type], expected: +(size / 2 - bottomPad * size / im.naturalHeight).toFixed(2) };
+    }
+    return out;
+  })()`);
+  const footWithin = walkerFootMeasured && Object.values(walkerFootMeasured).every(v => Math.abs(v.foot - v.expected) <= 1.5);
+  check('task455: cleaned walkers stand on the ground (WALKER_FOOT matches the sprite bounds within 1.5px)',
+    footWithin === true, JSON.stringify(walkerFootMeasured || {}));
 
   // Task 90: death sound is character-aware (cat.ogg for the kitty, "Јао!"
   // speech for the explorer girl) and the kitty is the default character.

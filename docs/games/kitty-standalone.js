@@ -892,7 +892,7 @@ let worldPos = 0;
 // than the kitty (48px tall).
 const WALKER_FOOT = {
     ladybug: 4, bee: 6, hedgehog: 14, snowman: 18, worm: 2,
-    spider: 8, crab: 16, meerkat: 8, panda: 14, seal: 13, scarab: 9
+    spider: 8, crab: 6, meerkat: 8, panda: 14, seal: 13, scarab: 9
 };
 
 let player, platforms, movingPlatforms, pipes, coins, goal, particles, mice, walkers, theme, levelCompleted, stairSteps, groundY = 0;
@@ -1643,12 +1643,12 @@ const TERRAIN_STEMS = {
     'spring': 'terrain-spring-top',
     'summer': 'terrain-summer-top',
     'autumn': 'terrain-autumn-top',
-    'winter-explorer': 'terrain-winter-explorer-top',   // new flat-topped snow cap (task 454)
+    'winter-explorer': 'terrain-tile-16',               // interim: icy block (flat generated cap was near-white on a white scene)
     'underground': 'terrain-underground-top',
     'cave': 'terrain-cave-top',
     'water': 'terrain-water-top',
     'savanna': 'terrain-savanna-top',
-    'japan': 'terrain-japan-top',                       // new flat-topped pink cap (task 454)
+    'japan': 'terrain-spring-top',                      // interim: painted grass (flat generated cap was pink on pink)
     'northpole': 'terrain-northpole-top',
     'egypt': 'terrain-egypt-top'
 };

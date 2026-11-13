@@ -687,10 +687,6 @@
     "sha256": "2ddec207186300e935dfe249574d1adea5a2d043f892040d26009eca50fbf8e5",
     "size": 8268
   },
-  "assets/art/terrain-japan-top.webp": {
-    "sha256": "455223d1f83f3c372472070843830c802072df959f670c86b50323291c1a9e26",
-    "size": 2552
-  },
   "assets/art/terrain-northpole-top.webp": {
     "sha256": "918dcdc504349dc382aeb84daf191099a4e13b8c94b9da844b67bf16ee4e9c19",
     "size": 10262
@@ -707,6 +703,10 @@
     "sha256": "b714a12454836440cfd8d2e0b48a4200caeaaaca04c7d333c9977b98e821ff97",
     "size": 7030
   },
+  "assets/art/terrain-tile-16.webp": {
+    "sha256": "d250ac7cbaa4e1bd99f01265fd2fd0e64219b90c08c8e99db607ef9529786095",
+    "size": 21104
+  },
   "assets/art/terrain-underground-top.webp": {
     "sha256": "a594290d91550077cf995a14ecfc130c2917558a95439f31fdb8785a1068dbec",
     "size": 13238
@@ -714,10 +714,6 @@
   "assets/art/terrain-water-top.webp": {
     "sha256": "6cef3b3858d01183f35ad6a751ad07832e7aecdc277f1ab972f4324c29441b31",
     "size": 4738
-  },
-  "assets/art/terrain-winter-explorer-top.webp": {
-    "sha256": "c0ea3a83a750f0ec0d920dfa443b4d63299c8949b91a924d982a0443070dee74",
-    "size": 1620
   },
   "assets/art/tractor.webp": {
     "sha256": "1e94668481c75f521dab76aed7f1de2fb6ea87a4ae66bacb0eb2b1745c12f532",
@@ -736,24 +732,24 @@
     "size": 32024
   },
   "assets/art/walker-bee.webp": {
-    "sha256": "2fd10dc7a7498f4cb20dcfd658eaaf50044477290fc1d6c56b9706462128991e",
-    "size": 12364
+    "sha256": "6135a064f1318735d5b871d62f4699c8e9b73c4e5394cafc289966d6342f0718",
+    "size": 14600
   },
   "assets/art/walker-crab.webp": {
-    "sha256": "6e006e383156b7c2522b88313c0643907e6f8a62256d31bbaee4330363a2dc42",
-    "size": 6998
+    "sha256": "7dff29da8274c9c3a2ffc20716693f3540ca6ce69f275006c5e4c7cc58c0efdf",
+    "size": 8830
   },
   "assets/art/walker-hedgehog.webp": {
     "sha256": "e5ae27cdb800e9a22b4fe930904dbbdd60e8a0773da3504e10b3b22537cabfb0",
     "size": 10586
   },
   "assets/art/walker-ladybug.webp": {
-    "sha256": "0fcc9200a79ddfad85baeee9c8410393b955a4b85a526a18f6d544a80c946f59",
-    "size": 9770
+    "sha256": "236264a554ba6b491e7d2f8ba5356ce5225ebd8b203c92c5aa971c1f7477ad34",
+    "size": 11894
   },
   "assets/art/walker-meerkat.webp": {
-    "sha256": "bf567b7d14961ca6be7e3db2b27c942a7566855eb700d5f4ab3f56a342727b57",
-    "size": 7896
+    "sha256": "1bf5b88269a9721a0fd618a2578fc72fe2ddd7fe212fd8b3a2e11cc42b91c339",
+    "size": 9698
   },
   "assets/art/walker-panda.webp": {
     "sha256": "e4a8a42d4c7735c7c8e534dd6d6f23b2180d3e24c3e9b56dce70f7eda7ee42c5",
@@ -1680,8 +1676,8 @@
     "size": 5268
   },
   "games/kitty-standalone.js": {
-    "sha256": "242e910f5f9f3d7eceac4fdfb4727d694b23a012106a1d3bfaa27b50f2055e70",
-    "size": 114266
+    "sha256": "12dec03ee43d4f857fc29a4c2b1374ce92872021eb6212a19cefe56755a2f287",
+    "size": 114326
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
@@ -1928,8 +1924,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "980cf884bda7f5c940a6421458d32ecb6ffc24fae4e44ac93758033053ff115f",
-    "size": 15421
+    "sha256": "a6dc3884c8590e912eaeef591b46abacd7e04490358874ab6bb0fa1792e382bb",
+    "size": 15370
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",

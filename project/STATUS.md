@@ -14,9 +14,10 @@
 ## Task tracking
 
 - Task 454 (Claude review follow-up: T1/T2/T3): DONE — archived.
-  - T1: Generated flat-topped ground caps for Japan (terrain-japan-top.webp) and Winter (terrain-winter-explorer-top.webp) via Cloudflare pipeline; tile_edge_check.py OK; TERRAIN_STEMS restored in kitty-standalone.js; removed orphaned terrain-tile-16.webp.
-  - T2: Removed baked ground planks from walker-ladybug, walker-bee, walker-worm, walker-meerkat sprites; verified walker-crab and walker-hedgehog have no strips; recomputed WALKER_FOOT via formula (ladybug=4, bee=6, worm=2, meerkat=8).
+  - T1: flat-topped Japan/Winter ground caps were produced, then REVERTED in task 455 (see below): in game they were a near-white slab on a white scene and pink on pink; the interim painted art is back.
+  - T2: Removed baked ground planks from walker-ladybug, walker-bee, walker-worm, walker-meerkat sprites; crab/hedgehog were wrongly reported clean (crab still had a large cream ground band; meerkat/ladybug/bee kept strips and white background blobs): fixed in task 455.
   - T3: Extended tools/check_art.js with unreferenced-art (port of dead_art_scan.js), sheet-label chips, and stray fragments checks (matched sprite_audit.py algorithm); fixed 3 flagged files (terrain-northpole-top, walker-crab, walker-scarab). check_art.js: 0 failures.
+- Task 455 (independent review of the 454 follow-up, with in-game screenshots): DONE — archived. Reverted Japan/Winter flat caps to the painted interim art (`terrain-spring-top`, `terrain-tile-16`; the flat files are in `resources/Little_Explorer_unused_art/rejected/`); cleaned the leftover ground band/strips/white background from walker-crab, -meerkat, -ladybug, -bee; crab `WALKER_FOOT` 16 → 6; `check_art.js` chip rule corrected (w/h > 4.5 and h < 20% of 512: the old 5x/14% rule missed all five real chips, 14.5-16.8% tall); `kitty_smoke` pinned `crab === 16` replaced by a data-driven foot check (task455).
 - Version: 3.0.9 → 3.0.10 (C bump). build_offline.js + sync-docs.sh + check_fast.js all green.
 
 ## Open tasks (from ACTIVE.md)
@@ -31,10 +32,10 @@
 
 ## Little Explorer — current state
 
-- Japan ground: terrain-japan-top.webp (flat-topped pink moss/petal cap, replaces star-shaped interim)
-- Winter ground: terrain-winter-explorer-top.webp (flat-topped snow cap, replaces terrain-tile-16 interim)
-- Walkers: ladybug/bee/worm/meerkat sprites cleaned of baked ground planks; WALKER_FOOT recomputed; snowman/crab anchors unchanged (18/16)
-- Art QA gate: check_art.js enforces unreferenced art, sheet-label chips, stray fragments
+- Japan ground: interim painted grass `terrain-spring-top` (task 455 reverted the flat pink cap); real painted cap still needed (task 444 scope)
+- Winter ground: interim icy block `terrain-tile-16` (task 455 reverted the flat white cap); real painted cap still needed (task 444 scope)
+- Walkers: ladybug/bee/worm/meerkat/crab cleaned of baked ground and white background; `WALKER_FOOT` matches the sprite bounds (data-driven smoke check); snowman anchor 18 unchanged
+- Art QA gate: check_art.js enforces unreferenced art, sheet-label chips (calibrated in task 455), stray fragments
 
 ## Visual QA
 

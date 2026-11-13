@@ -157,8 +157,10 @@ function checkSheetLabelChips(stem, img) {
   if (minX > maxX) return;
   const boxW = maxX - minX + 1;
   const boxH = maxY - minY + 1;
-  if (boxW > 5 * boxH && boxH < 0.14 * 512) {
-    fail(`game/assets/art/${stem}.webp: sheet-label chip — box ${boxW}x${boxH} (width > 5x height, height < 14% of canvas)`);
+  // Calibrated on the five real chips (collectible-01, decor-01, enemy-01, goal-01, hazard-01):
+  // w/h 5.0-5.9, height 74-86px (14.5-16.8% of 512). The widest legitimate sprite is 3.3.
+  if (boxW > 4.5 * boxH && boxH < 0.20 * 512) {
+    fail(`game/assets/art/${stem}.webp: sheet-label chip — box ${boxW}x${boxH} (width > 4.5x height, height < 20% of canvas)`);
   }
 }
 
