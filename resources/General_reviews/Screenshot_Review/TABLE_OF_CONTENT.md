@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-13T00:55:09.687Z
+- Генерисано / Generated: 2026-11-13T00:59:09.490Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -84,10 +84,10 @@
 | `explorer_phone-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 390×844 | портрет | — | 13.11.2026. 00:55:09 | 454 |
 | `explorer_tablet-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 1180×820 | пејзаж | — | 13.11.2026. 00:55:09 | 454 |
 | `explorer_tablet-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 820×1180 | портрет | — | 13.11.2026. 00:55:09 | 454 |
-| `fastcat_phone-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 844×390 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
-| `fastcat_phone-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 390×844 | портрет | — | 05.11.2026. 18:53:41 | 379 |
-| `fastcat_tablet-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 1180×820 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
-| `fastcat_tablet-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 820×1180 | портрет | — | 05.11.2026. 18:53:41 | 379 |
+| `fastcat_phone-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 844×390 | пејзаж | — | 13.11.2026. 00:59:09 | 454 |
+| `fastcat_phone-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 390×844 | портрет | — | 13.11.2026. 00:59:09 | 454 |
+| `fastcat_tablet-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 1180×820 | пејзаж | — | 13.11.2026. 00:59:09 | 454 |
+| `fastcat_tablet-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 820×1180 | портрет | — | 13.11.2026. 00:59:09 | 454 |
 | `hub-games_phone-landscape.png` | Игре — под-хаб | `/index.html` | 844×390 | пејзаж | — | 06.11.2026. 13:03:32 | 384 |
 | `hub-games_phone-portrait.png` | Игре — под-хаб | `/index.html` | 390×844 | портрет | — | 06.11.2026. 13:03:32 | 384 |
 | `hub-games_tablet-landscape.png` | Игре — под-хаб | `/index.html` | 1180×820 | пејзаж | — | 06.11.2026. 13:03:32 | 384 |

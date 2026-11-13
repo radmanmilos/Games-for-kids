@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "e447e64",
+  "commitSha": "f7d9573",
   "browser": {
     "product": "Chrome/157.0.8103.51",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-13T00:55:09.687Z",
+  "generatedAt": "2026-11-13T00:59:09.490Z",
   "pageSet": [
-    "explorer"
+    "fastcat"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,40 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "explorer_phone-portrait.png",
-      "page": "explorer",
+      "file": "fastcat_phone-portrait.png",
+      "page": "fastcat",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 200397
+      "bytes": 51991
     },
     {
-      "file": "explorer_phone-landscape.png",
-      "page": "explorer",
+      "file": "fastcat_phone-landscape.png",
+      "page": "fastcat",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 226448
+      "bytes": 55960
     },
     {
-      "file": "explorer_tablet-portrait.png",
-      "page": "explorer",
+      "file": "fastcat_tablet-portrait.png",
+      "page": "fastcat",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 401578
+      "bytes": 98793
     },
     {
-      "file": "explorer_tablet-landscape.png",
-      "page": "explorer",
+      "file": "fastcat_tablet-landscape.png",
+      "page": "fastcat",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 476272
+      "bytes": 102406
     }
   ]
 }
