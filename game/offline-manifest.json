@@ -196,28 +196,28 @@
     "size": 20334
   },
   "assets/art/enemy-bat.webp": {
-    "sha256": "10b62b2c2bf609489050cb561d6758313038e6a6756f40a2a4e399ffcab22187",
-    "size": 9306
+    "sha256": "cd7918ca13c54f18d275528ece31d04114da817e7da0306bdf9f2d6d8bcd93d4",
+    "size": 116256
   },
   "assets/art/enemy-mole.webp": {
-    "sha256": "9241049147853d26bf4b6047868d1db96c1d34d526d18907de8f9c4ca7469490",
-    "size": 7850
+    "sha256": "1023bc82ba7da7c7b095c07ef7f8b11033e6b72ba32c125f9830904ee98b4f5c",
+    "size": 124132
   },
   "assets/art/enemy-mouse.webp": {
-    "sha256": "584028a7091a0d0fd6763c088023088c57494b2699bd8a12053265cc5e8bd128",
-    "size": 6694
+    "sha256": "e4c9cfc15da0dd967d777e869ed07dcc7bd60a7b5f7877f724ab81358f71b60b",
+    "size": 160444
   },
   "assets/art/enemy-oni.webp": {
-    "sha256": "3056990823d92cb48b84b725c8d3709a0b5c4d16ffbfa9c6d0924bde8fa97e87",
-    "size": 12528
+    "sha256": "a3f632981c9a40099145b626407f02a47f77adf334d5d361cb3cdb2cf216bdd0",
+    "size": 67430
   },
   "assets/art/enemy-penguin.webp": {
     "sha256": "e88a9d157c627fbc7f524416db567d925d555d9ca8ba2b1f67f1e5da46be1a9b",
     "size": 24150
   },
   "assets/art/enemy-piranha.webp": {
-    "sha256": "545ca9350d451b918d076a611bc23e462d036f663b0b174e87a03652c86a35eb",
-    "size": 10566
+    "sha256": "8c50a3c7f05476be6e7c23f94ababc5f806f87a7b54a0c77f29eb50fb339d58a",
+    "size": 143712
   },
   "assets/art/enemy-scorpion.webp": {
     "sha256": "aabf53502129815e0ab53c7956bd4aba27ba5c459379b86dd3fdc1a76b3d92ee",
@@ -512,8 +512,8 @@
     "size": 26490
   },
   "assets/art/pipe-04.webp": {
-    "sha256": "8fc84739adc8050fad5137c19e05864bfd232a91dce5c4c81cd99e294f5b5508",
-    "size": 35748
+    "sha256": "92bb26c781d9f7c01732ce862e4a1b82747da0b0093c7b971b4bf35e6396f2b8",
+    "size": 141014
   },
   "assets/art/pipe-05.webp": {
     "sha256": "7ecf17d0f949d062c63c8ae62af54f21f7abccef601d4e5801fa2fbd2a61fafd",
@@ -676,12 +676,12 @@
     "size": 31708
   },
   "assets/art/terrain-autumn-top.webp": {
-    "sha256": "3896b7e9cb870aab3f6023415499c4dec3314f61a2c076effc728113057972ee",
-    "size": 37436
+    "sha256": "56cda891d09a257e5f7022bc24a2ad0746fcf69fefaca99b84f9bc9e914afb89",
+    "size": 137132
   },
   "assets/art/terrain-cave-top.webp": {
-    "sha256": "c75b35c116b328f4913444b20209595c31aa65a58d097d6a9bbc907ad4d5eef6",
-    "size": 44058
+    "sha256": "4dc3ff0bab85801341711f4030cfab629077164d5534ddac4e8820238acb6f79",
+    "size": 158086
   },
   "assets/art/terrain-egypt-top.webp": {
     "sha256": "2ddec207186300e935dfe249574d1adea5a2d043f892040d26009eca50fbf8e5",
@@ -708,8 +708,8 @@
     "size": 7030
   },
   "assets/art/terrain-underground-top.webp": {
-    "sha256": "279657222e252a13450ff204d035a6b59329a7a9b90ba4eaf7d5ab21f17c5fa9",
-    "size": 29672
+    "sha256": "77db3cb39cffdfabcd2856c4fb5761044b29f3ca8d62b30386fb10062a7fe837",
+    "size": 138898
   },
   "assets/art/terrain-water-top.webp": {
     "sha256": "6cef3b3858d01183f35ad6a751ad07832e7aecdc277f1ab972f4324c29441b31",
@@ -1744,7 +1744,7 @@
     "size": 19388
   },
   "manifest.json": {
-    "sha256": "2178471f8f6f9ae2909120a7c7b7241d475a56170264945aff5062c576f5dc5e",
+    "sha256": "df4010ac94bf375b60178583ced990aa59879ef0f065872122fe5b70c394ce8b",
     "size": 577
   },
   "pages/animal_counting.html": {
