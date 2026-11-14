@@ -2,8 +2,12 @@
 
 **Last verified:** 2026-11-14  
 **Repository:** radmanmilos/Games-for-kids  
-**Current branch:** `claude/explorer-review-followup-454` (committed, PR open, waiting for user to merge)  
-**Main HEAD:** `81b3339` version `3.0.10`
+**Current branch:** `claude/explorer-review-followup-454` at `4e086d7` (merged into main via PR #27)  
+**Main HEAD:** `7cee8bd` (PR #27, task 456) version `3.0.10`
+
+## Uncommitted changes (working tree, not yet committed)
+
+- Explorer ground alignment: replaced `game/assets/art/terrain-{autumn,underground,cave}-top.webp` with painted top-caps (content top-aligned at y=0, no empty above, `tile_edge_check=OK`, gap=0) so the ground surface sits flush at `groundY` — same fix as Japan/Winter in task 456. `check_fast.js` 10/10 green; `kitty_smoke.js` 45/45, `art_smoke.js` 22/22 pass. docs/ mirrors game/ via sync-docs.sh. Awaiting commit.
 
 ## Repository and verification
 

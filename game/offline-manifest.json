@@ -676,12 +676,12 @@
     "size": 31708
   },
   "assets/art/terrain-autumn-top.webp": {
-    "sha256": "347a58ac6b180ff75f7e7600e3b3280c946049ad5a118e942b24445bb8d88740",
-    "size": 22520
+    "sha256": "3896b7e9cb870aab3f6023415499c4dec3314f61a2c076effc728113057972ee",
+    "size": 37436
   },
   "assets/art/terrain-cave-top.webp": {
-    "sha256": "248470fd7b62d57d8c8c50c1ed081cb5fcb0708c193f80112f3f4f9238741675",
-    "size": 13752
+    "sha256": "c75b35c116b328f4913444b20209595c31aa65a58d097d6a9bbc907ad4d5eef6",
+    "size": 44058
   },
   "assets/art/terrain-egypt-top.webp": {
     "sha256": "2ddec207186300e935dfe249574d1adea5a2d043f892040d26009eca50fbf8e5",
@@ -708,8 +708,8 @@
     "size": 7030
   },
   "assets/art/terrain-underground-top.webp": {
-    "sha256": "a594290d91550077cf995a14ecfc130c2917558a95439f31fdb8785a1068dbec",
-    "size": 13238
+    "sha256": "279657222e252a13450ff204d035a6b59329a7a9b90ba4eaf7d5ab21f17c5fa9",
+    "size": 29672
   },
   "assets/art/terrain-water-top.webp": {
     "sha256": "6cef3b3858d01183f35ad6a751ad07832e7aecdc277f1ab972f4324c29441b31",
