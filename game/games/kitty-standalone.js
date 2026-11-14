@@ -891,8 +891,8 @@ let worldPos = 0;
 // feet sit, so the sprite stands flush on the ground. All walkers are smaller
 // than the kitty (48px tall).
 const WALKER_FOOT = {
-    ladybug: 10, bee: 10, hedgehog: 14, snowman: 18, worm: 10,
-    spider: 8, crab: 16, meerkat: 15, panda: 14, seal: 13, scarab: 9
+    ladybug: 4, bee: 6, hedgehog: 14, snowman: 18, worm: 2,
+    spider: 8, crab: 6, meerkat: 8, panda: 14, seal: 13, scarab: 9
 };
 
 let player, platforms, movingPlatforms, pipes, coins, goal, particles, mice, walkers, theme, levelCompleted, stairSteps, groundY = 0;
@@ -1643,12 +1643,12 @@ const TERRAIN_STEMS = {
     'spring': 'terrain-spring-top',
     'summer': 'terrain-summer-top',
     'autumn': 'terrain-autumn-top',
-    'winter-explorer': 'terrain-tile-16',   // icy snow block (the *-explorer-top art is a star shape)
+    'winter-explorer': 'terrain-winter-explorer-top',
     'underground': 'terrain-underground-top',
     'cave': 'terrain-cave-top',
     'water': 'terrain-water-top',
     'savanna': 'terrain-savanna-top',
-    'japan': 'terrain-spring-top',          // terrain-japan-top is a star shape: reuse the grass cap
+    'japan': 'terrain-japan-top',
     'northpole': 'terrain-northpole-top',
     'egypt': 'terrain-egypt-top'
 };

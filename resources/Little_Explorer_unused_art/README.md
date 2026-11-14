@@ -28,3 +28,14 @@ Used sprites that were swapped out because they were visibly wrong in the game (
 | --- | --- |
 | `enemy-snake-baked-landscape.webp` | A whole illustrated savanna scene (trees, ground, a tube) baked into the sprite; the "snake" showed as a framed picture. Replaced by `enemy-03`. |
 | `enemy-penguin-sketch-in-pipe.webp` | A black-and-white pencil sketch of a penguin inside its own grey pipe: wrong style, and a second pipe on top of the game's pipe. Replaced by `enemy-11`. |
+
+## `rejected/`
+
+Generated art that passed the automated checks but looked wrong in the game (task 455). Kept so nobody regenerates the same thing:
+
+| File | Why it was rejected |
+| --- | --- |
+| `terrain-winter-explorer-top-flat-white.webp` | 1.6 KB flat near-white band: no texture, almost the colour of the snow scene behind it, so the floor was nearly invisible. Passed `tile_edge_check.py` only because a uniform colour has zero edge difference. |
+| `terrain-japan-top-flat-pink.webp` | 2.5 KB flat pink band with a few petal dots: reads as a vector strip beside the painted art, and pink on a pink scene. |
+
+A real replacement must be painted ground (texture, a visible top edge with contrast against the scene) *and* pass `tile_edge_check.py`.
