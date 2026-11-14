@@ -196,8 +196,8 @@
     "size": 20334
   },
   "assets/art/enemy-bat.webp": {
-    "sha256": "cd7918ca13c54f18d275528ece31d04114da817e7da0306bdf9f2d6d8bcd93d4",
-    "size": 116256
+    "sha256": "d96f339e45530d7c5a2d8869d77c8540aaa26ab967269f296d9c2931f43f4cb2",
+    "size": 107700
   },
   "assets/art/enemy-mole.webp": {
     "sha256": "1023bc82ba7da7c7b095c07ef7f8b11033e6b72ba32c125f9830904ee98b4f5c",
@@ -216,8 +216,8 @@
     "size": 24150
   },
   "assets/art/enemy-piranha.webp": {
-    "sha256": "8c50a3c7f05476be6e7c23f94ababc5f806f87a7b54a0c77f29eb50fb339d58a",
-    "size": 143712
+    "sha256": "a45829c83c29e9b5db1e0d058faa140bd5b3a6e53869af6b92a825b52ccf343a",
+    "size": 133644
   },
   "assets/art/enemy-scorpion.webp": {
     "sha256": "aabf53502129815e0ab53c7956bd4aba27ba5c459379b86dd3fdc1a76b3d92ee",
@@ -512,8 +512,8 @@
     "size": 26490
   },
   "assets/art/pipe-04.webp": {
-    "sha256": "92bb26c781d9f7c01732ce862e4a1b82747da0b0093c7b971b4bf35e6396f2b8",
-    "size": 141014
+    "sha256": "6000ae161ffbabea3d5e551bcbabef2679822cc8568ec0cbc436cb40c7c9f5e0",
+    "size": 129292
   },
   "assets/art/pipe-05.webp": {
     "sha256": "7ecf17d0f949d062c63c8ae62af54f21f7abccef601d4e5801fa2fbd2a61fafd",
@@ -1744,7 +1744,7 @@
     "size": 19388
   },
   "manifest.json": {
-    "sha256": "09ca632c781a361c15dd63d084bfc2eb0612c4bdc592e013c2a66354a298bb26",
+    "sha256": "f5039a08df456bf9c2780e0ec735e026b1266a56be48f6c63c2ebce702457ef0",
     "size": 577
   },
   "pages/animal_counting.html": {
