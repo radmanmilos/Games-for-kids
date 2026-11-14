@@ -128,7 +128,9 @@ function checkUnreferencedArt() {
   for (const m of reg.matchAll(/"([^"]+)"\s*:\s*"([^"]+)"/g)) eff[m[1]] = m[2];
   const used = new Set();
   for (const f of files) {
-    const re = new RegExp('[\\"\'`/]' + f.replace(/-/g, '\\-') + '(\\.webp)?[\\"\'`]');
+    // escape every regex metacharacter, not just '-', or a stem containing '\' or '.' builds the wrong pattern
+    const esc = f.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp('[\\"\'`/]' + esc + '(\\.webp)?[\\"\'`]');
     if (re.test(corpus)) used.add(f);
   }
   for (const [emoji, stem] of Object.entries(eff)) if (corpus.includes(emoji)) used.add(stem);
