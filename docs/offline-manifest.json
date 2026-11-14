@@ -676,12 +676,12 @@
     "size": 31708
   },
   "assets/art/terrain-autumn-top.webp": {
-    "sha256": "3896b7e9cb870aab3f6023415499c4dec3314f61a2c076effc728113057972ee",
-    "size": 37436
+    "sha256": "04a0bddbdc8c9a96b37207cc2c2fe161c86afee8c2a958e4e491358179949c5c",
+    "size": 193720
   },
   "assets/art/terrain-cave-top.webp": {
-    "sha256": "c75b35c116b328f4913444b20209595c31aa65a58d097d6a9bbc907ad4d5eef6",
-    "size": 44058
+    "sha256": "d44680dcf405a66bdaddee85c4e4f7186779f19254a0ef01f931df6f373cd9fa",
+    "size": 212826
   },
   "assets/art/terrain-egypt-top.webp": {
     "sha256": "2ddec207186300e935dfe249574d1adea5a2d043f892040d26009eca50fbf8e5",
@@ -708,8 +708,8 @@
     "size": 7030
   },
   "assets/art/terrain-underground-top.webp": {
-    "sha256": "279657222e252a13450ff204d035a6b59329a7a9b90ba4eaf7d5ab21f17c5fa9",
-    "size": 29672
+    "sha256": "29cd406b60c6207487cd4a7a99c7deac32f20b4b8292254f45ca399d9df2ecc3",
+    "size": 189264
   },
   "assets/art/terrain-water-top.webp": {
     "sha256": "6cef3b3858d01183f35ad6a751ad07832e7aecdc277f1ab972f4324c29441b31",
@@ -1744,7 +1744,7 @@
     "size": 19388
   },
   "manifest.json": {
-    "sha256": "c1590600e8a3f27b8d0b502eb1a81f936a445232ab89ae97064820fac9698e20",
+    "sha256": "4153ee01b10a51167d3c38823b15f5506357ec183689c0c3493cce4e18ab81f3",
     "size": 577
   },
   "pages/animal_counting.html": {
