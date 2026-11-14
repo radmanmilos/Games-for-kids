@@ -1643,12 +1643,12 @@ const TERRAIN_STEMS = {
     'spring': 'terrain-spring-top',
     'summer': 'terrain-summer-top',
     'autumn': 'terrain-autumn-top',
-    'winter-explorer': 'terrain-tile-16',               // interim: icy block (flat generated cap was near-white on a white scene)
+    'winter-explorer': 'terrain-winter-explorer-top',
     'underground': 'terrain-underground-top',
     'cave': 'terrain-cave-top',
     'water': 'terrain-water-top',
     'savanna': 'terrain-savanna-top',
-    'japan': 'terrain-spring-top',                      // interim: painted grass (flat generated cap was pink on pink)
+    'japan': 'terrain-japan-top',
     'northpole': 'terrain-northpole-top',
     'egypt': 'terrain-egypt-top'
 };

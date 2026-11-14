@@ -687,6 +687,10 @@
     "sha256": "2ddec207186300e935dfe249574d1adea5a2d043f892040d26009eca50fbf8e5",
     "size": 8268
   },
+  "assets/art/terrain-japan-top.webp": {
+    "sha256": "54b3760ecaaea15a74faca27f102692c6c89f3575b881caea0371b4aba8aa972",
+    "size": 31592
+  },
   "assets/art/terrain-northpole-top.webp": {
     "sha256": "918dcdc504349dc382aeb84daf191099a4e13b8c94b9da844b67bf16ee4e9c19",
     "size": 10262
@@ -703,10 +707,6 @@
     "sha256": "b714a12454836440cfd8d2e0b48a4200caeaaaca04c7d333c9977b98e821ff97",
     "size": 7030
   },
-  "assets/art/terrain-tile-16.webp": {
-    "sha256": "d250ac7cbaa4e1bd99f01265fd2fd0e64219b90c08c8e99db607ef9529786095",
-    "size": 21104
-  },
   "assets/art/terrain-underground-top.webp": {
     "sha256": "a594290d91550077cf995a14ecfc130c2917558a95439f31fdb8785a1068dbec",
     "size": 13238
@@ -714,6 +714,10 @@
   "assets/art/terrain-water-top.webp": {
     "sha256": "6cef3b3858d01183f35ad6a751ad07832e7aecdc277f1ab972f4324c29441b31",
     "size": 4738
+  },
+  "assets/art/terrain-winter-explorer-top.webp": {
+    "sha256": "b3a0509e4c85fdf98e3d8bd0bf1337b90304319bc7c25a7921e71727b629f6a3",
+    "size": 15162
   },
   "assets/art/tractor.webp": {
     "sha256": "1e94668481c75f521dab76aed7f1de2fb6ea87a4ae66bacb0eb2b1745c12f532",
@@ -1676,8 +1680,8 @@
     "size": 5268
   },
   "games/kitty-standalone.js": {
-    "sha256": "12dec03ee43d4f857fc29a4c2b1374ce92872021eb6212a19cefe56755a2f287",
-    "size": 114326
+    "sha256": "8bd8e635e5f94eb7405404546d737827e1354d0235c5b7b780357fe70234da44",
+    "size": 114163
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
@@ -1924,8 +1928,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "a6dc3884c8590e912eaeef591b46abacd7e04490358874ab6bb0fa1792e382bb",
-    "size": 15370
+    "sha256": "980cf884bda7f5c940a6421458d32ecb6ffc24fae4e44ac93758033053ff115f",
+    "size": 15421
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",
