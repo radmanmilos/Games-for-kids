@@ -1,52 +1,59 @@
 # Project status
 
-**Last verified:** 2026-11-09  
+**Last verified:** 2026-11-14  
 **Repository:** radmanmilos/Games-for-kids  
-**Current branch:** `main` at `4d2ca5f` (pushed, secrets gate 4/4)  
-**Main HEAD:** `4d2ca5f` version `3.0.8`
+**Current branch:** `claude/explorer-review-followup-454` (committed, PR open, waiting for user to merge)  
+**Main HEAD:** `81b3339` version `3.0.10`
 
 ## Repository and verification
 
-- PR #22, `fix(explorer): switch world scenes and reuse approved art`, is merged. Merge commit: `beb4683811ac210463167b348f783bdba100aa17`.
-- PR #25, `feature/little-explorer-art-integration`, merged to main. All Explorer art integration complete.
-- `tools/kitty_smoke.js` contains the all-world scene mapping regression and approved-art reuse checks.
-- All 10 fast gate stages PASS (syntax, registry/metadata, CI workflow, secrets, scan alerts, generated artifacts, offline inventory, docs budgets, art integrity, hub smoke).
-- No local browser playtest in this session. Task 437 will capture gameplay screenshots.
+- PR #26, task 453 (Little Explorer render fixes), merged to main. CI green on 81b3339.
+- Task 456 work is on `claude/explorer-review-followup-454`, based on tip `892f34d`.
+- All 10 fast gate stages PASS after the final art swap + `sync-docs.sh` (syntax, registry/metadata, CI workflow, secrets, scan alerts, generated artifacts, offline inventory, docs budgets, art integrity, hub smoke).
+- Full battery before the art swap (`run_all.js`): ALL 37 TOOLS PASS, 1358 checks, 0 failures. After the swap, the diff-relevant smokes were re-run: `kitty_smoke.js` 45/45, `art_smoke.js` 22/22.
+- Review screenshots for the `explorer` page refreshed (`--review=Screenshot_Review --pages=explorer --task=456`), 4 viewports, no browser runtime errors.
 
 ## Task tracking
 
-- Task 429 (umbrella, Little Explorer env-art integration): DONE — Gates 0–4 complete.
-- Tasks 430–434: DONE and archived (Gate 0 repo verify, Gate 1 review, Gate 2 batch approvals 91/0/3/22, Gate 3 background integration, Gate 4 pilot terrain+pipe).
-- Task 435 (Gate 5 family rollout): PARTIALLY DONE — All 51 new glyph assets generated, cut out, registered in art-registry.js, and wired into drawEnemy/drawWalker/drawGoal. Spring world fully wired; other worlds use backgrounds + procedural glyphs except where new art is mapped.
-- Task 436 (Gate 6): PARTIALLY DONE — Backgrounds integrated, docs synced. Remaining: 11-world regression + gameplay screenshot review (task 437).
-- Task 437: NEW — Full Little Explorer review + gameplay screenshots for all 11 worlds at 4 viewports (phone portrait 390×844, phone landscape 844×390, tablet 1024×800, desktop 1280×720). Output to resources/General_reviews/Screenshot_Review/.
-- Other open tasks: 438–452 (art reorganization), 391, 392, 396, 398, 415.
+- Task 454 (Claude review follow-up: T1/T2/T3): DONE — archived.
+  - T1: flat-topped Japan/Winter ground caps were produced, then REVERTED in task 455: in game they were a near-white slab on a white scene and pink on pink; the interim painted art was back.
+  - T2: walker sprites cleaned of baked ground strips/white background; finished in task 455.
+  - T3: `tools/check_art.js` extended with unreferenced-art, sheet-label chips and stray-fragment checks; calibrated in task 455.
+- Task 455 (independent review of the 454 follow-up): DONE — archived. Reverted Japan/Winter flat caps; cleaned walker-crab/-meerkat/-ladybug/-bee; crab `WALKER_FOOT` 16 → 6; chip rule calibrated (w/h > 4.5 and h < 20% of 512); `kitty_smoke` crab foot check made data-driven.
+- Task 456 (Explorer review follow-up, this branch): DONE — archived (next task number 457).
+  - Gates first: `check_fast` 10/10; full `run_all` 37/37 tools, 1358 checks.
+  - Visual sign-off of all 11 worlds at 1024x800 (criteria A–G); moving-platform and walker criteria also proven numerically.
+  - Real painted ground caps for the two remaining worlds: Japan `terrain-japan-top` (seed 4561) and Winter `terrain-winter-explorer-top` (v4 slate body + v3 painted snow cap through a wavy feathered mask; four straight generations each failed one half of the brief). Both `tile_edge_check` OK and judged as ground in-game.
+  - `TERRAIN_STEMS` now points at real stems for all 11 worlds; interim `terrain-tile-16.webp` deleted (art gate: 0 failures).
+  - Sprite-float above the soft grass edge measured (spring 7.8 px, autumn 18.6 px, savanna 11.6 px at 140 px draw height) with the trim-to-first-solid-row fix proposed — reported only, not implemented.
+  - Evidence: `tools/.cache/task456-validation.md`, `tools/.cache/world_probe456_ground/`.
+- Version stays `3.0.10` (no bump in this task).
 
-## Little Explorer — merged implementation
+## Open tasks (from ACTIVE.md)
 
-- All 11 world backgrounds regenerated via Cloudflare flux-2-klein-4b, QA-verified, integrated into `game/assets/scenes/` (2048×592, opaque PNG, seamless horizontal tiling, sky-dominant, no baked gameplay, no bear/star content).
-- 51 new art glyphs generated, cut out to 512×512 real-alpha WebP (≤60 KB each), integrated:
-  - 11 terrain tiles (one per world)
-  - 11 pipes (one per world)
-  - 8 enemies (mouse, mole, bat, piranha, snake, oni, penguin, scorpion)
-  - 10 walkers (ladybug, bee, hedgehog, snowman, worm, spider, crab, meerkat, panda, scarab)
-  - 8 goals (house, mine, cave, submarine, hut, igloo, pyramid)
-  - 10 collectibles (submarine, gift, star, heart, coin, daisy, purple-flower, tomato, strawberry, tulip)
-  - 10 hazards (ice-crystal, flame, barrel, spiked-ball, spikes, thorn-vine, tornado, rock, cloud, rock-pile)
-  - 16 decor (bush-flowers, bush-berries-yellow, bush, bush-small, bush-berries-orange, bush-berries-orange-b, bush-berries-blue, lamp-stone, fence-wood, signpost, mushroom-flowers, rock-mushroom, stump)
-- `art-registry.js` extended with emoji mappings for all new assets.
-- `kitty-standalone.js draw()` updated: terrain, pipes, enemies, walkers, goals use `Art.draw()` with fillRect fallback for non-spring worlds and while images load.
-- `loadWorld()` tracks `sceneSrc` and updates the cached image source when the active world changes.
-- Unused legacy assets moved to `resources/General_reviews/Little_explorer_assets/Little_Explorer_Asset_Review_Package/UnusedAssets/`.
+- 435 (Gate 5 family rollout): NEW
+- 436 (Gate 6: 11-world regression): NEW
+- 437 (Little Explorer full review + screenshots): NEW — recommend CLOSE (done by tasks 455/456; keep only screenshot refresh)
+- 438–443 (art reorganization): NEW — recommend DO NOT DO (per brief section 2b)
+- 444–449 (terrain/pipes/enemies/walkers/goals/collectibles): NEW — recommend RE-SCOPE (Japan/Winter terrain now done in 456; rest already done)
+- 450 (cut-out + QA): NEW — recommend KEEP (done as T3)
+- 451–452 (regenerate + full validation): NEW — recommend KEEP (closing steps)
 
-## Visual QA and performance
+## Little Explorer — current state
 
-- Backgrounds are approximately 564 KB–2.3 MB each and add offline payload. Measure load time, memory, and frame time on modest Android hardware (Task 398).
-- Task 437 will capture gameplay screenshots for all 11 worlds at 4 viewports — this is the missing PLAY-state evidence.
-- All fast gate stages pass including art integrity (266 glyph WebP files, 258 registry stems, 0 failures).
+- Ground: all 11 worlds use their own painted `terrain-*-top` tile. Japan `terrain-japan-top` and Winter `terrain-winter-explorer-top` are built by `tools/.cache/make_tile.py` ([centre strip | mirrored strip] on a 512x512 canvas with 8 px transparent side margins, top trimmed to the first visibly solid row).
+- Known follow-up: the soft top edge of spring/autumn/savanna still leaves a small float under the hero's feet (7.8 / 18.6 / 11.6 px at 140 px draw height) — fix proposed in task 456, not implemented.
+- Walkers: ladybug/bee/worm/meerkat/crab cleaned of baked ground and white background; `WALKER_FOOT` matches the sprite bounds (data-driven smoke check); snowman anchor 18 unchanged.
+- Art QA gate: `check_art.js` enforces unreferenced art, sheet-label chips, stray fragments, 512x512 cut-outs with transparent corners, and the calibrated alpha threshold.
+
+## Visual QA
+
+- **This model (Big Pickle) cannot read images** — every visual verdict in task 456 was produced by subagents on `opencode/nemotron-3.5-super-vl-free`, or by the user.
+- All 11 Explorer worlds captured programmatically (`tools/.cache/world_probe456*`); before/after ground contact sheet at `tools/.cache/world_probe456_ground/ground_before_after_sheet.png`.
+- Tile-boundary texture step in the rendered band: before winter 24.2 / japan 19.1 vs after winter 2.4 / japan 3.8 (median 4.4 / 6.6) — no hard repeat seam.
 
 ## Generation pipeline
 
-- Cloudflare credentials staged at `%TEMP%\opencode\cloudflare-creds.json` (never in repo). `tools/asset_generate.js` uses `flux-2-klein-4b` (~31 neurons per 512×512 glyph, ~219 per 2048×592 scene).
-- ~7,959 of 10,000 free neurons used today (~90 runs). Daily free allowance exhausted at 10,000 — remaining generations (decor-01 through decor-16, plus any additional terrain/pipe/enemy/walker variants) must wait for 00:00 UTC reset.
-- Gate 1 style-addendum/palettes/technical-contract accepted before generation. Gates 0–4 complete.
+- Cloudflare credentials staged at `%TEMP%\opencode\cloudflare-creds.json` (never in repo).
+- Task 456 used 5 generations for the two caps (~575 of 10 000 daily neurons).
+- Candidates and rejected variants: `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/` (git-ignored); old rejected flat caps in `resources/Little_Explorer_unused_art/rejected/`.

@@ -30,6 +30,7 @@ try { new Function('window', fs.readFileSync(REGISTRY, 'utf8'))(win); }
 catch (e) { console.error('check_art: cannot evaluate art-registry.js: ' + e.message); process.exit(2); }
 const registry = win.ART_REGISTRY || {};
 const stems = new Set(Object.values(registry));
+const decoded = new Map(); // stem -> {width, height, pixels} for chips/fragments checks
 
 // Normalise keys the same way Art does, so the gate matches runtime behaviour.
 const regKeys = Object.keys(registry).map((k) => k.replace(/\uFE0F/g, ''));
@@ -68,6 +69,7 @@ if (ffProbe.error || ffProbe.status !== 0) {
   process.exit(2);
 }
 for (const f of files) {
+  const stem = f.replace(/\.webp$/, '');
   const full = path.join(ART_DIR, f);
   const bytes = fs.readFileSync(full);
   const det = detectFormat(bytes);
@@ -87,6 +89,7 @@ for (const f of files) {
   }
   let img;
   try { img = decodePng(fs.readFileSync(tmpPng)); } catch (e) { fail(`game/assets/art/${f}: png decode failed (${e.message})`); continue; }
+  decoded.set(stem, { width: img.width, height: img.height, pixels: toRgba(img).pixels });
   if (img.width !== 512 || img.height !== 512) {
     fail(`game/assets/art/${f}: ${img.width}x${img.height}, expected 512x512`);
   }
@@ -103,6 +106,117 @@ for (const f of files) {
   if (cornerA.filter((v) => v < 8).length < 3) {
     fail(`game/assets/art/${f}: corner alpha ${cornerA.join(',')} (expected a transparent background, >=3 corners <8)`);
   }
+}
+
+// --- T3 (task 450): unreferenced art (port from dead_art_scan.js) ---
+function checkUnreferencedArt() {
+  const root = path.join(ROOT, 'game');
+  const artDir = path.join(root, 'assets', 'art');
+  const files = fs.readdirSync(artDir).filter((f) => f.endsWith('.webp')).map((f) => f.replace(/\.webp$/, ''));
+  const texts = [];
+  (function walk(d) {
+    for (const f of fs.readdirSync(d)) {
+      const p = path.join(d, f);
+      const st = fs.statSync(p);
+      if (st.isDirectory()) { if (f !== 'assets') walk(p); }
+      else if (/\.(js|mjs|html|css)$/.test(f) && !/art-registry\.js$/.test(f)) texts.push(fs.readFileSync(p, 'utf8'));
+    }
+  })(root);
+  const corpus = texts.join('\n');
+  const reg = fs.readFileSync(path.join(root, 'data', 'art-registry.js'), 'utf8');
+  const eff = {};
+  for (const m of reg.matchAll(/"([^"]+)"\s*:\s*"([^"]+)"/g)) eff[m[1]] = m[2];
+  const used = new Set();
+  for (const f of files) {
+    const re = new RegExp('[\\"\'`/]' + f.replace(/-/g, '\\-') + '(\\.webp)?[\\"\'`]');
+    if (re.test(corpus)) used.add(f);
+  }
+  for (const [emoji, stem] of Object.entries(eff)) if (corpus.includes(emoji)) used.add(stem);
+  const dead = files.filter((f) => !used.has(f));
+  if (dead.length) {
+    dead.forEach((f) => fail(`art registry: game/assets/art/${f}.webp is unreferenced (dead weight in the offline cache)`));
+  }
+}
+
+// --- T3: sheet-label chips ---
+function checkSheetLabelChips(stem, img) {
+  const { width, height, pixels } = img;
+  let minX = width, maxX = 0, minY = height, maxY = 0;
+  for (let y = 0; y < height; y++) {
+    const row = y * width;
+    for (let x = 0; x < width; x++) {
+      const i = (row + x) * 4;
+      if (pixels[i + 3] > 24) {
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+    }
+  }
+  if (minX > maxX) return;
+  const boxW = maxX - minX + 1;
+  const boxH = maxY - minY + 1;
+  // Calibrated on the five real chips (collectible-01, decor-01, enemy-01, goal-01, hazard-01):
+  // w/h 5.0-5.9, height 74-86px (14.5-16.8% of 512). The widest legitimate sprite is 3.3.
+  if (boxW > 4.5 * boxH && boxH < 0.20 * 512) {
+    fail(`game/assets/art/${stem}.webp: sheet-label chip — box ${boxW}x${boxH} (width > 4.5x height, height < 20% of canvas)`);
+  }
+}
+
+// --- T3: stray fragments (connected components over alpha > 24) ---
+// Matches sprite_audit.py: count only components individually > 0.05% of total,
+// fail if their total > 0.4% of total alpha.
+const FRAGMENT_ALLOW_LIST = new Set(['pawprint', 'skis', 'weather-rain', 'object-plate', 'notebook', 'bone', 'car', 'road-barrier']);
+function checkStrayFragments(stem, img) {
+  if (FRAGMENT_ALLOW_LIST.has(stem)) return;
+  const { width, height, pixels } = img;
+  const n = width * height;
+  const visited = new Uint8Array(n);
+  const areas = [];
+  for (let y = 0; y < height; y++) {
+    const row = y * width;
+    for (let x = 0; x < width; x++) {
+      const idx = row + x;
+      if (visited[idx] || pixels[idx * 4 + 3] <= 24) continue;
+      let area = 0;
+      const queue = [idx];
+      visited[idx] = 1;
+      while (queue.length) {
+        const cur = queue.pop();
+        area++;
+        const cx = cur % width;
+        const cy = (cur - cx) / width;
+        for (const [dx, dy] of [[0, 1], [0, -1], [1, 0], [-1, 0]]) {
+          const nx = cx + dx, ny = cy + dy;
+          if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            const nidx = ny * width + nx;
+            if (!visited[nidx] && pixels[nidx * 4 + 3] > 24) {
+              visited[nidx] = 1;
+              queue.push(nidx);
+            }
+          }
+        }
+      }
+      areas.push(area);
+    }
+  }
+  if (areas.length === 0) return;
+  areas.sort((a, b) => b - a);
+  const tot = areas.reduce((a, b) => a + b, 0);
+  const big = areas[0];
+  const stray = areas.filter((a) => a < big && a / tot > 0.0005);
+  const straySum = stray.reduce((a, b) => a + b, 0);
+  if (stray.length && straySum / tot > 0.004) {
+    fail(`game/assets/art/${stem}.webp: stray fragments — non-main islands ${Math.round(100 * straySum / tot)}% of subject (>0.4%)`);
+  }
+}
+
+// Run T3 checks
+checkUnreferencedArt();
+for (const [stem, img] of decoded) {
+  checkSheetLabelChips(stem, img);
+  checkStrayFragments(stem, img);
 }
 
 // toRgba helper (png lib has toRgba but not exported? check)

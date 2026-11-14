@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "b71c207e181b53ee4ae848306e98fc7026363799",
+  "commitSha": "892f34db5f22d480fd72094d47e4a3b0e64bddde",
   "browser": {
-    "product": "Chrome/156.0.8078.80",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "product": "Chrome/157.0.8103.51",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-06T23:56:29.044Z",
+  "generatedAt": "2026-11-14T13:44:31.023Z",
   "pageSet": [
     "explorer"
   ],
@@ -46,7 +46,7 @@
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 36948
+      "bytes": 36788
     },
     {
       "file": "explorer_phone-landscape.png",
@@ -55,7 +55,7 @@
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 35960
+      "bytes": 35795
     },
     {
       "file": "explorer_tablet-portrait.png",
@@ -64,7 +64,7 @@
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 74291
+      "bytes": 73127
     },
     {
       "file": "explorer_tablet-landscape.png",
@@ -73,7 +73,7 @@
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 72788
+      "bytes": 71679
     }
   ]
 }
