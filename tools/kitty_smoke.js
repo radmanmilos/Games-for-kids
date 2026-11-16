@@ -254,6 +254,44 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   check('task453: no white paper-outline is filled under loaded terrain, moving-platform or pipe art',
     whiteUnderArt && whiteUnderArt.white === 0, JSON.stringify(whiteUnderArt));
 
+  // Task 458: a flat white band across the top of the ground. The approved
+  // autumn/underground/cave caps are paintings whose top edge IS the ground
+  // surface; a white-padded "CI-passing" re-encode put the sprite sheet's white
+  // padding back above the painting. Sample the rendered ground row, not the file.
+  const whiteGroundBand = await h.evalp(`(async () => {
+    const savedOrder = worldOrder.slice();
+    const savedPos = worldPos;
+    const out = {};
+    setPaused(true);
+    for (const scene of ['autumn', 'underground', 'cave']) {
+      worldOrder = WORLDS.map((_, i) => i);
+      worldPos = WORLDS.findIndex(w => w.scene === scene);
+      loadWorld();
+      const im = Art.imageStem(TERRAIN_STEMS[scene]);
+      if (!im.complete) await new Promise(r => { im.onload = r; im.onerror = r; });
+      cameraX = 0;
+      draw();
+      const p = platforms[0];
+      const y = Math.round(p.y) + 4;
+      const x0 = Math.round(Math.max(0, p.x)) + 10;
+      const x1 = Math.round(Math.min(canvas.width, p.x + p.width)) - 10;
+      const d = ctx.getImageData(x0, y, Math.max(1, x1 - x0), 1).data;
+      let white = 0, n = 0;
+      for (let i = 0; i < d.length; i += 4) {
+        n++;
+        if (d[i] >= 245 && d[i + 1] >= 245 && d[i + 2] >= 245) white++;
+      }
+      out[scene] = { y, n, whitePct: +(100 * white / n).toFixed(1) };
+    }
+    worldOrder = savedOrder;
+    worldPos = savedPos;
+    loadWorld();
+    return out;
+  })()`);
+  check('task458: no white band across the top of the autumn/underground/cave ground',
+    whiteGroundBand && ['autumn', 'underground', 'cave'].every(s => whiteGroundBand[s] && whiteGroundBand[s].whitePct <= 5),
+    JSON.stringify(whiteGroundBand || {}));
+
   const staleCanvas = await h.evalp(`(async () => {
     loadWorld();
     for (const stem of [TERRAIN_STEMS[theme.scene], PIPE_STEMS[theme.scene], MOVING_PLATFORM_STEM]) {
