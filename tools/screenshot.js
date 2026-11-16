@@ -68,6 +68,26 @@ for (const app of registryAll()) {
   if (app.screenshot) PAGES[app.id] = app.url;
 }
 
+/* Pages that open behind a hero picker (#char-modal): the review shot must show
+   the game, not the picker. After clicking a hero, `ready` is a page expression
+   that only becomes true once the game (and its freshly created art) has booted.
+   Task 458: the Explorer review shots had regressed to the picker alone. */
+const HERO_PICKER = {
+  explorer: {
+    modal: '#char-modal',
+    button: '#char-modal .char-btn[data-character="kitty"]',
+    ready: `typeof theme !== 'undefined' && !!theme && !!window.__explorerFrames &&
+      Array.isArray(window.__explorerFrames.idle) && window.__explorerFrames.idle.length === 3 &&
+      !!sceneImg && sceneImg.complete && sceneImg.naturalWidth > 0 &&
+      !!Art.imageStem(TERRAIN_STEMS[theme.scene]).complete`,
+  },
+  fastcat: {
+    modal: '#char-modal',
+    button: '#char-modal .char-btn[data-character="kitty"]',
+    ready: `!!window.__fc && typeof window.__fc.state === 'function'`,
+  },
+};
+
 const SIZES = {
   'phone-portrait': { width: 390, height: 844, deviceScaleFactor: 1, mobile: true },
   'phone-landscape': { width: 844, height: 390, deviceScaleFactor: 1, mobile: true },
@@ -271,6 +291,27 @@ function writeReviewToc({ review, generatedAt }) {
         );
         if (!assetsReady.ok) throw new Error(assetsReady.why);
 
+        /* Task 458: choose a hero so the shot shows gameplay, not the picker.
+           Fail loudly if the picker is still up after the click — a review
+           screenshot of a modal is a stale screenshot. */
+        const picker = HERO_PICKER[page];
+        if (picker) {
+          const buttonReady = await h.waitFor(
+            `(() => { const b = document.querySelector(${JSON.stringify(picker.button)}); return !!b && b.getBoundingClientRect().width > 0; })()`,
+            { timeout: 15000, label: `${page} hero picker` },
+          );
+          if (!buttonReady.ok) throw new Error(buttonReady.why);
+          const clicked = await h.evalv(`(() => { const b = document.querySelector(${JSON.stringify(picker.button)}); if (!b) return false; b.click(); return true; })()`);
+          if (clicked !== true) throw new Error(`${page}: could not choose a hero in the picker`);
+          const booted = await h.waitFor(picker.ready, { timeout: 15000, label: `${page} to boot after choosing a hero` });
+          if (!booted.ok) throw new Error(booted.why);
+          const pickerClosed = await h.waitFor(
+            `(() => { const m = document.querySelector(${JSON.stringify(picker.modal)}); return !!m && !m.classList.contains('show') && getComputedStyle(m).display === 'none'; })()`,
+            { timeout: 5000, label: `${page} hero picker to close` },
+          );
+          if (!pickerClosed.ok) throw new Error(`${page}: hero picker is still visible after choosing a hero (the screenshot would show the picker, not the game)`);
+        }
+
         await h.evalv(`(() => {
           if (!document.getElementById('__visual-regression-stability')) {
             const style = document.createElement('style');
@@ -285,6 +326,13 @@ function writeReviewToc({ review, generatedAt }) {
         await h.sleep(250);
         const frames = await h.evalv('window.__visualAdvance(60)');
         if (frames !== 60) throw new Error(`${page} advanced ${frames} visual frames, expected 60`);
+
+        /* Belt and braces: whatever the game does with the picker, a still-visible
+           modal must never be captured. */
+        if (picker) {
+          const stillOpen = await h.evalv(`(() => { const m = document.querySelector(${JSON.stringify(picker.modal)}); return !!(m && (m.classList.contains('show') || getComputedStyle(m).display !== 'none')); })()`);
+          if (stillOpen) throw new Error(`${page}: hero picker is still visible — the screenshot would show the picker, not the game`);
+        }
 
         /* Task 384: open an internal hub sub-view through the child-facing tile
            before capturing, so the shot shows real navigation, not a forced state. */

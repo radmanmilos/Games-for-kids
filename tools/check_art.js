@@ -166,6 +166,29 @@ function checkSheetLabelChips(stem, img) {
   }
 }
 
+// --- task 458: flat white band above a painted ground cap ---
+// The approved autumn/underground/cave caps are full-bleed paintings whose top edge
+// is the ground surface. A "CI-passing" re-encode (7917c7e) put the sprite sheet's
+// white padding back above the painting (68/81/71 opaque pure-white rows), which the
+// game draws as a white strip across the top of the ground. Every good cap is 0.
+function checkTerrainWhiteCap(stem, img) {
+  if (!/^terrain-.*-top$/.test(stem)) return;
+  const { width, height, pixels } = img; // RGBA (toRgba applied)
+  let rows = 0;
+  for (let y = 0; y < height; y++) {
+    let white = 0;
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 4;
+      if (pixels[i + 3] >= 250 && pixels[i] >= 250 && pixels[i + 1] >= 250 && pixels[i + 2] >= 250) white++;
+    }
+    if (white > width * 0.5) rows++;
+    else break;
+  }
+  if (rows > 8) {
+    fail(`game/assets/art/${stem}.webp: ${rows} opaque pure-white rows at the top (a flat band above the painted ground, expected <=8). Use the approved cap from 271a248 with transparent corners inside the outer 20%, not the white-padded copy.`);
+  }
+}
+
 // --- T3: stray fragments (connected components over alpha > 24) ---
 // Matches sprite_audit.py: count only components individually > 0.05% of total,
 // fail if their total > 0.4% of total alpha.
@@ -217,6 +240,7 @@ function checkStrayFragments(stem, img) {
 // Run T3 checks
 checkUnreferencedArt();
 for (const [stem, img] of decoded) {
+  checkTerrainWhiteCap(stem, img);
   checkSheetLabelChips(stem, img);
   checkStrayFragments(stem, img);
 }

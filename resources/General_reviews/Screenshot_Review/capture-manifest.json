@@ -2,15 +2,16 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "892f34db5f22d480fd72094d47e4a3b0e64bddde",
+  "commitSha": "a88f593331d2ac870e011bceb6aa7be52cb1af86",
   "browser": {
     "product": "Chrome/157.0.8103.51",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-14T13:44:31.023Z",
+  "generatedAt": "2026-11-16T15:45:29.492Z",
   "pageSet": [
-    "explorer"
+    "explorer",
+    "fastcat"
   ],
   "viewports": {
     "phone-portrait": {
@@ -46,7 +47,7 @@
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 36788
+      "bytes": 219419
     },
     {
       "file": "explorer_phone-landscape.png",
@@ -55,7 +56,7 @@
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 35795
+      "bytes": 256649
     },
     {
       "file": "explorer_tablet-portrait.png",
@@ -64,7 +65,7 @@
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 73127
+      "bytes": 429664
     },
     {
       "file": "explorer_tablet-landscape.png",
@@ -73,7 +74,43 @@
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 71679
+      "bytes": 545037
+    },
+    {
+      "file": "fastcat_phone-portrait.png",
+      "page": "fastcat",
+      "size": "phone-portrait",
+      "state": null,
+      "width": 390,
+      "height": 844,
+      "bytes": 51789
+    },
+    {
+      "file": "fastcat_phone-landscape.png",
+      "page": "fastcat",
+      "size": "phone-landscape",
+      "state": null,
+      "width": 844,
+      "height": 390,
+      "bytes": 55734
+    },
+    {
+      "file": "fastcat_tablet-portrait.png",
+      "page": "fastcat",
+      "size": "tablet-portrait",
+      "state": null,
+      "width": 820,
+      "height": 1180,
+      "bytes": 98520
+    },
+    {
+      "file": "fastcat_tablet-landscape.png",
+      "page": "fastcat",
+      "size": "tablet-landscape",
+      "state": null,
+      "width": 1180,
+      "height": 820,
+      "bytes": 102521
     }
   ]
 }
