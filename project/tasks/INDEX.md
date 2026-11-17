@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **458**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **459**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -426,3 +426,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 455 | DONE | 2026-11-10 | Independent review of the task 454 follow-up, verified in headless Chromium (task 454's own report was made… | tasks-400-499.md
 456 | DONE | 2026-11-14 | Explorer review follow-up on claude/explorer-review-followup-454 (tip 892f34d): gates green (check_fast… | tasks-400-499.md
 457 | DONE | 2026-11-14 | Explorer ground alignment: autumn/underground/cave top-caps flush at groundY (2026-11-14, OpenCode/Big… | tasks-400-499.md
+458 | DONE | 2026-11-16 | Explorer finalize, delivered on branch claude/explorer-ui-kit (2026-11-16 → 2026-11-17, OpenCode/Big Pickle).… | tasks-400-499.md

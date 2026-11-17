@@ -16,9 +16,9 @@ Do NOT move a file back without fixing the defects listed below first.
 | `goal-02..05` | 4 | Usable (mine arch, cave, house, torii). `goal-house` ships a grass strip. |
 | `hazard-02..12`, `hazard-<name>` | 21 | Fragments on `-05/-06/-08/-11`; `hazard-09` is a pixelated low-res rock; `hazard-spikes` is a pale grey comb. |
 | `pipe-<world>` (autumn, cave, egypt, japan, northpole, savanna, spring, underground, water, winter) | 10 | Plain flat jars, not pipes; `pipe-winter` is a star-shaped glass jar. Replaced in code by `pipe-01..08`. |
-| `platform-01..11` (except `-07`) | 10 | Floating-platform cut-outs; unused. |
+| `platform-02..11` (except `-07`) | 9 | Floating-platform cut-outs; unused. `platform-01` was deleted in task 458. |
 | `terrain-japan-top`, `terrain-winter-explorer-top` | 2 | **Star-shaped**: they cannot tile as ground. Need regenerating (see task brief). |
-| `terrain-tile-01..18` (except `-16`) | 17 | Grass-and-dirt chunks cut from a sheet; `-01` is a thin strip with a stray line, `-10/-11` have cut slivers. |
+| `terrain-tile-02..18` (except `-16`) | 16 | Grass-and-dirt chunks cut from a sheet; `-10/-11` have cut slivers. `-01` (a thin strip with a stray line) was deleted in task 458. |
 
 ## `replaced/`
 

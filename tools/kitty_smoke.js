@@ -193,8 +193,12 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
       drawEnemy('penguin');
       drawWalker('snowman');
       drawWalker('crab');
-      theme = WORLDS.find(w => w.scene === 'spring');
-      drawGoal('house', { x: 0, y: 0, width: 220, height: 220 });
+      // task 458: all four seasons draw the same painted goal-house now (the
+      // Spring-only pilot was removed), so the goal must not depend on the theme.
+      for (const scene of ['spring', 'summer', 'autumn', 'winter-explorer']) {
+        theme = WORLDS.find(w => w.scene === scene);
+        drawGoal('house', { x: 0, y: 0, width: 220, height: 220 });
+      }
     } finally {
       Art.imageStem = oldImageStem;
       Art.drawStem = oldDrawStem;
@@ -205,11 +209,13 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   })()`);
   const expectedArtCalls = [
     { stem: 'enemy-mouse', size: 40 }, { stem: 'enemy-bat', size: 40 }, { stem: 'enemy-penguin', size: 40 },
-    { stem: 'walker-snowman', size: 36 }, { stem: 'walker-crab', size: 32 }, { stem: 'house', size: 220 }
+    { stem: 'walker-snowman', size: 36 }, { stem: 'walker-crab', size: 32 },
+    { stem: 'goal-house', size: 220 }, { stem: 'goal-house', size: 220 },
+    { stem: 'goal-house', size: 220 }, { stem: 'goal-house', size: 220 }
   ];
   const artReuseOk = Array.isArray(artReuseCalls) && artReuseCalls.length === expectedArtCalls.length &&
     artReuseCalls.every((call, i) => call.stem === expectedArtCalls[i].stem && call.size === expectedArtCalls[i].size);
-  check('task429: explorer uses stem-based art for mouse, bat, penguin, snowman, crab and Spring goal',
+  check('task429/458: explorer uses stem art for mouse, bat, penguin, snowman, crab and one goal-house for all four seasons',
     artReuseOk, JSON.stringify(artReuseCalls || []));
 
   // Rendering guards (task 430). The suite used to prove only "draw() does not throw", so a screen
@@ -291,6 +297,181 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   check('task458: no white band across the top of the autumn/underground/cave ground',
     whiteGroundBand && ['autumn', 'underground', 'cave'].every(s => whiteGroundBand[s] && whiteGroundBand[s].whitePct <= 5),
     JSON.stringify(whiteGroundBand || {}));
+
+  // Task 458 STEP 3: the worlds picker is the shared paper kit — one painted card
+  // per world, showing that world's own painted scene as a thumbnail plus the
+  // Serbian name. A card with no thumbnail (or a stale path) breaks the menu.
+  const worldsCards = await h.evalp(`(async () => {
+    buildWorldsMenu();
+    const cards = [...document.querySelectorAll('#worlds-grid .world-btn')];
+    const rows = cards.map(c => {
+      const img = c.querySelector('img.w-thumb');
+      const name = c.querySelector('.w-name');
+      return {
+        paper: c.classList.contains('ps-paper') && c.classList.contains('ps-card--paper'),
+        src: img ? img.getAttribute('src') : null,
+        name: name ? name.textContent : null,
+        emoji: !!c.querySelector('.w-emoji')
+      };
+    });
+    const imgs = cards.map(c => c.querySelector('img.w-thumb')).filter(Boolean);
+    await Promise.all(imgs.map(im => im.complete ? null : new Promise(r => { im.onload = r; im.onerror = r; })));
+    rows.forEach((row, i) => { row.w = imgs[i] ? imgs[i].naturalWidth : 0; });
+    return { rows, worlds: WORLDS.map(w => ({ scene: w.scene, name: w.name })) };
+  })()`);
+  // The menu is shuffled on purpose (worldOrder), so match each card to its world
+  // by the scene in its thumbnail path, not by position.
+  const worldsByName = {};
+  if (worldsCards && Array.isArray(worldsCards.worlds)) {
+    for (const w of worldsCards.worlds) worldsByName[w.scene] = w.name;
+  }
+  const worldsCardsOk = worldsCards && worldsCards.rows.length === 11 &&
+    worldsCards.rows.every(row => {
+      const m = /^\.\.\/assets\/ui\/world-thumbs\/([a-z-]+)\.png$/.exec(row.src || '');
+      return row.paper && row.emoji && !!m && row.w > 0 && row.name === worldsByName[m[1]];
+    }) &&
+    new Set(worldsCards.rows.map(r => r.src)).size === 11;
+  check('task458: worlds menu is 11 paper cards, each with its own loaded scene thumbnail and Serbian name',
+    worldsCardsOk === true, JSON.stringify(worldsCards || {}));
+
+  // Task 458 STEP 3: the chrome must actually carry the painted surface, not just
+  // the class name — a later page rule that resets the background would silently
+  // flatten the kit back to flat vector.
+  const paperChrome = await h.evalv(`(() => {
+    const graded = el => {
+      const s = getComputedStyle(el);
+      return { bg: s.backgroundImage.includes('gradient'), border: parseFloat(s.borderTopWidth) > 0 };
+    };
+    const out = { chips: [], discs: [], panel: null };
+    for (const id of ['level-num', 'world-name', 'coin-count']) {
+      const el = document.getElementById(id);
+      out.chips.push({ id, paper: el.classList.contains('ps-paper') && el.classList.contains('ps-pill--paper'), ...graded(el) });
+    }
+    for (const id of ['fun-speed-btn', 'worlds-btn', 'music-btn']) {
+      const el = document.getElementById(id);
+      out.discs.push({ id, paper: el.classList.contains('ps-paper') && el.classList.contains('ps-disc--paper'), ...graded(el) });
+    }
+    const winPanel = document.querySelector('#win-modal .ps-panel--paper');
+    const charTiles = [...document.querySelectorAll('#char-modal .char-btn')];
+    out.panel = winPanel ? graded(winPanel) : null;
+    out.tiles = charTiles.map(t => graded(t).bg && t.classList.contains('ps-card--paper'));
+    out.modalBtn = (() => {
+      const b = document.getElementById('modal-btn');
+      return !!b && b.classList.contains('ps-btn--paper') && getComputedStyle(b).backgroundImage.includes('gradient');
+    })();
+    return out;
+  })()`);
+  const paperChromeOk = paperChrome &&
+    paperChrome.chips.every(c => c.paper && c.bg && c.border) &&
+    paperChrome.discs.every(d => d.paper && d.bg && d.border) &&
+    paperChrome.panel && paperChrome.panel.bg && paperChrome.panel.border &&
+    paperChrome.tiles.length === 2 && paperChrome.tiles.every(Boolean) &&
+    paperChrome.modalBtn === true;
+  check('task458: HUD chips, discs, modal panel, hero tiles and the modal button all render the paper surface',
+    paperChromeOk === true, JSON.stringify(paperChrome || {}));
+
+  // Task 458 STEP 5: the painted caps carry a soft haze above the ground surface.
+  // stemBox() must measure the first solid row and tileStem() must start its source
+  // there, so the ground's top edge lands on the platform instead of floating.
+  const stemSolidTop = await h.evalp(`(async () => {
+    const savedOrder = worldOrder.slice();
+    const savedPos = worldPos;
+    const out = {};
+    setPaused(true);
+    for (const scene of ['spring', 'autumn', 'savanna']) {
+      const wi = WORLDS.findIndex(w => w.scene === scene);
+      worldOrder = WORLDS.map((_, i) => i);
+      worldPos = wi;
+      loadWorld();
+      const stem = TERRAIN_STEMS[scene];
+      const im = Art.imageStem(stem);
+      if (!im.complete) await new Promise(r => { im.onload = r; im.onerror = r; });
+      const box = stemBox(stem, im);
+      const seen = [];
+      const orig = ctx.drawImage.bind(ctx);
+      ctx.drawImage = function (img, ...a) {
+        if (img === im && a.length === 8) seen.push({ sy: a[1], sh: a[3] });
+        return orig(img, ...a);
+      };
+      cameraX = 0;
+      try { draw(); } finally { ctx.drawImage = orig; }
+      out[scene] = {
+        top: box.y, solidTop: box.solidTop, bottom: box.y + box.h,
+        haze: box.solidTop - box.y,
+        tiles: seen.length,
+        allAtSolidTop: seen.length > 0 && seen.every(s => s.sy === box.solidTop)
+      };
+    }
+    worldOrder = savedOrder;
+    worldPos = savedPos;
+    loadWorld();
+    return out;
+  })()`);
+  // The measured row is authoritative per cap: autumn's approved painting is
+  // already opaque on its first row (haze 0), spring/savanna carry 15-17px of
+  // painted haze. The guard is that tiles start exactly at that measured row.
+  const stemSolidTopOk = stemSolidTop && ['spring', 'autumn', 'savanna'].every(scene => {
+    const r = stemSolidTop[scene];
+    return r && Number.isFinite(r.solidTop) && r.solidTop >= r.top && r.solidTop <= r.bottom &&
+      r.tiles > 0 && r.allAtSolidTop === true;
+  }) && Object.values(stemSolidTop).some(r => r.haze > 0);
+  check('task458: ground caps tile from their first solid row (painted haze above the surface is cropped)',
+    stemSolidTopOk === true, JSON.stringify(stemSolidTop || {}));
+
+  // Task 458 STEP 4: the pit interior is a painted strip now. The strip must be the
+  // real image from assets/ui/pits/, drawn exactly over the pit rect, with the flat
+  // gradient still available as the fallback while the file has not decoded.
+  const pitStrips = await h.evalp(`(async () => {
+    const savedOrder = worldOrder.slice();
+    const savedPos = worldPos;
+    const out = {};
+    setPaused(true);
+    for (const [scene, hazard] of [['spring', 'water'], ['autumn', 'spikes'], ['underground', 'lava']]) {
+      worldOrder = WORLDS.map((_, i) => i);
+      worldPos = WORLDS.findIndex(w => w.scene === scene);
+      loadWorld();
+      const im = pitStripCache['pit-' + hazard] || (pitStripPainted(hazard, 0, -9999, 1, 1), pitStripCache['pit-' + hazard]);
+      if (im && !im.complete) await new Promise(r => { im.onload = r; im.onerror = r; });
+      const grounds = theme.grounds.slice().sort((a, b) => a.x - b.x);
+      const pits = [];
+      for (let i = 0; i < grounds.length - 1; i++) {
+        const gx = grounds[i].x + grounds[i].w, gapEnd = grounds[i + 1].x;
+        if (gapEnd - gx >= 8) pits.push({ gx, gapEnd });
+      }
+      const seen = [];
+      const orig = ctx.drawImage.bind(ctx);
+      ctx.drawImage = function (img, ...a) {
+        if (img === im) seen.push({ a, w: img.naturalWidth, h: img.naturalHeight });
+        return orig(img, ...a);
+      };
+      cameraX = 0;
+      try { draw(); } finally { ctx.drawImage = orig; }
+      const matches = seen.length === pits.length && seen.every((s, i) =>
+        Math.abs(s.a[0] - pits[i].gx) < 0.6 && Math.abs(s.a[1] - groundY) < 0.6 &&
+        Math.abs(s.a[2] - (pits[i].gapEnd - pits[i].gx)) < 0.6 &&
+        Math.abs(s.a[3] - (canvas.height - groundY)) < 0.6);
+      out[hazard] = {
+        scene, src: im ? im.currentSrc || im.src : null, loaded: !!(im && im.naturalWidth > 0),
+        pits: pits.length, drawn: seen.length, matches
+      };
+    }
+    // Fallback: an undecoded strip must report "no paint" so the flat gradient branch runs.
+    const saved = pitStripCache['pit-water'];
+    pitStripCache['pit-water'] = { complete: false, naturalWidth: 0 };
+    out.fallback = pitStripPainted('water', 0, -9999, 1, 1);
+    pitStripCache['pit-water'] = saved;
+    worldOrder = savedOrder;
+    worldPos = savedPos;
+    loadWorld();
+    return out;
+  })()`);
+  const pitStripsOk = pitStrips && ['water', 'spikes', 'lava'].every(hazard => {
+    const r = pitStrips[hazard];
+    return r && r.loaded && r.drawn === r.pits && r.pits > 0 && r.matches === true &&
+      /\/assets\/ui\/pits\/pit-/.test(r.src || '');
+  }) && pitStrips.fallback === false;
+  check('task458: every pit is covered by its own painted strip at the exact pit rect (flat fill remains the fallback)',
+    pitStripsOk === true, JSON.stringify(pitStrips || {}));
 
   const staleCanvas = await h.evalp(`(async () => {
     loadWorld();

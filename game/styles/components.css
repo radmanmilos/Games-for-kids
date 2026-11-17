@@ -288,6 +288,123 @@
 .ps-complete { text-align: center; }
 .ps-complete__title { font-weight: 800; color: var(--green); }
 
+/* ----------------------------------------------------------- paper surfaces */
+/* Task 458 STEP 3 — the painted storybook chrome, shared by every game.
+   Adapted from the approved A/B direction study (cream paper + soft painted
+   edge); the vision review of that study called it painted paper rather than
+   flat vector.
+
+   Scope rule (STYLE_BIBLE §12/§17): only the SURFACE is painted. Every letter,
+   arrow, icon and glyph stays crisp DOM text/SVG, so labels, hit areas, focus
+   rings and Serbian text are untouched. A page opts in by adding these classes;
+   geometry, position and layout stay with the page.
+
+   Components:
+     .ps-paper            surface paint (background + grain), no geometry
+     .ps-pill--paper      HUD status chip
+     .ps-disc--paper      circular icon-control skin
+     .ps-card--paper      selectable tile / card
+     .ps-panel--paper     modal panel
+     .ps-btn--paper       primary action plate (.ps-btn--secondary re-tints it)
+
+   The grain is one inline SVG-noise tile from design-tokens.css — no image
+   request, works offline, and it is blended into the element only
+   (isolation:isolate), never into the page behind it. */
+.ps-paper {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(120% 90% at 18% 6%, var(--paper-hi, #FFFBF2), transparent 58%),
+    linear-gradient(168deg,
+      var(--paper, #FBF0DC) 0%,
+      var(--paper, #FBF0DC) 62%,
+      color-mix(in srgb, var(--paper, #FBF0DC) 88%, var(--paper-edge, #C9A675)) 100%);
+  color: var(--paper-ink, #5A4632);
+}
+.ps-paper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--paper-grain);
+  background-size: 160px 160px;
+  opacity: .13;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.ps-pill--paper {
+  border: 3px solid var(--paper-edge, #C9A675);
+  border-radius: 13px 16px 12px 15px;
+  box-shadow:
+    0 4px 0 color-mix(in srgb, var(--paper-edge-deep, #A9855A) 42%, transparent),
+    0 6px 12px rgba(74, 50, 26, .18),
+    inset 0 2px 0 rgba(255, 255, 255, .55);
+}
+
+.ps-disc--paper {
+  border: 4px solid var(--paper-edge, #C9A675);
+  background:
+    radial-gradient(90% 90% at 32% 22%, var(--paper-hi, #FFFBF2), var(--paper, #FBF0DC) 72%);
+  color: var(--paper-ink, #5A4632);
+  box-shadow:
+    0 4px 0 color-mix(in srgb, var(--paper-edge-deep, #A9855A) 42%, transparent),
+    inset 0 3px 0 rgba(255, 255, 255, .6);
+}
+
+.ps-card--paper {
+  border: 3px solid var(--paper-edge, #C9A675);
+  border-radius: 20px 17px 21px 18px;
+  box-shadow:
+    0 5px 0 color-mix(in srgb, var(--paper-edge-deep, #A9855A) 40%, transparent),
+    0 9px 18px rgba(50, 34, 16, .25),
+    inset 0 0 0 2px rgba(255, 255, 255, .5);
+  overflow: hidden;
+}
+.ps-card--paper:active { transform: translateY(3px); box-shadow: 0 2px 0 color-mix(in srgb, var(--paper-edge-deep, #A9855A) 40%, transparent), inset 0 0 0 2px rgba(255, 255, 255, .5); }
+
+.ps-panel--paper {
+  border: 4px solid var(--paper-edge, #C9A675);
+  border-radius: 28px 24px 29px 25px;
+  box-shadow:
+    0 10px 0 rgba(120, 84, 44, .32),
+    0 22px 44px rgba(46, 30, 14, .40),
+    inset 0 0 0 2px rgba(255, 255, 255, .5);
+  padding: var(--space-5, 24px);
+  max-width: min(92vw, 720px);
+  max-height: 90svh;
+  overflow: auto;
+}
+
+.ps-btn--paper {
+  --ps-paper-btn: 103, 201, 113;              /* --green */
+  border: 4px solid #FFF3DC;
+  color: #2B5C31;
+  background: radial-gradient(120% 180% at 24% 0%, #A8E3AE 0%, #7ED187 55%, rgb(var(--ps-paper-btn)) 100%);
+  box-shadow:
+    0 7px 0 #3C7F45,
+    inset 0 4px 6px rgba(255, 255, 255, .55),
+    inset 0 -6px 0 rgba(0, 0, 0, .08);
+}
+.ps-btn--paper.ps-btn--secondary {
+  --ps-paper-btn: 138, 203, 226;              /* soft sky */
+  color: #2B4B5C;
+  background: radial-gradient(120% 180% at 24% 0%, #CBEAF6 0%, #9FD8EC 55%, rgb(var(--ps-paper-btn)) 100%);
+  box-shadow:
+    0 7px 0 #3E6E80,
+    inset 0 4px 6px rgba(255, 255, 255, .55),
+    inset 0 -6px 0 rgba(0, 0, 0, .08);
+}
+.ps-btn--paper:active {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 #3C7F45,
+    inset 0 3px 5px rgba(255, 255, 255, .45),
+    inset 0 -4px 0 rgba(0, 0, 0, .08);
+}
+.ps-btn--paper.ps-btn--secondary:active { box-shadow: 0 2px 0 #3E6E80, inset 0 3px 5px rgba(255, 255, 255, .45), inset 0 -4px 0 rgba(0, 0, 0, .08); }
+.ps-btn--paper[hidden] { display: none; }
+
 /* Art helper */
 .art { width:1em; height:1em; display:inline-block; vertical-align:-0.12em; object-fit:contain; pointer-events:none; }
 

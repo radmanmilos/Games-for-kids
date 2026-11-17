@@ -1603,6 +1603,62 @@
     "sha256": "9e88c3bc0208b5e9c98312852c639f502aa9dd974dacd49f88141bc7ec642417",
     "size": 1546477
   },
+  "assets/ui/pits/pit-lava.webp": {
+    "sha256": "3d93e22f39c1a20f248a8392eeec33896ad5ac1891735ae80d768e6be58cae63",
+    "size": 10972
+  },
+  "assets/ui/pits/pit-spikes.webp": {
+    "sha256": "1f7bd9a6816fd358a2ecff9d972ba4ceb91c6df9b640d1c5b685573a9b5e8ce1",
+    "size": 17814
+  },
+  "assets/ui/pits/pit-water.webp": {
+    "sha256": "d52d4c842f40c965e4bbaceafe4b88aa4e700d80a91fcc9be2d496a8f82c711e",
+    "size": 16062
+  },
+  "assets/ui/world-thumbs/autumn.png": {
+    "sha256": "cb85553ffd3360393aeddcd4fe9d837957d39a0d8cdec9b6df72a4fc4f873e9b",
+    "size": 121059
+  },
+  "assets/ui/world-thumbs/cave.png": {
+    "sha256": "90d16d5ff007bf9921dd116f904bda7e624c27c96386557532db1aa867379741",
+    "size": 60343
+  },
+  "assets/ui/world-thumbs/egypt.png": {
+    "sha256": "c0bfb956b6fb4991da81d255b5ec43170c57d2a08acf040e9a960cfca951774f",
+    "size": 62902
+  },
+  "assets/ui/world-thumbs/japan.png": {
+    "sha256": "d8c8ff52fa2eb33227cbb7389da3df42ea2a52e767188145e33bc217da1ca1d4",
+    "size": 47094
+  },
+  "assets/ui/world-thumbs/northpole.png": {
+    "sha256": "71482f4292ad4a7c0381c87bea2f96edd145facb7be9c6f4da04891459792002",
+    "size": 35357
+  },
+  "assets/ui/world-thumbs/savanna.png": {
+    "sha256": "71174649834d37ff35655bb07978c45fc5d3e4c453411c3a72b3cbd5fc91175c",
+    "size": 50605
+  },
+  "assets/ui/world-thumbs/spring.png": {
+    "sha256": "d48dedc6a91a8ca65d7f21442f2ed8f23aaeddc28e3bbe42578d61a0e89eff5e",
+    "size": 83240
+  },
+  "assets/ui/world-thumbs/summer.png": {
+    "sha256": "814fdf8670b78bf1b9d0041f5a2cbe8541a352ee69118180da465c2f9cd0f93c",
+    "size": 98833
+  },
+  "assets/ui/world-thumbs/underground.png": {
+    "sha256": "9486eed693874a7cac0a33c6a19fbec0ff6167d5165fbe3dd4747b537b2307ef",
+    "size": 66774
+  },
+  "assets/ui/world-thumbs/water.png": {
+    "sha256": "d94ad0ef72fe3a27974764aa8665211a90b293fd1c7da7cadaede883777ed687",
+    "size": 55508
+  },
+  "assets/ui/world-thumbs/winter-explorer.png": {
+    "sha256": "f78858fa4eec5866569b957b8a3dd14e405bbfb9b6b092e047dba3214ec2dc9c",
+    "size": 64676
+  },
   "data/app-registry.js": {
     "sha256": "41613086f5914084aa4cbd371c6dd100dc51628cbbd29803317c4362ef99b636",
     "size": 9917
@@ -1680,8 +1736,8 @@
     "size": 5268
   },
   "games/kitty-standalone.js": {
-    "sha256": "8bd8e635e5f94eb7405404546d737827e1354d0235c5b7b780357fe70234da44",
-    "size": 114163
+    "sha256": "43c55fd2cabd10461dce8b8d27a0278f0235b0064d58d5abb7464477e3a4d946",
+    "size": 116853
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
@@ -1744,7 +1800,7 @@
     "size": 19388
   },
   "manifest.json": {
-    "sha256": "f5039a08df456bf9c2780e0ec735e026b1266a56be48f6c63c2ebce702457ef0",
+    "sha256": "32cdaab4b11ce2a8f281f79d848ae8573104a3740310dbfa24e6640d976717ed",
     "size": 577
   },
   "pages/animal_counting.html": {
@@ -1788,8 +1844,8 @@
     "size": 4904
   },
   "pages/explorer.html": {
-    "sha256": "291bfefe62c03549362ab55d8a41112f6acc2377b5821f759717571d074fbf92",
-    "size": 10950
+    "sha256": "86dcf87ab8965a6c592d791e70ec291046c0f02245f67a53522af9cb754fa11a",
+    "size": 11839
   },
   "pages/fastcat.html": {
     "sha256": "cbe8f2dfe0d90e95c6cf96cef6dfaebd97a9f01237ea705a66d150a6c0a4d01d",
@@ -1908,12 +1964,12 @@
     "size": 2292
   },
   "styles/components.css": {
-    "sha256": "7554b354ea6577dd2212dc8e04c751379a1deb9506b4667b28134b015e7df4f2",
-    "size": 11966
+    "sha256": "ec77bc923a8be9858b7aec853114248607c702b4b8c69a8c9041a9d4985d7ce1",
+    "size": 16296
   },
   "styles/design-tokens.css": {
-    "sha256": "df799f501346a87dc731b2ba3467fcecbed0d1bf9db5acf5d57a268194683ecf",
-    "size": 1470
+    "sha256": "736c0e5b0aa2ec7f1d0e32983e9aafca4e6c2e8af67a3ac2e5a7bf785bc54d5c",
+    "size": 2477
   },
   "styles/learning-stage.css": {
     "sha256": "bec74ce468fbf7a91667735d5d477ec7fe6e8c0ad14e6835a5f78a0a0b63e416",
@@ -1928,8 +1984,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "980cf884bda7f5c940a6421458d32ecb6ffc24fae4e44ac93758033053ff115f",
-    "size": 15421
+    "sha256": "f65c1697961a7b7a3e74161d4edf957d83f7faf95004700a212f17a6cd7b253d",
+    "size": 15968
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",

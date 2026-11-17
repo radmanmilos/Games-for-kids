@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-16T15:45:29.492Z
+- Генерисано / Generated: 2026-11-17T06:49:10.837Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -80,14 +80,14 @@
 | `driving_phone-portrait.png` | Возила | `/pages/driving.html` | 390×844 | портрет | — | 05.11.2026. 21:02:59 | 380 |
 | `driving_tablet-landscape.png` | Возила | `/pages/driving.html` | 1180×820 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |
 | `driving_tablet-portrait.png` | Возила | `/pages/driving.html` | 820×1180 | портрет | — | 05.11.2026. 21:02:59 | 380 |
-| `explorer_phone-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 844×390 | пејзаж | — | 16.11.2026. 16:45:29 | 458 |
-| `explorer_phone-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 390×844 | портрет | — | 16.11.2026. 16:45:29 | 458 |
-| `explorer_tablet-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 1180×820 | пејзаж | — | 16.11.2026. 16:45:29 | 458 |
-| `explorer_tablet-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 820×1180 | портрет | — | 16.11.2026. 16:45:29 | 458 |
-| `fastcat_phone-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 844×390 | пејзаж | — | 16.11.2026. 16:45:29 | 458 |
-| `fastcat_phone-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 390×844 | портрет | — | 16.11.2026. 16:45:29 | 458 |
-| `fastcat_tablet-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 1180×820 | пејзаж | — | 16.11.2026. 16:45:29 | 458 |
-| `fastcat_tablet-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 820×1180 | портрет | — | 16.11.2026. 16:45:29 | 458 |
+| `explorer_phone-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 844×390 | пејзаж | — | 17.11.2026. 07:49:10 | 458 |
+| `explorer_phone-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 390×844 | портрет | — | 17.11.2026. 07:49:10 | 458 |
+| `explorer_tablet-landscape.png` | Мала истраживачица | `/pages/explorer.html` | 1180×820 | пејзаж | — | 17.11.2026. 07:49:10 | 458 |
+| `explorer_tablet-portrait.png` | Мала истраживачица | `/pages/explorer.html` | 820×1180 | портрет | — | 17.11.2026. 07:49:10 | 458 |
+| `fastcat_phone-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 844×390 | пејзаж | — | 17.11.2026. 07:49:10 | 458 |
+| `fastcat_phone-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 390×844 | портрет | — | 17.11.2026. 07:49:10 | 458 |
+| `fastcat_tablet-landscape.png` | Брзи мачак | `/pages/fastcat.html` | 1180×820 | пејзаж | — | 17.11.2026. 07:49:10 | 458 |
+| `fastcat_tablet-portrait.png` | Брзи мачак | `/pages/fastcat.html` | 820×1180 | портрет | — | 17.11.2026. 07:49:10 | 458 |
 | `hub-games_phone-landscape.png` | Игре — под-хаб | `/index.html` | 844×390 | пејзаж | — | 06.11.2026. 13:03:32 | 384 |
 | `hub-games_phone-portrait.png` | Игре — под-хаб | `/index.html` | 390×844 | портрет | — | 06.11.2026. 13:03:32 | 384 |
 | `hub-games_tablet-landscape.png` | Игре — под-хаб | `/index.html` | 1180×820 | пејзаж | — | 06.11.2026. 13:03:32 | 384 |
