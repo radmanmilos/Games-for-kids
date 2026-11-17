@@ -3,9 +3,9 @@
 **Last verified:** 2026-11-17  
 **Repository:** radmanmilos/Games-for-kids  
 **Current branch:** `claude/explorer-ui-kit`  
-**Main HEAD:** `bdcc3d7` (PR #28, task 458 STEP 0-2) version `3.0.15`  
+**Main HEAD:** `bdcc3d7` (PR #28, task 458 STEP 0-2) version `3.0.16`  
 **Open PR:** #29 "Explorer paper UI kit, painted pits, ground-cap alignment" → `main` (not merged; waiting for the user's visual sign-off)  
-**Branch commits:** `2abe5a8` (task 458 STEP 3-5) + the task 459 pit-rework commit on top
+**Branch commits:** `2abe5a8` (task 458 STEP 3-5) + task 459 pit-rework + task 460 (spikes ship no art, intermediate) + task 461 (painted spike strip v4 integrated) on top
 
 ## Task 459 — pit rework (this session, OpenCode/Big Pickle)
 

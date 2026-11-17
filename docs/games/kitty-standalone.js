@@ -1551,6 +1551,8 @@ function drawDecor(t) {
 // (768x202 WebP, ~16 KB each) and replace ONLY the flat fill under the animation:
 // the ripples, bubbles, fish, crisp spikes and the flat gradient fallback stay as
 // they are, so a slow or offline load still draws a readable pit.
+// Task 459: spikes have no painted strip (the stone band read as rocks); their
+// interior is a dark trench drawn in drawPitHazards().
 const PIT_STRIPS = { water: 'pit-water', lava: 'pit-lava', spikes: 'pit-spikes' };
 const pitStripCache = {};
 function pitStripPainted(hazard, gx, gy, w, h) {
@@ -1573,13 +1575,17 @@ function pitStripPainted(hazard, gx, gy, w, h) {
         ctx.drawImage(img, 0, 0, iw * (dw / bandW), ih, gx + x, gy, dw, h);
     }
     // depth shading: the paintings are shallow-water light, so darken the body towards
-    // the bottom of the trench (neutral black keeps lava/water/stone all correct)
+    // the bottom of the trench (neutral black keeps lava/water/stone all correct).
+    // Spikes keep their painted contrast: the strip is already dark and extra depth
+    // would hide the painted spike faces.
+    if (hazard !== 'spikes') {
     const depthGrad = ctx.createLinearGradient(0, gy, 0, gy + h);
     depthGrad.addColorStop(0, 'rgba(0,0,0,0.04)');
     depthGrad.addColorStop(0.4, 'rgba(0,0,0,0.12)');
     depthGrad.addColorStop(1, 'rgba(0,0,0,0.30)');
     ctx.fillStyle = depthGrad;
     ctx.fillRect(gx, gy, w, h);
+    }
     // bank shading: a soft shadow at both ends, so the paint meets the ground cap
     // without a hard colour seam (the ground caps end with their own painted cut)
     const bank = Math.min(16, Math.max(8, w * 0.06));
@@ -1652,28 +1658,35 @@ function drawPitHazards() {
                 else ctx.fillText('🐟', fx, fy);
             }
         } else if (hazard === 'spikes') {
-            if (!pitStripPainted('spikes', gx, gy, pw, depth)) {
-                ctx.fillStyle = 'rgba(18,20,30,0.92)';
+            // Task 461: painted strip (dark field + painted spikes) is the body; the
+            // dark trench + crisp procedural triangles are the fallback while it loads.
+            const stripLoaded = pitStripPainted('spikes', gx, gy, pw, depth);
+            if (!stripLoaded) {
+                const trench = ctx.createLinearGradient(0, gy, 0, canvas.height);
+                trench.addColorStop(0, '#333a47');
+                trench.addColorStop(0.35, '#20242e');
+                trench.addColorStop(1, '#0e1016');
+                ctx.fillStyle = trench;
                 ctx.fillRect(gx, gy, pw, depth);
+                for (let sx = gx + 13; sx < gapEnd - 4; sx += 22) {
+                    const h = 58 + Math.sin(sx * 0.31 + gx) * 10;
+                    const half = 13;
+                    ctx.beginPath();
+                    ctx.moveTo(sx - half, canvas.height - 6);
+                    ctx.lineTo(sx, canvas.height - h);
+                    ctx.lineTo(sx + half, canvas.height - 6);
+                    ctx.closePath();
+                    ctx.fillStyle = '#eef3fa';
+                    ctx.fill();
+                    ctx.strokeStyle = '#14161c';
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                }
             }
-            // Task 458 follow-up: spikes must be unmistakable against the painted bed —
-            // bigger triangles, a dark outline, a light face and a base band.
-            for (let sx = gx + 14; sx < gapEnd - 6; sx += 26) {
-                const h = 46 + Math.sin(sx * 0.33 + gx) * 10;
-                const half = 12;
-                ctx.beginPath();
-                ctx.moveTo(sx - half, canvas.height - 4);
-                ctx.lineTo(sx, canvas.height - h);
-                ctx.lineTo(sx + half, canvas.height - 4);
-                ctx.closePath();
-                ctx.fillStyle = '#eef3fa';
-                ctx.fill();
-                ctx.strokeStyle = '#14161c';
-                ctx.lineWidth = 3;
-                ctx.stroke();
-            }
+            ctx.fillStyle = 'rgba(12,10,8,0.55)';
+            ctx.fillRect(gx, gy, pw, 5);
             ctx.fillStyle = '#2a2f3a';
-            ctx.fillRect(gx, canvas.height - 8, gapEnd - gx, 8);
+            ctx.fillRect(gx, canvas.height - 8, pw, 8);
         }
     }
 }

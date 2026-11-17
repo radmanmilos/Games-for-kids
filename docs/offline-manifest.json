@@ -1608,8 +1608,8 @@
     "size": 14298
   },
   "assets/ui/pits/pit-spikes.webp": {
-    "sha256": "8bfa0b0ac1a70b535da5fe6a123484b00dfa5ee0f25f452ec130362af6693137",
-    "size": 17600
+    "sha256": "6133ff0bb3955b7886ae1737982c7a5fdc0acc2b947d3715fe6798ddba9adec9",
+    "size": 24800
   },
   "assets/ui/pits/pit-water.webp": {
     "sha256": "5b0bccf88de11c4dda1f2aef96d9d66bb723f935ebf9e0daad7913142462c68b",
@@ -1736,8 +1736,8 @@
     "size": 5268
   },
   "games/kitty-standalone.js": {
-    "sha256": "1371954e0fb0dabca89be1fc52906e2880d4a7614fa39fb293e4ed7f6b0303a5",
-    "size": 118770
+    "sha256": "733d660906bcd1018f194cf029192434affa7a09558d2acd8d9197ec85451092",
+    "size": 119483
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",

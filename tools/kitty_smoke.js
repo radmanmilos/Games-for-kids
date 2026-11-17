@@ -418,9 +418,10 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   check('task458: ground caps tile from their first solid row (painted haze above the surface is cropped)',
     stemSolidTopOk === true, JSON.stringify(stemSolidTop || {}));
 
-  // Task 458 STEP 4 (+ follow-up): the pit interior is a painted strip. The real image
-  // from assets/ui/pits/ must cover every pit edge-to-edge at the pit rect, tiled at its
-  // own scale (no stretching), with the flat gradient still the fallback before decode.
+  // Task 458 STEP 4 (+ follow-up): the water/lava pit interiors are painted strips. The
+  // real image from assets/ui/pits/ must cover every pit edge-to-edge at the pit rect,
+  // tiled at its own scale (no stretching), with the flat gradient still the fallback
+  // before decode.
   const pitStrips = await h.evalp(`(async () => {
     const savedOrder = worldOrder.slice();
     const savedPos = worldPos;
@@ -486,7 +487,7 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
     return r && r.loaded && r.pits > 0 && r.covered === true && r.aspectOk === true &&
       /\/assets\/ui\/pits\/pit-/.test(r.src || '');
   }) && pitStrips.fallback === false;
-  check('task458: every pit is covered edge-to-edge by its own painted strip, tiled without stretching (flat fill remains the fallback)',
+  check('task458: every water/lava pit is covered edge-to-edge by its painted strip, tiled without stretching (flat fill remains the fallback)',
     pitStripsOk === true, JSON.stringify(pitStrips || {}));
 
   // Task 458 follow-up: guard the shipped strips themselves. The first crop left the
@@ -514,51 +515,62 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   })()`);
   const edgeOk = (r, kind) => {
     if (!r || !r.left || !r.right) return false;
-    const aqua = ([l, g, b]) => g >= l - 14 && b >= l - 20 && !(l > b + 12);
-    const lava = ([l, g, b]) => l > g + 40 && l > b + 60;
-    const stone = ([l, g, b]) => (l + g + b) / 3 < 170;
-    const test = kind === 'lava' ? lava : kind === 'spikes' ? stone : aqua;
-    return test(r.left) && test(r.right);
+     const aqua = ([l, g, b]) => g >= l - 14 && b >= l - 20 && !(l > b + 12);
+     const lava = ([l, g, b]) => l > g + 40 && l > b + 60;
+     const stone = ([l, g, b]) => (l + g + b) / 3 < 170;
+     const test = kind === 'lava' ? lava : kind === 'spikes' ? stone : aqua;
+     return test(r.left) && test(r.right);
   };
   const stripEdgesOk = stripEdges && stripEdges.water && stripEdges.lava && stripEdges.spikes &&
-    edgeOk(stripEdges.water, 'water') &&
-    edgeOk(stripEdges.lava, 'lava') &&
-    edgeOk(stripEdges.spikes, 'spikes') &&
-    ['water', 'lava', 'spikes'].every(h => {
+     edgeOk(stripEdges.water, 'water') &&
+     edgeOk(stripEdges.lava, 'lava') &&
+     edgeOk(stripEdges.spikes, 'spikes') &&
+     ['water', 'lava', 'spikes'].every(h => {
       const r = stripEdges[h];
       return r && Math.abs(r.w / r.h - 4) < 0.25;
     });
   check('task458: pit strips are 4:1 and their edge columns are hazard paint, not paper margin',
     stripEdgesOk === true, JSON.stringify(stripEdges || {}));
 
-  // Task 458 follow-up: user report "the pit-spikes i dont see any spikes". The spikes
-  // are drawn over the painted bed, so this samples the actual canvas: the light spike
-  // faces must exist inside the first spike pit.
+   // Task 461: painted spike strip (dark field + painted spikes) is the body now, with the
+   // dark trench + crisp procedural triangles as the fallback while it loads. The strip must
+   // load, be dark overall, and the painted spikes must produce light pixels in the canvas.
   const spikePixels = await h.evalp(`(async () => {
     const savedOrder = worldOrder.slice();
     const savedPos = worldPos;
     setPaused(true);
     worldOrder = WORLDS.map((_, i) => i);
     worldPos = WORLDS.findIndex(w => w.scene === 'autumn');
-    loadWorld();
-    cameraX = 0;
-    draw();
-    const im = pitStripCache['pit-spikes'];
-    if (im && !im.complete) await new Promise(r => { im.onload = r; im.onerror = r; });
-    draw();
-    const grounds = theme.grounds.slice().sort((a, b) => a.x - b.x);
-    let out = { loaded: !!(im && im.naturalWidth > 0), light: 0, pit: null };
+     loadWorld();
+     cameraX = 0;
+     const _spikeIm = pitStripCache['pit-spikes'];
+     if (_spikeIm && !_spikeIm.complete) await new Promise(r => { _spikeIm.onload = r; _spikeIm.onerror = r; });
+     draw();
+     const grounds = theme.grounds.slice().sort((a, b) => a.x - b.x);
+     const savedStrip = pitStripCache['pit-spikes'];
+     let out = { strip: !!(savedStrip && savedStrip.naturalWidth), light: 0, dark: null, pit: null };
     for (let i = 0; i < grounds.length - 1; i++) {
       const gx = grounds[i].x + grounds[i].w, gapEnd = grounds[i + 1].x;
       if (gapEnd - gx < 8) continue;
       const y0 = Math.max(0, Math.floor(groundY));
       const h = canvas.height - y0;
       const d = ctx.getImageData(Math.ceil(gx), y0, Math.max(1, Math.floor(gapEnd - gx)), h).data;
-      let light = 0;
-      for (let k = 0; k < d.length; k += 4) {
-        if (d[k] > 225 && d[k + 1] > 230 && d[k + 2] > 235) light++;
+      const w = Math.max(1, Math.floor(gapEnd - gx));
+       let light = 0;
+       for (let k = 0; k < d.length; k += 4) {
+         const lum = (0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2]) / 255;
+         if (lum > 0.72) light++;
+       }
+      // upper third of the trench: the body above the spike tips
+      let sum = 0, n = 0;
+      for (let y = 0; y < Math.floor(h / 3); y++) {
+        for (let x = 0; x < w; x++) {
+          const k = (y * w + x) * 4;
+          sum += (0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2]) / 255;
+          n++;
+        }
       }
-      out = { loaded: out.loaded, light, pit: { gx, gapEnd, h } };
+      out = { strip: out.strip, light, dark: sum / Math.max(1, n), pit: { gx, gapEnd, h } };
       break;
     }
     worldOrder = savedOrder;
@@ -566,9 +578,10 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
     loadWorld();
     return out;
   })()`);
-  check('task458: spike pits actually show spikes over the painted bed',
-    !!(spikePixels && spikePixels.loaded && spikePixels.light > 200),
-    JSON.stringify(spikePixels || {}));
+   check('task461: spike pits use a painted strip with clearly visible spikes (dark field + painted spikes)',
+     !!(spikePixels && spikePixels.strip === true && spikePixels.light > 200 &&
+       typeof spikePixels.dark === 'number' && spikePixels.dark < 0.28),
+     JSON.stringify(spikePixels || {}));
 
 
 
