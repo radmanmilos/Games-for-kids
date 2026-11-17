@@ -1,4 +1,4 @@
-# Petra's World — Emoticon Replacement Inventory
+﻿# Petra's World — Emoticon Replacement Inventory
 
 **Status:** Source-audit draft v0.4 — literal emoji scan completed across the canonical `game/` JavaScript modules, page HTML, shared modules, CSS, manifests, and runtime configs (excluding the third-party minified Three.js bundle). Candidate rows have been expanded and duplicate asset IDs have been consolidated. This is a source-backed inventory draft, not yet approved for generation: semantic use-site verification and a final review of dynamic rendering remain.  
 **Scope:** Replace existing emoji/emoticon pictographs used as game artwork. Do not redesign games or replace proper illustrations, character sprites, 3D models, CSS/SVG controls, or ordinary text.
@@ -576,9 +576,9 @@ Rows below are the Little Explorer world-redesign candidates extracted from the 
 | env-walker-panda | procedural walker | `drawWalker('panda')` | Japan ground walker | Transparent glyph ≤48 px | PROPOSED |
 | env-walker-seal | procedural walker | `drawWalker('seal')` | North Pole ground walker | Transparent glyph ≤48 px | PROPOSED |
 | env-walker-scarab | procedural walker | `drawWalker('scarab')` | Egypt ground walker | Transparent glyph ≤48 px | PROPOSED |
-| env-hazard-water | water gradient + 🐟 | `drawPitHazards('water')` | Spring/Summer/Japan pits | Retain procedural gradient; 🐟 via existing fish glyph | INTEGRATED (task 458) — painted body strip `game/assets/ui/pits/pit-water.webp` (768×202 WebP, 16 KB, generated 1024×1024 RGB → cropped band) drawn at the pit rect; the flat gradient/fillRect stays the load fallback and the ripple/bubble/fish animation stays procedural |
-| env-hazard-lava | lava gradient + bubbles | `drawPitHazards('lava')` | Underground/Cave pits | Retain procedural gradient | INTEGRATED (task 458) — painted body strip `game/assets/ui/pits/pit-lava.webp` (768×202 WebP, 11 KB); pale side margins crop out of the band; gradient fallback + bubble animation unchanged |
-| env-hazard-spikes | spikes triangles | `drawPitHazards('spikes')` | Autumn/Winter/Water/Savanna/NorthPole/Egypt pits | Retain procedural, preserve collision bounds | INTEGRATED (task 458) — painted bed strip `game/assets/ui/pits/pit-spikes.webp` (768×202 WebP, 17 KB) under the procedural triangle spikes; triangle geometry and collision bounds untouched |
+| env-hazard-water | water gradient + 🐟 | `drawPitHazards('water')` | Spring/Summer/Japan pits | Retain procedural gradient; 🐟 via existing fish glyph | INTEGRATED (task 458) — painted body strip `game/assets/ui/pits/pit-water.webp` (800×200 WebP, 9 KB, generated 1024×1024 RGB → hue-guarded 4:1 crop of the surface band) tiled at native scale across the pit; the flat gradient/fillRect stays the load fallback and the ripple/bubble/fish animation stays procedural |
+| env-hazard-lava | lava gradient + bubbles | `drawPitHazards('lava')` | Underground/Cave pits | Retain procedural gradient | INTEGRATED (task 458) — painted body strip `game/assets/ui/pits/pit-lava.webp` (800×200 WebP, 14 KB) DERIVED from the water strip by a luminance→molten-ramp remap (the generator would not produce a full-bleed lava field: three attempts all framed cream and the crop guard rejected them); gradient fallback + bubble animation unchanged |
+| env-hazard-spikes | spikes triangles | `drawPitHazards('spikes')` | Autumn/Winter/Water/Savanna/NorthPole/Egypt pits | Retain procedural, preserve collision bounds | INTEGRATED (task 458) — painted bed strip `game/assets/ui/pits/pit-spikes.webp` (800×200 WebP, 17 KB, hue-guarded 4:1 crop of the dense stone band) under the procedural triangle spikes; spikes enlarged (46±10 px, dark outline, light face, base band); triangle geometry and collision bounds untouched |
 | env-collectible-strawberry | 🍓 on coin | `WORLDS[0].collectible` + `draw()` coins | Spring collectible | Reuse existing strawberry glyph where scale fits | INTEGRATED — existing approved ART_REGISTRY asset drawn by Art.draw; no new generation required |
 | env-collectible-watermelon | 🍉 on coin | `WORLDS[1].collectible` | Summer collectible | Existing watermelon glyph | INTEGRATED — existing approved ART_REGISTRY asset drawn by Art.draw; no new generation required |
 | env-collectible-apple | 🍎 on coin | `WORLDS[2].collectible` | Autumn collectible | Existing apple glyph | INTEGRATED — existing approved ART_REGISTRY asset drawn by Art.draw; no new generation required |
@@ -607,9 +607,9 @@ These are screen-space surfaces, not glyphs: they live in `game/assets/ui/` and 
 | ID | Asset | Render site | Status |
 |---|---|---|---|
 | ui-world-thumbs | `game/assets/ui/world-thumbs/world-<scene>.png` ×11 (400×116 RGB PNG, 729 KB total) | `buildWorldsMenu()` `<img class="w-thumb">` in `explorer.html` | INTEGRATED — one thumbnail per world, downscaled from that world's own approved scene (no new generation, no scene edit); paper card frame + Serbian name are DOM |
-| ui-pit-water | `game/assets/ui/pits/pit-water.webp` | `drawPitHazards('water')` via `pitStripPainted()` | INTEGRATED — body paint only; ripple/bubble/fish stay procedural |
-| ui-pit-lava | `game/assets/ui/pits/pit-lava.webp` | `drawPitHazards('lava')` | INTEGRATED — body paint only; bubble animation stays procedural |
-| ui-pit-spikes | `game/assets/ui/pits/pit-spikes.webp` | `drawPitHazards('spikes')` | INTEGRATED — bed paint under the procedural triangle spikes |
+| ui-pit-water | `game/assets/ui/pits/pit-water.webp` | `drawPitHazards('water')` via `pitStripPainted()` | INTEGRATED — 800×200, 9 KB, body paint only; tiled at native scale + depth gradient + bank shadow; ripple/bubble/fish stay procedural |
+| ui-pit-lava | `game/assets/ui/pits/pit-lava.webp` | `drawPitHazards('lava')` | INTEGRATED — 800×200, 14 KB, DERIVED from the water strip (deterministic molten ramp, not generated); bubble animation stays procedural |
+| ui-pit-spikes | `game/assets/ui/pits/pit-spikes.webp` | `drawPitHazards('spikes')` | INTEGRATED — 800×200, 17 KB bed paint under bigger outlined triangle spikes (46±10 px, light face, dark outline) |
 
 
 ## Production corrections — task 358 (2026-11-04, OpenCode/Big Pickle)

@@ -418,9 +418,9 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   check('task458: ground caps tile from their first solid row (painted haze above the surface is cropped)',
     stemSolidTopOk === true, JSON.stringify(stemSolidTop || {}));
 
-  // Task 458 STEP 4: the pit interior is a painted strip now. The strip must be the
-  // real image from assets/ui/pits/, drawn exactly over the pit rect, with the flat
-  // gradient still available as the fallback while the file has not decoded.
+  // Task 458 STEP 4 (+ follow-up): the pit interior is a painted strip. The real image
+  // from assets/ui/pits/ must cover every pit edge-to-edge at the pit rect, tiled at its
+  // own scale (no stretching), with the flat gradient still the fallback before decode.
   const pitStrips = await h.evalp(`(async () => {
     const savedOrder = worldOrder.slice();
     const savedPos = worldPos;
@@ -441,18 +441,34 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
       const seen = [];
       const orig = ctx.drawImage.bind(ctx);
       ctx.drawImage = function (img, ...a) {
-        if (img === im) seen.push({ a, w: img.naturalWidth, h: img.naturalHeight });
+        if (img === im && a.length === 8) seen.push(a);
         return orig(img, ...a);
       };
       cameraX = 0;
       try { draw(); } finally { ctx.drawImage = orig; }
-      const matches = seen.length === pits.length && seen.every((s, i) =>
-        Math.abs(s.a[0] - pits[i].gx) < 0.6 && Math.abs(s.a[1] - groundY) < 0.6 &&
-        Math.abs(s.a[2] - (pits[i].gapEnd - pits[i].gx)) < 0.6 &&
-        Math.abs(s.a[3] - (canvas.height - groundY)) < 0.6);
+      // per pit: the horizontal runs must start at gx, be contiguous and end at gapEnd,
+      // and every tile must keep the strip's own aspect (no stretch)
+      const depth = canvas.height - groundY;
+      const covered = pits.every(p => {
+        const runs = seen.filter(a => Math.abs(a[5] - groundY) < 0.6 && Math.abs(a[7] - depth) < 0.6 &&
+            a[4] >= p.gx - 0.6 && a[4] < p.gapEnd)
+          .map(a => [a[4], a[6]]).sort((x, y) => x[0] - y[0]);
+        if (!runs.length) return false;
+        let cursor = p.gx;
+        for (const [dx, dw] of runs) {
+          if (Math.abs(dx - cursor) > 0.6) return false;
+          cursor = dx + dw;
+        }
+        return Math.abs(cursor - p.gapEnd) < 0.6;
+      });
+      const aspectOk = seen.length > 0 && seen.every(a => {
+        const srcAspect = a[2] / a[3], dstAspect = a[6] / a[7];
+        return Math.abs(srcAspect - dstAspect) < 0.02;
+      });
       out[hazard] = {
         scene, src: im ? im.currentSrc || im.src : null, loaded: !!(im && im.naturalWidth > 0),
-        pits: pits.length, drawn: seen.length, matches
+        pits: pits.length, drawn: seen.length, covered, aspectOk,
+        size: im && im.naturalWidth ? im.naturalWidth + 'x' + im.naturalHeight : null
       };
     }
     // Fallback: an undecoded strip must report "no paint" so the flat gradient branch runs.
@@ -467,11 +483,94 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   })()`);
   const pitStripsOk = pitStrips && ['water', 'spikes', 'lava'].every(hazard => {
     const r = pitStrips[hazard];
-    return r && r.loaded && r.drawn === r.pits && r.pits > 0 && r.matches === true &&
+    return r && r.loaded && r.pits > 0 && r.covered === true && r.aspectOk === true &&
       /\/assets\/ui\/pits\/pit-/.test(r.src || '');
   }) && pitStrips.fallback === false;
-  check('task458: every pit is covered by its own painted strip at the exact pit rect (flat fill remains the fallback)',
+  check('task458: every pit is covered edge-to-edge by its own painted strip, tiled without stretching (flat fill remains the fallback)',
     pitStripsOk === true, JSON.stringify(pitStrips || {}));
+
+  // Task 458 follow-up: guard the shipped strips themselves. The first crop left the
+  // painting's warm cream margin in the file, which showed as a stripe at the pit edge;
+  // these are the edge colours that caught it, read from the decoded images.
+  const stripEdges = await h.evalp(`(async () => {
+    const out = {};
+    for (const hazard of ['water', 'lava', 'spikes']) {
+      const im = pitStripCache['pit-' + hazard];
+      if (!im || !im.complete || !im.naturalWidth) { out[hazard] = null; continue; }
+      const c = document.createElement('canvas');
+      c.width = im.naturalWidth; c.height = im.naturalHeight;
+      const g = c.getContext('2d', { willReadFrequently: true });
+      g.drawImage(im, 0, 0);
+      const mean = (x) => {
+        const d = g.getImageData(x, 0, 1, c.height).data;
+        let r = 0, gg = 0, b = 0;
+        for (let i = 0; i < d.length; i += 4) { r += d[i]; gg += d[i + 1]; b += d[i + 2]; }
+        const n = d.length / 4;
+        return [r / n, gg / n, b / n];
+      };
+      out[hazard] = { w: c.width, h: c.height, left: mean(0), right: mean(c.width - 1) };
+    }
+    return out;
+  })()`);
+  const edgeOk = (r, kind) => {
+    if (!r || !r.left || !r.right) return false;
+    const aqua = ([l, g, b]) => g >= l - 14 && b >= l - 20 && !(l > b + 12);
+    const lava = ([l, g, b]) => l > g + 40 && l > b + 60;
+    const stone = ([l, g, b]) => (l + g + b) / 3 < 170;
+    const test = kind === 'lava' ? lava : kind === 'spikes' ? stone : aqua;
+    return test(r.left) && test(r.right);
+  };
+  const stripEdgesOk = stripEdges && stripEdges.water && stripEdges.lava && stripEdges.spikes &&
+    edgeOk(stripEdges.water, 'water') &&
+    edgeOk(stripEdges.lava, 'lava') &&
+    edgeOk(stripEdges.spikes, 'spikes') &&
+    ['water', 'lava', 'spikes'].every(h => {
+      const r = stripEdges[h];
+      return r && Math.abs(r.w / r.h - 4) < 0.25;
+    });
+  check('task458: pit strips are 4:1 and their edge columns are hazard paint, not paper margin',
+    stripEdgesOk === true, JSON.stringify(stripEdges || {}));
+
+  // Task 458 follow-up: user report "the pit-spikes i dont see any spikes". The spikes
+  // are drawn over the painted bed, so this samples the actual canvas: the light spike
+  // faces must exist inside the first spike pit.
+  const spikePixels = await h.evalp(`(async () => {
+    const savedOrder = worldOrder.slice();
+    const savedPos = worldPos;
+    setPaused(true);
+    worldOrder = WORLDS.map((_, i) => i);
+    worldPos = WORLDS.findIndex(w => w.scene === 'autumn');
+    loadWorld();
+    cameraX = 0;
+    draw();
+    const im = pitStripCache['pit-spikes'];
+    if (im && !im.complete) await new Promise(r => { im.onload = r; im.onerror = r; });
+    draw();
+    const grounds = theme.grounds.slice().sort((a, b) => a.x - b.x);
+    let out = { loaded: !!(im && im.naturalWidth > 0), light: 0, pit: null };
+    for (let i = 0; i < grounds.length - 1; i++) {
+      const gx = grounds[i].x + grounds[i].w, gapEnd = grounds[i + 1].x;
+      if (gapEnd - gx < 8) continue;
+      const y0 = Math.max(0, Math.floor(groundY));
+      const h = canvas.height - y0;
+      const d = ctx.getImageData(Math.ceil(gx), y0, Math.max(1, Math.floor(gapEnd - gx)), h).data;
+      let light = 0;
+      for (let k = 0; k < d.length; k += 4) {
+        if (d[k] > 225 && d[k + 1] > 230 && d[k + 2] > 235) light++;
+      }
+      out = { loaded: out.loaded, light, pit: { gx, gapEnd, h } };
+      break;
+    }
+    worldOrder = savedOrder;
+    worldPos = savedPos;
+    loadWorld();
+    return out;
+  })()`);
+  check('task458: spike pits actually show spikes over the painted bed',
+    !!(spikePixels && spikePixels.loaded && spikePixels.light > 200),
+    JSON.stringify(spikePixels || {}));
+
+
 
   const staleCanvas = await h.evalp(`(async () => {
     loadWorld();

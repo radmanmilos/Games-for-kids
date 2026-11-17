@@ -1563,7 +1563,36 @@ function pitStripPainted(hazard, gx, gy, w, h) {
         pitStripCache[stem] = img;
     }
     if (!img.complete || img.naturalWidth <= 0) return false;
-    ctx.drawImage(img, gx, gy, w, h);
+    // Task 458 follow-up: the strips are 4:1 (800x200) like a real pit (300-500 wide,
+    // 100 deep), so tile them horizontally at their own scale instead of stretching
+    // one image across the gap (the stretch made the brushwork read top-down).
+    const iw = img.naturalWidth, ih = img.naturalHeight;
+    const bandW = Math.max(1, iw * (h / ih));
+    for (let x = 0; x < w; x += bandW) {
+        const dw = Math.min(bandW, w - x);
+        ctx.drawImage(img, 0, 0, iw * (dw / bandW), ih, gx + x, gy, dw, h);
+    }
+    // depth shading: the paintings are shallow-water light, so darken the body towards
+    // the bottom of the trench (neutral black keeps lava/water/stone all correct)
+    const depthGrad = ctx.createLinearGradient(0, gy, 0, gy + h);
+    depthGrad.addColorStop(0, 'rgba(0,0,0,0.04)');
+    depthGrad.addColorStop(0.4, 'rgba(0,0,0,0.12)');
+    depthGrad.addColorStop(1, 'rgba(0,0,0,0.30)');
+    ctx.fillStyle = depthGrad;
+    ctx.fillRect(gx, gy, w, h);
+    // bank shading: a soft shadow at both ends, so the paint meets the ground cap
+    // without a hard colour seam (the ground caps end with their own painted cut)
+    const bank = Math.min(16, Math.max(8, w * 0.06));
+    let bg = ctx.createLinearGradient(gx, 0, gx + bank, 0);
+    bg.addColorStop(0, 'rgba(20,14,8,0.5)');
+    bg.addColorStop(1, 'rgba(20,14,8,0)');
+    ctx.fillStyle = bg;
+    ctx.fillRect(gx, gy, bank, h);
+    bg = ctx.createLinearGradient(gx + w, 0, gx + w - bank, 0);
+    bg.addColorStop(0, 'rgba(20,14,8,0.5)');
+    bg.addColorStop(1, 'rgba(20,14,8,0)');
+    ctx.fillStyle = bg;
+    ctx.fillRect(gx + w - bank, gy, bank, h);
     return true;
 }
 
@@ -1627,18 +1656,24 @@ function drawPitHazards() {
                 ctx.fillStyle = 'rgba(18,20,30,0.92)';
                 ctx.fillRect(gx, gy, pw, depth);
             }
-            ctx.fillStyle = '#c7d2e0';
-            for (let sx = gx + 12; sx < gapEnd - 6; sx += 24) {
-                const h = 30 + Math.sin(sx * 0.33 + gx) * 8;
+            // Task 458 follow-up: spikes must be unmistakable against the painted bed —
+            // bigger triangles, a dark outline, a light face and a base band.
+            for (let sx = gx + 14; sx < gapEnd - 6; sx += 26) {
+                const h = 46 + Math.sin(sx * 0.33 + gx) * 10;
+                const half = 12;
                 ctx.beginPath();
-                ctx.moveTo(sx - 10, canvas.height);
+                ctx.moveTo(sx - half, canvas.height - 4);
                 ctx.lineTo(sx, canvas.height - h);
-                ctx.lineTo(sx + 10, canvas.height);
+                ctx.lineTo(sx + half, canvas.height - 4);
                 ctx.closePath();
+                ctx.fillStyle = '#eef3fa';
                 ctx.fill();
+                ctx.strokeStyle = '#14161c';
+                ctx.lineWidth = 3;
+                ctx.stroke();
             }
-            ctx.fillStyle = '#5c6a7a';
-            ctx.fillRect(gx, canvas.height - 6, gapEnd - gx, 6);
+            ctx.fillStyle = '#2a2f3a';
+            ctx.fillRect(gx, canvas.height - 8, gapEnd - gx, 8);
         }
     }
 }

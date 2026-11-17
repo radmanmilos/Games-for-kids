@@ -1604,16 +1604,16 @@
     "size": 1546477
   },
   "assets/ui/pits/pit-lava.webp": {
-    "sha256": "3d93e22f39c1a20f248a8392eeec33896ad5ac1891735ae80d768e6be58cae63",
-    "size": 10972
+    "sha256": "05211e508ed685cf97b56ed1181804fc66acf9ebdaa6f850820fa6f1ee6f3d8f",
+    "size": 14298
   },
   "assets/ui/pits/pit-spikes.webp": {
-    "sha256": "1f7bd9a6816fd358a2ecff9d972ba4ceb91c6df9b640d1c5b685573a9b5e8ce1",
-    "size": 17814
+    "sha256": "8bfa0b0ac1a70b535da5fe6a123484b00dfa5ee0f25f452ec130362af6693137",
+    "size": 17600
   },
   "assets/ui/pits/pit-water.webp": {
-    "sha256": "d52d4c842f40c965e4bbaceafe4b88aa4e700d80a91fcc9be2d496a8f82c711e",
-    "size": 16062
+    "sha256": "5b0bccf88de11c4dda1f2aef96d9d66bb723f935ebf9e0daad7913142462c68b",
+    "size": 9258
   },
   "assets/ui/world-thumbs/autumn.png": {
     "sha256": "cb85553ffd3360393aeddcd4fe9d837957d39a0d8cdec9b6df72a4fc4f873e9b",
@@ -1736,8 +1736,8 @@
     "size": 5268
   },
   "games/kitty-standalone.js": {
-    "sha256": "43c55fd2cabd10461dce8b8d27a0278f0235b0064d58d5abb7464477e3a4d946",
-    "size": 116853
+    "sha256": "1371954e0fb0dabca89be1fc52906e2880d4a7614fa39fb293e4ed7f6b0303a5",
+    "size": 118770
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
