@@ -25,6 +25,7 @@ The user rejected the first pit strips: bird's-eye look, colours not matching th
 - `node tools/check_release.js`: fast gate PASS + full smoke battery PASS — "Release gate green. Nothing was written." (log `tools/.cache/task458-check_release2.log`).
 - `tools/kitty_smoke.js`: 0 FAIL. Three new guards (coverage as contiguous runs, aspect/no-stretch, strip edge colours, spike pixels) each proven to FAIL on mutated input; files restored from pre-mutation **copies** and hash-matched (`906f81cb001caa7e` JS, `5b0bccf88de11c4d` strip).
 - Review screenshots refreshed: `screenshot.js --review=Screenshot_Review --pages=explorer,fastcat --task=458` → 8 shots, no browser runtime errors.
+- CI run [44038945180](https://github.com/radmanmilos/Games-for-kids/actions/runs/44038945180) on `afcc354`: **success** (smoke matrix + Release QA + Pages).
 - Per-task evidence: `tools/.cache/task458-validation.md`.
 
 ## Visual QA
