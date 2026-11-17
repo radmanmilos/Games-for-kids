@@ -1103,8 +1103,14 @@ function buildWorldsMenu() {
     worldOrder.forEach((wi, idx) => {
         const w = WORLDS[wi];
         const btn = document.createElement('button');
-        btn.className = 'world-btn';
-        btn.innerHTML = '<span class="w-emoji"></span>' + w.name;
+        // task 458: the picker is a storybook card — the world's own painted scene
+        // as a thumbnail, then the collectible and the Serbian name on a paper
+        // strip. The 400px thumbs live in assets/ui/world-thumbs/ (729 KB total
+        // for all 11); the full scenes stay untouched at their source size.
+        btn.className = 'world-btn ps-paper ps-card--paper';
+        btn.innerHTML = '<img class="w-thumb" alt="" src="../assets/ui/world-thumbs/' + w.scene + '.png">' +
+            '<span class="w-strip"><span class="w-emoji"></span><span class="w-name"></span></span>';
+        btn.querySelector('.w-name').textContent = w.name;
         if (window.Art && window.Art.fill) window.Art.fill(btn.querySelector('.w-emoji'), w.collectible);
         else btn.querySelector('.w-emoji').textContent = w.collectible;
         btn.addEventListener('click', () => {
@@ -1541,6 +1547,61 @@ function drawDecor(t) {
     }
 }
 
+// Painted pit strips (task 458). The generated paintings live in assets/ui/pits/
+// (768x202 WebP, ~16 KB each) and replace ONLY the flat fill under the animation:
+// the ripples, bubbles, fish, crisp spikes and the flat gradient fallback stay as
+// they are, so a slow or offline load still draws a readable pit.
+// Task 459: spikes have no painted strip (the stone band read as rocks); their
+// interior is a dark trench drawn in drawPitHazards().
+const PIT_STRIPS = { water: 'pit-water', lava: 'pit-lava', spikes: 'pit-spikes' };
+const pitStripCache = {};
+function pitStripPainted(hazard, gx, gy, w, h) {
+    const stem = PIT_STRIPS[hazard];
+    if (!stem) return false;
+    let img = pitStripCache[stem];
+    if (!img) {
+        img = new Image();
+        img.src = '../assets/ui/pits/' + stem + '.webp';
+        pitStripCache[stem] = img;
+    }
+    if (!img.complete || img.naturalWidth <= 0) return false;
+    // Task 458 follow-up: the strips are 4:1 (800x200) like a real pit (300-500 wide,
+    // 100 deep), so tile them horizontally at their own scale instead of stretching
+    // one image across the gap (the stretch made the brushwork read top-down).
+    const iw = img.naturalWidth, ih = img.naturalHeight;
+    const bandW = Math.max(1, iw * (h / ih));
+    for (let x = 0; x < w; x += bandW) {
+        const dw = Math.min(bandW, w - x);
+        ctx.drawImage(img, 0, 0, iw * (dw / bandW), ih, gx + x, gy, dw, h);
+    }
+    // depth shading: the paintings are shallow-water light, so darken the body towards
+    // the bottom of the trench (neutral black keeps lava/water/stone all correct).
+    // Spikes keep their painted contrast: the strip is already dark and extra depth
+    // would hide the painted spike faces.
+    if (hazard !== 'spikes') {
+    const depthGrad = ctx.createLinearGradient(0, gy, 0, gy + h);
+    depthGrad.addColorStop(0, 'rgba(0,0,0,0.04)');
+    depthGrad.addColorStop(0.4, 'rgba(0,0,0,0.12)');
+    depthGrad.addColorStop(1, 'rgba(0,0,0,0.30)');
+    ctx.fillStyle = depthGrad;
+    ctx.fillRect(gx, gy, w, h);
+    }
+    // bank shading: a soft shadow at both ends, so the paint meets the ground cap
+    // without a hard colour seam (the ground caps end with their own painted cut)
+    const bank = Math.min(16, Math.max(8, w * 0.06));
+    let bg = ctx.createLinearGradient(gx, 0, gx + bank, 0);
+    bg.addColorStop(0, 'rgba(20,14,8,0.5)');
+    bg.addColorStop(1, 'rgba(20,14,8,0)');
+    ctx.fillStyle = bg;
+    ctx.fillRect(gx, gy, bank, h);
+    bg = ctx.createLinearGradient(gx + w, 0, gx + w - bank, 0);
+    bg.addColorStop(0, 'rgba(20,14,8,0.5)');
+    bg.addColorStop(1, 'rgba(20,14,8,0)');
+    ctx.fillStyle = bg;
+    ctx.fillRect(gx + w - bank, gy, bank, h);
+    return true;
+}
+
 function drawPitHazards() {
     const hazard = theme.pitHazard;
     if (!hazard) return;
@@ -1552,13 +1613,16 @@ function drawPitHazards() {
         const gx = grounds[i].x + grounds[i].w;
         const gapEnd = grounds[i + 1].x;
         if (gapEnd - gx < 8) continue;
+        const pw = gapEnd - gx;
         if (hazard === 'lava') {
-            const grad = ctx.createLinearGradient(0, gy, 0, canvas.height);
-            grad.addColorStop(0, '#ff5f2e');
-            grad.addColorStop(0.5, '#ff7f1f');
-            grad.addColorStop(1, '#b33a00');
-            ctx.fillStyle = grad;
-            ctx.fillRect(gx, gy, gapEnd - gx, depth);
+            if (!pitStripPainted('lava', gx, gy, pw, depth)) {
+                const grad = ctx.createLinearGradient(0, gy, 0, canvas.height);
+                grad.addColorStop(0, '#ff5f2e');
+                grad.addColorStop(0.5, '#ff7f1f');
+                grad.addColorStop(1, '#b33a00');
+                ctx.fillStyle = grad;
+                ctx.fillRect(gx, gy, pw, depth);
+            }
             ctx.fillStyle = '#ffd166';
             ctx.fillRect(gx, gy, gapEnd - gx, 5);
             ctx.fillStyle = '#fff3c4';
@@ -1570,11 +1634,13 @@ function drawPitHazards() {
                 ctx.fill();
             }
         } else if (hazard === 'water') {
-            const grad = ctx.createLinearGradient(0, gy, 0, canvas.height);
-            grad.addColorStop(0, 'rgba(90,190,255,0.9)');
-            grad.addColorStop(1, 'rgba(15,80,160,0.95)');
-            ctx.fillStyle = grad;
-            ctx.fillRect(gx, gy, gapEnd - gx, depth);
+            if (!pitStripPainted('water', gx, gy, pw, depth)) {
+                const grad = ctx.createLinearGradient(0, gy, 0, canvas.height);
+                grad.addColorStop(0, 'rgba(90,190,255,0.9)');
+                grad.addColorStop(1, 'rgba(15,80,160,0.95)');
+                ctx.fillStyle = grad;
+                ctx.fillRect(gx, gy, pw, depth);
+            }
             ctx.fillStyle = 'rgba(255,255,255,0.5)';
             for (let k = 0; k < 3; k++) {
                 const ry = gy + 8 + k * 14;
@@ -1592,20 +1658,35 @@ function drawPitHazards() {
                 else ctx.fillText('🐟', fx, fy);
             }
         } else if (hazard === 'spikes') {
-            ctx.fillStyle = 'rgba(18,20,30,0.92)';
-            ctx.fillRect(gx, gy, gapEnd - gx, depth);
-            ctx.fillStyle = '#c7d2e0';
-            for (let sx = gx + 12; sx < gapEnd - 6; sx += 24) {
-                const h = 30 + Math.sin(sx * 0.33 + gx) * 8;
-                ctx.beginPath();
-                ctx.moveTo(sx - 10, canvas.height);
-                ctx.lineTo(sx, canvas.height - h);
-                ctx.lineTo(sx + 10, canvas.height);
-                ctx.closePath();
-                ctx.fill();
+            // Task 461: painted strip (dark field + painted spikes) is the body; the
+            // dark trench + crisp procedural triangles are the fallback while it loads.
+            const stripLoaded = pitStripPainted('spikes', gx, gy, pw, depth);
+            if (!stripLoaded) {
+                const trench = ctx.createLinearGradient(0, gy, 0, canvas.height);
+                trench.addColorStop(0, '#333a47');
+                trench.addColorStop(0.35, '#20242e');
+                trench.addColorStop(1, '#0e1016');
+                ctx.fillStyle = trench;
+                ctx.fillRect(gx, gy, pw, depth);
+                for (let sx = gx + 13; sx < gapEnd - 4; sx += 22) {
+                    const h = 58 + Math.sin(sx * 0.31 + gx) * 10;
+                    const half = 13;
+                    ctx.beginPath();
+                    ctx.moveTo(sx - half, canvas.height - 6);
+                    ctx.lineTo(sx, canvas.height - h);
+                    ctx.lineTo(sx + half, canvas.height - 6);
+                    ctx.closePath();
+                    ctx.fillStyle = '#eef3fa';
+                    ctx.fill();
+                    ctx.strokeStyle = '#14161c';
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                }
             }
-            ctx.fillStyle = '#5c6a7a';
-            ctx.fillRect(gx, canvas.height - 6, gapEnd - gx, 6);
+            ctx.fillStyle = 'rgba(12,10,8,0.55)';
+            ctx.fillRect(gx, gy, pw, 5);
+            ctx.fillStyle = '#2a2f3a';
+            ctx.fillRect(gx, canvas.height - 8, pw, 8);
         }
     }
 }
@@ -1631,7 +1712,22 @@ function stemBox(stem, im) {
                 }
             }
         }
-        stemBoxCache[stem] = x1 < 0 ? full : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
+        // task 458: the painted caps carry a soft haze above the ground surface, so
+        // the alpha bbox top is not where the ground reads. The real top is the
+        // first row where at least half of the centre 60% is opaque; tiles start
+        // there so the surface sits flush instead of floating inside its own haze.
+        let solidTop = y0;
+        if (x1 >= 0) {
+            const spanX0 = Math.floor(x0 + (x1 - x0 + 1) * 0.2);
+            const spanX1 = Math.ceil(x0 + (x1 - x0 + 1) * 0.8);
+            const need = Math.max(1, Math.round((spanX1 - spanX0) * 0.5));
+            for (let y = y0; y <= y1; y++) {
+                let solid = 0;
+                for (let x = spanX0; x < spanX1; x++) if (d[(y * c.width + x) * 4 + 3] >= 128) solid++;
+                if (solid >= need) { solidTop = y; break; }
+            }
+        }
+        stemBoxCache[stem] = x1 < 0 ? full : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1, solidTop };
     } catch (e) {
         stemBoxCache[stem] = full; // e.g. tainted canvas: fall back to the padded canvas
     }
@@ -1676,10 +1772,14 @@ function tileStem(stem, x, y, w, h) {
     const box = stemBox(stem, im);
     const cx = box.x + box.w * 0.2;
     const cw = box.w * 0.6;
-    const tileW = Math.max(16, Math.round(h * cw / box.h));
+    // task 458: crop the soft haze above the painted surface — the tile starts at
+    // the first solid row, so the ground's top edge lands exactly on y.
+    const sy = box.solidTop === undefined ? box.y : box.solidTop;
+    const sh = Math.max(1, box.h - (sy - box.y));
+    const tileW = Math.max(16, Math.round(h * cw / sh));
     for (let tx = x; tx < x + w; tx += tileW) {
         const tw = Math.min(tileW, x + w - tx);
-        ctx.drawImage(im, cx, box.y, cw * (tw / tileW), box.h, tx, y, tw, h);
+        ctx.drawImage(im, cx, sy, cw * (tw / tileW), sh, tx, y, tw, h);
     }
     return true;
 }
@@ -2442,12 +2542,10 @@ function drawGoal(type, c) {
         'pyramid': 'goal-pyramid'
     };
     const goalStem = GOAL_STEMS[type];
-    if (goalStem && !(type === 'house' && theme && theme.scene === 'spring') &&
-        drawGoalArt(goalStem, c, type === 'submarine')) return;
-    // The Spring pilot reuses the approved painted house. Other seasonal
-    // worlds keep their existing fallback until their distinct goals are ready.
-    if (type === 'house' && theme && theme.scene === 'spring' &&
-        drawGoalArt('house', c, false)) return;
+    // task 458: every 'house' goal draws the same approved painted goal-house, so
+    // all four seasons read as one storybook; the procedural house below stays
+    // only as the fallback while the art is still loading.
+    if (goalStem && drawGoalArt(goalStem, c, type === 'submarine')) return;
     if (type === 'house') {
         ctx.fillStyle = '#f8edeb';
         ctx.fillRect(c.x, c.y + 38, c.width, c.height - 38);

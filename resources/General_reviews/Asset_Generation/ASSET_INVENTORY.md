@@ -1,4 +1,4 @@
-# Petra's World — Emoticon Replacement Inventory
+﻿# Petra's World — Emoticon Replacement Inventory
 
 **Status:** Source-audit draft v0.4 — literal emoji scan completed across the canonical `game/` JavaScript modules, page HTML, shared modules, CSS, manifests, and runtime configs (excluding the third-party minified Three.js bundle). Candidate rows have been expanded and duplicate asset IDs have been consolidated. This is a source-backed inventory draft, not yet approved for generation: semantic use-site verification and a final review of dynamic rendering remain.  
 **Scope:** Replace existing emoji/emoticon pictographs used as game artwork. Do not redesign games or replace proper illustrations, character sprites, 3D models, CSS/SVG controls, or ordinary text.
@@ -576,9 +576,9 @@ Rows below are the Little Explorer world-redesign candidates extracted from the 
 | env-walker-panda | procedural walker | `drawWalker('panda')` | Japan ground walker | Transparent glyph ≤48 px | PROPOSED |
 | env-walker-seal | procedural walker | `drawWalker('seal')` | North Pole ground walker | Transparent glyph ≤48 px | PROPOSED |
 | env-walker-scarab | procedural walker | `drawWalker('scarab')` | Egypt ground walker | Transparent glyph ≤48 px | PROPOSED |
-| env-hazard-water | water gradient + 🐟 | `drawPitHazards('water')` | Spring/Summer/Japan pits | Retain procedural gradient; 🐟 via existing fish glyph | PARTIAL — water hazard remains procedural; fish accent uses approved fish.webp via Art.draw |
-| env-hazard-lava | lava gradient + bubbles | `drawPitHazards('lava')` | Underground/Cave pits | Retain procedural gradient | RETAIN PROCEDURAL — gradient/bubbles; no new image required in this pass |
-| env-hazard-spikes | spikes triangles | `drawPitHazards('spikes')` | Autumn/Winter/Water/Savanna/NorthPole/Egypt pits | Retain procedural, preserve collision bounds | RETAIN PROCEDURAL — triangle geometry; preserve exact collision bounds |
+| env-hazard-water | water gradient + 🐟 | `drawPitHazards('water')` | Spring/Summer/Japan pits | Retain procedural gradient; 🐟 via existing fish glyph | INTEGRATED (task 458) — painted body strip `game/assets/ui/pits/pit-water.webp` (800×200 WebP, 9 KB, generated 1024×1024 RGB → hue-guarded 4:1 crop of the surface band) tiled at native scale across the pit; the flat gradient/fillRect stays the load fallback and the ripple/bubble/fish animation stays procedural |
+| env-hazard-lava | lava gradient + bubbles | `drawPitHazards('lava')` | Underground/Cave pits | Retain procedural gradient | INTEGRATED (task 458) — painted body strip `game/assets/ui/pits/pit-lava.webp` (800×200 WebP, 14 KB) DERIVED from the water strip by a luminance→molten-ramp remap (the generator would not produce a full-bleed lava field: three attempts all framed cream and the crop guard rejected them); gradient fallback + bubble animation unchanged |
+| env-hazard-spikes | spikes triangles | `drawPitHazards('spikes')` | Autumn/Winter/Water/Savanna/NorthPole/Egypt pits | Retain procedural, preserve collision bounds | INTEGRATED (task 458) → RETIRED (task 460) → RE-ADDED (task 461) — painted strip `game/assets/ui/pits/pit-spikes.webp` (800×200 WebP, 24 KB, v4 near-black field with painted spikes, no depth shading) is the body now; the dark trench + crisp procedural triangles (58±10 px) remain the load fallback. Hue/dark edge guard passes (dark edges, 1844 light px in-game). |
 | env-collectible-strawberry | 🍓 on coin | `WORLDS[0].collectible` + `draw()` coins | Spring collectible | Reuse existing strawberry glyph where scale fits | INTEGRATED — existing approved ART_REGISTRY asset drawn by Art.draw; no new generation required |
 | env-collectible-watermelon | 🍉 on coin | `WORLDS[1].collectible` | Summer collectible | Existing watermelon glyph | INTEGRATED — existing approved ART_REGISTRY asset drawn by Art.draw; no new generation required |
 | env-collectible-apple | 🍎 on coin | `WORLDS[2].collectible` | Autumn collectible | Existing apple glyph | INTEGRATED — existing approved ART_REGISTRY asset drawn by Art.draw; no new generation required |
@@ -590,7 +590,7 @@ Rows below are the Little Explorer world-redesign candidates extracted from the 
 | env-collectible-rice-ball | 🍙 on coin | `WORLDS[8].collectible` | Japan collectible | Existing food-rice-ball glyph | INTEGRATED — existing approved ART_REGISTRY asset drawn by Art.draw; no new generation required |
 | env-collectible-gift | 🎁 on coin | `WORLDS[9].collectible` | North Pole collectible | Existing object-gift glyph | INTEGRATED — existing approved ART_REGISTRY asset drawn by Art.draw; no new generation required |
 | env-collectible-palm-tree | 🌴 on coin | `WORLDS[10].collectible` | Egypt collectible | Existing palm-tree glyph | INTEGRATED — existing approved ART_REGISTRY asset drawn by Art.draw; no new generation required |
-| env-goal-house | house building | drawGoal('house') | Spring/Summer/Autumn/Winter goal | Reuse approved house.webp for the Spring pilot only; other seasonal goals remain procedural pending distinct art | PARTIAL — Spring image integrated; other seasons pending |
+| env-goal-house | house building | drawGoal('house') | Spring/Summer/Autumn/Winter goal | Reuse approved house.webp for all four seasons (task 458 removed the Spring-only exception); the remaining world goals still await distinct art | INTEGRATED — all four seasons draw `goal-house` (user decision, task 458) |
 | env-goal-mine | mine arch | `drawGoal('mine')` | Underground goal | Transparent glyph goal landmark | PROPOSED — structure remains procedural; existing pickaxe glyph is already used as detail |
 | env-goal-cave | cave arch | `drawGoal('cave')` | Cave goal | Transparent glyph goal landmark | PROPOSED — structure remains procedural; existing sparkle glyph is already used as detail |
 | env-goal-arch | arch | `drawGoal('arch')` | (unused) goal | Transparent glyph goal landmark | UNUSED — no generation required unless this goal becomes active |
@@ -599,6 +599,17 @@ Rows below are the Little Explorer world-redesign candidates extracted from the 
 | env-goal-igloo | igloo | `drawGoal('igloo')` | North Pole goal | Transparent glyph goal landmark | PROPOSED |
 | env-goal-pyramid | pyramid | `drawGoal('pyramid')` | Egypt goal | Transparent glyph goal landmark | PROPOSED |
 | env-goal-submarine | submarine | `drawGoal('submarine')` | Water goal | Transparent glyph goal landmark | PROPOSED |
+
+### Little Explorer UI-kit surfaces (task 458, 2026-11-17)
+
+These are screen-space surfaces, not glyphs: they live in `game/assets/ui/` and are never drawn through `Art.draw()`. All letters, icons and arrows stay crisp DOM/SVG (`STYLE_BIBLE.md` §12/§17); the kit paints surfaces only.
+
+| ID | Asset | Render site | Status |
+|---|---|---|---|
+| ui-world-thumbs | `game/assets/ui/world-thumbs/world-<scene>.png` ×11 (400×116 RGB PNG, 729 KB total) | `buildWorldsMenu()` `<img class="w-thumb">` in `explorer.html` | INTEGRATED — one thumbnail per world, downscaled from that world's own approved scene (no new generation, no scene edit); paper card frame + Serbian name are DOM |
+| ui-pit-water | `game/assets/ui/pits/pit-water.webp` | `drawPitHazards('water')` via `pitStripPainted()` | INTEGRATED — 800×200, 9 KB, body paint only; tiled at native scale + depth gradient + bank shadow; ripple/bubble/fish stay procedural |
+| ui-pit-lava | `game/assets/ui/pits/pit-lava.webp` | `drawPitHazards('lava')` | INTEGRATED — 800×200, 14 KB, DERIVED from the water strip (deterministic molten ramp, not generated); bubble animation stays procedural |
+| ui-pit-spikes | `game/assets/ui/pits/pit-spikes.webp` | `drawPitHazards('spikes')` | INTEGRATED (task 461) — 800×200, 24 KB, near-black field with painted spikes; no depth shading; dark trench + procedural triangles are the load fallback |
 
 
 ## Production corrections — task 358 (2026-11-04, OpenCode/Big Pickle)

@@ -48,4 +48,19 @@
      sky back bubble and the green next bubble read as siblings; page CSS owns
      position only. Clamped by the a11y comfort floor, never smaller than it. */
   --ps-nav-size: clamp(var(--touch-comfort, 56px), 9vmin, 84px);
+
+  /* Paper surfaces (task 458 STEP 3) — the painted-storybook chrome shared by
+     the games. Colours only; geometry lives in components.css, so a page can
+     re-tint the whole kit by overriding these five values. Text on --paper
+     (#5A4632) measures ~7:1 contrast. */
+  --paper: #FBF0DC;
+  --paper-hi: #FFFBF2;
+  --paper-ink: #5A4632;
+  --paper-ink-soft: #8A7057;
+  --paper-edge: #C9A675;
+  --paper-edge-deep: #A9855A;
+  /* Grain: one inline SVG-noise tile (fractalNoise, stitched) — no runtime
+     image, no request, no per-page asset. Painted onto the surfaces at low
+     opacity so the paper reads tactile without a texture download. */
+  --paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
 }

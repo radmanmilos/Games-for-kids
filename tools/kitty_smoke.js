@@ -193,8 +193,12 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
       drawEnemy('penguin');
       drawWalker('snowman');
       drawWalker('crab');
-      theme = WORLDS.find(w => w.scene === 'spring');
-      drawGoal('house', { x: 0, y: 0, width: 220, height: 220 });
+      // task 458: all four seasons draw the same painted goal-house now (the
+      // Spring-only pilot was removed), so the goal must not depend on the theme.
+      for (const scene of ['spring', 'summer', 'autumn', 'winter-explorer']) {
+        theme = WORLDS.find(w => w.scene === scene);
+        drawGoal('house', { x: 0, y: 0, width: 220, height: 220 });
+      }
     } finally {
       Art.imageStem = oldImageStem;
       Art.drawStem = oldDrawStem;
@@ -205,11 +209,13 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   })()`);
   const expectedArtCalls = [
     { stem: 'enemy-mouse', size: 40 }, { stem: 'enemy-bat', size: 40 }, { stem: 'enemy-penguin', size: 40 },
-    { stem: 'walker-snowman', size: 36 }, { stem: 'walker-crab', size: 32 }, { stem: 'house', size: 220 }
+    { stem: 'walker-snowman', size: 36 }, { stem: 'walker-crab', size: 32 },
+    { stem: 'goal-house', size: 220 }, { stem: 'goal-house', size: 220 },
+    { stem: 'goal-house', size: 220 }, { stem: 'goal-house', size: 220 }
   ];
   const artReuseOk = Array.isArray(artReuseCalls) && artReuseCalls.length === expectedArtCalls.length &&
     artReuseCalls.every((call, i) => call.stem === expectedArtCalls[i].stem && call.size === expectedArtCalls[i].size);
-  check('task429: explorer uses stem-based art for mouse, bat, penguin, snowman, crab and Spring goal',
+  check('task429/458: explorer uses stem art for mouse, bat, penguin, snowman, crab and one goal-house for all four seasons',
     artReuseOk, JSON.stringify(artReuseCalls || []));
 
   // Rendering guards (task 430). The suite used to prove only "draw() does not throw", so a screen
@@ -291,6 +297,293 @@ const JS = path.join(__dirname, '..', 'game', 'games', 'kitty-standalone.js');
   check('task458: no white band across the top of the autumn/underground/cave ground',
     whiteGroundBand && ['autumn', 'underground', 'cave'].every(s => whiteGroundBand[s] && whiteGroundBand[s].whitePct <= 5),
     JSON.stringify(whiteGroundBand || {}));
+
+  // Task 458 STEP 3: the worlds picker is the shared paper kit — one painted card
+  // per world, showing that world's own painted scene as a thumbnail plus the
+  // Serbian name. A card with no thumbnail (or a stale path) breaks the menu.
+  const worldsCards = await h.evalp(`(async () => {
+    buildWorldsMenu();
+    const cards = [...document.querySelectorAll('#worlds-grid .world-btn')];
+    const rows = cards.map(c => {
+      const img = c.querySelector('img.w-thumb');
+      const name = c.querySelector('.w-name');
+      return {
+        paper: c.classList.contains('ps-paper') && c.classList.contains('ps-card--paper'),
+        src: img ? img.getAttribute('src') : null,
+        name: name ? name.textContent : null,
+        emoji: !!c.querySelector('.w-emoji')
+      };
+    });
+    const imgs = cards.map(c => c.querySelector('img.w-thumb')).filter(Boolean);
+    await Promise.all(imgs.map(im => im.complete ? null : new Promise(r => { im.onload = r; im.onerror = r; })));
+    rows.forEach((row, i) => { row.w = imgs[i] ? imgs[i].naturalWidth : 0; });
+    return { rows, worlds: WORLDS.map(w => ({ scene: w.scene, name: w.name })) };
+  })()`);
+  // The menu is shuffled on purpose (worldOrder), so match each card to its world
+  // by the scene in its thumbnail path, not by position.
+  const worldsByName = {};
+  if (worldsCards && Array.isArray(worldsCards.worlds)) {
+    for (const w of worldsCards.worlds) worldsByName[w.scene] = w.name;
+  }
+  const worldsCardsOk = worldsCards && worldsCards.rows.length === 11 &&
+    worldsCards.rows.every(row => {
+      const m = /^\.\.\/assets\/ui\/world-thumbs\/([a-z-]+)\.png$/.exec(row.src || '');
+      return row.paper && row.emoji && !!m && row.w > 0 && row.name === worldsByName[m[1]];
+    }) &&
+    new Set(worldsCards.rows.map(r => r.src)).size === 11;
+  check('task458: worlds menu is 11 paper cards, each with its own loaded scene thumbnail and Serbian name',
+    worldsCardsOk === true, JSON.stringify(worldsCards || {}));
+
+  // Task 458 STEP 3: the chrome must actually carry the painted surface, not just
+  // the class name — a later page rule that resets the background would silently
+  // flatten the kit back to flat vector.
+  const paperChrome = await h.evalv(`(() => {
+    const graded = el => {
+      const s = getComputedStyle(el);
+      return { bg: s.backgroundImage.includes('gradient'), border: parseFloat(s.borderTopWidth) > 0 };
+    };
+    const out = { chips: [], discs: [], panel: null };
+    for (const id of ['level-num', 'world-name', 'coin-count']) {
+      const el = document.getElementById(id);
+      out.chips.push({ id, paper: el.classList.contains('ps-paper') && el.classList.contains('ps-pill--paper'), ...graded(el) });
+    }
+    for (const id of ['fun-speed-btn', 'worlds-btn', 'music-btn']) {
+      const el = document.getElementById(id);
+      out.discs.push({ id, paper: el.classList.contains('ps-paper') && el.classList.contains('ps-disc--paper'), ...graded(el) });
+    }
+    const winPanel = document.querySelector('#win-modal .ps-panel--paper');
+    const charTiles = [...document.querySelectorAll('#char-modal .char-btn')];
+    out.panel = winPanel ? graded(winPanel) : null;
+    out.tiles = charTiles.map(t => graded(t).bg && t.classList.contains('ps-card--paper'));
+    out.modalBtn = (() => {
+      const b = document.getElementById('modal-btn');
+      return !!b && b.classList.contains('ps-btn--paper') && getComputedStyle(b).backgroundImage.includes('gradient');
+    })();
+    return out;
+  })()`);
+  const paperChromeOk = paperChrome &&
+    paperChrome.chips.every(c => c.paper && c.bg && c.border) &&
+    paperChrome.discs.every(d => d.paper && d.bg && d.border) &&
+    paperChrome.panel && paperChrome.panel.bg && paperChrome.panel.border &&
+    paperChrome.tiles.length === 2 && paperChrome.tiles.every(Boolean) &&
+    paperChrome.modalBtn === true;
+  check('task458: HUD chips, discs, modal panel, hero tiles and the modal button all render the paper surface',
+    paperChromeOk === true, JSON.stringify(paperChrome || {}));
+
+  // Task 458 STEP 5: the painted caps carry a soft haze above the ground surface.
+  // stemBox() must measure the first solid row and tileStem() must start its source
+  // there, so the ground's top edge lands on the platform instead of floating.
+  const stemSolidTop = await h.evalp(`(async () => {
+    const savedOrder = worldOrder.slice();
+    const savedPos = worldPos;
+    const out = {};
+    setPaused(true);
+    for (const scene of ['spring', 'autumn', 'savanna']) {
+      const wi = WORLDS.findIndex(w => w.scene === scene);
+      worldOrder = WORLDS.map((_, i) => i);
+      worldPos = wi;
+      loadWorld();
+      const stem = TERRAIN_STEMS[scene];
+      const im = Art.imageStem(stem);
+      if (!im.complete) await new Promise(r => { im.onload = r; im.onerror = r; });
+      const box = stemBox(stem, im);
+      const seen = [];
+      const orig = ctx.drawImage.bind(ctx);
+      ctx.drawImage = function (img, ...a) {
+        if (img === im && a.length === 8) seen.push({ sy: a[1], sh: a[3] });
+        return orig(img, ...a);
+      };
+      cameraX = 0;
+      try { draw(); } finally { ctx.drawImage = orig; }
+      out[scene] = {
+        top: box.y, solidTop: box.solidTop, bottom: box.y + box.h,
+        haze: box.solidTop - box.y,
+        tiles: seen.length,
+        allAtSolidTop: seen.length > 0 && seen.every(s => s.sy === box.solidTop)
+      };
+    }
+    worldOrder = savedOrder;
+    worldPos = savedPos;
+    loadWorld();
+    return out;
+  })()`);
+  // The measured row is authoritative per cap: autumn's approved painting is
+  // already opaque on its first row (haze 0), spring/savanna carry 15-17px of
+  // painted haze. The guard is that tiles start exactly at that measured row.
+  const stemSolidTopOk = stemSolidTop && ['spring', 'autumn', 'savanna'].every(scene => {
+    const r = stemSolidTop[scene];
+    return r && Number.isFinite(r.solidTop) && r.solidTop >= r.top && r.solidTop <= r.bottom &&
+      r.tiles > 0 && r.allAtSolidTop === true;
+  }) && Object.values(stemSolidTop).some(r => r.haze > 0);
+  check('task458: ground caps tile from their first solid row (painted haze above the surface is cropped)',
+    stemSolidTopOk === true, JSON.stringify(stemSolidTop || {}));
+
+  // Task 458 STEP 4 (+ follow-up): the water/lava pit interiors are painted strips. The
+  // real image from assets/ui/pits/ must cover every pit edge-to-edge at the pit rect,
+  // tiled at its own scale (no stretching), with the flat gradient still the fallback
+  // before decode.
+  const pitStrips = await h.evalp(`(async () => {
+    const savedOrder = worldOrder.slice();
+    const savedPos = worldPos;
+    const out = {};
+    setPaused(true);
+    for (const [scene, hazard] of [['spring', 'water'], ['autumn', 'spikes'], ['underground', 'lava']]) {
+      worldOrder = WORLDS.map((_, i) => i);
+      worldPos = WORLDS.findIndex(w => w.scene === scene);
+      loadWorld();
+      const im = pitStripCache['pit-' + hazard] || (pitStripPainted(hazard, 0, -9999, 1, 1), pitStripCache['pit-' + hazard]);
+      if (im && !im.complete) await new Promise(r => { im.onload = r; im.onerror = r; });
+      const grounds = theme.grounds.slice().sort((a, b) => a.x - b.x);
+      const pits = [];
+      for (let i = 0; i < grounds.length - 1; i++) {
+        const gx = grounds[i].x + grounds[i].w, gapEnd = grounds[i + 1].x;
+        if (gapEnd - gx >= 8) pits.push({ gx, gapEnd });
+      }
+      const seen = [];
+      const orig = ctx.drawImage.bind(ctx);
+      ctx.drawImage = function (img, ...a) {
+        if (img === im && a.length === 8) seen.push(a);
+        return orig(img, ...a);
+      };
+      cameraX = 0;
+      try { draw(); } finally { ctx.drawImage = orig; }
+      // per pit: the horizontal runs must start at gx, be contiguous and end at gapEnd,
+      // and every tile must keep the strip's own aspect (no stretch)
+      const depth = canvas.height - groundY;
+      const covered = pits.every(p => {
+        const runs = seen.filter(a => Math.abs(a[5] - groundY) < 0.6 && Math.abs(a[7] - depth) < 0.6 &&
+            a[4] >= p.gx - 0.6 && a[4] < p.gapEnd)
+          .map(a => [a[4], a[6]]).sort((x, y) => x[0] - y[0]);
+        if (!runs.length) return false;
+        let cursor = p.gx;
+        for (const [dx, dw] of runs) {
+          if (Math.abs(dx - cursor) > 0.6) return false;
+          cursor = dx + dw;
+        }
+        return Math.abs(cursor - p.gapEnd) < 0.6;
+      });
+      const aspectOk = seen.length > 0 && seen.every(a => {
+        const srcAspect = a[2] / a[3], dstAspect = a[6] / a[7];
+        return Math.abs(srcAspect - dstAspect) < 0.02;
+      });
+      out[hazard] = {
+        scene, src: im ? im.currentSrc || im.src : null, loaded: !!(im && im.naturalWidth > 0),
+        pits: pits.length, drawn: seen.length, covered, aspectOk,
+        size: im && im.naturalWidth ? im.naturalWidth + 'x' + im.naturalHeight : null
+      };
+    }
+    // Fallback: an undecoded strip must report "no paint" so the flat gradient branch runs.
+    const saved = pitStripCache['pit-water'];
+    pitStripCache['pit-water'] = { complete: false, naturalWidth: 0 };
+    out.fallback = pitStripPainted('water', 0, -9999, 1, 1);
+    pitStripCache['pit-water'] = saved;
+    worldOrder = savedOrder;
+    worldPos = savedPos;
+    loadWorld();
+    return out;
+  })()`);
+  const pitStripsOk = pitStrips && ['water', 'spikes', 'lava'].every(hazard => {
+    const r = pitStrips[hazard];
+    return r && r.loaded && r.pits > 0 && r.covered === true && r.aspectOk === true &&
+      /\/assets\/ui\/pits\/pit-/.test(r.src || '');
+  }) && pitStrips.fallback === false;
+  check('task458: every water/lava pit is covered edge-to-edge by its painted strip, tiled without stretching (flat fill remains the fallback)',
+    pitStripsOk === true, JSON.stringify(pitStrips || {}));
+
+  // Task 458 follow-up: guard the shipped strips themselves. The first crop left the
+  // painting's warm cream margin in the file, which showed as a stripe at the pit edge;
+  // these are the edge colours that caught it, read from the decoded images.
+  const stripEdges = await h.evalp(`(async () => {
+    const out = {};
+    for (const hazard of ['water', 'lava', 'spikes']) {
+      const im = pitStripCache['pit-' + hazard];
+      if (!im || !im.complete || !im.naturalWidth) { out[hazard] = null; continue; }
+      const c = document.createElement('canvas');
+      c.width = im.naturalWidth; c.height = im.naturalHeight;
+      const g = c.getContext('2d', { willReadFrequently: true });
+      g.drawImage(im, 0, 0);
+      const mean = (x) => {
+        const d = g.getImageData(x, 0, 1, c.height).data;
+        let r = 0, gg = 0, b = 0;
+        for (let i = 0; i < d.length; i += 4) { r += d[i]; gg += d[i + 1]; b += d[i + 2]; }
+        const n = d.length / 4;
+        return [r / n, gg / n, b / n];
+      };
+      out[hazard] = { w: c.width, h: c.height, left: mean(0), right: mean(c.width - 1) };
+    }
+    return out;
+  })()`);
+  const edgeOk = (r, kind) => {
+    if (!r || !r.left || !r.right) return false;
+     const aqua = ([l, g, b]) => g >= l - 14 && b >= l - 20 && !(l > b + 12);
+     const lava = ([l, g, b]) => l > g + 40 && l > b + 60;
+     const stone = ([l, g, b]) => (l + g + b) / 3 < 170;
+     const test = kind === 'lava' ? lava : kind === 'spikes' ? stone : aqua;
+     return test(r.left) && test(r.right);
+  };
+  const stripEdgesOk = stripEdges && stripEdges.water && stripEdges.lava && stripEdges.spikes &&
+     edgeOk(stripEdges.water, 'water') &&
+     edgeOk(stripEdges.lava, 'lava') &&
+     edgeOk(stripEdges.spikes, 'spikes') &&
+     ['water', 'lava', 'spikes'].every(h => {
+      const r = stripEdges[h];
+      return r && Math.abs(r.w / r.h - 4) < 0.25;
+    });
+  check('task458: pit strips are 4:1 and their edge columns are hazard paint, not paper margin',
+    stripEdgesOk === true, JSON.stringify(stripEdges || {}));
+
+   // Task 461: painted spike strip (dark field + painted spikes) is the body now, with the
+   // dark trench + crisp procedural triangles as the fallback while it loads. The strip must
+   // load, be dark overall, and the painted spikes must produce light pixels in the canvas.
+  const spikePixels = await h.evalp(`(async () => {
+    const savedOrder = worldOrder.slice();
+    const savedPos = worldPos;
+    setPaused(true);
+    worldOrder = WORLDS.map((_, i) => i);
+    worldPos = WORLDS.findIndex(w => w.scene === 'autumn');
+     loadWorld();
+     cameraX = 0;
+     const _spikeIm = pitStripCache['pit-spikes'];
+     if (_spikeIm && !_spikeIm.complete) await new Promise(r => { _spikeIm.onload = r; _spikeIm.onerror = r; });
+     draw();
+     const grounds = theme.grounds.slice().sort((a, b) => a.x - b.x);
+     const savedStrip = pitStripCache['pit-spikes'];
+     let out = { strip: !!(savedStrip && savedStrip.naturalWidth), light: 0, dark: null, pit: null };
+    for (let i = 0; i < grounds.length - 1; i++) {
+      const gx = grounds[i].x + grounds[i].w, gapEnd = grounds[i + 1].x;
+      if (gapEnd - gx < 8) continue;
+      const y0 = Math.max(0, Math.floor(groundY));
+      const h = canvas.height - y0;
+      const d = ctx.getImageData(Math.ceil(gx), y0, Math.max(1, Math.floor(gapEnd - gx)), h).data;
+      const w = Math.max(1, Math.floor(gapEnd - gx));
+       let light = 0;
+       for (let k = 0; k < d.length; k += 4) {
+         const lum = (0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2]) / 255;
+         if (lum > 0.72) light++;
+       }
+      // upper third of the trench: the body above the spike tips
+      let sum = 0, n = 0;
+      for (let y = 0; y < Math.floor(h / 3); y++) {
+        for (let x = 0; x < w; x++) {
+          const k = (y * w + x) * 4;
+          sum += (0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2]) / 255;
+          n++;
+        }
+      }
+      out = { strip: out.strip, light, dark: sum / Math.max(1, n), pit: { gx, gapEnd, h } };
+      break;
+    }
+    worldOrder = savedOrder;
+    worldPos = savedPos;
+    loadWorld();
+    return out;
+  })()`);
+   check('task461: spike pits use a painted strip with clearly visible spikes (dark field + painted spikes)',
+     !!(spikePixels && spikePixels.strip === true && spikePixels.light > 200 &&
+       typeof spikePixels.dark === 'number' && spikePixels.dark < 0.28),
+     JSON.stringify(spikePixels || {}));
+
+
 
   const staleCanvas = await h.evalp(`(async () => {
     loadWorld();

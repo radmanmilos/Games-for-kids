@@ -1,63 +1,64 @@
 # Project status
 
-**Last verified:** 2026-11-14  
+**Last verified:** 2026-11-17  
 **Repository:** radmanmilos/Games-for-kids  
-**Current branch:** `claude/explorer-review-followup-454` at `4e086d7` (merged into main via PR #27)  
-**Main HEAD:** `7cee8bd` (PR #27, task 456) version `3.0.10`
+**Current branch:** `claude/explorer-ui-kit`  
+**Main HEAD:** `bdcc3d7` (PR #28, task 458 STEP 0-2) version `3.0.16`  
+**Open PR:** #29 "Explorer paper UI kit, painted pits, ground-cap alignment" → `main` (not merged; waiting for the user's visual sign-off)  
+**Branch commits:** `2abe5a8` (task 458 STEP 3-5) + task 459 pit-rework + task 460 (spikes ship no art, intermediate) + task 461 (painted spike strip v4 integrated) on top
 
-## Uncommitted changes (working tree, not yet committed)
+## Task 459 — pit rework (this session, OpenCode/Big Pickle)
 
-- Explorer ground alignment: replaced `game/assets/art/terrain-{autumn,underground,cave}-top.webp` with painted top-caps (content top-aligned at y=0, no empty above, `tile_edge_check=OK`, gap=0) so the ground surface sits flush at `groundY` — same fix as Japan/Winter in task 456. `check_fast.js` 10/10 green; `kitty_smoke.js` 45/45, `art_smoke.js` 22/22 pass. docs/ mirrors game/ via sync-docs.sh. Awaiting commit.
+The user rejected the first pit strips: bird's-eye look, colours not matching the worlds, pit edges not meeting the ground tiles, and no visible spikes. Both causes fixed:
 
-## Repository and verification
+- **Crop** — the old crop only rejected near-white paper, so the painting's warm cream margin (223,210,185) shipped as a stripe at the pit edge. `tools/.cache/pit_crop2.js` now classifies by hue and **refuses to write** a strip whose edge columns are not hazard paint.
+- **Draw** — one strip was stretched across every 300–500 px pit. Strips are 4:1 (`800×200`) like a real pit and are tiled at native scale with src-rect draws, a neutral depth gradient and an 8–16 px bank shadow.
+- **Water** 9.0 KB (`pit-water-v3.png`, x10..1013 y128..378, hazard 1.00, edges 1.00/1.00, edge `#9dd2d6`).
+- **Spikes** 17.2 KB (dense stone band of `pit-spikes.png`) + bigger outlined triangles (46±10 px, `#eef3fa` face, 3 px `#14161c` outline, 8 px base) so 9–10 spikes are visible.
+- **Lava** 14.0 KB — **derived, not generated**: three Cloudflare attempts all framed the square with cream and the crop guard rejected each (v4 hazard 0.02, v5 core 112 px). `tools/.cache/pit_derive_lava.js` remaps the accepted water strip by luminance → molten ramp with a depth factor (crest `#ffd27f`, body `#c24d1e`→`#c6451a`).
 
-- PR #26, task 453 (Little Explorer render fixes), merged to main. CI green on 81b3339.
-- Task 456 work is on `claude/explorer-review-followup-454`, based on tip `892f34d`.
-- All 10 fast gate stages PASS after the final art swap + `sync-docs.sh` (syntax, registry/metadata, CI workflow, secrets, scan alerts, generated artifacts, offline inventory, docs budgets, art integrity, hub smoke).
-- Full battery before the art swap (`run_all.js`): ALL 37 TOOLS PASS, 1358 checks, 0 failures. After the swap, the diff-relevant smokes were re-run: `kitty_smoke.js` 45/45, `art_smoke.js` 22/22.
-- Review screenshots for the `explorer` page refreshed (`--review=Screenshot_Review --pages=explorer --task=456`), 4 viewports, no browser runtime errors.
+## Verification
 
-## Task tracking
+- `node tools/build_offline.js`: 499 cache entries / 498 manifest.
+- `bash tools/sync-docs.sh`: `docs/` mirrors `game/` (500 files); hashes of the changed JS/strips/manifest verified identical.
+- `node tools/check_fast.js`: 10/10 green.
+- `node tools/check_release.js`: fast gate PASS + full smoke battery PASS — "Release gate green. Nothing was written." (log `tools/.cache/task458-check_release2.log`).
+- `tools/kitty_smoke.js`: 0 FAIL. Three new guards (coverage as contiguous runs, aspect/no-stretch, strip edge colours, spike pixels) each proven to FAIL on mutated input; files restored from pre-mutation **copies** and hash-matched (`906f81cb001caa7e` JS, `5b0bccf88de11c4d` strip).
+- Review screenshots refreshed: `screenshot.js --review=Screenshot_Review --pages=explorer,fastcat --task=458` → 8 shots, no browser runtime errors.
+- CI run [44038945180](https://github.com/radmanmilos/Games-for-kids/actions/runs/44038945180) on `afcc354`: **success** (smoke matrix + Release QA + Pages).
+- Per-task evidence: `tools/.cache/task458-validation.md`.
 
-- Task 454 (Claude review follow-up: T1/T2/T3): DONE — archived.
-  - T1: flat-topped Japan/Winter ground caps were produced, then REVERTED in task 455: in game they were a near-white slab on a white scene and pink on pink; the interim painted art was back.
-  - T2: walker sprites cleaned of baked ground strips/white background; finished in task 455.
-  - T3: `tools/check_art.js` extended with unreferenced-art, sheet-label chips and stray-fragment checks; calibrated in task 455.
-- Task 455 (independent review of the 454 follow-up): DONE — archived. Reverted Japan/Winter flat caps; cleaned walker-crab/-meerkat/-ladybug/-bee; crab `WALKER_FOOT` 16 → 6; chip rule calibrated (w/h > 4.5 and h < 20% of 512); `kitty_smoke` crab foot check made data-driven.
-- Task 456 (Explorer review follow-up, this branch): DONE — archived (next task number 457).
-  - Gates first: `check_fast` 10/10; full `run_all` 37/37 tools, 1358 checks.
-  - Visual sign-off of all 11 worlds at 1024x800 (criteria A–G); moving-platform and walker criteria also proven numerically.
-  - Real painted ground caps for the two remaining worlds: Japan `terrain-japan-top` (seed 4561) and Winter `terrain-winter-explorer-top` (v4 slate body + v3 painted snow cap through a wavy feathered mask; four straight generations each failed one half of the brief). Both `tile_edge_check` OK and judged as ground in-game.
-  - `TERRAIN_STEMS` now points at real stems for all 11 worlds; interim `terrain-tile-16.webp` deleted (art gate: 0 failures).
-  - Sprite-float above the soft grass edge measured (spring 7.8 px, autumn 18.6 px, savanna 11.6 px at 140 px draw height) with the trim-to-first-solid-row fix proposed — reported only, not implemented.
-  - Evidence: `tools/.cache/task456-validation.md`, `tools/.cache/world_probe456_ground/`.
-- Version stays `3.0.10` (no bump in this task).
+## Visual QA
+
+- **This model (Big Pickle) cannot read images** — verdicts come from subagents on `opencode/nemotron-3.5-super-vl-free` or from the user. The user's sign-off is still required before merge.
+- Corrected close-ups (`tools/.cache/task458_pit_{water,spikes,lava}.png`): water **ACCEPT**, spikes **ACCEPT** (9–10 visible spikes), lava **ACCEPT** — all read as side-view pits with world-matching colours and clean edges.
+- Trap recorded in `project/lessons/testing-harness.md`: `update()` re-drives `cameraX` (`kitty-standalone.js:1407`), so review captures must pause the game before framing — the first capture set slid off the pit and produced phantom "cream stripe"/"vertical seam" verdicts against ground tiles.
+
+## Little Explorer — current state
+
+- Every child-visible surface (HUD, modals, hero tiles, worlds picker, action button) uses the shared paper kit; icons, arrows and letters stay crisp DOM/SVG.
+- Worlds picker: 11 paper cards with a 400×116 thumbnail of each world's own scene (0 generation neurons).
+- Ground: all 11 worlds use their own painted `terrain-*-top` tile; the soft-cap float is fixed by cropping to `solidTop`.
+- All four seasons share one `goal-house`.
+- Pits: painted strips, tiled at native scale, procedural animation and the flat fill fallback kept; hazard-to-world mapping and collision unchanged.
 
 ## Open tasks (from ACTIVE.md)
 
 - 435 (Gate 5 family rollout): NEW
 - 436 (Gate 6: 11-world regression): NEW
-- 437 (Little Explorer full review + screenshots): NEW — recommend CLOSE (done by tasks 455/456; keep only screenshot refresh)
+- 437 (Little Explorer full review + screenshots): NEW — recommend CLOSE
 - 438–443 (art reorganization): NEW — recommend DO NOT DO (per brief section 2b)
-- 444–449 (terrain/pipes/enemies/walkers/goals/collectibles): NEW — recommend RE-SCOPE (Japan/Winter terrain now done in 456; rest already done)
-- 450 (cut-out + QA): NEW — recommend KEEP (done as T3)
+- 444–449 (terrain/pipes/enemies/walkers/goals/collectibles): NEW — recommend RE-SCOPE (mostly done)
+- 450 (cut-out + QA): NEW — recommend KEEP
 - 451–452 (regenerate + full validation): NEW — recommend KEEP (closing steps)
 
-## Little Explorer — current state
+## Deferred (recorded in `project/DECISIONS.md`)
 
-- Ground: all 11 worlds use their own painted `terrain-*-top` tile. Japan `terrain-japan-top` and Winter `terrain-winter-explorer-top` are built by `tools/.cache/make_tile.py` ([centre strip | mirrored strip] on a 512x512 canvas with 8 px transparent side margins, top trimmed to the first visibly solid row).
-- Known follow-up: the soft top edge of spring/autumn/savanna still leaves a small float under the hero's feet (7.8 / 18.6 / 11.6 px at 140 px draw height) — fix proposed in task 456, not implemented.
-- Walkers: ladybug/bee/worm/meerkat/crab cleaned of baked ground and white background; `WALKER_FOOT` matches the sprite bounds (data-driven smoke check); snowman anchor 18 unchanged.
-- Art QA gate: `check_art.js` enforces unreferenced art, sheet-label chips, stray fragments, 512x512 cut-outs with transparent corners, and the calibrated alpha threshold.
-
-## Visual QA
-
-- **This model (Big Pickle) cannot read images** — every visual verdict in task 456 was produced by subagents on `opencode/nemotron-3.5-super-vl-free`, or by the user.
-- All 11 Explorer worlds captured programmatically (`tools/.cache/world_probe456*`); before/after ground contact sheet at `tools/.cache/world_probe456_ground/ground_before_after_sheet.png`.
-- Tile-boundary texture step in the rendered band: before winter 24.2 / japan 19.1 vs after winter 2.4 / japan 3.8 (median 4.4 / 6.6) — no hard repeat seam.
+- Converting the 11 background scenes to WebP (measured 2–8% of PNG size).
+- devicePixelRatio canvas scaling.
 
 ## Generation pipeline
 
 - Cloudflare credentials staged at `%TEMP%\opencode\cloudflare-creds.json` (never in repo).
-- Task 456 used 5 generations for the two caps (~575 of 10 000 daily neurons).
-- Candidates and rejected variants: `resources/General_reviews/Asset_Generation/assets_work_in_progress_bundle/little-explorer/` (git-ignored); old rejected flat caps in `resources/Little_Explorer_unused_art/rejected/`.
+- Task 458/459 pits: 9 runs total, 4 accepted (water v2, spikes v1, lava v3, water v3); ~344.8 neurons spent on the rework (1 029 cumulative of 10 000). Source PNGs stay in the git-ignored WIP bundle; production files are the cropped `800×200` WebP strips.
+- World thumbnails and the lava strip spent 0 neurons (downscale / deterministic derivation).
