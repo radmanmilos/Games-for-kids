@@ -1691,48 +1691,8 @@ function drawPitHazards() {
     }
 }
 
-// Explorer glyph art is 512x512 with transparent padding. Measure the visible subject once per
-// stem so tiles abut, pipes stand on the floor and nothing floats inside its own padding.
-const stemBoxCache = {};
-function stemBox(stem, im) {
-    if (stemBoxCache[stem]) return stemBoxCache[stem];
-    const full = { x: 0, y: 0, w: im.naturalWidth, h: im.naturalHeight || im.naturalWidth };
-    try {
-        const c = document.createElement('canvas');
-        c.width = full.w; c.height = full.h;
-        const g = c.getContext('2d', { willReadFrequently: true });
-        g.drawImage(im, 0, 0);
-        const d = g.getImageData(0, 0, c.width, c.height).data;
-        let x0 = c.width, y0 = c.height, x1 = -1, y1 = -1;
-        for (let y = 0; y < c.height; y++) {
-            for (let x = 0; x < c.width; x++) {
-                if (d[(y * c.width + x) * 4 + 3] > 24) {
-                    if (x < x0) x0 = x; if (x > x1) x1 = x;
-                    if (y < y0) y0 = y; if (y > y1) y1 = y;
-                }
-            }
-        }
-        // task 458: the painted caps carry a soft haze above the ground surface, so
-        // the alpha bbox top is not where the ground reads. The real top is the
-        // first row where at least half of the centre 60% is opaque; tiles start
-        // there so the surface sits flush instead of floating inside its own haze.
-        let solidTop = y0;
-        if (x1 >= 0) {
-            const spanX0 = Math.floor(x0 + (x1 - x0 + 1) * 0.2);
-            const spanX1 = Math.ceil(x0 + (x1 - x0 + 1) * 0.8);
-            const need = Math.max(1, Math.round((spanX1 - spanX0) * 0.5));
-            for (let y = y0; y <= y1; y++) {
-                let solid = 0;
-                for (let x = spanX0; x < spanX1; x++) if (d[(y * c.width + x) * 4 + 3] >= 128) solid++;
-                if (solid >= need) { solidTop = y; break; }
-            }
-        }
-        stemBoxCache[stem] = x1 < 0 ? full : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1, solidTop };
-    } catch (e) {
-        stemBoxCache[stem] = full; // e.g. tainted canvas: fall back to the padded canvas
-    }
-    return stemBoxCache[stem];
-}
+// Explorer glyph art is 512x512 with transparent padding. Measurement/tiling helpers
+// now live in game/shared/scene-tiles.js (window.stemBox / window.tileStem).
 
 // Ground cap art per world, and the themed spawner pipe per world (stems bypass the emoji registry).
 const TERRAIN_STEMS = {
@@ -1763,26 +1723,7 @@ const PIPE_STEMS = {
 };
 const MOVING_PLATFORM_STEM = 'platform-07'; // wooden bridge: reads as different from the ground
 
-// Tile a stem's visible subject across a rect: centre 60% (drops the rounded shoulders so repeats
-// read as continuous), true aspect ratio, top edge flush. Returns false until the art is loaded.
-function tileStem(stem, x, y, w, h) {
-    if (!stem || !window.Art || !window.Art.imageStem) return false;
-    const im = window.Art.imageStem(stem);
-    if (!im || !im.complete || im.naturalWidth <= 0) return false;
-    const box = stemBox(stem, im);
-    const cx = box.x + box.w * 0.2;
-    const cw = box.w * 0.6;
-    // task 458: crop the soft haze above the painted surface — the tile starts at
-    // the first solid row, so the ground's top edge lands exactly on y.
-    const sy = box.solidTop === undefined ? box.y : box.solidTop;
-    const sh = Math.max(1, box.h - (sy - box.y));
-    const tileW = Math.max(16, Math.round(h * cw / sh));
-    for (let tx = x; tx < x + w; tx += tileW) {
-        const tw = Math.min(tileW, x + w - tx);
-        ctx.drawImage(im, cx, sy, cw * (tw / tileW), sh, tx, y, tw, h);
-    }
-    return true;
-}
+// TERRAIN_STEMS / PIPE_STEMS / MOVING_PLATFORM_STEM defined above; tiling via window.tileStem.
 
 function draw() {
     const t = Date.now() / 1000;
@@ -1793,33 +1734,7 @@ function draw() {
     // Scene background (Little Explorer redesign) — tiled horizontally, sky area only.
     // Falls back to the original procedural sky for worlds without a scene asset.
     if (sceneImg && sceneImg.complete && sceneImg.naturalWidth > 0) {
-        // Scale the scene (keeping its aspect ratio) so it exactly covers the sky area
-        // [0, groundY]: no flat colour band on tall screens, no vertical squash on short ones.
-        const scale = groundY / sceneImg.naturalHeight;
-        const drawW = Math.ceil(sceneImg.naturalWidth * scale);
-        const firstTile = Math.floor(cameraX / drawW);
-        const below = canvas.height - groundY;
-        const nh = sceneImg.naturalHeight;
-        const nw = sceneImg.naturalWidth;
-        for (let i = firstTile; i * drawW < cameraX + canvas.width; i++) {
-            const sx = i * drawW;
-            ctx.save();
-            if (i % 2 !== 0) {
-                // Every second tile is mirrored, so the join is seamless by construction
-                // (the generated scenes are not edge-matched and showed a hard seam).
-                ctx.translate(sx + drawW, 0);
-                ctx.scale(-1, 1);
-            } else {
-                ctx.translate(sx, 0);
-            }
-            ctx.drawImage(sceneImg, 0, 0, drawW, groundY);
-            // The canvas is never cleared and the scene only covers [0, groundY]. Continue the scene's
-            // own bottom row down behind the ground, so the soft edges and seams of the ground tiles
-            // blend with the painting instead of the first fallback frame (sky blue / green hills),
-            // which used to stay underneath forever and show as blue/green fringe lines.
-            if (below > 0) ctx.drawImage(sceneImg, 0, nh - 2, nw, 2, 0, groundY, drawW, below);
-            ctx.restore();
-        }
+        window.drawSceneCover(ctx, sceneImg, cameraX, canvas, groundY);
     } else {
         // Sky Background
         ctx.fillStyle = theme.bgSky;
@@ -1859,7 +1774,7 @@ function draw() {
 
     // Draw Static Platforms (explorer stems bypass emoji registry to avoid cross-game collisions)
     platforms.forEach(p => {
-        if (!tileStem(TERRAIN_STEMS[theme.scene], p.x, p.y, p.width, p.height)) {
+        if (!window.tileStem(ctx, TERRAIN_STEMS[theme.scene], p.x, p.y, p.width, p.height)) {
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(p.x - 4, p.y - 4, p.width + 8, p.height + 8);
             ctx.fillStyle = p.color;
@@ -1870,7 +1785,7 @@ function draw() {
 
     // Draw Moving Platforms
     movingPlatforms.forEach(mp => {
-        if (!tileStem(MOVING_PLATFORM_STEM, mp.x, mp.y, mp.width, mp.height)) {
+        if (!window.tileStem(ctx, MOVING_PLATFORM_STEM, mp.x, mp.y, mp.width, mp.height)) {
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(mp.x - 4, mp.y - 4, mp.width + 8, mp.height + 8);
             ctx.fillStyle = mp.color;
@@ -1888,7 +1803,7 @@ function draw() {
             if (im && im.complete && im.naturalWidth > 0) {
                 // Fit the visible pipe to the hitbox height (top flush, standing on the floor),
                 // keeping its true aspect ratio and centring it on the hitbox.
-                const box = stemBox(pipeStem, im);
+                const box = window.stemBox(pipeStem, im);
                 const dh = pipe.height + 4;
                 const dw = Math.round(dh * box.w / box.h);
                 ctx.drawImage(im, box.x, box.y, box.w, box.h, pipe.x + pipe.width / 2 - dw / 2, pipe.y - 4, dw, dh);
@@ -2518,17 +2433,7 @@ function drawWalker(type) {
 // Goals rest on the ground. The art is a padded square, so work out where that square must be
 // drawn (through the shared Art.drawStem) for the *visible* subject to fit the goal rect,
 // bottom-aligned; the submarine hovers instead.
-function drawGoalArt(stem, c, hover) {
-    if (!window.Art || !window.Art.imageStem || !window.Art.drawStem) return false;
-    const im = window.Art.imageStem(stem);
-    if (!im || !im.complete || im.naturalWidth <= 0) return false;
-    const box = stemBox(stem, im);
-    const k = Math.min(c.width / box.w, c.height / box.h);
-    const side = Math.max(im.naturalWidth, im.naturalHeight || im.naturalWidth) * k;
-    const left = c.x + (c.width - box.w * k) / 2 - box.x * k;
-    const top = (hover ? c.y + (c.height - box.h * k) / 2 : c.y + c.height - box.h * k) - box.y * k;
-    return window.Art.drawStem(ctx, stem, left + side / 2, top + side / 2, side);
-}
+// drawGoalArt now lives in game/shared/scene-tiles.js (window.drawGoalArt).
 
 function drawGoal(type, c) {
     const GOAL_STEMS = {
@@ -2545,7 +2450,7 @@ function drawGoal(type, c) {
     // task 458: every 'house' goal draws the same approved painted goal-house, so
     // all four seasons read as one storybook; the procedural house below stays
     // only as the fallback while the art is still loading.
-    if (goalStem && drawGoalArt(goalStem, c, type === 'submarine')) return;
+    if (goalStem && window.drawGoalArt(ctx, goalStem, c, type === 'submarine')) return;
     if (type === 'house') {
         ctx.fillStyle = '#f8edeb';
         ctx.fillRect(c.x, c.y + 38, c.width, c.height - 38);

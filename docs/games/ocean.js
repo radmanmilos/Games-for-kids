@@ -73,8 +73,10 @@
     // Obstacles with vx/minX/maxX patrol back and forth (sharks).
     const LEVELS = [
         {
-            name: 'Корални гребен', collectible: '🐚', goal: 'finish', music: 'reef', decor: 'reef',
+            name: 'Корални гребен', collectible: '🐚', goal: 'finish', music: 'reef', decor: 'reef', scene: 'ocean-reef', seabed: 'reef',
             bgSky: '#3fbfd8', bgPage: '#3fbfd8', isNight: false, noClouds: true, noHills: true,
+            obstacleArt: { rock: 'ocean-rock', seaweed: 'ocean-seaweed' },
+            gateArt: 'ocean-gate',
             obstacles: [
                 { x: 700, dy: 210, w: 80, h: 70, type: 'jelly' },
                 { x: 1400, dy: 70, w: 90, h: 60, type: 'rock' },
@@ -93,7 +95,7 @@
             goalX: 6100, goalW: 240, goalDy: 70, goalH: 340
         },
         {
-            name: 'Тропска лагуна', collectible: '🦀', goal: 'finish', music: 'lagoon', decor: 'lagoon',
+            name: 'Тропска лагуна', collectible: '🦀', goal: 'finish', music: 'lagoon', decor: 'lagoon', scene: 'ocean-lagoon', seabed: 'lagoon',
             bgSky: '#2fb8e8', bgPage: '#2fb8e8', isNight: false, noClouds: true, noHills: true,
             obstacles: [
                 { x: 650, dy: 110, w: 56, h: 140, type: 'seaweed' },
@@ -110,10 +112,12 @@
                 { x: 1850, dy: 330 }, { x: 2350, dy: 180 }, { x: 2850, dy: 280 }, { x: 3250, dy: 110 },
                 { x: 3800, dy: 240 }, { x: 4250, dy: 320 }, { x: 4650, dy: 140 }, { x: 5150, dy: 260 }, { x: 5750, dy: 200 }
             ],
-            goalX: 6150, goalW: 240, goalDy: 70, goalH: 340
+            goalX: 6150, goalW: 240, goalDy: 70, goalH: 340,
+            obstacleArt: { seaweed: 'ocean-seaweed', jelly: 'ocean-jelly', crab: 'ocean-crab', puffer: 'ocean-puffer', rock: 'ocean-rock', shark: 'shark' },
+            gateArt: 'ocean-gate'
         },
         {
-            name: 'Морске траве', collectible: '🐙', goal: 'finish', music: 'seagrass', decor: 'seagrass',
+            name: 'Морске траве', collectible: '🐙', goal: 'finish', music: 'seagrass', decor: 'seagrass', scene: 'ocean-seagrass', seabed: 'seagrass',
             bgSky: '#2aa878', bgPage: '#2aa878', isNight: false, noClouds: true, noHills: true,
             obstacles: [
                 { x: 600, dy: 90, w: 56, h: 160, type: 'seaweed' },
@@ -132,10 +136,12 @@
                 { x: 1950, dy: 120 }, { x: 2600, dy: 280 }, { x: 3050, dy: 90 }, { x: 3450, dy: 320 },
                 { x: 4000, dy: 180 }, { x: 4400, dy: 300 }, { x: 5000, dy: 130 }, { x: 5550, dy: 250 }, { x: 5900, dy: 330 }
             ],
-            goalX: 6300, goalW: 240, goalDy: 70, goalH: 340
+            goalX: 6300, goalW: 240, goalDy: 70, goalH: 340,
+            obstacleArt: { seaweed: 'ocean-seaweed', jelly: 'ocean-jelly', crab: 'ocean-crab', puffer: 'ocean-puffer', rock: 'ocean-rock' },
+            gateArt: 'ocean-gate'
         },
         {
-            name: 'Каменита обала', collectible: '⭐', goal: 'finish', music: 'rocks', decor: 'rocks',
+            name: 'Каменита обала', collectible: '⭐', goal: 'finish', music: 'rocks', decor: 'rocks', scene: 'ocean-rocks', seabed: 'rocks',
             bgSky: '#5fbfa0', bgPage: '#5fbfa0', isNight: false, noClouds: true, noHills: true,
             obstacles: [
                 { x: 650, dy: 80, w: 90, h: 55, type: 'rock' },
@@ -153,10 +159,12 @@
                 { x: 2150, dy: 300 }, { x: 2550, dy: 110 }, { x: 3050, dy: 250 }, { x: 3650, dy: 320 },
                 { x: 4250, dy: 140 }, { x: 4650, dy: 270 }, { x: 5150, dy: 120 }, { x: 5750, dy: 230 }, { x: 6300, dy: 320 }
             ],
-            goalX: 6650, goalW: 240, goalDy: 70, goalH: 340
+            goalX: 6650, goalW: 240, goalDy: 70, goalH: 340,
+            obstacleArt: { rock: 'ocean-rock', mine: 'ocean-mine' },
+            gateArt: 'ocean-gate'
         },
         {
-            name: 'Потопљени брод', collectible: '⚓', goal: 'finish', music: 'ship', decor: 'ship',
+            name: 'Потопљени брод', collectible: '⚓', goal: 'finish', music: 'ship', decor: 'ship', scene: 'ocean-ship', seabed: 'ship',
             bgSky: '#2f7090', bgPage: '#2f7090', isNight: false, noClouds: true, noHills: true,
             obstacles: [
                 { x: 600, dy: 90, w: 70, h: 100, type: 'anchor' },
@@ -173,10 +181,12 @@
                 { x: 2100, dy: 300 }, { x: 2600, dy: 100 }, { x: 3000, dy: 250 }, { x: 3550, dy: 320 },
                 { x: 4250, dy: 150 }, { x: 4650, dy: 280 }, { x: 5300, dy: 120 }, { x: 5850, dy: 250 }, { x: 6200, dy: 330 }
             ],
-            goalX: 6500, goalW: 240, goalDy: 70, goalH: 340
+            goalX: 6500, goalW: 240, goalDy: 70, goalH: 340,
+            obstacleArt: { anchor: 'ocean-anchor', shark: 'shark', rock: 'ocean-rock', mine: 'ocean-mine' },
+            gateArt: 'ocean-gate'
         },
         {
-            name: 'Подводна пећина', collectible: '💎', goal: 'finish', music: 'cave', decor: 'cave',
+            name: 'Подводна пећина', collectible: '💎', goal: 'finish', music: 'cave', decor: 'cave', scene: 'ocean-cave', seabed: 'cave',
             bgSky: '#1f3a5a', bgPage: '#1f3a5a', isNight: false, noClouds: true, noHills: true,
             ceiling: true, ceilingColor: '#0e2238',
             obstacles: [
@@ -194,10 +204,12 @@
                 { x: 2150, dy: 300 }, { x: 2600, dy: 110 }, { x: 3050, dy: 240 }, { x: 3700, dy: 310 },
                 { x: 4250, dy: 140 }, { x: 4650, dy: 260 }, { x: 5200, dy: 120 }, { x: 5750, dy: 230 }, { x: 6200, dy: 300 }
             ],
-            goalX: 6500, goalW: 240, goalDy: 70, goalH: 340
+            goalX: 6500, goalW: 240, goalDy: 70, goalH: 340,
+            obstacleArt: { mine: 'ocean-mine', jelly: 'ocean-jelly', rock: 'ocean-rock', puffer: 'ocean-puffer' },
+            gateArt: 'ocean-gate'
         },
         {
-            name: 'Ледени океан', collectible: '🐋', goal: 'finish', music: 'arctic', decor: 'arctic',
+            name: 'Ледени океан', collectible: '🐋', goal: 'finish', music: 'arctic', decor: 'arctic', scene: 'ocean-arctic', seabed: 'arctic',
             bgSky: '#bfe8ff', bgPage: '#bfe8ff', isNight: false, noClouds: true, noHills: true,
             obstacles: [
                 { x: 650, dy: 80, w: 90, h: 55, type: 'rock', color: '#cfeaff' },
@@ -214,10 +226,12 @@
                 { x: 2000, dy: 300 }, { x: 2450, dy: 110 }, { x: 2950, dy: 250 }, { x: 3650, dy: 320 },
                 { x: 4250, dy: 150 }, { x: 4650, dy: 280 }, { x: 5250, dy: 120 }, { x: 5800, dy: 240 }, { x: 6300, dy: 320 }
             ],
-            goalX: 6600, goalW: 240, goalDy: 70, goalH: 340
+            goalX: 6600, goalW: 240, goalDy: 70, goalH: 340,
+            obstacleArt: { rock: 'ocean-rock', puffer: 'ocean-puffer', jelly: 'ocean-jelly', mine: 'ocean-mine' },
+            gateArt: 'ocean-gate'
         },
         {
-            name: 'Тамни ров', collectible: '🌟', goal: 'finish', music: 'trench', decor: 'trench',
+            name: 'Тамни ров', collectible: '🌟', goal: 'finish', music: 'trench', decor: 'trench', scene: 'ocean-trench', seabed: 'trench',
             bgSky: '#101a30', bgPage: '#101a30', isNight: true, noClouds: true, noHills: true,
             obstacles: [
                 { x: 600, dy: 260, w: 70, h: 70, type: 'mine' },
@@ -234,10 +248,12 @@
                 { x: 2150, dy: 320 }, { x: 2650, dy: 110 }, { x: 3100, dy: 250 }, { x: 3750, dy: 310 },
                 { x: 4300, dy: 150 }, { x: 4700, dy: 270 }, { x: 5250, dy: 130 }, { x: 5800, dy: 250 }, { x: 6300, dy: 320 }
             ],
-            goalX: 6600, goalW: 240, goalDy: 70, goalH: 340
+            goalX: 6600, goalW: 240, goalDy: 70, goalH: 340,
+            obstacleArt: { mine: 'ocean-mine', jelly: 'ocean-jelly', rock: 'ocean-rock' },
+            gateArt: 'ocean-gate'
         },
         {
-            name: 'Пиратско благо', collectible: '💰', goal: 'finish', music: 'treasure', decor: 'treasure',
+            name: 'Пиратско благо', collectible: '💰', goal: 'finish', music: 'treasure', decor: 'treasure', scene: 'ocean-treasure', seabed: 'treasure',
             bgSky: '#2fbfa0', bgPage: '#2fbfa0', isNight: false, noClouds: true, noHills: true,
             obstacles: [
                 { x: 650, dy: 70, w: 70, h: 50, type: 'crab' },
@@ -254,10 +270,12 @@
                 { x: 2050, dy: 300 }, { x: 2500, dy: 110 }, { x: 3000, dy: 250 }, { x: 3650, dy: 320 },
                 { x: 4250, dy: 140 }, { x: 4650, dy: 280 }, { x: 5200, dy: 120 }, { x: 5750, dy: 240 }, { x: 6300, dy: 330 }
             ],
-            goalX: 6600, goalW: 240, goalDy: 70, goalH: 340
+            goalX: 6600, goalW: 240, goalDy: 70, goalH: 340,
+            obstacleArt: { crab: 'ocean-crab', rock: 'ocean-rock', mine: 'ocean-mine', jelly: 'ocean-jelly' },
+            gateArt: 'ocean-gate'
         },
         {
-            name: 'Ноћни океан', collectible: '🌙', goal: 'finish', music: 'night', decor: 'night',
+            name: 'Ноћни океан', collectible: '🌙', goal: 'finish', music: 'night', decor: 'night', scene: 'ocean-night', seabed: 'night',
             bgSky: '#1a2a5a', bgPage: '#1a2a5a', isNight: true, noClouds: true, noHills: true,
             obstacles: [
                 { x: 650, dy: 220, w: 130, h: 70, type: 'shark', color: '#8fa1b5', vx: 2, minX: 500, maxX: 850 },
@@ -274,7 +292,9 @@
                 { x: 2150, dy: 300 }, { x: 2650, dy: 110 }, { x: 3150, dy: 250 }, { x: 3800, dy: 310 },
                 { x: 4350, dy: 150 }, { x: 4750, dy: 280 }, { x: 5300, dy: 120 }, { x: 5850, dy: 240 }, { x: 6300, dy: 320 }
             ],
-            goalX: 6600, goalW: 240, goalDy: 70, goalH: 340
+            goalX: 6600, goalW: 240, goalDy: 70, goalH: 340,
+            obstacleArt: { shark: 'shark', jelly: 'ocean-jelly', rock: 'ocean-rock', mine: 'ocean-mine' },
+            gateArt: 'ocean-gate'
         }
     ];
 

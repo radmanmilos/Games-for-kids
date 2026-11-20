@@ -373,6 +373,20 @@ function writeReviewToc({ review, generatedAt }) {
           await h.evalv('window.__visualAdvance(30)');
           await h.sleep(100);
         }
+
+        /* Ensure late-appended images (e.g. JS-loaded painted scenes) finish
+           loading before capture, so review shots show the painted scene not
+           the fallback flat colour. Waits are cheap when images are already
+           complete; only slow-scene games pay the load time. */
+        await h.waitFor(
+          `Array.from(document.images).every(image => image.complete)`,
+          { timeout: 15000, label: `${page} images settled before capture` },
+        );
+
+        /* Let one more render frame paint newly-loaded JS images (painted
+           scenes appended by the engine after boot) before capturing. */
+        await h.sleep(500);
+
         const target = path.join(outDir, file);
         let bytes;
         let image;

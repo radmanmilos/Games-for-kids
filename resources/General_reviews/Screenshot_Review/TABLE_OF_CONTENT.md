@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-17T13:20:06.254Z
+- Генерисано / Generated: 2026-11-20T14:29:31.934Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -108,10 +108,10 @@
 | `maze_phone-portrait.png` | Путања | `/pages/maze.html` | 390×844 | портрет | — | 05.11.2026. 21:02:59 | 380 |
 | `maze_tablet-landscape.png` | Путања | `/pages/maze.html` | 1180×820 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |
 | `maze_tablet-portrait.png` | Путања | `/pages/maze.html` | 820×1180 | портрет | — | 05.11.2026. 21:02:59 | 380 |
-| `ocean_phone-landscape.png` | Океан | `/pages/ocean.html` | 844×390 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |
-| `ocean_phone-portrait.png` | Океан | `/pages/ocean.html` | 390×844 | портрет | — | 05.11.2026. 21:02:59 | 380 |
-| `ocean_tablet-landscape.png` | Океан | `/pages/ocean.html` | 1180×820 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |
-| `ocean_tablet-portrait.png` | Океан | `/pages/ocean.html` | 820×1180 | портрет | — | 05.11.2026. 21:02:59 | 380 |
+| `ocean_phone-landscape.png` | Океан | `/pages/ocean.html` | 844×390 | пејзаж | — | 20.11.2026. 15:29:31 | 462 |
+| `ocean_phone-portrait.png` | Океан | `/pages/ocean.html` | 390×844 | портрет | — | 20.11.2026. 15:29:31 | 462 |
+| `ocean_tablet-landscape.png` | Океан | `/pages/ocean.html` | 1180×820 | пејзаж | — | 20.11.2026. 15:29:31 | 462 |
+| `ocean_tablet-portrait.png` | Океан | `/pages/ocean.html` | 820×1180 | портрет | — | 20.11.2026. 15:29:31 | 462 |
 | `parent_phone-landscape.png` | За родитеље | `/pages/parent.html` | 844×390 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |
 | `parent_phone-portrait.png` | За родитеље | `/pages/parent.html` | 390×844 | портрет | — | 05.11.2026. 21:02:59 | 380 |
 | `parent_tablet-landscape.png` | За родитеље | `/pages/parent.html` | 1180×820 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |

@@ -451,6 +451,38 @@
     "sha256": "d437815adefcd9b5864be2254323beef9d10478cb643af6c76c39d54cc26d3eb",
     "size": 45118
   },
+  "assets/art/ocean-anchor.webp": {
+    "sha256": "13c50c856e7ff6ab129a1b6a162d3acb50f6b7518fb10983e98e2ae2e5ce1c26",
+    "size": 12364
+  },
+  "assets/art/ocean-crab.webp": {
+    "sha256": "f5b301996169cc3ab3e10ca3c8d5067d34e7f47b8742b2466ae1b8e33741b00d",
+    "size": 10782
+  },
+  "assets/art/ocean-gate.webp": {
+    "sha256": "bce89eaaf299149f90d84d6d39adeb9f00d75f9586fa91a0360dffaa2fe2a0d7",
+    "size": 9434
+  },
+  "assets/art/ocean-jelly.webp": {
+    "sha256": "43e21e577196f4c7caae0caea9b10a60b6f1091645c3e819a5d4e7c1302d320f",
+    "size": 9084
+  },
+  "assets/art/ocean-mine.webp": {
+    "sha256": "a05dbdd0307b31b252a4ed2bacee863860028997f3ee24dd4ca93a4cc2d39696",
+    "size": 9192
+  },
+  "assets/art/ocean-puffer.webp": {
+    "sha256": "b040f222233b5608a45f1bb63c958c78d5a0688edc8c346460135b551e6bda1a",
+    "size": 12732
+  },
+  "assets/art/ocean-rock.webp": {
+    "sha256": "4b99205ea35a329249e1ba4a5f52eee6d6822411f81472e17dac73f8f5b6bf8e",
+    "size": 12820
+  },
+  "assets/art/ocean-seaweed.webp": {
+    "sha256": "1790b95ec27ef7e726e7103a990529b16acc32d79164224e24d40023d150a8cf",
+    "size": 10226
+  },
   "assets/art/orange.webp": {
     "sha256": "5b87cb756a5fc57e20d28e12019dbdca8be50c3c63b482fee7f86762d3bd474b",
     "size": 36878
@@ -1555,6 +1587,46 @@
     "sha256": "a143525e04d324acfd01d074523445b359e602c0fa3f17534ef9c4368cedcc0c",
     "size": 577362
   },
+  "assets/scenes/scene-ocean-arctic.webp": {
+    "sha256": "96e92d3165222384168ca90a975c05797731b46c9f4b646738e9e60009647006",
+    "size": 120310
+  },
+  "assets/scenes/scene-ocean-cave.webp": {
+    "sha256": "762e167104d2b8e9f02f9dc044b1a30303e57ebc45fde3a2208e10f8aede0b2b",
+    "size": 237374
+  },
+  "assets/scenes/scene-ocean-lagoon.webp": {
+    "sha256": "d0e4b7f9b9b61beb44eed7cf06cd6d9382e5bf59121560c53910b3ae540d2f23",
+    "size": 153302
+  },
+  "assets/scenes/scene-ocean-night.webp": {
+    "sha256": "26b70639bb57270090f65a578e20f555b94239a62186218e84f1aa65619a2015",
+    "size": 284940
+  },
+  "assets/scenes/scene-ocean-reef.webp": {
+    "sha256": "f9d51c2e6104b4be465c840f878d48dde00dff89db5b7d00f3ac7eb297023b3d",
+    "size": 255796
+  },
+  "assets/scenes/scene-ocean-rocks.webp": {
+    "sha256": "c455ab4efa9e8752b7c4e991e6d6fe47af7338c82b2fa790d97423ad7d4e35a5",
+    "size": 245900
+  },
+  "assets/scenes/scene-ocean-seagrass.webp": {
+    "sha256": "15c5e4e6dca82c664fd77763d0dcfcbac46de30df3cb74c1aaf01f3b64de581a",
+    "size": 286638
+  },
+  "assets/scenes/scene-ocean-ship.webp": {
+    "sha256": "52327ca7c762746f0c4be51f8d6dfdfac9bcb1c7a4d799289a0819c6dc44d95d",
+    "size": 251806
+  },
+  "assets/scenes/scene-ocean-treasure.webp": {
+    "sha256": "804ffdb18fc08cf29e724646ba089e8cc2c9412bdff24279742e75980861cb99",
+    "size": 229488
+  },
+  "assets/scenes/scene-ocean-trench.webp": {
+    "sha256": "c8e2ce4cdbd59d8a820df197f5a54c40f9e5f61f8167f8a4081d13b25c8b2c72",
+    "size": 184550
+  },
   "assets/scenes/scene-park.png": {
     "sha256": "562f34748b4b0f0031835c607eac8b682585a8139b86b57e2d32425289c27b08",
     "size": 2047270
@@ -1594,6 +1666,46 @@
   "assets/scenes/scene-winter.png": {
     "sha256": "82eec1a5e16138c19067edf0a778307fbc57fd42552977cf3df5e6d9f3f1d0e6",
     "size": 1651027
+  },
+  "assets/scenes/seabed-arctic.webp": {
+    "sha256": "e40fa15b6c87f0cee7a3e72d06b4ca83a05704b623e213bc12b3acf0e7c5fee4",
+    "size": 13360
+  },
+  "assets/scenes/seabed-cave.webp": {
+    "sha256": "6b7a1a11bfcc780eec2947fff850a2c04ec391311f6288f6940480483e30524f",
+    "size": 24856
+  },
+  "assets/scenes/seabed-lagoon.webp": {
+    "sha256": "cdee36386991fda8c8fc4ede4d9048597b37c630b6ad183eef52704235736dc6",
+    "size": 14570
+  },
+  "assets/scenes/seabed-night.webp": {
+    "sha256": "b8c7b6bd55bd1f244694c50ab7d5f05b02b4633b2a0a944be3c1dab6b69168ce",
+    "size": 27292
+  },
+  "assets/scenes/seabed-reef.webp": {
+    "sha256": "a5bee1501986564a02eec72d60686d848c624ccfcb659dbe4685d9e46cfdfdd2",
+    "size": 12076
+  },
+  "assets/scenes/seabed-rocks.webp": {
+    "sha256": "d62771ab0b26014be2f5da885b096864c271422ddbcd6f8103b9e371f8d141e1",
+    "size": 10444
+  },
+  "assets/scenes/seabed-seagrass.webp": {
+    "sha256": "a065946db465dab8da17ca139fb5d81edcef094b51b8b945d310bf9aabf7df08",
+    "size": 14088
+  },
+  "assets/scenes/seabed-ship.webp": {
+    "sha256": "73085460cd35f08955829d8c52592631cee6abc1a2637aff479f2117ad87efcf",
+    "size": 14428
+  },
+  "assets/scenes/seabed-treasure.webp": {
+    "sha256": "01eea0125a18be6e5c1e09e8d6fdff19f5883346fb07c85a6fa8cebe85b1d4f6",
+    "size": 16364
+  },
+  "assets/scenes/seabed-trench.webp": {
+    "sha256": "083e8ceeb66887a0c120a3e8c02f324716549fbb750c44f8329c3c38835b5c3f",
+    "size": 32890
   },
   "assets/scenes/sunrise.png": {
     "sha256": "cdfa19c2dfc53859e80a9b2a5f79be057d4c866bd9f8d33a3a20dfff100805a8",
@@ -1680,8 +1792,8 @@
     "size": 15812
   },
   "games/adventure.js": {
-    "sha256": "65776e75156313a7e70c110da7401cc2920f3091d8a7c8d3141980b7c1ae99e7",
-    "size": 59051
+    "sha256": "28c7d221f66e17e7111d3cf3d32ee5ad6e943eefe571ec0be346e888747c085f",
+    "size": 64018
   },
   "games/animal_counting.js": {
     "sha256": "67ad67f8edd689cb89ee5e2e99233318c375259a59fd7e93e1263602869267eb",
@@ -1736,16 +1848,16 @@
     "size": 5268
   },
   "games/kitty-standalone.js": {
-    "sha256": "733d660906bcd1018f194cf029192434affa7a09558d2acd8d9197ec85451092",
-    "size": 119483
+    "sha256": "7ec9713b94a288065dbd0934a400b96b53bec7cfad73e28c603e09d915bf9a2b",
+    "size": 114533
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
     "size": 11183
   },
   "games/ocean.js": {
-    "sha256": "fab2a6fc1b811886fd059142a12ef2b102898b15ce5fd638d6e48cb8d3abb0e2",
-    "size": 41378
+    "sha256": "6c004f4b2b88293e5729c0253e3419e30f986cec6413df861ddaa9692fcb9097",
+    "size": 43220
   },
   "games/phonics.js": {
     "sha256": "7b2f16bf0b370d1b32b663cc225e574815d16c4d87b228ba8c5cbf13e8fecb65",
@@ -1836,16 +1948,16 @@
     "size": 5099
   },
   "pages/dino.html": {
-    "sha256": "2065656eea8cde30f71b6e4a03cd9942b4defaa61039f9335278701d3aa45c11",
-    "size": 5086
+    "sha256": "b96f5d564496a2d469cd6bcc324bc0c9572d2d69c74a4328b584db74863e87f4",
+    "size": 5128
   },
   "pages/driving.html": {
-    "sha256": "c883a3ae502bbb730ac7ca50ff13acbe33d60ac406cfd4deea0860036f978b05",
-    "size": 4904
+    "sha256": "677d45f124ec7034c1cf4902fa34c475f08b88903647dc9c8147927315995053",
+    "size": 4932
   },
   "pages/explorer.html": {
-    "sha256": "86dcf87ab8965a6c592d791e70ec291046c0f02245f67a53522af9cb754fa11a",
-    "size": 11839
+    "sha256": "33381f16f836d4120f3ed475a3e57ecf112cf1388c32d90e1d69318ca3cf67c8",
+    "size": 11890
   },
   "pages/fastcat.html": {
     "sha256": "cbe8f2dfe0d90e95c6cf96cef6dfaebd97a9f01237ea705a66d150a6c0a4d01d",
@@ -1860,8 +1972,8 @@
     "size": 6506
   },
   "pages/ocean.html": {
-    "sha256": "4f4a9a3c37ffca771616247e61df7e6bc846dd0fb28ae74a9e64e3d787740c70",
-    "size": 5427
+    "sha256": "2e402206716fff54ee842b48331f897662ef662817c604f930a8d8769f905ef3",
+    "size": 5663
   },
   "pages/parent.html": {
     "sha256": "4d63303107ed6aeb210ca6a8fd58ccfadee34b6a3e935e7368b4bdc1a5cf59c0",
@@ -1896,8 +2008,8 @@
     "size": 6754
   },
   "pages/space.html": {
-    "sha256": "f5a3e3dcfa1ebb1b32a54b84717896c9508110fa3b3bd85b4aed41a6437def49",
-    "size": 5429
+    "sha256": "42573601dda604baf1cf419481630d05e051aadd97a651fdfc1f95dc4286de1b",
+    "size": 5485
   },
   "pages/spatial.html": {
     "sha256": "aeba3f7e307e669850b7fc96106ddf010df2eb759eb5c087cc6b638a44346c59",
@@ -1951,6 +2063,10 @@
     "sha256": "835eb27435d9f142d706ecb5fc09442faeeb5ccdfb7e3954783c881af583b235",
     "size": 8543
   },
+  "shared/scene-tiles.js": {
+    "sha256": "c070c85c14bb7eeaa8445cc5c4ca4f53502cbb077a27f9609fca6a164be3bf93",
+    "size": 4831
+  },
   "shared/speech.js": {
     "sha256": "2c40eee8e20449f9cbec2f0a77e08f6952a83e5e35eac2d9be9ae2dade24351c",
     "size": 6383
@@ -1984,8 +2100,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "f65c1697961a7b7a3e74161d4edf957d83f7faf95004700a212f17a6cd7b253d",
-    "size": 15968
+    "sha256": "21f2b260beee8ccdda0d419a4ac38532f75652748dd35226b71e827dad0cf8be",
+    "size": 17061
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",

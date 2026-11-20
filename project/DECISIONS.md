@@ -156,3 +156,12 @@ The following child-facing glyphs keep their emoji rendering by explicit decisio
 - **Ground-cap float fix = measure, don't re-art.** `solidTop` (first tile row with ≥50% of the centre 60% of columns at alpha ≥128) drives the `tileStem()` source crop, so painted haze above the cap is never drawn; goals and pipes still anchor to `box.y`. Approved art is untouched.
 - **Unified goal:** the Spring-only `goal-house` exception is removed; all four seasons draw `goal-house`.
 - **Deferred (per user):** converting the 11 background scenes to WebP (measured 2–8% of PNG size) and devicePixelRatio canvas scaling. Both are size/perf work, not visual fixes, and change no pixels today.
+
+## Ocean pilot decisions (2026-11-20, user)
+
+- Scene format: **WebP** (proven decode via 	ools/check_art.js ffmpeg check). Pilot scene scene-ocean-reef.webp (2048x592) generated and wired.
+- Decor: **separate parallax sprites** (not folded into scene). Engine config decorSprites reserved for later; decor still procedural until sprites land.
+- Control buttons: **unified to paper** (ps-btn--paper) across ocean/dino/space/driving.
+- Spike pits (Explorer): **switch to plain stone/ice spikes** � art swap deferred (needs generation + QA).
+- Shared helper extraction from kitty-standalone.js into game/shared/scene-tiles.js: **approved and done** (stemBox, tileStem, drawGoalArt, drawSceneCover). kitty_smoke 52/52 green.
+- Art reorg tasks 438-443: **retired for now** (revisit later).
