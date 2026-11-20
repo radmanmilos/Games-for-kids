@@ -175,6 +175,10 @@
     "sha256": "b6e70b32115ad74a1862d930d8c1195a0cadea0c6f9ce4724ca6c47332a8aee5",
     "size": 30896
   },
+  "assets/art/driving-car-side.webp": {
+    "sha256": "30275c582eeadb987c425c19dd597ae754a8829b6ed3b91e009ed2688e566f52",
+    "size": 14252
+  },
   "assets/art/drum.webp": {
     "sha256": "59167b3816641096fbea88a93d2ef025da8432a75b346470106c02afaec624d4",
     "size": 33720
@@ -1836,8 +1840,8 @@
     "size": 38114
   },
   "games/driving.js": {
-    "sha256": "64871dfd360bb88f83400e29682b66e338c5ab384db7c3f7414588ec52cad824",
-    "size": 17984
+    "sha256": "da7bf6c6175ab1fadb87304bc1146e18479fb454f7b770d9c2e16feaa6450891",
+    "size": 17926
   },
   "games/fastcat.js": {
     "sha256": "635e6b52c605841b3c52d41586a540f1b2a2054cdabaf2b6fbcc0773e8286532",
@@ -2100,8 +2104,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "21f2b260beee8ccdda0d419a4ac38532f75652748dd35226b71e827dad0cf8be",
-    "size": 17061
+    "sha256": "a9538a7a9776ee0ff037b0fe913b60446127d3dc35dcfbcf0f5230578bff6af1",
+    "size": 17099
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",
