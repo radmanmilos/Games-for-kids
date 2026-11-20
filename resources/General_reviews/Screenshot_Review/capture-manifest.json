@@ -2,16 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "fed864fae0244e71793d8cff30017bfd52865198",
+  "commitSha": "cce9364d5bceb033025692e74d3e0b82b0db7486",
   "browser": {
-    "product": "Chrome/157.0.8103.51",
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36",
+    "product": "Chrome/158.0.8127.36",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-17T13:20:06.254Z",
+  "generatedAt": "2026-11-20T14:29:31.934Z",
   "pageSet": [
-    "explorer",
-    "fastcat"
+    "ocean"
   ],
   "viewports": {
     "phone-portrait": {
@@ -41,76 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "explorer_phone-portrait.png",
-      "page": "explorer",
+      "file": "ocean_phone-portrait.png",
+      "page": "ocean",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 225094
+      "bytes": 441121
     },
     {
-      "file": "explorer_phone-landscape.png",
-      "page": "explorer",
+      "file": "ocean_phone-landscape.png",
+      "page": "ocean",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 261491
+      "bytes": 506220
     },
     {
-      "file": "explorer_tablet-portrait.png",
-      "page": "explorer",
+      "file": "ocean_tablet-portrait.png",
+      "page": "ocean",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 447391
+      "bytes": 1125215
     },
     {
-      "file": "explorer_tablet-landscape.png",
-      "page": "explorer",
+      "file": "ocean_tablet-landscape.png",
+      "page": "ocean",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 577752
-    },
-    {
-      "file": "fastcat_phone-portrait.png",
-      "page": "fastcat",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 51789
-    },
-    {
-      "file": "fastcat_phone-landscape.png",
-      "page": "fastcat",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 55734
-    },
-    {
-      "file": "fastcat_tablet-portrait.png",
-      "page": "fastcat",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 98520
-    },
-    {
-      "file": "fastcat_tablet-landscape.png",
-      "page": "fastcat",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 102521
+      "bytes": 1267647
     }
   ]
 }

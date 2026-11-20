@@ -1057,6 +1057,20 @@
         }
 
         function drawDecor(t) {
+            if (cfg.decorSprites && cfg.decorSprites.length) {
+                cfg.decorSprites.forEach(ds => {
+                    const im = window.Art && window.Art.imageStem ? window.Art.imageStem(ds.stem) : null;
+                    if (!im || !im.complete || !im.naturalWidth) return;
+                    const spacing = ds.spacing || 260;
+                    const factor = ds.factor || 0.4;
+                    const xs = bgXs(spacing, factor);
+                    const h = ds.h || Math.round(canvas.height * 0.18);
+                    const w = ds.w || Math.round(h * im.naturalWidth / im.naturalHeight);
+                    const y = (ds.y !== undefined) ? ds.y : (canvas.height - h - 40);
+                    xs.forEach(x => { ctx.drawImage(im, x, y, w, h); });
+                });
+                return;
+            }
             if (cfg.drawDecor) { cfg.drawDecor(ctx, t, cameraX, canvas, theme); return; }
             const baseY = roadTopY();
             switch (theme.decor) {
@@ -1087,7 +1101,47 @@
             ctx.save();
             ctx.translate(-cameraX, 0);
 
-            if (theme.isNight) {
+            // Painted scene background (config-driven). Tiles at true aspect ratio,
+            // mirrored every second tile for a seamless loop; covers the whole viewport height.
+            // When cfg.scene is set the flat bgSky fill (above) is just the clear; this overwrites it.
+            if ((theme && theme.scene) || cfg.scene) {
+                const __sceneStem = (theme && theme.scene) || cfg.scene;
+                if (!window.__advSceneCache) window.__advSceneCache = {};
+                let __sim = window.__advSceneCache[__sceneStem];
+                if (!__sim) { __sim = new Image(); __sim.src = '../assets/scenes/scene-' + __sceneStem + '.webp'; __sim.style.display = 'none'; __sim.style.width = '1px'; __sim.style.height = '1px'; document.body.appendChild(__sim); window.__advSceneCache[__sceneStem] = __sim; }
+                if (__sim.complete && __sim.naturalWidth > 0) {
+                    const __scale = canvas.height / __sim.naturalHeight;
+                    const __drawW = Math.ceil(__sim.naturalWidth * __scale);
+                    const __first = Math.floor(cameraX / __drawW);
+                    for (let __i = __first; __i * __drawW < cameraX + canvas.width; __i++) {
+                        const __sx = __i * __drawW;
+                        ctx.save();
+                        if (__i % 2 !== 0) { ctx.translate(__sx + __drawW, 0); ctx.scale(-1, 1); }
+                        else { ctx.translate(__sx, 0); }
+                        ctx.drawImage(__sim, 0, 0, __drawW, canvas.height);
+                        ctx.restore();
+                    }
+                }
+            }
+
+            // Painted seabed strip (config-driven): tiled at native scale along the bottom.
+            if ((theme && theme.seabed) || cfg.seabed) {
+                const __stem = (theme && theme.seabed) || cfg.seabed;
+                if (!window.__advSeabedCache) window.__advSeabedCache = {};
+                let __bim = window.__advSeabedCache[__stem];
+                if (!__bim) { __bim = new Image(); __bim.src = '../assets/scenes/seabed-' + __stem + '.webp'; __bim.style.display = 'none'; __bim.style.width = '1px'; __bim.style.height = '1px'; document.body.appendChild(__bim); window.__advSeabedCache[__stem] = __bim; }
+                if (__bim && __bim.complete && __bim.naturalWidth > 0) {
+                    const __bh = (theme && theme.seabedHeight) || cfg.seabedHeight || 72;
+                    const __bw = Math.max(16, Math.round(__bh * __bim.naturalWidth / __bim.naturalHeight));
+                    const __firstB = Math.floor(cameraX / __bw);
+                    for (let __i = __firstB; __i * __bw < cameraX + canvas.width; __i++) {
+                        const __sx = __i * __bw;
+                        ctx.drawImage(__bim, __sx, canvas.height - __bh, __bw, __bh);
+                    }
+                }
+            }
+
+            if (theme.isNight && !cfg.scene) {
                 ctx.fillStyle = '#ffffff';
                 for (let sx = 100; sx < 7000; sx += 400) {
                     ctx.fillRect(sx, 40, 4, 4);
@@ -1095,7 +1149,7 @@
                 }
             }
 
-            if (!theme.noHills) {
+            if (!theme.noHills && !((theme && theme.scene) || cfg.scene)) {
                 ctx.fillStyle = theme.hillColor;
                 for (let hx = 300; hx < 7200; hx += 800) {
                     ctx.beginPath();
@@ -1104,7 +1158,7 @@
                 }
             }
 
-            if (!theme.noClouds) {
+            if (!theme.noClouds && !((theme && theme.scene) || cfg.scene)) {
                 ctx.fillStyle = theme.isNight ? 'rgba(255, 255, 255, 0.3)' : '#ffffff';
                 for (let cx = 200; cx < 7200; cx += 550) {
                     ctx.beginPath();
@@ -1155,6 +1209,15 @@
                 });
             } else {
                 obstacles.forEach(o => {
+                    const __stem = (theme && theme.obstacleArt && theme.obstacleArt[o.type]) || (cfg.obstacleArt && cfg.obstacleArt[o.type]);
+                    if (__stem && window.Art && window.Art.drawStem) {
+                        ctx.save();
+                        ctx.translate(o.x + o.width / 2, o.y + o.height / 2);
+                        if (o.vx < 0) ctx.scale(-1, 1);
+                        const __ok = window.Art.drawStem(ctx, __stem, 0, 0, Math.max(o.width, o.height) * 1.15, '');
+                        ctx.restore();
+                        if (__ok) return;
+                    }
                     if (cfg.drawObstacle) { cfg.drawObstacle(ctx, o, theme); return; }
                     window.AdventureModes.drawObstacle(ctx, o.type, o);
                 });
@@ -1176,7 +1239,17 @@
                 }
             });
 
-            window.AdventureModes.drawGoalFinish(ctx, goal);
+            const __gateArt = (theme && theme.gateArt) || cfg.gateArt;
+            if (__gateArt && window.Art && window.Art.drawStem) {
+                const __gim = window.Art.imageStem(__gateArt);
+                if (__gim && __gim.complete && __gim.naturalWidth) {
+                    window.Art.drawStem(ctx, __gateArt, goal.x + goal.width / 2, goal.y + goal.height / 2, Math.max(goal.width, goal.height), '');
+                } else {
+                    window.AdventureModes.drawGoalFinish(ctx, goal);
+                }
+            } else {
+                window.AdventureModes.drawGoalFinish(ctx, goal);
+            }
 
             if (mode === 'drive') {
                 ctx.fillStyle = 'rgba(0,0,0,0.18)';

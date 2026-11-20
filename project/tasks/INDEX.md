@@ -430,3 +430,9 @@ One line per task: `number | status | date | title | archive file`. Every finish
 459 | DONE | 2026-11-17 | Pit rework after visual rejection. User rejected the first pit strips (bird's-eye pool, colours not matching… | tasks-400-499.md
 460 | DONE | 2026-11-17 | Spike pits ship no painted art (intermediate): deleted pit-spikes.webp, dark trench + crisp procedural… | tasks-400-499.md
 461 | DONE | 2026-11-17 | Painted spike strip (v4) integrated: game/assets/ui/pits/pit-spikes.webp (800×200, 24 KB, near-black field +… | tasks-400-499.md
+438 | RETIRED | - | Art reorganization Phase 1: create category folder structure under game/assets/art/… | tasks-400-499.md
+439 | RETIRED | - | Art reorganization Phase 1: move shared assets into category folders (~130 WebP: fruits, vegetables,… | tasks-400-499.md
+440 | RETIRED | - | Art reorganization Phase 1: move game-specific assets into game folders (cat-forest, driving, ocean, space,… | tasks-400-499.md
+441 | RETIRED | - | Art reorganization Phase 2: update art-registry.js with category subfolder paths | tasks-400-499.md
+442 | RETIRED | - | Art reorganization Phase 2: update kitty-standalone.js draw calls for new asset paths | tasks-400-499.md
+443 | RETIRED | - | Art reorganization Phase 2: update all other game JS files (animals, cat_forest, ocean, space, dino, driving,… | tasks-400-499.md
