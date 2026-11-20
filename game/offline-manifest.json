@@ -179,6 +179,34 @@
     "sha256": "30275c582eeadb987c425c19dd597ae754a8829b6ed3b91e009ed2688e566f52",
     "size": 14252
   },
+  "assets/art/driving-gate.webp": {
+    "sha256": "e4f1f44694804a4bc3c250b10088bc3ab0fd9f8c8d3f49133fd275749802f9af",
+    "size": 14792
+  },
+  "assets/art/driving-obstacle-barrier.webp": {
+    "sha256": "756a391a99c4852e52a3ea4862814cef1593c6f1f71493a5b0271a5c7ecabcb1",
+    "size": 6230
+  },
+  "assets/art/driving-obstacle-bus.webp": {
+    "sha256": "01a6e90bb35d831a1d65e995b6cca8cf2bd0e3b8dfe595808c14ca5cb4209469",
+    "size": 10406
+  },
+  "assets/art/driving-obstacle-car.webp": {
+    "sha256": "eaf3e445044eeae6440f363d6022685f9c283f158a611e56758e9010c67c4f04",
+    "size": 11966
+  },
+  "assets/art/driving-obstacle-cone.webp": {
+    "sha256": "4b7e147cc9c28a13b6217aec215a3f12f9f8f946e02238adf5df64b1b08fa9c6",
+    "size": 10528
+  },
+  "assets/art/driving-obstacle-rock.webp": {
+    "sha256": "f9c7ee1c3083ea61271b0279658dc9f659bc530b6d7230a955ecefdb544d8956",
+    "size": 13492
+  },
+  "assets/art/driving-obstacle-truck.webp": {
+    "sha256": "2968577e34ca5d9073c503b6b3e0afa447f95d7c25cc6c517f044364e09c9c98",
+    "size": 11680
+  },
   "assets/art/drum.webp": {
     "sha256": "59167b3816641096fbea88a93d2ef025da8432a75b346470106c02afaec624d4",
     "size": 33720
@@ -1567,6 +1595,46 @@
     "sha256": "b15da35e2a76bc4fdd5b46559e54b5f7f7c46ab45ef625479b07392e4d6ebc0b",
     "size": 1145032
   },
+  "assets/scenes/scene-driving-city.webp": {
+    "sha256": "792873f465c3be7af610140b0ff7c1c39cae21e32f35c659a00e764c434250e7",
+    "size": 146690
+  },
+  "assets/scenes/scene-driving-coast.webp": {
+    "sha256": "8625c52923337b77f97c79ceda64a63c8b6d69fbc4f72f693b5b9dc4c35fa030",
+    "size": 134090
+  },
+  "assets/scenes/scene-driving-cosmic.webp": {
+    "sha256": "682f5b60b5982c218eecbc299f4af945935a63abae7ac67f9fcb102975d9ce91",
+    "size": 249674
+  },
+  "assets/scenes/scene-driving-desert.webp": {
+    "sha256": "fc4398dc2b9b8c0dafb17b8d9c1b4787a58677e887b292307d7d73cb256056c5",
+    "size": 129014
+  },
+  "assets/scenes/scene-driving-field.webp": {
+    "sha256": "d1575e78059ce7bc4bdb15ce7ff880c6bbcec079cb4cb4724ccbb678f3d2bdb0",
+    "size": 109182
+  },
+  "assets/scenes/scene-driving-forest.webp": {
+    "sha256": "67f14ee3940e3ea2d966c2bdde075a1a253f3cb39dbe3b92d80e9492894f1e96",
+    "size": 204160
+  },
+  "assets/scenes/scene-driving-island.webp": {
+    "sha256": "67e0f1cd5e9cdefe1714561a648a023fec4fb7b5113661d41b8b64d1a2bb546f",
+    "size": 125558
+  },
+  "assets/scenes/scene-driving-mountain.webp": {
+    "sha256": "b574460b1bc08c6d365356d7b3264d3a8115593f80b459fa723a2f02727dce41",
+    "size": 120566
+  },
+  "assets/scenes/scene-driving-night.webp": {
+    "sha256": "d8064db793b00b128dff8794556db0f2a5941ec120873ebbf20d459a256e7387",
+    "size": 253492
+  },
+  "assets/scenes/scene-driving-winter.webp": {
+    "sha256": "dbd3cf0b26ab857fb920fb7c2a5db4bdb37d9946d2ea91053036d275a0effac2",
+    "size": 128628
+  },
   "assets/scenes/scene-egypt.png": {
     "sha256": "ea5fc361c6970c02bd24078fdd13ec613939582c3252b7803ab2aedb6ab6eb99",
     "size": 1047674
@@ -1840,8 +1908,8 @@
     "size": 38114
   },
   "games/driving.js": {
-    "sha256": "da7bf6c6175ab1fadb87304bc1146e18479fb454f7b770d9c2e16feaa6450891",
-    "size": 17926
+    "sha256": "e2b962bd8cb374abac183364a627009422604d2d22b1d291872b86028a1fa7fa",
+    "size": 20493
   },
   "games/fastcat.js": {
     "sha256": "635e6b52c605841b3c52d41586a540f1b2a2054cdabaf2b6fbcc0773e8286532",
@@ -2104,8 +2172,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "a9538a7a9776ee0ff037b0fe913b60446127d3dc35dcfbcf0f5230578bff6af1",
-    "size": 17099
+    "sha256": "bc8e2a67c62c5e531223ca86b634b48fa04a5eabda7983ffa88d023b679ee956",
+    "size": 17840
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",

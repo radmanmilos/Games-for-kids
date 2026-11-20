@@ -4,7 +4,7 @@ Moved verbatim from `README.md` (2026-10-13 refactor). Keep this file current wh
 
 Purpose:
 
-Drive a little car through ten different road worlds, dodging vehicles and road works.
+Drive a little car through ten different road worlds, dodging painted-storybook vehicles and road works. All 10 worlds use hand-painted scene backgrounds, obstacle glyphs, and gate art in the Little Play storybook style, replacing flat procedural backgrounds.
 
 Gameplay:
 

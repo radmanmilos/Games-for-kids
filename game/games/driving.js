@@ -74,7 +74,7 @@
     const LEVELS = [
         {
             name: 'Градски трг', collectible: '⭐', goal: 'finish', music: 'city',
-            bgSky: '#8fd3ff', bgPage: '#8fd3ff', roadColor: '#6f6f6f', grassColor: '#67c971',
+            scene: 'driving-city', obstacleArt: { cone: 'driving-obstacle-cone', car: 'driving-obstacle-car', barrier: 'driving-obstacle-barrier', truck: 'driving-obstacle-truck', bus: 'driving-obstacle-bus', rock: 'driving-obstacle-rock' }, gateArt: 'driving-gate', bgSky: '#8fd3ff', bgPage: '#8fd3ff', roadColor: '#6f6f6f', grassColor: '#67c971',
             hillColor: '#5aa76a', isNight: false, decor: 'city', noClouds: true, noHills: true,
             obstacles: [
                 { x: 700, dy: 80, w: 44, h: 40, type: 'cone' },
@@ -94,7 +94,7 @@
         },
         {
             name: 'Поље сунцокрета', collectible: '🍭', goal: 'finish', music: 'field',
-            bgSky: '#ffe066', bgPage: '#ffe066', roadColor: '#b0965a', grassColor: '#7bc74f',
+            scene: 'driving-field', obstacleArt: { cone: 'driving-obstacle-cone', car: 'driving-obstacle-car', barrier: 'driving-obstacle-barrier', truck: 'driving-obstacle-truck', bus: 'driving-obstacle-bus', rock: 'driving-obstacle-rock' }, gateArt: 'driving-gate', bgSky: '#ffe066', bgPage: '#ffe066', roadColor: '#b0965a', grassColor: '#7bc74f',
             hillColor: '#a0c860', isNight: false, decor: null, noClouds: false,
             obstacles: [
                 { x: 800, dy: 60, w: 60, h: 34, type: 'barrier' },
@@ -114,7 +114,7 @@
         },
         {
             name: 'Јесења шума', collectible: '🍂', goal: 'finish', music: 'forest',
-            bgSky: '#f0a860', bgPage: '#f0a860', roadColor: '#a08050', grassColor: '#b08838',
+            scene: 'driving-forest', obstacleArt: { cone: 'driving-obstacle-cone', car: 'driving-obstacle-car', barrier: 'driving-obstacle-barrier', truck: 'driving-obstacle-truck', bus: 'driving-obstacle-bus', rock: 'driving-obstacle-rock' }, gateArt: 'driving-gate', bgSky: '#f0a860', bgPage: '#f0a860', roadColor: '#a08050', grassColor: '#b08838',
             hillColor: '#c88040', isNight: false, decor: 'leaves', noClouds: false,
             obstacles: [
                 { x: 600, dy: 70, w: 44, h: 40, type: 'cone' },
@@ -134,7 +134,7 @@
         },
         {
             name: 'Зимски пут', collectible: '⛄', goal: 'finish', music: 'winter',
-            bgSky: '#cfe8ff', bgPage: '#cfe8ff', roadColor: '#e8f0f8', grassColor: '#dbe7f0',
+            scene: 'driving-winter', obstacleArt: { cone: 'driving-obstacle-cone', car: 'driving-obstacle-car', barrier: 'driving-obstacle-barrier', truck: 'driving-obstacle-truck', bus: 'driving-obstacle-bus', rock: 'driving-obstacle-rock' }, gateArt: 'driving-gate', bgSky: '#cfe8ff', bgPage: '#cfe8ff', roadColor: '#e8f0f8', grassColor: '#dbe7f0',
             hillColor: '#b8d0e8', isNight: false, decor: 'snow', noClouds: false,
             obstacles: [
                 { x: 700, dy: 55, w: 52, h: 42, type: 'car', color: '#e52521' },
@@ -154,7 +154,7 @@
         },
         {
             name: 'Планински пут', collectible: '🎿', goal: 'finish', music: 'mountain',
-            bgSky: '#bfd8ff', bgPage: '#bfd8ff', roadColor: '#8a8a8a', grassColor: '#9aa88a',
+            scene: 'driving-mountain', obstacleArt: { cone: 'driving-obstacle-cone', car: 'driving-obstacle-car', barrier: 'driving-obstacle-barrier', truck: 'driving-obstacle-truck', bus: 'driving-obstacle-bus', rock: 'driving-obstacle-rock' }, gateArt: 'driving-gate', bgSky: '#bfd8ff', bgPage: '#bfd8ff', roadColor: '#8a8a8a', grassColor: '#9aa88a',
             hillColor: '#8a98a8', isNight: false, decor: null, noClouds: true,
             obstacles: [
                 { x: 700, dy: 200, w: 60, h: 34, type: 'barrier' },
@@ -175,7 +175,7 @@
         },
         {
             name: 'Ноћни град', collectible: '🌙', goal: 'finish', music: 'night',
-            bgSky: '#1a1a3a', bgPage: '#1a1a3a', roadColor: '#4a4a5a', grassColor: '#2a3a2a',
+            scene: 'driving-night', obstacleArt: { cone: 'driving-obstacle-cone', car: 'driving-obstacle-car', barrier: 'driving-obstacle-barrier', truck: 'driving-obstacle-truck', bus: 'driving-obstacle-bus', rock: 'driving-obstacle-rock' }, gateArt: 'driving-gate', bgSky: '#1a1a3a', bgPage: '#1a1a3a', roadColor: '#4a4a5a', grassColor: '#2a3a2a',
             hillColor: '#23233f', isNight: true, decor: 'city', noClouds: true, noHills: true,
             obstacles: [
                 { x: 650, dy: 60, w: 52, h: 42, type: 'car', color: '#ff6f91' },
@@ -196,7 +196,7 @@
         },
         {
             name: 'Пустињска магистрала', collectible: '🌵', goal: 'finish', music: 'desert',
-            bgSky: '#f8d878', bgPage: '#f8d878', roadColor: '#e0c878', grassColor: '#e8c878',
+            scene: 'driving-desert', obstacleArt: { cone: 'driving-obstacle-cone', car: 'driving-obstacle-car', barrier: 'driving-obstacle-barrier', truck: 'driving-obstacle-truck', bus: 'driving-obstacle-bus', rock: 'driving-obstacle-rock' }, gateArt: 'driving-gate', bgSky: '#f8d878', bgPage: '#f8d878', roadColor: '#e0c878', grassColor: '#e8c878',
             hillColor: '#d0a860', isNight: false, decor: null, noClouds: false,
             obstacles: [
                 { x: 700, dy: 70, w: 60, h: 34, type: 'barrier' },
@@ -217,7 +217,7 @@
         },
         {
             name: 'Тропско острво', collectible: '🌴', goal: 'finish', music: 'island',
-            bgSky: '#a8e8ff', bgPage: '#a8e8ff', roadColor: '#d8a868', grassColor: '#7bc74f',
+            scene: 'driving-island', obstacleArt: { cone: 'driving-obstacle-cone', car: 'driving-obstacle-car', barrier: 'driving-obstacle-barrier', truck: 'driving-obstacle-truck', bus: 'driving-obstacle-bus', rock: 'driving-obstacle-rock' }, gateArt: 'driving-gate', bgSky: '#a8e8ff', bgPage: '#a8e8ff', roadColor: '#d8a868', grassColor: '#7bc74f',
             hillColor: '#5ab8a8', isNight: false, decor: 'palms', palmColor: '#2f9e44', noClouds: false,
             obstacles: [
                 { x: 650, dy: 60, w: 52, h: 42, type: 'car', color: '#ff6f91' },
@@ -238,7 +238,7 @@
         },
         {
             name: 'Морска обала', collectible: '🐚', goal: 'finish', music: 'coast',
-            bgSky: '#7fc8f8', bgPage: '#7fc8f8', roadColor: '#9ab0b8', grassColor: '#e8d8a0',
+            scene: 'driving-coast', obstacleArt: { cone: 'driving-obstacle-cone', car: 'driving-obstacle-car', barrier: 'driving-obstacle-barrier', truck: 'driving-obstacle-truck', bus: 'driving-obstacle-bus', rock: 'driving-obstacle-rock' }, gateArt: 'driving-gate', bgSky: '#7fc8f8', bgPage: '#7fc8f8', roadColor: '#9ab0b8', grassColor: '#e8d8a0',
             hillColor: '#6aa8d8', isNight: false, decor: 'gulls', noClouds: false,
             obstacles: [
                 { x: 700, dy: 60, w: 52, h: 42, type: 'car', color: '#e52521' },
@@ -259,7 +259,7 @@
         },
         {
             name: 'Космичка стаза', collectible: '🪐', goal: 'finish', music: 'cosmic',
-            bgSky: '#14142e', bgPage: '#14142e', roadColor: '#3a3a5a', grassColor: '#1a1a30',
+            scene: 'driving-cosmic', obstacleArt: { cone: 'driving-obstacle-cone', car: 'driving-obstacle-car', barrier: 'driving-obstacle-barrier', truck: 'driving-obstacle-truck', bus: 'driving-obstacle-bus', rock: 'driving-obstacle-rock' }, gateArt: 'driving-gate', bgSky: '#14142e', bgPage: '#14142e', roadColor: '#3a3a5a', grassColor: '#1a1a30',
             hillColor: '#232340', isNight: true, decor: 'stars', noClouds: true, noHills: true,
             obstacles: [
                 { x: 650, dy: 200, w: 60, h: 34, type: 'barrier' },
