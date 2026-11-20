@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "cce9364d5bceb033025692e74d3e0b82b0db7486",
+  "commitSha": "d4c604b0ab697f2d3a128cb7124284c90fc6cf58",
   "browser": {
     "product": "Chrome/158.0.8127.36",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-20T14:29:31.934Z",
+  "generatedAt": "2026-11-20T18:41:17.076Z",
   "pageSet": [
-    "ocean"
+    "driving"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,40 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "ocean_phone-portrait.png",
-      "page": "ocean",
+      "file": "driving_phone-portrait.png",
+      "page": "driving",
       "size": "phone-portrait",
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 441121
+      "bytes": 338711
     },
     {
-      "file": "ocean_phone-landscape.png",
-      "page": "ocean",
+      "file": "driving_phone-landscape.png",
+      "page": "driving",
       "size": "phone-landscape",
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 506220
+      "bytes": 435088
     },
     {
-      "file": "ocean_tablet-portrait.png",
-      "page": "ocean",
+      "file": "driving_tablet-portrait.png",
+      "page": "driving",
       "size": "tablet-portrait",
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 1125215
+      "bytes": 812379
     },
     {
-      "file": "ocean_tablet-landscape.png",
-      "page": "ocean",
+      "file": "driving_tablet-landscape.png",
+      "page": "driving",
       "size": "tablet-landscape",
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 1267647
+      "bytes": 927242
     }
   ]
 }
