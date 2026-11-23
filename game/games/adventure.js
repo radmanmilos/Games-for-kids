@@ -1231,15 +1231,16 @@
             ctx.translate(-cameraX, 0);
 
             // Painted scene background (config-driven). Tiles at true aspect ratio,
-            // mirrored every second tile for a seamless loop; covers the whole viewport height.
-            // When cfg.scene is set the flat bgSky fill (above) is just the clear; this overwrites it.
+            // mirrored every second tile for a seamless loop.
+            // In drive mode the scene only covers the sky above the road strip;
+            // in other modes (ocean, adventure) it fills the full canvas.
             if ((theme && theme.scene) || cfg.scene) {
                 const __sceneStem = (theme && theme.scene) || cfg.scene;
                 if (!window.__advSceneCache) window.__advSceneCache = {};
                 let __sim = window.__advSceneCache[__sceneStem];
                 if (!__sim) { __sim = new Image(); __sim.src = '../assets/scenes/scene-' + __sceneStem + '.webp'; __sim.style.display = 'none'; __sim.style.width = '1px'; __sim.style.height = '1px'; document.body.appendChild(__sim); window.__advSceneCache[__sceneStem] = __sim; }
                 if (__sim.complete && __sim.naturalWidth > 0) {
-                    const __skyH = Math.max(1, roadTopY());
+                    const __skyH = mode === 'drive' ? Math.max(1, roadTopY()) : canvas.height;
                     const __scale = __skyH / __sim.naturalHeight;
                     const __drawW = Math.ceil(__sim.naturalWidth * __scale);
                     const __first = Math.floor(cameraX / __drawW);

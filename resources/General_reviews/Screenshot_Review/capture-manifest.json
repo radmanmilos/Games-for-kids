@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "9e2b8fb5532ff9144ee0bf6090f5be827c1885ae",
+  "commitSha": "a9360af5d01e53a1892bda00239f9ccc46d4bd92",
   "browser": {
     "product": "Chrome/158.0.8127.36",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-23T12:14:20.165Z",
+  "generatedAt": "2026-11-23T16:32:57.717Z",
   "pageSet": [
-    "driving"
+    "ocean"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,48 +40,40 @@
   },
   "screenshots": [
     {
-      "file": "driving__phone-portrait__WORLD_1.png",
-      "page": "driving",
+      "file": "ocean_phone-portrait.png",
+      "page": "ocean",
       "size": "phone-portrait",
-      "state": [
-        "WORLD_1"
-      ],
+      "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 282851
+      "bytes": 442686
     },
     {
-      "file": "driving__phone-landscape__WORLD_1.png",
-      "page": "driving",
+      "file": "ocean_phone-landscape.png",
+      "page": "ocean",
       "size": "phone-landscape",
-      "state": [
-        "WORLD_1"
-      ],
+      "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 305906
+      "bytes": 516898
     },
     {
-      "file": "driving__tablet-portrait__WORLD_1.png",
-      "page": "driving",
+      "file": "ocean_tablet-portrait.png",
+      "page": "ocean",
       "size": "tablet-portrait",
-      "state": [
-        "WORLD_1"
-      ],
+      "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 661790
+      "bytes": 1127396
     },
     {
-      "file": "driving__tablet-landscape__WORLD_1.png",
-      "page": "driving",
+      "file": "ocean_tablet-landscape.png",
+      "page": "ocean",
       "size": "tablet-landscape",
-      "state": [
-        "WORLD_1"
-      ],
+      "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 676725
+      "bytes": 1266311
     }
   ]
 }

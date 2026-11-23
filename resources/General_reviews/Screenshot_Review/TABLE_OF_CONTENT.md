@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-23T12:14:20.165Z
+- Генерисано / Generated: 2026-11-23T16:32:57.717Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -76,7 +76,7 @@
 | `dino_phone-portrait.png` | Дино | `/pages/dino.html` | 390×844 | портрет | — | 05.11.2026. 21:02:59 | 380 |
 | `dino_tablet-landscape.png` | Дино | `/pages/dino.html` | 1180×820 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |
 | `dino_tablet-portrait.png` | Дино | `/pages/dino.html` | 820×1180 | портрет | — | 05.11.2026. 21:02:59 | 380 |
-| `driving__phone-landscape__WORLD_1.png` | Возила | `/pages/driving.html` | 844×390 | пејзаж | WORLD_1 | 23.11.2026. 13:14:20 | 453 |
+| `driving__phone-landscape__WORLD_1.png` | Возила | `/pages/driving.html` | 844×390 | пејзаж | WORLD_1 | 23.11.2026. 17:32:41 | 453 |
 | `driving__phone-landscape__WORLD_2.png` | Возила | `/pages/driving.html` | 844×390 | пејзаж | WORLD_2 | 23.11.2026. 13:08:10 | 453 |
 | `driving__phone-landscape__WORLD_3.png` | Возила | `/pages/driving.html` | 844×390 | пејзаж | WORLD_3 | 23.11.2026. 13:08:16 | 453 |
 | `driving__phone-landscape__WORLD_4.png` | Возила | `/pages/driving.html` | 844×390 | пејзаж | WORLD_4 | 23.11.2026. 13:08:23 | 453 |
@@ -85,7 +85,7 @@
 | `driving__phone-landscape__WORLD_7.png` | Возила | `/pages/driving.html` | 844×390 | пејзаж | WORLD_7 | 23.11.2026. 13:08:47 | 453 |
 | `driving__phone-landscape__WORLD_8.png` | Возила | `/pages/driving.html` | 844×390 | пејзаж | WORLD_8 | 23.11.2026. 13:08:53 | 453 |
 | `driving__phone-landscape__WORLD_9.png` | Возила | `/pages/driving.html` | 844×390 | пејзаж | WORLD_9 | 23.11.2026. 13:08:59 | 453 |
-| `driving__phone-portrait__WORLD_1.png` | Возила | `/pages/driving.html` | 390×844 | портрет | WORLD_1 | 23.11.2026. 13:14:20 | 453 |
+| `driving__phone-portrait__WORLD_1.png` | Возила | `/pages/driving.html` | 390×844 | портрет | WORLD_1 | 23.11.2026. 17:32:41 | 453 |
 | `driving__phone-portrait__WORLD_2.png` | Возила | `/pages/driving.html` | 390×844 | портрет | WORLD_2 | 23.11.2026. 13:08:10 | 453 |
 | `driving__phone-portrait__WORLD_3.png` | Возила | `/pages/driving.html` | 390×844 | портрет | WORLD_3 | 23.11.2026. 13:08:16 | 453 |
 | `driving__phone-portrait__WORLD_4.png` | Возила | `/pages/driving.html` | 390×844 | портрет | WORLD_4 | 23.11.2026. 13:08:23 | 453 |
@@ -94,7 +94,7 @@
 | `driving__phone-portrait__WORLD_7.png` | Возила | `/pages/driving.html` | 390×844 | портрет | WORLD_7 | 23.11.2026. 13:08:47 | 453 |
 | `driving__phone-portrait__WORLD_8.png` | Возила | `/pages/driving.html` | 390×844 | портрет | WORLD_8 | 23.11.2026. 13:08:53 | 453 |
 | `driving__phone-portrait__WORLD_9.png` | Возила | `/pages/driving.html` | 390×844 | портрет | WORLD_9 | 23.11.2026. 13:08:59 | 453 |
-| `driving__tablet-landscape__WORLD_1.png` | Возила | `/pages/driving.html` | 1180×820 | пејзаж | WORLD_1 | 23.11.2026. 13:14:20 | 453 |
+| `driving__tablet-landscape__WORLD_1.png` | Возила | `/pages/driving.html` | 1180×820 | пејзаж | WORLD_1 | 23.11.2026. 17:32:41 | 453 |
 | `driving__tablet-landscape__WORLD_2.png` | Возила | `/pages/driving.html` | 1180×820 | пејзаж | WORLD_2 | 23.11.2026. 13:08:10 | 453 |
 | `driving__tablet-landscape__WORLD_3.png` | Возила | `/pages/driving.html` | 1180×820 | пејзаж | WORLD_3 | 23.11.2026. 13:08:16 | 453 |
 | `driving__tablet-landscape__WORLD_4.png` | Возила | `/pages/driving.html` | 1180×820 | пејзаж | WORLD_4 | 23.11.2026. 13:08:23 | 453 |
@@ -103,7 +103,7 @@
 | `driving__tablet-landscape__WORLD_7.png` | Возила | `/pages/driving.html` | 1180×820 | пејзаж | WORLD_7 | 23.11.2026. 13:08:47 | 453 |
 | `driving__tablet-landscape__WORLD_8.png` | Возила | `/pages/driving.html` | 1180×820 | пејзаж | WORLD_8 | 23.11.2026. 13:08:53 | 453 |
 | `driving__tablet-landscape__WORLD_9.png` | Возила | `/pages/driving.html` | 1180×820 | пејзаж | WORLD_9 | 23.11.2026. 13:08:59 | 453 |
-| `driving__tablet-portrait__WORLD_1.png` | Возила | `/pages/driving.html` | 820×1180 | портрет | WORLD_1 | 23.11.2026. 13:14:20 | 453 |
+| `driving__tablet-portrait__WORLD_1.png` | Возила | `/pages/driving.html` | 820×1180 | портрет | WORLD_1 | 23.11.2026. 17:32:41 | 453 |
 | `driving__tablet-portrait__WORLD_2.png` | Возила | `/pages/driving.html` | 820×1180 | портрет | WORLD_2 | 23.11.2026. 13:08:10 | 453 |
 | `driving__tablet-portrait__WORLD_3.png` | Возила | `/pages/driving.html` | 820×1180 | портрет | WORLD_3 | 23.11.2026. 13:08:16 | 453 |
 | `driving__tablet-portrait__WORLD_4.png` | Возила | `/pages/driving.html` | 820×1180 | портрет | WORLD_4 | 23.11.2026. 13:08:23 | 453 |
@@ -144,10 +144,10 @@
 | `maze_phone-portrait.png` | Путања | `/pages/maze.html` | 390×844 | портрет | — | 05.11.2026. 21:02:59 | 380 |
 | `maze_tablet-landscape.png` | Путања | `/pages/maze.html` | 1180×820 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |
 | `maze_tablet-portrait.png` | Путања | `/pages/maze.html` | 820×1180 | портрет | — | 05.11.2026. 21:02:59 | 380 |
-| `ocean_phone-landscape.png` | Океан | `/pages/ocean.html` | 844×390 | пејзаж | — | 23.11.2026. 07:18:33 | 462 |
-| `ocean_phone-portrait.png` | Океан | `/pages/ocean.html` | 390×844 | портрет | — | 23.11.2026. 07:18:33 | 462 |
-| `ocean_tablet-landscape.png` | Океан | `/pages/ocean.html` | 1180×820 | пејзаж | — | 23.11.2026. 07:18:33 | 462 |
-| `ocean_tablet-portrait.png` | Океан | `/pages/ocean.html` | 820×1180 | портрет | — | 23.11.2026. 07:18:33 | 462 |
+| `ocean_phone-landscape.png` | Океан | `/pages/ocean.html` | 844×390 | пејзаж | — | 23.11.2026. 17:32:57 | 453 |
+| `ocean_phone-portrait.png` | Океан | `/pages/ocean.html` | 390×844 | портрет | — | 23.11.2026. 17:32:57 | 453 |
+| `ocean_tablet-landscape.png` | Океан | `/pages/ocean.html` | 1180×820 | пејзаж | — | 23.11.2026. 17:32:57 | 453 |
+| `ocean_tablet-portrait.png` | Океан | `/pages/ocean.html` | 820×1180 | портрет | — | 23.11.2026. 17:32:57 | 453 |
 | `parent_phone-landscape.png` | За родитеље | `/pages/parent.html` | 844×390 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |
 | `parent_phone-portrait.png` | За родитеље | `/pages/parent.html` | 390×844 | портрет | — | 05.11.2026. 21:02:59 | 380 |
 | `parent_tablet-landscape.png` | За родитеље | `/pages/parent.html` | 1180×820 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |
