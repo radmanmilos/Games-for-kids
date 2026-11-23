@@ -127,13 +127,18 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('coin pickup: count +1, HUD updated', coj.count === coj.before + 1 && coj.collected === true && coj.hud === String(coj.before + 1), coin);
 
   await sleep(1100);
-  const hit = await h.evalv(`(() => {
+const hit = await h.evalv(`(() => {
     const a = window.__adv;
     a.loadWorld();
     const o = a.obstacles[0];
     const beforeBumps = a.bumpCount;
-    o.x = a.player.x + 20;
+    // Position the obstacle so its left edge is 5px inside the hero's left edge,
+    // guaranteeing overlap given the hero is now ~186px wide (was 280px).
+    o.x = Math.max(0, a.player.x - 5);
     o.y = a.player.y;
+    o.vx = 0;
+    // The engine's update() runs collision detection; with the obstacle placed
+    // this far inside the hero, a bump should register.
     a.update();
     return JSON.stringify({ bumped: a.bumpCount > beforeBumps, after: a.cameraX, completed: a.levelCompleted });
   })()`);

@@ -288,12 +288,14 @@
             mode: 'drive',
             hero: '🚗',
             heroImage: '../assets/art/driving-car-side.webp',
-            heroW: 280,
-            heroH: 280,
+            // heroW/heroH were previously used as fixed display sizes, but Phase 2A
+            // now sizes the hero from the sprite's visible alpha bounds via stemBox.
+            // Remove fixed dimensions so initHeroBox sets size from the asset's
+            // non-transparent content.
             offsetStartRatio: 0.16,
             speed: 4.2,
             driveSpeed: 3.2,
-            obstacleScale: 2.7,
+            obstacleScale: 2.0,
             pickupFontSize: 72,
             levels: LEVELS,
             music: MUSIC

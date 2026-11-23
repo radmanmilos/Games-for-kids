@@ -176,8 +176,8 @@
     "size": 30896
   },
   "assets/art/driving-car-side.webp": {
-    "sha256": "30275c582eeadb987c425c19dd597ae754a8829b6ed3b91e009ed2688e566f52",
-    "size": 14252
+    "sha256": "8ca8b76ec5efeb42afcaad88adc420f069e279f0b0a368630d226108003517c2",
+    "size": 12844
   },
   "assets/art/driving-gate.webp": {
     "sha256": "e4f1f44694804a4bc3c250b10088bc3ab0fd9f8c8d3f49133fd275749802f9af",
@@ -1904,8 +1904,8 @@
     "size": 15812
   },
   "games/adventure.js": {
-    "sha256": "fcac84570cd13d511777479c5c666cc30c07f2386fcf8d50447198556734e581",
-    "size": 75382
+    "sha256": "c6706237f786617f79b39487650dd31999bdf0de43e48153c1f796ac50fac025",
+    "size": 75946
   },
   "games/animal_counting.js": {
     "sha256": "67ad67f8edd689cb89ee5e2e99233318c375259a59fd7e93e1263602869267eb",
@@ -1948,8 +1948,8 @@
     "size": 38114
   },
   "games/driving.js": {
-    "sha256": "a0560a28b53b0ba201524e91e5f0f936d3e262940f8db84bbe95187aef3dd7e9",
-    "size": 20678
+    "sha256": "30fa4b83353950e070294219dd020e426d773dccd9779758a8ef6da9348134d9",
+    "size": 20922
   },
   "games/fastcat.js": {
     "sha256": "635e6b52c605841b3c52d41586a540f1b2a2054cdabaf2b6fbcc0773e8286532",
@@ -2024,7 +2024,7 @@
     "size": 19388
   },
   "manifest.json": {
-    "sha256": "8163ad604fd54ed70e781e7809fedb34702c167fadc6f88205a34ee25f82f079",
+    "sha256": "1db430d8be78148e1e8d85609b8aa835a61206a017b93d699ed9a61036ec6976",
     "size": 578
   },
   "pages/animal_counting.html": {
@@ -2064,8 +2064,8 @@
     "size": 5128
   },
   "pages/driving.html": {
-    "sha256": "677d45f124ec7034c1cf4902fa34c475f08b88903647dc9c8147927315995053",
-    "size": 4932
+    "sha256": "ceccc8a392eea7f11e77e64a59a40a579adfc520b828ded3ec7a5cdc6f18eec2",
+    "size": 4981
   },
   "pages/explorer.html": {
     "sha256": "33381f16f836d4120f3ed475a3e57ecf112cf1388c32d90e1d69318ca3cf67c8",

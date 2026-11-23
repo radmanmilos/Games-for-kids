@@ -280,8 +280,7 @@
                     ? 100
                     : (mode === 'fly' ? Math.round(canvas.height * 0.4) : canvas.height - heroH - 24),
                 width: heroW,
-                height: heroH,
-                vx: 0,
+                height: heroH,                vx: 0,
                 vy: 0,
                 speed: cfg.speed || 5.2,
                 jumpPower: cfg.jumpPower || -13.5,
@@ -290,6 +289,15 @@
                 squish: 1,
                 offsetX: cfg.offsetStartX || (canvas.width * (cfg.offsetStartRatio || 0.3))
             };
+            // Drive mode: always size from the sprite's visible alpha box, not the
+            // fixed heroW/heroH (which default to 48 when the asset is auto-sized).
+            // Re-apply on every loadWorld so level transitions keep the correct size.
+            if (mode === 'drive' && heroBox) {
+                player.width = heroBox.w;
+                player.height = heroBox.h;
+                const rb = pf && pf.roadBand;
+                if (rb) player.y = rb.bottom - player.height - 6;
+            }
 
             coins = [];
             obstacles = [];
@@ -374,7 +382,7 @@
                         color: o.color,
                         minX: o.minX,
                         maxX: o.maxX,
-                        vx: o.vx || 0,
+                        vx: o.vx || (mode === 'drive' ? roadY < pf.roadBand.top + (pf.roadBand.bottom - pf.roadBand.top) / 2 ? -1 : 1 : 0),
                         dy: o.dy
                     };
                 });
@@ -539,7 +547,7 @@
                     });
 
                     obstacles.forEach(o => {
-                        if (o.vx) {
+                        if (o.vx && mode !== 'drive') {
                             o.x += o.vx;
                             if (o.x <= o.minX || o.x + o.width >= o.maxX) o.vx *= -1;
                         }
@@ -1223,7 +1231,7 @@
 
             const t = Date.now() / 1000;
 
-            if (mode === 'drive') window.AdventureModes.drawRoad(ctx, theme, roadTopY(), t, cameraX, canvas);
+            if (mode === 'drive') window.AdventureModes.drawRoad(ctx, theme, 0, t, cameraX, canvas);
 
             if (cfg.decorBehind) drawDecor(t);
 
@@ -1232,15 +1240,15 @@
 
             // Painted scene background (config-driven). Tiles at true aspect ratio,
             // mirrored every second tile for a seamless loop.
-            // In drive mode the scene only covers the sky above the road strip;
-            // in other modes (ocean, adventure) it fills the full canvas.
-            if ((theme && theme.scene) || cfg.scene) {
+            // In drive mode the road strip owns the whole screen; the scene (sky)
+            // is skipped entirely so there is no sky strip above the road.
+            if (mode !== 'drive' && ((theme && theme.scene) || cfg.scene)) {
                 const __sceneStem = (theme && theme.scene) || cfg.scene;
                 if (!window.__advSceneCache) window.__advSceneCache = {};
                 let __sim = window.__advSceneCache[__sceneStem];
                 if (!__sim) { __sim = new Image(); __sim.src = '../assets/scenes/scene-' + __sceneStem + '.webp'; __sim.style.display = 'none'; __sim.style.width = '1px'; __sim.style.height = '1px'; document.body.appendChild(__sim); window.__advSceneCache[__sceneStem] = __sim; }
                 if (__sim.complete && __sim.naturalWidth > 0) {
-                    const __skyH = mode === 'drive' ? Math.max(1, roadTopY()) : canvas.height;
+                    const __skyH = canvas.height;
                     const __scale = __skyH / __sim.naturalHeight;
                     const __drawW = Math.ceil(__sim.naturalWidth * __scale);
                     const __first = Math.floor(cameraX / __drawW);
@@ -1255,20 +1263,20 @@
                 }
             }
 
-            // Painted road strip (config-driven): tileable strip drawn at the road band,
-            // replacing the flat roadColor fill for worlds that supply one.
+            // Painted road strip (config-driven): tileable strip drawn across the
+            // entire canvas in drive mode, replacing the flat roadColor fill.
             if ((theme && theme.roadStrip) || cfg.roadStrip) {
                 const __stem = (theme && theme.roadStrip) || cfg.roadStrip;
                 if (!window.__advRoadStripCache) window.__advRoadStripCache = {};
                 let __rim = window.__advRoadStripCache[__stem];
                 if (!__rim) { __rim = new Image(); __rim.src = '../assets/scenes/road-strip-' + __stem + '.webp'; __rim.style.display = 'none'; __rim.style.width = '1px'; __rim.style.height = '1px'; document.body.appendChild(__rim); window.__advRoadStripCache[__stem] = __rim; }
                 if (__rim && __rim.complete && __rim.naturalWidth > 0) {
-                    const __rh = (theme && theme.roadStripHeight) || cfg.roadStripHeight || Math.max(40, canvas.height - roadTopY());
+                    const __rh = (theme && theme.roadStripHeight) || cfg.roadStripHeight || canvas.height;
                     const __rw = Math.max(16, Math.round(__rh * __rim.naturalWidth / __rim.naturalHeight));
                     const __firstR = Math.floor(cameraX / __rw);
                     for (let __i = __firstR; __i * __rw < cameraX + canvas.width; __i++) {
                         const __sx = __i * __rw;
-                        ctx.drawImage(__rim, __sx, roadTopY(), __rw, __rh);
+                        ctx.drawImage(__rim, __sx, 0, __rw, __rh);
                     }
                 }
             }
