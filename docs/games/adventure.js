@@ -65,13 +65,61 @@
         let worldPos = 0;
         let paused = false;
         let flyDyScale = 1;
+        let pf = null;
+        let u = 1;
+        let scrollScale = 1;
+        let isCompact = false;
+        let __debugPF = false;
+        try {
+            if (new URLSearchParams(location.search).get('debug') === 'pf') __debugPF = true;
+        } catch (e) { /* ignore */ }
+        const REF_PF_H = 520;
+        const U_MIN = 0.5;
 
-        const keys = { left: false, right: false, up: false, down: false, jump: false };
+        function computePlayfield() {
+            const c = el('adv-canvas');
+            if (!c) return;
+            const H = c.height;
+            const canvasRect = c.getBoundingClientRect();
+            const rel = e => { const r = e.getBoundingClientRect(); return { t: r.top - canvasRect.top, b: r.bottom - canvasRect.top }; };
+            const ov = [
+                el('adv-score'), el('adv-title'), el('adv-worlds-btn'), el('adv-music-btn'), el('adv-controls')
+            ].filter(Boolean).map(rel);
+            const top = ov.filter(o => o.b < H * 0.4);
+            const bot = ov.filter(o => o.t > H * 0.55);
+            const hudBottom = top.length ? Math.max(...top.map(o => o.b)) : 0;
+            const ctlTop = bot.length ? Math.min(...bot.map(o => o.t)) : H;
+            const gap = Math.max(8, Math.round(H * 0.02));
+            pf = {
+                top: hudBottom + gap,
+                bottom: Math.max(hudBottom + gap, ctlTop - gap),
+                left: gap,
+                right: Math.max(gap, c.width - gap)
+            };
+            pf.top = Math.max(0, Math.min(pf.top, H));
+            pf.bottom = Math.max(pf.top + 1, Math.min(pf.bottom, H));
+            pf.height = pf.bottom - pf.top;
+            u = Math.min(1, Math.max(U_MIN, pf.height / REF_PF_H));
+            // 1C: compact HUD on short screens (canvas < 500px). The top chrome band
+            // collapses to a ≤56px strip, the world-name line drops out of the score
+            // card, and the page title overlay hides (it repeats the world name).
+            isCompact = H < 500;
+            const gameEl = document.getElementById('adv-game');
+            if (gameEl) gameEl.classList.toggle('adv-compact', isCompact);
+            const titleEl = document.getElementById('adv-title');
+            if (titleEl) titleEl.style.display = isCompact ? 'none' : '';
+            // 1D: reaction-time budget. Scroll speed scales with screen width so the
+            // time from an obstacle entering the screen to reaching the hero stays
+            // >= 2.0 s at every size. W/1024 is the reference frame; clamp to a sane
+            // range so tiny phones do not crawl and tablets do not outrun the child.
+            scrollScale = Math.min(1, Math.max(0.6, canvas.width / 1024));
+        }
 
         function resizeCanvas() {
             const oldH = canvas.height;
             canvas.width = canvas.clientWidth;
             canvas.height = canvas.clientHeight;
+            computePlayfield();
             if (!theme || Math.abs(canvas.height - oldH) < 2) return;
             const dy = canvas.height - oldH;
             if (mode === 'ground') {
@@ -91,6 +139,8 @@
         resizeCanvas();
         // Attempt to initialize music early so themes can start on load (best-effort).
         try { if (window.AdventureMusic) window.AdventureMusic.init(); } catch (e) { /* ignore */ }
+
+        const keys = { left: false, right: false, up: false, down: false, jump: false };
 
         function initAudio() {
             if (!window.AdventureMusic || window.AdventureMusic.audioCtx) return;
@@ -237,11 +287,17 @@
                     flyDyScale = (canvas.height * 0.88) / maxDy;
                 }
                 obstacles = (w.obstacles || []).map(o => {
-                    const ow = (o.w || 46) * obstacleScale;
-                    const oh = (o.h || 42) * obstacleScale;
-                    const roadY = mode === 'drive'
-                        ? roadTopY() + 16 + Math.random() * Math.max(0, canvas.height - roadTopY() - oh - 32)
-                        : canvas.height - o.dy * flyDyScale - oh;
+                    const ow = Math.max(48, Math.round((o.w || 46) * obstacleScale * u));
+                    const oh = Math.max(48, Math.round((o.h || 42) * obstacleScale * u));
+                    const span = Math.max(8, pf.height - oh - 12);
+                    let frac;
+                    if (mode === 'drive') {
+                        frac = ((o.x * 37) % Math.max(1, span)) / Math.max(1, span);
+                    } else {
+                        const maxDy = Math.max(w.goalDy || 210, ...(w.obstacles || []).map(ob => ob.dy || 0));
+                        frac = Math.min(1, Math.max(0, (o.dy || 0) / maxDy));
+                    }
+                    const roadY = pf.top + Math.round(frac * (pf.height - oh));
                     return {
                         x: o.x,
                         y: roadY,
@@ -255,20 +311,21 @@
                         dy: o.dy
                     };
                 });
-                coins = (w.coins || []).map(c => ({
-                    x: c.x,
-                    y: mode === 'drive'
-                        ? roadTopY() + 24 + Math.random() * Math.max(0, canvas.height - roadTopY() - 48)
-                        : canvas.height - c.dy * flyDyScale,
-                    collected: false
-                }));
+                coins = (w.coins || []).map(c => {
+                    const maxDy = Math.max(w.goalDy || 210, ...(w.coins || []).map(cc => cc.dy || 0));
+                    const frac = Math.min(1, Math.max(0, (c.dy || 0) / maxDy));
+                    const cy = mode === 'drive'
+                        ? pf.top + ((c.x * 29 + 7) % Math.max(8, pf.height - 24 - 8))
+                        : pf.top + Math.round(Math.max(0, Math.min(1, frac)) * (pf.height - 24));
+                    return { x: c.x, y: cy, collected: false };
+                });
                 if (mode === 'drive') {
-                    goal = { x: w.goalX, y: roadTopY(), width: w.goalW || 240, height: canvas.height - roadTopY() };
+                    goal = { x: w.goalX, y: pf.top, width: w.goalW || 240, height: pf.bottom - pf.top };
                 } else {
                     const yScale = mode === 'fly' ? flyDyScale : 1;
-                    const goalH = (w.goalH || 200) * yScale;
+                    const goalH = Math.max(48, (w.goalH || 200) * yScale);
                     const goalW = w.goalW || 200;
-                    goal = { x: w.goalX, y: canvas.height - (w.goalDy || 210) * yScale - goalH, width: goalW, height: goalH };
+                    goal = { x: w.goalX, y: pf.bottom - goalH, width: goalW, height: goalH };
                 }
             }
 
@@ -644,7 +701,7 @@
 
         function updateDrive() {
             if (!levelCompleted) {
-                const spd = player.speed;
+                const spd = player.speed * scrollScale;
                 if (keys.left) player.offsetX -= spd;
                 if (keys.right) player.offsetX += spd;
                 if (keys.up) player.y -= spd;
@@ -652,11 +709,10 @@
             }
 
             // The road keeps rolling forward until the car reaches the finish line.
-            if (!levelCompleted) cameraX += cfg.driveSpeed || 3.2;
+            if (!levelCompleted) cameraX += (cfg.driveSpeed || 3.2) * scrollScale;
             player.x = cameraX + player.offsetX;
             player.offsetX = Math.max(30, Math.min(canvas.width - player.width - 30, player.offsetX));
-            const driveTopPadding = cfg.driveTopPadding ?? 12;
-            player.y = Math.max(roadTopY() + driveTopPadding, Math.min(canvas.height - player.height - 10, player.y));
+            player.y = Math.max(pf.top, Math.min(pf.bottom - player.height, player.y));
         }
 
         function updateFly() {
@@ -680,7 +736,7 @@
             else if (player.vx < -0.1) player.facingRight = false;
 
             player.x = Math.max(cameraX + 20, player.x);
-            player.y = Math.max(30, Math.min(canvas.height - player.height - 20, player.y));
+            player.y = Math.max(pf.top, Math.min(pf.bottom - player.height, player.y));
 
             cameraX += (player.x - canvas.width / 3 - cameraX) * 0.1;
             cameraX = Math.max(0, cameraX);
@@ -1256,8 +1312,6 @@
                 ctx.beginPath();
                 ctx.ellipse(player.x + player.width / 2, player.y + player.height + 3, player.width * 0.42, 6, 0, 0, Math.PI * 2);
                 ctx.fill();
-
-                // Navigation arrow: large arrow near goal when child is far away
                 if (!levelCompleted && goal && player.x < goal.x - 500) {
                     const arrowX = goal.x - 80;
                     const arrowY = goal.y + goal.height / 2;
@@ -1367,6 +1421,30 @@
             ctx.restore();
 
             if (!cfg.decorBehind) drawDecor(t);
+
+            if (__debugPF) {
+                ctx.save();
+                ctx.strokeStyle = '#7CFC9A';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([6, 6]);
+                ctx.strokeRect(pf ? pf.left : 0, pf ? pf.top : 0, pf ? pf.right - pf.left : canvas.width, pf ? pf.height : canvas.height);
+                ctx.setLineDash([]);
+                ctx.strokeStyle = '#FF6F91';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(player.x, player.y, player.width, player.height);
+                obstacles.forEach(o => {
+                    ctx.strokeStyle = '#FFD23F';
+                    ctx.strokeRect(o.x, o.y, o.width, o.height);
+                });
+                ctx.strokeStyle = '#B8E8FF';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([4, 4]);
+                ctx.beginPath();
+                ctx.moveTo(player.x, player.y + player.height);
+                ctx.lineTo(player.x + player.width, player.y + player.height);
+                ctx.stroke();
+                ctx.restore();
+            }
         }
 
         // --- Hero picker ---
@@ -1435,6 +1513,10 @@
             get bumpCount() { return bumpCount; },
             get heroType() { return heroType; },
             get paused() { return paused; },
+            get pf() { return pf; },
+            get scrollScale() { return scrollScale; },
+            get isCompact() { return isCompact; },
+            get debug() { return __debugPF; },
             setHeroType,
         };
         window.__adv = game;
