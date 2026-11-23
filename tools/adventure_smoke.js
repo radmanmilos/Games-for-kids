@@ -70,10 +70,10 @@ async function waitReady(h) {
     a.loadWorld();
     const o = a.obstacles[0];
     const beforeBumps = a.bumpCount;
+    // Keep obstacle at its natural level size (which is ~69px h, correctly sized
+    // for the 128px hero after Phase 2A). Only position it to overlap.
     o.x = a.player.x;
     o.y = a.player.y;
-    o.width = 200;
-    o.height = 200;
     a.setPaused(false);
     a.update();
     return JSON.stringify({ bumpCount: a.bumpCount, beforeBumps, completed: a.levelCompleted });

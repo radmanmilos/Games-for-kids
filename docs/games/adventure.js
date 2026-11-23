@@ -546,7 +546,7 @@
                         }
                     });
 
-                    obstacles.forEach(o => {
+obstacles.forEach(o => {
                         if (o.vx && mode !== 'drive') {
                             o.x += o.vx;
                             if (o.x <= o.minX || o.x + o.width >= o.maxX) o.vx *= -1;
