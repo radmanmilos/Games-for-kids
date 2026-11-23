@@ -276,6 +276,31 @@ body, html {
     #adv-title{margin:var(--ps-safe-top) 0 0;min-height:56px;line-height:56px;}
 }
 
+/* task 1C: compact HUD on short screens (canvas.height < 500px) */
+.adv-compact #adv-title { display: none !important; }
+.adv-compact #adv-score {
+    top: 6px;
+    padding: 4px 12px;
+    font-size: 14px;
+    line-height: 1.2;
+    min-width: auto;
+    max-width: 130px;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.18);
+}
+.adv-compact #adv-score .sb-small { display: none; }
+.adv-compact #adv-worlds-btn,
+.adv-compact #adv-music-btn {
+    top: 6px;
+    font-size: 20px;
+}
+.adv-compact #adv-worlds-btn { right: 150px; }
+.adv-compact #adv-music-btn { right: 210px; }
+
+@media (max-height:499px) {
+    /* ensure HUD top band ≤ 56px: back(~8px) + title(hidden) + gap(4px) + score(~37px) ≈ 45px */
+    .adv-compact #adv-score { top: 2px; }
+}
+
 /* --- Win modal --- */
 #adv-win-modal {
     display: none;
