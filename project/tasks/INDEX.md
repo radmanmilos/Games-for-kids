@@ -437,3 +437,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 442 | RETIRED | - | Art reorganization Phase 2: update kitty-standalone.js draw calls for new asset paths | tasks-400-499.md
 443 | RETIRED | - | Art reorganization Phase 2: update all other game JS files (animals, cat_forest, ocean, space, dino, driving,… | tasks-400-499.md
 463 | DONE | 2026-11-23 | Phase 1 adventure engine: playfield rectangle (pf), compact HUD on short screens, reaction-time budget, debug… | tasks-400-499.md
+453 | DONE | 2026-11-23 | Driving Phase 2 (heroBox, lane placement, shadow, hitbox guard) + 10-world screenshot battery (2026-11-23,… | tasks-400-499.md

@@ -28,6 +28,14 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   check('driving booted (window.__adv ready)', ready);
   await h.evalv(`window.audioBuses.connect=function(){}; true`);
 
+  // Wait for player to exist before steering tests.
+  let playerReady = false;
+  for (let i = 0; i < 25 && !playerReady; i++) {
+    playerReady = await h.evalv(`!!window.__adv.player`);
+    if (!playerReady) await sleep(200);
+  }
+  check('driving: player spawned', playerReady);
+
   const boot = await h.evalv(`(() => {
     const t = document.createElement('div');
     t.style.background = window.__adv.theme.bgPage;

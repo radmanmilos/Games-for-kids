@@ -4,6 +4,13 @@
 
     function drawRoad(ctx, theme, roadTopY, t, cameraX, canvas) {
         const top = roadTopY;
+        const strip = theme && (theme.roadStrip || theme.road);
+        if (strip) {
+            // Painted road strip owns the band: just the grass edge above the road.
+            ctx.fillStyle = theme.grassColor || '#67c971';
+            ctx.fillRect(0, top - 14, canvas.width, 14);
+            return;
+        }
         ctx.fillStyle = theme.roadColor || '#7a7a7a';
         ctx.fillRect(0, top, canvas.width, canvas.height - top);
 
@@ -212,6 +219,17 @@
         ctx.fillRect(x + w * 0.48, y + h * 0.42, w * 0.08, h * 0.035);
     }
 
+    function drawHeroShadow(ctx, groundY, t) {
+        const ph = 7;
+        const r = 26;
+        const jitter = Math.sin(t * 5) * 2;
+        const sx = Math.sin(t * 2) * 2;
+        ctx.fillStyle = 'rgba(90, 45, 20, 0.22)';
+        ctx.beginPath();
+        ctx.ellipse(0, ph + jitter, r + sx, ph, 0, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
     function drawPitHazards(ctx, theme, t, canvas) {
         const hazard = theme.pitHazard;
         if (!hazard) return;
@@ -349,6 +367,7 @@
         drawPitHazards,
         drawCeiling,
         drawEnemy,
-        drawGoalFinish
+        drawGoalFinish,
+        drawHeroShadow,
     };
 })();

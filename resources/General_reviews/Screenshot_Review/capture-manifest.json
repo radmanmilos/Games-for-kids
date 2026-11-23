@@ -2,16 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "211b41c2674eb4dad6e7e0a05fab7fe447e9d4c8",
+  "commitSha": "9e2b8fb5532ff9144ee0bf6090f5be827c1885ae",
   "browser": {
     "product": "Chrome/158.0.8127.36",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-23T06:18:33.786Z",
+  "generatedAt": "2026-11-23T12:14:20.165Z",
   "pageSet": [
-    "driving",
-    "ocean"
+    "driving"
   ],
   "viewports": {
     "phone-portrait": {
@@ -41,76 +40,48 @@
   },
   "screenshots": [
     {
-      "file": "driving_phone-portrait.png",
+      "file": "driving__phone-portrait__WORLD_1.png",
       "page": "driving",
       "size": "phone-portrait",
-      "state": null,
+      "state": [
+        "WORLD_1"
+      ],
       "width": 390,
       "height": 844,
-      "bytes": 353821
+      "bytes": 282851
     },
     {
-      "file": "driving_phone-landscape.png",
+      "file": "driving__phone-landscape__WORLD_1.png",
       "page": "driving",
       "size": "phone-landscape",
-      "state": null,
+      "state": [
+        "WORLD_1"
+      ],
       "width": 844,
       "height": 390,
-      "bytes": 432541
+      "bytes": 305906
     },
     {
-      "file": "driving_tablet-portrait.png",
+      "file": "driving__tablet-portrait__WORLD_1.png",
       "page": "driving",
       "size": "tablet-portrait",
-      "state": null,
+      "state": [
+        "WORLD_1"
+      ],
       "width": 820,
       "height": 1180,
-      "bytes": 820114
+      "bytes": 661790
     },
     {
-      "file": "driving_tablet-landscape.png",
+      "file": "driving__tablet-landscape__WORLD_1.png",
       "page": "driving",
       "size": "tablet-landscape",
-      "state": null,
+      "state": [
+        "WORLD_1"
+      ],
       "width": 1180,
       "height": 820,
-      "bytes": 918016
-    },
-    {
-      "file": "ocean_phone-portrait.png",
-      "page": "ocean",
-      "size": "phone-portrait",
-      "state": null,
-      "width": 390,
-      "height": 844,
-      "bytes": 442218
-    },
-    {
-      "file": "ocean_phone-landscape.png",
-      "page": "ocean",
-      "size": "phone-landscape",
-      "state": null,
-      "width": 844,
-      "height": 390,
-      "bytes": 516300
-    },
-    {
-      "file": "ocean_tablet-portrait.png",
-      "page": "ocean",
-      "size": "tablet-portrait",
-      "state": null,
-      "width": 820,
-      "height": 1180,
-      "bytes": 1127378
-    },
-    {
-      "file": "ocean_tablet-landscape.png",
-      "page": "ocean",
-      "size": "tablet-landscape",
-      "state": null,
-      "width": 1180,
-      "height": 820,
-      "bytes": 1266969
+      "bytes": 676725
     }
   ]
 }

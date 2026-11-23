@@ -32,6 +32,14 @@ Gameplay:
 - Debug overlay: `?debug=pf` draws pf rect, hero hitbox, obstacle hitboxes, shadow baseline (no network, no UI text).
 - Ocean coin Y bug fixed (uses `maxDy` not `goalDy`).
 
+## Phase 2 (2026-11-23, task 453)
+- Car size from visible sprite bounds: `heroBox` (visible alpha box, stemBox) drives display size; fallback to old drawImage; car snapped to road band bottom via `initHeroBox()`.
+- Lane-based obstacle/coin placement inside `pf.roadBand` (3 lanes, deterministic from entity x).
+- Shadow at visible bottom: `drawHeroShadow()` in `AdventureModes`, drawn at `pf.roadBand.bottom`.
+- Hitboxes from sprite visible alpha boxes: `spriteHitbox()` (hero drawMode 'fill', obstacles 'square', ~10% shrink).
+- `goal` null-guard added in `update()` to avoid crash before world load completes.
+- `driving_smoke.js`: waits for player before steering/clamp tests.
+
 Educational goals:
 
 - Motor skills

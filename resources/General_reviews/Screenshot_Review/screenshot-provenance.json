@@ -288,20 +288,20 @@
     "task": "379"
   },
   "driving_phone-portrait.png": {
-    "updatedAt": "2026-11-23T06:18:33.786Z",
-    "task": "462"
+    "updatedAt": "2026-11-23T12:07:44.204Z",
+    "task": "453"
   },
   "driving_phone-landscape.png": {
-    "updatedAt": "2026-11-23T06:18:33.786Z",
-    "task": "462"
+    "updatedAt": "2026-11-23T12:07:44.204Z",
+    "task": "453"
   },
   "driving_tablet-portrait.png": {
-    "updatedAt": "2026-11-23T06:18:33.786Z",
-    "task": "462"
+    "updatedAt": "2026-11-23T12:07:44.204Z",
+    "task": "453"
   },
   "driving_tablet-landscape.png": {
-    "updatedAt": "2026-11-23T06:18:33.786Z",
-    "task": "462"
+    "updatedAt": "2026-11-23T12:07:44.204Z",
+    "task": "453"
   },
   "ocean_phone-portrait.png": {
     "updatedAt": "2026-11-23T06:18:33.786Z",
@@ -686,5 +686,149 @@
   "hub-learning_tablet-landscape.png": {
     "updatedAt": "2026-11-06T12:03:32.710Z",
     "task": "384"
+  },
+  "driving__phone-portrait__WORLD_1.png": {
+    "updatedAt": "2026-11-23T12:14:20.165Z",
+    "task": "453"
+  },
+  "driving__phone-landscape__WORLD_1.png": {
+    "updatedAt": "2026-11-23T12:14:20.165Z",
+    "task": "453"
+  },
+  "driving__tablet-portrait__WORLD_1.png": {
+    "updatedAt": "2026-11-23T12:14:20.165Z",
+    "task": "453"
+  },
+  "driving__tablet-landscape__WORLD_1.png": {
+    "updatedAt": "2026-11-23T12:14:20.165Z",
+    "task": "453"
+  },
+  "driving__phone-portrait__WORLD_2.png": {
+    "updatedAt": "2026-11-23T12:08:10.890Z",
+    "task": "453"
+  },
+  "driving__phone-landscape__WORLD_2.png": {
+    "updatedAt": "2026-11-23T12:08:10.890Z",
+    "task": "453"
+  },
+  "driving__tablet-portrait__WORLD_2.png": {
+    "updatedAt": "2026-11-23T12:08:10.890Z",
+    "task": "453"
+  },
+  "driving__tablet-landscape__WORLD_2.png": {
+    "updatedAt": "2026-11-23T12:08:10.890Z",
+    "task": "453"
+  },
+  "driving__phone-portrait__WORLD_3.png": {
+    "updatedAt": "2026-11-23T12:08:16.822Z",
+    "task": "453"
+  },
+  "driving__phone-landscape__WORLD_3.png": {
+    "updatedAt": "2026-11-23T12:08:16.822Z",
+    "task": "453"
+  },
+  "driving__tablet-portrait__WORLD_3.png": {
+    "updatedAt": "2026-11-23T12:08:16.822Z",
+    "task": "453"
+  },
+  "driving__tablet-landscape__WORLD_3.png": {
+    "updatedAt": "2026-11-23T12:08:16.822Z",
+    "task": "453"
+  },
+  "driving__phone-portrait__WORLD_4.png": {
+    "updatedAt": "2026-11-23T12:08:23.009Z",
+    "task": "453"
+  },
+  "driving__phone-landscape__WORLD_4.png": {
+    "updatedAt": "2026-11-23T12:08:23.009Z",
+    "task": "453"
+  },
+  "driving__tablet-portrait__WORLD_4.png": {
+    "updatedAt": "2026-11-23T12:08:23.009Z",
+    "task": "453"
+  },
+  "driving__tablet-landscape__WORLD_4.png": {
+    "updatedAt": "2026-11-23T12:08:23.009Z",
+    "task": "453"
+  },
+  "driving__phone-portrait__WORLD_5.png": {
+    "updatedAt": "2026-11-23T12:08:29.048Z",
+    "task": "453"
+  },
+  "driving__phone-landscape__WORLD_5.png": {
+    "updatedAt": "2026-11-23T12:08:29.048Z",
+    "task": "453"
+  },
+  "driving__tablet-portrait__WORLD_5.png": {
+    "updatedAt": "2026-11-23T12:08:29.048Z",
+    "task": "453"
+  },
+  "driving__tablet-landscape__WORLD_5.png": {
+    "updatedAt": "2026-11-23T12:08:29.048Z",
+    "task": "453"
+  },
+  "driving__phone-portrait__WORLD_6.png": {
+    "updatedAt": "2026-11-23T12:08:41.072Z",
+    "task": "453"
+  },
+  "driving__phone-landscape__WORLD_6.png": {
+    "updatedAt": "2026-11-23T12:08:41.072Z",
+    "task": "453"
+  },
+  "driving__tablet-portrait__WORLD_6.png": {
+    "updatedAt": "2026-11-23T12:08:41.072Z",
+    "task": "453"
+  },
+  "driving__tablet-landscape__WORLD_6.png": {
+    "updatedAt": "2026-11-23T12:08:41.072Z",
+    "task": "453"
+  },
+  "driving__phone-portrait__WORLD_7.png": {
+    "updatedAt": "2026-11-23T12:08:47.363Z",
+    "task": "453"
+  },
+  "driving__phone-landscape__WORLD_7.png": {
+    "updatedAt": "2026-11-23T12:08:47.363Z",
+    "task": "453"
+  },
+  "driving__tablet-portrait__WORLD_7.png": {
+    "updatedAt": "2026-11-23T12:08:47.363Z",
+    "task": "453"
+  },
+  "driving__tablet-landscape__WORLD_7.png": {
+    "updatedAt": "2026-11-23T12:08:47.363Z",
+    "task": "453"
+  },
+  "driving__phone-portrait__WORLD_8.png": {
+    "updatedAt": "2026-11-23T12:08:53.387Z",
+    "task": "453"
+  },
+  "driving__phone-landscape__WORLD_8.png": {
+    "updatedAt": "2026-11-23T12:08:53.387Z",
+    "task": "453"
+  },
+  "driving__tablet-portrait__WORLD_8.png": {
+    "updatedAt": "2026-11-23T12:08:53.387Z",
+    "task": "453"
+  },
+  "driving__tablet-landscape__WORLD_8.png": {
+    "updatedAt": "2026-11-23T12:08:53.387Z",
+    "task": "453"
+  },
+  "driving__phone-portrait__WORLD_9.png": {
+    "updatedAt": "2026-11-23T12:08:59.487Z",
+    "task": "453"
+  },
+  "driving__phone-landscape__WORLD_9.png": {
+    "updatedAt": "2026-11-23T12:08:59.487Z",
+    "task": "453"
+  },
+  "driving__tablet-portrait__WORLD_9.png": {
+    "updatedAt": "2026-11-23T12:08:59.487Z",
+    "task": "453"
+  },
+  "driving__tablet-landscape__WORLD_9.png": {
+    "updatedAt": "2026-11-23T12:08:59.487Z",
+    "task": "453"
   }
 }

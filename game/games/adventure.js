@@ -38,6 +38,64 @@
         if (heroImage) heroImage.src = cfg.heroImage;
         const heroW = cfg.heroW || 48;
         const heroH = cfg.heroH || 48;
+        // Phase 2A: drive hero sizes from the sprite's visible alpha box (stemBox),
+        // not the padded 512x512 canvas. heroBox holds the visible box in natural px
+        // plus the scaled display box; it is set once heroImage has loaded.
+        const heroImgStem = heroImage && cfg.heroImage
+            ? String(cfg.heroImage).replace(/^.*\//, '').replace(/\.webp$/, '')
+            : null;
+        let heroBox = null; // { vb:{x,y,w,h}, nw, nh, w, h, scale } — visible bounds + display size
+        let heroSpriteReady = false;
+        function initHeroBox() {
+            if (mode !== 'drive' || !heroImage || !heroImage.complete || heroSpriteReady) return;
+            let vb = null;
+            try { if (heroImgStem && window.stemBox) vb = window.stemBox(heroImgStem, heroImage); } catch (e) { vb = null; }
+            if (!vb || vb.w <= 0 || vb.h <= 0) return;
+            const band = Math.max(40, canvas.height * (1 - roadTop));
+            const targetH = Math.round(band * (cfg.heroVisibleRatio || 0.30));
+            const scale = Math.min(cfg.heroVisibleMax || 128, Math.max(cfg.heroVisibleMin || 64, targetH)) / vb.h;
+            heroBox = {
+                vb: vb,
+                nw: heroImage.naturalWidth,
+                nh: heroImage.naturalHeight,
+                w: vb.w * scale,
+                h: vb.h * scale,
+                scale: scale,
+            };
+            heroSpriteReady = true;
+            if (player) {
+                player.width = heroBox.w;
+                player.height = heroBox.h;
+                // Keep the car on the road band: snap its bottom to the band bottom.
+                const rb = pf && pf.roadBand;
+                if (rb) player.y = rb.bottom - player.height - 6;
+            }
+        }
+        if (heroImage) heroImage.addEventListener('load', initHeroBox);
+        // Phase 2E: hitboxes from sprite visible alpha boxes (shrunk ~10% for forgiveness).
+        // `mode` 'fill' = drawImage maps the visible box to the player box exactly (drive hero);
+        // 'square' = drawStem draws a square of size max(w,h)*1.15 centred on the box (obstacles).
+        function spriteHitbox(stem, boxW, boxH, drawMode) {
+            const fb = { l: boxW * 0.12, t: boxH * 0.14, r: boxW * 0.88, b: boxH * 0.9 };
+            if (!stem || !window.stemBox || !window.Art || !window.Art.imageStem) return fb;
+            const im = window.Art.imageStem(stem);
+            if (!im || !im.complete || !im.naturalWidth) return fb;
+            let vb;
+            try { vb = window.stemBox(stem, im); } catch (e) { return fb; }
+            if (!vb || vb.w <= 0 || vb.h <= 0) return fb;
+            let vw, vh, left, top;
+            if (drawMode === 'fill') {
+                vw = boxW; vh = boxH; left = 0; top = 0;
+            } else {
+                const s = Math.max(boxW, boxH) * 1.15;
+                const sc = s / Math.max(vb.w, vb.h);
+                vw = vb.w * sc; vh = vb.h * sc;
+                left = (boxW - vw) / 2 + vb.x * sc;
+                top = (boxH - vh) / 2 + vb.y * sc;
+            }
+            const ix = vw * 0.1, iy = vh * 0.1;
+            return { l: left + ix, t: top + iy, r: left + vw - ix, b: top + vh - iy };
+        }
         const roadTop = cfg.roadTop || 0.20;
         const roadTopY = () => canvas.height * roadTop;
         const pickupPad = 26;
@@ -99,6 +157,10 @@
             pf.top = Math.max(0, Math.min(pf.top, H));
             pf.bottom = Math.max(pf.top + 1, Math.min(pf.bottom, H));
             pf.height = pf.bottom - pf.top;
+            // 2B: road band — the drivable strip within the playfield.
+            // Top is max(HUD bottom + gap, roadTopY). Bottom = pf.bottom.
+            const roadBandTop = canvas.height * (cfg.roadTop || 0.20);
+            pf.roadBand = { top: Math.max(pf.top, roadBandTop), bottom: pf.bottom };
             u = Math.min(1, Math.max(U_MIN, pf.height / REF_PF_H));
             // 1C: compact HUD on short screens (canvas < 500px). The top chrome band
             // collapses to a ≤56px strip, the world-name line drops out of the score
@@ -288,16 +350,21 @@
                 }
                 obstacles = (w.obstacles || []).map(o => {
                     const ow = Math.max(48, Math.round((o.w || 46) * obstacleScale * u));
-                    const oh = Math.max(48, Math.round((o.h || 42) * obstacleScale * u));
-                    const span = Math.max(8, pf.height - oh - 12);
+                    let oh = Math.max(48, Math.round((o.h || 42) * obstacleScale * u));
                     let frac;
                     if (mode === 'drive') {
-                        frac = ((o.x * 37) % Math.max(1, span)) / Math.max(1, span);
+                        const rb = pf.roadBand;
+                        const laneH = rb.bottom - rb.top;
+                        const lane = Math.abs(o.x * 37) % 3;
+                        frac = (lane + 0.5) / 3;
+                        oh = Math.min(oh, laneH * 0.9);
                     } else {
                         const maxDy = Math.max(w.goalDy || 210, ...(w.obstacles || []).map(ob => ob.dy || 0));
                         frac = Math.min(1, Math.max(0, (o.dy || 0) / maxDy));
                     }
-                    const roadY = pf.top + Math.round(frac * (pf.height - oh));
+                    const roadY = mode === 'drive'
+                        ? pf.roadBand.top + Math.round(frac * (pf.roadBand.bottom - pf.roadBand.top - oh))
+                        : pf.top + Math.round(frac * (pf.height - oh));
                     return {
                         x: o.x,
                         y: roadY,
@@ -315,7 +382,12 @@
                     const maxDy = Math.max(w.goalDy || 210, ...(w.coins || []).map(cc => cc.dy || 0));
                     const frac = Math.min(1, Math.max(0, (c.dy || 0) / maxDy));
                     const cy = mode === 'drive'
-                        ? pf.top + ((c.x * 29 + 7) % Math.max(8, pf.height - 24 - 8))
+                        ? (() => {
+                            const rb = pf.roadBand;
+                            const laneH = rb.bottom - rb.top;
+                            const lane = Math.abs(c.x * 29 + 7) % 3;
+                            return rb.top + Math.round((lane + 0.5) * laneH / 3);
+                        })()
                         : pf.top + Math.round(Math.max(0, Math.min(1, frac)) * (pf.height - 24));
                     return { x: c.x, y: cy, collected: false };
                 });
@@ -471,19 +543,19 @@
                             o.x += o.vx;
                             if (o.x <= o.minX || o.x + o.width >= o.maxX) o.vx *= -1;
                         }
-                        const playerLeft = player.x + player.width * 0.08;
-                        const playerTop = player.y + player.height * 0.28;
-                        const playerRight = player.x + player.width * 0.9;
-                        const playerBottom = player.y + player.height * 0.92;
-                        const obstacleLeft = o.x + o.width * 0.12;
-                        const obstacleTop = o.y + o.height * 0.14;
-                        const obstacleRight = o.x + o.width * 0.88;
-                        const obstacleBottom = o.y + o.height * 0.9;
+                        // 2E: obstacle hitbox derived from sprite visible alpha box (shrunk ~10%)
+                        const __obStem = (theme && theme.obstacleArt && theme.obstacleArt[o.type])
+                            || (cfg.obstacleArt && cfg.obstacleArt[o.type]);
+                        const __obHB = spriteHitbox(__obStem, o.width, o.height, 'square');
+                        const obstacleLeft = o.x + __obHB.l;
+                        const obstacleTop = o.y + __obHB.t;
+                        const obstacleRight = o.x + __obHB.r;
+                        const obstacleBottom = o.y + __obHB.b;
                         if (now - lastHitAt > 900 &&
-                            playerRight > obstacleLeft &&
-                            playerLeft < obstacleRight &&
-                            playerBottom > obstacleTop &&
-                            playerTop < obstacleBottom) {
+                            player.x + player.width > obstacleLeft &&
+                            player.x < obstacleRight &&
+                            player.y + player.height > obstacleTop &&
+                            player.y < obstacleBottom) {
                             window.AdventureMusic.play('bump');
                             spawnParticles(player.x + player.width / 2, player.y, '#ffffff');
                             respawnPlayer();
@@ -492,8 +564,7 @@
                 }
             }
 
-            // Level clear goal (all modes)
-            if (!levelCompleted && player.x + player.width > goal.x + 30 && player.x < goal.x + goal.width) {
+                        if (goal && !levelCompleted && player.x + player.width > goal.x + 30 && player.x < goal.x + goal.width) {
                 levelCompleted = true;
                 player.vx = 0;
                 window.AdventureMusic.play('win');
@@ -712,7 +783,9 @@
             if (!levelCompleted) cameraX += (cfg.driveSpeed || 3.2) * scrollScale;
             player.x = cameraX + player.offsetX;
             player.offsetX = Math.max(30, Math.min(canvas.width - player.width - 30, player.offsetX));
-            player.y = Math.max(pf.top, Math.min(pf.bottom - player.height, player.y));
+            // 2B: clamp car Y to the road band, not the full playfield.
+            const rb = pf.roadBand;
+            player.y = Math.max(rb.top, Math.min(rb.bottom - player.height, player.y));
         }
 
         function updateFly() {
@@ -1166,7 +1239,8 @@
                 let __sim = window.__advSceneCache[__sceneStem];
                 if (!__sim) { __sim = new Image(); __sim.src = '../assets/scenes/scene-' + __sceneStem + '.webp'; __sim.style.display = 'none'; __sim.style.width = '1px'; __sim.style.height = '1px'; document.body.appendChild(__sim); window.__advSceneCache[__sceneStem] = __sim; }
                 if (__sim.complete && __sim.naturalWidth > 0) {
-                    const __scale = canvas.height / __sim.naturalHeight;
+                    const __skyH = Math.max(1, roadTopY());
+                    const __scale = __skyH / __sim.naturalHeight;
                     const __drawW = Math.ceil(__sim.naturalWidth * __scale);
                     const __first = Math.floor(cameraX / __drawW);
                     for (let __i = __first; __i * __drawW < cameraX + canvas.width; __i++) {
@@ -1174,8 +1248,26 @@
                         ctx.save();
                         if (__i % 2 !== 0) { ctx.translate(__sx + __drawW, 0); ctx.scale(-1, 1); }
                         else { ctx.translate(__sx, 0); }
-                        ctx.drawImage(__sim, 0, 0, __drawW, canvas.height);
+                        ctx.drawImage(__sim, 0, 0, __drawW, __skyH);
                         ctx.restore();
+                    }
+                }
+            }
+
+            // Painted road strip (config-driven): tileable strip drawn at the road band,
+            // replacing the flat roadColor fill for worlds that supply one.
+            if ((theme && theme.roadStrip) || cfg.roadStrip) {
+                const __stem = (theme && theme.roadStrip) || cfg.roadStrip;
+                if (!window.__advRoadStripCache) window.__advRoadStripCache = {};
+                let __rim = window.__advRoadStripCache[__stem];
+                if (!__rim) { __rim = new Image(); __rim.src = '../assets/scenes/road-strip-' + __stem + '.webp'; __rim.style.display = 'none'; __rim.style.width = '1px'; __rim.style.height = '1px'; document.body.appendChild(__rim); window.__advRoadStripCache[__stem] = __rim; }
+                if (__rim && __rim.complete && __rim.naturalWidth > 0) {
+                    const __rh = (theme && theme.roadStripHeight) || cfg.roadStripHeight || Math.max(40, canvas.height - roadTopY());
+                    const __rw = Math.max(16, Math.round(__rh * __rim.naturalWidth / __rim.naturalHeight));
+                    const __firstR = Math.floor(cameraX / __rw);
+                    for (let __i = __firstR; __i * __rw < cameraX + canvas.width; __i++) {
+                        const __sx = __i * __rw;
+                        ctx.drawImage(__rim, __sx, roadTopY(), __rw, __rh);
                     }
                 }
             }
@@ -1310,7 +1402,11 @@
             if (mode === 'drive') {
                 ctx.fillStyle = 'rgba(0,0,0,0.18)';
                 ctx.beginPath();
-                ctx.ellipse(player.x + player.width / 2, player.y + player.height + 3, player.width * 0.42, 6, 0, 0, Math.PI * 2);
+                // 2D: shadow sits on the visible wheel line (bottom of the visible sprite),
+                // not on the padded sprite box. Gap between wheels and shadow <= 4 px.
+                const wheelLine = heroBox ? player.y + player.height : player.y + player.height + 3;
+                const sw = heroBox ? player.width * 0.8 : player.width * 0.42;
+                ctx.ellipse(player.x + player.width / 2, wheelLine + 2, sw, 6, 0, 0, Math.PI * 2);
                 ctx.fill();
                 if (!levelCompleted && goal && player.x < goal.x - 500) {
                     const arrowX = goal.x - 80;
@@ -1385,10 +1481,28 @@
             ctx.globalAlpha = 1;
             if (mode === 'drive') {
                 if (heroImage && heroImage.complete && heroImage.naturalWidth) {
-                    const imageHeight = player.width * heroImage.naturalHeight / heroImage.naturalWidth;
-                    ctx.filter = cfg.heroFilter || 'none';
-                    ctx.drawImage(heroImage, -player.width / 2, player.height / 2 - imageHeight, player.width, imageHeight);
-                    ctx.filter = 'none';
+                    initHeroBox();
+if (heroBox) {
+                        // 2D: shadow at the wheel line (bottom of visible sprite),
+                        // in the hero's already-translated local coordinate space.
+                        if (pf && pf.roadBand) {
+                            ctx.save();
+                            ctx.translate(0, player.height / 2);
+                            window.AdventureModes.drawHeroShadow(ctx, pf.roadBand.bottom, t);
+                            ctx.restore();
+                        }
+                        // Draw the sprite's visible box exactly filling the player box,
+                        // so the wheel line is at player.y + player.height.
+                        ctx.drawImage(heroImage,
+                            heroBox.vb.x, heroBox.vb.y, heroBox.vb.w, heroBox.vb.h,
+                            -player.width / 2, -player.height / 2,
+                            player.width, player.height);
+                    } else {
+                        const imageHeight = player.width * heroImage.naturalHeight / heroImage.naturalWidth;
+                        ctx.filter = cfg.heroFilter || 'none';
+                        ctx.drawImage(heroImage, -player.width / 2, player.height / 2 - imageHeight, player.width, imageHeight);
+                        ctx.filter = 'none';
+                    }
                 } else {
                     window.AdventureModes.drawDriveCar(ctx, player.width, player.height, 0);
                 }
@@ -1517,6 +1631,7 @@
             get scrollScale() { return scrollScale; },
             get isCompact() { return isCompact; },
             get debug() { return __debugPF; },
+            get heroBox() { return heroBox; },
             setHeroType,
         };
         window.__adv = game;

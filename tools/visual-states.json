@@ -57,9 +57,18 @@
   "dino": {
     "INIT": "true"
   },
-  "driving": {
-    "INIT": "true"
-  },
+"driving": {
+    "INIT": "true",
+    "WORLD_1": "(() => { const a = window.__adv; if (!a) return false; for (let i = 0; i < 1; i++) a.nextLevel(); return true; })()",
+    "WORLD_2": "(() => { const a = window.__adv; if (!a) return false; for (let i = 0; i < 2; i++) a.nextLevel(); return true; })()",
+    "WORLD_3": "(() => { const a = window.__adv; if (!a) return false; for (let i = 0; i < 3; i++) a.nextLevel(); return true; })()",
+    "WORLD_4": "(() => { const a = window.__adv; if (!a) return false; for (let i = 0; i < 4; i++) a.nextLevel(); return true; })()",
+    "WORLD_5": "(() => { const a = window.__adv; if (!a) return false; for (let i = 0; i < 5; i++) a.nextLevel(); return true; })()",
+    "WORLD_6": "(() => { const a = window.__adv; if (!a) return false; for (let i = 0; i < 6; i++) a.nextLevel(); return true; })()",
+    "WORLD_7": "(() => { const a = window.__adv; if (!a) return false; for (let i = 0; i < 7; i++) a.nextLevel(); return true; })()",
+    "WORLD_8": "(() => { const a = window.__adv; if (!a) return false; for (let i = 0; i < 8; i++) a.nextLevel(); return true; })()",
+    "WORLD_9": "(() => { const a = window.__adv; if (!a) return false; for (let i = 0; i < 9; i++) a.nextLevel(); return true; })()"
+},
   "ocean": {
     "INIT": "true"
   },

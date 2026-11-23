@@ -383,9 +383,11 @@ function writeReviewToc({ review, generatedAt }) {
           { timeout: 15000, label: `${page} images settled before capture` },
         );
 
-        /* Let one more render frame paint newly-loaded JS images (painted
-           scenes appended by the engine after boot) before capturing. */
-        await h.sleep(500);
+        /* Repaint after late JS-loaded images (painted scene / road strip) finish:
+           the last draw() ran before they loaded, so advance a few frames now that
+           image.complete is true, or the shot keeps the pre-load (flat) frame. */
+        await h.evalv('window.__visualAdvance(3)');
+        await h.sleep(200);
 
         const target = path.join(outDir, file);
         let bytes;

@@ -1587,6 +1587,46 @@
     "sha256": "f0acbb0ca7d2bbf33e794cb5a024136b0b01271c06ad3b932e1993652a08fae8",
     "size": 2018229
   },
+  "assets/scenes/road-strip-city.webp": {
+    "sha256": "611720b02b7bfe52d6a506e28ee47f58814a842c4e09333cfa3936ecb21cb677",
+    "size": 12834
+  },
+  "assets/scenes/road-strip-coast.webp": {
+    "sha256": "cd340e78230719d589eba0782f5035d861ea52017166fa00ddcf8f31c3d6bc25",
+    "size": 14442
+  },
+  "assets/scenes/road-strip-cosmic.webp": {
+    "sha256": "9b59ee3cc143ecf5378a76204c39a8310571df9dc1bd84d7010eaf4b73a68481",
+    "size": 44202
+  },
+  "assets/scenes/road-strip-desert.webp": {
+    "sha256": "4e04571d2b120061a8eac42784acd46581711ceeba4f3e8b73fa2ce671a1444f",
+    "size": 20376
+  },
+  "assets/scenes/road-strip-field.webp": {
+    "sha256": "00129b208535bf0d45b126780a661eb37876a635fac5c0600344befae5f404ce",
+    "size": 17544
+  },
+  "assets/scenes/road-strip-forest.webp": {
+    "sha256": "c80b0df9a5587ecaf1ce6d6b959831af1bf68efc777812d7529e83e372652f2f",
+    "size": 38072
+  },
+  "assets/scenes/road-strip-island.webp": {
+    "sha256": "4b46fb81912a20f3be67e6852c4ac655c73c3151d30ab9dc86714292141b6ecc",
+    "size": 24052
+  },
+  "assets/scenes/road-strip-mountain.webp": {
+    "sha256": "8a4fcdbf3b2bc2cc94a85c61665cae247665b228f8a51ed6bd4918f3a42cb023",
+    "size": 42172
+  },
+  "assets/scenes/road-strip-night.webp": {
+    "sha256": "49309cb544ccc6baa57b290c566fdb44086855cdc6fc63823375c9453807afd4",
+    "size": 27380
+  },
+  "assets/scenes/road-strip-winter.webp": {
+    "sha256": "afce2ff626933ff5d12f6a49bf7986afb94881c3ffd42031649cf997ba840576",
+    "size": 19264
+  },
   "assets/scenes/scene-autumn.png": {
     "sha256": "10b0702e7b550a34b90217ec57a43d0b04f683643041d61ef52648f92af3fc20",
     "size": 2336057
@@ -1856,16 +1896,16 @@
     "size": 8824
   },
   "games/adventure-modes.js": {
-    "sha256": "85fe27874c0b19e713c28dff4c434b8519f578a2efe02afe47dbd435fed85132",
-    "size": 14799
+    "sha256": "611e50478c9581a00e58578697973a54e5abc2205ae88eee33ff2f6989e6ce70",
+    "size": 15485
   },
   "games/adventure-music.js": {
     "sha256": "cdd5c88f3f4840a44bbb863a290774101def10eb3b718c75ce54d7a9100b6527",
     "size": 15812
   },
   "games/adventure.js": {
-    "sha256": "c7e30e3191ecf9a786138173791cc53b41272ed302c3d9dbb9b351f7f67f5c8f",
-    "size": 68327
+    "sha256": "4c94220628fb173f3fcd7c9466f232bb523bce6915ac157739ceb060646e6609",
+    "size": 75329
   },
   "games/animal_counting.js": {
     "sha256": "67ad67f8edd689cb89ee5e2e99233318c375259a59fd7e93e1263602869267eb",
@@ -1908,8 +1948,8 @@
     "size": 38114
   },
   "games/driving.js": {
-    "sha256": "e2b962bd8cb374abac183364a627009422604d2d22b1d291872b86028a1fa7fa",
-    "size": 20493
+    "sha256": "a0560a28b53b0ba201524e91e5f0f936d3e262940f8db84bbe95187aef3dd7e9",
+    "size": 20678
   },
   "games/fastcat.js": {
     "sha256": "635e6b52c605841b3c52d41586a540f1b2a2054cdabaf2b6fbcc0773e8286532",
@@ -2172,8 +2212,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "bc8e2a67c62c5e531223ca86b634b48fa04a5eabda7983ffa88d023b679ee956",
-    "size": 17840
+    "sha256": "300e9e20904127a789f078faa214be8ad59a9d32002faa705b211d78d1727065",
+    "size": 18257
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",
