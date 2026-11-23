@@ -25,6 +25,13 @@ Gameplay:
 - **Animal art recovery (task 135):** reverted custom SVG illustrations — restored native Unicode emoji for all animal artwork (per Master Implementation Plan: custom SVGs were "visually too crude")
 - **Navigation arrow (task 126):** a large pulsing yellow arrow appears near the goal when the child is far away, pointing toward the finish — no text instructions.
 
+## Phase 1 (2026-11-23, task 463)
+- Shared playfield rectangle (`pf`) measured from DOM chrome — hero/obstacles/coins/goal clamped inside, entity scale `u = pf.height / 520` clamped to [0.5, 1].
+- Compact HUD on short screens (`canvas.height < 500px`): title hidden, score card shrunk to icon+number, HUD band ≤ 56px.
+- Reaction-time budget: scroll speed scales by `clamp(canvas.width/1024, 0.6, 1)` so obstacle-to-hero time stays ≥ 2.0 s at every size.
+- Debug overlay: `?debug=pf` draws pf rect, hero hitbox, obstacle hitboxes, shadow baseline (no network, no UI text).
+- Ocean coin Y bug fixed (uses `maxDy` not `goalDy`).
+
 Educational goals:
 
 - Motor skills

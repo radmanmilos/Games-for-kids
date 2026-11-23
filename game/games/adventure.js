@@ -1513,6 +1513,10 @@
             get bumpCount() { return bumpCount; },
             get heroType() { return heroType; },
             get paused() { return paused; },
+            get pf() { return pf; },
+            get scrollScale() { return scrollScale; },
+            get isCompact() { return isCompact; },
+            get debug() { return __debugPF; },
             setHeroType,
         };
         window.__adv = game;
