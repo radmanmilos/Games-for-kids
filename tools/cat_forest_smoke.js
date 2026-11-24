@@ -1371,7 +1371,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     const sel = m[1].split('\n').pop().trim();
     if (sel) cf12Anim.push(sel);
   }
-  const cf12Known = ['.cf-gift', '.cf-decor-item', '.cf-treat.cf-bounce', '#cf-tray.cf-hint', '#cf-rain i'];
+  const cf12Known = ['.cf-gift', '.cf-decor-item', '.cf-fish-sprite', '.cf-treat.cf-bounce', '#cf-tray.cf-hint', '#cf-rain i'];
   const cf12Unknown = cf12Anim.filter(s => cf12Known.indexOf(s) === -1);
   check('every animation: selector on the page is classified by the audit (AC2)',
     cf12Anim.length >= 5 && cf12Unknown.length === 0,
@@ -1665,7 +1665,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     JSON.stringify({ keys: cf14Pre.keys, met: cf14Pre.met, decor: cf14Pre.decor.length }));
   check('CF-14: the save payload is exactly {v:1, met:[ids], decor:[{e,s}]}',
     cf14Raw && cf14Raw.v === 1 && Array.isArray(cf14Raw.met) && Array.isArray(cf14Raw.decor)
-      && Object.keys(cf14Raw).sort().join(',') === 'decor,met,v'
+      && Object.keys(cf14Raw).sort().join(',') === 'decor,fishCount,met,v'
       && cf14Raw.met.every(id => typeof id === 'string')
       && cf14Raw.decor.every(d => d && typeof d.e === 'string' && (d.s | 0) === d.s),
     cf14Pre.raw);

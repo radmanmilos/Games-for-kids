@@ -130,6 +130,9 @@
       idle: { sinceMs: 0, hints: 0, firstDone: false },
       fx: { count: 0, parts: [] },
       scene: DEFAULT_SCENE,
+      /* Catches made at the pond (Phase 3). Starts at 0; every successful
+         catch +1, and a fish set on a plate is not consumed twice. */
+      fishCount: 0,
       /* Transient picture hints (no text): a gentle bounce of the tray or of the
          selected treat. Kept in state and timed by the clock so step() can drive
          it in tests; not part of the TD §8 snapshot. */
@@ -561,7 +564,10 @@
       bookGrid: document.querySelector('#cf-book .cf-book-grid'),
       treats: [].slice.call(document.querySelectorAll('#cf-tray .cf-treat')),
       plates: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate')),
-      plateTreats: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate-treat'))
+      plateTreats: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate-treat')),
+      pondSpot: document.getElementById('cf-fishing-spot'),
+      fishBasket: document.getElementById('cf-fish-basket'),
+      pondScene: document.getElementById('cf-pond-scene')
     };
   }
 
@@ -687,10 +693,30 @@
     }
   }
 
+/* CF-13 step 2: the fish basket shows up to this many sprites; the internal
+     count stays generous and never discards a catch (plan §3.2). A module
+     constant, not a CF property — it is a visual cap, not a gameplay rule. */
+  var FISH_BASKET_CAP = 24;
+
+  function renderFishBasket() {
+    if (!els || !els.fishBasket) return;
+    var shown = state.fishCount;
+    if (shown > FISH_BASKET_CAP) shown = FISH_BASKET_CAP;
+    var sig = 'n' + shown;
+    if (els.fishBasket.getAttribute('data-sig') === sig) return;
+    els.fishBasket.setAttribute('data-sig', sig);
+    while (els.fishBasket.firstChild) els.fishBasket.removeChild(els.fishBasket.firstChild);
+    for (var i = 0; i < shown; i++) {
+      var sp = document.createElement('span');
+      sp.className = 'cf-fish-sprite';
+      els.fishBasket.appendChild(sp);
+    }
+  }
+
   /* ---- cat rendering (CF-07; TD §7/§10) ---------------------------------
-     render() projects each actor's fraction of its phase to a position; CSS
-     only scales the body for facing and bobs it while walking, so step() stays
-     exact and positions never come from a transition. */
+   render() projects each actor's fraction of its phase to a position; CSS
+   only scales the body for facing and bobs it while walking, so step() stays
+   exact and positions never come from a transition. */
   function geomPlate(idx) {
     return (geom && geom.plates[idx]) || { x: 0.3 + idx * 0.2, y: 0.48 };
   }
@@ -1359,7 +1385,7 @@
   var SAVE_KEY = 'catForestSave';
 
   function loadSave() {
-    var out = { met: [], decor: [] };
+    var out = { met: [], decor: [], fishCount: 0 };
     try {
       var raw = localStorage.getItem(SAVE_KEY);
       if (!raw) return out;
@@ -1385,6 +1411,9 @@
           }
         }
       }
+      if (typeof s.fishCount === 'number' && (s.fishCount | 0) === s.fishCount && s.fishCount >= 0) {
+        out.fishCount = s.fishCount;
+      }
     } catch (e) { /* corrupt or unavailable storage: fresh start */ }
     return out;
   }
@@ -1394,7 +1423,8 @@
       localStorage.setItem(SAVE_KEY, JSON.stringify({
         v: 1,
         met: state.met.slice(),
-        decor: state.decor.map(function (d) { return { e: d.e, s: d.s }; })
+        decor: state.decor.map(function (d) { return { e: d.e, s: d.s }; }),
+        fishCount: state.fishCount
       }));
     } catch (e) { /* private mode / quota: play on */ }
   }
@@ -1512,6 +1542,19 @@
     els.app.addEventListener('pointerdown', onAppPointerDown); // CF-10: any real touch restarts the idle windows
     els.friends.addEventListener('click', openBook);   // CF-15
     els.bookClose.addEventListener('click', closeBook); // CF-15
+
+    /* CF-13 step 2: pond fishing interaction.
+       Tap the fishing spot → increment fish count; a fish sprite is added to the
+       basket. No failure state, no timer, no shortage — every catch is a gift.
+       The basket shows the collected fish as sprites; no digits, no counters. */
+    els.pondSpot.addEventListener('click', function () {
+      state.fishCount++;
+      renderFishBasket();
+      if (window.tone) {
+        window.tone(880, 0.1, 0, 'sine', 0.15);
+        window.tone(660, 0.1, 0.08, 'sine', 0.2);
+      }
+    });
 
     /* CF-10 step 4: one spoken welcome prompt at boot (PS §5, D9). Best-effort
        with the sorting idiom — a silent failure is fine and nothing depends

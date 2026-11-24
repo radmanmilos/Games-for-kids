@@ -278,6 +278,73 @@
     font-variant-emoji:emoji;transition:transform .16s ease, box-shadow .16s ease;}
   #cf-book-close::before{content:"✖️";}
 
+  /* Phase 3 pond scene (plan §3.2): visible only when
+     #app[data-scene="pond"]. The water is a soft blue shape; reeds and lily
+     pads are decorative emoji drawn through ::before (no text nodes). The
+     fishing spot is a large circular button over the water; the fish basket
+     near the bottom edge shows collected fish as sprites (no digits). The
+     return control and the path-to-woodland hotspot sit on the bank. */
+  #app[data-scene="pond"] #cf-pond-scene{display:block;}
+  #app[data-scene="pond"] #cf-fishing-spot{display:block;}
+  #app[data-scene="pond"] #cf-fish-basket{display:flex;}
+  #app[data-scene="pond"] #cf-pond-back{display:grid;}
+  #app[data-scene="pond"] #cf-pond-path{display:grid;}
+  /* Hide village interactive layers when at the pond. */
+  #app[data-scene="pond"] #cf-plates{display:none;}
+  #app[data-scene="pond"] #cf-tray{display:none;}
+  #app[data-scene="pond"] #cf-friends{display:none;}
+  #app[data-scene="pond"] .cf-toggles{display:none;}
+  /* Phase 3: the whole pond scene is hidden unless we are AT the pond. */
+  #cf-pond-scene,#cf-fishing-spot,#cf-fish-basket,#cf-pond-back,#cf-pond-path{display:none!important;}
+
+  #cf-pond-scene{position:absolute;inset:0;z-index:2;pointer-events:none;}
+  .cf-pond-water{position:absolute;left:10%;right:10%;bottom:4%;top:22%;
+    background:linear-gradient(180deg,#7FB8D9 0%,#5A9BCC 55%,#3E7BA3 100%);
+    border-radius:50% 50% 8% 8%;box-shadow:inset 0 -2vmin 4vmin rgba(0,0,0,.06);}
+  .cf-pond-reed{position:absolute;bottom:8%;font-size:10vmin;line-height:1;font-variant-emoji:emoji;}
+  .cf-pond-reed::before{content:attr(data-e);}
+  .cf-pond-reed-1{left:6%;transform:rotate(-8deg);}
+  .cf-pond-reed-2{right:6%;transform:rotate(8deg);}
+  .cf-pond-lily{position:absolute;bottom:18%;font-size:7vmin;line-height:1;font-variant-emoji:emoji;}
+  .cf-pond-lily::before{content:attr(data-e);}
+  .cf-pond-lily-1{left:18%;}
+  .cf-pond-lily-2{right:18%;}
+
+  #cf-fishing-spot{display:none;position:absolute;left:50%;top:38%;
+    transform:translate(-50%,-50%);width:clamp(96px,26vmin,160px);
+    height:clamp(96px,26vmin,160px);border-radius:50%;border:none;
+    background:rgba(255,255,255,.12);cursor:pointer;z-index:5;
+    box-shadow:0 0 0 2px rgba(255,255,255,.35),inset 0 0 3vmin rgba(255,255,255,.2);
+    transition:box-shadow .16s ease,transform .16s ease;}
+  #cf-fishing-spot:active{box-shadow:0 0 0 4px rgba(255,255,255,.6),inset 0 0 4vmin rgba(255,255,255,.3);
+    transform:translate(-50%,-50%) scale(.96);}
+
+  #cf-fish-basket{position:absolute;left:50%;bottom:clamp(10px,3vmin,28px);
+    transform:translateX(-50%);z-index:6;display:flex;justify-content:center;align-items:flex-end;
+    gap:clamp(4px,1vmin,10px);padding:clamp(6px,1.4vmin,14px);min-height:clamp(56px,10vmin,80px);
+    pointer-events:none;}
+  .cf-fish-sprite{width:clamp(28px,6vmin,44px);height:clamp(28px,6vmin,44px);
+    font-size:clamp(24px,5vmin,38px);line-height:1;display:grid;place-items:center;
+    font-variant-emoji:emoji;animation:cf-fish-in .35s ease;}
+  .cf-fish-sprite::before{content:"🐟";}
+  @keyframes cf-fish-in{from{opacity:0;transform:translateY(12px) scale(.6);}to{opacity:1;transform:none;}}
+
+  #cf-pond-back{position:absolute;left:clamp(10px,2.6vmin,28px);
+    top:clamp(10px,2.6vmin,28px);z-index:10;width:clamp(56px,8vmin,72px);
+    aspect-ratio:1;padding:0;border:none;border-radius:50%;background:#fff;
+    box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);cursor:pointer;
+    display:grid;place-items:center;font-size:clamp(26px,5.5vmin,44px);line-height:1;
+    font-variant-emoji:emoji;transition:transform .16s ease, box-shadow .16s ease;}
+  #cf-pond-back::before{content:"🏠";}
+
+  #cf-pond-path{position:absolute;right:clamp(10px,2.6vmin,28px);
+    bottom:clamp(10px,2.6vmin,28px);z-index:10;width:clamp(56px,8vmin,72px);
+    aspect-ratio:1;padding:0;border:none;border-radius:50%;background:#fff;
+    box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);cursor:pointer;
+    display:grid;place-items:center;font-size:clamp(26px,5.5vmin,44px);line-height:1;
+    font-variant-emoji:emoji;transition:transform .16s ease, box-shadow .16s ease;}
+  #cf-pond-path::before{content:"🌲";}
+
   /* The keyboard/OS preference always wins over the page's own motion.
      CF-12 audit (TP §3.10): every decorative *movement* is disabled here —
      press feedback and the idle pulse (DECISIONS: shake/pulse suppressed) and
@@ -289,6 +356,8 @@
     #cf-sky-night,#cf-night-tint,#cf-stars{transition:none;}
     #cf-rain i{animation:none;transform:translateY(var(--y));opacity:.3;}
     .cf-treat.cf-bounce,#cf-tray.cf-hint{animation:none;}
+    #cf-fishing-spot{transition:none;}
+    .cf-fish-sprite{animation:none;}
   }
 
   /* Desktop tier, mirroring sorting.html: cap the vmin glyphs so a tablet held
@@ -366,6 +435,22 @@
       <button id="cf-book-close" aria-label="Затвори"></button>
       <div class="cf-book-grid"><span class="cf-book-empty" data-e="🐾"></span></div>
     </div>
+
+    <!-- Phase 3 pond scene (plan §3.2): hidden by default, shown when
+         data-scene="pond". Decorative water + reeds + lily pads are
+         aria-hidden; the fishing spot is the one large tappable control;
+         the fish basket shows the collected fish as sprites (no digits). -->
+    <div id="cf-pond-scene" aria-hidden="true">
+      <span class="cf-pond-water" aria-hidden="true"></span>
+      <span class="cf-pond-reed cf-pond-reed-1" data-e="🌾" aria-hidden="true"></span>
+      <span class="cf-pond-reed cf-pond-reed-2" data-e="🌾" aria-hidden="true"></span>
+      <span class="cf-pond-lily cf-pond-lily-1" data-e="🪷" aria-hidden="true"></span>
+      <span class="cf-pond-lily cf-pond-lily-2" data-e="🪷" aria-hidden="true"></span>
+    </div>
+    <button id="cf-fishing-spot" aria-label="Пецај рибу"></button>
+    <div id="cf-fish-basket" aria-hidden="true"></div>
+    <button id="cf-pond-back" aria-label="Назад у село"></button>
+    <button id="cf-pond-path" aria-label="Вир"></button>
   </div>
 </div>
 <script src="../data/serbian.js"></script>
