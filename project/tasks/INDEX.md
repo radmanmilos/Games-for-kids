@@ -1,6 +1,6 @@
 # Task index
 
-One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **466**.
+One line per task: `number | status | date | title | archive file`. Every finished task lives in `archive/tasks/`. Look one up with `grep -n "^- 249\. \|^### 249\. " archive/tasks/tasks-200-249.md` (use the file named in the last column). Open tasks are in `ACTIVE.md`. The next task number is **467**.
 
 1 | DONE | 2026-07-31 | Integrate Paper Kitty into Petrin svet (2026-07-31, Codex) | tasks-001-099.md
 2 | DONE | 2026-07-31 | Share navigation system across mini-games (2026-07-31, Codex) | tasks-001-099.md
@@ -440,3 +440,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 453 | DONE | 2026-11-23 | Driving Phase 2 (heroBox, lane placement, shadow, hitbox guard) + 10-world screenshot battery (2026-11-23,… | tasks-400-499.md
 464 | DONE | 2026-11-23 | Cat Forest Village expansion Phase 1: art direction & scene prototypes (2026-11-23, OpenCode/Big Pickle) —… | tasks-400-499.md
 465 | DONE | 2026-11-24 | Cat Forest Village expansion Phase 2: village hub + 3 fixed feeding spots (2026-11-24, OpenCode/Big Pickle).… | tasks-400-499.md
+466 | DONE | 2026-11-24 | little_adventure IS-00: confirm decisions + install plan package (2026-11-24, Kilo/openrouter/free) —… | tasks-400-499.md

@@ -1884,16 +1884,16 @@
     "size": 64676
   },
   "data/app-registry.js": {
-    "sha256": "41613086f5914084aa4cbd371c6dd100dc51628cbbd29803317c4362ef99b636",
-    "size": 9917
+    "sha256": "f7f5d3fdd004a8a6396ca2457fcffc736d090f41c5100174b3d8a284df9a3316",
+    "size": 10251
   },
   "data/art-registry.js": {
     "sha256": "b746be54ac05a725e6efe8087afbc7b0e23ab33e81e6df874cb6adad7e5ce494",
     "size": 4544
   },
   "data/serbian.js": {
-    "sha256": "12f7f7f12989868bc399ecbe94de2e88165e1fea452047dd097c83a3e830ceb8",
-    "size": 8824
+    "sha256": "622dc894109955d9815ed28c1e4ee38b3568bad753150e203dda0c409ecb1fdd",
+    "size": 8877
   },
   "games/adventure-modes.js": {
     "sha256": "611e50478c9581a00e58578697973a54e5abc2205ae88eee33ff2f6989e6ce70",
@@ -1963,6 +1963,18 @@
     "sha256": "7ec9713b94a288065dbd0934a400b96b53bec7cfad73e28c603e09d915bf9a2b",
     "size": 114533
   },
+  "games/little_adventure-config.js": {
+    "sha256": "7fef685c426db94af5986ed7180e7f731ebe74e9ee76e861c70be88cf9ad3d67",
+    "size": 4225
+  },
+  "games/little_adventure-logic.js": {
+    "sha256": "5cb2a062c9fa740e00f1081889f6ea38cc33878393b064dc1d6b62199fdb4baf",
+    "size": 6843
+  },
+  "games/little_adventure.mjs": {
+    "sha256": "dfe87fa8408d9977986f19b413fc57b6413c8a427362f69d7ceae40a6c0b8055",
+    "size": 3968
+  },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
     "size": 11183
@@ -2020,11 +2032,11 @@
     "size": 17659
   },
   "index.html": {
-    "sha256": "97e966ecca4876958c50cc369f5e2dc107fc9220dac348ea91ea7e525fda15f2",
-    "size": 19388
+    "sha256": "1c914c2fd54fcf3db80ddd21b6893c27db87a9555336ac9b8586a71d1c2f695f",
+    "size": 19526
   },
   "manifest.json": {
-    "sha256": "d770dfdce848cea198becad856e5369ff637fb77fbdfcf330822d522f56188ad",
+    "sha256": "6b061cfa9533c478ec195c3e2389da9a6359bd8859b00bb1416d4650102ad0df",
     "size": 578
   },
   "pages/animal_counting.html": {
@@ -2074,6 +2086,10 @@
   "pages/fastcat.html": {
     "sha256": "cbe8f2dfe0d90e95c6cf96cef6dfaebd97a9f01237ea705a66d150a6c0a4d01d",
     "size": 14166
+  },
+  "pages/little_adventure.html": {
+    "sha256": "1f7d7e2579d6b018363423bf7acae16c9c89c1ce98ec9948d1de0a06f5f9e275",
+    "size": 4111
   },
   "pages/matching_game.html": {
     "sha256": "7a73924813a6c965f45915665cc74ef9db993d377e3fb28d019b9385d3f4f49a",
@@ -2212,8 +2228,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "300e9e20904127a789f078faa214be8ad59a9d32002faa705b211d78d1727065",
-    "size": 18257
+    "sha256": "b60800903315615c7d098d1716ce3636351e5f29588647e65c88c62be060224e",
+    "size": 18397
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",

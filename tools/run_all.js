@@ -92,6 +92,11 @@ const SHARED_MODULE_SMOKE = {
   // racing3d-config.js is config for the racing3d module; no page loads it
   // directly, so the page rule below cannot reach racing3d_smoke.
   'racing3d-config': ['racing3d_smoke'],
+  // little_adventure-config.js/logic.js/models.js are module files with no app id;
+  // their pages' smoke covers them.
+  'little_adventure-config': ['little_adventure_smoke'],
+  'little_adventure-logic': ['little_adventure_smoke', 'little_adventure_logic_smoke'],
+  'little_adventure-models': ['little_adventure_smoke'],
 };
 /* Games file -> id. Only needed where the filename and the registry id differ. */
 const GAME_FILE_ALIAS = { candy: 'matching_game', 'kitty-standalone': 'explorer' };

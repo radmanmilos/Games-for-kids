@@ -1,9 +1,10 @@
 # Project status
 
-**Last verified:** 2026-11-23
+**Last verified:** 2026-11-24
 **Repository:** radmanmilos/Games-for-kids
-**Current branch:** `claude/cat-forest-village`
+**Current branch:** `little-adventure` (IS-00 baseline; plan package committed 2077646)
 **Version:** `3.0.20` (main) / `2.4.0` (cat_forest manifest, on main)
+**Little adventure:** plan package installed: `resources/General_reviews/little_adventure/` — ledger `PROGRESS.md`; next card per that file.
 
 ## Driving engine work (complete on `main`, CI green)
 

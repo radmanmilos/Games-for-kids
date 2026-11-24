@@ -99,6 +99,9 @@
   "racing3d": {
     "INIT": "true"
   },
+  "little_adventure": {
+    "INIT": "true"
+  },
   "parent": {
     "INIT": "true"
   }

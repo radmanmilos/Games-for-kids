@@ -219,6 +219,7 @@
       racing3d: 'Мала тркачица 3Д',
       explorer: 'Мала истраживачица',
       fastcat: 'Брзи мачак',
+      little_adventure: 'Мала авантура',
       cat_forest: 'Мачја шума',
       parent: 'За родитеље',
     },

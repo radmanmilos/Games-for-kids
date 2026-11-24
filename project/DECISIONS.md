@@ -27,7 +27,7 @@ The Мала тркачица (Little Racer) game is fully built (Stages 1–5, 
 4. **Countdown words use existing MP3s** (`три`/`два`/`један`); `Крени!` uses TTS. No new audio assets.
 5. **Engine hum is synthesized** Web Audio (twin sawtooth, pitch/gain follows speed); music restarts on replay (also fixed a pre-existing bug: music never resumed after a race).
 6. **Pickup collect → 5 sparkle particles** in the world's finish color (gold default).
-7. **Controls = tablet-first thumb zones** — two big round buttons (⬅/➡) inside full screen-half zones (left/right 50% width, top 26vmin → bottom); portrait tablets ≥520px get an "Окрени уређај водоравно 🌍" overlay.
+7. **Controls = tablet-first thumb zones** — two big round buttons (⬅/➡) inside full screen-half zones (left/right 50% width, top 26vmin → bottom); portrait tablets ≥520px get an "Окрени уређај водоравно 🌝" overlay.
 8. **Reduced-motion caveat (watch this one):** the user's OS reports `prefers-reduced-motion: reduce` = ON (same reason task 83 was reverted). Consequence on the user's machine (`racing.js` `&& !REDUCED_MOTION`): the obstacle screen-shake AND the 2026-09-11 FOV/scale pulse + speed-line streaks are suppressed; `@media (prefers-reduced-motion: reduce)` also removes button-press and progress-fill transitions. Banking lean, hills, fog, shadows, skids/dust and the vignette still render (kept so the user can SEE the upgrade; discrete/gentle effects stay on). Slowdown + sound feedback always work. If the user wants any of the gated effects, it's a one-line change.
 9. **Wins count only on a real finish** — quitting mid-race never counts (guarded by `finishRecorded`, reset in `restart()`).
 10. **Locked cars announce via ARIA + 🎉 "НОВО: <car>" toast** when a threshold is crossed.
@@ -143,7 +143,7 @@ The following child-facing glyphs keep their emoji rendering by explicit decisio
 
 - **Gate 3 background integration (task 433) — complete 2026-11-09:** all 11 world backgrounds regenerated via Cloudflare flux-2-klein-4b into resources/.../09_BACKGROUND_SCENES/background_scene_<world>_new.png, then QA-verified (2048x592, opaque PNG, cornerA=255x4, no alpha issues) and integrated into game/assets/scenes/scene-<world>.png replacing all 11 existing scenes (spring, summer, autumn, winter-explorer, underground, cave, water, savanna, japan, northpole, egypt). Originals SHA256-backed to %TEMP%/opencode/scenes_backup_before_gate3/. Requirements: no bear/star IN backgrounds (style references only), seamless horizontal tiling for cameraX scrolling, sky-dominant composition, no baked ground line/platforms/hazards/enemies/collectibles, bottom halves with visible depth (no flat empty regions). Existing background candidates used as style references via --ref-files. Gate 1 style-addendum/palettes/technical-contract accepted before generation. ~4,355 of 10,000 neurons used today.
 
-- **Gate 4 pilot integration (task 434) — complete 2026-11-09:** terrain-spring-top + pipe-spring generated via Cloudflare flux-2-klein-4b (1024x1024 opaque PNG, star reference), cut out to 512x512 real-alpha WebP via asset_cutout.js (terrain-spring-top.webp 15 KB, pipe-spring.webp 6 KB, both ≤60 KB), added to art-registry.js (emoji 🍃 -> terrain-spring-top, emoji 🚰 -> pipe-spring), integrated into kitty-standalone.js draw() — spring static platforms use Art.draw with fillRect fallback, spring pipes use Art.draw with fillRect fallback. Non-spring worlds unchanged. Original raw PNGs in resources/.../09_BACKGROUND_SCENES/. ~4,592 of 10,000 neurons used today.
+- **Gate 4 pilot integration (task 434) — complete 2026-11-09:** terrain-spring-top + pipe-spring generated via Cloudflare flux-2-klein-4b (1024x1024 opaque PNG, star reference), cut out to 512x512 real-alpha WebP via asset_cutout.js (terrain-spring-top.webp 15 KB, pipe-spring.webp 6 KB, both ≤60 KB), added to art-registry.js (emoji 🝃 -> terrain-spring-top, emoji 🚰 -> pipe-spring), integrated into kitty-standalone.js draw() — spring static platforms use Art.draw with fillRect fallback, spring pipes use Art.draw with fillRect fallback. Non-spring worlds unchanged. Original raw PNGs in resources/.../09_BACKGROUND_SCENES/. ~4,592 of 10,000 neurons used today.
 
 ## Explorer paper UI kit + painted pits (2026-11-17, task 458)
 
@@ -159,9 +159,17 @@ The following child-facing glyphs keep their emoji rendering by explicit decisio
 
 ## Ocean pilot decisions (2026-11-20, user)
 
-- Scene format: **WebP** (proven decode via 	ools/check_art.js ffmpeg check). Pilot scene scene-ocean-reef.webp (2048x592) generated and wired.
+- Scene format: **WebP** (proven decode via tools/check_art.js ffmpeg check). Pilot scene scene-ocean-reef.webp (2048x592) generated and wired.
 - Decor: **separate parallax sprites** (not folded into scene). Engine config decorSprites reserved for later; decor still procedural until sprites land.
 - Control buttons: **unified to paper** (ps-btn--paper) across ocean/dino/space/driving.
 - Spike pits (Explorer): **switch to plain stone/ice spikes** � art swap deferred (needs generation + QA).
 - Shared helper extraction from kitty-standalone.js into game/shared/scene-tiles.js: **approved and done** (stemBox, tileStem, drawGoalArt, drawSceneCover). kitty_smoke 52/52 green.
 - Art reorg tasks 438-443: **retired for now** (revisit later).
+
+## little_adventure (2026-11-23) � product rules
+
+- 3D low-poly adventure `little_adventure` (working title �???? ????????�), ages ~4�6, fixed camera, floating joystick + sword + shield buttons, `toddler:false`.
+- Characters/world are code-built three.js primitives; no 2D sprites, no emoji in the scene, no image/audio assets, no new libraries.
+- The hero cannot be hurt; sword hits turn grumpy creatures friendly; keys/gems are puzzle items � no score, counters, coins, timers, health, lives or fail states.
+- Pure logic in `little_adventure-logic.js` (Node-testable); rendering only reads state.
+- Hub tile hidden until the user approves shipping (G4). Plan: `resources/General_reviews/little_adventure/`.

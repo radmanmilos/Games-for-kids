@@ -88,6 +88,8 @@ window.APP_REGISTRY = [
     route: 'game-fastcat', hubOrder: 11, hubGroup: 'games', back: 'back-btn', start: 'startFastCat' },
   { id: 'cat_forest', path: 'pages/cat_forest.html', category: 'games', title: window.SERBIAN.titles.cat_forest, smoke: 'cat_forest_smoke', screenshot: true, offline: true, toddler: true,
     route: 'game-cat-forest', hubOrder: 12, hubGroup: 'games', back: 'cat-forest-back', start: 'startCatForest' },
+  { id: 'little_adventure', path: 'pages/little_adventure.html', category: 'games', title: window.SERBIAN.titles.little_adventure, smoke: 'little_adventure_smoke', screenshot: true, offline: true, toddler: false,
+    route: 'game-little_adventure', hubOrder: 13, hubGroup: 'games', back: 'i3d-back', start: 'startlittle_adventure' },
   { id: 'parent', path: 'pages/parent.html', category: 'parent', title: window.SERBIAN.titles.parent, smoke: null, screenshot: false, offline: true, toddler: false,
     route: 'game-parent', hubOrder: null, hubGroup: null, back: 'back-btn', start: null }
 ];

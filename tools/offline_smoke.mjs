@@ -378,6 +378,17 @@ const APPS = [
     },
   },
   {
+    id: 'little_adventure', back: '#i3d-back',
+    ready: `typeof window.startlittle_adventure === 'function'`,
+    act: async h => {
+      await h.evalv(`window.startlittle_adventure(); true`);
+      return h.waitFor(`(function(){
+        const v = document.getElementById('i3d-view');
+        return (!v || v.textContent === '3D није доступан овде') || !!window.__little_adventure;
+      })()`, { timeout: 8000, label: 'the renderer or its no-WebGL fallback to answer' });
+    },
+  },
+  {
     id: 'explorer', back: '#back-btn',
     ready: `!!document.querySelector('#char-modal.show .char-btn[data-character="kitty"]')`,
     start: async h => {
@@ -723,7 +734,7 @@ await h.c.send('Network.enable');
 
     let note = 'played';
     let passed = true;
-    if (a.id === 'racing3d') {
+    if (a.id === 'racing3d' || a.id === 'little_adventure') {
       // probe a throwaway canvas, not a page selector: the view canvas is built
       // at runtime, so a wrong selector would report "no WebGL" on a host that
       // has it and quietly reduce coverage to a SKIP

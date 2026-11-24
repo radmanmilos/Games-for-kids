@@ -15,7 +15,7 @@ Status: `NEW` · `IN PROGRESS` · `DONE` · `BLOCKED` · `DEFERRED`. "Repo #" is
 
 | ID | Phase | Title | Depends on | Status | Repo # | Who (tool/model) | Date | Result / notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| IS-00 | 0 | Confirm decisions, install package, baseline | — | NEW | | | | |
+| IS-00 | 0 | Confirm decisions, install package, baseline | — | DONE | 466 | Kilo/openrouter/free | 2026-11-24 | Decisions confirmed (D1), plan committed 2077646, check_fast 10/10, check_docs green, DECISIONS+STATUS updated |
 | IS-01 | 1 | Page shell + registry + hidden hub tile | IS-00 | NEW | | | | |
 | IS-02 | 1 | Chrome smoke skeleton + tool wiring + version bump | IS-01 | NEW | | | | |
 | IS-03 | 2 | Config + validateConfig + stickVector + logic smoke | IS-02 | NEW | | | | |
@@ -39,4 +39,5 @@ Status: `NEW` · `IN PROGRESS` · `DONE` · `BLOCKED` · `DEFERRED`. "Repo #" is
 
 ## Log
 
+- 2026-11-24 — Kilo/openrouter/free — IS-00 DONE: decisions confirmed (D1 "Мала авантура" per user), plan package installed & committed (2077646), DECISIONS.md + STATUS.md sections added per 05 §5, baseline recorded. ✅ `check_fast` 10/10 green. ✅ `node tools/check_docs.js` green. Not verified: Chrome/WebGL behaviour, real tablet performance (no game/ changes made in IS-00).
 - 2026-11-23 — Claude/Sonnet 5.5 — plan package written (README, 00–06, PROGRESS). No `game/` or `tools/` file touched. Not verified: Chrome/WebGL behaviour, CI state, tablet performance.
