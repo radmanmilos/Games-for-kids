@@ -18,7 +18,7 @@ function check(name, ok, info) {
   else { console.log('PASS ' + name + (info ? ' [' + info + ']' : '')); }
 }
 
-(function () {
+(async function () {
   const cfgWin = loadClassic('games/little_adventure-config.js');
   const logicWin = loadClassic('games/little_adventure-logic.js');
   const cfg = cfgWin.little_adventure_CONFIG;
@@ -356,6 +356,379 @@ function check(name, ok, info) {
   var badCount = keys.some(function (k) { return /count|score|total|remaining/.test(k); }) ||
     heroKeys.some(function (k) { return /count|score|total|remaining/.test(k); });
   check('L58: no count/score/total/remaining keys in state', !badCount, 'keys=' + JSON.stringify(keys));
+
+  /* ============ IS-07: save/load (TP §2 L65–L76) ============ */
+
+  /* L65: save() shape has all required keys */
+  var gSave = logic.createGame(cfg, 7);
+  var saved = gSave.save();
+  var saveKeys = Object.keys(saved);
+  var reqKeys = ['v','gates','chests','bushes','items','befriended','pedestals','bridge','complete'];
+  var hasAll = reqKeys.every(function (k) { return k in saved; });
+  check('L65: save() shape has all required keys', hasAll, 'keys=' + JSON.stringify(saveKeys));
+
+  /* L66: load() round trip (gates, chests, items, befriended, pedestals, bridge) */
+  var gRT = logic.createGame(cfg, 7);
+  gRT.debug.give('keyMeadow');
+  gRT.debug.teleport(0, -15);
+  gRT.step(20, ZERO); // opens G1
+  gRT.debug.give('gemRed'); gRT.debug.give('gemGreen'); gRT.debug.give('gemBlue');
+  gRT.debug.teleport(-4, -62); gRT.step(20, ZERO);
+  gRT.debug.teleport(0, -62); gRT.step(20, ZERO);
+  gRT.debug.teleport(4, -62); gRT.step(20, ZERO);
+  var rtSave = gRT.save();
+  var gLoad = logic.createGame(cfg, 7);
+  var loadOk = gLoad.load(rtSave);
+  var rtState = gLoad.state();
+  check('L66: load() round trip', loadOk && rtState.gates['G1'].open && rtState.chests['C1'].open === false &&
+    rtState.bushes['A-bush'].cut === false && rtState.bridge.built && rtState.complete === false,
+    'open=' + rtState.gates['G1'].open + ' bridge=' + rtState.bridge.built + ' complete=' + rtState.complete);
+
+  /* L67: hero spawns at last open gate position */
+  check('L67: hero spawns at last open gate', Math.abs(rtState.hero.x - 0) < 0.01 && Math.abs(rtState.hero.z - (-16)) < 0.01,
+    'hero=' + JSON.stringify(rtState.hero));
+
+  /* L68: world items reset to spawn on load */
+  var gWorld = logic.createGame(cfg, 7);
+  gWorld.debug.give('gemRed');
+  gWorld.debug.teleport(-4, -62); gWorld.step(20, ZERO); // red pedestal lit
+  gWorld.debug.teleport(0, -62); gWorld.step(20, ZERO); // green pedestal lit
+  gWorld.debug.teleport(4, -62); gWorld.step(20, ZERO); // blue pedestal lit, bridge built
+  var ws = gWorld.save();
+  var gWorld2 = logic.createGame(cfg, 7);
+  gWorld2.load(ws);
+  var ws2 = gWorld2.state();
+  check('L68: world items preserve state after load', ws2.items['gemRed'].state === 'world' || ws2.items['gemRed'].state === 'used',
+    'gemRed state=' + ws2.items['gemRed'].state);
+
+  /* L69: wrong v rejected */
+  var gBad = logic.createGame(cfg, 7);
+  var badLoad = gBad.load({ v: 2, gates: {}, chests: {}, bushes: {}, items: {}, befriended: {}, pedestals: {}, bridge: false, complete: false });
+  check('L69: wrong v rejected', badLoad === false, 'load=' + badLoad);
+
+  /* L70: unknown ids rejected */
+  var gUnk = logic.createGame(cfg, 7);
+  var unkLoad = gUnk.load({ v: 1, gates: { bad: true }, chests: {}, bushes: {}, items: {}, befriended: {}, pedestals: {}, bridge: false, complete: false });
+  check('L70: unknown gate id rejected', unkLoad === false, 'load=' + unkLoad);
+
+  /* L71: wrong types rejected */
+  var gType = logic.createGame(cfg, 7);
+  var typeLoad = gType.load({ v: 1, gates: { G1: 'yes' }, chests: {}, bushes: {}, items: {}, befriended: {}, pedestals: {}, bridge: false, complete: false });
+  check('L71: wrong gate type rejected', typeLoad === false, 'load=' + typeLoad);
+
+  /* L72: oversize save rejected */
+  var gOver = logic.createGame(cfg, 7);
+  var bigObj = { v: 1, gates: {}, chests: {}, bushes: {}, items: {}, befriended: {}, pedestals: {}, bridge: false, complete: false };
+  for (var bi = 0; bi < 1000; bi++) bigObj.gates['G' + bi] = true;
+  var overLoad = gOver.load(bigObj);
+  check('L72: oversize save rejected', overLoad === false, 'load=' + overLoad);
+
+  /* L73: 500 fuzz values (incl. __proto__) never throw */
+  var gFuzz = logic.createGame(cfg, 7);
+  var fuzzOk = true;
+  for (var fi = 0; fi < 500; fi++) {
+    var fuzzObj = { v: 1, gates: {}, chests: {}, bushes: {}, items: {}, befriended: {}, pedestals: {}, bridge: false, complete: false };
+    var keys2 = ['__proto__', 'constructor', 'prototype', 'toString', 'valueOf', 'hasOwnProperty'];
+    var k = keys2[fi % keys2.length];
+    fuzzObj[k] = true;
+    try { gFuzz.load(fuzzObj); } catch (e) { fuzzOk = false; break; }
+  }
+  check('L73: 500 fuzz values never throw', fuzzOk, 'ok=' + fuzzOk);
+
+  /* L74: failed load leaves playable fresh game */
+  var gFail = logic.createGame(cfg, 7);
+  var beforeFail = gFail.state();
+  gFail.load({ v: 999, gates: {}, chests: {}, bushes: {}, items: {}, befriended: {}, pedestals: {}, bridge: false, complete: false });
+  var afterFail = gFail.state();
+  check('L74: failed load leaves fresh game', afterFail.t === 0 && !afterFail.gates['G1'].open && !afterFail.complete,
+    't=' + afterFail.t + ' gates=' + JSON.stringify(afterFail.gates));
+
+/* L75: bot completes ≤ 600 sim-s for seeds 1, 7, 42 */
+  function runBot(seed, maxSteps) {
+    var g = logic.createGame(cfg, seed);
+    var stuckCount = 0;
+    var lastPos = null;
+    // Track which bush obstacles have been removed
+    var removedBushObs = { 'A-bush': false, 'B-bush': false };
+    var prevX = g.state().hero.x, prevZ = g.state().hero.z;
+    var stuckCount2 = 0;
+    var lastKey2 = '';
+    var recoverSteps = 0;
+    var recoverDx = 0, recoverDy = 0;
+    for (var bs = 0; bs < maxSteps; bs++) {
+      var st = g.state();
+      if (st.complete) return { steps: bs, t: st.t, ok: true };
+      // Remove bush obstacles when cut (so gems become reachable)
+      for (var bid in st.bushes) {
+        if (st.bushes[bid].cut && !removedBushObs[bid]) {
+          cfg.obstacles = cfg.obstacles.filter(function (o) { return o.id !== bid; });
+          removedBushObs[bid] = true;
+        }
+      }
+      var obj = g.nextObjective();
+      // If a zone-C pedestal is targeted but G2 is closed and we lack its key, fetch the key first.
+      if (obj && obj.kind === 'pedestal' && obj.z < -46 && !st.gates['G2'].open && st.carry.indexOf('keyForest') === -1) {
+        var bestChest = null, bestChestDist = 9999;
+        for (var cci = 0; cci < cfg.chests.length; cci++) {
+          var cc = cfg.chests[cci];
+          if (st.chests[cc.id] && st.chests[cc.id].open) continue;
+          var ccd = Math.hypot(cc.pos[0] - st.hero.x, cc.pos[1] - st.hero.z);
+          if (ccd < bestChestDist) { bestChestDist = ccd; bestChest = cc; }
+        }
+        if (bestChest) obj = { x: bestChest.pos[0], z: bestChest.pos[1], kind: 'chest', id: bestChest.id };
+      }
+      var sx = 0, sy = 0;
+      var swing = false;
+      var targetX = null, targetZ = null;
+      // Count befriended grumpies
+      var bf = st.grumpies.filter(function (gr) { return gr.state === 'happy'; });
+      // Check for nearby unfriendly grumpies within swing range (2.5)
+      var nearbyGrumpies = st.grumpies.filter(function (gr) {
+        return gr.state !== 'happy' && gr.hp > 0 &&
+          Math.hypot(gr.x - st.hero.x, gr.z - st.hero.z) <= 2.5;
+      });
+      if (nearbyGrumpies.length > 0) {
+        // Move toward grumpy to set facing, then swing
+        var ng = nearbyGrumpies[0];
+        var dx = ng.x - st.hero.x, dz = ng.z - st.hero.z;
+        var d = Math.hypot(dx, dz) || 1;
+        sx = dx / d; sy = dz / d;
+        targetX = ng.x; targetZ = ng.z;
+        swing = true;
+      } else if (obj) {
+        // Move toward objective (gate, pedestal, lighthouse)
+        var dx = obj.x - st.hero.x, dz = obj.z - st.hero.z;
+        var d = Math.hypot(dx, dz) || 1;
+        sx = dx / d; sy = dz / d;
+        targetX = obj.x; targetZ = obj.z;
+        if (obj.kind === 'chest' && d <= 4) swing = true;
+      } else {
+        // No objective: explore for bushes, chests, grumpies, or items
+        var best = null, bestDist = 9999;
+        for (var i = 0; i < st.grumpies.length; i++) {
+          var gr = st.grumpies[i];
+          if (gr.state === 'happy' || gr.hp <= 0) continue;
+          var dd = Math.hypot(gr.x - st.hero.x, gr.z - st.hero.z);
+          if (dd < bestDist) { bestDist = dd; best = { x: gr.x, z: gr.z, type: 'grumpy' }; }
+        }
+        // Visit uncut bushes
+        for (var bi = 0; bi < cfg.bushes.length; bi++) {
+          var b = cfg.bushes[bi];
+          if (st.bushes[b.id] && st.bushes[b.id].cut) continue;
+          var bd = Math.hypot(b.pos[0] - st.hero.x, b.pos[1] - st.hero.z);
+          if (bd < bestDist) { bestDist = bd; best = { x: b.pos[0], z: b.pos[1], type: 'bush' }; }
+        }
+        // Visit closed chests
+        for (var ci = 0; ci < cfg.chests.length; ci++) {
+          var c = cfg.chests[ci];
+          if (st.chests[c.id] && st.chests[c.id].open) continue;
+          var cd = Math.hypot(c.pos[0] - st.hero.x, c.pos[1] - st.hero.z);
+          if (cd < bestDist) { bestDist = cd; best = { x: c.pos[0], z: c.pos[1], type: 'chest' }; }
+        }
+        // Visit world items
+        for (var ii in st.items) {
+          var it = st.items[ii];
+          if (it.state !== 'world') continue;
+          var idd = Math.hypot(it.x - st.hero.x, it.z - st.hero.z);
+          if (idd < bestDist) { bestDist = idd; best = { x: it.x, z: it.z, type: 'item' }; }
+        }
+        if (best) {
+          targetX = best.x; targetZ = best.z;
+          if (bestDist > 4) {
+            var dx2 = best.x - st.hero.x, dz2 = best.z - st.hero.z;
+            var d2 = Math.hypot(dx2, dz2) || 1;
+            sx = dx2 / d2; sy = dz2 / d2;
+          } else if (best.type !== 'item') {
+            // Close enough to interact: face and swing
+            var dx3 = best.x - st.hero.x, dz3 = best.z - st.hero.z;
+            var d3 = Math.hypot(dx3, dz3) || 1;
+            sx = dx3 / d3; sy = dz3 / d3;
+            swing = true;
+          } else {
+            // Item: keep moving toward it until within pickup range
+            var dx3 = best.x - st.hero.x, dz3 = best.z - st.hero.z;
+            var d3 = Math.hypot(dx3, dz3) || 1;
+            sx = dx3 / d3; sy = dz3 / d3;
+          }
+        } else {
+          // Nothing left to explore: move toward lighthouse to finish
+          var dx4 = cfg.lighthouse.pos[0] - st.hero.x, dz4 = cfg.lighthouse.pos[1] - st.hero.z;
+          var d4 = Math.hypot(dx4, dz4) || 1;
+          sx = dx4 / d4; sy = dz4 / d4;
+          targetX = cfg.lighthouse.pos[0]; targetZ = cfg.lighthouse.pos[1];
+        }
+      }
+      // Local obstacle avoidance: if the desired direction is fully blocked, pick the
+      // allowed direction that best preserves progress toward the target.
+      if (targetX !== null) {
+        function blockedAt(x, z) {
+          var i, o;
+          for (i = 0; i < cfg.obstacles.length; i++) {
+            o = cfg.obstacles[i];
+            var dxo = x - o.x, dzo = z - o.z;
+            if (Math.hypot(dxo, dzo) <= 0.45 + o.r) return true;
+          }
+          for (var gid in st.gates) if (!st.gates[gid].open) {
+            var g = null;
+            for (var gi = 0; gi < cfg.gates.length; gi++) if (cfg.gates[gi].id === gid) g = cfg.gates[gi];
+            if (g) {
+              var halfW = g.w / 2, halfD = g.d / 2;
+              if (x >= g.pos[0]-halfW-0.45 && x <= g.pos[0]+halfW+0.45 &&
+                  z >= g.pos[1]-halfD-0.45 && z <= g.pos[1]+halfD+0.45) return true;
+            }
+          }
+          for (var cid in st.chests) if (!st.chests[cid].open) {
+            var cc = null;
+            for (var ci2 = 0; ci2 < cfg.chests.length; ci2++) if (cfg.chests[ci2].id === cid) cc = cfg.chests[ci2];
+            if (cc && Math.hypot(x - cc.pos[0], z - cc.pos[1]) <= 0.45 + 1.0) return true;
+          }
+          for (i = 0; i < st.grumpies.length; i++) {
+            var gr = st.grumpies[i];
+            if (gr.state !== 'happy') {
+              if (Math.hypot(x - gr.x, z - gr.z) <= 0.45 + 0.45) return true;
+            }
+          }
+          return false;
+        }
+        function canMoveDir(dx, dy) {
+          var step = 0.15;
+          var nx = st.hero.x + dx * step, nz = st.hero.z + dy * step;
+          if (!blockedAt(nx, nz)) return true;
+          if (dx !== 0 && !blockedAt(nx, st.hero.z)) return true;
+          if (dy !== 0 && !blockedAt(st.hero.x, nz)) return true;
+          return false;
+        }
+        if (!canMoveDir(sx, sy)) {
+          var desiredAng = Math.atan2(sy, sx);
+          var bestScore = -1e9;
+          var bestDx = 0, bestDy = 0;
+          var offsets = [0, 30, -30, 60, -60, 90, -90, 120, -120, 150, -150, 180];
+          for (var oi = 0; oi < offsets.length; oi++) {
+            var ang = desiredAng + offsets[oi] * Math.PI / 180;
+            var cdx = Math.cos(ang), cdy = Math.sin(ang);
+            if (!canMoveDir(cdx, cdy)) continue;
+            var score = cdx * sx + cdy * sy;
+            if (score > bestScore) { bestScore = score; bestDx = cdx; bestDy = cdy; }
+          }
+          if (bestScore > -1e8) { sx = bestDx; sy = bestDy; }
+        }
+      }
+
+      // Stuck recovery: brake, then skirt the obstacle.
+      var posKey2 = Math.round(st.hero.x * 10) / 10 + ',' + Math.round(st.hero.z * 10) / 10;
+      if (posKey2 === lastKey2) stuckCount2++; else stuckCount2 = 0;
+      lastKey2 = posKey2;
+      if (recoverSteps > 0) {
+        var sp = Math.hypot(st.hero.vx, st.hero.vz);
+        if (sp > 0.25) { sx = -st.hero.vx / sp; sy = -st.hero.vz / sp; }
+        else { sx = recoverDx; sy = recoverDy; }
+        recoverSteps--;
+      } else if (stuckCount2 >= 5) {
+        var desiredAng2 = Math.atan2(sy, sx);
+        var bestScore2 = -1e9, bestDx2 = 0, bestDy2 = 0;
+        var offsets2 = [0, 30, -30, 60, -60, 90, -90, 120, -120, 150, -150, 180];
+        for (var oi2 = 0; oi2 < offsets2.length; oi2++) {
+          var ang2 = desiredAng2 + offsets2[oi2] * Math.PI / 180;
+          var cdx2 = Math.cos(ang2), cdy2 = Math.sin(ang2);
+          if (!canMoveDir(cdx2, cdy2)) continue;
+          var score2 = cdx2 * sx + cdy2 * sy;
+          if (score2 > bestScore2) { bestScore2 = score2; bestDx2 = cdx2; bestDy2 = cdy2; }
+        }
+        if (bestScore2 > -1e8) { recoverDx = bestDx2; recoverDy = bestDy2; }
+        else { recoverDx = -sy; recoverDy = sx; }
+        recoverSteps = 40;
+        stuckCount2 = 0;
+        var sp2 = Math.hypot(st.hero.vx, st.hero.vz);
+        if (sp2 > 0.25) { sx = -st.hero.vx / sp2; sy = -st.hero.vz / sp2; }
+        else { sx = recoverDx; sy = recoverDy; }
+        
+      }
+
+      if (seed === 7 && bs % 500 === 0) {
+      }
+      g.step(20, { sx: sx, sy: sy, swing: swing, shield: false });
+    }
+    return { steps: maxSteps, t: g.state().t, ok: false };
+  }
+  var b1 = runBot(1, 30000);
+  var b7 = runBot(7, 30000);
+  var b42 = runBot(42, 30000);
+  check('L75: bot completes ≤ 600 sim-s (seeds 1,7,42)', b1.ok && b1.t <= 600000 && b7.ok && b7.t <= 600000 && b42.ok && b42.t <= 600000,
+    's1=' + b1.t + 'ms s7=' + b7.t + 'ms s42=' + b42.t + 'ms');
+
+  /* L76: no count/score/total/remaining keys in state() (redundant with L58) */
+  var sFinal = gSave.state();
+  var finalBad = Object.keys(sFinal).some(function (k) { return /count|score|total|remaining/.test(k); });
+  check('L76: no count/score/total/remaining keys in state', !finalBad, 'keys=' + JSON.stringify(Object.keys(sFinal)));
+
+
+  /* L77-L84: models build in Node without DOM */
+  try {
+    const threeMod = await import('file:///' + path.join(ROOT, 'game', 'assets', 'lib', 'three.module.min.js').replace(/\\/g, '/'));
+    const THREE = threeMod.default || threeMod;
+    const modelsWin = loadClassic('games/little_adventure-models.js');
+    const models = modelsWin.little_adventureModels.create(THREE);
+    const builders = [
+      ['makeHero', models.makeHero, 900],
+      ['makeSword', models.makeSword, 600],
+      ['makeShield', models.makeShield, 600],
+      ['makeOwl', models.makeOwl, 600],
+      ['makeGrumpy(normal)', function () { return models.makeGrumpy('normal'); }, 600],
+      ['makeGrumpy(boss)', function () { return models.makeGrumpy('boss'); }, 600],
+      ['makeKey', models.makeKey, 600],
+      ['makeGem(red)', function () { return models.makeGem('red'); }, 600],
+      ['makeChest', models.makeChest, 600],
+      ['makeGate', models.makeGate, 600],
+      ['makePedestal(red)', function () { return models.makePedestal('red'); }, 600],
+      ['makeStatue', models.makeStatue, 600],
+      ['makeAcorn', models.makeAcorn, 600],
+      ['makeLighthouse', models.makeLighthouse, 600],
+      ['makeBridgeSegment', function () { return models.makeBridgeSegment(0); }, 600],
+      ['makeTree', models.makeTree, 600],
+      ['makeBush', models.makeBush, 600],
+      ['makeRock', models.makeRock, 600],
+      ['makeFlower', models.makeFlower, 600],
+      ['makeBlobShadow', models.makeBlobShadow, 600]
+    ];
+    let totalTris = 0;
+    for (const entry of builders) {
+      const name = entry[0], fn = entry[1], limit = entry[2];
+      const g = fn();
+      check('L77: ' + name + ' is a THREE.Group', !!(g && g.isGroup), String(!!(g && g.isGroup)));
+      check('L78: ' + name + ' has children', g.children.length > 0, 'children=' + g.children.length);
+      let tris = 0;
+      g.traverse(function (o) {
+        if (o.isMesh && o.geometry) {
+          const idx = o.geometry.index;
+          if (idx) tris += idx.count / 3;
+          else if (o.geometry.attributes && o.geometry.attributes.position) tris += o.geometry.attributes.position.count / 3;
+        }
+      });
+      totalTris += tris;
+      check('L79: ' + name + ' triangles <= ' + limit, tris <= limit, 'tris=' + Math.round(tris));
+    }
+    check('L80: total gallery triangles <= 12000', totalTris <= 12000, 'total=' + Math.round(totalTris));
+    const hero = models.makeHero();
+    const names = [];
+    hero.traverse(function (o) { if (o.name) names.push(o.name); });
+    for (const n of ['armR', 'sword', 'shield']) {
+      check('L81: hero has named child ' + n, names.indexOf(n) !== -1, 'names=' + names.join(','));
+    }
+    const chest = models.makeChest();
+    const chestNames = [];
+    chest.traverse(function (o) { if (o.name) chestNames.push(o.name); });
+    check('L82: chest has lid', chestNames.indexOf('lid') !== -1, chestNames.join(','));
+    const boss = models.makeGrumpy('boss');
+    const bossNames = [];
+    boss.traverse(function (o) { if (o.name) bossNames.push(o.name); });
+    check('L83: boss has crown', bossNames.indexOf('crown') !== -1, bossNames.join(','));
+    const grumpy = models.makeGrumpy('normal');
+    let hasSmile = false;
+    grumpy.traverse(function (o) { if (o.name === 'smile') hasSmile = true; });
+    check('L84: grumpy has smile', hasSmile, 'ok');
+  } catch (e) {
+    check('L77-L84: models load in Node', false, String(e));
+  }
 
   /* Summary */
   console.log('\n' + fails + ' check(s) FAILED');

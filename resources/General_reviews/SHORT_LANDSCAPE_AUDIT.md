@@ -1,6 +1,6 @@
 # Short-landscape audit — 844×390 (spec §11)
 
-Generated: 2026-11-05 21:34 UTC · `node tools/short_landscape_audit.js`
+Generated: 2026-11-24 18:07 UTC · `node tools/short_landscape_audit.js`
 
 Every surface (hub + every registry app) measured at **844×390** against the
 Master Visual/UX plan §11 checklist: header budget 56–72 px, board-first,
@@ -33,17 +33,18 @@ adjudication. The tool exits 1 while any FAIL remains.**
 | `piano` | Клавир | 72 | OK | 0 | 0 |
 | `shapes` | (none) | 72 | WARN | 0 | 1 |
 | `matching_game` | (none) | 72 | WARN | 0 | 1 |
-| `driving` | Возила | 83 | WARN | 0 | 1 |
-| `ocean` | Океан | 83 | WARN | 0 | 1 |
-| `dino` | Дино | 83 | WARN | 0 | 1 |
-| `space` | Свемир | 83 | WARN | 0 | 1 |
+| `driving` | (none) | 70 | WARN | 0 | 1 |
+| `ocean` | (none) | 70 | WARN | 0 | 1 |
+| `dino` | (none) | 70 | WARN | 0 | 1 |
+| `space` | (none) | 70 | WARN | 0 | 1 |
 | `racing3d` | 🏎️ Мала тркачица 3Д | 32 | OK | 0 | 0 |
 | `explorer` | Свет | 64 | OK | 0 | 0 |
 | `fastcat` | (none) | 64 | WARN | 0 | 1 |
 | `cat_forest` | (none) | 66 | WARN | 0 | 1 |
+| `little_adventure` | Мала авантура | 0 | OK | 0 | 0 |
 | `parent` | 🔒 За родитеље | 72 | OK | 0 | 0 |
 
-**Summary:** 27 surfaces · 13 OK · 14 WARN · 0 FAIL · 0 error · 0 individual failures.
+**Summary:** 28 surfaces · 14 OK · 14 WARN · 0 FAIL · 0 error · 0 individual failures.
 
 ## Warnings — adjudicate
 
@@ -81,19 +82,19 @@ adjudication. The tool exits 1 while any FAIL remains.**
 
 ### `driving`
 
-- WARN: header budget: top chrome reaches 83px (spec §11.1: 56–72px)
+- WARN: no header text visible (.ps-title / h1 / .count-title / #*-prompt) — stage-led page? adjudicate
 
 ### `ocean`
 
-- WARN: header budget: top chrome reaches 83px (spec §11.1: 56–72px)
+- WARN: no header text visible (.ps-title / h1 / .count-title / #*-prompt) — stage-led page? adjudicate
 
 ### `dino`
 
-- WARN: header budget: top chrome reaches 83px (spec §11.1: 56–72px)
+- WARN: no header text visible (.ps-title / h1 / .count-title / #*-prompt) — stage-led page? adjudicate
 
 ### `space`
 
-- WARN: header budget: top chrome reaches 83px (spec §11.1: 56–72px)
+- WARN: no header text visible (.ps-title / h1 / .count-title / #*-prompt) — stage-led page? adjudicate
 
 ### `fastcat`
 
@@ -129,4 +130,5 @@ adjudication. The tool exits 1 while any FAIL remains.**
 - `space`: modal: none open in the default state
 - `racing3d`: modal: none open in the default state
 - `cat_forest`: modal: none open in the default state
+- `little_adventure`: modal: none open in the default state
 - `parent`: modal: none open in the default state

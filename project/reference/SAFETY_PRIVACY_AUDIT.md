@@ -9,6 +9,7 @@ Scope: all runtime files under game/.
 - shared/main.js: single tiny local progress key (deliberately minimal). reset() clears it.
 - fastcat.js, kitty-standalone.js: 'pkMusic' preference.
 - cat_forest.js: one validated save key.
+- little_adventure.js/mjs: one validated save key little_adventureSave.
 - parent.html: localStorage.clear() on reset.
 
 ## Permissions / injection

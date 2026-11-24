@@ -492,6 +492,7 @@
   "games/kitty-standalone.js",
   "games/little_adventure-config.js",
   "games/little_adventure-logic.js",
+  "games/little_adventure-models.js",
   "games/little_adventure.mjs",
   "games/maze.js",
   "games/ocean.js",

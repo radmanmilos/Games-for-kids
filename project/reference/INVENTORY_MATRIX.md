@@ -29,6 +29,10 @@ Generated from live `game/data/app-registry.js` (authoritative). 26 registry ent
 | explorer | pages/explorer.html | yes | kitty_smoke | yes | true | true | false | games |
 | fastcat | pages/fastcat.html | yes | fastcat_smoke | yes | true | true | false | games |
 | cat_forest | pages/cat_forest.html | yes | cat_forest_smoke | yes | false | true | true | games |
+- tools/cat_forest_smoke.js
+| little_adventure | pages/little_adventure.html | yes | little_adventure_smoke | yes | false | true | true | games |
+- tools/little_adventure_smoke.js
+- tools/little_adventure_logic_smoke.js
 | parent | pages/parent.html | yes | null | none | false | true | false | null |
 
 ## Unregistered pages on disk

@@ -56,6 +56,7 @@ Default posture: minimal, stable, maintainable, and only as complex as the task 
 | write or run a smoke / guard / harness, do a negative test, or debug a flaky or failing test              | `project/lessons/testing-harness.md`        |
 | edit `.github/workflows`, the offline manifest, service worker, `build_offline.js` or the Release QA gate | `project/lessons/ci-offline.md`             |
 | touch `game/shared/*`, standalone boot, the kitty HUD, coloring regions or audio helpers                  | `project/lessons/game-runtime.md`           |
+| work on little_adventure (renderer, models, input, save)                                                  | `project/lessons/little_adventure.md`       |
 | work on racing3d (WebGL, camera, pulses, reduced motion)                                                  | `project/lessons/racing3d.md`               |
 | generate or review image assets (asset_generate, asset_qa, Cloudflare Workers AI, bundle)                 | `project/lessons/asset-generation.md`       |
 | fix a scanner alert, add or rotate a credential, or spawn a process from a tool                           | `project/lessons/security.md`               |

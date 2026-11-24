@@ -10,7 +10,7 @@
     stick: { deadzone: 0.12, radiusVmin: 9, minPx: 56, maxPx: 110 },
     grumpy: { radius: 0.6, speed: 1.6, notice: 7, wanderR: 4, bumpCooldownMs: 1500, retreatMs: 900, respawnMs: 20000, respawnMinHeroDist: 12, maxAliveNormal: 4, followersMax: 3, followDist: 2.5 },
     acorn: { intervalMs: 2500, speed: 5, radius: 0.25, lifeMs: 4000 },
-    interact: { pickup: 0.9, chest: 1.2, keyUse: 2.2, gemPlace: 1.8, owlTalk: 3.0, owlRepeatMs: 30000 },
+    interact: { pickup: 0.9, chest: 1.5, keyUse: 2.2, gemPlace: 1.8, owlTalk: 3.0, owlRepeatMs: 30000 },
     bounds: { xMin: -24, xMax: 24, zMin: -80, zMax: 16 },
     sim: { stepMs: 20, dtClampMs: 100 },
     camera: { fov: 45, fovNarrow: 55, narrowAspect: 1.2, offset: [0, 13, 11], follow: 6 },

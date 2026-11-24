@@ -34,6 +34,7 @@ Columns: ID | Category | Smoke | Screenshot | Offline | Toddler | Guide doc | No
 | explorer | games | kitty_smoke | true | true | false | yes | little-explorer.md |
 | fastcat | games | fastcat_smoke | true | true | false | yes | fastcat.md |
 | cat_forest | games | cat_forest_smoke | true | true | true | yes | cat-forest.md |
+| little_adventure | games | little_adventure_smoke | true | true | true | yes | little_adventure.md |
 | parent | parent | null | false | true | false | MISSING | adult surface; screenshot flag left as registry value |
 
 ## Guide docs present (16 files in project/games/)

@@ -58,14 +58,24 @@
 <div id="i3d-game">
     <button class="adv-back ps-back" id="i3d-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <div id="i3d-view"></div>
-    <div id="i3d-announcer" class="sr-only" role="status" aria-live="polite"></div>
+    <div id="i3d-stick-zone" style="position:absolute; left:0; top:0; width:50%; height:100%; z-index:5; touch-action:none;"></div>
+    <div id="i3d-stick-base" style="position:absolute; display:none; width:120px; height:120px; border-radius:50%; background:rgba(255,255,255,0.25); border:2px solid rgba(255,255,255,0.5); transform:translate(-50%,-50%); z-index:6; pointer-events:none;"></div>
+    <div id="i3d-stick-knob" style="position:absolute; display:none; width:50px; height:50px; border-radius:50%; background:rgba(74,63,107,0.7); transform:translate(-50%,-50%); z-index:7; pointer-events:none;"></div>
+    <button id="i3d-btn-sword" class="ps-btn ps-btn--control" aria-label="Мач" style="position:absolute; right:4vmin; bottom:18vmin; width:16vmin; height:16vmin; z-index:20;">⚔️</button>
+    <button id="i3d-btn-shield" class="ps-btn ps-btn--control" aria-label="Штит" style="position:absolute; right:4vmin; bottom:4vmin; width:14vmin; height:14vmin; z-index:20;">🛡️</button>
     <div id="i3d-landscape-hint">Окрени уређај водоравно 🌍</div>
+    <div id="i3d-pause" style="position:absolute; inset:0; z-index:45; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.5); color:#FFF8ED; font-size:6vmin; pointer-events:auto;">Пауза</div>
+    <div id="i3d-start" style="position:absolute; inset:0; z-index:50; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(74,63,107,0.92); color:#FFF8ED; pointer-events:none;">
+      <h1 style="font-size:8vmin; margin:0 0 4vmin;">Мала авантура</h1>
+      <button id="i3d-btn-continue" class="ps-btn ps-btn--control" aria-label="Настави" style="display:none; margin:2vmin; width:24vmin; height:8vmin; pointer-events:auto;">▶️</button>
+      <button id="i3d-btn-new" class="ps-btn ps-btn--control" aria-label="Нова авантура" style="margin:2vmin; width:24vmin; height:8vmin; pointer-events:auto;">🆕</button>
+    </div>
 </div>
-
 <script type="importmap">{ "imports": { "three": "../assets/lib/three.module.min.js" } }</script>
 <script src="../data/serbian.js"></script>
 <script src="../games/little_adventure-config.js"></script>
 <script src="../games/little_adventure-logic.js"></script>
+<script src="../games/little_adventure-models.js"></script>
 <script type="module" src="../games/little_adventure.mjs"></script>
 <script src="../shared/audio.js"></script>
 <script src="../shared/speech.js"></script>
