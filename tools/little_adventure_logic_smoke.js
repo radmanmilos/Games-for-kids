@@ -154,6 +154,58 @@ function check(name, ok, info) {
   var serial = JSON.stringify(sNan);
   check('L22: no NaN in state after varied drive', !serial.includes('null'), 'serial=' + serial.slice(0, 120));
 
+  /* ---- IS-05: swing / combat (TP §2 L25–L44) ---- */
+  /* L25: swing triggers event + swingT */
+  var gSw = logic.createGame(cfg, 7);
+  gSw.step(20, { swing: true });
+  var evSw = gSw.drainEvents();
+  var sSw = gSw.state();
+  check('L25: swing emits swing event, swingT>0', evSw.length === 1 && evSw[0].type === 'swing' && sSw.hero.swingT > 0, JSON.stringify(evSw));
+
+  /* L26: swing hits grumpy within reach/arc; hp decreases, hit event fires */
+  var gHit = logic.createGame(cfg, 7);
+  gHit.debug.teleport(0, 2);
+  for (var ih = 0; ih < 50; ih++) gHit.step(20, { sx: 1, sy: 0 });
+  gHit.step(20, { swing: true });
+  var evHit = gHit.drainEvents();
+  var sHit = gHit.state();
+  var targetGrumpy = sHit.grumpies.find(function (gr) { return gr.id === 'a1'; });
+  check('L26: swing hit within arc emits hit + lowers hp',
+    evHit.some(function (e) { return e.type === 'hit'; }) && targetGrumpy.hp < 1,
+    'ev=' + JSON.stringify(evHit) + ' hp=' + (targetGrumpy ? targetGrumpy.hp : '?'));
+
+  /* L27: befriend (hp<=0) sets state happy + emits befriend (fresh game) */
+  var gBf = logic.createGame(cfg, 7);
+  gBf.debug.teleport(0, 2);
+  for (var ib2 = 0; ib2 < 50; ib2++) gBf.step(20, { sx: 1, sy: 0 });
+  var befriendSeen = false, befriendId = null;
+  var befriendGrumpy = null;
+  for (var ib = 0; ib < 10; ib++) { gBf.step(20, { swing: true }); var evBf = gBf.drainEvents(); var gr = gBf.state().grumpies.find(function (g) { return g.id === 'a1'; }); if (gr && gr.state === 'happy') { befriendGrumpy = gr; break; } }
+  check('L27: befriend via swing sets grumpy happy', befriendGrumpy && befriendGrumpy.state === 'happy', befriendGrumpy ? JSON.stringify(befriendGrumpy.state) : 'none');
+
+  /* L28: shield slows hero ×0.7 */
+  var gSh = logic.createGame(cfg, 7);
+  for (var ish = 0; ish < 50; ish++) gSh.step(20, { sx: 1, sy: 0 });
+  var sShNo = gSh.state();
+  var gSh2 = logic.createGame(cfg, 7);
+  for (var ish2 = 0; ish2 < 50; ish2++) gSh2.step(20, { sx: 1, sy: 0, shield: true });
+  var sShYes = gSh2.state();
+  check('L28: shield slows hero x0.7',
+    Math.abs(sShYes.hero.vx - cfg.hero.speed * cfg.hero.shieldSpeedMul) < 1e-3 &&
+    sShNo.hero.vx > sShYes.hero.vx,
+    'noShield=' + sShNo.hero.vx + ' shield=' + sShYes.hero.vx + ' expected=' + (cfg.hero.speed * cfg.hero.shieldSpeedMul));
+
+  /* L29: no NaN/throw across 36000 random-ish steps */
+  var gNan = logic.createGame(cfg, 7);
+  var nanOk = true;
+  var serial = '';
+  for (var in1 = 0; in1 < 36000; in1++) {
+    gNan.step(20, { sx: (in1 % 2), sy: (Math.floor(in1 / 2) % 2), swing: (in1 % 13 === 0), shield: (in1 % 17 === 0) });
+    serial = JSON.stringify(gNan.state());
+    if (serial.includes('null')) nanOk = false;
+  }
+  check('L29: 36000 random-ish steps -> no NaN/throw', nanOk, 'serial=' + serial.slice(0, 80));
+
   /* Summary */
   console.log('\n' + fails + ' check(s) FAILED');
   process.exit(fails ? 1 : 0);
