@@ -218,6 +218,29 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
       seated.ok !== false && seated.catCoversPlatePct === 0 && seated.catCoversTreatPct === 0 && seated.gapPlateTopPx > 0,
       JSON.stringify(seated));
 
+    /* Phase 2: the three feeding anchors are stage-fraction points (FEED_ANCHORS)
+       so they never drift between viewport sizes. Measure each plate's centre as
+       a fraction of the stage box and compare to the data table (tolerance 1%
+       for sub-pixel rounding). */
+    const anchorFit = JSON.parse(await hv.evalv(`JSON.stringify((() => {
+      const stage = document.getElementById('cf-stage').getBoundingClientRect();
+      const anchors = window.__catForest.data.anchors;
+      const plates = [...document.querySelectorAll('.cf-plate')];
+      const out = [];
+      for (const a of anchors) {
+        const r = plates[a.plate].getBoundingClientRect();
+        out.push({
+          id: a.id,
+          dx: Math.abs((r.left + r.width / 2 - stage.left) / stage.width - a.x),
+          dy: Math.abs((r.top + r.height / 2 - stage.top) / stage.height - a.y)
+        });
+      }
+      return out;
+    })())`));
+    check(`${vp.name}: feeding anchors match FEED_ANCHORS fractions (Phase 2)`,
+      anchorFit.length === 3 && anchorFit.every(a => a.dx <= 0.01 && a.dy <= 0.01),
+      JSON.stringify(anchorFit));
+
     await hv.close();
   }
 

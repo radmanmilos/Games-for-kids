@@ -13,7 +13,7 @@
 
 ## Cat Forest Village expansion (Phase 1 complete, Phase 2 pending)
 
-Branch `claude/cat-forest-village`. Base game CF-00..CF-21 complete on `main` (05edfd1), CI green, `check_fast` 10/10, driving 25/25, ocean 27/27, cat_forest smoke 209 checks.
+Branch `claude/cat-forest-village`. Base game CF-00..CF-21 complete on `main` (05edfd1), CI green, `check_fast.js` 10/10, driving 25/25, ocean 27/27, cat_forest smoke 221 checks.
 
 ### Task 464 — Phase 1: art direction & scene prototypes (DONE, 2026-11-23, OpenCode/Big Pickle)
 
@@ -27,13 +27,23 @@ All 6 Phase 1 deliverables complete:
 
 Four prompt briefs under `resources/General_reviews/Asset_Generation/prompts/` (`cat_forest_village_house.md`, `cat_forest_village_cat.md`, `cat_forest_village_fish_basket.md`, `cat_forest_village_decoration.md`, `cat_forest_village_scene.md`). ~1,470 of 10,000 daily neurons used (17 runs).
 
-### Next: Phase 2 (repo task 465) — village hub + 3 feeding spots
+### Task 465 — Phase 2: village hub + 3 feeding spots (DONE, 2026-11-24, OpenCode/Big Pickle)
 
-Engine is `game/games/cat_forest.js` (1,353 lines) + `game/pages/cat_forest.html` (317 lines, 14 `cf-plate` refs, 7 scene refs). Phase 2 needs: new village scene with house/garden, three fixed feeding places, existing cat visit lifecycle integrated into the house scene, cat positions/collision/hit-testing/touch geometry, day/night + weather migrated. Exit gate: existing cat feeding still works, no feeding anchor moves between viewports, existing save data remains readable, smoke + viewport checks pass.
+All Phase 2 deliverables complete:
+- Village house + garden decorative elements in `game/pages/cat_forest.html` inside `#cf-scenery` (CSS + markup, aria-hidden, no visible text)
+- `FEED_ANCHORS` table pins 3 fixed stage-fraction anchors (`porch.feed.1/2/3` at x 0.26/0.50/0.74, y 0.62, plates 0/1/2)
+- Plates positioned at anchor fractions via CSS percentages (`left:26%/50%/74%; top:62%`) so spot is stable across all viewports
+- Scene state machine: `SCENES=['village','pond','woodland','workshop','diary']`, `DEFAULT_SCENE='village'`, `state.scene`, `enterScene/exitScene/setScene`, `data-scene` on `#app` in `render()`
+- Hook exposes `anchors: FEED_ANCHORS` in `window.__catForest.data`
+- Smoke asserts feeding anchors match `FEED_ANCHORS` fractions (≤1% tol) across all 4 target viewports
+- Existing cat feeding works; no feeding anchor moves between viewport sizes; existing save data readable
+- `check_fast.js` 10/10 green, `build_offline.js` regenerated manifest, docs synced
+
+### Next: Phase 3 deferred — pond/woodland/workshop/diary scenes
 
 ## Open tasks (from ACTIVE.md)
 
-- 465 (Phase 2 village hub + 3 feeding spots): NEW
+- 465 (Phase 2 village hub + 3 feeding spots): DONE
 - 435 (Gate 5 family rollout): NEW
 - 436 (Gate 6: 11-world regression): NEW
 - 437 (Little Explorer full review + screenshots): NEW — recommend CLOSE
