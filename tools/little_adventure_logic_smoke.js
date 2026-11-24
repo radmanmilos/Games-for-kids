@@ -206,6 +206,157 @@ function check(name, ok, info) {
   }
   check('L29: 36000 random-ish steps -> no NaN/throw', nanOk, 'serial=' + serial.slice(0, 80));
 
+  /* ============ IS-06: interactions (TP §2 L45–L64) ============ */
+
+  /* L45: bush cut spawns item (gemRed from A-bush via swing) */
+  var gBush = logic.createGame(cfg, 7);
+  gBush.debug.teleport(7, -2);
+  for (var ib = 0; ib < 10; ib++) gBush.step(20, { sx: 1, sy: 0 }); // face east toward bush at (9,-2)
+  gBush.step(20, { sx: 0, sy: 0, swing: true });
+  var sBush = gBush.state();
+  var bushCut = sBush.bushes['A-bush'].cut;
+  var itemSpawned = sBush.items['gemRed'] && (sBush.items['gemRed'].state === 'world' || sBush.items['gemRed'].state === 'carried');
+  var evBush = gBush.drainEvents();
+  check('L45: bush cut spawns gemRed world/carried item', bushCut && itemSpawned &&
+    evBush.some(function (e) { return e.type === 'bushCut' && e.id === 'A-bush'; }),
+    'cut=' + bushCut + ' item=' + JSON.stringify(sBush.items['gemRed']));
+
+  /* L46: pickup (carry array adds gem) */
+  var gPick = logic.createGame(cfg, 7);
+  gPick.debug.give('gemRed');
+  var sPick = gPick.state();
+  check('L46: pickup add gem to carry', sPick.carry.indexOf('gemRed') !== -1 && sPick.items['gemRed'].state === 'carried',
+    'carry=' + JSON.stringify(sPick.carry));
+
+  /* L47: chest open by swing+proximity opens chest */
+  var gChest = logic.createGame(cfg, 7);
+  gChest.debug.teleport(14, -34);
+  for (var ic = 0; ic < 10; ic++) gChest.step(20, { sx: 0, sy: 0, swing: true });
+  var sChest = gChest.state();
+  check('L47: chest opens by swing', sChest.chests['C1'].open,
+    'open=' + sChest.chests['C1'].open);
+
+  /* L48: pickup range (carry keyForest) */
+  var gPick2 = logic.createGame(cfg, 7);
+  gPick2.debug.teleport(14, -34);
+  for (var ip = 0; ip < 10; ip++) gPick2.step(20, { sx: 0, sy: 0, swing: true });
+  for (var ip2 = 0; ip2 < 10; ip2++) gPick2.step(20, ZERO);
+  var sPick2 = gPick2.state();
+  check('L48: carry keyForest after chest', sPick2.carry.indexOf('keyForest') !== -1,
+    'carry=' + JSON.stringify(sPick2.carry));
+
+  /* L49: gate opens only with its key */
+  var gGate2 = logic.createGame(cfg, 7);
+  gGate2.debug.give('keyMeadow');
+  gGate2.debug.teleport(0, -16);
+  gGate2.step(20, { sx: 0, sy: 0 });
+  var sGate2 = gGate2.state();
+  check('L49: gate opens with keyMeadow', sGate2.gates['G1'].open &&
+    sGate2.carry.indexOf('keyMeadow') === -1,
+    'open=' + sGate2.gates['G1'].open + ' carry=' + JSON.stringify(sGate2.carry));
+
+  /* L50: wrong key does nothing */
+  var gGateWrong = logic.createGame(cfg, 7);
+  gGateWrong.debug.give('keyForest');
+  gGateWrong.debug.teleport(0, -16);
+  gGateWrong.step(20, { sx: 0, sy: 0 });
+  var sGateWrong = gGateWrong.state();
+  check('L50: wrong key does not open gate', !sGateWrong.gates['G1'].open &&
+    sGateWrong.carry.indexOf('keyForest') !== -1,
+    'open=' + sGateWrong.gates['G1'].open + ' carry=' + JSON.stringify(sGateWrong.carry));
+
+  /* L51: gate stays open */
+  var sGate2b = gGate2.state();
+  check('L51: gate stays open', sGate2b.gates['G1'].open === true,
+    'open=' + sGate2b.gates['G1'].open);
+
+  /* L52: pedestal accepts only its colour */
+  var gPed = logic.createGame(cfg, 7);
+  gPed.debug.give('gemBlue');
+  gPed.debug.teleport(4, -62);
+  gPed.step(20, { sx: 0, sy: 0 });
+  var sPed = gPed.state();
+  check('L52: pedestal blue accepts gemBlue', sPed.pedestals['blue'].lit &&
+    sPed.items['gemBlue'].state === 'used',
+    'blueLit=' + sPed.pedestals['blue'].lit + ' item=' + JSON.stringify(sPed.items['gemBlue']));
+
+  /* L53: pedestal wrong colour keeps gem + pedestalWrong cooldown */
+  var gPedWrong = logic.createGame(cfg, 7);
+  gPedWrong.debug.give('gemRed');
+  gPedWrong.debug.teleport(4, -62);
+  gPedWrong.step(20, { sx: 0, sy: 0 });
+  var sPedWrong = gPedWrong.state();
+  var evPedWrong = gPedWrong.drainEvents();
+  check('L53: wrong colour keeps gem + pedestalWrong',
+    sPedWrong.items['gemRed'].state === 'carried' &&
+    evPedWrong.some(function (e) { return e.type === 'pedestalWrong'; }),
+    'gemRedState=' + sPedWrong.items['gemRed'].state + ' events=' + JSON.stringify(evPedWrong));
+
+  /* L54: bridge needs all 3 lit */
+  var gBridge = logic.createGame(cfg, 7);
+  gBridge.debug.give('gemRed'); gBridge.debug.give('gemGreen'); gBridge.debug.give('gemBlue');
+  gBridge.debug.teleport(-4, -62); gBridge.step(20, ZERO); // red lit
+  gBridge.debug.teleport(0, -62); gBridge.step(20, ZERO); // green lit
+  gBridge.debug.teleport(4, -62); gBridge.step(20, ZERO); // blue lit -> bridge
+  var sBridge = gBridge.state();
+  check('L54: bridge needs all 3 lit', sBridge.pedestals['red'].lit && sBridge.pedestals['green'].lit &&
+    sBridge.pedestals['blue'].lit && sBridge.bridge.built,
+    'red=' + sBridge.pedestals['red'].lit + ' green=' + sBridge.pedestals['green'].lit +
+    ' blue=' + sBridge.pedestals['blue'].lit + ' bridge=' + sBridge.bridge.built);
+
+  /* L55: complete fires once at lighthouse after bridge */
+  var gComp = logic.createGame(cfg, 7);
+  gComp.debug.give('gemRed'); gComp.debug.give('gemGreen'); gComp.debug.give('gemBlue');
+  gComp.debug.teleport(-4, -62); gComp.step(20, ZERO);
+  gComp.debug.teleport(0, -62); gComp.step(20, ZERO);
+  gComp.debug.teleport(4, -62); gComp.step(20, ZERO);
+  gComp.debug.teleport(0, -78); gComp.step(20, ZERO);
+  var evComp = gComp.drainEvents();
+  var sComp = gComp.state();
+  check('L55: complete fires once at lighthouse', sComp.complete === true &&
+    evComp.filter(function (e) { return e.type === 'complete'; }).length === 1,
+    'complete=' + sComp.complete + ' compCount=' + evComp.filter(function (e) { return e.type === 'complete'; }).length);
+
+  /* L56: owl intro then hints by objective */
+  var gOwl = logic.createGame(cfg, 7);
+  gOwl.debug.give('keyMeadow');
+  gOwl.debug.teleport(-5, 4); // near owl at (-5,4)
+  gOwl.state().hero.facing = 0;
+  for (var io = 0; io < 5; io++) gOwl.step(20, ZERO);
+  var evOwl = gOwl.drainEvents();
+  check('L56: owl intro+gate hint line keys', evOwl.some(function (e) { return e.type === 'owlTalk'; }) &&
+    ['intro', 'hintGate', 'hintGems', 'bridge', 'complete'].indexOf(evOwl[evOwl.length - 1].line) !== -1,
+    'lines=' + JSON.stringify(evOwl.map(function (e) { return e.line; })));
+
+  /* L57: nextObjective order and null after complete */
+  var gObj = logic.createGame(cfg, 7);
+  var o1 = gObj.nextObjective();
+  check('L57: nextObjective first is null (no key)', o1 === null, JSON.stringify(o1));
+  gObj.debug.give('keyMeadow');
+  gObj.debug.teleport(0, -15);
+  var o2 = gObj.nextObjective();
+  check('L57: nextObjective gate G1 when key carried, gate closed', o2.kind === 'gate' && o2.id === 'G1', JSON.stringify(o2));
+  gObj.step(20, ZERO); // opens gate
+  var o2b = gObj.nextObjective();
+  check('L57: nextObjective null after gate opens (key used)', o2b === null, JSON.stringify(o2b));
+  gObj.debug.give('gemRed'); gObj.debug.give('gemGreen'); gObj.debug.give('gemBlue');
+  gObj.debug.teleport(-4, -62); gObj.step(20, ZERO);
+  gObj.debug.teleport(0, -62); gObj.step(20, ZERO);
+  gObj.debug.teleport(4, -62); gObj.step(20, ZERO);
+  var o3 = gObj.nextObjective();
+  check('L57: nextObjective bridge/lighthouse when all lit', (o3.kind === 'bridge' || o3.kind === 'lighthouse') && gObj.state().bridge.built, JSON.stringify(o3));
+  gObj.debug.teleport(0, -78); gObj.step(20, ZERO);
+  var o4 = gObj.nextObjective();
+  check('L57: nextObjective null after complete', o4 === null || (o4 && o4.kind === 'lighthouse' && gObj.state().complete), JSON.stringify(o4));
+
+  /* L58: no count/score/total/remaining keys in state() */
+  var sNoCount = gObj.state();
+  var keys = Object.keys(sNoCount);
+  var heroKeys = Object.keys(sNoCount.hero);
+  var badCount = keys.some(function (k) { return /count|score|total|remaining/.test(k); }) ||
+    heroKeys.some(function (k) { return /count|score|total|remaining/.test(k); });
+  check('L58: no count/score/total/remaining keys in state', !badCount, 'keys=' + JSON.stringify(keys));
+
   /* Summary */
   console.log('\n' + fails + ' check(s) FAILED');
   process.exit(fails ? 1 : 0);
