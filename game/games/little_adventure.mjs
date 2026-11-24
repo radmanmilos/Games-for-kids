@@ -698,6 +698,8 @@ window.startlittle_adventure = function startlittle_adventure() {
       cancelAnimationFrame(rafId);
       renderer.dispose();
       booted = false;
+      try { if (window.top !== window && window.top && typeof window.top.goTo === "function") window.top.goTo("hub-games"); else location.href = "../index.html#hub-games"; }
+      catch (e) { location.href = "../index.html#hub-games"; }
     });
 
     window.__little_adventure = {
