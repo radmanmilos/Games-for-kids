@@ -439,3 +439,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 463 | DONE | 2026-11-23 | Phase 1 adventure engine: playfield rectangle (pf), compact HUD on short screens, reaction-time budget, debug… | tasks-400-499.md
 453 | DONE | 2026-11-23 | Driving Phase 2 (heroBox, lane placement, shadow, hitbox guard) + 10-world screenshot battery (2026-11-23,… | tasks-400-499.md
 464 | DONE | 2026-11-23 | Cat Forest Village expansion Phase 1: art direction & scene prototypes (2026-11-23, OpenCode/Big Pickle) —… | tasks-400-499.md
+465 | DONE | 2026-11-24 | Cat Forest Village expansion Phase 2: village hub + 3 fixed feeding spots (2026-11-24, OpenCode/Big Pickle).… | tasks-400-499.md

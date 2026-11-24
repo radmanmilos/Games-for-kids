@@ -1928,8 +1928,8 @@
     "size": 20395
   },
   "games/cat_forest.js": {
-    "sha256": "3a08f9071bcf03d9a4a08c55cf60e4d5c950c99d10b60845609e4d84f6243ef2",
-    "size": 61500
+    "sha256": "a26c43485f26d4491019c524e1495b08946910f4f689525b358a881354a07389",
+    "size": 64383
   },
   "games/classroom.js": {
     "sha256": "12d741c329ab9e7f85439dc1fd9136b740910f36e7ea6f363657deb7093f6713",
@@ -2044,8 +2044,8 @@
     "size": 14607
   },
   "pages/cat_forest.html": {
-    "sha256": "f8794f9acb656a572d35253d01c9c77114e226ddedbcac94d697b3d62e1400d2",
-    "size": 20416
+    "sha256": "a11a444286b4de7513df9d733445d5ab5a32a26b577863eab76fb7cc81c3e7ec",
+    "size": 23504
   },
   "pages/classroom.html": {
     "sha256": "7a9245cc1193d5c9a3ff7662399632a9cbb144269138954d2ee044cd913d2b16",

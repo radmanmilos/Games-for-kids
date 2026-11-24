@@ -77,6 +77,30 @@
 
   var GIFTS = ['🌸', '🌷', '🍄', '🍀', '🦋'];
 
+  /* Phase 2 (plan §8 Phase 2): the village hub. The three fixed feeding places
+     live in this table — they are STABLE stage-fraction anchors, so a tap on
+     porch.feed.1 lands at the same stage fraction on a 390×844 phone and a
+     1280×800 desktop, and no feeding anchor moves between viewport sizes (the
+     Phase 2 exit gate). `x`/`y` are stage fractions of the plate CENTRE; the
+     plate button keeps its own clamp() size, so the anchor is a point and the
+     target grows around it. The house sits above them (see the .cf-house CSS in
+     cat_forest.html). `plate` ties each anchor to its feeding slot. */
+  var FEED_ANCHORS = [
+    { id: 'porch.feed.1', x: 0.26, y: 0.62, plate: 0 },
+    { id: 'porch.feed.2', x: 0.50, y: 0.62, plate: 1 },
+    { id: 'porch.feed.3', x: 0.74, y: 0.62, plate: 2 }
+  ];
+
+  /* Phase 2 (plan §7.2): the scene state machine. Only one main scene is
+     interactive at a time; the village is the default and the home scene for
+     every other one. `state.scene` is the live scene id; the scene layer is
+     CSS-driven (data-scene on #app) so the house, the pond, the woodland, the
+     workshop and the diary each get their own palette without touching the
+     engine's render() projection. Pond/woodland/workshop/diary arrive in
+     later phases; the village is the only scene with plates and cats today. */
+  var SCENES = ['village', 'pond', 'woodland', 'workshop', 'diary'];
+  var DEFAULT_SCENE = 'village';
+
   var started = false;
 
   /* ---- state (TD §5) ---------------------------------------------------- */
@@ -105,6 +129,7 @@
       visitsThisSession: 0,
       idle: { sinceMs: 0, hints: 0, firstDone: false },
       fx: { count: 0, parts: [] },
+      scene: DEFAULT_SCENE,
       /* Transient picture hints (no text): a gentle bounce of the tray or of the
          selected treat. Kept in state and timed by the clock so step() can drive
          it in tests; not part of the TD §8 snapshot. */
@@ -439,6 +464,35 @@
     setWeather(state.weather === 'rain' ? 'clear' : 'rain');
   }
 
+  /* Phase 2 scene state machine (plan §7.2). `setScene` switches the live scene,
+     calling exitScene/enterScene so each phase owns its own entry/exit without
+     touching the engine's tick order. The village is always rendered; other
+     scenes are placeholders until their phase. `state.scene` survives reloads
+     through the normal loadSave path when a save schema carries it (Phase 6);
+     until then it resets to DEFAULT_SCENE on a fresh start. */
+  function enterScene(name) {
+    // Phase 2: entering the village leaves every layer intact. Later phases
+    // render scene-specific layers here (pond fishing UI, workshop recipes,
+    // the diary overlay) and cancel them in exitScene.
+    return true;
+  }
+
+  function exitScene(name) {
+    // Nothing transient to cancel in the village today; state (resources,
+    // cats, met cats, saved decor) is always preserved across scene switches.
+    return true;
+  }
+
+  function setScene(name) {
+    if (SCENES.indexOf(name) === -1) return false;
+    if (state.scene === name) return true;
+    exitScene(state.scene);
+    state.scene = name;
+    enterScene(name);
+    render();
+    return true;
+  }
+
   /* previewPick (TD §8): the picks the engine would make for this plate right
      now, through the same pickArgs the spawn path uses. Side-effect free apart
      from the RNG stream itself (same contract as the pick hook). */
@@ -563,6 +617,9 @@
     if (!els || !els.app) return;
     els.app.setAttribute('data-time', state.time);
     els.app.setAttribute('data-weather', state.weather);
+    /* Phase 2: the scene id drives a palette/segment class on #app without
+       touching render()'s projection; later scenes read their CSS here. */
+    els.app.setAttribute('data-scene', state.scene);
     /* CF-11: the toggle's pressed state mirrors the world; the glyph and the
        whole night palette hang off data-time in CSS. */
     if (els.dayNight) els.dayNight.setAttribute('aria-pressed', state.time === 'night' ? 'true' : 'false');
@@ -1437,7 +1494,7 @@
       closeBook: closeBook,
       /* Read-only view of the DATA tables so the smoke can assert the roster
          (AC5). Inspection only — nothing here changes behaviour. */
-      data: { treats: TREATS, cats: CATS, gifts: GIFTS }
+      data: { treats: TREATS, cats: CATS, gifts: GIFTS, anchors: FEED_ANCHORS }
     };
 
     els.treats.forEach(function (el) {
