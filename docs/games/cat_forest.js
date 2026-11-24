@@ -77,6 +77,30 @@
 
   var GIFTS = ['🌸', '🌷', '🍄', '🍀', '🦋'];
 
+  /* Phase 2 (plan §8 Phase 2): the village hub. The three fixed feeding places
+     live in this table — they are STABLE stage-fraction anchors, so a tap on
+     porch.feed.1 lands at the same stage fraction on a 390×844 phone and a
+     1280×800 desktop, and no feeding anchor moves between viewport sizes (the
+     Phase 2 exit gate). `x`/`y` are stage fractions of the plate CENTRE; the
+     plate button keeps its own clamp() size, so the anchor is a point and the
+     target grows around it. The house sits above them (see the .cf-house CSS in
+     cat_forest.html). `plate` ties each anchor to its feeding slot. */
+  var FEED_ANCHORS = [
+    { id: 'porch.feed.1', x: 0.26, y: 0.62, plate: 0 },
+    { id: 'porch.feed.2', x: 0.50, y: 0.62, plate: 1 },
+    { id: 'porch.feed.3', x: 0.74, y: 0.62, plate: 2 }
+  ];
+
+  /* Phase 2 (plan §7.2): the scene state machine. Only one main scene is
+     interactive at a time; the village is the default and the home scene for
+     every other one. `state.scene` is the live scene id; the scene layer is
+     CSS-driven (data-scene on #app) so the house, the pond, the woodland, the
+     workshop and the diary each get their own palette without touching the
+     engine's render() projection. Pond/woodland/workshop/diary arrive in
+     later phases; the village is the only scene with plates and cats today. */
+  var SCENES = ['village', 'pond', 'woodland', 'workshop', 'diary'];
+  var DEFAULT_SCENE = 'village';
+
   var started = false;
 
   /* ---- state (TD §5) ---------------------------------------------------- */
@@ -105,6 +129,10 @@
       visitsThisSession: 0,
       idle: { sinceMs: 0, hints: 0, firstDone: false },
       fx: { count: 0, parts: [] },
+      scene: DEFAULT_SCENE,
+      /* Catches made at the pond (Phase 3). Starts at 0; every successful
+         catch +1, and a fish set on a plate is not consumed twice. */
+      fishCount: 0,
       /* Transient picture hints (no text): a gentle bounce of the tray or of the
          selected treat. Kept in state and timed by the clock so step() can drive
          it in tests; not part of the TD §8 snapshot. */
@@ -439,6 +467,35 @@
     setWeather(state.weather === 'rain' ? 'clear' : 'rain');
   }
 
+  /* Phase 2 scene state machine (plan §7.2). `setScene` switches the live scene,
+     calling exitScene/enterScene so each phase owns its own entry/exit without
+     touching the engine's tick order. The village is always rendered; other
+     scenes are placeholders until their phase. `state.scene` survives reloads
+     through the normal loadSave path when a save schema carries it (Phase 6);
+     until then it resets to DEFAULT_SCENE on a fresh start. */
+  function enterScene(name) {
+    // Phase 2: entering the village leaves every layer intact. Later phases
+    // render scene-specific layers here (pond fishing UI, workshop recipes,
+    // the diary overlay) and cancel them in exitScene.
+    return true;
+  }
+
+  function exitScene(name) {
+    // Nothing transient to cancel in the village today; state (resources,
+    // cats, met cats, saved decor) is always preserved across scene switches.
+    return true;
+  }
+
+  function setScene(name) {
+    if (SCENES.indexOf(name) === -1) return false;
+    if (state.scene === name) return true;
+    exitScene(state.scene);
+    state.scene = name;
+    enterScene(name);
+    render();
+    return true;
+  }
+
   /* previewPick (TD §8): the picks the engine would make for this plate right
      now, through the same pickArgs the spawn path uses. Side-effect free apart
      from the RNG stream itself (same contract as the pick hook). */
@@ -507,7 +564,10 @@
       bookGrid: document.querySelector('#cf-book .cf-book-grid'),
       treats: [].slice.call(document.querySelectorAll('#cf-tray .cf-treat')),
       plates: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate')),
-      plateTreats: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate-treat'))
+      plateTreats: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate-treat')),
+      pondSpot: document.getElementById('cf-fishing-spot'),
+      fishBasket: document.getElementById('cf-fish-basket'),
+      pondScene: document.getElementById('cf-pond-scene')
     };
   }
 
@@ -563,6 +623,9 @@
     if (!els || !els.app) return;
     els.app.setAttribute('data-time', state.time);
     els.app.setAttribute('data-weather', state.weather);
+    /* Phase 2: the scene id drives a palette/segment class on #app without
+       touching render()'s projection; later scenes read their CSS here. */
+    els.app.setAttribute('data-scene', state.scene);
     /* CF-11: the toggle's pressed state mirrors the world; the glyph and the
        whole night palette hang off data-time in CSS. */
     if (els.dayNight) els.dayNight.setAttribute('aria-pressed', state.time === 'night' ? 'true' : 'false');
@@ -630,10 +693,30 @@
     }
   }
 
+/* CF-13 step 2: the fish basket shows up to this many sprites; the internal
+     count stays generous and never discards a catch (plan §3.2). A module
+     constant, not a CF property — it is a visual cap, not a gameplay rule. */
+  var FISH_BASKET_CAP = 24;
+
+  function renderFishBasket() {
+    if (!els || !els.fishBasket) return;
+    var shown = state.fishCount;
+    if (shown > FISH_BASKET_CAP) shown = FISH_BASKET_CAP;
+    var sig = 'n' + shown;
+    if (els.fishBasket.getAttribute('data-sig') === sig) return;
+    els.fishBasket.setAttribute('data-sig', sig);
+    while (els.fishBasket.firstChild) els.fishBasket.removeChild(els.fishBasket.firstChild);
+    for (var i = 0; i < shown; i++) {
+      var sp = document.createElement('span');
+      sp.className = 'cf-fish-sprite';
+      els.fishBasket.appendChild(sp);
+    }
+  }
+
   /* ---- cat rendering (CF-07; TD §7/§10) ---------------------------------
-     render() projects each actor's fraction of its phase to a position; CSS
-     only scales the body for facing and bobs it while walking, so step() stays
-     exact and positions never come from a transition. */
+   render() projects each actor's fraction of its phase to a position; CSS
+   only scales the body for facing and bobs it while walking, so step() stays
+   exact and positions never come from a transition. */
   function geomPlate(idx) {
     return (geom && geom.plates[idx]) || { x: 0.3 + idx * 0.2, y: 0.48 };
   }
@@ -1302,7 +1385,7 @@
   var SAVE_KEY = 'catForestSave';
 
   function loadSave() {
-    var out = { met: [], decor: [] };
+    var out = { met: [], decor: [], fishCount: 0 };
     try {
       var raw = localStorage.getItem(SAVE_KEY);
       if (!raw) return out;
@@ -1328,6 +1411,9 @@
           }
         }
       }
+      if (typeof s.fishCount === 'number' && (s.fishCount | 0) === s.fishCount && s.fishCount >= 0) {
+        out.fishCount = s.fishCount;
+      }
     } catch (e) { /* corrupt or unavailable storage: fresh start */ }
     return out;
   }
@@ -1337,7 +1423,8 @@
       localStorage.setItem(SAVE_KEY, JSON.stringify({
         v: 1,
         met: state.met.slice(),
-        decor: state.decor.map(function (d) { return { e: d.e, s: d.s }; })
+        decor: state.decor.map(function (d) { return { e: d.e, s: d.s }; }),
+        fishCount: state.fishCount
       }));
     } catch (e) { /* private mode / quota: play on */ }
   }
@@ -1437,7 +1524,7 @@
       closeBook: closeBook,
       /* Read-only view of the DATA tables so the smoke can assert the roster
          (AC5). Inspection only — nothing here changes behaviour. */
-      data: { treats: TREATS, cats: CATS, gifts: GIFTS }
+      data: { treats: TREATS, cats: CATS, gifts: GIFTS, anchors: FEED_ANCHORS }
     };
 
     els.treats.forEach(function (el) {
@@ -1455,6 +1542,19 @@
     els.app.addEventListener('pointerdown', onAppPointerDown); // CF-10: any real touch restarts the idle windows
     els.friends.addEventListener('click', openBook);   // CF-15
     els.bookClose.addEventListener('click', closeBook); // CF-15
+
+    /* CF-13 step 2: pond fishing interaction.
+       Tap the fishing spot → increment fish count; a fish sprite is added to the
+       basket. No failure state, no timer, no shortage — every catch is a gift.
+       The basket shows the collected fish as sprites; no digits, no counters. */
+    els.pondSpot.addEventListener('click', function () {
+      state.fishCount++;
+      renderFishBasket();
+      if (window.tone) {
+        window.tone(880, 0.1, 0, 'sine', 0.15);
+        window.tone(660, 0.1, 0.08, 'sine', 0.2);
+      }
+    });
 
     /* CF-10 step 4: one spoken welcome prompt at boot (PS §5, D9). Best-effort
        with the sorting idiom — a silent failure is fine and nothing depends

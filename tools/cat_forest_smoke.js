@@ -218,6 +218,29 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
       seated.ok !== false && seated.catCoversPlatePct === 0 && seated.catCoversTreatPct === 0 && seated.gapPlateTopPx > 0,
       JSON.stringify(seated));
 
+    /* Phase 2: the three feeding anchors are stage-fraction points (FEED_ANCHORS)
+       so they never drift between viewport sizes. Measure each plate's centre as
+       a fraction of the stage box and compare to the data table (tolerance 1%
+       for sub-pixel rounding). */
+    const anchorFit = JSON.parse(await hv.evalv(`JSON.stringify((() => {
+      const stage = document.getElementById('cf-stage').getBoundingClientRect();
+      const anchors = window.__catForest.data.anchors;
+      const plates = [...document.querySelectorAll('.cf-plate')];
+      const out = [];
+      for (const a of anchors) {
+        const r = plates[a.plate].getBoundingClientRect();
+        out.push({
+          id: a.id,
+          dx: Math.abs((r.left + r.width / 2 - stage.left) / stage.width - a.x),
+          dy: Math.abs((r.top + r.height / 2 - stage.top) / stage.height - a.y)
+        });
+      }
+      return out;
+    })())`));
+    check(`${vp.name}: feeding anchors match FEED_ANCHORS fractions (Phase 2)`,
+      anchorFit.length === 3 && anchorFit.every(a => a.dx <= 0.01 && a.dy <= 0.01),
+      JSON.stringify(anchorFit));
+
     await hv.close();
   }
 
@@ -1348,7 +1371,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     const sel = m[1].split('\n').pop().trim();
     if (sel) cf12Anim.push(sel);
   }
-  const cf12Known = ['.cf-gift', '.cf-decor-item', '.cf-treat.cf-bounce', '#cf-tray.cf-hint', '#cf-rain i'];
+  const cf12Known = ['.cf-gift', '.cf-decor-item', '.cf-fish-sprite', '.cf-treat.cf-bounce', '#cf-tray.cf-hint', '#cf-rain i'];
   const cf12Unknown = cf12Anim.filter(s => cf12Known.indexOf(s) === -1);
   check('every animation: selector on the page is classified by the audit (AC2)',
     cf12Anim.length >= 5 && cf12Unknown.length === 0,
@@ -1642,7 +1665,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     JSON.stringify({ keys: cf14Pre.keys, met: cf14Pre.met, decor: cf14Pre.decor.length }));
   check('CF-14: the save payload is exactly {v:1, met:[ids], decor:[{e,s}]}',
     cf14Raw && cf14Raw.v === 1 && Array.isArray(cf14Raw.met) && Array.isArray(cf14Raw.decor)
-      && Object.keys(cf14Raw).sort().join(',') === 'decor,met,v'
+      && Object.keys(cf14Raw).sort().join(',') === 'decor,fishCount,met,v'
       && cf14Raw.met.every(id => typeof id === 'string')
       && cf14Raw.decor.every(d => d && typeof d.e === 'string' && (d.s | 0) === d.s),
     cf14Pre.raw);

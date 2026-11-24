@@ -36,7 +36,7 @@ Data lists are `TREATS` (🐟🥛🍗🍣🍪), `CATS` (10; each has `likes`, `w
 `state()` snapshot · `seed(n)` deterministic RNG · `rand(n)` · `pause()` / `step(ms)` (game clock;
 `pause` is the harness rAF gate) · `place(treat, plate)` · `forceCat(id, plate)` · `pick(...)` ·
 `previewPick()` · `setTime()` / `setWeather()` · `reset()` · `openBook()` / `closeBook()` ·
-`data {treats, cats, gifts}`.
+`data {treats, cats, gifts, anchors}`.
 Determinism recipe used by the smoke and by `tools/visual-states.json` `PLAY`: `seed(7)` →
 `place('fish', 0)` → poll `step(50)` until a cat is `sitting` (it is `sitting` only ~5350–6250 ms,
 so a fixed long step overshoots to an empty stage).
@@ -52,6 +52,28 @@ game is fully playable silently. Save is one key `catForestSave` = `{v:1, met:[i
 cats on stage, plates, selection, clock and weather are transient by design. `parent.html`'s existing
 reset clears it. `state.book` freezes `step()` and the rAF `frame()` while the book is open;
 `render()` always runs.
+
+## Village hub (Phase 2, plan §7.2)
+
+The three feeding stations are fixed **stage-fraction anchors** in `FEED_ANCHORS`:
+
+| id | x | y | plate |
+|---|---|---|---|
+| `porch.feed.1` | 0.26 | 0.62 | 0 |
+| `porch.feed.2` | 0.50 | 0.62 | 1 |
+| `porch.feed.3` | 0.74 | 0.62 | 2 |
+
+`#cf-plates` fills the stage and each `.cf-plate` is absolutely placed at its anchor
+percentage (`left:26%/50%/74%; top:62%`), so a tap on `porch.feed.1` lands at the same
+stage fraction on a 390×844 phone and a 1280×800 desktop — no feeding anchor moves
+between viewport sizes (the Phase 2 exit gate). The house sits above them in
+`#cf-scenery` (CSS shapes, aria-hidden, no visible text).
+
+A scene state machine owns the main view: `SCENES = ['village','pond','woodland','workshop','diary']`,
+`DEFAULT_SCENE = 'village'`, `state.scene`, `enterScene/exitScene/setScene`, and `data-scene`
+on `#app` in `render()`. Only the village has plates and cats today; the other four
+are placeholders until their phase. `setScene` is a no-op for unknown ids and for the
+already-active scene.
 
 ## Gotchas
 

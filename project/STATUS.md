@@ -2,32 +2,48 @@
 
 **Last verified:** 2026-11-23
 **Repository:** radmanmilos/Games-for-kids
-**Current branch:** `claude/adventure-playability`
-**Version:** `3.0.18`
+**Current branch:** `claude/cat-forest-village`
+**Version:** `3.0.20` (main) / `2.4.0` (cat_forest manifest, on main)
 
-## Task 463 — Phase 1 adventure engine (this session, Kilo/openrouter/free)
+## Driving engine work (complete on `main`, CI green)
 
-Extended the shared adventure engine (`game/games/adventure.js`) with the Phase 1 fixes from `resources/General_reviews/OCEAN_DRIVING_FIXES.md` (1A–1E), applied to all four games that ride the engine (driving, ocean, space, dino-grounded paths):
+- Driving car sizing fix (task 453): headless probe confirmed `heroBox` = 186.5×128 at desktop, `player` = 186.5×128, aspect preserved (440/302 source = 1.457 vs 186.49/128 = 1.456); driving smoke passes with `heroW:186.49`; `check_fast.js` 10/10 green; `build_offline.js` regenerated sw-cache-list.json (556 entries) + offline-manifest.json (555 entries). Temp probe `tools/probe_car.js` deleted.
+- CI verified green on `main` (`05edfd1` — CI + CodeQL both success).
+- Obstacle knockback smoke test fix: removed forced `o.width = 200; o.height = 200;` in `tools/adventure_smoke.js`; committed `05edfd1`, pushed, CI green.
 
-- **1A/1B — playfield rectangle + entity scale.** `computePlayfield()` measures the real HUD (above) and control (below) DOM rects on every resize and builds `pf = {top, bottom, left, right, height}`, then `u = clamp(pf.height / 520, 0.5, 1)`. Hero clamps, obstacle/coin Y, and the goal all use `pf`; obstacle/coin sizes scale by `u`.
-- **1C — compact HUD on short screens.** When `canvas.height < 500`: `#adv-game` gets `adv-compact`, the page title hides, the score card shrinks to icon+number (world-name line dropped), and the HUD band caps at 52 px (measured) ≤ 56 px.
-- **1D — reaction-time budget.** Scroll speed scales by `clamp(canvas.width/1024, 0.6, 1)` in `updateDrive`, so obstacle-enters-screen-to-hero time stays ≥ 2.0 s at every viewport (measured ≈ 4.5 s at 844×390).
-- **1E — debug overlay.** `?debug=pf` draws the playfield rect, the hero hitbox, every obstacle hitbox and the shadow baseline (no network, no UI text).
-- **Ocean coin Y bug.** Coins divided by `goalDy` but ocean `dy` values exceed it, sending coins to `y=1112` (off-screen). Fixed to use the level's true `maxDy`.
+## Cat Forest Village expansion (Phase 1 complete, Phase 2 pending)
 
-Exposed read-only `pf`, `scrollScale`, `isCompact`, `debug` on `window.__adv` for smoke guards.
+Branch `claude/cat-forest-village`. Base game CF-00..CF-21 complete on `main` (05edfd1), CI green, `check_fast.js` 10/10, driving 25/25, ocean 27/27, cat_forest smoke 221 checks.
 
-## Verification
+### Task 464 — Phase 1: art direction & scene prototypes (DONE, 2026-11-23, OpenCode/Big Pickle)
 
-- `node tools/check_fast.js`: 10/10 green.
-- `node tools/build_offline.js`: 546 cache entries / 545 manifest; `bash tools/sync-docs.sh`: `docs/` mirrors `game/` (547 files).
-- Smokes: `driving_smoke.js` PASS, `ocean_smoke.js` PASS, `dino_smoke.js` PASS, `space_smoke.js` PASS, `adventure_smoke.js` PASS — all report "no browser runtime errors".
-- Headless probe at 844×390: `adv-compact` applied, title hidden, HUD band 52 px, pf 116→292, `scrollScale` 0.824 → reaction ≈ 4.5 s.
-- Review screenshots refreshed: `screenshot.js --review=Screenshot_Review --pages=driving,ocean --task=462` → 8 shots (4 viewports × 2 games), no browser runtime errors.
-- Version: `3.0.17` → `3.0.18` (C = minor segment).
+All 6 Phase 1 deliverables complete:
+- Village-house concept `resources/General_reviews/Cat_Forest/village_house_concept.png`
+- Cat illustration `village_cat_prototype.png`
+- Fish basket `village_fish_basket_prototype.png`
+- Decoration `village_decoration_prototype.png`
+- Village scene mockup `village_scene_mockup.png` (three feeding positions on porch, pond/woodland hotspots, workshop shed, diary-on-table, empty pot rings)
+- Palette/camera/shadow/scale guide `resources/General_reviews/Cat_Forest/ART_DIRECTION.md`
+
+Four prompt briefs under `resources/General_reviews/Asset_Generation/prompts/` (`cat_forest_village_house.md`, `cat_forest_village_cat.md`, `cat_forest_village_fish_basket.md`, `cat_forest_village_decoration.md`, `cat_forest_village_scene.md`). ~1,470 of 10,000 daily neurons used (17 runs).
+
+### Task 465 — Phase 2: village hub + 3 feeding spots (DONE, 2026-11-24, OpenCode/Big Pickle)
+
+All Phase 2 deliverables complete:
+- Village house + garden decorative elements in `game/pages/cat_forest.html` inside `#cf-scenery` (CSS + markup, aria-hidden, no visible text)
+- `FEED_ANCHORS` table pins 3 fixed stage-fraction anchors (`porch.feed.1/2/3` at x 0.26/0.50/0.74, y 0.62, plates 0/1/2)
+- Plates positioned at anchor fractions via CSS percentages (`left:26%/50%/74%; top:62%`) so spot is stable across all viewports
+- Scene state machine: `SCENES=['village','pond','woodland','workshop','diary']`, `DEFAULT_SCENE='village'`, `state.scene`, `enterScene/exitScene/setScene`, `data-scene` on `#app` in `render()`
+- Hook exposes `anchors: FEED_ANCHORS` in `window.__catForest.data`
+- Smoke asserts feeding anchors match `FEED_ANCHORS` fractions (≤1% tol) across all 4 target viewports
+- Existing cat feeding works; no feeding anchor moves between viewport sizes; existing save data readable
+- `check_fast.js` 10/10 green, `build_offline.js` regenerated manifest, docs synced
+
+### Next: Phase 3 deferred — pond/woodland/workshop/diary scenes
 
 ## Open tasks (from ACTIVE.md)
 
+- 465 (Phase 2 village hub + 3 feeding spots): DONE
 - 435 (Gate 5 family rollout): NEW
 - 436 (Gate 6: 11-world regression): NEW
 - 437 (Little Explorer full review + screenshots): NEW — recommend CLOSE
@@ -42,4 +58,4 @@ Exposed read-only `pf`, `scrollScale`, `isCompact`, `debug` on `window.__adv` fo
 ## Generation pipeline
 
 - Cloudflare credentials staged at `%TEMP%\opencode\cloudflare-creds.json` (never in repo).
-- Driving/ocean painted art already shipped (task 462); Phase 1 only touched the engine + CSS, no new art.
+- Cat Forest painted art direction approved by user 2026-11-23 (Phase 1 prototypes).

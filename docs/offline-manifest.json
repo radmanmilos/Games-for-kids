@@ -1928,8 +1928,8 @@
     "size": 20395
   },
   "games/cat_forest.js": {
-    "sha256": "3a08f9071bcf03d9a4a08c55cf60e4d5c950c99d10b60845609e4d84f6243ef2",
-    "size": 61500
+    "sha256": "e8c7dd2c5cc22cc533552412799e27b348bff43cfc66d6fc0b0d3eca86825c52",
+    "size": 66298
   },
   "games/classroom.js": {
     "sha256": "12d741c329ab9e7f85439dc1fd9136b740910f36e7ea6f363657deb7093f6713",
@@ -2024,7 +2024,7 @@
     "size": 19388
   },
   "manifest.json": {
-    "sha256": "1db430d8be78148e1e8d85609b8aa835a61206a017b93d699ed9a61036ec6976",
+    "sha256": "d770dfdce848cea198becad856e5369ff637fb77fbdfcf330822d522f56188ad",
     "size": 578
   },
   "pages/animal_counting.html": {
@@ -2044,8 +2044,8 @@
     "size": 14607
   },
   "pages/cat_forest.html": {
-    "sha256": "f8794f9acb656a572d35253d01c9c77114e226ddedbcac94d697b3d62e1400d2",
-    "size": 20416
+    "sha256": "93227982396c42527dcb817d600a10cdbfd03206e1b1993ec83e6b0a1b48b626",
+    "size": 28768
   },
   "pages/classroom.html": {
     "sha256": "7a9245cc1193d5c9a3ff7662399632a9cbb144269138954d2ee044cd913d2b16",

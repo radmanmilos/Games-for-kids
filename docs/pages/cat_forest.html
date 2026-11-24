@@ -78,6 +78,37 @@
   .cf-tree-2{right:3vmin;bottom:29vmin;font-size:10vmin;}
   .cf-tree-3{left:20vmin;bottom:24vmin;font-size:8vmin;}
 
+  /* Phase 2 village house + garden (decorative, inside #cf-scenery which is
+     aria-hidden + pointer-events:none — no child can steal a tap). The house is
+     drawn with CSS shapes so no text node exists (the no-visible-text guard
+     reads body.innerText); the two flowers use the data-e ::before idiom like
+     the trees. */
+  .cf-house{position:absolute;left:50%;top:14%;transform:translateX(-50%);}
+  .cf-house-body{position:relative;display:block;width:34vmin;height:22vmin;
+    background:#F2E7D5;border-radius:4px 4px 2px 2px;
+    box-shadow:inset 0 -1.2vmin 2vmin rgba(74,63,107,.08);}
+  .cf-house-roof{position:absolute;left:24vmin;right:24vmin;top:-10vmin;
+    width:0;height:0;
+    border-left:12vmin solid transparent;border-right:12vmin solid transparent;
+    border-top:11vmin solid #C97F5E;}
+  .cf-house-door{position:absolute;left:40vmin;top:13vmin;
+    width:8vmin;height:9vmin;background:#C89B6A;border-radius:3px 3px 0 0;}
+  .cf-house-window{position:absolute;width:7vmin;height:6vmin;
+    background:rgba(240,196,108,.55);border:0.5vmin solid #C89B6A;border-radius:2px;}
+  .cf-house-window-left{left:10vmin;}
+  .cf-house-window-right{right:10vmin;}
+  .cf-house-chimney{position:absolute;left:7vmin;top:-4vmin;
+    width:4vmin;height:9vmin;background:#C89B6A;border-radius:2px 2px 0 0;}
+  /* Night: the windows glow warm amber so the house stays cosy in the dark. */
+  #app[data-time="night"] .cf-house-window{background:#F0C46C;
+    box-shadow:0 0 2.5vmin rgba(240,196,108,.65);}
+  .cf-ground{position:absolute;left:0;right:0;bottom:0;height:9vmin;
+    background:#A9B56E;border-radius:50% 50% 0 0;}
+  .cf-flower{position:absolute;bottom:6vmin;line-height:1;font-size:5vmin;font-variant-emoji:emoji;}
+  .cf-flower::before{content:attr(data-e);}
+  .cf-flower-1{left:18vmin;}
+  .cf-flower-2{right:20vmin;bottom:4.5vmin;font-size:4vmin;}
+
   /* T301: when Art.fillAttr paints an <img class="art"> on any glyph site, the
      image must be the same size the emoji was (1em = the site's own font-size),
      and it must sit on the baseline the ::before used so hit tests and
@@ -89,14 +120,20 @@
   .cf-book-cat .art, .cf-book-cat-acc .art, .cf-tree .art, .cf-star .art{
     width:1em;height:1em;vertical-align:middle; display:inline-block;}
   .art-painted::before{content:none !important;}
-  #cf-plates{z-index:4;left:0;right:0;top:48%;transform:translateY(-50%);
-    display:flex;justify-content:center;align-items:center;gap:clamp(16px,6vmin,64px);
-    pointer-events:none;}
-  .cf-plate{pointer-events:auto;position:relative;padding:0;border:none;background:none;cursor:pointer;
+  /* Phase 2 (plan §7.2): the three feeding spots are fixed stage-fraction
+     anchors (FEED_ANCHORS in cat_forest.js). #cf-plates fills the stage and each
+     plate is absolutely placed at its anchor with a percentage so it holds the
+     same fraction on every viewport — no JS layout, positioned at first paint.
+     The percentages mirror FEED_ANCHORS; the smoke asserts they still agree. */
+  #cf-plates{z-index:4;position:absolute;inset:0;pointer-events:none;}
+  .cf-plate{pointer-events:auto;position:absolute;transform:translate(-50%,-50%);padding:0;border:none;background:none;cursor:pointer;
     width:clamp(72px,22vmin,132px);aspect-ratio:1;border-radius:50%;
     display:grid;place-items:center;line-height:1;font-size:clamp(40px,14vmin,88px);
     filter:drop-shadow(0 1vmin 1.2vmin rgba(74,63,107,.16));
     transition:transform .16s ease, filter .16s ease;}
+  .cf-plate[data-plate="0"]{left:26%;top:62%;}
+  .cf-plate[data-plate="1"]{left:50%;top:62%;}
+  .cf-plate[data-plate="2"]{left:74%;top:62%;}
   .cf-plate::before{content:attr(data-e);}
   .cf-plate-treat{position:absolute;left:50%;top:50%;transform:translate(-50%,-64%);
     font-size:clamp(30px,9vmin,56px);line-height:1;opacity:0;font-variant-emoji:emoji;}
@@ -241,6 +278,73 @@
     font-variant-emoji:emoji;transition:transform .16s ease, box-shadow .16s ease;}
   #cf-book-close::before{content:"✖️";}
 
+  /* Phase 3 pond scene (plan §3.2): visible only when
+     #app[data-scene="pond"]. The water is a soft blue shape; reeds and lily
+     pads are decorative emoji drawn through ::before (no text nodes). The
+     fishing spot is a large circular button over the water; the fish basket
+     near the bottom edge shows collected fish as sprites (no digits). The
+     return control and the path-to-woodland hotspot sit on the bank. */
+  #app[data-scene="pond"] #cf-pond-scene{display:block;}
+  #app[data-scene="pond"] #cf-fishing-spot{display:block;}
+  #app[data-scene="pond"] #cf-fish-basket{display:flex;}
+  #app[data-scene="pond"] #cf-pond-back{display:grid;}
+  #app[data-scene="pond"] #cf-pond-path{display:grid;}
+  /* Hide village interactive layers when at the pond. */
+  #app[data-scene="pond"] #cf-plates{display:none;}
+  #app[data-scene="pond"] #cf-tray{display:none;}
+  #app[data-scene="pond"] #cf-friends{display:none;}
+  #app[data-scene="pond"] .cf-toggles{display:none;}
+  /* Phase 3: the whole pond scene is hidden unless we are AT the pond. */
+  #cf-pond-scene,#cf-fishing-spot,#cf-fish-basket,#cf-pond-back,#cf-pond-path{display:none!important;}
+
+  #cf-pond-scene{position:absolute;inset:0;z-index:2;pointer-events:none;}
+  .cf-pond-water{position:absolute;left:10%;right:10%;bottom:4%;top:22%;
+    background:linear-gradient(180deg,#7FB8D9 0%,#5A9BCC 55%,#3E7BA3 100%);
+    border-radius:50% 50% 8% 8%;box-shadow:inset 0 -2vmin 4vmin rgba(0,0,0,.06);}
+  .cf-pond-reed{position:absolute;bottom:8%;font-size:10vmin;line-height:1;font-variant-emoji:emoji;}
+  .cf-pond-reed::before{content:attr(data-e);}
+  .cf-pond-reed-1{left:6%;transform:rotate(-8deg);}
+  .cf-pond-reed-2{right:6%;transform:rotate(8deg);}
+  .cf-pond-lily{position:absolute;bottom:18%;font-size:7vmin;line-height:1;font-variant-emoji:emoji;}
+  .cf-pond-lily::before{content:attr(data-e);}
+  .cf-pond-lily-1{left:18%;}
+  .cf-pond-lily-2{right:18%;}
+
+  #cf-fishing-spot{display:none;position:absolute;left:50%;top:38%;
+    transform:translate(-50%,-50%);width:clamp(96px,26vmin,160px);
+    height:clamp(96px,26vmin,160px);border-radius:50%;border:none;
+    background:rgba(255,255,255,.12);cursor:pointer;z-index:5;
+    box-shadow:0 0 0 2px rgba(255,255,255,.35),inset 0 0 3vmin rgba(255,255,255,.2);
+    transition:box-shadow .16s ease,transform .16s ease;}
+  #cf-fishing-spot:active{box-shadow:0 0 0 4px rgba(255,255,255,.6),inset 0 0 4vmin rgba(255,255,255,.3);
+    transform:translate(-50%,-50%) scale(.96);}
+
+  #cf-fish-basket{position:absolute;left:50%;bottom:clamp(10px,3vmin,28px);
+    transform:translateX(-50%);z-index:6;display:flex;justify-content:center;align-items:flex-end;
+    gap:clamp(4px,1vmin,10px);padding:clamp(6px,1.4vmin,14px);min-height:clamp(56px,10vmin,80px);
+    pointer-events:none;}
+  .cf-fish-sprite{width:clamp(28px,6vmin,44px);height:clamp(28px,6vmin,44px);
+    font-size:clamp(24px,5vmin,38px);line-height:1;display:grid;place-items:center;
+    font-variant-emoji:emoji;animation:cf-fish-in .35s ease;}
+  .cf-fish-sprite::before{content:"🐟";}
+  @keyframes cf-fish-in{from{opacity:0;transform:translateY(12px) scale(.6);}to{opacity:1;transform:none;}}
+
+  #cf-pond-back{position:absolute;left:clamp(10px,2.6vmin,28px);
+    top:clamp(10px,2.6vmin,28px);z-index:10;width:clamp(56px,8vmin,72px);
+    aspect-ratio:1;padding:0;border:none;border-radius:50%;background:#fff;
+    box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);cursor:pointer;
+    display:grid;place-items:center;font-size:clamp(26px,5.5vmin,44px);line-height:1;
+    font-variant-emoji:emoji;transition:transform .16s ease, box-shadow .16s ease;}
+  #cf-pond-back::before{content:"🏠";}
+
+  #cf-pond-path{position:absolute;right:clamp(10px,2.6vmin,28px);
+    bottom:clamp(10px,2.6vmin,28px);z-index:10;width:clamp(56px,8vmin,72px);
+    aspect-ratio:1;padding:0;border:none;border-radius:50%;background:#fff;
+    box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);cursor:pointer;
+    display:grid;place-items:center;font-size:clamp(26px,5.5vmin,44px);line-height:1;
+    font-variant-emoji:emoji;transition:transform .16s ease, box-shadow .16s ease;}
+  #cf-pond-path::before{content:"🌲";}
+
   /* The keyboard/OS preference always wins over the page's own motion.
      CF-12 audit (TP §3.10): every decorative *movement* is disabled here —
      press feedback and the idle pulse (DECISIONS: shake/pulse suppressed) and
@@ -252,6 +356,8 @@
     #cf-sky-night,#cf-night-tint,#cf-stars{transition:none;}
     #cf-rain i{animation:none;transform:translateY(var(--y));opacity:.3;}
     .cf-treat.cf-bounce,#cf-tray.cf-hint{animation:none;}
+    #cf-fishing-spot{transition:none;}
+    .cf-fish-sprite{animation:none;}
   }
 
   /* Desktop tier, mirroring sorting.html: cap the vmin glyphs so a tablet held
@@ -281,6 +387,21 @@
       <span class="cf-tree cf-tree-1" data-e="🌲"></span>
       <span class="cf-tree cf-tree-2" data-e="🌲"></span>
       <span class="cf-tree cf-tree-3" data-e="🌲"></span>
+
+      <!-- Village house -->
+      <span class="cf-house" aria-hidden="true">
+        <span class="cf-house-body" aria-hidden="true"></span>
+        <span class="cf-house-roof" aria-hidden="true"></span>
+        <span class="cf-house-door" aria-hidden="true"></span>
+        <span class="cf-house-window cf-house-window-left" aria-hidden="true"></span>
+        <span class="cf-house-window cf-house-window-right" aria-hidden="true"></span>
+        <span class="cf-house-chimney" aria-hidden="true"></span>
+      </span>
+
+      <!-- Garden -->
+      <span class="cf-ground" aria-hidden="true"></span>
+      <span class="cf-flower cf-flower-1" data-e="🌸" aria-hidden="true"></span>
+      <span class="cf-flower cf-flower-2" data-e="🌷" aria-hidden="true"></span>
     </div>
     <div id="cf-decor" aria-hidden="true"></div>
     <div id="cf-night-tint" aria-hidden="true"></div>
@@ -314,6 +435,22 @@
       <button id="cf-book-close" aria-label="Затвори"></button>
       <div class="cf-book-grid"><span class="cf-book-empty" data-e="🐾"></span></div>
     </div>
+
+    <!-- Phase 3 pond scene (plan §3.2): hidden by default, shown when
+         data-scene="pond". Decorative water + reeds + lily pads are
+         aria-hidden; the fishing spot is the one large tappable control;
+         the fish basket shows the collected fish as sprites (no digits). -->
+    <div id="cf-pond-scene" aria-hidden="true">
+      <span class="cf-pond-water" aria-hidden="true"></span>
+      <span class="cf-pond-reed cf-pond-reed-1" data-e="🌾" aria-hidden="true"></span>
+      <span class="cf-pond-reed cf-pond-reed-2" data-e="🌾" aria-hidden="true"></span>
+      <span class="cf-pond-lily cf-pond-lily-1" data-e="🪷" aria-hidden="true"></span>
+      <span class="cf-pond-lily cf-pond-lily-2" data-e="🪷" aria-hidden="true"></span>
+    </div>
+    <button id="cf-fishing-spot" aria-label="Пецај рибу"></button>
+    <div id="cf-fish-basket" aria-hidden="true"></div>
+    <button id="cf-pond-back" aria-label="Назад у село"></button>
+    <button id="cf-pond-path" aria-label="Вир"></button>
   </div>
 </div>
 <script src="../data/serbian.js"></script>
