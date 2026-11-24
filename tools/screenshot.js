@@ -48,6 +48,22 @@ const { decodePng } = require('./visual_compare.js');
 
 const ROOT = path.resolve(__dirname, '..');
 const CURRENT = path.join(__dirname, 'screenshots', 'current');
+
+/* jsLiteral(value): a string LITERAL that is safe to embed inside the
+   JavaScript source strings we hand to h.evalv/h.waitFor. JSON.stringify alone
+   already escapes quotes, backslashes and control characters, but it leaves
+   `<`, `>`, `/` and the U+2028/U+2029 line separators raw — a value such as
+   `</script>` could break out of the surrounding script context (CodeQL
+   js/bad-code-sanitization). Escaping just those characters keeps the embedded
+   code inert without double-escaping, so a registry selector can never become
+   executable code. */
+const JS_UNSAFE = {
+  '<': '\\u003C', '>': '\\u003E', '/': '\\u002F',
+  '\u2028': '\\u2028', '\u2029': '\\u2029',
+};
+function jsLiteral(value) {
+  return JSON.stringify(value).replace(/[<>/\u2028\u2029]/g, (c) => JS_UNSAFE[c]);
+}
 const REVIEW_ROOT = path.join(ROOT, 'resources', 'General_reviews');
 
 /* Every registry app (children AND the parent area) plus the hub. The review
@@ -297,16 +313,16 @@ function writeReviewToc({ review, generatedAt }) {
         const picker = HERO_PICKER[page];
         if (picker) {
           const buttonReady = await h.waitFor(
-            `(() => { const b = document.querySelector(${JSON.stringify(picker.button)}); return !!b && b.getBoundingClientRect().width > 0; })()`,
+            `(() => { const b = document.querySelector(${jsLiteral(picker.button)}); return !!b && b.getBoundingClientRect().width > 0; })()`,
             { timeout: 15000, label: `${page} hero picker` },
           );
           if (!buttonReady.ok) throw new Error(buttonReady.why);
-          const clicked = await h.evalv(`(() => { const b = document.querySelector(${JSON.stringify(picker.button)}); if (!b) return false; b.click(); return true; })()`);
+          const clicked = await h.evalv(`(() => { const b = document.querySelector(${jsLiteral(picker.button)}); if (!b) return false; b.click(); return true; })()`);
           if (clicked !== true) throw new Error(`${page}: could not choose a hero in the picker`);
           const booted = await h.waitFor(picker.ready, { timeout: 15000, label: `${page} to boot after choosing a hero` });
           if (!booted.ok) throw new Error(booted.why);
           const pickerClosed = await h.waitFor(
-            `(() => { const m = document.querySelector(${JSON.stringify(picker.modal)}); return !!m && !m.classList.contains('show') && getComputedStyle(m).display === 'none'; })()`,
+            `(() => { const m = document.querySelector(${jsLiteral(picker.modal)}); return !!m && !m.classList.contains('show') && getComputedStyle(m).display === 'none'; })()`,
             { timeout: 5000, label: `${page} hero picker to close` },
           );
           if (!pickerClosed.ok) throw new Error(`${page}: hero picker is still visible after choosing a hero (the screenshot would show the picker, not the game)`);
@@ -330,7 +346,7 @@ function writeReviewToc({ review, generatedAt }) {
         /* Belt and braces: whatever the game does with the picker, a still-visible
            modal must never be captured. */
         if (picker) {
-          const stillOpen = await h.evalv(`(() => { const m = document.querySelector(${JSON.stringify(picker.modal)}); return !!(m && (m.classList.contains('show') || getComputedStyle(m).display !== 'none')); })()`);
+          const stillOpen = await h.evalv(`(() => { const m = document.querySelector(${jsLiteral(picker.modal)}); return !!(m && (m.classList.contains('show') || getComputedStyle(m).display !== 'none')); })()`);
           if (stillOpen) throw new Error(`${page}: hero picker is still visible — the screenshot would show the picker, not the game`);
         }
 
