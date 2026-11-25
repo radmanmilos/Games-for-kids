@@ -478,11 +478,13 @@ window.startlittle_adventure = function startlittle_adventure() {
         const A = window.little_adventureAudio;
         const recipe = A && A.SFX ? A.SFX[name] : null;
         if (!recipe) return;
+        const pv = recipe.pitchVar || 0;
+        const jitter = pv ? (1 + (Math.random() * 2 - 1) * pv) : 1;
         for (const l of recipe.layers) {
           if (l.type === 'tone' && window.audioBuses.playSweep) {
-            window.audioBuses.playSweep('sfx', l.f0, l.f1, l.dur, 'sine', l.gain || 0.1, 0);
+            window.audioBuses.playSweep('sfx', (l.f0 || 440) * jitter, (l.f1 || l.f0 || 440) * jitter, l.dur, 'sine', l.gain || 0.1, 0);
           } else if (l.type === 'noise' && window.audioBuses.playTone) {
-            window.audioBuses.playTone('sfx', 180, l.dur || 0.05, 'triangle', (l.gain || 0.05) * 0.6, 0);
+            window.audioBuses.playTone('sfx', 180 * jitter, l.dur || 0.05, 'triangle', (l.gain || 0.05) * 0.6, 0);
           }
         }
       }
