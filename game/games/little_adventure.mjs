@@ -203,6 +203,16 @@ window.startlittle_adventure = function startlittle_adventure() {
     let lastFrame = performance.now();
     let frameMs = 16;
     let dpr = renderer.getPixelRatio();
+    let tier = 'high';
+    let tierStepped = false;
+    const TIERS = (window.little_adventureFx && window.little_adventureFx.TIERS) || { high: { dprCap: 1.5, particles: 250 }, medium: { dprCap: 1.25, particles: 120 }, low: { dprCap: 1.0, particles: 40 } };
+    function applyTier(next) {
+      if (!TIERS[next]) return;
+      tier = next;
+      const cap = TIERS[tier].dprCap || 1.0;
+      const target = Math.min(window.devicePixelRatio || 1, cfg.budget.dprMax, cap);
+      if (target < dpr) { dpr = target; renderer.setPixelRatio(dpr); }
+    }
     let rafId = 0;
 
     // --- Actor storage ---
@@ -846,13 +856,15 @@ const offc = cfg.camera.offset;
       }
 
       updateActors();
-      if (perfOverlay.style.display !== 'none') perfOverlay.textContent = 'frameMs=' + frameMs.toFixed(1) + ' dpr=' + dpr.toFixed(2) + ' calls=' + renderer.info.render.calls + ' tris=' + renderer.info.render.triangles;
+      if (perfOverlay.style.display !== 'none') perfOverlay.textContent = 'frameMs=' + frameMs.toFixed(1) + ' dpr=' + dpr.toFixed(2) + ' tier=' + tier + ' calls=' + renderer.info.render.calls + ' tris=' + renderer.info.render.triangles;
 
       renderer.render(scene, camera);
 
-      if (!gallery && frameMs > cfg.budget.slowFrameMs && dpr > 1.0) {
-        dpr = 1.0;
-        renderer.setPixelRatio(dpr);
+      if (!gallery && !tierStepped && frameMs > cfg.budget.slowFrameMs) {
+        tierStepped = true;
+        if (tier === 'high') applyTier('medium');
+        else if (tier === 'medium') applyTier('low');
+        else { dpr = 1.0; renderer.setPixelRatio(dpr); }
       }
     }
     renderLoop();
@@ -880,7 +892,7 @@ const offc = cfg.camera.offset;
     });
 
     window.__little_adventure = {
-      state: () => (game ? Object.assign({}, game.state(), { frameMs, dpr, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, webgl: true, motionScale: reducedMotion ? 0 : 1 }) : { frameMs, dpr, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, webgl: true, motionScale: reducedMotion ? 0 : 1 }),
+      state: () => (game ? Object.assign({}, game.state(), { frameMs, dpr, tier, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, webgl: true, motionScale: reducedMotion ? 0 : 1 }) : { frameMs, dpr, tier, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, webgl: true, motionScale: reducedMotion ? 0 : 1 }),
       seed: (n) => { if (game) game = logic.createGame(cfg, n); },
       pause: () => { paused = true; },
       step: (ms) => { if (game) stepGame(ms); },
@@ -917,8 +929,8 @@ const offc = cfg.camera.offset;
       },
       sheet: (name, frames) => { if (game) { paused = true; game = logic.createGame(cfg, 7); currentSheet = { name, frames: frames || 8 }; } },
       setPose: (actor, id, t) => { /* reserved for Q-10+ */ },
-      quality: (tier) => { /* reserved for Q-18 */ },
-      fxTable: () => [],
+      quality: (t) => { if (TIERS[t]) { tierStepped = true; applyTier(t); } return tier; },
+      fxTable: () => (window.little_adventureFx && window.little_adventureFx.eventKeys ? window.little_adventureFx.eventKeys() : []),
       data: { cfg }
     };
   } catch (e) {
