@@ -62,3 +62,4 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 - 2026-11-26 — OpenCode/Big Pickle — Q-18 wiring: tier in state/perf overlay, one-step adaptive down, quality()/fxTable() hooks, fx module loaded. check_fast green.
 - 2026-11-26 — OpenCode/Big Pickle — Q-09 wiring: sheet() builds placeholder filmstrip clones, camera guarded; smokes/check_fast green.
 - 2026-11-26 — OpenCode/Big Pickle — Q-16 small: SFX pitch variance jitter applied; smokes/check_fast green.
+- 2026-11-26 — OpenCode/Big Pickle — Q-18 small: renderer.info memory/programs exposed in state/perf overlay; check_fast green.

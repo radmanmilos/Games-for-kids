@@ -890,7 +890,7 @@ const offc = cfg.camera.offset;
       }
 
       updateActors();
-      if (perfOverlay.style.display !== 'none') perfOverlay.textContent = 'frameMs=' + frameMs.toFixed(1) + ' dpr=' + dpr.toFixed(2) + ' tier=' + tier + ' calls=' + renderer.info.render.calls + ' tris=' + renderer.info.render.triangles;
+      if (perfOverlay.style.display !== 'none') perfOverlay.textContent = 'frameMs=' + frameMs.toFixed(1) + ' dpr=' + dpr.toFixed(2) + ' tier=' + tier + ' calls=' + renderer.info.render.calls + ' tris=' + renderer.info.render.triangles + ' tex=' + renderer.info.memory.textures + ' geo=' + renderer.info.memory.geometries;
 
       renderer.render(scene, camera);
 
@@ -935,7 +935,7 @@ const offc = cfg.camera.offset;
     });
 
     window.__little_adventure = {
-      state: () => (game ? Object.assign({}, game.state(), { frameMs, dpr, tier, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, webgl: true, motionScale: reducedMotion ? 0 : 1 }) : { frameMs, dpr, tier, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, webgl: true, motionScale: reducedMotion ? 0 : 1 }),
+      state: () => (game ? Object.assign({}, game.state(), { frameMs, dpr, tier, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries, programs: renderer.info.programs ? renderer.info.programs.length : 0, webgl: true, motionScale: reducedMotion ? 0 : 1 }) : { frameMs, dpr, tier, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries, programs: renderer.info.programs ? renderer.info.programs.length : 0, webgl: true, motionScale: reducedMotion ? 0 : 1 }),
       seed: (n) => { if (game) game = logic.createGame(cfg, n); },
       pause: () => { paused = true; },
       step: (ms) => { if (game) stepGame(ms); },
