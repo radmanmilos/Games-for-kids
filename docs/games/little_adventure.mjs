@@ -26,6 +26,7 @@ window.startlittle_adventure = function startlittle_adventure() {
 
   const reducedMotion = !!window.REDUCED_MOTION;
   const gallery = new URLSearchParams(location.search).has('gallery');
+  let tickAudio = null;
 
   try {
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -489,6 +490,56 @@ window.startlittle_adventure = function startlittle_adventure() {
         }
       }
 
+      // Q-16 thin music/ambient/footstep player (no-gate slice; full polish later)
+      const ZONE_LETTERS = ['A', 'B', 'C'];
+      let musicZone = 'A';
+      let musicClock = 0;
+      let musicIdx = 0;
+      let musicEvents = [];
+      let footstepClock = 0;
+      let ambientClock = 0;
+      function rebuildMusic(zone) {
+        const A = window.little_adventureAudio;
+        musicZone = zone;
+        musicClock = 0;
+        musicIdx = 0;
+        musicEvents = (A && A.sequencer) ? A.sequencer(zone, 4, 7) : [];
+      }
+      rebuildMusic('A');
+      tickAudio = function(dtSec, heroMoving, zoneIdx) {
+        if (!soundOn || !window.audioBuses || paused || document.hidden) return;
+        const A = window.little_adventureAudio;
+        const zone = ZONE_LETTERS[Math.max(0, Math.min(2, zoneIdx | 0))] || 'A';
+        if (zone !== musicZone) {
+          // Q-16: crossfade 2s on zone change (simple bus gain ramp)
+          if (window.audioBuses.setBus) window.audioBuses.setBus('music', 0.001, 300);
+          rebuildMusic(zone);
+          if (window.audioBuses.setBus) window.audioBuses.setBus('music', 1, 2000);
+        }
+        musicClock += dtSec;
+        while (musicIdx < musicEvents.length && musicEvents[musicIdx].time <= musicClock) {
+          const ev = musicEvents[musicIdx++];
+          if (window.audioBuses.playTone) window.audioBuses.playTone(ev.bus || 'music', ev.freq, ev.dur, 'sine', ev.gain || 0.06, 0);
+        }
+        if (musicEvents.length && musicClock >= (musicEvents[musicEvents.length - 1].time + 2)) {
+          rebuildMusic(zone); // loop
+        }
+        footstepClock -= dtSec;
+        if (heroMoving && footstepClock <= 0) {
+          footstepClock = 0.38;
+          playSfx('footstep');
+        }
+        ambientClock -= dtSec;
+        if (ambientClock <= 0) {
+          ambientClock = 4.5 + Math.random() * 3.5;
+          const amb = A && A.AMBIENT ? A.AMBIENT[zone] : null;
+          if (amb && window.audioBuses.playTone) {
+            const f = zone === 'B' ? 220 : zone === 'C' ? 330 : 180;
+            window.audioBuses.playTone('music', f, 0.6, 'sine', (amb.gain || 0.05) * 0.5, 0);
+          }
+        }
+      }
+
       // milestone events -> save
       const _origDrain = game.drainEvents.bind(game);
       // wrap drainEvents to trigger saves
@@ -890,6 +941,10 @@ const offc = cfg.camera.offset;
       }
 
       updateActors();
+      const _st = game ? game.state() : null;
+      const _hm = !!(_st && _st.hero && (Math.abs(_st.hero.vx || 0) + Math.abs(_st.hero.vz || 0) > 0.02));
+      const _zi = (_st && _st.hero) ? zoneIndexForZ(_st.hero.z) : 0;
+      if (tickAudio) tickAudio(frameMs / 1000, _hm, _zi);
       if (perfOverlay.style.display !== 'none') perfOverlay.textContent = 'frameMs=' + frameMs.toFixed(1) + ' dpr=' + dpr.toFixed(2) + ' tier=' + tier + ' calls=' + renderer.info.render.calls + ' tris=' + renderer.info.render.triangles + ' tex=' + renderer.info.memory.textures + ' geo=' + renderer.info.memory.geometries;
 
       renderer.render(scene, camera);
