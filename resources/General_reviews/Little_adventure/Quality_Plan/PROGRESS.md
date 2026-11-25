@@ -23,7 +23,7 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 | Q-06 | 1 | Terrain, island, beach, path | Q-04 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | little_adventure-terrain.js: heightAt, maskAt, pathAt, vertex data. 6 Node tests green. Not wired into renderer. |
 | Q-07 | 1 | Water | Q-06 | yes | NEW | | | |
 | Q-08 | 1 | Vegetation + props (QG2) | Q-06 | yes | NEW | | | |
-| Q-09 | 2 | Animation toolkit + filmstrip mode | Q-02 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | little_adventure-anim.js: easings, spring, envelope, blend, idleNoise, sheet. 9 Node tests. Not wired. |
+| Q-09 | 2 | Animation toolkit + filmstrip mode | Q-02 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | anim module + 9 Node tests; sheet() hook builds placeholder filmstrip clones in renderer (camera guarded). Visual filmstrip review still pending. |
 | Q-10 | 2 | Hero v2 rig + face + outlines | Q-04, Q-09 | yes | NEW | | | |
 | Q-11 | 2 | Hero animation set (QG3) | Q-10 | yes | NEW | | | |
 | Q-12 | 2 | Grumpy/guard/boss v2 + animation | Q-10, Q-11 | yes | NEW | | | |
@@ -60,3 +60,4 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 - 2026-11-25 — OpenCode/Big Pickle — Q-16 partial: audio module + 4 tests.
 - 2026-11-26 — OpenCode/Big Pickle — Q-16 wiring: sound button (SVG, aria-pressed), separate mute key, event SFX playSweep, speakWithDuck, visibility audio suspend/resume. check_fast green.
 - 2026-11-26 — OpenCode/Big Pickle — Q-18 wiring: tier in state/perf overlay, one-step adaptive down, quality()/fxTable() hooks, fx module loaded. check_fast green.
+- 2026-11-26 — OpenCode/Big Pickle — Q-09 wiring: sheet() builds placeholder filmstrip clones, camera guarded; smokes/check_fast green.

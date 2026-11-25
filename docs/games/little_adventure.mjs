@@ -167,6 +167,34 @@ window.startlittle_adventure = function startlittle_adventure() {
 
     const galleryRoot = new THREE.Group();
     scene.add(galleryRoot);
+    const sheetRoot = new THREE.Group();
+    sheetRoot.visible = false;
+    scene.add(sheetRoot);
+
+    function buildSheet(name, frames) {
+      while (sheetRoot.children.length) sheetRoot.remove(sheetRoot.children[0]);
+      const n = Math.max(1, frames | 0);
+      const spacing = 1.6;
+      const startX = -((n - 1) * spacing) / 2;
+      for (let i = 0; i < n; i++) {
+        const t = n === 1 ? 0 : i / (n - 1);
+        const g = new THREE.Group();
+        const body = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.0, 0.6), new THREE.MeshLambertMaterial({ color: 0x88ccee }));
+        body.position.y = 0.5 + Math.sin(t * Math.PI) * 0.2;
+        g.add(body);
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.28, 10, 10), new THREE.MeshLambertMaterial({ color: 0xffe0bd }));
+        head.position.y = 1.15 + Math.sin(t * Math.PI) * 0.2;
+        g.add(head);
+        g.position.x = startX + i * spacing;
+        g.userData.t = t;
+        sheetRoot.add(g);
+      }
+      sheetRoot.visible = true;
+      galleryRoot.visible = false;
+      heroMesh.visible = false;
+      camera.position.set(0, 2.5, 6 + n * 0.4);
+      camera.lookAt(0, 0.8, 0);
+    }
 
     // Particle pool
     const partCount = cfg.budget.particleCap;
@@ -826,8 +854,10 @@ const offc = cfg.camera.offset;
       const cx = Math.max(b.xMin, Math.min(b.xMax, s.hero.x));
       const cz = Math.max(b.zMin, Math.min(b.zMax, s.hero.z));
       const desired = new THREE.Vector3(cx + offc[0], offc[1], cz + offc[2]);
-      camera.position.lerp(desired, 1 - Math.exp(-cfg.camera.follow * (frameMs / 1000)));
-      camera.lookAt(cx, 0.6, cz);
+      if (!sheetRoot.visible) {
+        camera.position.lerp(desired, 1 - Math.exp(-cfg.camera.follow * (frameMs / 1000)));
+        camera.lookAt(cx, 0.6, cz);
+      }
     }
 
     function stepGame(ms) {
@@ -938,7 +968,7 @@ const offc = cfg.camera.offset;
         stepGame(50);
         currentPhoto = name || null;
       },
-      sheet: (name, frames) => { if (game) { paused = true; game = logic.createGame(cfg, 7); currentSheet = { name, frames: frames || 8 }; } },
+      sheet: (name, frames) => { if (game) { paused = true; game = logic.createGame(cfg, 7); currentSheet = { name, frames: frames || 8 }; buildSheet(name, currentSheet.frames); } },
       setPose: (actor, id, t) => { /* reserved for Q-10+ */ },
       quality: (t) => { if (TIERS[t]) { tierStepped = true; applyTier(t); } return tier; },
       fxTable: () => (window.little_adventureFx && window.little_adventureFx.eventKeys ? window.little_adventureFx.eventKeys() : []),
