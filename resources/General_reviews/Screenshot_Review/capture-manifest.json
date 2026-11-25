@@ -2,15 +2,15 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "10a1c0d936062f45a7a1cd9f5bb46545ae62c20f",
+  "commitSha": "492422b45cf40df28633e1057e638ec5ac08e454",
   "browser": {
     "product": "Chrome/158.0.8127.36",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-23T17:41:02.811Z",
+  "generatedAt": "2026-11-25T23:21:14.894Z",
   "pageSet": [
-    "ocean"
+    "little_adventure"
   ],
   "viewports": {
     "phone-portrait": {
@@ -40,40 +40,48 @@
   },
   "screenshots": [
     {
-      "file": "ocean_phone-portrait.png",
-      "page": "ocean",
+      "file": "little_adventure__phone-portrait__PLAY.png",
+      "page": "little_adventure",
       "size": "phone-portrait",
-      "state": null,
+      "state": [
+        "PLAY"
+      ],
       "width": 390,
       "height": 844,
-      "bytes": 442686
+      "bytes": 38658
     },
     {
-      "file": "ocean_phone-landscape.png",
-      "page": "ocean",
+      "file": "little_adventure__phone-landscape__PLAY.png",
+      "page": "little_adventure",
       "size": "phone-landscape",
-      "state": null,
+      "state": [
+        "PLAY"
+      ],
       "width": 844,
       "height": 390,
-      "bytes": 516687
+      "bytes": 56460
     },
     {
-      "file": "ocean_tablet-portrait.png",
-      "page": "ocean",
+      "file": "little_adventure__tablet-portrait__PLAY.png",
+      "page": "little_adventure",
       "size": "tablet-portrait",
-      "state": null,
+      "state": [
+        "PLAY"
+      ],
       "width": 820,
       "height": 1180,
-      "bytes": 1127396
+      "bytes": 44123
     },
     {
-      "file": "ocean_tablet-landscape.png",
-      "page": "ocean",
+      "file": "little_adventure__tablet-landscape__PLAY.png",
+      "page": "little_adventure",
       "size": "tablet-landscape",
-      "state": null,
+      "state": [
+        "PLAY"
+      ],
       "width": 1180,
       "height": 820,
-      "bytes": 1266311
+      "bytes": 102504
     }
   ]
 }

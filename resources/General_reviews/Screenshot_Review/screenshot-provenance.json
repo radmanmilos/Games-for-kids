@@ -830,5 +830,37 @@
   "driving__tablet-landscape__WORLD_9.png": {
     "updatedAt": "2026-11-23T17:40:51.986Z",
     "task": "453"
+  },
+  "little_adventure_phone-portrait.png": {
+    "updatedAt": "2026-11-25T23:18:03.735Z",
+    "task": "453"
+  },
+  "little_adventure_phone-landscape.png": {
+    "updatedAt": "2026-11-25T23:18:03.735Z",
+    "task": "453"
+  },
+  "little_adventure_tablet-portrait.png": {
+    "updatedAt": "2026-11-25T23:18:03.735Z",
+    "task": "453"
+  },
+  "little_adventure_tablet-landscape.png": {
+    "updatedAt": "2026-11-25T23:18:03.735Z",
+    "task": "453"
+  },
+  "little_adventure__phone-portrait__PLAY.png": {
+    "updatedAt": "2026-11-25T23:21:14.894Z",
+    "task": "453"
+  },
+  "little_adventure__phone-landscape__PLAY.png": {
+    "updatedAt": "2026-11-25T23:21:14.894Z",
+    "task": "453"
+  },
+  "little_adventure__tablet-portrait__PLAY.png": {
+    "updatedAt": "2026-11-25T23:21:14.894Z",
+    "task": "453"
+  },
+  "little_adventure__tablet-landscape__PLAY.png": {
+    "updatedAt": "2026-11-25T23:21:14.894Z",
+    "task": "453"
   }
 }
