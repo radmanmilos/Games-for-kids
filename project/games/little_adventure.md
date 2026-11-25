@@ -37,3 +37,24 @@ Every animation checks `window.REDUCED_MOTION`; `motionScale` is 0 under reduced
 - Models are primitives only; `?gallery=1` lays them out for review.
 - No shadows (blob shadows only); no shadow maps.
 EOF
+## Modules (quality pass)
+
+- little_adventure-anim.js — easings, spring, springChain, envelope, blend, idleNoise, evalHero/evalGrumpy/evalOwl, sheet/filmstrip. Pure, Node-testable.
+- little_adventure-materials.js — toon ramp (3-step DataTexture), shared material cache, outline (inverted hull), vertex-AO helper, wind patch.
+- little_adventure-characters.js — makeHero2, makeGrumpy2, makeOwl2, paintFaceAtlas, applyPose. Rigs expose userData.pivots (named) + userData.materials + userData.rest.
+- little_adventure-terrain.js — generate(cfg, seed) -> heightAt, maskAt, pathAt, vertex data. Pure, Node-testable.
+- little_adventure-fx.js — EVENT_TABLE (16 events), TIERS (low/med/high), particleCapFor, cameraNudge. Pure data + helpers.
+- little_adventure-audio.js — SFX recipes, AMBIENT, SCORE, sequencer (deterministic), maxGain. Pure data + helpers.
+
+## Rig contract (TDQ S2)
+
+A rig builder returns a THREE.Group with userData.pivots = { name: Object3D } for every pivot named in AD S3; missing pivot = Node test failure. Poses applied by name via applyPose(rig, pose). Spring chains advanced by renderer with little_adventureAnim.springChain.
+
+## Animation table (AD S4)
+
+evalHero/evalGrumpy/evalOwl are pure functions of (state, t, opts) returning pivot transforms. Filmstrips use sheet(name, frames) clones posed at evenly spaced t.
+
+## Tiers (TDQ S9)
+
+low/medium/high: DPR cap, draw calls, triangles, particles, shadows, wind, water, ambient. Adaptive step-down only (never up).
+

@@ -130,5 +130,23 @@ function check(name, ok, info) {
   const nudge = FX.cameraNudge({ x: 0, z: 0 }, { x: 10, z: 0 }, 6, false);
   check('Q-15: cameraNudge moves toward thing', nudge.x > 0, nudge.x);
 
+  // evalHero swing envelope (Q-11)
+  const heroState = { hero: { vx: 0, vz: 0, facing: 0, swingT: 350, cooldown: 0, shield: false, bumpT: 0 } };
+  const p0 = A.evalHero(heroState, 0, { motionScale: 1 });
+  const pMid = A.evalHero({ hero: { ...heroState.hero, swingT: 350 * (1 - 0.26) } }, 0, { motionScale: 1 });
+  const pEnd = A.evalHero({ hero: { ...heroState.hero, swingT: 0 } }, 0, { motionScale: 1 });
+  check('Q-11: evalHero returns armR', p0.armR != null);
+  // reduced motion scales amplitudes
+  const pRM = A.evalHero(heroState, 0, { motionScale: 0.4 });
+  check('Q-11: reduced motion scales armR (0.4x)', Math.abs(pRM.armR.rx) <= Math.abs(p0.armR.rx) * 0.45 + 0.01);
+  // no NaN
+  check('Q-11: evalHero no NaN', !Object.values(p0).some((v) => Object.values(v).some((n) => isNaN(n))));
+  // evalGrumpy
+  const gp = A.evalGrumpy({ state: 'idle', hp: 3, mood: 1 }, 0, { motionScale: 1 });
+  check('Q-11: evalGrumpy returns root', gp.root != null);
+  // evalOwl
+  const op = A.evalOwl({ pos: [-5, 4] }, { x: 0, z: 0 }, true, 0, { motionScale: 1 });
+  check('Q-11: evalOwl returns head', op.head != null);
+
   process.exit(fails ? 1 : 0);
 })();

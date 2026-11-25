@@ -82,5 +82,77 @@
     return out;
   };
 
+  // Evaluators (pure) — return pivot transforms
+  A.evalHero = (state, t, opts) => {
+    opts = opts || {};
+    const ms = opts.motionScale == null ? 1 : opts.motionScale;
+    const s = (state && state.hero) ? state.hero : (state || {});
+    const speed = Math.hypot(s.vx || 0, s.vz || 0);
+    const speed01 = Math.min(1, speed / 5.0);
+    const swingFrac = s.swingT ? 1 - (s.swingT / 350) : 0;
+    const swingPhase = Math.max(0, Math.min(1, swingFrac));
+    // swing 3-phase: windup (0-0.26), strike (0.26-0.57), recover (0.57-1)
+    let armR = 0;
+    if (swingPhase > 0 && swingPhase < 0.26) armR = -0.6 * (swingPhase / 0.26) * ms;
+    else if (swingPhase < 0.57) armR = (-0.6 + (swingPhase - 0.26) / 0.31 * 2.2) * ms;
+    else armR = (1.6 - (swingPhase - 0.57) / 0.43 * 1.6) * ms;
+    const walkPhase = (t * speed01 * 2) % (Math.PI * 2);
+    const legSwing = Math.sin(walkPhase) * 0.4 * speed01 * ms;
+    const idleBob = Math.sin(t * 2) * 0.02 * (1 - speed01) * ms;
+    return {
+      root: { ry: s.facing || 0 },
+      torso: { ry: 0, py: idleBob },
+      armR: { rx: armR },
+      armL: { rx: speed01 * 0.3 * ms },
+      legL: { rx: legSwing },
+      legR: { rx: -legSwing },
+      head: { ry: 0 },
+      hatTip1: { rz: Math.sin(t * 1.5) * 0.1 * ms },
+      hatTip2: { rz: Math.sin(t * 1.5 + 0.5) * 0.08 * ms },
+      hatTip3: { rz: Math.sin(t * 1.5 + 1) * 0.05 * ms },
+      scarf1: { rz: Math.sin(t * 2 + 0.3) * 0.15 * ms },
+      scarf2: { rz: Math.sin(t * 2 + 0.8) * 0.12 * ms },
+      scarf3: { rz: Math.sin(t * 2 + 1.3) * 0.08 * ms }
+    };
+  };
+
+  A.evalGrumpy = (g, t, opts) => {
+    opts = opts || {};
+    const ms = opts.motionScale == null ? 1 : opts.motionScale;
+    const state = (g && g.state) || 'idle';
+    const idle = Math.sin(t * 1.2) * 0.03 * ms;
+    const hop = state === 'approach' ? Math.abs(Math.sin(t * 4)) * 0.15 * ms : 0;
+    return {
+      root: { py: idle + hop },
+      head: { ry: Math.sin(t * 0.8) * 0.1 * ms },
+      armL: { rx: state === 'hit' ? -0.6 * ms : 0 },
+      armR: { rx: state === 'hit' ? 0.6 * ms : 0 }
+    };
+  };
+
+  A.evalOwl = (owl, heroPos, speaking, t, opts) => {
+    opts = opts || {};
+    const ms = opts.motionScale == null ? 1 : opts.motionScale;
+    const bob = speaking ? Math.sin(t * 6) * 0.05 * ms : 0;
+    // look-at limited ±70°
+    let ry = 0;
+    if (heroPos && owl && owl.pos) {
+      const dx = (heroPos.x || 0) - (owl.pos[0] || 0);
+      const dz = (heroPos.z || 0) - (owl.pos[1] || 0);
+      ry = Math.atan2(dx, dz);
+      const limit = (70 * Math.PI) / 180;
+      ry = Math.max(-limit, Math.min(limit, ry));
+    }
+    return {
+      root: { py: bob },
+      head: { ry: ry * ms },
+      wingL: { rz: speaking ? Math.sin(t * 8) * 0.2 * ms : 0 },
+      wingR: { rz: speaking ? -Math.sin(t * 8) * 0.2 * ms : 0 }
+    };
+  };
+
+  // filmstrip mode helper for renderer
+  A.filmstrip = (evaluator, state, frames, duration, opts) => A.sheet(evaluator, state, frames, duration, opts);
+
   window.little_adventureAnim = A;
 })();

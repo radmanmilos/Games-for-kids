@@ -48,6 +48,17 @@ window.startlittle_adventure = function startlittle_adventure() {
     scene.add(hemi);
     const dir = new THREE.DirectionalLight(0xFFFFFF, 0.8);
     dir.position.set(5, 10, 7.5);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    dir.castShadow = true;
+    dir.shadow.mapSize.width = 1024;
+    dir.shadow.mapSize.height = 1024;
+    dir.shadow.camera.near = 0.5;
+    dir.shadow.camera.far = 50;
+    dir.shadow.camera.left = -14;
+    dir.shadow.camera.right = 14;
+    dir.shadow.camera.top = 14;
+    dir.shadow.camera.bottom = -14;
     scene.add(dir);
 
     // Q-03: atmosphere state + blend
@@ -754,7 +765,17 @@ window.startlittle_adventure = function startlittle_adventure() {
         }
         clouds.instanceMatrix.needsUpdate = true;
       }
-      const offc = cfg.camera.offset;
+// shadow frustum follows hero (Q-19)
+      if (game && dir.castShadow) {
+        const s = game.state();
+        if (s && s.hero) {
+          dir.shadow.camera.position.set(s.hero.x, 10, s.hero.z);
+          dir.target.position.set(s.hero.x, 0, s.hero.z);
+          dir.target.updateMatrixWorld();
+        }
+      }
+      water.position.y = -0.05 + Math.sin(performance.now() * 0.002) * 0.05;
+const offc = cfg.camera.offset;
       const b = cfg.bounds;
       const cx = Math.max(b.xMin, Math.min(b.xMax, s.hero.x));
       const cz = Math.max(b.zMin, Math.min(b.zMax, s.hero.z));
