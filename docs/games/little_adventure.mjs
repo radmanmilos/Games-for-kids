@@ -349,7 +349,7 @@ window.startlittle_adventure = function startlittle_adventure() {
       if (saved) { btnContinue.style.display = 'block'; }
       btnNew.addEventListener('click', () => {
         try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
-        if (game && game.debug) game.debug.reset();
+        game = logic.createGame(cfg, 7);
         if (startOverlay) startOverlay.style.display = 'none';
         paused = false;
       });
