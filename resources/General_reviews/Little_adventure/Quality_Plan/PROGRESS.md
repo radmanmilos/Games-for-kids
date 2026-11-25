@@ -1,6 +1,6 @@
 # PROGRESS — Quality Plan (Little Adventure)
 
-Live ledger. Status: `NEW` · `IN PROGRESS` · `DONE` · `BLOCKED` · `DEFERRED`. Last updated: 2026-11-25 (OpenCode/Big Pickle — Q-00, Q-01, Q-02 partial, Q-03 partial, Q-05 partial, Q-06 partial, Q-09 partial, Q-14/Q-15/Q-16/Q-18 partial).
+Live ledger. Status: `NEW` · `IN PROGRESS` · `DONE` · `BLOCKED` · `DEFERRED`. Last updated: 2026-11-26 (OpenCode/Big Pickle — Q-16/Q-18 wiring increments; check_fast green).
 
 Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00…IS-19 DONE, IS-20 user-led).
 
@@ -30,7 +30,7 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 | Q-13 | 2 | Owl + props + completion bloom (QG4) | Q-12 | yes | NEW | | | |
 | Q-14 | 3 | Sprite particles + ambient life | Q-04 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | little_adventure-fx.js: EVENT_TABLE (16), TIERS, particleCap, cameraNudge. 4 Node tests. |
 | Q-15 | 3 | Camera polish | Q-03, Q-11 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | cameraNudge helper in fx module. Full camera work needs Q-11. |
-| Q-16 | 3 | Audio v2 + sound toggle | Q-09 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | little_adventure-audio.js: SFX, AMBIENT, SCORE, sequencer. 4 Node tests. Player on audioBuses not wired. |
+| Q-16 | 3 | Audio v2 + sound toggle | Q-09 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | audio module + sound button/aria-pressed + separate mute key + event SFX playSweep + speakWithDuck + visibility suspend/resume. Still missing: sequencer music player, ambient beds, zone crossfade, footstep sync, pitch variance, full SFX audit. |
 | Q-17 | 3 | UI/UX art pass + start screen (QG5) | Q-11, Q-16 | yes | NEW | | | |
 | Q-18 | 4 | Quality tiers + performance | Q-07, Q-08, Q-14 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | TIERS table in fx module. Adaptive step-down needs renderer wiring. |
 | Q-19 | 4 | Shadows | Q-18 | yes | NEW | | | |
@@ -58,3 +58,5 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 - 2026-11-25 — OpenCode/Big Pickle — Q-09 partial: anim module + 9 tests.
 - 2026-11-25 — OpenCode/Big Pickle — Q-14/Q-15/Q-18 partial: fx module + 4 tests.
 - 2026-11-25 — OpenCode/Big Pickle — Q-16 partial: audio module + 4 tests.
+- 2026-11-26 — OpenCode/Big Pickle — Q-16 wiring: sound button (SVG, aria-pressed), separate mute key, event SFX playSweep, speakWithDuck, visibility audio suspend/resume. check_fast green.
+- 2026-11-26 — OpenCode/Big Pickle — Q-18 wiring: tier in state/perf overlay, one-step adaptive down, quality()/fxTable() hooks, fx module loaded. check_fast green.

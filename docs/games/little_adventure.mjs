@@ -574,9 +574,11 @@ window.startlittle_adventure = function startlittle_adventure() {
         const speechMap = { befriend:'befriend', bushCut:'gem', chestOpen:'key', gateOpen:'gateOpen', pedestalFill:'gem', complete:'complete', owlTalk: ev.line };
         const key = ev.type === 'owlTalk' ? ev.line : speechMap[ev.type];
         if (key && cfg.speech && cfg.speech[key]) {
-          if (window.speech && window.speech.speak) window.speech.speak(cfg.speech[key]);
+          const txt = cfg.speech[key];
+          if (window.audioBuses && window.audioBuses.speakWithDuck) window.audioBuses.speakWithDuck(txt);
+          else if (window.speech && window.speech.speak) window.speech.speak(txt);
           const ann = document.getElementById('i3d-announcer');
-          if (ann) ann.textContent = cfg.speech[key];
+          if (ann) ann.textContent = txt;
           window.__laLastSpeech = { key, time: s.t };
         }
         // particles
@@ -879,7 +881,16 @@ const offc = cfg.camera.offset;
 
     window.addEventListener('blur', () => { paused = true; input.sx = 0; input.sy = 0; input.swing = false; input.shield = false; const po = document.getElementById('i3d-pause'); if (po) po.style.display = 'flex'; });
     document.addEventListener('contextmenu', (e) => e.preventDefault());
-    document.addEventListener('visibilitychange', () => { if (document.hidden) { paused = true; input.sx = 0; input.sy = 0; input.swing = false; input.shield = false; const po = document.getElementById('i3d-pause'); if (po) po.style.display = 'flex'; } });
+    document.addEventListener('visibilitychange', () => {
+      const ac = window.audioBuses && window.audioBuses.getAudioContext ? window.audioBuses.getAudioContext() : null;
+      if (document.hidden) {
+        paused = true; input.sx = 0; input.sy = 0; input.swing = false; input.shield = false;
+        const po = document.getElementById('i3d-pause'); if (po) po.style.display = 'flex';
+        if (ac && ac.state === 'running' && ac.suspend) ac.suspend().catch(() => {});
+      } else if (ac && ac.state === 'suspended' && ac.resume) {
+        ac.resume().catch(() => {});
+      }
+    });
 
     const pauseOverlay = document.getElementById('i3d-pause');
     if (pauseOverlay) pauseOverlay.addEventListener('click', () => { pauseOverlay.style.display = 'none'; paused = false; });
