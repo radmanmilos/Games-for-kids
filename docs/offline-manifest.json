@@ -103,9 +103,17 @@
     "sha256": "ea5ddeae50b9a5d4a22ce564f30d93319b42051b633c4b1ff333705c1d3774d5",
     "size": 33334
   },
+  "assets/art/cat-forest-cat.webp": {
+    "sha256": "872495a5619e1b0dc2da4667d7e998b00771261967702c9ad4c78472c0b62491",
+    "size": 14454
+  },
   "assets/art/cat-forest-leopard.webp": {
     "sha256": "2e60119a02ffe7d2a74a46c3198243660ecdcc5df07aad563513a17fe4141016",
     "size": 47308
+  },
+  "assets/art/cat-forest-lion.webp": {
+    "sha256": "f859931ef9329a7c39eeac9e9108a4483d4408519c4160a3b8b0e1c645b26a00",
+    "size": 15300
   },
   "assets/art/cat-forest-tabby.webp": {
     "sha256": "7165c311efb09f1bc3bd718bc8cd05e1817509500c865bd01e10e611ebb17e32",
@@ -1928,8 +1936,8 @@
     "size": 20395
   },
   "games/cat_forest.js": {
-    "sha256": "e8c7dd2c5cc22cc533552412799e27b348bff43cfc66d6fc0b0d3eca86825c52",
-    "size": 66298
+    "sha256": "8469ef810c6aac96d3d46190ec067173e35c0eb65ab75498f8e4740cced146d4",
+    "size": 67760
   },
   "games/classroom.js": {
     "sha256": "12d741c329ab9e7f85439dc1fd9136b740910f36e7ea6f363657deb7093f6713",
@@ -2040,7 +2048,7 @@
     "size": 19519
   },
   "manifest.json": {
-    "sha256": "0480bb83e194792477219e294ce04608e0975a6f535ee3da0aad5753a9a3cf61",
+    "sha256": "cbc0357d44a4ae4f476c7b574417bd87f275e66a4839b552123aa32fdb61fdc4",
     "size": 578
   },
   "pages/animal_counting.html": {
@@ -2232,8 +2240,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "d74018d928621657ed33c24a9e0765a5dce11f6b2fa3fa71e782b9b8e5c08fc2",
-    "size": 18435
+    "sha256": "e6bbeb913650889ba9cf8e69ae1f57a3d5a7b11e6770c3cca2293beb28a9fb2f",
+    "size": 18508
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",

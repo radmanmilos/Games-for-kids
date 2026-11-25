@@ -63,16 +63,16 @@
   /* `acc` is the accessory drawn over the body emoji; `fallbackEmoji` covers
      devices that do not render the 🐈‍⬛ ZWJ glyph as one (D7, probed later). */
   var CATS = [
-    { id: 'maca',   name: 'Маца',     emoji: '🐱', acc: null, likes: ['fish', 'milk'],      weight: 1.0 },
+    { id: 'maca',   name: 'Маца',     emoji: '🐱', art: 'cat-forest-cat', acc: null, likes: ['fish', 'milk'],      weight: 1.0 },
     { id: 'puhko',  name: 'Пухко',    emoji: '🐈', acc: null, likes: ['milk', 'cookie'],    weight: 1.0 },
-    { id: 'mica',   name: 'Мица',     emoji: '🐱', acc: '🎀', likes: ['cookie', 'chicken'], weight: 0.8 },
+    { id: 'mica',   name: 'Мица',     emoji: '🐱', art: 'cat-forest-cat', acc: '🎀', likes: ['cookie', 'chicken'], weight: 0.8 },
     { id: 'sef',    name: 'Шеф',      emoji: '🐈', acc: '🎩', likes: ['chicken', 'sushi'],  weight: 0.7 },
-    { id: 'cveta',  name: 'Цвета',    emoji: '🐱', acc: '🌸', likes: ['milk', 'sushi'],     weight: 0.7 },
+    { id: 'cveta',  name: 'Цвета',    emoji: '🐱', art: 'cat-forest-cat', acc: '🌸', likes: ['milk', 'sushi'],     weight: 0.7 },
     { id: 'tigar',  name: 'Тигар',    emoji: '🐯', acc: null, likes: ['chicken', 'fish'],   weight: 0.5 },
     { id: 'tacka',  name: 'Тачка',    emoji: '🐆', acc: null, likes: ['sushi', 'fish'],     weight: 0.5 },
     { id: 'senka',  name: 'Сенка',    emoji: '🐈‍⬛', fallbackEmoji: '🐱', acc: null, likes: ['fish'], weight: 1.0, night: true },
     { id: 'zvezda', name: 'Звездица', emoji: '🐈', acc: '⭐', likes: ['milk', 'sushi'],     weight: 0.7, night: true },
-    { id: 'kralj',  name: 'Краљ',     emoji: '🦁', acc: '👑', likes: [],                    weight: 0.4, needsAllPlates: true }
+    { id: 'kralj',  name: 'Краљ',     emoji: '🦁', art: 'cat-forest-lion', acc: '👑', likes: [],                    weight: 0.4, needsAllPlates: true }
   ];
 
   var GIFTS = ['🌸', '🌷', '🍄', '🍀', '🦋'];
@@ -752,8 +752,28 @@
     el.setAttribute('aria-label', cat ? cat.name : '');
     var body = document.createElement('span');
     body.className = 'cf-cat-body';
-    if (window.Art && window.Art.fillAttr) window.Art.fillAttr(body, 'data-e', cat ? cat.emoji : '');
-    else body.setAttribute('data-e', cat ? cat.emoji : '');
+    if (cat && cat.art && window.Art && window.Art.stemUrl) {
+      var u = window.Art.stemUrl(cat.art);
+      var oldImg = body.querySelector(':scope > img.art');
+      if (u) {
+        var img = oldImg || document.createElement('img');
+        img.className = 'art';
+        img.alt = '';
+        img.draggable = false;
+        img.src = u;
+        if (!oldImg) body.insertBefore(img, body.firstChild);
+        body.classList.add('art-painted');
+      } else {
+        if (oldImg) oldImg.remove();
+        body.classList.remove('art-painted');
+      }
+      body.dataset.emoji = cat.emoji || '';
+      body.setAttribute('data-e', cat.emoji || '');
+    } else if (window.Art && window.Art.fillAttr) {
+      window.Art.fillAttr(body, 'data-e', cat ? cat.emoji : '');
+    } else {
+      body.setAttribute('data-e', cat ? cat.emoji : '');
+    }
     el.appendChild(body);
     if (cat && cat.acc) {
       var acc = document.createElement('span');
@@ -1358,8 +1378,28 @@
     el.setAttribute('aria-label', cat.name);
     var body = document.createElement('span');
     body.className = 'cf-book-cat-body';
-    if (window.Art && window.Art.fillAttr) window.Art.fillAttr(body, 'data-e', cat.emoji);
-    else body.setAttribute('data-e', cat.emoji);
+    if (cat.art && window.Art && window.Art.stemUrl) {
+      var bu = window.Art.stemUrl(cat.art);
+      var boldImg = body.querySelector(':scope > img.art');
+      if (bu) {
+        var bimg = boldImg || document.createElement('img');
+        bimg.className = 'art';
+        bimg.alt = '';
+        bimg.draggable = false;
+        bimg.src = bu;
+        if (!boldImg) body.insertBefore(bimg, body.firstChild);
+        body.classList.add('art-painted');
+      } else {
+        if (boldImg) boldImg.remove();
+        body.classList.remove('art-painted');
+      }
+      body.dataset.emoji = cat.emoji || '';
+      body.setAttribute('data-e', cat.emoji || '');
+    } else if (window.Art && window.Art.fillAttr) {
+      window.Art.fillAttr(body, 'data-e', cat.emoji);
+    } else {
+      body.setAttribute('data-e', cat.emoji);
+    }
     el.appendChild(body);
     if (cat.acc) {
       var acc = document.createElement('span');
