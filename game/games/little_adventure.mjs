@@ -416,6 +416,39 @@ window.startlittle_adventure = function startlittle_adventure() {
         if (!game) return;
         try { localStorage.setItem(SAVE_KEY, JSON.stringify(game.save())); } catch (e) {}
       }
+      // Sound toggle (Q-16, separate key to avoid logic.js validateSave contract change)
+      const SOUND_KEY = 'little_adventureSound';
+      const soundBtn = document.getElementById('i3d-sound-btn');
+      let soundOn = true;
+      try { soundOn = localStorage.getItem(SOUND_KEY) !== '0'; } catch (e) { soundOn = true; }
+      function applySound(on) {
+        soundOn = !!on;
+        if (window.audioBuses && window.audioBuses.setBus) {
+          window.audioBuses.setBus('master', soundOn ? 1 : 0, 0);
+        }
+        if (soundBtn) {
+          soundBtn.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
+          soundBtn.style.opacity = soundOn ? '1' : '0.45';
+        }
+        try { localStorage.setItem(SOUND_KEY, soundOn ? '1' : '0'); } catch (e) {}
+      }
+      applySound(soundOn);
+      if (soundBtn) soundBtn.addEventListener('click', () => applySound(!soundOn));
+
+      function playSfx(name) {
+        if (!soundOn || !window.audioBuses) return;
+        const A = window.little_adventureAudio;
+        const recipe = A && A.SFX ? A.SFX[name] : null;
+        if (!recipe) return;
+        for (const l of recipe.layers) {
+          if (l.type === 'tone' && window.audioBuses.playSweep) {
+            window.audioBuses.playSweep('sfx', l.f0, l.f1, l.dur, 'sine', l.gain || 0.1, 0);
+          } else if (l.type === 'noise' && window.audioBuses.playTone) {
+            window.audioBuses.playTone('sfx', 180, l.dur || 0.05, 'triangle', (l.gain || 0.05) * 0.6, 0);
+          }
+        }
+      }
+
       // milestone events -> save
       const _origDrain = game.drainEvents.bind(game);
       // wrap drainEvents to trigger saves
@@ -526,6 +559,7 @@ window.startlittle_adventure = function startlittle_adventure() {
         if (['pickup','befriend','gateOpen','chestOpen','bushCut','pedestalFill'].indexOf(ev.type) !== -1) progress = true;
         // save on milestones
         if (['gateOpen','chestOpen','bushCut','pedestalFill','complete','befriend'].indexOf(ev.type) !== -1) saveNow();
+        playSfx(ev.type);
         // speech
         const speechMap = { befriend:'befriend', bushCut:'gem', chestOpen:'key', gateOpen:'gateOpen', pedestalFill:'gem', complete:'complete', owlTalk: ev.line };
         const key = ev.type === 'owlTalk' ? ev.line : speechMap[ev.type];
