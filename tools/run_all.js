@@ -94,9 +94,14 @@ const SHARED_MODULE_SMOKE = {
   'racing3d-config': ['racing3d_smoke'],
   // little_adventure-config.js/logic.js/models.js are module files with no app id;
   // their pages' smoke covers them.
-  'little_adventure-config': ['little_adventure_smoke'],
-  'little_adventure-logic': ['little_adventure_smoke', 'little_adventure_logic_smoke'],
+  'little_adventure-config': ['little_adventure_smoke', 'little_adventure_quality_smoke'],
+  'little_adventure-logic': ['little_adventure_smoke', 'little_adventure_logic_smoke', 'little_adventure_quality_smoke'],
   'little_adventure-models': ['little_adventure_smoke'],
+  'little_adventure-anim': ['little_adventure_quality_smoke'],
+  'little_adventure-terrain': ['little_adventure_quality_smoke'],
+  'little_adventure-audio': ['little_adventure_quality_smoke'],
+  'little_adventure-fx': ['little_adventure_quality_smoke'],
+  'little_adventure-materials': ['little_adventure_quality_smoke'],
 };
 /* Games file -> id. Only needed where the filename and the registry id differ. */
 const GAME_FILE_ALIAS = { candy: 'matching_game', 'kitty-standalone': 'explorer' };
