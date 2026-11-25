@@ -29,6 +29,9 @@ window.startlittle_adventure = function startlittle_adventure() {
 
   try {
     const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.NeutralToneMapping;
+    renderer.toneMappingExposure = 1.0;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, cfg.budget.dprMax));
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.getElementById('i3d-view').appendChild(renderer.domElement);
@@ -47,11 +50,31 @@ window.startlittle_adventure = function startlittle_adventure() {
     dir.position.set(5, 10, 7.5);
     scene.add(dir);
 
+    // Q-03: atmosphere state + blend
+    const zoneAtmos = (cfg.zoneAtmos || []);
+    const atmos = { idx: 0, t: 0, blend: 1, from: null, to: null };
+    function zoneIndexForZ(z) {
+      const zones = cfg.zones || [];
+      for (let i = 0; i < zones.length; i++) {
+        if (z > zones[i].z1) return i;
+      }
+      return zones.length - 1;
+    }
+    function applyAtmos(a) {
+      const c = new THREE.Color(a.skyTop);
+      scene.background = c;
+      if (scene.fog) { scene.fog.color = new THREE.Color(a.fog); scene.fog.near = a.fogNear; scene.fog.far = a.fogFar; }
+      hemi.color.set(a.key); hemi.groundColor.set(a.fill); hemi.intensity = a.intensity;
+      dir.color.set(a.key);
+    }
+    // initial
+    if (zoneAtmos.length) applyAtmos(zoneAtmos[0]);
+
     const models = modelsFactory.create(THREE);
 
     // Ground with vertex colours by zone
     const groundSeg = 64;
-    const groundGeo = new THREE.PlaneGeometry(128, 128, groundSeg, groundSeg);
+    const groundGeo = new THREE.PlaneGeometry(96, 160, groundSeg, groundSeg);
     const pos = groundGeo.attributes.position;
     const colors = new Float32Array(pos.count * 3);
     const colA = new THREE.Color(cfg.zones[0].color);
@@ -68,22 +91,67 @@ window.startlittle_adventure = function startlittle_adventure() {
       if (d1 < 3) c.lerp(z > cfg.zones[0].z1 ? colB : colA, 1 - d1 / 3);
       if (d2 < 3) c.lerp(z > cfg.zones[1].z1 ? colC : colB, 1 - d2 / 3);
       const x = pos.getX(i);
-      const edge = Math.max(Math.abs(x) / 60, Math.abs(z) / 60);
-      let f = 1;
-      if (edge > 0.7) f = 1 - (edge - 0.7) * 1.5;
-      colors[i * 3] = c.r * f; colors[i * 3 + 1] = c.g * f; colors[i * 3 + 2] = c.b * f;
+      colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b;
     }
     groundGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     const ground = new THREE.Mesh(groundGeo, new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true }));
     ground.rotation.x = -Math.PI / 2;
+    ground.position.z = -32;
     scene.add(ground);
 
+    // Q-05: sky dome (inverted sphere, vertex colour gradient)
+    const skyGeo = new THREE.SphereGeometry(400, 24, 16);
+    const skyPos = skyGeo.attributes.position;
+    const skyCol = new Float32Array(skyPos.count * 3);
+    const zenith = new THREE.Color(0x4A90D9);
+    const horizon = new THREE.Color(0xFFE4B5);
+    for (let i = 0; i < skyPos.count; i++) {
+      const y = skyPos.getY(i);
+      const t = Math.max(0, Math.min(1, (y + 400) / 800)); // 0 horizon, 1 zenith
+      const c = horizon.clone().lerp(zenith, t);
+      skyCol[i * 3] = c.r; skyCol[i * 3 + 1] = c.g; skyCol[i * 3 + 2] = c.b;
+    }
+    skyGeo.setAttribute('color', new THREE.BufferAttribute(skyCol, 3));
+    const sky = new THREE.Mesh(skyGeo, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, fog: false, depthWrite: false }));
+    scene.add(sky);
+
+    // sun disc sprite
+    const sunCanvas = document.createElement('canvas');
+    sunCanvas.width = 64; sunCanvas.height = 64;
+    const sctx = sunCanvas.getContext('2d');
+    const grad = sctx.createRadialGradient(32, 32, 2, 32, 32, 30);
+    grad.addColorStop(0, 'rgba(255,250,220,1)');
+    grad.addColorStop(1, 'rgba(255,200,120,0)');
+    sctx.fillStyle = grad;
+    sctx.fillRect(0, 0, 64, 64);
+    const sunTex = new THREE.CanvasTexture(sunCanvas);
+    const sunSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: sunTex, transparent: true, depthWrite: false }));
+    sunSprite.scale.set(20, 20, 1);
+    sunSprite.position.set(80, 120, -60);
+    scene.add(sunSprite);
+
+    // instanced clouds (low-poly)
+    const cloudGeo = new THREE.SphereGeometry(6, 6, 4);
+    const cloudMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.85, fog: false });
+    const cloudCount = 10;
+    const clouds = new THREE.InstancedMesh(cloudGeo, cloudMat, cloudCount);
+    const dummy = new THREE.Object3D();
+    for (let i = 0; i < cloudCount; i++) {
+      dummy.position.set((Math.random() - 0.5) * 200, 60 + Math.random() * 40, (Math.random() - 0.5) * 200);
+      dummy.scale.set(2 + Math.random() * 3, 0.6 + Math.random() * 0.6, 2 + Math.random() * 3);
+      dummy.updateMatrix();
+      clouds.setMatrixAt(i, dummy.matrix);
+    }
+    clouds.instanceMatrix.needsUpdate = true;
+    scene.add(clouds);
+
     const water = new THREE.Mesh(
-      new THREE.PlaneGeometry(128, 128),
+      new THREE.PlaneGeometry(96, 160),
       new THREE.MeshLambertMaterial({ color: 0x6EC6E8, transparent: true, opacity: 0.55, flatShading: true })
     );
     water.rotation.x = -Math.PI / 2;
     water.position.y = -0.05;
+    water.position.z = -32;
     scene.add(water);
 
     const galleryRoot = new THREE.Group();
@@ -116,6 +184,8 @@ window.startlittle_adventure = function startlittle_adventure() {
 
     let game = null;
     let paused = false;
+    let currentPhoto = null;
+    let currentSheet = null;
     const input = { sx: 0, sy: 0, swing: false, shield: false };
     let keyX = 0, keyY = 0;
     let forceSlow = false;
@@ -635,10 +705,62 @@ window.startlittle_adventure = function startlittle_adventure() {
         sh.mesh.position.set(sh.target.position.x, 0.01, sh.target.position.z);
       });
 
+// atmosphere blend (Q-03)
+      if (game && zoneAtmos.length) {
+        const s = game.state();
+        if (s && s.hero) {
+          const zi = zoneIndexForZ(s.hero.z);
+          if (zi !== atmos.idx && atmos.to === null) {
+            atmos.from = zoneAtmos[atmos.idx] || zoneAtmos[0];
+            atmos.to = zoneAtmos[zi] || zoneAtmos[0];
+            atmos.idx = zi;
+            atmos.t = 0;
+          }
+          if (atmos.to) {
+            atmos.t += frameMs / 1000;
+            const k = Math.min(1, atmos.t / 2.0);
+            // lerp colours
+            const from = atmos.from, to = atmos.to;
+            const lerpColor = (a, b, k) => {
+              const ca = new THREE.Color(a), cb = new THREE.Color(b);
+              return ca.lerp(cb, k).getHex();
+            };
+            scene.background = new THREE.Color(lerpColor(from.skyTop, to.skyTop, k));
+            if (scene.fog) {
+              scene.fog.color = new THREE.Color(lerpColor(from.fog, to.fog, k));
+              scene.fog.near = from.fogNear + (to.fogNear - from.fogNear) * k;
+              scene.fog.far = from.fogFar + (to.fogFar - from.fogFar) * k;
+            }
+            hemi.color.set(lerpColor(from.key, to.key, k));
+            hemi.groundColor.set(lerpColor(from.fill, to.fill, k));
+            hemi.intensity = from.intensity + (to.intensity - from.intensity) * k;
+            dir.color.set(lerpColor(from.key, to.key, k));
+            if (k >= 1) { atmos.to = null; atmos.from = null; }
+          }
+        }
+      }
+
+// cloud drift (Q-05)
+      if (!reducedMotion) {
+        const t = performance.now() * 0.0001;
+        const dm = new THREE.Object3D();
+        for (let i = 0; i < clouds.count; i++) {
+          clouds.getMatrixAt(i, dm.matrix);
+          dm.matrix.decompose(dm.position, dm.quaternion, dm.scale);
+          dm.position.x += Math.sin(t + i) * 0.02;
+          dm.position.z += Math.cos(t + i * 0.7) * 0.015;
+          dm.updateMatrix();
+          clouds.setMatrixAt(i, dm.matrix);
+        }
+        clouds.instanceMatrix.needsUpdate = true;
+      }
       const offc = cfg.camera.offset;
-      const desired = new THREE.Vector3(s.hero.x + offc[0], offc[1], s.hero.z + offc[2]);
+      const b = cfg.bounds;
+      const cx = Math.max(b.xMin, Math.min(b.xMax, s.hero.x));
+      const cz = Math.max(b.zMin, Math.min(b.zMax, s.hero.z));
+      const desired = new THREE.Vector3(cx + offc[0], offc[1], cz + offc[2]);
       camera.position.lerp(desired, 1 - Math.exp(-cfg.camera.follow * (frameMs / 1000)));
-      camera.lookAt(s.hero.x, 0.6, s.hero.z);
+      camera.lookAt(cx, 0.6, cz);
     }
 
     function stepGame(ms) {
@@ -715,6 +837,33 @@ window.startlittle_adventure = function startlittle_adventure() {
       setHits: (id, n) => { if (game && game.debug) game.debug.setHits(id, n); },
       reset: () => { if (game) game = logic.createGame(cfg, 7); },
       forceSlow: (b) => { forceSlow = !!b; },
+      photo: (name) => {
+        if (!game) return;
+        paused = true;
+        game = logic.createGame(cfg, 7);
+        const so = document.getElementById('i3d-start');
+        if (so) so.style.display = 'none';
+        const presets = {
+          'hero-front': [0, 8], 'hero-side': [0, 8], 'hero-34': [0, 8],
+          'meadow-wide': [0, 8], 'meadow-flowers': [0, 8],
+          'forest-wide': [0, -20], 'forest-lane': [0, -20],
+          'shrine-wide': [0, -30], 'pedestals-lit': [0, -62],
+          'lighthouse': [0, -78], 'owl-closeup': [-5, 4],
+          'grumpy-angry': [-8, -10], 'grumpy-happy': [-8, -10],
+          'boss': [10, -56], 'gate-closed': [0, -16], 'gate-open': [0, -16],
+          'chest-open': [14, -34], 'bridge-built': [0, -70],
+          'complete-bloom': [0, -78], 'start-screen': [0, 8],
+          'hud-landscape': [0, 8]
+        };
+        const p = presets[name] || [0, 8];
+        if (game.debug) game.debug.teleport(p[0], p[1]);
+        stepGame(50);
+        currentPhoto = name || null;
+      },
+      sheet: (name, frames) => { if (game) { paused = true; game = logic.createGame(cfg, 7); currentSheet = { name, frames: frames || 8 }; } },
+      setPose: (actor, id, t) => { /* reserved for Q-10+ */ },
+      quality: (tier) => { /* reserved for Q-18 */ },
+      fxTable: () => [],
       data: { cfg }
     };
   } catch (e) {

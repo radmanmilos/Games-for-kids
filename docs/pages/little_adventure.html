@@ -33,6 +33,7 @@
         #i3d-game { position: fixed; inset: 0; overflow: hidden; background: #87CEEB; }
         #i3d-view { position: absolute; inset: 0; }
         #i3d-view canvas { width: 100%; height: 100%; display: block; }
+        #i3d-vignette { position: absolute; inset: 0; pointer-events: none; z-index: 15; background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.12) 100%); }
         /* --- Back button --- */
         #i3d-back {
             position: absolute; bottom: 4vmin; left: 4vmin; z-index: 30;
@@ -58,6 +59,7 @@
 <div id="i3d-game">
     <button class="adv-back ps-back" id="i3d-back" aria-label="Назад"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></button>
     <div id="i3d-view"></div>
+    <div id="i3d-vignette"></div>
     <div id="i3d-stick-zone" style="position:absolute; left:0; top:0; width:50%; height:100%; z-index:5; touch-action:none;"></div>
     <div id="i3d-stick-base" style="position:absolute; display:none; width:120px; height:120px; border-radius:50%; background:rgba(255,255,255,0.25); border:2px solid rgba(255,255,255,0.5); transform:translate(-50%,-50%); z-index:6; pointer-events:none;"></div>
     <div id="i3d-stick-knob" style="position:absolute; display:none; width:50px; height:50px; border-radius:50%; background:rgba(74,63,107,0.7); transform:translate(-50%,-50%); z-index:7; pointer-events:none;"></div>

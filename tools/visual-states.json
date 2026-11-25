@@ -100,7 +100,8 @@
     "INIT": "true"
   },
   "little_adventure": {
-    "INIT": "true"
+    "INIT": "true",
+    "PLAY": "(() => { const b = document.getElementById('i3d-btn-new'); if (b) b.click(); const h = window.__little_adventure; if (!h) return false; h.seed(7); h.photo('meadow-wide'); return h.state().webgl === true; })()"
   },
   "parent": {
     "INIT": "true"

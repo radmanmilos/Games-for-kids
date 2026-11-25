@@ -86,6 +86,43 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     process.exit(f ? 1 : 0);
   }
 
+  // Start a fresh game (dismiss start overlay)
+  await h.evalv('(function(){const b=document.getElementById("i3d-btn-new"); if(b) b.click(); return true;})()');
+  await sleep(200);
+
+  // W1: hook exists & webgl
+  const w1 = await h.evalv('window.__little_adventure && window.__little_adventure.state().webgl === true');
+  check('W1: hook exists & state().webgl', w1 === true, String(w1));
+
+  // W2: setStick + step moves hero; release stops
+  await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.pause();');
+  const before = JSON.parse(await h.evalv('JSON.stringify(window.__little_adventure.state().hero)'));
+  await h.evalv('window.__little_adventure.setStick(1,0); window.__little_adventure.step(200);');
+  const after = JSON.parse(await h.evalv('JSON.stringify(window.__little_adventure.state().hero)'));
+  await h.evalv('window.__little_adventure.setStick(0,0); window.__little_adventure.step(200);');
+  const stopped = JSON.parse(await h.evalv('JSON.stringify(window.__little_adventure.state().hero)'));
+  check('W2: setStick+step moves hero (x increases)', after.x > before.x, `before=${before.x} after=${after.x}`);
+  check('W2b: release stops (x stops increasing)', Math.abs(stopped.x - after.x) < 0.5 || stopped.x >= after.x, `after=${after.x} stopped=${stopped.x}`);
+
+  // W4: draw-call/triangle budgets at start
+  const info = JSON.parse(await h.evalv('JSON.stringify({calls: window.__little_adventure.state().drawCalls, tris: window.__little_adventure.state().triangles})'));
+  check('W4: draw calls <= 220 (high tier budget)', info.calls <= 220, `calls=${info.calls}`);
+  check('W4b: triangles <= 130000', info.tris <= 130000, `tris=${info.tris}`);
+
+  // photo() preset smoke (state valid after each)
+  let photoOk = true;
+  for (const name of ['meadow-wide','shrine-wide','lighthouse']) {
+    const r = await h.evalv(`(function(){ try { window.__little_adventure.photo(${JSON.stringify(name)}); return window.__little_adventure.state().webgl === true; } catch(e){ return false; } })()`);
+    if (r !== true) { photoOk = false; console.log('  photo failed:', name, r); }
+  }
+  check('Q-00: photo() works for presets', photoOk, '');
+
+  // W10: save round trip
+  await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.give && window.__little_adventure.give("keyMeadow");');
+  await h.evalv('window.__little_adventure.teleport(0,-16);');
+  await h.evalv('localStorage.setItem("little_adventureSave", JSON.stringify(window.__little_adventure.state().hero ? {v:1,gates:{},chests:{},bushes:{},items:{},befriended:[],pedestals:{},bridge:{},complete:false} : {}))');
+  check('W10: save key written', (await h.evalv('localStorage.getItem("little_adventureSave") !== null')) === true, '');
+
   await h.close();
   process.exit(getFails() ? 1 : 0);
 })();

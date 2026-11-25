@@ -15,6 +15,12 @@
     sim: { stepMs: 20, dtClampMs: 100 },
     camera: { fov: 45, fovNarrow: 55, narrowAspect: 1.2, offset: [0, 13, 11], follow: 6 },
     budget: { dprMax: 1.5, slowFrameMs: 24, slowWindowMs: 2000, particleCap: 24, burst: 12, burstReduced: 6 },
+    // Q-03: per-zone atmosphere (colour pipeline). Interpolated by atmosphere(blend).
+    zoneAtmos: [
+      { id: 'A', key: 0xFFF1D6, fill: 0x9BB8FF, skyTop: 0x87CEEB, skyHorizon: 0xFFE4B5, fog: 0xC9E8F5, fogNear: 50, fogFar: 110, intensity: 1.0 },
+      { id: 'B', key: 0xE8F0D8, fill: 0x8FA8E0, skyTop: 0x7FB3D9, skyHorizon: 0xDCE8C8, fog: 0xB8D8E8, fogNear: 45, fogFar: 100, intensity: 0.95 },
+      { id: 'C', key: 0xF0ECE0, fill: 0xA8B8D8, skyTop: 0x9BB3CC, skyHorizon: 0xE8E4D8, fog: 0xD8DCE0, fogNear: 40, fogFar: 90, intensity: 0.9 }
+    ],
     zones: [
       { id: 'A', z0: 16, z1: -16, color: '#9BD37A' },
       { id: 'B', z0: -16, z1: -46, color: '#6FB35A' },

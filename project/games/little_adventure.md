@@ -17,7 +17,7 @@ Every tunable lives in `window.little_adventure_CONFIG` (`game/games/little_adve
 
 ## Test hook (`window.__little_adventure`, TD §8)
 
-`state()` (logic snapshot plus `{frameMs,dpr,drawCalls,triangles,webgl,motionScale}`) · `seed(n)` · `pause()` / `step(ms)` · `setStick(x,y)` · `swing()` · `shield(bool)` · `teleport(x,z)` · `give(itemId)` · `setHits(id,n)` · `reset()` · `forceSlow(bool)` · `data {cfg}`. Set only when WebGL booted.
+`state()` (logic snapshot plus `{frameMs,dpr,drawCalls,triangles,webgl,motionScale}`) · `seed(n)` · `pause()` / `step(ms)` · `setStick(x,y)` · `swing()` · `shield(bool)` · `teleport(x,z)` · `give(itemId)` · `setHits(id,n)` · `reset()` · `forceSlow(bool)` · `photo(name)` (jump to a named deterministic scene, paused) · `sheet(name,frames)` (filmstrip) · `setPose(actor,id,t)` · `quality(tier)` · `fxTable()` · `data {cfg}`. Set only when WebGL booted.
 
 ## Determinism recipe
 

@@ -1,0 +1,48 @@
+# Shots — 00_baseline
+
+Generated 2026-11-25T15:16:37.285Z
+
+| file |
+| --- |
+| boss_1280x800.png |
+| boss_844x390.png |
+| bridge-built_1280x800.png |
+| bridge-built_844x390.png |
+| chest-open_1280x800.png |
+| chest-open_844x390.png |
+| complete-bloom_1280x800.png |
+| complete-bloom_844x390.png |
+| forest-lane_1280x800.png |
+| forest-lane_844x390.png |
+| forest-wide_1280x800.png |
+| forest-wide_844x390.png |
+| gate-closed_1280x800.png |
+| gate-closed_844x390.png |
+| gate-open_1280x800.png |
+| gate-open_844x390.png |
+| grumpy-angry_1280x800.png |
+| grumpy-angry_844x390.png |
+| grumpy-happy_1280x800.png |
+| grumpy-happy_844x390.png |
+| hero-34_1280x800.png |
+| hero-34_844x390.png |
+| hero-front_1280x800.png |
+| hero-front_844x390.png |
+| hero-side_1280x800.png |
+| hero-side_844x390.png |
+| hud-landscape_1280x800.png |
+| hud-landscape_844x390.png |
+| lighthouse_1280x800.png |
+| lighthouse_844x390.png |
+| meadow-flowers_1280x800.png |
+| meadow-flowers_844x390.png |
+| meadow-wide_1280x800.png |
+| meadow-wide_844x390.png |
+| owl-closeup_1280x800.png |
+| owl-closeup_844x390.png |
+| pedestals-lit_1280x800.png |
+| pedestals-lit_844x390.png |
+| shrine-wide_1280x800.png |
+| shrine-wide_844x390.png |
+| start-screen_1280x800.png |
+| start-screen_844x390.png |
