@@ -2007,9 +2007,13 @@
     "sha256": "8e10e450549abf008b274fca88c1671806121e0b5c858e965c5e329d0afafaba",
     "size": 3068
   },
+  "games/little_adventure-world.js": {
+    "sha256": "3824641b22170d58a1f07250de8c8f0ba0e7d75d9d067aec4b366cc533c327da",
+    "size": 8435
+  },
   "games/little_adventure.mjs": {
-    "sha256": "fc2151ba938ee19df2553dab34d927c07bfb55a85552394ba9dd0d017a23ec39",
-    "size": 88032
+    "sha256": "5a86376e553a711cc7d7b27e283fcd8a91fcb768b93d75658e075030382436b7",
+    "size": 82813
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
@@ -2124,8 +2128,8 @@
     "size": 14166
   },
   "pages/little_adventure.html": {
-    "sha256": "7bad48c3b311f5372d20cf10dc79f721bcceaeda930874d6f559ffd439198eba",
-    "size": 9023
+    "sha256": "d7f57173017d35ca78cde00733a36c09242f98a0d742fdf0fd80e75199034c9a",
+    "size": 9082
   },
   "pages/matching_game.html": {
     "sha256": "7a73924813a6c965f45915665cc74ef9db993d377e3fb28d019b9385d3f4f49a",
@@ -2264,8 +2268,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "640c1559775bf47be3d29b29000a59162de82ea8789ac5ddc575062b1531c9dc",
-    "size": 18737
+    "sha256": "50ced629a4b279b37c59f939ce7114ef8fcfdca7574e77da6c126459ee9077bb",
+    "size": 18774
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",

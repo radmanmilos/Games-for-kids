@@ -501,6 +501,7 @@
   "games/little_adventure-materials.js",
   "games/little_adventure-models.js",
   "games/little_adventure-terrain.js",
+  "games/little_adventure-world.js",
   "games/little_adventure.mjs",
   "games/maze.js",
   "games/ocean.js",
