@@ -266,6 +266,7 @@ window.startlittle_adventure = function startlittle_adventure() {
     let camNudge = null; // Q-15: {x,z,tLeft}
     let winFX = null; // Q-21: {t, nextBurst}
     let bloom = null; // Q-21: {mesh, t}
+    let butterflies = null; // Q-21 free-play ambience
     let footstepAcc = 0;
     let soundOn = true;
     // Save helpers (IS-15)
@@ -802,6 +803,17 @@ window.startlittle_adventure = function startlittle_adventure() {
             bloom.mesh.instanceMatrix.needsUpdate = true;
             scene.add(bloom.mesh);
           }
+          if (!butterflies) {
+            const n = tier === 'low' ? 4 : 8;
+            butterflies = [];
+            const bGeo = new THREE.PlaneGeometry(0.28, 0.18);
+            for (let i = 0; i < n; i++) {
+              const m = new THREE.Mesh(bGeo, new THREE.MeshBasicMaterial({ color: i % 2 ? 0xFFD54F : 0xFF8A80, side: THREE.DoubleSide, transparent: true, opacity: 0.85 }));
+              m.position.set(s.hero.x + (Math.random()-0.5)*8, 1.2 + Math.random()*1.5, s.hero.z + (Math.random()-0.5)*8);
+              m.userData = { ph: Math.random()*Math.PI*2, r: 1.5+Math.random()*2, sp: 0.4+Math.random()*0.4 };
+              scene.add(m); butterflies.push(m);
+            }
+          }
         }
         // Q-15: reveal nudge on gateOpen/bridgeUp
         if (!reducedMotion && (ev.type === 'gateOpen' || ev.type === 'bridgeUp')) {
@@ -898,6 +910,12 @@ window.startlittle_adventure = function startlittle_adventure() {
           bloom.mesh.instanceMatrix.needsUpdate = true;
         }
         if (winFX.t > 6) winFX = { t: 6, nextBurst: 999, done: true };
+      }
+      if (butterflies) {
+        for (let i = 0; i < butterflies.length; i++) {
+          const b = butterflies[i]; const u = b.userData;
+          if (!reducedMotion) { u.ph += dt * u.sp; b.position.x += Math.cos(u.ph) * dt * 0.6; b.position.z += Math.sin(u.ph * 0.7) * dt * 0.6; b.position.y = 1.1 + Math.sin(u.ph * 1.3) * 0.4 + (i % 3) * 0.2; b.rotation.y = u.ph; b.rotation.z = Math.sin(u.ph * 2) * 0.2; }
+        }
       }
 
       // Q-14 ambient life (tier-gated, reduced-motion scaled)
