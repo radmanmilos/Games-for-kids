@@ -496,6 +496,12 @@ window.startlittle_adventure = function startlittle_adventure() {
             window.audioBuses.playTone('sfx', 180 * jitter, l.dur || 0.05, 'triangle', (l.gain || 0.05) * 0.6, 0);
           }
         }
+        if (name === 'befriend' && window.audioBuses.playSweep) {
+          window.audioBuses.playSweep('sfx', 880, 1320, 0.18, 'sine', 0.08, 0.05);
+        }
+        if (name === 'complete' && window.audioBuses.playSweep) {
+          [523, 659, 784, 1047].forEach((f, i) => window.audioBuses.playSweep('sfx', f, f * 1.5, 0.2, 'sine', 0.07, i * 0.08));
+        }
       }
 
       // Q-16 thin music/ambient/footstep player (no-gate slice; full polish later)
@@ -682,7 +688,7 @@ window.startlittle_adventure = function startlittle_adventure() {
           window.__laLastSpeech = { key, time: s.t };
         }
         // particles
-        const burst = window.REDUCED_MOTION ? cfg.budget.burstReduced : cfg.budget.burst;
+        const burst = Math.min(window.REDUCED_MOTION ? cfg.budget.burstReduced : cfg.budget.burst, tier === 'low' ? 8 : tier === 'medium' ? 14 : cfg.budget.burst);
         function spawnBurst(x, z, color) {
           let n = 0;
           for (const p of particles) {
