@@ -108,12 +108,12 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   const info = JSON.parse(await h.evalv('JSON.stringify({calls: window.__little_adventure.state().drawCalls, tris: window.__little_adventure.state().triangles})'));
   check('W4: draw calls <= 220 (high tier budget)', info.calls <= 220, `calls=${info.calls}`);
   check('W4b: triangles <= 130000', info.tris <= 130000, `tris=${info.tris}`);
-  // W4 zone-centre budgets
-  for (const [zn, zx, zz] of [['meadow',0,-6],['forest',0,-30],['cave',0,-58]]) {
+  // W4 zone-centre budgets (8 corridor sub-zones)
+  for (const [zn, zx, zz] of [['lawn',0,4],['meadow',0,-6],['gate1',0,-14],['forest',0,-27],['gate2',0,-44],['cave',0,-58],['pedestals',0,-68],['lighthouse',0,-76]]) {
     await h.evalv(`window.__little_adventure.teleport(${zx},${zz}); window.__little_adventure.step(50);`);
     await sleep(80);
     const zi = JSON.parse(await h.evalv('JSON.stringify({calls: window.__little_adventure.state().drawCalls, tris: window.__little_adventure.state().triangles})'));
-    check(`W4 zone ${zn}: draw calls <= 260`, zi.calls <= 260, `calls=${zi.calls}`);
+    check(`W4 zone ${zn}: draw calls <= 260`, zi.calls <= 260, `calls=${zi.calls} tris=${zi.tris}`);
   }
 
   // photo() preset smoke (state valid after each)
