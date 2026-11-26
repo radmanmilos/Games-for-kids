@@ -926,6 +926,22 @@ window.startlittle_adventure = function startlittle_adventure() {
         // save on milestones
         if (['gateOpen','chestOpen','bushCut','pedestalFill','complete','befriend'].indexOf(ev.type) !== -1) saveNow();
         playSfx(ev.type);
+        if (ev.type === 'grumpyRespawn') {
+          const rg = s.grumpies.find((gg) => gg.id === ev.id);
+          if (rg) {
+            const puffN = reducedMotion ? 3 : 8;
+            let pn = 0;
+            for (const p of particles) {
+              if (pn >= puffN) break;
+              if (!p.alive) {
+                p.alive = true; p.x = rg.x + (Math.random() - 0.5) * 0.4; p.y = hAt(rg.x, rg.z) + 0.2; p.z = rg.z + (Math.random() - 0.5) * 0.4;
+                p.vx = (Math.random() - 0.5) * 1.2; p.vy = 0.6 + Math.random() * 0.8; p.vz = (Math.random() - 0.5) * 1.2;
+                p.life = 500 + Math.random() * 300; p.color = 0xD2B48C; p.additive = false; pn++;
+              }
+            }
+            const rm = grumpyMeshes[ev.id]; if (rm) { rm.userData.respawnT = reducedMotion ? 0 : 0.35; }
+          }
+        }
         if (ev.type === 'complete' && !winFX) {
           winFX = { t: 0, nextBurst: 0 };
           if (!bloom) {
@@ -1196,8 +1212,44 @@ window.startlittle_adventure = function startlittle_adventure() {
         const happy = g.state === 'happy';
         const anim = window.little_adventureAnim;
         const ch = window.little_adventureCharacters;
+        // Q-12 respawn puff-in scale
+        if (m.userData.respawnT > 0) {
+          m.userData.respawnT = Math.max(0, m.userData.respawnT - dt);
+          const rt = 1 - (m.userData.respawnT / 0.35);
+          const sc = 0.6 + 0.4 * (anim && anim.outBack ? anim.outBack(Math.max(0, Math.min(1, rt))) : rt);
+          m.scale.setScalar(sc);
+        } else if (m.scale.x !== 1) { m.scale.setScalar(1); }
         if (m.userData && m.userData.pivots && anim && anim.evalGrumpy && ch && ch.applyPose) {
-          const pose = anim.evalGrumpy(g, s.t / 1000, { motionScale: reducedMotion ? 0.4 : 1 });
+          let rg = g;
+          // Q-12 boss stomp ring/crown wobble (renderer-only, no logic mutation)
+          if (g.role === 'boss' && !happy && (g.respawnTimer || 0) <= 0) {
+            m.userData.stompT = (m.userData.stompT || 0) + dt;
+            const cycle = 2.4;
+            const win = 0.8; // stomp duration inside cycle
+            const ct = m.userData.stompT % cycle;
+            if (ct < win) {
+              const sf = ct / win;
+              rg = Object.assign({}, g, { state: 'bossStomp', stompFrac: sf });
+              if (sf > 0.45 && !m.userData.stompDidRing && !reducedMotion) {
+                m.userData.stompDidRing = true;
+                const ringN = tier === 'low' ? 4 : 8;
+                let rn = 0;
+                for (const p of particles) {
+                  if (rn >= ringN) break;
+                  if (!p.alive) {
+                    const a = (rn / ringN) * Math.PI * 2;
+                    p.alive = true; p.x = g.x + Math.cos(a) * 0.6; p.y = hAt(g.x, g.z) + 0.05; p.z = g.z + Math.sin(a) * 0.6;
+                    p.vx = Math.cos(a) * 1.2; p.vy = 0.2 + Math.random() * 0.2; p.vz = Math.sin(a) * 1.2;
+                    p.life = 500; p.color = 0xD2B48C; p.additive = false; rn++;
+                  }
+                }
+              }
+              if (sf < 0.1) m.userData.stompDidRing = false;
+            } else {
+              m.userData.stompDidRing = false;
+            }
+          } else { m.userData.stompT = 0; m.userData.stompDidRing = false; }
+          const pose = anim.evalGrumpy(rg, s.t / 1000, { motionScale: reducedMotion ? 0.4 : 1 });
           if (winFX && happy && !reducedMotion) { pose.root = pose.root || {}; pose.root.py = (pose.root.py || 0) + Math.abs(Math.sin(s.t * 0.008 + (g.x || 0))) * 0.12; }
           ch.applyPose(m, pose);
           if (m.userData.setFace) m.userData.setFace(happy ? 'happy' : (g.state === 'hit' ? 'strain' : 'grumpy'));
@@ -1206,6 +1258,8 @@ window.startlittle_adventure = function startlittle_adventure() {
           if (matsU.belly && matsU.belly.color) matsU.belly.color.setHex(happy ? 0xFFF0A8 : 0xE6A3BA);
           const bodyP = m.userData.pivots.body;
           if (bodyP) bodyP.rotation.y = (g.facing || 0);
+          const crownP = m.userData.pivots.crown;
+          if (crownP && g.role === 'boss') { crownP.rotation.z = (reducedMotion ? 0 : Math.sin(s.t * 0.008) * 0.08); crownP.rotation.x = (rg.state === 'bossStomp' ? Math.sin((rg.stompFrac || 0) * Math.PI) * 0.15 : 0); }
         } else {
           if (m.children.length && m.children[0].isMesh && m.children[0].material && m.children[0].material.color) {
             m.children[0].material.color.setHex(happy ? 0xFFD86B : 0xC06C84);
