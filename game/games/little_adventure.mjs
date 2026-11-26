@@ -355,8 +355,9 @@ window.startlittle_adventure = function startlittle_adventure() {
     let hideDragHint = () => {};
     let maybeShowDragHint = () => {};
     if (gallery) {
+      const charsG = (window.little_adventureCharacters && window.little_adventureCharacters.create) ? window.little_adventureCharacters.create(THREE, mats) : null;
       const items = [
-        models.makeHero(), models.makeOwl(), models.makeGrumpy('normal'), models.makeGrumpy('normal'),
+        models.makeHero(), ...(charsG ? [charsG.makeHero2()] : []), models.makeOwl(), models.makeGrumpy('normal'), models.makeGrumpy('normal'),
         models.makeGrumpy('guard'), models.makeGrumpy('boss'), models.makeKey(),
         models.makeGem('red'), models.makeGem('green'), models.makeGem('blue'),
         models.makeChest(), models.makeGate(), models.makePedestal('red'),
@@ -570,10 +571,12 @@ window.startlittle_adventure = function startlittle_adventure() {
 
       // Hero
       game = logic.createGame(cfg, 7);
-      const heroMesh = models.makeHero();
+      const chars = (window.little_adventureCharacters && window.little_adventureCharacters.create) ? window.little_adventureCharacters.create(THREE, mats) : null;
+      const heroMesh = chars ? chars.makeHero2() : models.makeHero();
       heroMesh.traverse((o) => { if (o.isMesh) { o.castShadow = true; } });
       scene.add(heroMesh);
       window.__laHeroMesh = heroMesh;
+      window.__laChars = chars;
       window.__laModels = models;
       addBlobShadow(heroMesh);
       applyShadowTier(tier);
@@ -856,21 +859,33 @@ window.startlittle_adventure = function startlittle_adventure() {
         }
       }
 
-      // sword anim
+      // hero anim (Q-11)
       if (heroMesh) {
-        const armR = heroMesh.getObjectByName('armR');
-        if (armR) {
-          if (s.hero.swingT > 0) {
-            const frac = 1 - s.hero.swingT / cfg.sword.swingMs;
-            armR.rotation.x = -Math.PI / 2 + frac * (Math.PI * 110 / 180);
-          } else {
-            armR.rotation.x = 0;
+        const anim = window.little_adventureAnim;
+        const chars = window.little_adventureCharacters;
+        if (heroMesh.userData && heroMesh.userData.pivots && anim && anim.evalHero && chars && chars.applyPose) {
+          const pose = anim.evalHero(s, s.t / 1000, { motionScale: reducedMotion ? 0.4 : 1 });
+          chars.applyPose(heroMesh, pose);
+          const shieldP = heroMesh.userData.pivots.shield;
+          if (shieldP) {
+            const st = s.hero.shield ? 1 : 0;
+            shieldP.position.y = -0.12 + st * 0.08;
+            shieldP.position.z = 0.1 + st * 0.04;
+            shieldP.rotation.x = st ? -0.6 : 0;
+            shieldP.scale.setScalar(s.hero.shield ? 1.15 : 1);
           }
-        }
-        const shield = heroMesh.getObjectByName('shield');
-        if (shield) {
-          shield.position.y = s.hero.shield ? 0.9 : 0.6;
-          shield.rotation.x = s.hero.shield ? 0 : 0;
+        } else {
+          const armR = heroMesh.getObjectByName('armR');
+          if (armR) {
+            if (s.hero.swingT > 0) {
+              const frac = 1 - s.hero.swingT / cfg.sword.swingMs;
+              armR.rotation.x = -Math.PI / 2 + frac * (Math.PI * 110 / 180);
+            } else {
+              armR.rotation.x = 0;
+            }
+          }
+          const shield = heroMesh.getObjectByName('shield');
+          if (shield) { shield.position.y = s.hero.shield ? 0.9 : 0.6; shield.rotation.x = s.hero.shield ? 0 : 0; }
         }
       }
 

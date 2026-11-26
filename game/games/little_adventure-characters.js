@@ -91,6 +91,16 @@
       if (v.rot) { p.rotation.x = v.rot.x || 0; p.rotation.y = v.rot.y || 0; p.rotation.z = v.rot.z || 0; }
       if (v.pos) { p.position.x = v.pos.x !== undefined ? v.pos.x : p.position.x; p.position.y = v.pos.y !== undefined ? v.pos.y : p.position.y; p.position.z = v.pos.z !== undefined ? v.pos.z : p.position.z; }
       if (v.scl) { p.scale.x = v.scl.x !== undefined ? v.scl.x : p.scale.x; p.scale.y = v.scl.y !== undefined ? v.scl.y : p.scale.y; p.scale.z = v.scl.z !== undefined ? v.scl.z : p.scale.z; }
+      // shorthand: rx/ry/rz/px/py/pz/sx/sy/sz
+      if (v.rx !== undefined) p.rotation.x = v.rx;
+      if (v.ry !== undefined) p.rotation.y = v.ry;
+      if (v.rz !== undefined) p.rotation.z = v.rz;
+      if (v.px !== undefined) p.position.x = v.px;
+      if (v.py !== undefined) p.position.y = v.py;
+      if (v.pz !== undefined) p.position.z = v.pz;
+      if (v.sx !== undefined) p.scale.x = v.sx;
+      if (v.sy !== undefined) p.scale.y = v.sy;
+      if (v.sz !== undefined) p.scale.z = v.sz;
     });
   }
 
