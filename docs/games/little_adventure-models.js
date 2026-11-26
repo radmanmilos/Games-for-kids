@@ -125,6 +125,8 @@
         shaft.position.y = -0.1; g.add(shaft);
         const tooth = mesh(new THREE.BoxGeometry(0.18, 0.06, 0.08), mat( P.gold));
         tooth.position.set(0.1, -0.32, 0); g.add(tooth);
+        const halo = mesh(new THREE.TorusGeometry(0.45, 0.03, 8, 24), mat(P.gold, { transparent: true, opacity: 0.25, emissive: P.gold, emissiveIntensity: 0.2 }));
+        halo.name = 'halo'; halo.rotation.x = Math.PI / 2; halo.position.y = 0.05; g.add(halo);
         return g;
       }
 
@@ -133,6 +135,8 @@
         const g = group();
         const gem = mesh(new THREE.OctahedronGeometry(0.3), mat( hex, { emissive: hex, emissiveIntensity: 0.25 }));
         g.add(gem);
+        const halo = mesh(new THREE.TorusGeometry(0.42, 0.03, 8, 24), mat(hex, { transparent: true, opacity: 0.22, emissive: hex, emissiveIntensity: 0.25 }));
+        halo.name = 'halo'; halo.rotation.x = Math.PI / 2; g.add(halo);
         return g;
       }
 
@@ -159,11 +163,14 @@
       }
 
       function makePedestal(color) {
+        const hex = color === 'red' ? P.gemRed : color === 'green' ? P.gemGreen : P.gemBlue;
         const g = group();
         const base = mesh(new THREE.CylinderGeometry(0.45, 0.5, 0.3, 8), mat( P.stone));
         base.position.y = 0.15; g.add(base);
-        const ring = mesh(new THREE.TorusGeometry(0.35, 0.05, 6, 12), mat( color === 'red' ? P.gemRed : color === 'green' ? P.gemGreen : P.gemBlue));
+        const ring = mesh(new THREE.TorusGeometry(0.35, 0.05, 6, 12), mat(hex));
         ring.position.y = 0.35; ring.rotation.x = Math.PI / 2; g.add(ring);
+        const beam = mesh(new THREE.CylinderGeometry(0.08, 0.18, 2.2, 8, 1, true), mat(hex, { transparent: true, opacity: 0, emissive: hex, emissiveIntensity: 0.4 }));
+        beam.name = 'beam'; beam.position.y = 1.45; g.add(beam);
         return g;
       }
 

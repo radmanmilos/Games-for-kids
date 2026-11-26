@@ -2000,16 +2000,16 @@
     "size": 2799
   },
   "games/little_adventure-models.js": {
-    "sha256": "5456246a13cb205097d66d33a2084c1d901bcca3098dab21eff2b8b38e863518",
-    "size": 12593
+    "sha256": "2b87ba181c379a566fd9b5db01fb934c44d82dbe167908f6371c0089104e1119",
+    "size": 13341
   },
   "games/little_adventure-terrain.js": {
     "sha256": "8e10e450549abf008b274fca88c1671806121e0b5c858e965c5e329d0afafaba",
     "size": 3068
   },
   "games/little_adventure.mjs": {
-    "sha256": "ed1683dfb5ac5c26709b6cd9d62affa2141c914e519adc0cef575daa9c1b68bc",
-    "size": 68917
+    "sha256": "c85676a3d4eac2d76a68258d71349caa427cd06f6f8137a14c7d9209cee27741",
+    "size": 70611
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",

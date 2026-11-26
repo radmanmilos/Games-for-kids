@@ -1054,17 +1054,35 @@ window.startlittle_adventure = function startlittle_adventure() {
         const it = s.items[id];
         const m = itemMeshes[id];
         if (!m) continue;
+        const halo = m.getObjectByName('halo');
+        if (halo) { halo.rotation.z += dt * 1.2; if (halo.material) halo.material.opacity = 0.18 + 0.08 * Math.sin(s.t * 0.004 + id.charCodeAt(0)); }
         if (it.state === 'world') {
           m.visible = true;
-          m.position.set(it.x, hAt(it.x, it.z) + 0.8 + Math.sin(s.t * 0.003 + id.charCodeAt(0)) * 0.15, it.z);
+          const tx = it.x, ty = hAt(it.x, it.z) + 0.8 + Math.sin(s.t * 0.003 + id.charCodeAt(0)) * 0.15, tz = it.z;
+          if (m.userData.prevState === 'carried') { m.userData.prevState = 'world'; }
+          m.position.set(tx, ty, tz);
           m.rotation.y += 0.02;
+          m.userData.prevState = 'world';
         } else if (it.state === 'carried') {
           m.visible = true;
           const idx = s.carry.indexOf(id);
           const ang = (idx / Math.max(1, s.carry.length)) * Math.PI - Math.PI / 2;
-          m.position.set(s.hero.x + Math.cos(ang) * 1.2, hAt(s.hero.x, s.hero.z) + 0.9, s.hero.z + Math.sin(ang) * 1.2);
+          const tx = s.hero.x + Math.cos(ang) * 1.2;
+          const ty = hAt(s.hero.x, s.hero.z) + 0.9 + Math.sin(s.t * 0.004 + idx) * 0.05;
+          const tz = s.hero.z + Math.sin(ang) * 1.2;
+          if (m.userData.prevState !== 'carried') { m.userData.carryT = 0; m.userData.from = m.position.clone(); m.userData.prevState = 'carried'; }
+          m.userData.carryT = Math.min(1, (m.userData.carryT || 0) + dt * 3.5);
+          const tArc = m.userData.carryT;
+          const from = m.userData.from || m.position;
+          const arcY = Math.sin(tArc * Math.PI) * 1.2;
+          m.position.x += (from.x + (tx - from.x) * tArc - m.position.x) * Math.min(1, dt * 8);
+          m.position.z += (from.z + (tz - from.z) * tArc - m.position.z) * Math.min(1, dt * 8);
+          m.position.y += (from.y + (ty - from.y) * tArc + arcY * (1 - tArc) - m.position.y) * Math.min(1, dt * 8);
+          if (tArc >= 1) { m.position.x += (tx - m.position.x) * Math.min(1, dt * 6); m.position.z += (tz - m.position.z) * Math.min(1, dt * 6); m.position.y += (ty - m.position.y) * Math.min(1, dt * 6); }
+          m.rotation.y += 0.03;
         } else {
           m.visible = false;
+          m.userData.prevState = it.state;
         }
       }
 
@@ -1114,6 +1132,8 @@ window.startlittle_adventure = function startlittle_adventure() {
           p.ring.scale.setScalar(lit ? 1.15 + Math.sin(s.t * 0.004) * 0.05 : 1);
           if (p.ring.material && 'emissive' in p.ring.material) { if (!p.ring.userData.ownMat) { p.ring.material = p.ring.material.clone(); p.ring.userData.ownMat = true; } p.ring.material.emissive.setHex(lit ? 0x332200 : 0x000000); }
         }
+        const beam = p.mesh.getObjectByName('beam');
+        if (beam && beam.material) { if (!beam.userData.ownMat) { beam.material = beam.material.clone(); beam.userData.ownMat = true; } beam.material.opacity = lit ? 0.22 + 0.08 * Math.sin(s.t * 0.005) : 0; beam.visible = lit; }
         const gemId = 'gem' + id.charAt(0).toUpperCase() + id.slice(1);
         const nearGem = !lit && (s.carry || []).indexOf(gemId) !== -1;
         p.mesh.traverse(o => { if (o.isMesh && o.material && 'emissive' in o.material && o !== p.ring) { if (!o.userData.ownMat) { o.material = o.material.clone(); o.userData.ownMat = true; } o.material.emissive.setHex(nearGem ? 0x333300 : 0x000000); } });
