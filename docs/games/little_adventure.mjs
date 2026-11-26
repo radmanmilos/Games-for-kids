@@ -1106,7 +1106,11 @@ const offc = cfg.camera.offset;
     });
 
     window.__little_adventure = {
-      state: () => (game ? Object.assign({}, game.state(), { frameMs, dpr, tier, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries, programs: renderer.info.programs ? renderer.info.programs.length : 0, webgl: true, motionScale: reducedMotion ? 0 : 1 }) : { frameMs, dpr, tier, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries, programs: renderer.info.programs ? renderer.info.programs.length : 0, webgl: true, motionScale: reducedMotion ? 0 : 1 }),
+      state: () => {
+        const particlesAlive = particles ? particles.reduce((n, p) => n + (p.alive ? 1 : 0), 0) : 0;
+        const base = { frameMs, dpr, tier, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries, programs: renderer.info.programs ? renderer.info.programs.length : 0, webgl: true, motionScale: reducedMotion ? 0 : 1, particlesAlive, particleCap: partCount };
+        return game ? Object.assign({}, game.state(), base) : base;
+      },
       seed: (n) => { if (game) game = logic.createGame(cfg, n); },
       pause: () => { paused = true; },
       step: (ms) => { if (game) stepGame(ms); },
@@ -1115,6 +1119,8 @@ const offc = cfg.camera.offset;
       shield: (b) => { input.shield = !!b; },
       teleport: (x, z) => { if (game && game.debug) game.debug.teleport(x, z); },
       give: (id) => { if (game && game.debug) game.debug.give(id); },
+      save: () => (game ? game.save() : null),
+      load: (snap) => { if (game && snap) game.load(snap); },
       setHits: (id, n) => { if (game && game.debug) game.debug.setHits(id, n); },
       reset: () => { if (game) game = logic.createGame(cfg, 7); },
       forceSlow: (b) => { forceSlow = !!b; },

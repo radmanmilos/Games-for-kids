@@ -133,6 +133,14 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   const fxKeys = JSON.parse(await h.evalv('JSON.stringify(window.__little_adventure.fxTable ? window.__little_adventure.fxTable() : [])'));
   check('W6: fxTable() covers >=16 event types', Array.isArray(fxKeys) && fxKeys.length >= 16, `n=${fxKeys.length}`);
 
+  // W7: particles <= cap in a 60s flail (real-time render loop, frantic input)
+  await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.pause(); (function(){ var po=document.getElementById("i3d-pause"); if(po){po.style.display="none";} })();');
+  await h.evalv('(function(){ window.__laFlailStart=performance.now(); window.__laFlailMax=0; window.__laFlailInt=setInterval(function(){ var h=window.__little_adventure; if(!h) return; var t=performance.now(); var a=t*0.003; h.setStick(Math.cos(a), Math.sin(a*1.3)); if(Math.floor(t/300)%2===0) h.swing(); h.shield(Math.floor(t/500)%2===0); var st=h.state(); if(st.particlesAlive>window.__laFlailMax) window.__laFlailMax=st.particlesAlive; }, 50); })()');
+  await sleep(60000);
+  const w7 = JSON.parse(await h.evalv('JSON.stringify({max: window.__laFlailMax||0, cap: (window.__little_adventure.state().particleCap||0), alive: window.__little_adventure.state().particlesAlive||0})'));
+  await h.evalv('(function(){ clearInterval(window.__laFlailInt); var h=window.__little_adventure; if(h){h.setStick(0,0); h.setShield(false);} })()');
+  check('W7: particles <= cap in 60s flail', w7.max <= w7.cap && w7.cap > 0, `max=${w7.max} cap=${w7.cap} alive=${w7.alive}`);
+
   // W9: speech keys / 4s guard hook present
   const w9 = await h.evalv('(function(){ var s=window.__little_adventure.state(); return typeof window.__laLastSpeech === "object" || window.__laLastSpeech === undefined; })()');
   check('W9: speech hook does not throw / shape ok', w9 === true, String(w9));
@@ -160,11 +168,15 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   check('W13: adaptive tier steps down under slow frames', tierAfterSlow !== 'high', `tier=${tierAfterSlow}`);
   check('W13b: tier never steps up automatically', tierAfterRecover === tierAfterSlow, `afterSlow=${tierAfterSlow} afterRecover=${tierAfterRecover}`);
 
-  // W10: save round trip
-  await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.give && window.__little_adventure.give("keyMeadow");');
-  await h.evalv('window.__little_adventure.teleport(0,-16);');
-  await h.evalv('localStorage.setItem("little_adventureSave", JSON.stringify(window.__little_adventure.state().hero ? {v:1,gates:{},chests:{},bushes:{},items:{},befriended:[],pedestals:{},bridge:{},complete:false} : {}))');
-  check('W10: save key written', (await h.evalv('localStorage.getItem("little_adventureSave") !== null')) === true, '');
+  // W10: save round trip (progress flags)
+  await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.pause(); window.__little_adventure.give("keyMeadow"); window.__little_adventure.step(50);');
+  const w10snap = JSON.parse(await h.evalv('JSON.stringify(window.__little_adventure.save())'));
+  await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.step(50);');
+  await h.evalv(`window.__little_adventure.load(${JSON.stringify(w10snap)})`);
+  await h.evalv('window.__little_adventure.step(50);');
+  const w10after = JSON.parse(await h.evalv('JSON.stringify({carry: window.__little_adventure.state().carry, items: window.__little_adventure.state().items})'));
+  const w10ok = !!w10snap && w10snap.v === 1 && Array.isArray(w10after.carry) && w10after.carry.indexOf('keyMeadow') !== -1;
+  check('W10: save round trip restores progress (carry)', w10ok, `carry=${JSON.stringify(w10after.carry)}`);
 
   // W12: context lost/restored does not throw (use temp canvas to avoid polluting game renderer)
   const w12 = await h.evalv(`(function(){
@@ -180,6 +192,32 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     } catch(e) { return 'err:' + e.message; }
   })()`);
   check('W12: WEBGL_lose_context lose/restore does not throw', w12 === 'ok' || w12 === 'no-ext', String(w12));
+
+  // W8: reduced-motion response (motionScale) via bootEmulated
+  let w8ok = false, w8detail = 'not-run';
+  try {
+    const h2 = await start({ page: null, tag: 'la-smoke-rm', width: 1100, height: 700 });
+    try {
+      await h2.c.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+      await h2.navigate(`http://127.0.0.1:${h2.port}/pages/little_adventure.html`);
+      let ready2 = false;
+      for (let i = 0; i < 40 && !ready2; i++) {
+        ready2 = await h2.evalv(`typeof window.startlittle_adventure === 'function'`);
+        if (!ready2) await sleep(250);
+      }
+      await h2.evalv('(function(){ var b=document.getElementById("i3d-btn-new"); if(b) b.click(); })()');
+      await sleep(500);
+      const ms = await h2.evalv('window.__little_adventure && window.__little_adventure.state ? window.__little_adventure.state().motionScale : null');
+      const rm = await h2.evalv('!!window.REDUCED_MOTION');
+      w8ok = (ms === 0 || rm === true);
+      w8detail = `motionScale=${ms} REDUCED_MOTION=${rm}`;
+    } finally {
+      await h2.close({ checkErrors: false });
+    }
+  } catch (e) {
+    w8detail = 'err:' + (e && e.message ? e.message : e);
+  }
+  check('W8: reduced-motion response (motionScale) via bootEmulated', w8ok, w8detail);
 
   await h.close();
   process.exit(getFails() ? 1 : 0);
