@@ -28,7 +28,7 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 | Q-11 | 2 | Hero animation set (QG3) | Q-10 | yes | NEW | | | |
 | Q-12 | 2 | Grumpy/guard/boss v2 + animation | Q-10, Q-11 | yes | NEW | | | |
 | Q-13 | 2 | Owl + props + completion bloom (QG4) | Q-12 | yes | NEW | | | |
-| Q-14 | 3 | Sprite particles + ambient life | Q-04 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | little_adventure-fx.js: EVENT_TABLE (16), TIERS, particleCap, cameraNudge. 4 Node tests. |
+| Q-14 | 3 | Sprite particles + ambient life | Q-04 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | Atlas-textured particles, EVENT_TABLE-driven particle configs/colors, ambient zone life (tier/reduced-motion gated). Still missing: two-pool/additive halo, footstep dust, full 60s flail W7 proof. |
 | Q-15 | 3 | Camera polish | Q-03, Q-11 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | Look-ahead (0.35s, ±2u) + gateOpen/bridgeUp reveal nudges (<=1.2s, reduced-motion safe) wired; full Q-11-dependent polish/safe-frame W-checks still pending. |
 | Q-16 | 3 | Audio v2 + sound toggle | Q-09 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | audio module + sound button/aria-pressed + mute key + event SFX/pitch variance + speakWithDuck + visibility suspend/resume + thin zone music sequencer/ambient/zone crossfade/footstep sync on audioBuses. Still missing: richer ambient beds, full SFX audit/fanfare sparkle, tablet listening (USER-RUN). |
 | Q-17 | 3 | UI/UX art pass + start screen (QG5) | Q-11, Q-16 | yes | NEW | | | |
@@ -75,3 +75,4 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 - 2026-11-26 — OpenCode/Big Pickle — Q-02: added W3/W6/W9/W11/W13 smoke checks; fixed saveNow/playSfx/soundOn scope bug; LA smokes 23+34 pass.
 - 2026-11-26 — OpenCode/Big Pickle — Q-02: added W5/W12 smoke checks (gate state after give/teleport, WEBGL_lose_context temp-canvas); 25/25 smoke pass.
 - 2026-11-26 — OpenCode/Big Pickle — Q-19: shadow map bias/tier wiring, ground receiveShadow, hero/actor castShadow by tier, blob hide on med/high; smokes green, screenshots captured.
+- 2026-11-26 — OpenCode/Big Pickle — Q-14: atlas-textured particles, EVENT_TABLE-driven configs, ambient zone life; smokes green, screenshots captured.

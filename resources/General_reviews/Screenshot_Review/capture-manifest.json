@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "77fb86cc4dcc9fb0487595e8353ebf355721da7e",
+  "commitSha": "c3cdb1e5b91194f5cca20d3a5c9d5ec74719a7e6",
   "browser": {
     "product": "Chrome/158.0.8127.36",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-26T00:46:04.339Z",
+  "generatedAt": "2026-11-26T06:52:05.967Z",
   "pageSet": [
     "little_adventure"
   ],

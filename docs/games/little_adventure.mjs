@@ -213,7 +213,8 @@ window.startlittle_adventure = function startlittle_adventure() {
     const partCol = new Float32Array(partCount * 3);
     partGeo.setAttribute('position', new THREE.BufferAttribute(partPos, 3));
     partGeo.setAttribute('color', new THREE.BufferAttribute(partCol, 3));
-    const partMat = new THREE.PointsMaterial({ size: 0.25, vertexColors: true, transparent: true, opacity: 0.9 });
+    const partAtlas = (window.little_adventureFx && window.little_adventureFx.makeAtlas) ? window.little_adventureFx.makeAtlas(THREE) : null;
+    const partMat = new THREE.PointsMaterial({ size: 0.28, map: partAtlas || undefined, vertexColors: true, transparent: true, opacity: 0.95, depthWrite: false, sizeAttenuation: true, alphaTest: 0.02 });
     const partPoints = new THREE.Points(partGeo, partMat);
     scene.add(partPoints);
     const particles = [];
@@ -225,6 +226,7 @@ window.startlittle_adventure = function startlittle_adventure() {
     const arrow = new THREE.Mesh(new THREE.ConeGeometry(0.25, 0.6, 6), new THREE.MeshBasicMaterial({ color: 0xFFD23F }));
     scene.add(arrow);
     let lastProgressT = 0;
+    let ambientAcc = 0;
 
     const camera = new THREE.PerspectiveCamera(cfg.camera.fov, window.innerWidth / window.innerHeight, 0.1, 1000);
     const off = cfg.camera.offset;
@@ -712,26 +714,55 @@ window.startlittle_adventure = function startlittle_adventure() {
           if (ann) ann.textContent = txt;
           window.__laLastSpeech = { key, time: s.t };
         }
-        // particles
-        const burst = Math.min(window.REDUCED_MOTION ? cfg.budget.burstReduced : cfg.budget.burst, tier === 'low' ? 8 : tier === 'medium' ? 14 : cfg.budget.burst);
-        function spawnBurst(x, z, color) {
+        // particles (Q-14: EVENT_TABLE driven)
+        const fxDef = (window.little_adventureFx && window.little_adventureFx.EVENT_TABLE) ? window.little_adventureFx.EVENT_TABLE[ev.type] : null;
+        const pType = fxDef && fxDef.particles ? fxDef.particles : null;
+        const pCfg = (window.little_adventureFx && window.little_adventureFx.PARTICLES && pType) ? window.little_adventureFx.PARTICLES[pType] : null;
+        if (pCfg) {
+          const burst = Math.min(window.REDUCED_MOTION ? cfg.budget.burstReduced : (pCfg.count || cfg.budget.burst), tier === 'low' ? 8 : tier === 'medium' ? 14 : (pCfg.count || cfg.budget.burst));
+          let px = s.hero.x, pz = s.hero.z;
+          if (ev.type === 'befriend') { const g = s.grumpies.find((gg)=>gg.id===ev.id); if (g) { px = g.x; pz = g.z; } }
+          else if (ev.type === 'bushCut') { const b = cfg.bushes.find((bb)=>bb.id===ev.id); if (b) { px = b.pos[0]; pz = b.pos[1]; } }
+          else if (ev.type === 'pedestalFill') { const pd = cfg.pedestals.find((pp)=>pp.id===ev.id); if (pd) { px = pd.pos[0]; pz = pd.pos[1]; } }
+          else if (ev.type === 'chestOpen') { const c = cfg.chests.find((cc)=>cc.id===ev.id); if (c) { px = c.pos[0]; pz = c.pos[1]; } }
+          else if (ev.type === 'gateOpen') { const g2 = cfg.gates.find((gg)=>gg.id===ev.gateId); if (g2 && g2.pos) { px = g2.pos[0]; pz = g2.pos[1]; } }
           let n = 0;
           for (const p of particles) {
             if (n >= burst) break;
             if (!p.alive) {
-              p.alive = true; p.x = x; p.y = 0.5; p.z = z;
-              p.vx = (Math.random() - 0.5) * 4; p.vy = 2 + Math.random() * 2; p.vz = (Math.random() - 0.5) * 4;
-              p.life = 600; p.color = color;
+              p.alive = true; p.x = px; p.y = 0.5; p.z = pz;
+              const sp = pCfg.spread || 1;
+              p.vx = (Math.random() - 0.5) * 4 * sp; p.vy = (pCfg.vy || 1.5) * (0.7 + Math.random() * 0.6); p.vz = (Math.random() - 0.5) * 4 * sp;
+              p.life = (pCfg.life || 0.8) * 1000; p.color = pCfg.color || 0xFFD23F;
               n++;
             }
           }
         }
-        if (ev.type === 'befriend') spawnBurst(s.grumpies.find(g=>g.id===ev.id)?.x || s.hero.x, s.grumpies.find(g=>g.id===ev.id)?.z || s.hero.z, 0xFFD23F);
-        if (ev.type === 'bushCut') { const b = cfg.bushes.find(b=>b.id===ev.id); if (b) spawnBurst(b.pos[0], b.pos[1], 0x9BD37A); }
-        if (ev.type === 'pickup') spawnBurst(s.hero.x, s.hero.z, 0xFFD23F);
-        if (ev.type === 'pedestalFill') { const p = cfg.pedestals.find(p=>p.id===ev.id); if (p) spawnBurst(p.pos[0], p.pos[1], 0xFFD23F); }
       }
       if (progress) lastProgressT = s.t;
+
+      // Q-14 ambient life (tier-gated, reduced-motion scaled)
+      ambientAcc += frameMs;
+      const ambientEvery = reducedMotion ? 900 : 450;
+      if (ambientAcc >= ambientEvery) {
+        ambientAcc = 0;
+        const ambCap = tier === 'low' ? 0 : (tier === 'medium' ? 1 : 2);
+        const zoneIdx = (s.hero.z > (cfg.zones[0].z1)) ? 0 : (s.hero.z > (cfg.zones[1].z1) ? 1 : 2);
+        const ambColor = [0xFFF176, 0xFFB74D, 0x8EC5FF][zoneIdx] || 0xFFF176;
+        const ambCount = reducedMotion ? Math.max(1, ambCap) : ambCap;
+        for (let a = 0; a < ambCount; a++) {
+          for (const p of particles) {
+            if (p.alive) continue;
+            p.alive = true;
+            p.x = s.hero.x + (Math.random() - 0.5) * 10;
+            p.y = 0.5 + Math.random() * 2.5;
+            p.z = s.hero.z + (Math.random() - 0.5) * 10;
+            p.vx = (Math.random() - 0.5) * 0.4; p.vy = 0.15 + Math.random() * 0.25; p.vz = (Math.random() - 0.5) * 0.4;
+            p.life = 1800 + Math.random() * 1200; p.color = ambColor;
+            break;
+          }
+        }
+      }
 
       // sword anim
       if (heroMesh) {
