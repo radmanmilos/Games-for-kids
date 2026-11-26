@@ -101,6 +101,7 @@
   },
   "little_adventure": {
     "INIT": "true",
+    "START": "(() => { const s = document.getElementById('i3d-start'); return !!(s && s.style.display !== 'none'); })()",
     "PLAY": "(() => { const b = document.getElementById('i3d-btn-new'); if (b) b.click(); const h = window.__little_adventure; if (!h) return false; h.seed(7); h.photo('meadow-wide'); return h.state().webgl === true; })()"
   },
   "parent": {

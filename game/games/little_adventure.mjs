@@ -324,6 +324,7 @@ window.startlittle_adventure = function startlittle_adventure() {
       blobShadows.push({ mesh: sh, target: m });
     }
 
+    let startOverlay = null;
     if (gallery) {
       const items = [
         models.makeHero(), models.makeOwl(), models.makeGrumpy('normal'), models.makeGrumpy('normal'),
@@ -588,7 +589,7 @@ window.startlittle_adventure = function startlittle_adventure() {
       // We'll handle save in updateActors via event drain.
 
       // Start overlay
-      const startOverlay = document.getElementById('i3d-start');
+      startOverlay = document.getElementById('i3d-start');
       const btnContinue = document.getElementById('i3d-btn-continue');
       const btnNew = document.getElementById('i3d-btn-new');
       const saved = loadSave();
@@ -1002,8 +1003,19 @@ const offc = cfg.camera.offset;
       cz = Math.max(b.zMin, Math.min(b.zMax, cz));
       const desired = new THREE.Vector3(cx + offc[0], offc[1], cz + offc[2]);
       if (!sheetRoot.visible) {
-        camera.position.lerp(desired, 1 - Math.exp(-cfg.camera.follow * (frameMs / 1000)));
-        camera.lookAt(cx, 0.6, cz);
+        const startVisible = startOverlay && startOverlay.style.display !== 'none';
+        if (startVisible && !gallery && !reducedMotion) {
+          const t = performance.now() * 0.00018;
+          const r = 10;
+          camera.position.set(s.hero.x + Math.sin(t) * r, 5.8, s.hero.z + Math.cos(t) * r + 2);
+          camera.lookAt(s.hero.x, 0.9, s.hero.z);
+        } else if (startVisible && !gallery) {
+          camera.position.set(s.hero.x + 6, 5.8, s.hero.z + 8);
+          camera.lookAt(s.hero.x, 0.9, s.hero.z);
+        } else {
+          camera.position.lerp(desired, 1 - Math.exp(-cfg.camera.follow * (frameMs / 1000)));
+          camera.lookAt(cx, 0.6, cz);
+        }
       }
     }
 

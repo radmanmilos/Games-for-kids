@@ -848,19 +848,35 @@
     "task": "453"
   },
   "little_adventure__phone-portrait__PLAY.png": {
-    "updatedAt": "2026-11-26T06:52:05.967Z",
+    "updatedAt": "2026-11-26T07:01:31.908Z",
     "task": "453"
   },
   "little_adventure__phone-landscape__PLAY.png": {
-    "updatedAt": "2026-11-26T06:52:05.967Z",
+    "updatedAt": "2026-11-26T07:01:31.908Z",
     "task": "453"
   },
   "little_adventure__tablet-portrait__PLAY.png": {
-    "updatedAt": "2026-11-26T06:52:05.967Z",
+    "updatedAt": "2026-11-26T07:01:31.908Z",
     "task": "453"
   },
   "little_adventure__tablet-landscape__PLAY.png": {
-    "updatedAt": "2026-11-26T06:52:05.967Z",
+    "updatedAt": "2026-11-26T07:01:31.908Z",
+    "task": "453"
+  },
+  "little_adventure__phone-portrait__START.png": {
+    "updatedAt": "2026-11-26T07:03:09.327Z",
+    "task": "453"
+  },
+  "little_adventure__phone-landscape__START.png": {
+    "updatedAt": "2026-11-26T07:03:09.327Z",
+    "task": "453"
+  },
+  "little_adventure__tablet-portrait__START.png": {
+    "updatedAt": "2026-11-26T07:03:09.327Z",
+    "task": "453"
+  },
+  "little_adventure__tablet-landscape__START.png": {
+    "updatedAt": "2026-11-26T07:03:09.327Z",
     "task": "453"
   }
 }
