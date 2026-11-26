@@ -170,22 +170,50 @@ window.startlittle_adventure = function startlittle_adventure() {
     const waterMat = new THREE.MeshLambertMaterial({ color: 0x6EC6E8, transparent: true, opacity: 0.62, flatShading: true });
     waterMat.onBeforeCompile = (shader) => {
       shader.uniforms.uTime = waterUniforms.uTime;
-      shader.vertexShader = 'uniform float uTime;\nvarying vec2 vWUv;\n' + shader.vertexShader.replace(
+      shader.vertexShader = 'uniform float uTime;\nattribute float aMask;\nvarying vec2 vWUv;\nvarying float vMask;\n' + shader.vertexShader.replace(
         '#include <begin_vertex>',
-        '#include <begin_vertex>\nvec4 wp = modelMatrix * vec4(transformed, 1.0);\nvWUv = wp.xz;\nfloat w1 = sin(wp.x * 0.18 + uTime * 0.9) * 0.08;\nfloat w2 = sin(wp.z * 0.22 + uTime * 1.1) * 0.06;\ntransformed.y += w1 + w2;'
+        '#include <begin_vertex>\nvec4 wp = modelMatrix * vec4(transformed, 1.0);\nvWUv = wp.xz;\nvMask = aMask;\nfloat w1 = sin(wp.x * 0.18 + uTime * 0.9) * 0.08;\nfloat w2 = sin(wp.z * 0.22 + uTime * 1.1) * 0.06;\ntransformed.y += w1 + w2;'
       );
-      shader.fragmentShader = 'uniform float uTime;\nvarying vec2 vWUv;\n' + shader.fragmentShader.replace(
+      shader.fragmentShader = 'uniform float uTime;\nvarying vec2 vWUv;\nvarying float vMask;\n' + shader.fragmentShader.replace(
         '#include <dithering_fragment>',
-        'float dx = max(abs(vWUv.x) - 22.0, 0.0);\nfloat dz = max(max(vWUv.y - 14.0, -78.0 - vWUv.y), 0.0);\nfloat shore = sqrt(dx*dx + dz*dz);\nfloat foam = smoothstep(5.5, 1.2, shore) * (0.5 + 0.5*sin(vWUv.x*0.7 + vWUv.y*0.6 + uTime*1.6));\ngl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.95, 0.98, 1.0), foam * 0.35);\ngl_FragColor.rgb += vec3(0.05,0.08,0.10) * (0.5 + 0.5*sin(vWUv.x*0.35 + uTime*0.5));\n#include <dithering_fragment>'
+        'float foam = smoothstep(0.02, 0.45, vMask) * (1.0 - smoothstep(0.45, 0.85, vMask));\nfoam *= (0.5 + 0.5*sin(vWUv.x*0.7 + vWUv.y*0.6 + uTime*1.6));\ngl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.95, 0.98, 1.0), foam * 0.45);\ngl_FragColor.rgb += vec3(0.05,0.08,0.10) * (0.5 + 0.5*sin(vWUv.x*0.35 + uTime*0.5));\n#include <dithering_fragment>'
       );
     };
-    waterMat.customProgramCacheKey = () => 'la-water';
-    const water = new THREE.Mesh(new THREE.PlaneGeometry(96, 160, 48, 80), waterMat);
+    waterMat.customProgramCacheKey = () => 'la-water-v2';
+    const waterGeo = new THREE.PlaneGeometry(96, 160, 48, 80);
+    const waterPos = waterGeo.attributes.position;
+    const waterMask = new Float32Array(waterPos.count);
+    for (let i = 0; i < waterPos.count; i++) {
+      const wx = waterPos.getX(i);
+      const wy = waterPos.getY(i);
+      const wz = -wy - 32; // plane rotated -PI/2 around X, translated z=-32
+      waterMask[i] = terrain && terrain.maskAt ? terrain.maskAt(wx, wz) : 0;
+    }
+    waterGeo.setAttribute('aMask', new THREE.BufferAttribute(waterMask, 1));
+    const water = new THREE.Mesh(waterGeo, waterMat);
     water.rotation.x = -Math.PI / 2;
     water.position.y = -0.05;
     water.position.z = -32;
     water.userData.uniforms = waterUniforms;
     scene.add(water);
+    // Q-07 low-tier water sparkles (cheap sprites/points)
+    const waterSparkleCount = 24;
+    const waterSparkleGeo = new THREE.BufferGeometry();
+    const waterSparklePos = new Float32Array(waterSparkleCount * 3);
+    const waterSparkleBase = [];
+    for (let i = 0; i < waterSparkleCount; i++) {
+      const a = (i / waterSparkleCount) * Math.PI * 2;
+      const r = 24 + (i % 5) * 1.2;
+      const x = Math.cos(a) * r * 0.55;
+      const z = -32 + Math.sin(a) * r * 1.25;
+      waterSparkleBase.push({ x, z, ph: i * 0.7 });
+      waterSparklePos[i*3] = x; waterSparklePos[i*3+1] = 0.08; waterSparklePos[i*3+2] = z;
+    }
+    waterSparkleGeo.setAttribute('position', new THREE.BufferAttribute(waterSparklePos, 3));
+    const waterSparkleMat = new THREE.PointsMaterial({ color: 0xFFFFFF, size: 0.35, transparent: true, opacity: 0.85, depthWrite: false });
+    const waterSparkles = new THREE.Points(waterSparkleGeo, waterSparkleMat);
+    waterSparkles.visible = false;
+    scene.add(waterSparkles);
 
     const galleryRoot = new THREE.Group();
     scene.add(galleryRoot);
@@ -1304,6 +1332,18 @@ window.startlittle_adventure = function startlittle_adventure() {
       }
       if (!paused) waterUniforms.uTime.value += (frameMs / 1000) * (reducedMotion ? 0.25 : 1);
       water.position.y = -0.05;
+      waterSparkles.visible = tier === 'low';
+      if (waterSparkles.visible) {
+        const wt = waterUniforms.uTime.value;
+        for (let i = 0; i < waterSparkleCount; i++) {
+          const b = waterSparkleBase[i];
+          waterSparklePos[i*3] = b.x + Math.sin(wt * 0.6 + b.ph) * 0.25;
+          waterSparklePos[i*3+1] = 0.06 + 0.03 * Math.sin(wt * 1.8 + b.ph);
+          waterSparklePos[i*3+2] = b.z + Math.cos(wt * 0.5 + b.ph) * 0.25;
+        }
+        waterSparkleGeo.attributes.position.needsUpdate = true;
+        waterSparkleMat.opacity = 0.55 + 0.35 * (0.5 + 0.5 * Math.sin(wt * 2.2));
+      }
 const offc = cfg.camera.offset;
       const b = cfg.bounds;
       const la = reducedMotion ? 0 : 0.35;
