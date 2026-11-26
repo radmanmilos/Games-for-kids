@@ -180,6 +180,8 @@ window.startlittle_adventure = function startlittle_adventure() {
       );
     };
     waterMat.customProgramCacheKey = () => 'la-water-v2';
+    // Q-07: low tier uses a simple flat water material (no wave shader/foam) for perf.
+    const waterFlatMat = new THREE.MeshLambertMaterial({ color: 0x6EC6E8, transparent: true, opacity: 0.62, flatShading: true });
     const waterGeo = new THREE.PlaneGeometry(96, 160, 48, 80);
     const waterPos = waterGeo.attributes.position;
     const waterMask = new Float32Array(waterPos.count);
@@ -408,6 +410,7 @@ window.startlittle_adventure = function startlittle_adventure() {
       const target = Math.min(window.devicePixelRatio || 1, cfg.budget.dprMax, cap);
       if (target < dpr) { dpr = target; renderer.setPixelRatio(dpr); }
       applyShadowTier(tier);
+      if (water) water.material = (tier === 'low') ? waterFlatMat : waterMat;
     }
     let rafId = 0;
 
