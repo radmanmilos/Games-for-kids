@@ -266,6 +266,7 @@ window.startlittle_adventure = function startlittle_adventure() {
     let camNudge = null; // Q-15: {x,z,tLeft}
     let winFX = null; // Q-21: {t, nextBurst}
     let bloom = null; // Q-21: {mesh, t}
+    let footstepAcc = 0;
     let soundOn = true;
     // Save helpers (IS-15)
     const SAVE_KEY = 'little_adventureSave';
@@ -1012,6 +1013,18 @@ window.startlittle_adventure = function startlittle_adventure() {
       if (heroMesh) {
         heroMesh.position.set(s.hero.x, hAt(s.hero.x, s.hero.z), s.hero.z);
         heroMesh.rotation.y = -s.hero.facing + Math.PI / 2;
+        const moving = Math.hypot(s.hero.vx || 0, s.hero.vz || 0) > 0.6;
+        if (moving && !reducedMotion) {
+          footstepAcc += dt;
+          if (footstepAcc > 0.35) {
+            footstepAcc = 0;
+            let dn = 0;
+            for (const p of particles) {
+              if (dn >= 2) break;
+              if (!p.alive) { p.alive = true; p.x = s.hero.x + (Math.random()-0.5)*0.3; p.y = hAt(s.hero.x, s.hero.z)+0.05; p.z = s.hero.z + (Math.random()-0.5)*0.3; p.vx = (Math.random()-0.5)*0.4; p.vy = 0.3+Math.random()*0.3; p.vz = (Math.random()-0.5)*0.4; p.life = 450; p.color = 0xD2B48C; dn++; }
+            }
+          }
+        } else { footstepAcc = 0; }
       }
 
       // grumpies
