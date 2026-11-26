@@ -232,6 +232,7 @@ window.startlittle_adventure = function startlittle_adventure() {
     let paused = false;
     let currentPhoto = null;
     let currentSheet = null;
+    let camNudge = null; // Q-15: {x,z,tLeft}
     const input = { sx: 0, sy: 0, swing: false, shield: false };
     let keyX = 0, keyY = 0;
     let forceSlow = false;
@@ -658,6 +659,17 @@ window.startlittle_adventure = function startlittle_adventure() {
         // save on milestones
         if (['gateOpen','chestOpen','bushCut','pedestalFill','complete','befriend'].indexOf(ev.type) !== -1) saveNow();
         playSfx(ev.type);
+        // Q-15: reveal nudge on gateOpen/bridgeUp
+        if (!reducedMotion && (ev.type === 'gateOpen' || ev.type === 'bridgeUp')) {
+          let nx = s.hero.x, nz = s.hero.z;
+          if (ev.type === 'gateOpen' && ev.gateId && cfg.gates) {
+            const g = cfg.gates.find((x) => x.id === ev.gateId);
+            if (g && g.pos) { nx = g.pos[0]; nz = g.pos[1]; }
+          } else if (ev.type === 'bridgeUp' && cfg.bridge && cfg.bridge.to) {
+            nx = cfg.bridge.to[0]; nz = cfg.bridge.to[1];
+          }
+          camNudge = { x: nx, z: nz, tLeft: 1.2 };
+        }
         // speech
         const speechMap = { befriend:'befriend', bushCut:'gem', chestOpen:'key', gateOpen:'gateOpen', pedestalFill:'gem', complete:'complete', owlTalk: ev.line };
         const key = ev.type === 'owlTalk' ? ev.line : speechMap[ev.type];
@@ -911,8 +923,21 @@ window.startlittle_adventure = function startlittle_adventure() {
       water.position.y = -0.05 + Math.sin(performance.now() * 0.002) * 0.05;
 const offc = cfg.camera.offset;
       const b = cfg.bounds;
-      const cx = Math.max(b.xMin, Math.min(b.xMax, s.hero.x));
-      const cz = Math.max(b.zMin, Math.min(b.zMax, s.hero.z));
+      const la = reducedMotion ? 0 : 0.35;
+      let cx = s.hero.x + Math.max(-2, Math.min(2, (s.hero.vx || 0) * la));
+      let cz = s.hero.z + Math.max(-2, Math.min(2, (s.hero.vz || 0) * la));
+      if (camNudge && camNudge.tLeft > 0) {
+        camNudge.tLeft -= frameMs / 1000;
+        const k = Math.max(0, Math.min(1, camNudge.tLeft / 1.2));
+        const nudgeAmt = 6 * k;
+        const dx = camNudge.x - cx, dz = camNudge.z - cz;
+        const len = Math.hypot(dx, dz) || 1;
+        cx += (dx / len) * Math.min(nudgeAmt, len);
+        cz += (dz / len) * Math.min(nudgeAmt, len);
+        if (camNudge.tLeft <= 0) camNudge = null;
+      }
+      cx = Math.max(b.xMin, Math.min(b.xMax, cx));
+      cz = Math.max(b.zMin, Math.min(b.zMax, cz));
       const desired = new THREE.Vector3(cx + offc[0], offc[1], cz + offc[2]);
       if (!sheetRoot.visible) {
         camera.position.lerp(desired, 1 - Math.exp(-cfg.camera.follow * (frameMs / 1000)));

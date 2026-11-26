@@ -70,3 +70,5 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 - 2026-11-26 — OpenCode/Big Pickle — Q-06 wiring: deterministic terrain heightAt applied to hero/actors/props; smokes green.
 - 2026-11-26 — OpenCode/Big Pickle — Q-06 ground mesh replaced with terrain BufferGeometry; smokes green, screenshots captured.
 - 2026-11-26 — User pre-approval: continue through all remaining tasks/QG decisions until done (recorded; still capture screenshots/artifacts).
+- 2026-11-26 — OpenCode/Big Pickle — Q-15: look-ahead + gate/bridge reveal nudges wired; smokes green.
+- 2026-11-26 — OpenCode/Big Pickle — Q-15: look-ahead + gate/bridge reveal nudges wired; smokes green.
