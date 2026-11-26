@@ -771,8 +771,9 @@ window.startlittle_adventure = function startlittle_adventure() {
       });
     }
 
-    function updateActors() {
+    function updateActors(dtFrame) {
       if (gallery || !game) return;
+      const dt = dtFrame || 0.016;
       const s = game.state();
       const heroMesh = window.__laHeroMesh;
 
@@ -1007,7 +1008,12 @@ window.startlittle_adventure = function startlittle_adventure() {
       for (const id in s.chests) {
         const c = chestMeshes[id];
         if (!c || !c.lid) continue;
-        c.lid.rotation.x = s.chests[id].open ? -Math.PI / 2 : 0;
+        const open = !!s.chests[id].open;
+        c._openT = (c._openT == null) ? (open ? 1 : 0) : c._openT;
+        const target = open ? 1 : 0;
+        c._openT += (target - c._openT) * Math.min(1, dt * 6);
+        const ease = (window.little_adventureAnim && window.little_adventureAnim.outBack) ? window.little_adventureAnim.outBack(Math.max(0, Math.min(1, c._openT))) : c._openT;
+        c.lid.rotation.x = -Math.PI / 2 * Math.max(0, Math.min(1.1, ease));
       }
 
       // gates
@@ -1038,12 +1044,12 @@ window.startlittle_adventure = function startlittle_adventure() {
         const wiggle = s.pedestals[id].wiggleT || 0;
         p.mesh.scale.setScalar(1 + (wiggle > 0 ? 0.15 * (wiggle / 500) : 0));
         if (p.ring) {
-          p.ring.material = p.ring.material || p.ring.material;
-          p.ring.scale.setScalar(lit ? 1.15 : 1);
+          p.ring.scale.setScalar(lit ? 1.15 + Math.sin(s.t * 0.004) * 0.05 : 1);
+          if (p.ring.material && 'emissive' in p.ring.material) { if (!p.ring.userData.ownMat) { p.ring.material = p.ring.material.clone(); p.ring.userData.ownMat = true; } p.ring.material.emissive.setHex(lit ? 0x332200 : 0x000000); }
         }
         const gemId = 'gem' + id.charAt(0).toUpperCase() + id.slice(1);
         const nearGem = !lit && (s.carry || []).indexOf(gemId) !== -1;
-        p.mesh.traverse(o => { if (o.isMesh && o.material && 'emissive' in o.material) { if (!o.userData.ownMat) { o.material = o.material.clone(); o.userData.ownMat = true; } o.material.emissive.setHex(nearGem ? 0x333300 : 0x000000); } });
+        p.mesh.traverse(o => { if (o.isMesh && o.material && 'emissive' in o.material && o !== p.ring) { if (!o.userData.ownMat) { o.material = o.material.clone(); o.userData.ownMat = true; } o.material.emissive.setHex(nearGem ? 0x333300 : 0x000000); } });
       }
 
       // acorns
@@ -1066,6 +1072,7 @@ window.startlittle_adventure = function startlittle_adventure() {
       // lighthouse light
       if (lighthouseLight) {
         lighthouseLight.visible = !!(s.bridge && s.bridge.built);
+        if (lighthouseLight.visible) lighthouseLight.rotation.y += dt * 0.8;
       }
 
       // blob shadows
@@ -1196,7 +1203,7 @@ const offc = cfg.camera.offset;
         galleryRoot.rotation.y += 0.002;
       }
 
-      updateActors();
+      updateActors(dt / 1000);
       const _st = game ? game.state() : null;
       const _hm = !!(_st && _st.hero && (Math.abs(_st.hero.vx || 0) + Math.abs(_st.hero.vz || 0) > 0.02));
       const _zi = (_st && _st.hero) ? zoneIndexForZ(_st.hero.z) : 0;

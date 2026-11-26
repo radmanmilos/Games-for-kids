@@ -288,7 +288,10 @@
         const w = new THREE.Mesh(new THREE.CircleGeometry(0.09, 12), eyeWMat); e.add(w);
         const p = new THREE.Mesh(new THREE.CircleGeometry(0.045, 12), eyePMat); p.position.z = 0.01; e.add(p);
         const hl = new THREE.Mesh(new THREE.CircleGeometry(0.015, 8), mToon(0xFFFFFF)); hl.position.set(-0.015, 0.015, 0.02); e.add(hl);
-        const lid = new THREE.Group(); lid.name = 'lid' + side; lid.position.set(s * 0.11, 0.03, 0.25); head.add(lid); pivots['lid' + side] = lid;
+        const lid = new THREE.Group(); lid.name = 'lid' + side; lid.position.set(0, 0.09, 0.01); e.add(lid); pivots['lid' + side] = lid;
+        const lidM = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.1, 0.02), mat('head', 0x9A6B3F));
+        lidM.position.y = -0.05; lid.add(lidM);
+        lid.scale.y = 0.001;
         return e;
       }
       mkEye('L'); mkEye('R');

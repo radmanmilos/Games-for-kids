@@ -134,20 +134,25 @@
     opts = opts || {};
     const ms = opts.motionScale == null ? 1 : opts.motionScale;
     const bob = speaking ? Math.sin(t * 6) * 0.05 * ms : 0;
-    // look-at limited ±70°
     let ry = 0;
-    if (heroPos && owl && owl.pos) {
-      const dx = (heroPos.x || 0) - (owl.pos[0] || 0);
-      const dz = (heroPos.z || 0) - (owl.pos[1] || 0);
+    const ox = owl && (owl.pos ? owl.pos[0] : owl.x);
+    const oz = owl && (owl.pos ? owl.pos[1] : owl.z);
+    if (heroPos && ox != null && oz != null) {
+      const dx = (heroPos.x || 0) - ox;
+      const dz = (heroPos.z || 0) - oz;
       ry = Math.atan2(dx, dz);
       const limit = (70 * Math.PI) / 180;
       ry = Math.max(-limit, Math.min(limit, ry));
     }
+    const blink = (t % 3.2) < 0.12 ? 1 : 0.001;
+    const flap = speaking ? Math.sin(t * 8) * 0.2 * ms : 0;
     return {
       root: { py: bob },
       head: { ry: ry * ms },
-      wingL: { rz: speaking ? Math.sin(t * 8) * 0.2 * ms : 0 },
-      wingR: { rz: speaking ? -Math.sin(t * 8) * 0.2 * ms : 0 }
+      lidL: { sy: blink },
+      lidR: { sy: blink },
+      wingL: { rz: flap },
+      wingR: { rz: -flap }
     };
   };
 
