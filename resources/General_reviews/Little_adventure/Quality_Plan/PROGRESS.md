@@ -33,7 +33,7 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 | Q-16 | 3 | Audio v2 + sound toggle | Q-09 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | audio module + sound button/aria-pressed + mute key + event SFX/pitch variance + speakWithDuck + visibility suspend/resume + thin zone music sequencer/ambient/zone crossfade/footstep sync on audioBuses. Still missing: richer ambient beds, full SFX audit/fanfare sparkle, tablet listening (USER-RUN). |
 | Q-17 | 3 | UI/UX art pass + start screen (QG5) | Q-11, Q-16 | yes | NEW | | | |
 | Q-18 | 4 | Quality tiers + performance | Q-07, Q-08, Q-14 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | TIERS table, adaptive step-down, quality()/fxTable(), perf overlay counters/memory/programs, scene dispose on back. Still missing: full tier switching, 5-cycle leak proof, tablet measurement. |
-| Q-19 | 4 | Shadows | Q-18 | yes | NEW | | | |
+| Q-19 | 4 | Shadows | Q-18 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | Dir shadow map 1024 PCFSoft, bias tuned, hero/actor cast by tier, ground receiveShadow, blob shadows hidden on med/high. Tablet perf/acne visual USER-RUN pending. |
 | Q-20 | 4 | Readability, guidance restyle, feel tuning | Q-17 | yes | NEW | | | |
 | Q-21 | 4 | Completion celebration + free-play life | Q-13, Q-14, Q-16 | yes | NEW | | | |
 | Q-22 | 4 | Full verification + golden shots (QG6) | Q-17…Q-21 | | NEW | | | |
@@ -74,3 +74,4 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 - 2026-11-26 — OpenCode/Big Pickle — Q-16/Q-18: SFX audit OK (17/17), befriend sparkle+complete fanfare layers, tier-based particle burst cap; smokes green.
 - 2026-11-26 — OpenCode/Big Pickle — Q-02: added W3/W6/W9/W11/W13 smoke checks; fixed saveNow/playSfx/soundOn scope bug; LA smokes 23+34 pass.
 - 2026-11-26 — OpenCode/Big Pickle — Q-02: added W5/W12 smoke checks (gate state after give/teleport, WEBGL_lose_context temp-canvas); 25/25 smoke pass.
+- 2026-11-26 — OpenCode/Big Pickle — Q-19: shadow map bias/tier wiring, ground receiveShadow, hero/actor castShadow by tier, blob hide on med/high; smokes green, screenshots captured.

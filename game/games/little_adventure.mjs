@@ -60,6 +60,8 @@ window.startlittle_adventure = function startlittle_adventure() {
     dir.shadow.camera.right = 14;
     dir.shadow.camera.top = 14;
     dir.shadow.camera.bottom = -14;
+    dir.shadow.bias = -0.0005;
+    dir.shadow.normalBias = 0.02;
     scene.add(dir);
 
     // Q-03: atmosphere state + blend
@@ -115,6 +117,7 @@ window.startlittle_adventure = function startlittle_adventure() {
       ground.rotation.x = -Math.PI / 2;
       ground.position.z = -32;
     }
+    ground.receiveShadow = true;
     scene.add(ground);
 
     // Q-05: sky dome (inverted sphere, vertex colour gradient)
@@ -278,12 +281,23 @@ window.startlittle_adventure = function startlittle_adventure() {
     let tier = 'high';
     let tierStepped = false;
     const TIERS = (window.little_adventureFx && window.little_adventureFx.TIERS) || { high: { dprCap: 1.5, particles: 250 }, medium: { dprCap: 1.25, particles: 120 }, low: { dprCap: 1.0, particles: 40 } };
+    const shadowActors = [];
+    function applyShadowTier(t) {
+      const heroOn = t === 'medium' || t === 'high';
+      const actorsOn = t === 'high';
+      dir.castShadow = heroOn;
+      const hm = window.__laHeroMesh;
+      if (hm) hm.traverse((o) => { if (o.isMesh) o.castShadow = heroOn; });
+      for (const m of shadowActors) { if (m && m.traverse) m.traverse((o) => { if (o.isMesh) o.castShadow = actorsOn; }); }
+      for (const b of blobShadows) { if (b.mesh) b.mesh.visible = !heroOn; }
+    }
     function applyTier(next) {
       if (!TIERS[next]) return;
       tier = next;
       const cap = TIERS[tier].dprCap || 1.0;
       const target = Math.min(window.devicePixelRatio || 1, cfg.budget.dprMax, cap);
       if (target < dpr) { dpr = target; renderer.setPixelRatio(dpr); }
+      applyShadowTier(tier);
     }
     let rafId = 0;
 
@@ -397,15 +411,18 @@ window.startlittle_adventure = function startlittle_adventure() {
         m.position.set(g.pos[0], hAt(g.pos[0], g.pos[1]), g.pos[1]);
         scene.add(m);
         gateMeshes[g.id] = m;
+        shadowActors.push(m);
       });
       const owlCfg = (cfg.npcs || [])[0];
       if (owlCfg) {
         owlMesh = models.makeOwl();
+        shadowActors.push(owlMesh);
         owlMesh.position.set(owlCfg.pos[0], hAt(owlCfg.pos[0], owlCfg.pos[1]), owlCfg.pos[1]);
         scene.add(owlMesh);
       }
       (cfg.statues || []).forEach((s) => {
         statueMesh = models.makeStatue();
+        shadowActors.push(statueMesh);
         statueMesh.position.set(s.pos[0], hAt(s.pos[0], s.pos[1]), s.pos[1]);
         scene.add(statueMesh);
       });
@@ -416,6 +433,7 @@ window.startlittle_adventure = function startlittle_adventure() {
         let lid = null;
         m.traverse((o) => { if (o.name === 'lid') lid = o; });
         chestMeshes[c.id] = { mesh: m, lid };
+        shadowActors.push(m);
       });
       (cfg.pedestals || []).forEach((p) => {
         const m = models.makePedestal(p.id);
@@ -424,9 +442,11 @@ window.startlittle_adventure = function startlittle_adventure() {
         let ring = null;
         m.traverse((o) => { if (o.isMesh && o.geometry && o.geometry.type === 'TorusGeometry') ring = o; });
         pedestalMeshes[p.id] = { mesh: m, ring };
+        shadowActors.push(m);
       });
       if (cfg.lighthouse) {
         lighthouseMesh = models.makeLighthouse();
+        shadowActors.push(lighthouseMesh);
         lighthouseMesh.position.set(cfg.lighthouse.pos[0], hAt(cfg.lighthouse.pos[0], cfg.lighthouse.pos[1]), cfg.lighthouse.pos[1]);
         scene.add(lighthouseMesh);
         lighthouseLight = lighthouseMesh.children[lighthouseMesh.children.length - 1];
@@ -436,6 +456,7 @@ window.startlittle_adventure = function startlittle_adventure() {
         m.position.set(b.pos[0], hAt(b.pos[0], b.pos[1]), b.pos[1]);
         scene.add(m);
         bushMeshes[b.id] = m;
+        shadowActors.push(m);
       });
 
       // Bridge segments
@@ -457,6 +478,7 @@ window.startlittle_adventure = function startlittle_adventure() {
         m.position.set(g.home[0], hAt(g.home[0], g.home[1]), g.home[1]);
         scene.add(m);
         grumpyMeshes[g.id] = m;
+        shadowActors.push(m);
         addBlobShadow(m);
       });
 
@@ -479,10 +501,12 @@ window.startlittle_adventure = function startlittle_adventure() {
       // Hero
       game = logic.createGame(cfg, 7);
       const heroMesh = models.makeHero();
+      heroMesh.traverse((o) => { if (o.isMesh) { o.castShadow = true; } });
       scene.add(heroMesh);
       window.__laHeroMesh = heroMesh;
       window.__laModels = models;
       addBlobShadow(heroMesh);
+      applyShadowTier(tier);
 
       paused = true;
       // (Save helpers moved to top-level scope for updateActors access)
