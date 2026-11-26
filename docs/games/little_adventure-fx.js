@@ -27,15 +27,15 @@
 
   // Particle type configs (Q-14)
   A.PARTICLES = {
-    dust:    { color: 0xD2B48C, size: 0.22, life: 0.7, vy: 0.6, spread: 0.8, count: 8 },
-    spark:   { color: 0xFFD23F, size: 0.18, life: 0.5, vy: 1.2, spread: 1.0, count: 10 },
-    hearts:  { color: 0xFF7AA2, size: 0.24, life: 1.0, vy: 0.8, spread: 0.6, count: 12 },
-    leaves:  { color: 0x6FB35A, size: 0.20, life: 1.2, vy: 0.5, spread: 1.2, count: 10 },
-    sparkle: { color: 0xFFF176, size: 0.20, life: 0.9, vy: 1.0, spread: 0.9, count: 10 },
-    rune:    { color: 0x8EC5FF, size: 0.22, life: 1.0, vy: 0.7, spread: 0.7, count: 8 },
-    feather: { color: 0xFFFFFF, size: 0.18, life: 1.1, vy: 0.4, spread: 0.8, count: 6 },
-    bloom:   { color: 0xFFD23F, size: 0.26, life: 1.4, vy: 0.6, spread: 1.4, count: 16 },
-    puff:    { color: 0xC06C84, size: 0.24, life: 0.8, vy: 0.5, spread: 1.0, count: 8 }
+    dust:    { color: 0xD2B48C, size: 0.22, life: 0.7, vy: 0.6, spread: 0.8, count: 8, additive: false },
+    spark:   { color: 0xFFD23F, size: 0.18, life: 0.5, vy: 1.2, spread: 1.0, count: 10, additive: true },
+    hearts:  { color: 0xFF7AA2, size: 0.24, life: 1.0, vy: 0.8, spread: 0.6, count: 12, additive: false },
+    leaves:  { color: 0x6FB35A, size: 0.20, life: 1.2, vy: 0.5, spread: 1.2, count: 10, additive: false },
+    sparkle: { color: 0xFFF176, size: 0.20, life: 0.9, vy: 1.0, spread: 0.9, count: 10, additive: true },
+    rune:    { color: 0x8EC5FF, size: 0.22, life: 1.0, vy: 0.7, spread: 0.7, count: 8, additive: true },
+    feather: { color: 0xFFFFFF, size: 0.18, life: 1.1, vy: 0.4, spread: 0.8, count: 6, additive: false },
+    bloom:   { color: 0xFFD23F, size: 0.26, life: 1.4, vy: 0.6, spread: 1.4, count: 16, additive: true },
+    puff:    { color: 0xC06C84, size: 0.24, life: 0.8, vy: 0.5, spread: 1.0, count: 8, additive: false }
   };
 
   A.makeAtlas = function (THREE) {

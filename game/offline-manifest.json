@@ -1988,8 +1988,8 @@
     "size": 4776
   },
   "games/little_adventure-fx.js": {
-    "sha256": "d0decefc2bc0db3f1a9ded6dac5f1ff38f44dbd765a4add52c3ec96af618919c",
-    "size": 4143
+    "sha256": "5c646e53f22838aea25838bd4b32a77ae9c7a331871f37f321235ecfa4c7c1ec",
+    "size": 4292
   },
   "games/little_adventure-logic.js": {
     "sha256": "6716fac5a8db639a0afc152b1c48fdb5ac28d7b0725b4b52ef677f9d04413ebc",
@@ -2008,8 +2008,8 @@
     "size": 3068
   },
   "games/little_adventure.mjs": {
-    "sha256": "8546c4769455379cd8e36735da59210a4cdfa0d95f305fcff2ce26789bfe7433",
-    "size": 72481
+    "sha256": "93054656bc9c01e4c331f943cd2c211e62afb3a9fe8eb3d222c730a3910f50b8",
+    "size": 73380
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",

@@ -218,19 +218,29 @@ window.startlittle_adventure = function startlittle_adventure() {
       camera.lookAt(0, 0.8, 0);
     }
 
-    // Particle pool
+    // Particle pools (Q-14: normal + additive, total cap = partCount)
     const partCount = cfg.budget.particleCap;
-    const partGeo = new THREE.BufferGeometry();
-    const partPos = new Float32Array(partCount * 3);
-    const partCol = new Float32Array(partCount * 3);
-    partGeo.setAttribute('position', new THREE.BufferAttribute(partPos, 3));
-    partGeo.setAttribute('color', new THREE.BufferAttribute(partCol, 3));
     const partAtlas = (window.little_adventureFx && window.little_adventureFx.makeAtlas) ? window.little_adventureFx.makeAtlas(THREE) : null;
-    const partMat = new THREE.PointsMaterial({ size: 0.28, map: partAtlas || undefined, vertexColors: true, transparent: true, opacity: 0.95, depthWrite: false, sizeAttenuation: true, alphaTest: 0.02 });
-    const partPoints = new THREE.Points(partGeo, partMat);
-    scene.add(partPoints);
+    function makePartPool(additive) {
+      const geo = new THREE.BufferGeometry();
+      const pos = new Float32Array(partCount * 3);
+      const col = new Float32Array(partCount * 3);
+      for (let i = 0; i < partCount; i++) pos[i * 3 + 1] = -1000;
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+      const mat = new THREE.PointsMaterial({
+        size: additive ? 0.34 : 0.28, map: partAtlas || undefined, vertexColors: true, transparent: true,
+        opacity: additive ? 0.75 : 0.95, depthWrite: false, sizeAttenuation: true, alphaTest: additive ? 0.01 : 0.02,
+        blending: additive ? THREE.AdditiveBlending : THREE.NormalBlending
+      });
+      const pts = new THREE.Points(geo, mat);
+      scene.add(pts);
+      return { geo, pos, col, mat, pts };
+    }
+    const partN = makePartPool(false);
+    const partA = makePartPool(true);
     const particles = [];
-    for (let i = 0; i < partCount; i++) particles.push({ alive: false, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, life: 0, color: 0xFFD23F });
+    for (let i = 0; i < partCount; i++) particles.push({ alive: false, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, life: 0, color: 0xFFD23F, additive: false });
 
     // Beacon + arrow (Q-20 readability)
     const beacon = new THREE.Group();
@@ -860,7 +870,7 @@ window.startlittle_adventure = function startlittle_adventure() {
               p.alive = true; p.x = px; p.y = 0.5; p.z = pz;
               const sp = pCfg.spread || 1;
               p.vx = (Math.random() - 0.5) * 4 * sp; p.vy = (pCfg.vy || 1.5) * (0.7 + Math.random() * 0.6); p.vz = (Math.random() - 0.5) * 4 * sp;
-              p.life = (pCfg.life || 0.8) * 1000; p.color = pCfg.color || 0xFFD23F;
+              p.life = (pCfg.life || 0.8) * 1000; p.color = pCfg.color || 0xFFD23F; p.additive = !!pCfg.additive;
               n++;
             }
           }
@@ -885,7 +895,7 @@ window.startlittle_adventure = function startlittle_adventure() {
               const r = 2 + Math.random() * 3;
               p.x = s.hero.x + Math.cos(a) * r; p.y = 1 + Math.random() * 2; p.z = s.hero.z + Math.sin(a) * r;
               p.vx = Math.cos(a) * 0.8; p.vy = 1.5 + Math.random() * 1.2; p.vz = Math.sin(a) * 0.8;
-              p.life = 1400 + Math.random() * 600; p.color = colors[bn % colors.length];
+              p.life = 1400 + Math.random() * 600; p.color = colors[bn % colors.length]; p.additive = true;
               bn++;
             }
           }
@@ -936,6 +946,7 @@ window.startlittle_adventure = function startlittle_adventure() {
             p.z = s.hero.z + (Math.random() - 0.5) * 10;
             p.vx = (Math.random() - 0.5) * 0.4; p.vy = 0.15 + Math.random() * 0.25; p.vz = (Math.random() - 0.5) * 0.4;
             p.life = 1800 + Math.random() * 1200; p.color = ambColor;
+            p.additive = zoneIdx >= 1; // forest fireflies / cave runes
             break;
           }
         }
@@ -1015,18 +1026,24 @@ window.startlittle_adventure = function startlittle_adventure() {
         p.life -= frameMs;
         if (p.life <= 0) p.alive = false;
       }
-      let pi = 0;
+      let piN = 0, piA = 0;
       for (const p of particles) {
-        if (p.alive && pi < partCount) {
-          partPos[pi*3] = p.x; partPos[pi*3+1] = p.y; partPos[pi*3+2] = p.z;
+        if (!p.alive) continue;
+        const pool = p.additive ? partA : partN;
+        const pi = p.additive ? piA : piN;
+        if (pi < partCount) {
+          pool.pos[pi*3] = p.x; pool.pos[pi*3+1] = p.y; pool.pos[pi*3+2] = p.z;
           const c = new THREE.Color(p.color);
-          partCol[pi*3] = c.r; partCol[pi*3+1] = c.g; partCol[pi*3+2] = c.b;
-          pi++;
+          pool.col[pi*3] = c.r; pool.col[pi*3+1] = c.g; pool.col[pi*3+2] = c.b;
+          if (p.additive) piA++; else piN++;
         }
       }
-      for (let i = pi; i < partCount; i++) { partPos[i*3+1] = -1000; }
-      partGeo.attributes.position.needsUpdate = true;
-      partGeo.attributes.color.needsUpdate = true;
+      for (let i = piN; i < partCount; i++) { partN.pos[i*3+1] = -1000; }
+      for (let i = piA; i < partCount; i++) { partA.pos[i*3+1] = -1000; }
+      partN.geo.attributes.position.needsUpdate = true;
+      partN.geo.attributes.color.needsUpdate = true;
+      partA.geo.attributes.position.needsUpdate = true;
+      partA.geo.attributes.color.needsUpdate = true;
 
       if (heroMesh) {
         heroMesh.position.set(s.hero.x, hAt(s.hero.x, s.hero.z), s.hero.z);
@@ -1039,7 +1056,7 @@ window.startlittle_adventure = function startlittle_adventure() {
             let dn = 0;
             for (const p of particles) {
               if (dn >= 2) break;
-              if (!p.alive) { p.alive = true; p.x = s.hero.x + (Math.random()-0.5)*0.3; p.y = hAt(s.hero.x, s.hero.z)+0.05; p.z = s.hero.z + (Math.random()-0.5)*0.3; p.vx = (Math.random()-0.5)*0.4; p.vy = 0.3+Math.random()*0.3; p.vz = (Math.random()-0.5)*0.4; p.life = 450; p.color = 0xD2B48C; dn++; }
+              if (!p.alive) { p.alive = true; p.x = s.hero.x + (Math.random()-0.5)*0.3; p.y = hAt(s.hero.x, s.hero.z)+0.05; p.z = s.hero.z + (Math.random()-0.5)*0.3; p.vx = (Math.random()-0.5)*0.4; p.vy = 0.3+Math.random()*0.3; p.vz = (Math.random()-0.5)*0.4; p.life = 450; p.color = 0xD2B48C; p.additive = false; dn++; }
             }
           }
         } else { footstepAcc = 0; }
