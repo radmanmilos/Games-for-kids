@@ -34,7 +34,7 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00â
 | Q-17 | 3 | UI/UX art pass + start screen (QG5) | Q-11, Q-16 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | Start overlay transparent/live 3D orbit, Continue/New SVG+text, sound icon swap, pause overlay polish, animated landscape hint, first-launch drag hint (5s/localStorage). S7/S8/S9 shell checks added to smoke. START/PLAY screenshots captured. Missing: full QG5 tablet review. |
 | Q-18 | 4 | Quality tiers + performance | Q-07, Q-08, Q-14 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | TIERS table, adaptive step-down, quality()/fxTable(), perf overlay counters/memory/programs, scene dispose on back. Smoke: Q-18 5 reload-cycle leak proxy stable. Remaining: full tier switching, tablet measurement. |
 | Q-19 | 4 | Shadows | Q-18 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | Dir shadow map 1024 PCFSoft, bias tuned, hero/actor cast by tier, ground receiveShadow, blob shadows hidden on med/high. Tablet perf/acne visual USER-RUN pending. |
-| Q-20 | 4 | Readability, guidance restyle, feel tuning | Q-17 | yes | NEW | | | |
+| Q-20 | 4 | Readability, guidance restyle, feel tuning | Q-17 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | Beacon as soft god-ray+sparkles, objective arrow as ground chevrons, aim-assist ring on nearest grumpy, gate/pedestal emissive glow when relevant item carried. Remaining: config feel tuning log, full readability/tablet review USER-RUN. |
 | Q-21 | 4 | Completion celebration + free-play life | Q-13, Q-14, Q-16 | yes | NEW | | | |
 | Q-22 | 4 | Full verification + golden shots (QG6) | Q-17â€¦Q-21 | | NEW | | | |
 | Q-23 | 4 | Docs + release prep | Q-22 + QG6 | | NEW | | | |
@@ -82,3 +82,4 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00â
 - 2026-11-26 - OpenCode/Big Pickle - Q-17: added animated landscape hint, pause overlay polish, first-launch drag hint (5s/localStorage), sound icon swap; START/PLAY screenshots refreshed; smokes green.
 - 2026-11-26 - OpenCode/Big Pickle - Q-02: added W4 zone-centre budgets, W5 gate/chest/pedestal logic+mesh checks, W9 4s speech guard; fixed gate openT=0 mesh render; hook exposes shouldSpeak/meshState; LA smoke 34 checks green.
 - 2026-11-26 - OpenCode/Big Pickle - Q-07: shader-patched water (waves/foam/tint, paused-frozen, reduced-motion slowed); Q-17: added S7/S8/S9 shell smoke checks.
+- 2026-11-26 - OpenCode/Big Pickle - Q-20: beacon god-ray+sparkles, ground chevron arrow, aim-assist ring, gate/pedestal carried-item emissive glow.

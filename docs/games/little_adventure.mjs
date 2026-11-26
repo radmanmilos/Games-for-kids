@@ -232,11 +232,25 @@ window.startlittle_adventure = function startlittle_adventure() {
     const particles = [];
     for (let i = 0; i < partCount; i++) particles.push({ alive: false, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, life: 0, color: 0xFFD23F });
 
-    // Beacon + arrow
-    const beacon = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 8, 8), new THREE.MeshBasicMaterial({ color: 0xFFD23F, transparent: true, opacity: 0.25 }));
+    // Beacon + arrow (Q-20 readability)
+    const beacon = new THREE.Group();
+    const beaconRay = new THREE.Mesh(new THREE.ConeGeometry(1.2, 7, 16, 1, true), new THREE.MeshBasicMaterial({ color: 0xFFE89A, transparent: true, opacity: 0.12, side: THREE.DoubleSide, depthWrite: false }));
+    beaconRay.position.y = 3.5;
+    const beaconBase = new THREE.Mesh(new THREE.RingGeometry(0.35, 0.7, 24), new THREE.MeshBasicMaterial({ color: 0xFFD23F, transparent: true, opacity: 0.5, side: THREE.DoubleSide, depthWrite: false }));
+    beaconBase.rotation.x = -Math.PI / 2;
+    beaconBase.position.y = 0.05;
+    beacon.add(beaconRay); beacon.add(beaconBase);
     scene.add(beacon);
-    const arrow = new THREE.Mesh(new THREE.ConeGeometry(0.25, 0.6, 6), new THREE.MeshBasicMaterial({ color: 0xFFD23F }));
+    const arrow = new THREE.Group();
+    for (let i = 0; i < 3; i++) {
+      const ch = new THREE.Mesh(new THREE.RingGeometry(0.18, 0.28, 3, 1, Math.PI * 0.75, Math.PI * 0.5), new THREE.MeshBasicMaterial({ color: 0xFFD23F, transparent: true, opacity: 0.85 - i * 0.2, side: THREE.DoubleSide, depthWrite: false }));
+      ch.rotation.x = -Math.PI / 2;
+      ch.position.z = -i * 0.32;
+      arrow.add(ch);
+    }
     scene.add(arrow);
+    const aimRing = new THREE.Mesh(new THREE.RingGeometry(0.75, 0.92, 32), new THREE.MeshBasicMaterial({ color: 0xFF6B6B, transparent: true, opacity: 0.0, side: THREE.DoubleSide, depthWrite: false }));
+    aimRing.rotation.x = -Math.PI / 2; aimRing.position.y = 0.04; scene.add(aimRing);
     let lastProgressT = 0;
     let ambientAcc = 0;
 
@@ -822,23 +836,40 @@ window.startlittle_adventure = function startlittle_adventure() {
         }
       }
 
-      // beacon + arrow
+      // beacon + arrow (Q-20 readability)
       const obj = game.nextObjective();
       if (obj) {
         beacon.visible = true;
-        beacon.position.set(obj.x, 4, obj.z);
-        beacon.scale.y = 1 + 0.1 * Math.sin(s.t * 0.005);
+        beacon.position.set(obj.x, 0, obj.z);
+        beaconRay.material.opacity = 0.10 + 0.04 * Math.sin(s.t * 0.003);
+        beaconBase.scale.setScalar(1 + 0.12 * Math.sin(s.t * 0.004));
+        if (Math.random() < (reducedMotion ? 0.01 : 0.04)) {
+          particles.push({ x: obj.x + (Math.random()-0.5)*0.6, y: 0.2, z: obj.z + (Math.random()-0.5)*0.6, vx: (Math.random()-0.5)*0.3, vy: 0.6 + Math.random()*0.5, vz: (Math.random()-0.5)*0.3, life: 1200, color: 0xFFE89A, size: 0.08 });
+        }
       } else {
         beacon.visible = false;
       }
-      if (s.t - lastProgressT > 6000) {
+      if (obj && s.t - lastProgressT > 6000) {
         arrow.visible = true;
-        const ang = s.t * 0.003;
-        arrow.position.set(s.hero.x + Math.cos(ang) * 1.4, 1.2, s.hero.z + Math.sin(ang) * 1.4);
-        arrow.rotation.y = -ang + Math.PI / 2;
+        const dx = obj.x - s.hero.x, dz = obj.z - s.hero.z;
+        const len = Math.hypot(dx, dz) || 1;
+        const ux = dx / len, uz = dz / len;
+        const baseD = Math.min(2.2, Math.max(1.2, len * 0.25));
+        arrow.position.set(s.hero.x + ux * baseD, 0.03, s.hero.z + uz * baseD);
+        arrow.rotation.y = Math.atan2(ux, uz);
+        arrow.children.forEach((ch, i) => { ch.material.opacity = 0.85 - i * 0.2 + 0.1 * Math.sin(s.t * 0.008 - i * 0.6); });
       } else {
         arrow.visible = false;
       }
+      // Q-20 aim-assist target ring
+      let aimTarget = null, aimDist = 1e9;
+      (s.grumpies || []).forEach((g) => {
+        if (g.state === 'happy' || (g.respawnTimer && g.respawnTimer > 0)) return;
+        const d = Math.hypot(g.x - s.hero.x, g.z - s.hero.z);
+        if (d < 3.2 && d < aimDist) { aimDist = d; aimTarget = g; }
+      });
+      if (aimTarget) { aimRing.visible = true; aimRing.position.set(aimTarget.x, 0.04, aimTarget.z); aimRing.material.opacity = 0.35 + 0.15 * Math.sin(s.t * 0.01); }
+      else { aimRing.visible = false; aimRing.material.opacity = 0; }
 
       // particles update
       const dtSec = frameMs / 1000;
@@ -915,6 +946,9 @@ window.startlittle_adventure = function startlittle_adventure() {
         const openT = s.gates[id].openT || 0;
         const openAmt = s.gates[id].open ? (openT > 0 ? Math.min(openT / 500, 1) : 1) : 0;
         m.position.y = -openAmt * 1.2;
+        const gDef = (cfg.gates || []).find(g => g.id === id);
+        const nearKey = gDef && !s.gates[id].open && (s.carry || []).indexOf(gDef.needs) !== -1 && Math.hypot(s.hero.x - gDef.pos[0], s.hero.z - gDef.pos[1]) < 6;
+        m.traverse(o => { if (o.isMesh && o.material && 'emissive' in o.material) { if (!o.userData.ownMat) { o.material = o.material.clone(); o.userData.ownMat = true; } o.material.emissive.setHex(nearKey ? 0x664400 : 0x000000); } });
       }
 
       // bushes
@@ -936,6 +970,9 @@ window.startlittle_adventure = function startlittle_adventure() {
           p.ring.material = p.ring.material || p.ring.material;
           p.ring.scale.setScalar(lit ? 1.15 : 1);
         }
+        const gemId = 'gem' + id.charAt(0).toUpperCase() + id.slice(1);
+        const nearGem = !lit && (s.carry || []).indexOf(gemId) !== -1;
+        p.mesh.traverse(o => { if (o.isMesh && o.material && 'emissive' in o.material) { if (!o.userData.ownMat) { o.material = o.material.clone(); o.userData.ownMat = true; } o.material.emissive.setHex(nearGem ? 0x333300 : 0x000000); } });
       }
 
       // acorns
