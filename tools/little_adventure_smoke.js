@@ -245,6 +245,23 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   const q18ok = q18last.tex <= q18base.tex + 5 && q18last.geo <= q18base.geo + 10 && q18last.prog <= q18base.prog + 2;
   check('Q-18: no leak after 5 open/close cycles (reload proxy)', q18ok, `base=${JSON.stringify(q18base)} last=${JSON.stringify(q18last)}`);
 
+  // Q-17 shell audit: aria-labels Cyrillic, no visible digits, controls hit-testable
+  const q17shell = JSON.parse(await h.evalv(`JSON.stringify((function(){
+    var ids=['i3d-back','i3d-btn-new','i3d-btn-continue','i3d-sound-btn','i3d-btn-sword','i3d-btn-shield'];
+    var ariaOk=true, missing=[];
+    ids.forEach(function(id){ var el=document.getElementById(id); if(!el){missing.push(id); return;} var a=el.getAttribute('aria-label')||''; if(!/[А-Яа-яЉЊЂЋЏђљњћџ]/.test(a)) {ariaOk=false; missing.push(id+':'+a);} });
+    var textIds=['i3d-btn-new','i3d-btn-continue','i3d-pause','i3d-drag-hint','i3d-landscape-hint','i3d-no-webgl'];
+    var digits=[];
+    textIds.forEach(function(id){ var el=document.getElementById(id); if(!el) return; var t=(el.textContent||'').trim(); if(/[0-9]/.test(t)) digits.push(id+':'+t); });
+    var swing=document.getElementById('i3d-btn-sword'); var shield=document.getElementById('i3d-btn-shield');
+    var sr=swing?swing.getBoundingClientRect():null; var shr=shield?shield.getBoundingClientRect():null;
+    var hitOk = !!(sr && shr && sr.width>=56 && sr.height>=56 && shr.width>=56 && shr.height>=56);
+    return {ariaOk:ariaOk, missing:missing, digits:digits, hitOk:hitOk, sw:sr?sr.width:0, sh:shr?shr.width:0};
+  })())`));
+  check('Q-17 S9: control aria-labels are Cyrillic', q17shell.ariaOk === true, JSON.stringify(q17shell.missing));
+  check('Q-17 S8: no visible digits in key UI text', q17shell.digits.length === 0, JSON.stringify(q17shell.digits));
+  check('Q-17 S7: sword/shield hit-testable >=56px', q17shell.hitOk === true, `sw=${q17shell.sw} sh=${q17shell.sh}`);
+
   // W8: reduced-motion response (motionScale) via bootEmulated
   let w8ok = false, w8detail = 'not-run';
   try {

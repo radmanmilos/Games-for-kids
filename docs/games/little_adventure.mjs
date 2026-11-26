@@ -166,13 +166,25 @@ window.startlittle_adventure = function startlittle_adventure() {
     clouds.instanceMatrix.needsUpdate = true;
     scene.add(clouds);
 
-    const water = new THREE.Mesh(
-      new THREE.PlaneGeometry(96, 160),
-      new THREE.MeshLambertMaterial({ color: 0x6EC6E8, transparent: true, opacity: 0.55, flatShading: true })
-    );
+    const waterUniforms = { uTime: { value: 0 } };
+    const waterMat = new THREE.MeshLambertMaterial({ color: 0x6EC6E8, transparent: true, opacity: 0.62, flatShading: true });
+    waterMat.onBeforeCompile = (shader) => {
+      shader.uniforms.uTime = waterUniforms.uTime;
+      shader.vertexShader = 'uniform float uTime;\nvarying vec2 vWUv;\n' + shader.vertexShader.replace(
+        '#include <begin_vertex>',
+        '#include <begin_vertex>\nvec4 wp = modelMatrix * vec4(transformed, 1.0);\nvWUv = wp.xz;\nfloat w1 = sin(wp.x * 0.18 + uTime * 0.9) * 0.08;\nfloat w2 = sin(wp.z * 0.22 + uTime * 1.1) * 0.06;\ntransformed.y += w1 + w2;'
+      );
+      shader.fragmentShader = 'uniform float uTime;\nvarying vec2 vWUv;\n' + shader.fragmentShader.replace(
+        '#include <dithering_fragment>',
+        'float dx = max(abs(vWUv.x) - 22.0, 0.0);\nfloat dz = max(max(vWUv.y - 14.0, -78.0 - vWUv.y), 0.0);\nfloat shore = sqrt(dx*dx + dz*dz);\nfloat foam = smoothstep(5.5, 1.2, shore) * (0.5 + 0.5*sin(vWUv.x*0.7 + vWUv.y*0.6 + uTime*1.6));\ngl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.95, 0.98, 1.0), foam * 0.35);\ngl_FragColor.rgb += vec3(0.05,0.08,0.10) * (0.5 + 0.5*sin(vWUv.x*0.35 + uTime*0.5));\n#include <dithering_fragment>'
+      );
+    };
+    waterMat.customProgramCacheKey = () => 'la-water';
+    const water = new THREE.Mesh(new THREE.PlaneGeometry(96, 160, 48, 80), waterMat);
     water.rotation.x = -Math.PI / 2;
     water.position.y = -0.05;
     water.position.z = -32;
+    water.userData.uniforms = waterUniforms;
     scene.add(water);
 
     const galleryRoot = new THREE.Group();
@@ -1011,7 +1023,8 @@ window.startlittle_adventure = function startlittle_adventure() {
           dir.target.updateMatrixWorld();
         }
       }
-      water.position.y = -0.05 + Math.sin(performance.now() * 0.002) * 0.05;
+      if (!paused) waterUniforms.uTime.value += (frameMs / 1000) * (reducedMotion ? 0.25 : 1);
+      water.position.y = -0.05;
 const offc = cfg.camera.offset;
       const b = cfg.bounds;
       const la = reducedMotion ? 0 : 0.35;
