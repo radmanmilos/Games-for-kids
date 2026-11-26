@@ -2004,12 +2004,12 @@
     "size": 11938
   },
   "games/little_adventure-terrain.js": {
-    "sha256": "51fbd817ce7c7520f4d17c358c87aeaa742e8aaace1888e6e1ecd3acc4d39c9b",
-    "size": 2903
+    "sha256": "8e10e450549abf008b274fca88c1671806121e0b5c858e965c5e329d0afafaba",
+    "size": 3068
   },
   "games/little_adventure.mjs": {
-    "sha256": "2370e2c5673b654c90c8cd0a3ebbb7b377b805d00720b037ee718b84f3a98c4c",
-    "size": 43900
+    "sha256": "a46e26a50eda0365d0bad8551eb66e38d47d54707e7945589a24dc2edc1cca6b",
+    "size": 44442
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",

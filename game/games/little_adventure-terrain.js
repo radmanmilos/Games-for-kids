@@ -24,15 +24,19 @@
     }
     function maskAt(x, z) { return Math.max(0, Math.min(1, landMask(x, z))); }
 
+    function hash2(x, z) {
+      const n = Math.sin(x * 127.1 + z * 311.7 + seed * 0.01) * 43758.5453;
+      return n - Math.floor(n);
+    }
     function heightAt(x, z) {
       // flat corridor inside bounds shrunk by 2u (|h| <= 0.12); hills outside; below water at coast
       const inside = (x >= bounds.xMin + 2 && x <= bounds.xMax - 2 && z >= bounds.zMin + 2 && z <= bounds.zMax - 2);
-      if (inside) return (rng() - 0.5) * 0.05; // tiny noise, |h|<=0.12
+      if (inside) return (hash2(x, z) - 0.5) * 0.05; // tiny noise, |h|<=0.12
       const m = maskAt(x, z);
       if (m <= 0) return -1.5; // water
       // hills outside bounds
       const dist = Math.max(Math.abs(x - cx) / hw, Math.abs(z - cz) / hd);
-      const hill = Math.max(0, (dist - 0.85) * 3) * (0.5 + rng() * 0.5);
+      const hill = Math.max(0, (dist - 0.85) * 3) * (0.5 + hash2(x + 7.3, z - 3.1) * 0.5);
       return Math.min(3, hill) * m - (1 - m) * 0.5;
     }
 

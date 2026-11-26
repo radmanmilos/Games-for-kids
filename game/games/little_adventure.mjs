@@ -84,6 +84,9 @@ window.startlittle_adventure = function startlittle_adventure() {
 
     const mats = (window.little_adventureMaterials && window.little_adventureMaterials.create)
       ? window.little_adventureMaterials.create(THREE) : null;
+    const terrain = (window.little_adventureTerrain && window.little_adventureTerrain.generate)
+      ? window.little_adventureTerrain.generate(cfg, 12345) : null;
+    const hAt = (x, z) => terrain ? terrain.heightAt(x, z) : 0;
     const models = modelsFactory.create(THREE);
 
     // Ground with vertex colours by zone
@@ -353,24 +356,24 @@ window.startlittle_adventure = function startlittle_adventure() {
       // Static structures + actor refs
       (cfg.gates || []).forEach((g) => {
         const m = models.makeGate();
-        m.position.set(g.pos[0], 0, g.pos[1]);
+        m.position.set(g.pos[0], hAt(g.pos[0], g.pos[1]), g.pos[1]);
         scene.add(m);
         gateMeshes[g.id] = m;
       });
       const owlCfg = (cfg.npcs || [])[0];
       if (owlCfg) {
         owlMesh = models.makeOwl();
-        owlMesh.position.set(owlCfg.pos[0], 0, owlCfg.pos[1]);
+        owlMesh.position.set(owlCfg.pos[0], hAt(owlCfg.pos[0], owlCfg.pos[1]), owlCfg.pos[1]);
         scene.add(owlMesh);
       }
       (cfg.statues || []).forEach((s) => {
         statueMesh = models.makeStatue();
-        statueMesh.position.set(s.pos[0], 0, s.pos[1]);
+        statueMesh.position.set(s.pos[0], hAt(s.pos[0], s.pos[1]), s.pos[1]);
         scene.add(statueMesh);
       });
       (cfg.chests || []).forEach((c) => {
         const m = models.makeChest();
-        m.position.set(c.pos[0], 0, c.pos[1]);
+        m.position.set(c.pos[0], hAt(c.pos[0], c.pos[1]), c.pos[1]);
         scene.add(m);
         let lid = null;
         m.traverse((o) => { if (o.name === 'lid') lid = o; });
@@ -378,7 +381,7 @@ window.startlittle_adventure = function startlittle_adventure() {
       });
       (cfg.pedestals || []).forEach((p) => {
         const m = models.makePedestal(p.id);
-        m.position.set(p.pos[0], 0, p.pos[1]);
+        m.position.set(p.pos[0], hAt(p.pos[0], p.pos[1]), p.pos[1]);
         scene.add(m);
         let ring = null;
         m.traverse((o) => { if (o.isMesh && o.geometry && o.geometry.type === 'TorusGeometry') ring = o; });
@@ -386,13 +389,13 @@ window.startlittle_adventure = function startlittle_adventure() {
       });
       if (cfg.lighthouse) {
         lighthouseMesh = models.makeLighthouse();
-        lighthouseMesh.position.set(cfg.lighthouse.pos[0], 0, cfg.lighthouse.pos[1]);
+        lighthouseMesh.position.set(cfg.lighthouse.pos[0], hAt(cfg.lighthouse.pos[0], cfg.lighthouse.pos[1]), cfg.lighthouse.pos[1]);
         scene.add(lighthouseMesh);
         lighthouseLight = lighthouseMesh.children[lighthouseMesh.children.length - 1];
       }
       (cfg.bushes || []).forEach((b) => {
         const m = models.makeBush();
-        m.position.set(b.pos[0], 0, b.pos[1]);
+        m.position.set(b.pos[0], hAt(b.pos[0], b.pos[1]), b.pos[1]);
         scene.add(m);
         bushMeshes[b.id] = m;
       });
@@ -413,7 +416,7 @@ window.startlittle_adventure = function startlittle_adventure() {
       // Grumpies
       (cfg.grumpies || []).forEach((g) => {
         const m = models.makeGrumpy(g.role);
-        m.position.set(g.home[0], 0, g.home[1]);
+        m.position.set(g.home[0], hAt(g.home[0], g.home[1]), g.home[1]);
         scene.add(m);
         grumpyMeshes[g.id] = m;
         addBlobShadow(m);
@@ -745,7 +748,7 @@ window.startlittle_adventure = function startlittle_adventure() {
       partGeo.attributes.color.needsUpdate = true;
 
       if (heroMesh) {
-        heroMesh.position.set(s.hero.x, 0, s.hero.z);
+        heroMesh.position.set(s.hero.x, hAt(s.hero.x, s.hero.z), s.hero.z);
         heroMesh.rotation.y = -s.hero.facing + Math.PI / 2;
       }
 
@@ -753,7 +756,7 @@ window.startlittle_adventure = function startlittle_adventure() {
       s.grumpies.forEach((g) => {
         const m = grumpyMeshes[g.id];
         if (!m) return;
-        m.position.set(g.x, 0, g.z);
+        m.position.set(g.x, hAt(g.x, g.z), g.z);
         const happy = g.state === 'happy';
         if (m.children.length && m.children[0].isMesh && m.children[0].material && m.children[0].material.color) {
           m.children[0].material.color.setHex(happy ? 0xFFD86B : 0xC06C84);
@@ -771,13 +774,13 @@ window.startlittle_adventure = function startlittle_adventure() {
         if (!m) continue;
         if (it.state === 'world') {
           m.visible = true;
-          m.position.set(it.x, 0.8 + Math.sin(s.t * 0.003 + id.charCodeAt(0)) * 0.15, it.z);
+          m.position.set(it.x, hAt(it.x, it.z) + 0.8 + Math.sin(s.t * 0.003 + id.charCodeAt(0)) * 0.15, it.z);
           m.rotation.y += 0.02;
         } else if (it.state === 'carried') {
           m.visible = true;
           const idx = s.carry.indexOf(id);
           const ang = (idx / Math.max(1, s.carry.length)) * Math.PI - Math.PI / 2;
-          m.position.set(s.hero.x + Math.cos(ang) * 1.2, 0.9, s.hero.z + Math.sin(ang) * 1.2);
+          m.position.set(s.hero.x + Math.cos(ang) * 1.2, hAt(s.hero.x, s.hero.z) + 0.9, s.hero.z + Math.sin(ang) * 1.2);
         } else {
           m.visible = false;
         }
@@ -900,7 +903,7 @@ window.startlittle_adventure = function startlittle_adventure() {
         const s = game.state();
         if (s && s.hero) {
           dir.shadow.camera.position.set(s.hero.x, 10, s.hero.z);
-          dir.target.position.set(s.hero.x, 0, s.hero.z);
+          dir.target.position.set(s.hero.x, hAt(s.hero.x, s.hero.z), s.hero.z);
           dir.target.updateMatrixWorld();
         }
       }
