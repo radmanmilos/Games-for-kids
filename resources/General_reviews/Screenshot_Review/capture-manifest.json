@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "3afbbf645526e3f278bd4dbff10be3e484bd9379",
+  "commitSha": "8de097df59c46af8ff71049a0a1eb0c38d9af9e7",
   "browser": {
     "product": "Chrome/158.0.8127.36",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-26T11:36:33.819Z",
+  "generatedAt": "2026-11-26T15:54:38.133Z",
   "pageSet": [
     "little_adventure"
   ],
@@ -46,7 +46,7 @@
       "state": null,
       "width": 390,
       "height": 844,
-      "bytes": 133169
+      "bytes": 127224
     },
     {
       "file": "little_adventure_phone-landscape.png",
@@ -55,7 +55,7 @@
       "state": null,
       "width": 844,
       "height": 390,
-      "bytes": 150898
+      "bytes": 145350
     },
     {
       "file": "little_adventure_tablet-portrait.png",
@@ -64,7 +64,7 @@
       "state": null,
       "width": 820,
       "height": 1180,
-      "bytes": 135490
+      "bytes": 132690
     },
     {
       "file": "little_adventure_tablet-landscape.png",
@@ -73,7 +73,7 @@
       "state": null,
       "width": 1180,
       "height": 820,
-      "bytes": 280517
+      "bytes": 268909
     }
   ]
 }

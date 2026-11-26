@@ -1976,12 +1976,12 @@
     "size": 10654
   },
   "games/little_adventure-audio.js": {
-    "sha256": "a2faa770c20489a40f81e910b6e6c4058b3c67a824947fd58e65d5963785e0df",
-    "size": 3660
+    "sha256": "eb9f4a4b0820ae187fa5fb1338b4e0013e163089c4726a8ab53908214876ef23",
+    "size": 4043
   },
   "games/little_adventure-characters.js": {
-    "sha256": "93b75baf72f12f98947bd18959913c4b5bc85f8301d339f366a59664e875d7f8",
-    "size": 21499
+    "sha256": "e4118ced742a3467bc57e05e7b4b4a2300be0d39e1ed5c8156dab1a8cd4dc950",
+    "size": 21656
   },
   "games/little_adventure-config.js": {
     "sha256": "08b5f9c7d564aec42f18ff539c6f67cfe918f543c9810372dfc759acb6bda622",
@@ -2000,8 +2000,8 @@
     "size": 2799
   },
   "games/little_adventure-models.js": {
-    "sha256": "2b87ba181c379a566fd9b5db01fb934c44d82dbe167908f6371c0089104e1119",
-    "size": 13341
+    "sha256": "cb51fab25614747d5abcf6f365dac230b71c989e50436bdb85e3db94f064b61d",
+    "size": 13679
   },
   "games/little_adventure-terrain.js": {
     "sha256": "8e10e450549abf008b274fca88c1671806121e0b5c858e965c5e329d0afafaba",
@@ -2012,8 +2012,8 @@
     "size": 8435
   },
   "games/little_adventure.mjs": {
-    "sha256": "5a86376e553a711cc7d7b27e283fcd8a91fcb768b93d75658e075030382436b7",
-    "size": 82813
+    "sha256": "25fa8715cfdd45ee09eae61aaf7f0792987c3f113b787e07bfe4b73e0e11c30a",
+    "size": 84822
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
@@ -2128,8 +2128,8 @@
     "size": 14166
   },
   "pages/little_adventure.html": {
-    "sha256": "e9f54ec90e52a3260a6fe96a198cd1a81177a67df928adf97e94e0f71e466b68",
-    "size": 9080
+    "sha256": "c20fc2a459bdecb81d7a11ba18c29d108b4d50baca0f5792b8b90f0af3a372bb",
+    "size": 9771
   },
   "pages/matching_game.html": {
     "sha256": "7a73924813a6c965f45915665cc74ef9db993d377e3fb28d019b9385d3f4f49a",

@@ -162,14 +162,25 @@ The following child-facing glyphs keep their emoji rendering by explicit decisio
 - Scene format: **WebP** (proven decode via tools/check_art.js ffmpeg check). Pilot scene scene-ocean-reef.webp (2048x592) generated and wired.
 - Decor: **separate parallax sprites** (not folded into scene). Engine config decorSprites reserved for later; decor still procedural until sprites land.
 - Control buttons: **unified to paper** (ps-btn--paper) across ocean/dino/space/driving.
-- Spike pits (Explorer): **switch to plain stone/ice spikes** — art swap deferred (needs generation + QA).
+- Spike pits (Explorer): **switch to plain stone/ice spikes** ï¿½ art swap deferred (needs generation + QA).
 - Shared helper extraction from kitty-standalone.js into game/shared/scene-tiles.js: **approved and done** (stemBox, tileStem, drawGoalArt, drawSceneCover). kitty_smoke 52/52 green.
 - Art reorg tasks 438-443: **retired for now** (revisit later).
 
-## little_adventure (2026-11-23) — product rules
+## little_adventure (2026-11-23) ï¿½ product rules
 
-- 3D low-poly adventure `little_adventure` (working title «???? ????????»), ages ~4–6, fixed camera, floating joystick + sword + shield buttons, `toddler:false`.
+- 3D low-poly adventure `little_adventure` (working title ï¿½???? ????????ï¿½), ages ~4ï¿½6, fixed camera, floating joystick + sword + shield buttons, `toddler:false`.
 - Characters/world are code-built three.js primitives; no 2D sprites, no emoji in the scene, no image/audio assets, no new libraries.
-- The hero cannot be hurt; sword hits turn grumpy creatures friendly; keys/gems are puzzle items — no score, counters, coins, timers, health, lives or fail states.
+- The hero cannot be hurt; sword hits turn grumpy creatures friendly; keys/gems are puzzle items ï¿½ no score, counters, coins, timers, health, lives or fail states.
 - Pure logic in `little_adventure-logic.js` (Node-testable); rendering only reads state.
 - Hub tile hidden until the user approves shipping (G4). Plan: `resources/General_reviews/little_adventure/`.
+
+## Little Adventure quality plan (2026-11-26, task 453)
+
+- **QG1 approved** by the user ("A approve", 2026-11-26). QG2â€“QG7 / per-card look gates are **pre-approved as decisions** by the user's 2026-11-26 instruction to continue through all remaining tasks, but a gate decision is NOT the same as a completed visual review: screenshots/artifacts must exist and VL/user look sign-off stays UNVERIFIED until the user actually reviews. Do not self-approve.
+- **Q-14 particles:** two tier-sized fixed pools (normal + additive), total alive cap = `partCount`; event FX never `push()` new particle objects.
+- **Q-16 persistence:** mute uses its own `little_adventureSound` key and drag-hint-seen uses `little_adventureDragHintSeen`, separate from `little_adventureSave`.
+- **Q-17 loading indicator:** start overlay shows Cyrillic "Ð£Ñ‡Ð¸Ñ‚Ð°Ð²Ð°ÑšÐµ..." and is hidden by the renderer once the scene is ready (S10 smoke check).
+- **Q-04 material ceiling deviation (accepted, perf-driven):** card's literal "<=40 material instances" is unreachable with the approved palette (53 cached variants / ~101 unique scene materials). Enforced ceiling is shader programs <=40 (13 measured). Recorded here and in `PROGRESS.md`; no art change.
+- **Deferred (per user / USER-RUN, not automatable):** real-tablet perf, visual, audio-listening, readability, flashing/fps/leak/shadow-acne checks; real-child playtest (Q-24/QG7); full 4-viewport QG6 package review and QG6 user release sign-off; Cat Forest CF-22 real-tablet play-test (task 454).
+- **Q-23 version bump is user-gated:** `game/manifest.json` stays at 3.0.25 until the user explicitly chooses a minor (C) or major (B) bump under the non-semver rule in `AGENTS.md`. Release prep is otherwise complete.
+- **Q-24 backlog policy:** config/data first, then small code; every change logged with its playtest observation; decisions needing a new choice go to `05` Â§3, not into code.

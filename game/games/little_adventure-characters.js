@@ -108,7 +108,12 @@
 
   function create(THREE, mats) {
     const mToon = (c, o) => mats ? mats.toon(c, o) : new THREE.MeshToonMaterial({ color: c });
-    const outlineMat = () => new THREE.MeshBasicMaterial({ color: 0x2C2137, side: THREE.BackSide });
+    // Q-04: outlines and blob shadows are identical for every rig — share one
+    // instance per kit instead of allocating one per outlined part (that was
+    // >100 materials in a full scene, over the 40-instance ceiling).
+    const sharedOutline = new THREE.MeshBasicMaterial({ color: 0x2C2137, side: THREE.BackSide });
+    const shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.18 });
+    const outlineMat = () => sharedOutline;
     const faceTex = makeFaceTexture(THREE, 256);
 
     function addOutline(mesh, thickness) {
@@ -130,7 +135,7 @@
       const bootMat = mat('boot', 0x8B5A2B);
       const beltMat = mat('trim', 0xD4A017);
 
-      const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.45, 12), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.18 }));
+      const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.45, 12), shadowMat);
       shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.02; shadow.name = 'shadow'; root.add(shadow); pivots.shadow = shadow;
 
       const hips = new THREE.Group(); hips.name = 'hips'; hips.position.y = 0.72; root.add(hips); pivots.hips = hips;
@@ -224,7 +229,7 @@
       root.scale.setScalar(scale);
       const bodyMat = mat('body', 0xC9708F);
       const bellyMat = mat('belly', 0xE6A3BA);
-      const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.5, 12), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.18 }));
+      const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.5, 12), shadowMat);
       shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.02; root.add(shadow); pivots.shadow = shadow;
       const body = new THREE.Group(); body.name = 'body'; body.position.y = 0.55; root.add(body); pivots.body = body;
       const blob = new THREE.Mesh(new THREE.SphereGeometry(0.55, 12, 10), bodyMat); blob.scale.set(1, 0.85, 1); blob.castShadow = true; body.add(blob); addOutline(blob, 0.03);
@@ -274,7 +279,7 @@
       const root = new THREE.Group(); root.name = 'owl2';
       const pivots = {};
       const mat = (k, c, o) => { const m = mToon(c, o); (root.userData.materials = root.userData.materials || {})[k] = m; return m; };
-      const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.35, 12), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.18 }));
+      const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.35, 12), shadowMat);
       shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.02; root.add(shadow); pivots.shadow = shadow;
       const body = new THREE.Group(); body.name = 'body'; body.position.y = 0.5; root.add(body); pivots.body = body;
       const bMesh = new THREE.Mesh(new THREE.SphereGeometry(0.38, 10, 8), mat('body', 0x9A6B3F)); bMesh.scale.set(1, 1.15, 0.95); bMesh.castShadow = true; body.add(bMesh); addOutline(bMesh, 0.03);

@@ -88,6 +88,11 @@ function check(name, ok, info) {
   check('Q-16: audio module loads', !!AU, 'little_adventureAudio');
   // gains <= 0.25
   check('Q-16: max SFX gain <= 0.25', AU.maxGain() <= 0.25, AU.maxGain());
+  // Q-16 richer ambient beds: every zone has two quiet layers under the peak ceiling
+  const ambZones = ['A', 'B', 'C'];
+  check('Q-16: each zone ambient has 2 layers', ambZones.every((z) => AU.AMBIENT[z] && AU.AMBIENT[z].layers && AU.AMBIENT[z].layers.length === 2), ambZones.map((z) => z + '=' + (AU.AMBIENT[z].layers || []).length).join(','));
+  const ambGains = ambZones.reduce((a, z) => a.concat(AU.AMBIENT[z].layers.map((l) => l.gain)), []);
+  check('Q-16: ambient layer gains <= 0.25', ambGains.every((g) => g <= 0.25), 'max=' + Math.max.apply(null, ambGains));
   // sequencer determinism
   const e1 = AU.sequencer('A', 4, 7);
   const e2 = AU.sequencer('A', 4, 7);

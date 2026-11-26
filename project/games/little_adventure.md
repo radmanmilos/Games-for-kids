@@ -17,7 +17,7 @@ Every tunable lives in `window.little_adventure_CONFIG` (`game/games/little_adve
 
 ## Test hook (`window.__little_adventure`, TD §8)
 
-`state()` (logic snapshot plus `{frameMs,dpr,drawCalls,triangles,webgl,motionScale}`) · `seed(n)` · `pause()` / `step(ms)` · `setStick(x,y)` · `swing()` · `shield(bool)` · `teleport(x,z)` · `give(itemId)` · `setHits(id,n)` · `reset()` · `forceSlow(bool)` · `photo(name)` (jump to a named deterministic scene, paused) · `sheet(name,frames)` (filmstrip) · `setPose(actor,id,t)` · `quality(tier)` · `fxTable()` · `data {cfg}`. Set only when WebGL booted.
+`state()` (logic snapshot plus `{frameMs,dpr,drawCalls,triangles,textures,geometries,programs,webgl,motionScale,particlesAlive,particleCap,materialCount,kitCacheSize,celebrating}`) · `seed(n)` · `pause()` / `step(ms)` · `setStick(x,y)` · `swing()` · `shield(bool)` · `teleport(x,z)` · `give(itemId)` · `setHits(id,n)` · `reset()` · `forceSlow(bool)` · `photo(name)` (jump to a named deterministic scene, paused) · `sheet(name,frames)` (filmstrip) · `setPose(actor,id,t)` · `quality(tier)` · `fxTable()` · `materialCount()` · `kitCacheSize()` · `data {cfg}`. Set only when WebGL booted. `materialCount()` counts unique material instances in the live scene; `kitCacheSize()` counts all cached variants (including filmstrip-only ones) and is intentionally larger.
 
 ## Determinism recipe
 
@@ -35,16 +35,17 @@ Every animation checks `window.REDUCED_MOTION`; `motionScale` is 0 under reduced
 
 - `hidden` hub tile until IS-19 (G4 approved).
 - Models are primitives only; `?gallery=1` lays them out for review.
-- No shadows (blob shadows only); no shadow maps.
-EOF
+- Dir shadow map (1024, PCFSoft) by tier; blob shadows are used only on low tier.
+
 ## Modules (quality pass)
 
-- little_adventure-anim.js � easings, spring, springChain, envelope, blend, idleNoise, evalHero/evalGrumpy/evalOwl, sheet/filmstrip. Pure, Node-testable.
-- little_adventure-materials.js � toon ramp (3-step DataTexture), shared material cache, outline (inverted hull), vertex-AO helper, wind patch.
-- little_adventure-characters.js � makeHero2, makeGrumpy2, makeOwl2, paintFaceAtlas, applyPose. Rigs expose userData.pivots (named) + userData.materials + userData.rest.
-- little_adventure-terrain.js � generate(cfg, seed) -> heightAt, maskAt, pathAt, vertex data. Pure, Node-testable.
-- little_adventure-fx.js � EVENT_TABLE (16 events), TIERS (low/med/high), particleCapFor, cameraNudge. Pure data + helpers.
-- little_adventure-audio.js � SFX recipes, AMBIENT, SCORE, sequencer (deterministic), maxGain. Pure data + helpers.
+- little_adventure-anim.js � easings, spring, springChain, envelope, blend, idleNoise, evalHero/evalGrumpy/evalOwl, sheet/filmstrip. Pure, Node-testable.
+- little_adventure-materials.js � toon ramp (3-step DataTexture), shared material cache, outline (inverted hull), vertex-AO helper, wind patch.
+- little_adventure-characters.js � makeHero2, makeGrumpy2, makeOwl2, paintFaceAtlas, applyPose. Rigs expose userData.pivots (named) + userData.materials + userData.rest.
+- little_adventure-terrain.js � generate(cfg, seed) -> heightAt, maskAt, pathAt, vertex data. Pure, Node-testable.
+- little_adventure-fx.js � EVENT_TABLE (16 events), TIERS (low/med/high), particleCapFor, cameraNudge. Pure data + helpers.
+- little_adventure-audio.js � SFX recipes, AMBIENT, SCORE, sequencer (deterministic), maxGain. AMBIENT has 2 quiet layers per zone. Pure data + helpers.
+- little_adventure-world.js: seeded zone-aware vegetation/props + landmark A/B/C builder (buildDecor), extracted from the renderer.
 
 ## Rig contract (TDQ S2)
 
@@ -56,5 +57,22 @@ evalHero/evalGrumpy/evalOwl are pure functions of (state, t, opts) returning piv
 
 ## Tiers (TDQ S9)
 
-low/medium/high: DPR cap, draw calls, triangles, particles, shadows, wind, water, ambient. Adaptive step-down only (never up).
+| Tier | DPR cap | Draw calls | Triangles | Particles | Shadows | Water | Ambient |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| low | read `cfg.budget` / `fx.TIERS` | <=154 (measured) | <=59896 (measured) | smallest pool | blob only | `waterFlatMat` (no wave shader) | sparse |
+| med | read `cfg.budget` / `fx.TIERS` | read TIERS | read TIERS | mid pool | dir map off | wave shader | 2 layers |
+| high | read `cfg.budget` / `fx.TIERS` | read TIERS | read TIERS | full pool | 1024 PCFSoft | wave shader | 2 layers |
+
+Adaptive step-down only (never up). Per-zone measured proof: `resources/General_reviews/Little_adventure/Quality_Plan/shots/q08_budget/budget.json`.
+
+## How to add things
+
+- **Animation:** add a pure `evalX` case in `little_adventure-anim.js`, expose it via `filmstrip` pose names, add a Node AC to `tools/little_adventure_quality_smoke.js`, then capture `node tools/little_adventure_shots.js --phase=<card>`.
+- **Zone:** add the `ZONE_ATMOS` entry in `little_adventure.mjs`, a matching `AMBIENT` entry in `little_adventure-audio.js`, and a `buildDecor` branch in `little_adventure-world.js`; add the zone centre to the W4 budget loop in `tools/little_adventure_smoke.js`.
+- **Prop:** build it in `little_adventure-models.js` using `mat()` from the shared kit (never `new THREE.Mesh*Material` in a builder); place it via config + `buildDecor`; verify the placement-exclusion and material-count smokes.
+- **UI feedback:** drive it from `game.state()` in `updateActors` (as the sword cooldown arc and shield glow do) so keyboard and touch stay in sync; add an S-check to `tools/little_adventure_smoke.js`.
+
+## Release gate recipe
+
+`node tools/little_adventure_quality_smoke.js` → `node tools/little_adventure_smoke.js` → `bash tools/sync-docs.sh` → `node tools/build_offline.js` → `bash tools/sync-docs.sh` → `node tools/check_fast.js`. A stale offline manifest is a FAIL (never an auto-rewrite); rebuild it with `node tools/build_offline.js`. Look gates and tablet/playtest items are USER-RUN and cannot be self-approved.
 

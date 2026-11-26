@@ -154,6 +154,10 @@
         const postGeo = new THREE.CylinderGeometry(0.12, 0.12, 1.2, 6);
         const p1 = mesh(postGeo, mat( P.wood)); p1.position.set(-2.5, 0.6, 0); g.add(p1);
         const p2 = mesh(postGeo, mat( P.wood)); p2.position.set(2.5, 0.6, 0); g.add(p2);
+        const topBar = mesh(new THREE.BoxGeometry(5.4, 0.16, 0.18), mat(P.wood));
+        topBar.position.set(0, 1.24, 0); g.add(topBar);
+        const arch = mesh(new THREE.TorusGeometry(0.45, 0.07, 6, 10, Math.PI), mat(P.gold || 0xD4A017));
+        arch.position.set(0, 1.32, 0); g.add(arch);
         const leafL = new THREE.Group(); leafL.name = 'gateLeafL'; leafL.position.set(-2.4, 0, 0); g.add(leafL);
         const leafR = new THREE.Group(); leafR.name = 'gateLeafR'; leafR.position.set(2.4, 0, 0); g.add(leafR);
         const leafGeo = new THREE.BoxGeometry(2.3, 1.0, 0.12);
@@ -247,9 +251,10 @@
         return g;
       }
 
+      const blobShadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.25 });
       function makeBlobShadow() {
         const g = group();
-        const s = mesh(new THREE.CircleGeometry(0.5, 12), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.25 }));
+        const s = mesh(new THREE.CircleGeometry(0.5, 12), blobShadowMat);
         s.rotation.x = -Math.PI / 2; g.add(s);
         return g;
       }

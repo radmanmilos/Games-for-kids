@@ -38,6 +38,16 @@
         #i3d-back {
             position: absolute; top: 2vmin; left: 4vmin; z-index: 30;
         }
+        /* --- Q-17 control feedback: sword cooldown arc, shield held glow --- */
+        #i3d-btn-sword::before {
+            content: ''; position: absolute; inset: -8px; border-radius: 50%;
+            background: conic-gradient(#FFD23F calc(var(--i3d-cool, 0) * 1turn), rgba(255,255,255,0.10) 0);
+            z-index: -1; pointer-events: none; opacity: 0;
+        }
+        #i3d-btn-sword.i3d-cooling::before { opacity: 0.9; }
+        #i3d-btn-shield.i3d-held {
+            box-shadow: 0 0 0 4px rgba(80,216,255,0.55), var(--ps-glow), 0 6px 0 var(--ps-btn-depth);
+        }
         /* --- Screen-reader live region --- */
         .sr-only {
             position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -74,6 +84,7 @@
     <div id="i3d-drag-hint" style="display:none; position:absolute; left:8vmin; bottom:22vmin; z-index:25; padding:1.5vmin 2.5vmin; border-radius:2vmin; background:rgba(74,63,107,0.72); color:#FFF8ED; font-size:3.2vmin; pointer-events:none;">Превуци да се крећеш</div>
     <div id="i3d-start" style="position:absolute; inset:0; z-index:50; display:flex; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(180deg, rgba(74,63,107,0.18) 0%, rgba(74,63,107,0.55) 55%, rgba(74,63,107,0.78) 100%); color:#FFF8ED; pointer-events:none; text-shadow:0 2px 8px rgba(0,0,0,0.35);">
       <h1 style="font-size:8vmin; margin:0 0 4vmin;">Мала авантура</h1>
+      <div id="i3d-loading" style="font-size:4vmin; margin:0 0 2vmin; opacity:0.92;">Учитавање...</div>
       <button id="i3d-btn-continue" class="ps-btn ps-btn--control" aria-label="Настави" style="display:none; margin:2vmin; min-width:28vmin; height:10vmin; pointer-events:auto; font-size:4vmin; gap:1vmin;"><svg viewBox="0 0 24 24" width="1.2em" height="1.2em" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg><span>Настави</span></button>
       <button id="i3d-btn-new" class="ps-btn ps-btn--control" aria-label="Нова авантура" style="margin:2vmin; min-width:28vmin; height:10vmin; pointer-events:auto; font-size:4vmin; gap:1vmin;"><svg viewBox="0 0 24 24" width="1.2em" height="1.2em" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35A7.96 7.96 0 0012 4a8 8 0 108 8h-2a6 6 0 11-1.76-4.24L14 10h6V4l-2.35 2.35z"/></svg><span>Нова</span></button>
     </div>

@@ -287,10 +287,10 @@ window.startlittle_adventure = function startlittle_adventure() {
               seg.visible = k < show;
               g.add(seg);
             }
-            const base = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.2, 2.8), new THREE.MeshLambertMaterial({ color: 0x7a6b5d }));
+            const base = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.2, 2.8), mats.toon(0x7a6b5d));
             base.position.y = -0.12; g.add(base);
           } else if (name === 'bloom-wave') {
-            const ground = new THREE.Mesh(new THREE.CircleGeometry(1.2, 20), new THREE.MeshLambertMaterial({ color: 0x6ea85f }));
+            const ground = new THREE.Mesh(new THREE.CircleGeometry(1.2, 20), mats.toon(0x6ea85f));
             ground.rotation.x = -Math.PI / 2; ground.position.y = -0.01; g.add(ground);
             const total = 12;
             const show = Math.round(f * total);
@@ -320,9 +320,9 @@ window.startlittle_adventure = function startlittle_adventure() {
         }
         if (!g) {
           g = new THREE.Group();
-          const body = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.0, 0.6), new THREE.MeshLambertMaterial({ color: 0x88ccee }));
+          const body = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.0, 0.6), mats.toon(0x88ccee));
           body.position.y = 0.5; g.add(body);
-          const head = new THREE.Mesh(new THREE.SphereGeometry(0.28, 10, 10), new THREE.MeshLambertMaterial({ color: 0xffe0bd }));
+          const head = new THREE.Mesh(new THREE.SphereGeometry(0.28, 10, 10), mats.toon(0xffe0bd));
           head.position.y = 1.15; g.add(head);
         }
         g.position.x = startX + i * spacing;
@@ -499,6 +499,9 @@ window.startlittle_adventure = function startlittle_adventure() {
     const bridgeSegments = [];
     const acornMeshes = [];
     const blobShadows = [];
+    // Q-17 control feedback (start()-scope so updateActors can drive it)
+    const swordBtnEl = document.getElementById('i3d-btn-sword');
+    const shieldBtnEl = document.getElementById('i3d-btn-shield');
 
     function addBlobShadow(m) {
       const sh = models.makeBlobShadow();
@@ -713,8 +716,8 @@ window.startlittle_adventure = function startlittle_adventure() {
           ambientClock = 4.5 + Math.random() * 3.5;
           const amb = A && A.AMBIENT ? A.AMBIENT[zone] : null;
           if (amb && window.audioBuses.playTone) {
-            const f = zone === 'B' ? 220 : zone === 'C' ? 330 : 180;
-            window.audioBuses.playTone('music', f, 0.6, 'sine', (amb.gain || 0.05) * 0.5, 0);
+            const layers = amb.layers || [{ f: zone === 'B' ? 220 : zone === 'C' ? 330 : 180, gain: amb.gain * 0.5, dur: 0.6 }];
+            layers.forEach((l, i) => window.audioBuses.playTone('music', l.f, l.dur || 0.8, 'sine', l.gain || 0.02, i * 0.04));
           }
         }
       }
@@ -729,6 +732,7 @@ window.startlittle_adventure = function startlittle_adventure() {
       startOverlay = document.getElementById('i3d-start');
       const btnContinue = document.getElementById('i3d-btn-continue');
       const btnNew = document.getElementById('i3d-btn-new');
+      const loadingEl = document.getElementById('i3d-loading');
       dragHint = document.getElementById('i3d-drag-hint');
       const DRAG_HINT_KEY = 'little_adventureDragHintSeen';
       let dragHintTimer = null;
@@ -746,6 +750,7 @@ window.startlittle_adventure = function startlittle_adventure() {
       };
       const saved = loadSave();
       if (saved) { btnContinue.style.display = 'block'; }
+      if (loadingEl) loadingEl.style.display = 'none';
       btnNew.addEventListener('click', () => {
         try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
         game = logic.createGame(cfg, 7);
@@ -839,6 +844,20 @@ window.startlittle_adventure = function startlittle_adventure() {
       const dt = dtFrame || 0.016;
       const s = game.state();
       const heroMesh = window.__laHeroMesh;
+
+      // Q-17: cooldown ring on sword, held glow on shield. Driven by game
+      // state so keyboard and touch both produce the same feedback.
+      if (swordBtnEl) {
+        const maxCd = (cfg.sword && cfg.sword.cooldownMs) || 1;
+        const cool = Math.max(0, Math.min(1, (s.hero.cooldown || 0) / maxCd));
+        swordBtnEl.classList.toggle('i3d-cooling', cool > 0);
+        swordBtnEl.style.setProperty('--i3d-cool', cool.toFixed(3));
+      }
+      if (shieldBtnEl) {
+        const held = !!s.hero.shield;
+        shieldBtnEl.classList.toggle('i3d-held', held);
+        shieldBtnEl.setAttribute('aria-pressed', held ? 'true' : 'false');
+      }
 
       // drain events
       const evs = game.drainEvents();
@@ -1079,7 +1098,16 @@ window.startlittle_adventure = function startlittle_adventure() {
         beaconRay.material.opacity = 0.10 + 0.04 * Math.sin(s.t * 0.003);
         beaconBase.scale.setScalar(1 + 0.12 * Math.sin(s.t * 0.004));
         if (Math.random() < (reducedMotion ? 0.01 : 0.04)) {
-          particles.push({ x: obj.x + (Math.random()-0.5)*0.6, y: 0.2, z: obj.z + (Math.random()-0.5)*0.6, vx: (Math.random()-0.5)*0.3, vy: 0.6 + Math.random()*0.5, vz: (Math.random()-0.5)*0.3, life: 1200, color: 0xFFE89A, size: 0.08 });
+          // Q-20/Q-14: emit from the fixed pool — pushing a new object here
+          // created particles with no `alive` flag that never rendered or died.
+          for (const p of particles) {
+            if (p.alive) continue;
+            p.alive = true;
+            p.x = obj.x + (Math.random()-0.5)*0.6; p.y = 0.2; p.z = obj.z + (Math.random()-0.5)*0.6;
+            p.vx = (Math.random()-0.5)*0.3; p.vy = 0.6 + Math.random()*0.5; p.vz = (Math.random()-0.5)*0.3;
+            p.life = 1200; p.color = 0xFFE89A; p.additive = false;
+            break;
+          }
         }
       } else {
         beacon.visible = false;
@@ -1565,10 +1593,25 @@ const offc = cfg.camera.offset;
       catch (e) { location.href = "../index.html#hub-games"; }
     });
 
+    // Q-04 AC: unique material instances actually used in the scene. The kit
+    // cache also holds filmstrip-only variants, so counting the cache alone
+    // overstates what is drawn.
+    const kitCacheSize = () => {
+      const M = window.little_adventureMaterials;
+      return M && M.create ? M.create(THREE).materialCount() : 0;
+    };
+    const materialCount = () => {
+      const used = new Set();
+      scene.traverse((o) => {
+        if (!o.material) return;
+        (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => used.add(m));
+      });
+      return used.size;
+    };
     window.__little_adventure = {
       state: () => {
         const particlesAlive = particles ? particles.reduce((n, p) => n + (p.alive ? 1 : 0), 0) : 0;
-        const base = { frameMs, dpr, tier, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries, programs: renderer.info.programs ? renderer.info.programs.length : 0, webgl: true, motionScale: reducedMotion ? 0 : 1, particlesAlive, particleCap: partCount };
+        const base = { frameMs, dpr, tier, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, textures: renderer.info.memory.textures, geometries: renderer.info.memory.geometries, programs: renderer.info.programs ? renderer.info.programs.length : 0, webgl: true, motionScale: reducedMotion ? 0 : 1, particlesAlive, particleCap: partCount, materialCount: materialCount(), kitCacheSize: kitCacheSize(), celebrating: !!winFX };
         return game ? Object.assign({}, game.state(), base) : base;
       },
       seed: (n) => { if (game) game = logic.createGame(cfg, n); },
@@ -1622,6 +1665,8 @@ const offc = cfg.camera.offset;
       setPose: (actor, id, t) => { /* reserved for Q-10+ */ },
       quality: (t) => { if (TIERS[t]) { tierStepped = true; applyTier(t); } return tier; },
       fxTable: () => (window.little_adventureFx && window.little_adventureFx.eventKeys ? window.little_adventureFx.eventKeys() : []),
+      materialCount,
+      kitCacheSize,
       data: { cfg }
     };
   } catch (e) {

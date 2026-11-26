@@ -24,10 +24,12 @@
     footstep: { layers: [{ type: 'noise', dur: 0.05, gain: 0.06 }], pitchVar: 0.08 }
   };
 
+  // Each zone bed has two quiet tones so the ambience reads as a layer, not a
+  // lone beep. Gains stay far below the 0.25 SFX peak ceiling.
   A.AMBIENT = {
-    A: { bed: 'wind', gain: 0.06 },
-    B: { bed: 'forest', gain: 0.07 },
-    C: { bed: 'shrine', gain: 0.05 }
+    A: { bed: 'wind', gain: 0.06, layers: [{ f: 180, gain: 0.030, dur: 0.9 }, { f: 270, gain: 0.020, dur: 1.2 }] },
+    B: { bed: 'forest', gain: 0.07, layers: [{ f: 220, gain: 0.035, dur: 0.8 }, { f: 330, gain: 0.020, dur: 1.1 }] },
+    C: { bed: 'shrine', gain: 0.05, layers: [{ f: 330, gain: 0.025, dur: 1.0 }, { f: 440, gain: 0.015, dur: 1.3 }] }
   };
 
   A.SCORE = {
