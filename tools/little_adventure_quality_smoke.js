@@ -127,6 +127,9 @@ function check(name, ok, info) {
   check('Q-14: EVENT_TABLE has 16 entries', Object.keys(FX.EVENT_TABLE).length === 16, Object.keys(FX.EVENT_TABLE).length);
   const missingSfx = Object.keys(FX.EVENT_TABLE).filter(k => !AU.SFX[FX.EVENT_TABLE[k].sfx]);
   check('Q-16: every EVENT_TABLE sfx exists in audio SFX', missingSfx.length === 0, missingSfx.join(','));
+  const emitted = [...new Set((fs.readFileSync(path.resolve(__dirname, '../game/games/little_adventure-logic.js'), 'utf8').match(/type: '([^']+)'/g)||[]).map(x=>x.slice(7,-1)))];
+  const unmapped = emitted.filter(t => !FX.EVENT_TABLE[t]);
+  check('Q-13: every logic event has visual mapping', unmapped.length === 0, unmapped.join(','));
   check('Q-18: TIERS has 3 tiers', Object.keys(FX.TIERS).length === 3);
   check('Q-18: high tier particles 250', FX.particleCapFor('high') === 250);
   const nudge = FX.cameraNudge({ x: 0, z: 0 }, { x: 10, z: 0 }, 6, false);
