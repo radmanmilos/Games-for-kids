@@ -731,12 +731,16 @@ window.startlittle_adventure = function startlittle_adventure() {
         const speechMap = { befriend:'befriend', bushCut:'gem', chestOpen:'key', gateOpen:'gateOpen', pedestalFill:'gem', complete:'complete', owlTalk: ev.line };
         const key = ev.type === 'owlTalk' ? ev.line : speechMap[ev.type];
         if (key && cfg.speech && cfg.speech[key]) {
-          const txt = cfg.speech[key];
-          if (window.audioBuses && window.audioBuses.speakWithDuck) window.audioBuses.speakWithDuck(txt);
-          else if (window.speech && window.speech.speak) window.speech.speak(txt);
-          const ann = document.getElementById('i3d-announcer');
-          if (ann) ann.textContent = txt;
-          window.__laLastSpeech = { key, time: s.t };
+          const lastSp = window.__laLastSpeech;
+          const nowSp = s.t;
+          if (!(lastSp && lastSp.key === key && (nowSp - lastSp.time) < 4000)) {
+            const txt = cfg.speech[key];
+            if (window.audioBuses && window.audioBuses.speakWithDuck) window.audioBuses.speakWithDuck(txt);
+            else if (window.speech && window.speech.speak) window.speech.speak(txt);
+            const ann = document.getElementById('i3d-announcer');
+            if (ann) ann.textContent = txt;
+            window.__laLastSpeech = { key, time: nowSp };
+          }
         }
         // particles (Q-14: EVENT_TABLE driven)
         const fxDef = (window.little_adventureFx && window.little_adventureFx.EVENT_TABLE) ? window.little_adventureFx.EVENT_TABLE[ev.type] : null;
@@ -897,7 +901,8 @@ window.startlittle_adventure = function startlittle_adventure() {
         const m = gateMeshes[id];
         if (!m) continue;
         const openT = s.gates[id].openT || 0;
-        m.position.y = -Math.min(openT / 500, 1) * 1.2;
+        const openAmt = s.gates[id].open ? (openT > 0 ? Math.min(openT / 500, 1) : 1) : 0;
+        m.position.y = -openAmt * 1.2;
       }
 
       // bushes
@@ -1146,6 +1151,16 @@ const offc = cfg.camera.offset;
       save: () => (game ? game.save() : null),
       load: (snap) => { if (game && snap) game.load(snap); },
       project: (x, y, z) => { const v = new THREE.Vector3(x, y, z); v.project(camera); return { x: v.x, y: v.y, z: v.z }; },
+      shouldSpeak: (key, t) => { const lastSp = window.__laLastSpeech; return !(lastSp && lastSp.key === key && (t - lastSp.time) < 4000); },
+      meshState: () => {
+        const gates = {};
+        Object.keys(gateMeshes).forEach(id => { const m = gateMeshes[id]; gates[id] = { visible: !!(m && m.visible), y: m ? m.position.y : null }; });
+        const chests = {};
+        Object.keys(chestMeshes).forEach(id => { const c = chestMeshes[id]; chests[id] = { lidRotX: c && c.lid ? c.lid.rotation.x : null }; });
+        const pedestals = {};
+        Object.keys(pedestalMeshes).forEach(id => { const p = pedestalMeshes[id]; pedestals[id] = { ringScale: p && p.ring ? p.ring.scale.x : null, lit: p && p.ring ? p.ring.visible : null }; });
+        return { gates, chests, pedestals };
+      },
       setHits: (id, n) => { if (game && game.debug) game.debug.setHits(id, n); },
       reset: () => { if (game) game = logic.createGame(cfg, 7); },
       forceSlow: (b) => { forceSlow = !!b; },

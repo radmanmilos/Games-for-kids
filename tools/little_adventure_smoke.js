@@ -108,6 +108,13 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   const info = JSON.parse(await h.evalv('JSON.stringify({calls: window.__little_adventure.state().drawCalls, tris: window.__little_adventure.state().triangles})'));
   check('W4: draw calls <= 220 (high tier budget)', info.calls <= 220, `calls=${info.calls}`);
   check('W4b: triangles <= 130000', info.tris <= 130000, `tris=${info.tris}`);
+  // W4 zone-centre budgets
+  for (const [zn, zx, zz] of [['meadow',0,-6],['forest',0,-30],['cave',0,-58]]) {
+    await h.evalv(`window.__little_adventure.teleport(${zx},${zz}); window.__little_adventure.step(50);`);
+    await sleep(80);
+    const zi = JSON.parse(await h.evalv('JSON.stringify({calls: window.__little_adventure.state().drawCalls, tris: window.__little_adventure.state().triangles})'));
+    check(`W4 zone ${zn}: draw calls <= 260`, zi.calls <= 260, `calls=${zi.calls}`);
+  }
 
   // photo() preset smoke (state valid after each)
   let photoOk = true;
@@ -123,11 +130,19 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   const w3z = await h.evalv('window.__little_adventure.state().hero.z');
   check('W3: closed gate blocks hero (z does not pass G1)', w3z > -16.5, `z=${w3z}`);
 
-  // W5: mesh/logic states match after give/teleport (gate opens)
+  // W5: mesh/logic states match after give/teleport (gate/chest/pedestal)
   await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.pause(); window.__little_adventure.give("keyMeadow"); window.__little_adventure.teleport(0,-14);');
-  await h.evalv('window.__little_adventure.setStick(0,-1); for(let i=0;i<30;i++) window.__little_adventure.step(50); window.__little_adventure.setStick(0,0);');
-  const w5gate = await h.evalv('(function(){ var s=window.__little_adventure.state(); return s && s.gates && s.gates.G1 ? !!s.gates.G1.open : null; })()');
-  check('W5: give+teleport+step opens G1 in logic state', w5gate === true, `G1.open=${w5gate}`);
+  for (let i = 0; i < 10; i++) { await h.evalv('window.__little_adventure.setStick(0,-1); window.__little_adventure.step(100); window.__little_adventure.setStick(0,0);'); await sleep(40); }
+  const w5g = JSON.parse(await h.evalv('JSON.stringify((function(){ var s=window.__little_adventure.state(); var m=window.__little_adventure.meshState?window.__little_adventure.meshState():null; return {logic:s.gates&&s.gates.G1&&!!s.gates.G1.open, mesh:m&&m.gates&&m.gates.G1?m.gates.G1:null}; })())'));
+  check('W5: gate G1 open in logic and mesh', w5g.logic === true && !!w5g.mesh && (w5g.mesh.visible === false || (typeof w5g.mesh.y === 'number' && w5g.mesh.y < -0.5)), JSON.stringify(w5g));
+  await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.pause(); window.__little_adventure.give("keyForest"); window.__little_adventure.teleport(14,-34);');
+  for (let i = 0; i < 10; i++) { await h.evalv('window.__little_adventure.swing(); window.__little_adventure.step(100);'); await sleep(40); }
+  const w5c = JSON.parse(await h.evalv('JSON.stringify((function(){ var s=window.__little_adventure.state(); var m=window.__little_adventure.meshState?window.__little_adventure.meshState():null; return {logic:s.chests&&s.chests.C1&&!!s.chests.C1.open, mesh:m&&m.chests&&m.chests.C1?m.chests.C1:null}; })())'));
+  check('W5: chest C1 open in logic and mesh', w5c.logic === true && !!w5c.mesh && typeof w5c.mesh.lidRotX === 'number' && w5c.mesh.lidRotX < -0.1, JSON.stringify(w5c));
+  await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.pause(); window.__little_adventure.give("gemRed"); window.__little_adventure.teleport(-4,-62);');
+  for (let i = 0; i < 10; i++) { await h.evalv('window.__little_adventure.step(100);'); await sleep(40); }
+  const w5p = JSON.parse(await h.evalv('JSON.stringify((function(){ var s=window.__little_adventure.state(); var m=window.__little_adventure.meshState?window.__little_adventure.meshState():null; return {logic:s.pedestals&&s.pedestals.red&&!!s.pedestals.red.lit, mesh:m&&m.pedestals&&m.pedestals.red?m.pedestals.red:null}; })())'));
+  check('W5: pedestal red lit in logic and mesh', w5p.logic === true && !!w5p.mesh && (w5p.mesh.lit === true || (typeof w5p.mesh.ringScale === 'number' && w5p.mesh.ringScale > 0.5)), JSON.stringify(w5p));
 
   // W6: fxTable covers event types
   const fxKeys = JSON.parse(await h.evalv('JSON.stringify(window.__little_adventure.fxTable ? window.__little_adventure.fxTable() : [])'));
@@ -141,9 +156,16 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   await h.evalv('(function(){ clearInterval(window.__laFlailInt); var h=window.__little_adventure; if(h){h.setStick(0,0); h.setShield(false);} })()');
   check('W7: particles <= cap in 60s flail', w7.max <= w7.cap && w7.cap > 0, `max=${w7.max} cap=${w7.cap} alive=${w7.alive}`);
 
-  // W9: speech keys / 4s guard hook present
-  const w9 = await h.evalv('(function(){ var s=window.__little_adventure.state(); return typeof window.__laLastSpeech === "object" || window.__laLastSpeech === undefined; })()');
-  check('W9: speech hook does not throw / shape ok', w9 === true, String(w9));
+  // W9: speech keys + 4s guard
+  const w9 = JSON.parse(await h.evalv(`JSON.stringify((function(){
+    var h=window.__little_adventure; var st=h.state();
+    window.__laLastSpeech = { key: 'gateOpen', time: st.t };
+    var blocked = h.shouldSpeak ? !h.shouldSpeak('gateOpen', st.t + 1000) : false;
+    var allowed = h.shouldSpeak ? h.shouldSpeak('gateOpen', st.t + 4100) : false;
+    var diffKey = h.shouldSpeak ? h.shouldSpeak('befriend', st.t + 1000) : false;
+    return {blocked:blocked, allowed:allowed, diffKey:diffKey};
+  })())`));
+  check('W9: speech 4s guard blocks same key <4s, allows after 4s/different key', w9.blocked === true && w9.allowed === true && w9.diffKey === true, JSON.stringify(w9));
 
   // W11: pause on visibility
   await h.evalv('(function(){ try{ Object.defineProperty(document,"hidden",{get:function(){return true;},configurable:true}); document.dispatchEvent(new Event("visibilitychange")); }catch(e){} })()');
