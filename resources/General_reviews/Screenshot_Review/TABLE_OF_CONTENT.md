@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-26T09:18:35.832Z
+- Генерисано / Generated: 2026-11-26T09:47:29.668Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -144,10 +144,10 @@
 | `little_adventure__tablet-landscape__START.png` | Мала авантура | `/pages/little_adventure.html` | 1180×820 | пејзаж | START | 26.11.2026. 09:37:50 | 453 |
 | `little_adventure__tablet-portrait__PLAY.png` | Мала авантура | `/pages/little_adventure.html` | 820×1180 | портрет | PLAY | 26.11.2026. 09:38:03 | 453 |
 | `little_adventure__tablet-portrait__START.png` | Мала авантура | `/pages/little_adventure.html` | 820×1180 | портрет | START | 26.11.2026. 09:37:50 | 453 |
-| `little_adventure_phone-landscape.png` | Мала авантура | `/pages/little_adventure.html` | 844×390 | пејзаж | — | 26.11.2026. 10:18:35 | 453 |
-| `little_adventure_phone-portrait.png` | Мала авантура | `/pages/little_adventure.html` | 390×844 | портрет | — | 26.11.2026. 10:18:35 | 453 |
-| `little_adventure_tablet-landscape.png` | Мала авантура | `/pages/little_adventure.html` | 1180×820 | пејзаж | — | 26.11.2026. 10:18:35 | 453 |
-| `little_adventure_tablet-portrait.png` | Мала авантура | `/pages/little_adventure.html` | 820×1180 | портрет | — | 26.11.2026. 10:18:35 | 453 |
+| `little_adventure_phone-landscape.png` | Мала авантура | `/pages/little_adventure.html` | 844×390 | пејзаж | — | 26.11.2026. 10:47:29 | 453 |
+| `little_adventure_phone-portrait.png` | Мала авантура | `/pages/little_adventure.html` | 390×844 | портрет | — | 26.11.2026. 10:47:29 | 453 |
+| `little_adventure_tablet-landscape.png` | Мала авантура | `/pages/little_adventure.html` | 1180×820 | пејзаж | — | 26.11.2026. 10:47:29 | 453 |
+| `little_adventure_tablet-portrait.png` | Мала авантура | `/pages/little_adventure.html` | 820×1180 | портрет | — | 26.11.2026. 10:47:29 | 453 |
 | `matching_game_phone-landscape.png` | Слагалица бомбона | `/pages/matching_game.html` | 844×390 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
 | `matching_game_phone-portrait.png` | Слагалица бомбона | `/pages/matching_game.html` | 390×844 | портрет | — | 05.11.2026. 18:53:41 | 379 |
 | `matching_game_tablet-landscape.png` | Слагалица бомбона | `/pages/matching_game.html` | 1180×820 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |

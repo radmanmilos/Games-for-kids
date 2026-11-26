@@ -178,5 +178,10 @@ function check(name, ok, info) {
   }
   check('Q-12: evalGrumpy continuity (16ms steps)', gContOk, gContOk);
 
+  // Q-13 owl2 contract
+  check('Q-13: OWL_PIVOTS has 10 entries', Array.isArray(CH.OWL_PIVOTS) && CH.OWL_PIVOTS.length === 10, CH.OWL_PIVOTS && CH.OWL_PIVOTS.length);
+  const oReq = ['root','body','head','eyeL','eyeR','lidL','lidR','wingL','wingR','tail'];
+  check('Q-13: OWL_PIVOTS contains AD3 names', oReq.every((p) => CH.OWL_PIVOTS.includes(p)), 'missing=' + oReq.filter((p)=>!CH.OWL_PIVOTS.includes(p)).join(','));
+
   process.exit(fails ? 1 : 0);
 })();

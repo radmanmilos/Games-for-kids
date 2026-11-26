@@ -5,6 +5,7 @@
   const FACE_CELLS = ['open', 'blink', 'happy', 'surprised', 'grumpy', 'strain', 'talk-a', 'talk-b'];
   const HERO_PIVOTS = ['root','hips','torso','head','face','hat','hatTip1','hatTip2','hatTip3','scarf1','scarf2','scarf3','armL','forearmL','handL','armR','forearmR','handR','legL','shinL','footL','legR','shinR','footR','sword','shield','shadow'];
   const GRUMPY_PIVOTS = ['root','body','face','feetL','feetR','armL','armR','tuft1','tuft2','tuft3','crown','shadow'];
+  const OWL_PIVOTS = ['root','body','head','eyeL','eyeR','lidL','lidR','wingL','wingR','tail'];
 
   function paintFaceAtlas(ctx, size) {
     const w = size || 256, h = Math.floor(w / 2);
@@ -269,8 +270,47 @@
       return root;
     }
 
-    return { makeHero2, makeGrumpy2, paintFaceAtlas, makeFaceTexture: () => makeFaceTexture(THREE, 256), setFaceCell, applyPose, FACE_CELLS, HERO_PIVOTS, GRUMPY_PIVOTS };
+    function makeOwl2() {
+      const root = new THREE.Group(); root.name = 'owl2';
+      const pivots = {};
+      const mat = (k, c, o) => { const m = mToon(c, o); (root.userData.materials = root.userData.materials || {})[k] = m; return m; };
+      const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.35, 16), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.18 }));
+      shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.02; root.add(shadow); pivots.shadow = shadow;
+      const body = new THREE.Group(); body.name = 'body'; body.position.y = 0.5; root.add(body); pivots.body = body;
+      const bMesh = new THREE.Mesh(new THREE.SphereGeometry(0.38, 16, 14), mat('body', 0x9A6B3F)); bMesh.scale.set(1, 1.15, 0.95); bMesh.castShadow = true; body.add(bMesh); addOutline(bMesh, 0.03);
+      const chest = new THREE.Mesh(new THREE.SphereGeometry(0.26, 14, 12), mat('belly', 0xE8D5B5)); chest.position.set(0, -0.05, 0.18); chest.scale.set(1, 1.1, 0.6); body.add(chest);
+      const head = new THREE.Group(); head.name = 'head'; head.position.y = 0.42; body.add(head); pivots.head = head;
+      const hMesh = new THREE.Mesh(new THREE.SphereGeometry(0.3, 16, 14), mat('head', 0x9A6B3F)); hMesh.castShadow = true; head.add(hMesh); addOutline(hMesh, 0.03);
+      const eyeWMat = mToon(0xFFFFFF); const eyePMat = mToon(0x2C2137);
+      function mkEye(side) {
+        const s = side === 'L' ? -1 : 1;
+        const e = new THREE.Group(); e.name = 'eye' + side; e.position.set(s * 0.11, 0.03, 0.24); head.add(e); pivots['eye' + side] = e;
+        const w = new THREE.Mesh(new THREE.CircleGeometry(0.09, 12), eyeWMat); e.add(w);
+        const p = new THREE.Mesh(new THREE.CircleGeometry(0.045, 12), eyePMat); p.position.z = 0.01; e.add(p);
+        const hl = new THREE.Mesh(new THREE.CircleGeometry(0.015, 8), mToon(0xFFFFFF)); hl.position.set(-0.015, 0.015, 0.02); e.add(hl);
+        const lid = new THREE.Group(); lid.name = 'lid' + side; lid.position.set(s * 0.11, 0.03, 0.25); head.add(lid); pivots['lid' + side] = lid;
+        return e;
+      }
+      mkEye('L'); mkEye('R');
+      const beak = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.09, 6), mToon(0xE89B3C)); beak.position.set(0, -0.04, 0.29); beak.rotation.x = Math.PI / 2; head.add(beak);
+      function mkWing(side) {
+        const s = side === 'L' ? -1 : 1;
+        const w = new THREE.Group(); w.name = 'wing' + side; w.position.set(s * 0.34, 0.15, 0); body.add(w); pivots['wing' + side] = w;
+        const wm = new THREE.Mesh(new THREE.SphereGeometry(0.16, 10, 8), mat('wing', 0x8A5E33)); wm.scale.set(0.5, 1.2, 0.8); w.add(wm);
+      }
+      mkWing('L'); mkWing('R');
+      const tail = new THREE.Group(); tail.name = 'tail'; tail.position.set(0, -0.2, -0.28); body.add(tail); pivots.tail = tail;
+      const tm = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.18, 0.08), mToon(0x7A5430)); tail.add(tm);
+      const rest = {};
+      Object.keys(pivots).forEach((k) => { const p = pivots[k]; rest[k] = { rot: { x: p.rotation.x, y: p.rotation.y, z: p.rotation.z }, pos: { x: p.position.x, y: p.position.y, z: p.position.z }, scl: { x: p.scale.x, y: p.scale.y, z: p.scale.z } }; });
+      root.userData.pivots = pivots; root.userData.rest = rest; root.userData.faceTex = faceTex;
+      root.userData.setFace = () => {};
+      root.traverse((o) => { if (o.isMesh) { o.castShadow = o.castShadow || false; o.receiveShadow = false; } });
+      return root;
+    }
+
+    return { makeHero2, makeGrumpy2, makeOwl2, paintFaceAtlas, makeFaceTexture: () => makeFaceTexture(THREE, 256), setFaceCell, applyPose, FACE_CELLS, HERO_PIVOTS, GRUMPY_PIVOTS, OWL_PIVOTS };
   }
 
-  window.little_adventureCharacters = { create, paintFaceAtlas, FACE_CELLS, HERO_PIVOTS, GRUMPY_PIVOTS };
+  window.little_adventureCharacters = { create, paintFaceAtlas, setFaceCell, applyPose, FACE_CELLS, HERO_PIVOTS, GRUMPY_PIVOTS, OWL_PIVOTS };
 })();

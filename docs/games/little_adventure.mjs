@@ -357,7 +357,7 @@ window.startlittle_adventure = function startlittle_adventure() {
     const chars = (window.little_adventureCharacters && window.little_adventureCharacters.create) ? window.little_adventureCharacters.create(THREE, mats) : null;
     if (gallery) {
       const items = [
-        models.makeHero(), ...(chars ? [chars.makeHero2()] : []), models.makeOwl(),
+        models.makeHero(), ...(chars ? [chars.makeHero2()] : []), models.makeOwl(), ...(chars && chars.makeOwl2 ? [chars.makeOwl2()] : []),
         models.makeGrumpy('normal'), ...(chars && chars.makeGrumpy2 ? [chars.makeGrumpy2('normal')] : []),
         models.makeGrumpy('guard'), ...(chars && chars.makeGrumpy2 ? [chars.makeGrumpy2('guard')] : []),
         models.makeGrumpy('boss'), ...(chars && chars.makeGrumpy2 ? [chars.makeGrumpy2('boss')] : []), models.makeKey(),
@@ -488,7 +488,7 @@ window.startlittle_adventure = function startlittle_adventure() {
       });
       const owlCfg = (cfg.npcs || [])[0];
       if (owlCfg) {
-        owlMesh = models.makeOwl();
+        owlMesh = (chars && chars.makeOwl2) ? chars.makeOwl2() : models.makeOwl();
         shadowActors.push(owlMesh);
         owlMesh.position.set(owlCfg.pos[0], hAt(owlCfg.pos[0], owlCfg.pos[1]), owlCfg.pos[1]);
         scene.add(owlMesh);
@@ -976,6 +976,13 @@ window.startlittle_adventure = function startlittle_adventure() {
           m.traverse((o) => { if (o.name === 'smile') o.visible = happy; if (o.name === 'eyebrows') o.visible = !happy; });
         }
       });
+
+      // owl
+      if (owlMesh && owlMesh.userData && owlMesh.userData.pivots && window.little_adventureAnim && window.little_adventureAnim.evalOwl && window.little_adventureCharacters && window.little_adventureCharacters.applyPose) {
+        const owlCfgNow = (cfg.npcs || [])[0];
+        const owlPose = window.little_adventureAnim.evalOwl(owlCfgNow, { x: s.hero.x, z: s.hero.z }, !!s.lastSpeech, s.t / 1000, { motionScale: reducedMotion ? 0.4 : 1 });
+        window.little_adventureCharacters.applyPose(owlMesh, owlPose);
+      }
 
       // items
       for (const id in s.items) {
