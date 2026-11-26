@@ -7,7 +7,7 @@
   A.SFX = {
     swing: { layers: [{ type: 'tone', f0: 440, f1: 660, dur: 0.12, gain: 0.18 }], pitchVar: 0.05 },
     hit: { layers: [{ type: 'tone', f0: 220, f1: 110, dur: 0.15, gain: 0.22 }, { type: 'noise', dur: 0.08, gain: 0.1 }], pitchVar: 0.04 },
-    befriend: { layers: [{ type: 'tone', f0: 523, f1: 784, dur: 0.25, gain: 0.2 }, { type: 'tone', f0: 659, f1: 988, dur: 0.25, gain: 0.15 }], pitchVar: 0.03 },
+    befriend: { layers: [{ type: 'tone', f0: 523, f1: 784, dur: 0.25, gain: 0.2 }, { type: 'tone', f0: 659, f1: 988, dur: 0.25, gain: 0.15 }, { type: 'noise', dur: 0.12, gain: 0.05 }], pitchVar: 0.03 },
     bump: { layers: [{ type: 'tone', f0: 180, f1: 90, dur: 0.18, gain: 0.2 }], pitchVar: 0.05 },
     shieldBlock: { layers: [{ type: 'tone', f0: 330, f1: 330, dur: 0.1, gain: 0.15 }, { type: 'noise', dur: 0.05, gain: 0.08 }], pitchVar: 0.02 },
     bushCut: { layers: [{ type: 'noise', dur: 0.12, gain: 0.15 }], pitchVar: 0.06 },

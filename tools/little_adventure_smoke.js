@@ -189,6 +189,11 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   const tierAfterRecover = await h.evalv('window.__little_adventure.state().tier');
   check('W13: adaptive tier steps down under slow frames', tierAfterSlow !== 'high', `tier=${tierAfterSlow}`);
   check('W13b: tier never steps up automatically', tierAfterRecover === tierAfterSlow, `afterSlow=${tierAfterSlow} afterRecover=${tierAfterRecover}`);
+  await h.evalv('window.__little_adventure.quality("high")');
+  const q18q = await h.evalv('window.__little_adventure.state().tier');
+  await h.evalv('window.__little_adventure.quality("low")');
+  const q18ql = await h.evalv('window.__little_adventure.state().tier');
+  check('Q-18: quality(tier) switches tiers', q18q === 'high' && q18ql === 'low', `high=${q18q} low=${q18ql}`);
 
   // W10: save round trip (progress flags)
   await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.pause(); window.__little_adventure.give("keyMeadow"); window.__little_adventure.step(50);');
