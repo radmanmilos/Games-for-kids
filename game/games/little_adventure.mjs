@@ -325,6 +325,9 @@ window.startlittle_adventure = function startlittle_adventure() {
     }
 
     let startOverlay = null;
+    let dragHint = null;
+    let hideDragHint = () => {};
+    let maybeShowDragHint = () => {};
     if (gallery) {
       const items = [
         models.makeHero(), models.makeOwl(), models.makeGrumpy('normal'), models.makeGrumpy('normal'),
@@ -525,7 +528,10 @@ window.startlittle_adventure = function startlittle_adventure() {
         }
         if (soundBtn) {
           soundBtn.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
-          soundBtn.style.opacity = soundOn ? '1' : '0.45';
+          soundBtn.style.opacity = soundOn ? '1' : '0.55';
+          soundBtn.innerHTML = soundOn
+            ? '<svg view="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 8.97v6.02A4.47 4.47 0 0016.5 12zM14 3.23v2.06a6.5 6.5 0 010 13.42v2.06a8.5 8.5 0 000-17.54z"/></svg>'
+            : '<svg view="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M16.5 12A4.5 4.5 0 0014 8.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0021 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 003.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>';
         }
         try { localStorage.setItem(SOUND_KEY, soundOn ? '1' : '0'); } catch (e) {}
       }
@@ -592,6 +598,21 @@ window.startlittle_adventure = function startlittle_adventure() {
       startOverlay = document.getElementById('i3d-start');
       const btnContinue = document.getElementById('i3d-btn-continue');
       const btnNew = document.getElementById('i3d-btn-new');
+      dragHint = document.getElementById('i3d-drag-hint');
+      const DRAG_HINT_KEY = 'little_adventureDragHintSeen';
+      let dragHintTimer = null;
+      hideDragHint = function(markSeen) {
+        if (dragHint) dragHint.style.display = 'none';
+        if (dragHintTimer) { clearTimeout(dragHintTimer); dragHintTimer = null; }
+        if (markSeen) { try { localStorage.setItem(DRAG_HINT_KEY, '1'); } catch (e) {} }
+      };
+      maybeShowDragHint = function() {
+        let seen = false;
+        try { seen = localStorage.getItem(DRAG_HINT_KEY) === '1'; } catch (e) { seen = false; }
+        if (seen || !dragHint) return;
+        dragHint.style.display = 'block';
+        dragHintTimer = setTimeout(() => hideDragHint(true), 5000);
+      };
       const saved = loadSave();
       if (saved) { btnContinue.style.display = 'block'; }
       btnNew.addEventListener('click', () => {
@@ -599,11 +620,13 @@ window.startlittle_adventure = function startlittle_adventure() {
         game = logic.createGame(cfg, 7);
         if (startOverlay) startOverlay.style.display = 'none';
         paused = false;
+        maybeShowDragHint();
       });
       btnContinue.addEventListener('click', () => {
         if (saved && game) { game.load(saved); }
         if (startOverlay) startOverlay.style.display = 'none';
         paused = false;
+        maybeShowDragHint();
       });
       // if no save, hide continue already
 
@@ -1039,6 +1062,7 @@ const offc = cfg.camera.offset;
         const sm = Math.hypot(input.sx, input.sy);
         const km = Math.hypot(keyX, keyY);
         if (km > sm) { input.sx = keyX; input.sy = keyY; }
+        if (dragHint && dragHint.style.display !== 'none' && (Math.abs(input.sx)+Math.abs(input.sy) > 0.05)) hideDragHint(true);
         stepGame(frameMs);
       }
 

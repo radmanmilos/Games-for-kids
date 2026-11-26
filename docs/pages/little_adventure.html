@@ -49,7 +49,10 @@
             background: rgba(74, 63, 107, 0.92); color: #FFF8ED;
             align-items: center; justify-content: center; text-align: center;
             font-size: 26px; font-weight: 700; padding: 6vmin;
+            animation: i3d-hint-pulse 2.2s ease-in-out infinite;
         }
+        @keyframes i3d-hint-pulse { 0%,100% { opacity: 0.92; transform: scale(1); } 50% { opacity: 1; transform: scale(1.02); } }
+        @media (prefers-reduced-motion: reduce) { #i3d-landscape-hint { animation: none; } }
         @media (orientation: portrait) and (min-width: 520px) {
             #i3d-landscape-hint { display: flex; }
         }
@@ -67,7 +70,8 @@
     <button id="i3d-btn-shield" class="ps-btn ps-btn--control" aria-label="Штит" style="position:absolute; right:4vmin; bottom:4vmin; width:14vmin; height:14vmin; z-index:20;"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></button>
     <button id="i3d-sound-btn" class="ps-btn ps-btn--control" aria-label="Звук" aria-pressed="true" style="position:absolute; top:2vmin; right:4vmin; width:10vmin; height:10vmin; z-index:30;"><svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 8.97v6.02A4.47 4.47 0 0016.5 12zM14 3.23v2.06a6.5 6.5 0 010 13.42v2.06a8.5 8.5 0 000-17.54z"/></svg></button>
     <div id="i3d-landscape-hint">Окрени уређај водоравно 🌍</div>
-    <div id="i3d-pause" style="position:absolute; inset:0; z-index:45; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.5); color:#FFF8ED; font-size:6vmin; pointer-events:auto;">Пауза</div>
+    <div id="i3d-pause" style="position:absolute; inset:0; z-index:45; display:none; align-items:center; justify-content:center; flex-direction:column; gap:2vmin; background:rgba(0,0,0,0.45); color:#FFF8ED; font-size:6vmin; pointer-events:auto; text-shadow:0 2px 8px rgba(0,0,0,0.4);"><svg viewBox="0 0 24 24" width="10vmin" height="10vmin" aria-hidden="true" style="fill:#FFF8ED;"><rect x="5" y="4" width="4" height="16" rx="1"/><rect x="13" y="4" width="4" height="16" rx="1"/></svg><div style="font-size:4vmin;">Пауза</div></div>
+    <div id="i3d-drag-hint" style="display:none; position:absolute; left:8vmin; bottom:22vmin; z-index:25; padding:1.5vmin 2.5vmin; border-radius:2vmin; background:rgba(74,63,107,0.72); color:#FFF8ED; font-size:3.2vmin; pointer-events:none;">Превуци да се крећеш</div>
     <div id="i3d-start" style="position:absolute; inset:0; z-index:50; display:flex; flex-direction:column; align-items:center; justify-content:center; background:linear-gradient(180deg, rgba(74,63,107,0.18) 0%, rgba(74,63,107,0.55) 55%, rgba(74,63,107,0.78) 100%); color:#FFF8ED; pointer-events:none; text-shadow:0 2px 8px rgba(0,0,0,0.35);">
       <h1 style="font-size:8vmin; margin:0 0 4vmin;">Мала авантура</h1>
       <button id="i3d-btn-continue" class="ps-btn ps-btn--control" aria-label="Настави" style="display:none; margin:2vmin; min-width:28vmin; height:10vmin; pointer-events:auto; font-size:4vmin; gap:1vmin;"><svg viewBox="0 0 24 24" width="1.2em" height="1.2em" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg><span>Настави</span></button>

@@ -437,8 +437,8 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
   // V21 (§39) — semantic-motion gate. Decorative infinite motion (hub bob/drift,
   // explorer jump pulse, dino advPulse, candy starGlow) failed the spec's tests
   // 1/5/6 (communicates nothing, runs indefinitely, costs battery/CPU) and was
-  // removed. The ONLY remaining indefinite animations in game/ are the seven
-  // justified cues, each a gameplay/instructional loop that prefers-reduced-motion
+  // removed. The ONLY remaining indefinite animations in game/ are the
+  // justified cues below, each a gameplay/instructional loop that prefers-reduced-motion
   // freezes: animalIdle (animals — "alive" idle), softLight (piano "Прати светло"
   // target-key cue), introDraw/introBob (tracing — teaches how to trace),
   // superPulse + superRing (fastcat — "meter full, tap ⚡" ready cues, only
@@ -447,7 +447,7 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
   // parked dimmed by its reduce override; CF-12 card step 2, task 273).
   // Set equality is non-vacuous both ways: an unjustified `infinite` (even a dead
   // one hidden in a hidden section) OR a deleted justified loop turns this red.
-  const V21_ALLOWED = ['animalIdle', 'cf-drop', 'softLight', 'introDraw', 'introBob', 'superPulse', 'superRing'].sort().join(',');
+  const V21_ALLOWED = ['animalIdle', 'cf-drop', 'i3d-hint-pulse', 'introBob', 'introDraw', 'softLight', 'superPulse', 'superRing'].sort().join(',');
   const V21_KEYWORDS = new Set(['infinite','none','alternate','alternate-reverse','reverse',
     'forwards','backwards','both','running','paused','normal','ease','linear','ease-in',
     'ease-out','ease-in-out','step-start','step-end']);
@@ -469,7 +469,7 @@ const ALL_LIVE_ROUTES = allHubRoutes().filter(r => !RETIRED_ROUTES.some(d => d.r
     }
   }
   const infFound = [...foundInf].sort().join(',');
-  check('V21: the only indefinite animations are the seven justified cues (animalIdle, cf-drop, softLight, introDraw, introBob, superPulse, superRing)',
+  check('V21: the only indefinite animations are the justified cues (animalIdle, cf-drop, i3d-hint-pulse, introBob, introDraw, softLight, superPulse, superRing)',
     infFound === V21_ALLOWED,
     infFound === V21_ALLOWED ? 'allowlist intact: ' + infFound
       : (infFound ? 'found: ' + infFound + ' | allowlist: ' + V21_ALLOWED

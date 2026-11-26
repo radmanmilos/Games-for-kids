@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "mode": "review",
   "reviewName": "Screenshot_Review",
-  "commitSha": "0839b6db5cc6d40f8abeef903cf15ba2dbd83b9d",
+  "commitSha": "1ffae40b25f4d339de5c0b0bb2b2bc2aad3093cb",
   "browser": {
     "product": "Chrome/158.0.8127.36",
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.0.0 Safari/537.36",
     "protocolVersion": "1.3"
   },
-  "generatedAt": "2026-11-26T07:03:09.327Z",
+  "generatedAt": "2026-11-26T08:38:03.537Z",
   "pageSet": [
     "little_adventure"
   ],
@@ -40,48 +40,48 @@
   },
   "screenshots": [
     {
-      "file": "little_adventure__phone-portrait__START.png",
+      "file": "little_adventure__phone-portrait__PLAY.png",
       "page": "little_adventure",
       "size": "phone-portrait",
       "state": [
-        "START"
+        "PLAY"
       ],
       "width": 390,
       "height": 844,
-      "bytes": 105238
+      "bytes": 42401
     },
     {
-      "file": "little_adventure__phone-landscape__START.png",
+      "file": "little_adventure__phone-landscape__PLAY.png",
       "page": "little_adventure",
       "size": "phone-landscape",
       "state": [
-        "START"
+        "PLAY"
       ],
       "width": 844,
       "height": 390,
-      "bytes": 118109
+      "bytes": 62396
     },
     {
-      "file": "little_adventure__tablet-portrait__START.png",
+      "file": "little_adventure__tablet-portrait__PLAY.png",
       "page": "little_adventure",
       "size": "tablet-portrait",
       "state": [
-        "START"
+        "PLAY"
       ],
       "width": 820,
       "height": 1180,
-      "bytes": 121370
+      "bytes": 51951
     },
     {
-      "file": "little_adventure__tablet-landscape__START.png",
+      "file": "little_adventure__tablet-landscape__PLAY.png",
       "page": "little_adventure",
       "size": "tablet-landscape",
       "state": [
-        "START"
+        "PLAY"
       ],
       "width": 1180,
       "height": 820,
-      "bytes": 215954
+      "bytes": 114693
     }
   ]
 }

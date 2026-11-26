@@ -2008,8 +2008,8 @@
     "size": 3068
   },
   "games/little_adventure.mjs": {
-    "sha256": "34f33edcaea4130dae5e6f90aa1b74ac53e9bf053915248874aeadc77d2e6d3a",
-    "size": 49830
+    "sha256": "ea21cf621824c618e26fb5b0e3ee18047cf7107c50fd7f2b0e47d2515ac7ca99",
+    "size": 51614
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",
@@ -2124,8 +2124,8 @@
     "size": 14166
   },
   "pages/little_adventure.html": {
-    "sha256": "1bc80e3f47e1119867db539a7fc4d9aa45a61cd2f152e153fe4001207601b9eb",
-    "size": 7893
+    "sha256": "43ae002be01026bbff143c4ecfd3a5c793af89c36bfb1c2cef5d8ecb650d9fcf",
+    "size": 8777
   },
   "pages/matching_game.html": {
     "sha256": "7a73924813a6c965f45915665cc74ef9db993d377e3fb28d019b9385d3f4f49a",

@@ -1,6 +1,6 @@
 # Преглед екрана (UI review)
 
-- Генерисано / Generated: 2026-11-26T07:03:09.327Z
+- Генерисано / Generated: 2026-11-26T08:38:03.537Z
 - Поново направи / Regenerate: `node tools/screenshot.js --review=Screenshot_Review`
 - Освежи само промењену страну / Refresh only a changed page: `node tools/screenshot.js --review=Screenshot_Review --pages=<id> --task=<id>`
 
@@ -136,14 +136,14 @@
 | `hub_phone-portrait.png` | Петрин свет — почетна | `/index.html` | 390×844 | портрет | — | 05.11.2026. 21:02:59 | 380 |
 | `hub_tablet-landscape.png` | Петрин свет — почетна | `/index.html` | 1180×820 | пејзаж | — | 05.11.2026. 21:02:59 | 380 |
 | `hub_tablet-portrait.png` | Петрин свет — почетна | `/index.html` | 820×1180 | портрет | — | 05.11.2026. 21:02:59 | 380 |
-| `little_adventure__phone-landscape__PLAY.png` | Мала авантура | `/pages/little_adventure.html` | 844×390 | пејзаж | PLAY | 26.11.2026. 08:01:31 | 453 |
-| `little_adventure__phone-landscape__START.png` | Мала авантура | `/pages/little_adventure.html` | 844×390 | пејзаж | START | 26.11.2026. 08:03:09 | 453 |
-| `little_adventure__phone-portrait__PLAY.png` | Мала авантура | `/pages/little_adventure.html` | 390×844 | портрет | PLAY | 26.11.2026. 08:01:31 | 453 |
-| `little_adventure__phone-portrait__START.png` | Мала авантура | `/pages/little_adventure.html` | 390×844 | портрет | START | 26.11.2026. 08:03:09 | 453 |
-| `little_adventure__tablet-landscape__PLAY.png` | Мала авантура | `/pages/little_adventure.html` | 1180×820 | пејзаж | PLAY | 26.11.2026. 08:01:31 | 453 |
-| `little_adventure__tablet-landscape__START.png` | Мала авантура | `/pages/little_adventure.html` | 1180×820 | пејзаж | START | 26.11.2026. 08:03:09 | 453 |
-| `little_adventure__tablet-portrait__PLAY.png` | Мала авантура | `/pages/little_adventure.html` | 820×1180 | портрет | PLAY | 26.11.2026. 08:01:31 | 453 |
-| `little_adventure__tablet-portrait__START.png` | Мала авантура | `/pages/little_adventure.html` | 820×1180 | портрет | START | 26.11.2026. 08:03:09 | 453 |
+| `little_adventure__phone-landscape__PLAY.png` | Мала авантура | `/pages/little_adventure.html` | 844×390 | пејзаж | PLAY | 26.11.2026. 09:38:03 | 453 |
+| `little_adventure__phone-landscape__START.png` | Мала авантура | `/pages/little_adventure.html` | 844×390 | пејзаж | START | 26.11.2026. 09:37:50 | 453 |
+| `little_adventure__phone-portrait__PLAY.png` | Мала авантура | `/pages/little_adventure.html` | 390×844 | портрет | PLAY | 26.11.2026. 09:38:03 | 453 |
+| `little_adventure__phone-portrait__START.png` | Мала авантура | `/pages/little_adventure.html` | 390×844 | портрет | START | 26.11.2026. 09:37:50 | 453 |
+| `little_adventure__tablet-landscape__PLAY.png` | Мала авантура | `/pages/little_adventure.html` | 1180×820 | пејзаж | PLAY | 26.11.2026. 09:38:03 | 453 |
+| `little_adventure__tablet-landscape__START.png` | Мала авантура | `/pages/little_adventure.html` | 1180×820 | пејзаж | START | 26.11.2026. 09:37:50 | 453 |
+| `little_adventure__tablet-portrait__PLAY.png` | Мала авантура | `/pages/little_adventure.html` | 820×1180 | портрет | PLAY | 26.11.2026. 09:38:03 | 453 |
+| `little_adventure__tablet-portrait__START.png` | Мала авантура | `/pages/little_adventure.html` | 820×1180 | портрет | START | 26.11.2026. 09:37:50 | 453 |
 | `matching_game_phone-landscape.png` | Слагалица бомбона | `/pages/matching_game.html` | 844×390 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
 | `matching_game_phone-portrait.png` | Слагалица бомбона | `/pages/matching_game.html` | 390×844 | портрет | — | 05.11.2026. 18:53:41 | 379 |
 | `matching_game_tablet-landscape.png` | Слагалица бомбона | `/pages/matching_game.html` | 1180×820 | пејзаж | — | 05.11.2026. 18:53:41 | 379 |
