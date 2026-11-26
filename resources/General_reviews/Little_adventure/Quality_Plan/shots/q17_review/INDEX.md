@@ -1,6 +1,6 @@
 # Shots — q17_review
 
-Generated 2026-11-26T12:09:35.052Z
+Generated 2026-11-26T14:59:37.664Z
 
 | file |
 | --- |
@@ -20,6 +20,8 @@ Generated 2026-11-26T12:09:35.052Z
 | gate-closed_844x390.png |
 | gate-open_1280x800.png |
 | gate-open_844x390.png |
+| gate1_1280x800.png |
+| gate1_844x390.png |
 | grumpy-angry_1280x800.png |
 | grumpy-angry_844x390.png |
 | grumpy-happy_1280x800.png |

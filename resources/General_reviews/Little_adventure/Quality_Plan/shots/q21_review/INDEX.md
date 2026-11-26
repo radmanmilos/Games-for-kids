@@ -1,9 +1,11 @@
 # Shots — q21_review
 
-Generated 2026-11-26T12:08:27.319Z
+Generated 2026-11-26T14:59:57.605Z
 
 | file |
 | --- |
+| beacon_1280x800.png |
+| beacon_844x390.png |
 | boss_1280x800.png |
 | boss_844x390.png |
 | bridge-built_1280x800.png |
