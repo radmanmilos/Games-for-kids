@@ -1,0 +1,146 @@
+[
+  {
+    "tier": "high",
+    "zone": "lawn",
+    "calls": 148,
+    "tris": 59836
+  },
+  {
+    "tier": "high",
+    "zone": "meadow",
+    "calls": 120,
+    "tris": 57638
+  },
+  {
+    "tier": "high",
+    "zone": "gate1",
+    "calls": 98,
+    "tris": 55104
+  },
+  {
+    "tier": "high",
+    "zone": "forest",
+    "calls": 96,
+    "tris": 55088
+  },
+  {
+    "tier": "high",
+    "zone": "gate2",
+    "calls": 91,
+    "tris": 53636
+  },
+  {
+    "tier": "high",
+    "zone": "cave",
+    "calls": 74,
+    "tris": 51878
+  },
+  {
+    "tier": "high",
+    "zone": "pedestals",
+    "calls": 63,
+    "tris": 49086
+  },
+  {
+    "tier": "high",
+    "zone": "lighthouse",
+    "calls": 54,
+    "tris": 47830
+  },
+  {
+    "tier": "medium",
+    "zone": "lawn",
+    "calls": 148,
+    "tris": 59836
+  },
+  {
+    "tier": "medium",
+    "zone": "meadow",
+    "calls": 120,
+    "tris": 57638
+  },
+  {
+    "tier": "medium",
+    "zone": "gate1",
+    "calls": 98,
+    "tris": 55104
+  },
+  {
+    "tier": "medium",
+    "zone": "forest",
+    "calls": 96,
+    "tris": 55088
+  },
+  {
+    "tier": "medium",
+    "zone": "gate2",
+    "calls": 91,
+    "tris": 53636
+  },
+  {
+    "tier": "medium",
+    "zone": "cave",
+    "calls": 74,
+    "tris": 51878
+  },
+  {
+    "tier": "medium",
+    "zone": "pedestals",
+    "calls": 63,
+    "tris": 49086
+  },
+  {
+    "tier": "medium",
+    "zone": "lighthouse",
+    "calls": 54,
+    "tris": 47830
+  },
+  {
+    "tier": "low",
+    "zone": "lawn",
+    "calls": 154,
+    "tris": 59896
+  },
+  {
+    "tier": "low",
+    "zone": "meadow",
+    "calls": 125,
+    "tris": 57686
+  },
+  {
+    "tier": "low",
+    "zone": "gate1",
+    "calls": 101,
+    "tris": 55128
+  },
+  {
+    "tier": "low",
+    "zone": "forest",
+    "calls": 99,
+    "tris": 55112
+  },
+  {
+    "tier": "low",
+    "zone": "gate2",
+    "calls": 94,
+    "tris": 53660
+  },
+  {
+    "tier": "low",
+    "zone": "cave",
+    "calls": 76,
+    "tris": 51890
+  },
+  {
+    "tier": "low",
+    "zone": "pedestals",
+    "calls": 65,
+    "tris": 49098
+  },
+  {
+    "tier": "low",
+    "zone": "lighthouse",
+    "calls": 55,
+    "tris": 47842
+  }
+]
