@@ -264,6 +264,7 @@ window.startlittle_adventure = function startlittle_adventure() {
     let currentPhoto = null;
     let currentSheet = null;
     let camNudge = null; // Q-15: {x,z,tLeft}
+    let winFX = null; // Q-21: {t, nextBurst}
     let soundOn = true;
     // Save helpers (IS-15)
     const SAVE_KEY = 'little_adventureSave';
@@ -785,6 +786,7 @@ window.startlittle_adventure = function startlittle_adventure() {
         // save on milestones
         if (['gateOpen','chestOpen','bushCut','pedestalFill','complete','befriend'].indexOf(ev.type) !== -1) saveNow();
         playSfx(ev.type);
+        if (ev.type === 'complete' && !winFX) winFX = { t: 0, nextBurst: 0 };
         // Q-15: reveal nudge on gateOpen/bridgeUp
         if (!reducedMotion && (ev.type === 'gateOpen' || ev.type === 'bridgeUp')) {
           let nx = s.hero.x, nz = s.hero.z;
@@ -837,6 +839,30 @@ window.startlittle_adventure = function startlittle_adventure() {
         }
       }
       if (progress) lastProgressT = s.t;
+
+      // Q-21 completion celebration (soft, <=2Hz bursts, playable after)
+      if (winFX) {
+        winFX.t += dt;
+        if (!reducedMotion && winFX.t < 4.5 && winFX.t >= winFX.nextBurst) {
+          winFX.nextBurst += 0.65; // ~1.5Hz
+          const colors = [0xFFD23F, 0xFF8A80, 0x80D8FF, 0xB388FF, 0xFFFFFF];
+          const burstN = tier === 'low' ? 6 : 10;
+          let bn = 0;
+          for (const p of particles) {
+            if (bn >= burstN) break;
+            if (!p.alive) {
+              p.alive = true;
+              const a = (bn / burstN) * Math.PI * 2;
+              const r = 2 + Math.random() * 3;
+              p.x = s.hero.x + Math.cos(a) * r; p.y = 1 + Math.random() * 2; p.z = s.hero.z + Math.sin(a) * r;
+              p.vx = Math.cos(a) * 0.8; p.vy = 1.5 + Math.random() * 1.2; p.vz = Math.sin(a) * 0.8;
+              p.life = 1400 + Math.random() * 600; p.color = colors[bn % colors.length];
+              bn++;
+            }
+          }
+        }
+        if (winFX.t > 6) winFX = { t: 6, nextBurst: 999, done: true };
+      }
 
       // Q-14 ambient life (tier-gated, reduced-motion scaled)
       ambientAcc += frameMs;
