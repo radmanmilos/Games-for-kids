@@ -981,8 +981,18 @@ const offc = cfg.camera.offset;
 
     const pauseOverlay = document.getElementById('i3d-pause');
     if (pauseOverlay) pauseOverlay.addEventListener('click', () => { pauseOverlay.style.display = 'none'; paused = false; });
+    function disposeObject(obj) {
+      if (!obj) return;
+      if (obj.geometry) obj.geometry.dispose();
+      const mats = obj.material ? (Array.isArray(obj.material) ? obj.material : [obj.material]) : [];
+      mats.forEach((m) => {
+        for (const k in m) { const v = m[k]; if (v && v.isTexture && v.dispose) v.dispose(); }
+        if (m.dispose) m.dispose();
+      });
+    }
     document.getElementById('i3d-back').addEventListener('click', () => {
       cancelAnimationFrame(rafId);
+      scene.traverse(disposeObject);
       renderer.dispose();
       booted = false;
       try { if (window.top !== window && window.top && typeof window.top.goTo === "function") window.top.goTo("hub-games"); else location.href = "../index.html#hub-games"; }

@@ -32,7 +32,7 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 | Q-15 | 3 | Camera polish | Q-03, Q-11 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | cameraNudge helper in fx module. Full camera work needs Q-11. |
 | Q-16 | 3 | Audio v2 + sound toggle | Q-09 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | audio module + sound button/aria-pressed + mute key + event SFX/pitch variance + speakWithDuck + visibility suspend/resume + thin zone music sequencer/ambient/zone crossfade/footstep sync on audioBuses. Still missing: richer ambient beds, full SFX audit/fanfare sparkle, tablet listening (USER-RUN). |
 | Q-17 | 3 | UI/UX art pass + start screen (QG5) | Q-11, Q-16 | yes | NEW | | | |
-| Q-18 | 4 | Quality tiers + performance | Q-07, Q-08, Q-14 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | TIERS table in fx module. Adaptive step-down needs renderer wiring. |
+| Q-18 | 4 | Quality tiers + performance | Q-07, Q-08, Q-14 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | TIERS table, adaptive step-down, quality()/fxTable(), perf overlay counters/memory/programs, scene dispose on back. Still missing: full tier switching, 5-cycle leak proof, tablet measurement. |
 | Q-19 | 4 | Shadows | Q-18 | yes | NEW | | | |
 | Q-20 | 4 | Readability, guidance restyle, feel tuning | Q-17 | yes | NEW | | | |
 | Q-21 | 4 | Completion celebration + free-play life | Q-13, Q-14, Q-16 | yes | NEW | | | |
@@ -64,3 +64,4 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 - 2026-11-26 — OpenCode/Big Pickle — Q-16 small: SFX pitch variance jitter applied; smokes/check_fast green.
 - 2026-11-26 — OpenCode/Big Pickle — Q-18 small: renderer.info memory/programs exposed in state/perf overlay; check_fast green.
 - 2026-11-26 — OpenCode/Big Pickle — Q-16: thin zone music sequencer/ambient/crossfade/footstep sync wired in renderer (audioBuses, mute/visibility respected); LA smokes 19+34 pass.
+- 2026-11-26 — OpenCode/Big Pickle — Q-18: scene dispose pass on back; smokes green.
