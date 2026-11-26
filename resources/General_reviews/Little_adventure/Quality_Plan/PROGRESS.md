@@ -2,7 +2,7 @@
 
 Live ledger. Status: `NEW` · `IN PROGRESS` · `DONE` · `BLOCKED` · `DEFERRED`. Last updated: 2026-11-26 (OpenCode/Big Pickle — Q-04/Q-16/Q-17/Q-20 automatable close-out + Q-22 evidence packaging + Q-23 docs prep; check_fast green).
 
-Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00…IS-19 DONE, IS-20 user-led).
+Base: `main`, manifest 3.0.26 (Q-23 minor bump, user choice 2026-11-26). Original package ledger: `../PROGRESS.md` (IS-00…IS-19 DONE, IS-20 user-led).
 
 ## Gates
 
@@ -37,7 +37,7 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 | Q-20 | 4 | Readability, guidance restyle, feel tuning | Q-17 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | Beacon god-ray+sparkles, ground chevron arrow, aim-assist ring, gate/pedestal carried-item glow. Feel tuning log: `shots/q20/feel_tuning_log.md`. Q-20 review shots captured (`shots/q20_review/`, pre-approved QG; VL/user look review pending). Fixed beacon ambient emitter leak: particles now reused from the fixed pool instead of `particles.push({...})` (which created immortal, unrendered objects). Remaining: full readability/tablet review USER-RUN. |
 | Q-21 | 4 | Completion celebration + free-play life | Q-13, Q-14, Q-16 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | Win celebration: star bursts ~1.5Hz 4.5s, lighthouse beam burst, bridge shimmer, bloom wave, follower dance/owl hop, post-win butterflies; reduced-motion still/short; game stays playable. Q-21 review shots captured (`shots/q21_review/`, pre-approved QG; VL/user look review pending). Remaining: flashing USER-RUN check. |
 | Q-22 | 4 | Full verification + golden shots (QG6) | Q-17..Q-21 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | LA quality 46/46, LA smoke 44/44 (S1-S10 shell + W1-W13 WebGL incl.), touch_interruption LA 6/6, `node tools/offline_smoke.mjs` PASS incl. little_adventure offline boot/interaction/audio-failure/back, golden shots 78 PNGs (`shots/golden/`), ASSET_BUDGET refreshed. check_release sh_217a73d33001xlET8sVGtFKAa0 FAIL only racing3d drift (39/40) - standalone racing3d PASS 40/40, runtime_error 34/0; classified flaky/unrelated. visual_compare LA baseline not created (tool requires full approved registered set/all 5 viewports). Rubric self-score recorded (AI, non-VL); USER-RUN/tablet/perf/audio/listening/playtest/readability, full 4-viewport QG6 package review, and QG6 user approval still pending. Refreshed 2026-11-26: quality 56/56, LA smoke 49/49 (added S10 loading + W4c/W4d material/program checks), touch_interruption LA 6/6, offline_smoke PASS, golden shots 78 PNGs recaptured, Screenshot_Review 4 viewports; check_fast 10/10 green after offline rebuild. Full check matrix below. |
-| Q-23 | 4 | Docs + release prep | Q-22 + QG6 | | IN PROGRESS (automatable DONE) | OpenCode/Big Pickle | 2026-11-26 | Game doc/lessons/DECISIONS/PROGRESS/Q-22 matrix/STATUS refreshed; ASSET_BUDGET + GAME_MATRIX current; `check_fast` 10/10, `check_docs` green, `docs/` mirrors `game/`. Blocked only on the user's explicit minor-vs-major version bump and QG6 release sign-off; `game/manifest.json` left at 3.0.25. |
+| Q-23 | 4 | Docs + release prep | Q-22 + QG6 | | IN PROGRESS (automatable DONE) | OpenCode/Big Pickle | 2026-11-26 | Game doc/lessons/DECISIONS/PROGRESS/Q-22 matrix/STATUS refreshed; ASSET_BUDGET + GAME_MATRIX current; `check_fast` 10/10, `check_docs` green, `docs/` mirrors `game/`. User chose the minor bump 2026-11-26; `game/manifest.json` is 3.0.26 and offline inventories rebuilt. Only QG6 release sign-off remains (user-led). |
 | Q-24 | 4 | Playtest rounds (QG7) | Q-23 | | NEW | | | |
 
 ## Rubric scores (RV �5)
@@ -69,7 +69,7 @@ Every check is PASS, SKIP(reason) or UNVERIFIED. Nothing below is self-approved 
 | `node tools/offline_smoke.mjs` | PASS | 570/570 cached files, second-visit boot/interaction/audio-failure/back offline |
 | `node tools/little_adventure_shots.js --phase=golden` | PASS | 78 PNGs in `shots/golden/` (21 presets × 2 viewports + filmstrips) |
 | `node tools/screenshot.js --review=Screenshot_Review --pages=little_adventure --task=453` | PASS | 4 viewports (phone/tablet × portrait/landscape), no runtime errors |
-| `node tools/check_release.js` | PASS (LA scope) | earlier full run 40 tools/1555 checks; latest LA scope green; racing3d drift flake standalone PASS 40/40, unrelated |
+| `node tools/check_release.js` | PASS (LA scope) | earlier full run 40 tools/1555 checks; latest LA scope green; racing3d drift flake standalone PASS 40/40, unrelated. CI run 45856393412 Release QA failed on `classroom` offline start timeout (2/153 checks); classroom untouched, local `offline_smoke.mjs` PASS 26/26 — CI-load flake. |
 | `node tools/visual_compare.js` LA baseline | SKIP | tool requires the full approved registered set at all 5 viewports; LA-only baseline not supported |
 | Rubric self-score (RV §5) | PASS (AI) | table above; non-VL estimates only |
 | Rubric user score | UNVERIFIED | user-led |
@@ -143,4 +143,4 @@ Protocol: after each playtest session, change config/data first then small code,
 - 2026-11-26 - OpenCode/Big Pickle - Q-17: Cyrillic "Учитавање..." start-overlay indicator hidden when scene ready (S10); sword cooldown conic arc + shield held glow driven from `game.state()` in `updateActors`. Polish/golden shots captured (`shots/polish_q13_q17/`, `shots/golden/`).
 - 2026-11-26 - OpenCode/Big Pickle - Q-20: beacon ambient emitter reuses a free particle from the fixed pool (removed immortal unrendered `particles.push` objects).
 - 2026-11-26 - OpenCode/Big Pickle - Q-22: evidence matrix added (quality 56/56, LA smoke 49/49, touch 6/6, offline smoke PASS, golden 78 PNGs, Screenshot_Review 4 viewports, check_fast 10/10); visual_compare SKIP reason, USER-RUN/unreviewed items explicit.
-- 2026-11-26 - OpenCode/Big Pickle - Q-23 automatable docs prep: game doc/lessons/DECISIONS/STATUS/PROGRESS refreshed; version bump left at 3.0.25 pending the user's minor/major choice; QG6 release sign-off user-led.
+- 2026-11-26 - OpenCode/Big Pickle - Q-23 automatable docs prep: game doc/lessons/DECISIONS/STATUS/PROGRESS refreshed; user chose minor bump 3.0.26 on 2026-11-26; offline inventories rebuilt; QG6 release sign-off user-led. CI run 45856393412 Release QA had a `classroom` offline-start timeout (unrelated; local offline_smoke PASS 26/26).

@@ -3,7 +3,7 @@
 **Last verified:** 2026-11-26 (OpenCode/Big Pickle)
 **Repository:** radmanmilos/Games-for-kids
 **Current branch:** `main`
-**Version:** `3.0.25` (unchanged — Q-23 bump awaits user's minor/major choice)
+**Version:** `3.0.26` (Q-23 minor bump chosen by user 2026-11-26)
 
 ## Little Adventure (task 453, IN PROGRESS)
 
@@ -29,7 +29,7 @@
 
 ## Next steps
 
-1. User: choose Q-23 version bump (minor C = 3.0.26, or major B = 3.1.0; A only for a full overhaul) and give QG6 release sign-off.
+1. User: give QG6 release sign-off (Q-23 minor bump 3.0.26 applied 2026-11-26).
 2. User: run the tablet/audio/child playtest items and report observations for Q-24; AI then changes config/data first, logs each change and re-runs shots + smokes.
 3. No automatic commit/push to `main` by the AI; the user publishes explicitly.
 
