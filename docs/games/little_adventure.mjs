@@ -224,25 +224,65 @@ window.startlittle_adventure = function startlittle_adventure() {
     function buildSheet(name, frames) {
       while (sheetRoot.children.length) sheetRoot.remove(sheetRoot.children[0]);
       const n = Math.max(1, frames | 0);
-      const spacing = 1.6;
+      const spacing = 1.7;
       const startX = -((n - 1) * spacing) / 2;
+      const chars = window.little_adventureCharacters;
+      const anim = window.little_adventureAnim;
+      const mats = (window.little_adventureMaterials && window.little_adventureMaterials.create)
+        ? window.little_adventureMaterials.create(THREE)
+        : { toon: (c) => new THREE.MeshToonMaterial({ color: c }) };
+
+      function poseAt(name, i, n) {
+        const f = n <= 1 ? 0 : i / (n - 1);
+        const t = f; // normalized 0..1
+        const sec = t * 2;
+        if (name === 'hero-idle') return { rig: 'hero', pose: anim.evalHero({ hero: { vx:0,vz:0,swingT:0,shield:false,bumpT:0 } }, sec, { motionScale: 1 }) };
+        if (name === 'hero-walk') return { rig: 'hero', pose: anim.evalHero({ hero: { vx:3,vz:0,swingT:0,shield:false,bumpT:0 } }, 0, { motionScale: 1, phase: f * Math.PI * 2 }) };
+        if (name === 'hero-swing') return { rig: 'hero', pose: anim.evalHero({ hero: { vx:0,vz:0,swingFrac:f,shield:false,bumpT:0 } }, 0, { motionScale: 1 }) };
+        if (name === 'hero-shield') return { rig: 'hero', pose: anim.evalHero({ hero: { vx:0,vz:0,swingT:0,shield:true,bumpT:0 } }, sec, { motionScale: 1 }) };
+        if (name === 'hero-bump') return { rig: 'hero', pose: anim.evalHero({ hero: { vx:0,vz:0,swingT:0,shield:false,bumpT:200*(1-f) } }, sec, { motionScale: 1 }) };
+        if (name === 'hero-pickup') return { rig: 'hero', pose: anim.evalHero({ hero: { vx:0,vz:0,swingT:0,shield:false,bumpT:0,pickupFrac:f } }, sec, { motionScale: 1 }) };
+        if (name === 'hero-celebrate') return { rig: 'hero', pose: anim.evalHero({ hero: { vx:0,vz:0,swingT:0,shield:false,bumpT:0,celebrateFrac:f } }, sec, { motionScale: 1 }) };
+        if (name === 'grumpy-walk') return { rig: 'grumpy', pose: anim.evalGrumpy({ state:'approach', hp:3, mood:1 }, sec, { motionScale: 1 }) };
+        if (name === 'grumpy-notice') return { rig: 'grumpy', pose: anim.evalGrumpy({ state:'notice', hp:3, mood:1, noticeFrac:f }, sec, { motionScale: 1 }) };
+        if (name === 'grumpy-hit') return { rig: 'grumpy', pose: anim.evalGrumpy({ state:'retreat', hp:2, mood:1, hitT:Math.max(0,430-f*430) }, sec, { motionScale: 1 }) };
+        if (name === 'grumpy-befriend') return { rig: 'grumpy', pose: anim.evalGrumpy({ state:'happy', hp:0, mood:100, befriendT:Math.max(0,400-f*400) }, sec, { motionScale: 1 }) };
+        if (name === 'happy-dance') return { rig: 'grumpy', pose: anim.evalGrumpy({ state:'happyDance', hp:0, mood:100 }, sec, { motionScale: 1 }) };
+        if (name === 'boss-stomp') return { rig: 'boss', pose: anim.evalGrumpy({ state:'bossStomp', hp:5, mood:1, stompFrac:f }, sec, { motionScale: 1 }) };
+        if (name === 'owl-talk') return { rig: 'owl', pose: anim.evalOwl({ pos:[0,0] }, { x:0, z:2 }, true, sec, { motionScale: 1 }) };
+        return null;
+      }
+
       for (let i = 0; i < n; i++) {
-        const t = n === 1 ? 0 : i / (n - 1);
-        const g = new THREE.Group();
-        const body = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.0, 0.6), new THREE.MeshLambertMaterial({ color: 0x88ccee }));
-        body.position.y = 0.5 + Math.sin(t * Math.PI) * 0.2;
-        g.add(body);
-        const head = new THREE.Mesh(new THREE.SphereGeometry(0.28, 10, 10), new THREE.MeshLambertMaterial({ color: 0xffe0bd }));
-        head.position.y = 1.15 + Math.sin(t * Math.PI) * 0.2;
-        g.add(head);
+        const info = poseAt(name, i, n);
+        let g;
+        if (info && chars && chars.create && anim) {
+          const c = chars.create(THREE, mats);
+          if (info.rig === 'hero') g = c.makeHero2();
+          else if (info.rig === 'grumpy') g = c.makeGrumpy2('normal');
+          else if (info.rig === 'boss') g = c.makeGrumpy2('boss');
+          else if (info.rig === 'owl') g = c.makeOwl2();
+          if (g) {
+            if (chars.applyPose) chars.applyPose(g, info.pose);
+            if (info.rig === 'hero' && g.userData && g.userData.setFace) g.userData.setFace(name === 'hero-celebrate' ? 'happy' : (name === 'hero-bump' ? 'strain' : 'open'));
+            if ((info.rig === 'grumpy' || info.rig === 'boss') && g.userData && g.userData.setFace) g.userData.setFace(name === 'grumpy-befriend' || name === 'happy-dance' ? 'happy' : (name === 'grumpy-hit' ? 'strain' : 'grumpy'));
+          }
+        }
+        if (!g) {
+          g = new THREE.Group();
+          const body = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.0, 0.6), new THREE.MeshLambertMaterial({ color: 0x88ccee }));
+          body.position.y = 0.5; g.add(body);
+          const head = new THREE.Mesh(new THREE.SphereGeometry(0.28, 10, 10), new THREE.MeshLambertMaterial({ color: 0xffe0bd }));
+          head.position.y = 1.15; g.add(head);
+        }
         g.position.x = startX + i * spacing;
-        g.userData.t = t;
+        g.userData.t = n === 1 ? 0 : i / (n - 1);
         sheetRoot.add(g);
       }
       sheetRoot.visible = true;
       galleryRoot.visible = false;
       heroMesh.visible = false;
-      camera.position.set(0, 2.5, 6 + n * 0.4);
+      camera.position.set(0, 2.2, 6 + n * 0.45);
       camera.lookAt(0, 0.8, 0);
     }
 
