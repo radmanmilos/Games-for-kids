@@ -72,6 +72,18 @@ The Мала тркачица (Little Racer) game is fully built (Stages 1–5, 
 
 - Built exactly to the approved package `resources/General_reviews/Cat_Forest/`; D1–D11 and R1–R14 stood with one amendment: D11 now has the AI commit+push each done card and verify CI (already recorded above).
 - **Implementation shape (no new decisions, recorded for the next session):** one engine `game/games/cat_forest.js` + one page `game/pages/cat_forest.html`, data (`TREATS`/`CATS`/`GIFTS`) and every tunable (`CF`) inside the engine. No assets, no libraries, no network — CF-18 proved the offline inventory is exactly those two files.
+
+## Cat Forest — village/fishing/gathering/workshop/diary expansion (2026-11-26, user approval)
+User explicitly approved the following product-direction changes that expand beyond the original CF-21 base game, all under the project's non-negotiable rules (no currency, no timers, no fail states, Serbian Cyrillic text/speech only, offline-only):
+1. Finite-but-generous fish gathered at pond, stored in illustrated basket without numeric counters — feeding consumes one fish when cat begins eating.
+2. Wood resources gathered from woodland clearing, stored in illustrated basket/pile without numeric counters — used for crafting decorations.
+3. Workshop crafting: child-friendly recipe system using wood + cat gifts as keepsake materials, instant craft (no timers), decorations placed at fixed anchors; replacing returns item to storage, nothing destroyed.
+4. Expanded cat diary: discovered cats only, large portraits, Serbian Cyrillic names/facts per entry, optional icon-based favourite food/place indicators — no completion counters, percentages, silhouettes or unseen-cat placeholders.
+5. Save-schema migration: new version v2 `catForestSave` with `resources`, `wood`, `keepsakes`, `crafted`, `placedDecorations`, `scene`, `settings` fields; existing v1 saves discarded on version bump; clean save starts on fresh install; version bump `A` (full overhaul) per project non-semver rule.
+
+All changes preserve: no coins/gems/XP/levels/locks/score/counters/timers/fail states/offline earnings/notifications; no countdowns/time limits/failure/loss/pressure; no locked content/opaque progression gates; cats remain friendly/safe/non-threatening; core interactions remain possible with simple taps; original calm/low-pressure character survives; large forgiving touch targets; no essential instruction delivered only through sound; all child-facing text/speech Serbian Cyrillic.
+
+Source: user 2026-11-26 explicit approval of all 5 expansion mechanics; save migration discards old states, version bump to next A-overhaul release.
 - **Persistence (D4):** one key `catForestSave` = `{v:1, met:[ids], decor:[{e,s}]}`; cats on stage, plates, selection, clock and weather are transient by design. `parent.html`'s existing reset clears it.
 - **Screenshots (D10):** `screenshot:false` is deliberate. `tools/visual-states.json` carries real `INIT`/`PLAY` states for `cat_forest`; the flag may flip to `true` **only after** the owner has reviewed and approved baselines (the flip is the owner's action; exact commands are in `PROGRESS.md`).
 - **Accepted audit exception (CF-17, task 279):** the short-landscape audit prints one WARN, "no header text visible" — the page is deliberately wordless (TP §4, "no visible text at all"), so this WARN is correct-by-design and is not to be "fixed" by adding a heading. 0 FAIL.

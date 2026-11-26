@@ -441,3 +441,4 @@ One line per task: `number | status | date | title | archive file`. Every finish
 464 | DONE | 2026-11-23 | Cat Forest Village expansion Phase 1: art direction & scene prototypes (2026-11-23, OpenCode/Big Pickle) —… | tasks-400-499.md
 465 | DONE | 2026-11-24 | Cat Forest Village expansion Phase 2: village hub + 3 fixed feeding spots (2026-11-24, OpenCode/Big Pickle).… | tasks-400-499.md
 466 | DONE | 2026-11-24 | little_adventure IS-00: confirm decisions + install plan package (2026-11-24, Kilo/openrouter/free) —… | tasks-400-499.md
+454 | DONE | 2026-11-25 | Cat Forest improvements: art gaps + play-test + village merge (2026-11-25, OpenCode/Big Pickle) — Base game… | tasks-400-499.md

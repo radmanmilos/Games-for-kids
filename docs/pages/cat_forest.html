@@ -29,7 +29,29 @@
   .cf-sky{inset:0;z-index:1;pointer-events:none;
     background:linear-gradient(#DDF1FF 0%, #EAF7E4 58%, #F7ECCF 100%);}
   #cf-scenery{inset:0;z-index:2;pointer-events:none;}
+/* CF-19: per-scene painted full-bleed background (opaque scene art in
+   game/assets/scenes/). Sits under the scenery/foreground layers; each scene
+   switches it via render() (`data-scene` -> #cf-scene-bg). */
+  #cf-scene-bg{position:absolute;inset:0;z-index:1;pointer-events:none;background-color:#EAE2D2;
+    background-size:cover;background-position:center;background-repeat:no-repeat;}
+  /* Scene-specific gradient fallbacks (replaced by painted WebP when generated) */
+  #app[data-scene="village"] #cf-scene-bg{background-image:linear-gradient(180deg,#F0D8A8 0%,#E8C88A 40%,#B8D698 100%);}
+  #app[data-scene="pond"] #cf-scene-bg{background-image:linear-gradient(180deg,#A8D0E8 0%,#7FB8D9 35%,#5A9BCC 70%,#3E7BA3 100%);}
+  #app[data-scene="woodland"] #cf-scene-bg{background-image:linear-gradient(180deg,#C8D8A8 0%,#98B878 40%,#7A9860 100%);}
+  #app[data-scene="workshop"] #cf-scene-bg{background-image:linear-gradient(180deg,#D8C8A8 0%,#B89A78 40%,#987858 100%);}
+  #app[data-scene="diary"] #cf-scene-bg{background-image:linear-gradient(180deg,#E8E0D0 0%,#D8D0C0 40%,#C8BFB0 100%);}
   #cf-decor{inset:0;z-index:3;pointer-events:none;}
+
+  /* ---- CF-13 step 3: pond fishing bobber dip ----
+     On click the fishing spot dips (translateY) briefly, then resets.
+     This is a pure transform animation — no layout change, no JS timers. */
+  #app[data-scene="pond"] #cf-fishing-spot{
+    transition: transform .12s ease-out;
+    transform-box: fill-box;
+  }
+  #app[data-scene="pond"] #cf-fishing-spot:active{
+    transform: translateY(-4px);
+  }
 
   /* CF-11 night: gradients cannot transition, so day->night is three stacked
      opacity layers (the night sky, a tint over the scenery, the stars) that
@@ -258,15 +280,19 @@
     max-width:min(92vw,88vh);max-height:min(92vw,88vh);}
   /* Met cats are buttons because a tap is a cuddle (CF-09): the same meow,
      the spoken name and hearts, on this page's own clock stamps. */
-  .cf-book-cat{position:relative;pointer-events:auto;padding:0;border:none;background:#fff;
-    cursor:pointer;width:clamp(72px,16vmin,120px);aspect-ratio:1;border-radius:50%;
-    box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);display:grid;place-items:center;
-    font-size:clamp(38px,11vmin,68px);line-height:1;font-variant-emoji:emoji;
+  .cf-book-cat{position:relative;pointer-events:auto;padding:0.5em 0.6em;border:none;background:#fff;
+    cursor:pointer;min-width:clamp(72px,16vmin,120px);border-radius:1.6vmin;
+    box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);display:flex;flex-direction:column;
+    align-items:center;gap:0.18em;font-size:clamp(38px,11vmin,68px);line-height:1;font-variant-emoji:emoji;
     transition:transform .16s ease, box-shadow .16s ease;}
   .cf-book-cat-body{display:block;line-height:1;font-variant-emoji:emoji;}
   .cf-book-cat-body::before{content:attr(data-e);}
   .cf-book-cat-acc{position:absolute;top:0.22em;right:0.22em;font-size:.5em;line-height:1;font-variant-emoji:emoji;}
   .cf-book-cat-acc::before{content:attr(data-e);}
+  .cf-book-cat-likes{display:flex;gap:0.12em;font-size:0.34em;line-height:1;font-variant-emoji:emoji;pointer-events:none;}
+  .cf-book-cat-like::before{content:attr(data-e);}
+  .cf-book-cat-hearts{display:flex;gap:0.08em;font-size:0.28em;line-height:1;font-variant-emoji:emoji;pointer-events:none;}
+  .cf-book-cat-heart::before{content:attr(data-e);}
   /* Empty book: a single 🐾, decorative and unclickable (PS §7). */
   .cf-book-empty{width:clamp(72px,16vmin,120px);aspect-ratio:1;display:grid;place-items:center;
     font-size:clamp(38px,11vmin,68px);line-height:1;font-variant-emoji:emoji;pointer-events:none;}
@@ -345,20 +371,127 @@
     font-variant-emoji:emoji;transition:transform .16s ease, box-shadow .16s ease;}
   #cf-pond-path::before{content:"🌲";}
 
-  /* The keyboard/OS preference always wins over the page's own motion.
-     CF-12 audit (TP §3.10): every decorative *movement* is disabled here —
-     press feedback and the idle pulse (DECISIONS: shake/pulse suppressed) and
-     the rain fall (card step 2). The two opacity-only entrance fades above are
-     DELIBERATELY kept running: their keyframes touch opacity alone, which is     their exemption and is asserted by the smoke. */
+  /* Phase 3 woodland scene (plan §3.2): visible only when
+     #app[data-scene="woodland"]. The woodland has trees, logs, foliage -- all
+     decorative emoji through ::before. The gather spot is a large tappable
+     button; the wood basket near the bottom shows collected wood as sprites. */
+  #app[data-scene="woodland"] #cf-woodland-scene{display:block;}
+  #app[data-scene="woodland"] #cf-gather-spot{display:block;}
+  #app[data-scene="woodland"] #cf-wood-basket{display:flex;}
+  #app[data-scene="woodland"] #cf-wood-back{display:grid;}
+  /* Hide village interactive layers when at the woodland. */
+  #app[data-scene="woodland"] #cf-plates{display:none;}
+  #app[data-scene="woodland"] #cf-tray{display:none;}
+  #app[data-scene="woodland"] #cf-friends{display:none;}
+  #app[data-scene="woodland"] .cf-toggles{display:none;}
+  /* Hide pond scene when at the woodland. */
+  #app[data-scene="woodland"] #cf-pond-scene{display:none;}
+  #app[data-scene="woodland"] #cf-fishing-spot{display:none;}
+  #app[data-scene="woodland"] #cf-fish-basket{display:none;}
+  #app[data-scene="woodland"] #cf-pond-back{display:none;}
+  #app[data-scene="woodland"] #cf-pond-path{display:none;}
+  /* The whole woodland scene is hidden unless we are AT the woodland. */
+  #cf-woodland-scene,#cf-gather-spot,#cf-wood-basket,#cf-wood-back{display:none!important;}
+
+  #cf-woodland-scene{position:absolute;inset:0;z-index:2;pointer-events:none;}
+  .cf-wood-tree{position:absolute;bottom:8%;font-size:12vmin;line-height:1;font-variant-emoji:emoji;}
+  .cf-wood-tree::before{content:attr(data-e);}
+  .cf-wood-tree-1{left:10%;transform:rotate(-4deg);}
+  .cf-wood-tree-2{left:50%;transform:rotate(2deg);}
+  .cf-wood-tree-3{right:10%;transform:rotate(-2deg);}
+  .cf-wood-bush{position:absolute;bottom:4%;font-size:9vmin;line-height:1;font-variant-emoji:emoji;}
+  .cf-wood-bush::before{content:attr(data-e);}
+  .cf-wood-bush-1{left:14%;}
+  .cf-wood-bush-2{right:14%;}
+  .cf-wood-log{position:absolute;bottom:30%;font-size:10vmin;line-height:1;font-variant-emoji:emoji;}
+  .cf-wood-log::before{content:attr(data-e);}
+  .cf-wood-log-1{left:22%;}
+  .cf-wood-log-2{right:22%;}
+
+  #cf-gather-spot{display:none;position:absolute;left:50%;top:38%;
+    transform:translate(-50%,-50%);width:clamp(96px,26vmin,160px);
+    height:clamp(96px,26vmin,160px);border-radius:50%;border:none;
+    background:rgba(255,255,255,.12);cursor:pointer;z-index:5;
+    box-shadow:0 0 0 2px rgba(255,255,255,.35),inset 0 0 3vmin rgba(255,255,255,.2);
+    transition:box-shadow .16s ease,transform .16s ease;}
+  #cf-gather-spot:active{box-shadow:0 0 0 4px rgba(255,255,255,.6),inset 0 0 4vmin rgba(255,255,255,.3);
+    transform:translate(-50%,-50%) scale(.96);}
+
+  #cf-wood-basket{position:absolute;left:50%;bottom:clamp(10px,3vmin,28px);
+    transform:translateX(-50%);z-index:6;display:flex;justify-content:center;align-items:flex-end;
+    gap:clamp(4px,1vmin,10px);padding:clamp(6px,1.4vmin,14px);min-height:clamp(56px,10vmin,80px);
+    pointer-events:none;}
+  .cf-wood-sprite{width:clamp(28px,6vmin,44px);height:clamp(28px,6vmin,44px);
+    font-size:clamp(24px,5vmin,38px);line-height:1;display:grid;place-items:center;
+    font-variant-emoji:emoji;animation:cf-wood-in .35s ease;}
+  .cf-wood-sprite::before{content:"🪵";}
+  @keyframes cf-wood-in{from{opacity:0;transform:translateY(12px) scale(.6);}to{opacity:1;transform:none;}}
+
+  #cf-wood-back{position:absolute;left:clamp(10px,2.6vmin,28px);
+    top:clamp(10px,2.6vmin,28px);z-index:10;width:clamp(56px,8vmin,72px);
+    aspect-ratio:1;padding:0;border:none;border-radius:50%;background:#fff;
+    box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);cursor:pointer;
+    display:grid;place-items:center;font-size:clamp(26px,5.5vmin,44px);line-height:1;
+    font-variant-emoji:emoji;transition:transform .16s ease, box-shadow .16s ease;}
+  #cf-wood-back::before{content:"🏠";}
+
   @media (prefers-reduced-motion: reduce){
     .cf-plate,.cf-treat,.cf-toggles button{transition:none;}
-    #cf-friends,#cf-book-close,.cf-book-cat{transition:none;}
+    #cf-friends,#cf-book-close,.cf-book-cat,.cf-book-cat-like,.cf-book-cat-heart{transition:none;}
     #cf-sky-night,#cf-night-tint,#cf-stars{transition:none;}
     #cf-rain i{animation:none;transform:translateY(var(--y));opacity:.3;}
     .cf-treat.cf-bounce,#cf-tray.cf-hint{animation:none;}
     #cf-fishing-spot{transition:none;}
     .cf-fish-sprite{animation:none;}
+    #cf-gather-spot{transition:none;}
+    .cf-wood-sprite{animation:none;}
+    #cf-craft-btn{transition:none;}
   }
+
+  /* Workshop scene (Phase 3, §3.4): wooden craft shed, recipe cards, workbench. */
+  #app[data-scene="workshop"] #cf-workshop-scene{display:block;}
+  #app[data-scene="workshop"] #cf-recipe-grid{display:grid;}
+  #app[data-scene="workshop"] #cf-craft-btn{display:block;}
+  #app[data-scene="workshop"] #cf-workshop-back{display:grid;}
+  /* Hide village interactive layers when at the workshop. */
+  #app[data-scene="workshop"] #cf-plates{display:none;}
+  #app[data-scene="workshop"] #cf-tray{display:none;}
+  #app[data-scene="workshop"] #cf-friends{display:none;}
+  #app[data-scene="workshop"] .cf-toggles{display:none;}
+  /* Hide other scenes when at workshop. */
+  #app[data-scene="workshop"] #cf-pond-scene{display:none;}
+  #app[data-scene="workshop"] #cf-fishing-spot{display:none;}
+  #app[data-scene="workshop"] #cf-fish-basket{display:none;}
+  #app[data-scene="workshop"] #cf-pond-back{display:none;}
+  #app[data-scene="workshop"] #cf-pond-path{display:none;}
+  #app[data-scene="workshop"] #cf-woodland-scene{display:none;}
+  #app[data-scene="workshop"] #cf-gather-spot{display:none;}
+  #app[data-scene="workshop"] #cf-wood-basket{display:none;}
+  #app[data-scene="workshop"] #cf-wood-back{display:none;}
+  #app[data-scene="workshop"] #cf-workshop-path{display:none;}
+  /* The whole workshop scene is hidden unless we are AT the workshop. */
+  #cf-workshop-scene,#cf-recipe-grid,#cf-craft-btn,#cf-workshop-back{display:none!important;}
+
+  #cf-workshop-scene{position:relative;z-index:2;}
+  #cf-workshop-scene .cf-workbench{position:absolute;left:50%;top:30%;transform:translateX(-50%);width:clamp(120px,28vmin,200px);height:clamp(80px,18vmin,120px);border:2px solid rgba(74,63,107,.4);border-radius:6px;background:#fff8f0;pointer-events:none;}
+  #cf-workshop-scene .cf-wood-pile{position:absolute;left:8%;top:44%;font-size:11vmin;line-height:1;font-variant-emoji:emoji;}
+  #cf-workshop-scene .cf-wood-pile::before{content:attr(data-e);}
+  #cf-workshop-scene .cf-wood-pile-1{left:8%;transform:rotate(-5deg);}
+  #cf-workshop-scene .cf-wood-pile-2{left:12%;transform:rotate(3deg);}
+  #cf-workshop-scene .cf-keep-tray{position:absolute;right:8%;top:44%;width:clamp(36px,6vmin,44px);height:clamp(36px,6vmin,44px);display:flex;justify-content:center;align-items:flex-end;gap:2px;font-size:9vmin;line-height:1;font-variant-emoji:emoji;}
+  #cf-workshop-scene .cf-keep-tray::before{content:attr(data-e);}
+  #cf-workshop-scene .cf-keep-tray-1{right:8%;}
+  #cf-workshop-scene .cf-keep-tray-2{right:12%;}
+  #cf-recipe-grid{position:absolute;left:0;right:0;top:60%;display:grid;gap:clamp(6px,1vmin,12px);grid-template-columns:repeat(auto-fit,minmax(clamp(80px,16vmin,160px),1fr));justify-content:center;}
+  #cf-recipe-grid .cf-recipe-card{background:#fff3e0;border:1px solid rgba(74,63,107,.3);border-radius:6px;padding:clamp(6px,1vmin,8px);cursor:pointer;pointer-events:auto;}
+  #cf-recipe-grid .cf-recipe-card:hover{background:#ffe0cc;}
+  #cf-recipe-grid .cf-recipe-card.selected{border-color:rgba(74,63,107,.6);background:#ffccbc;}
+  #cf-recipe-grid .cf-recipe-card .cf-recipe-emoji{font-size:24px;display:block;text-align:center;margin:0 auto clamp(4px,1vmin,6px);}
+  #cf-recipe-grid .cf-recipe-card .cf-recipe-name{font-size:clamp(10px,1.2vmin,14px);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  #cf-craft-btn{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:clamp(100px,22vmin,140px);height:clamp(36px,8vmin,44px);background:#ffb74d;border:none;border-radius:6px;font-size:clamp(14px,2.5vmin,18px);line-height:1;color:#fff;cursor:pointer;}
+  #cf-craft-btn:active{background:#e68a33;}
+  #cf-workshop-back{position:absolute;left:clamp(10px,2.6vmin,28px);top:clamp(10px,2.6vmin,28px);z-index:10;width:clamp(56px,8vmin,72px);aspect-ratio:1;padding:0;border:none;border-radius:50%;background:#fff;box-shadow:0 0.6vmin 0 rgba(74,63,107,.14);cursor:pointer;display:grid;place-items:center;font-size:clamp(26px,5.5vmin,44px);line-height:1;font-variant-emoji:emoji;}
+  #cf-workshop-back::before{content:"🏠";}
 
   /* Desktop tier, mirroring sorting.html: cap the vmin glyphs so a tablet held
      in landscape does not turn the forest into giant emoji. */
@@ -398,6 +531,9 @@
         <span class="cf-house-chimney" aria-hidden="true"></span>
       </span>
 
+      <!-- Village scene painted background (opaque full-bleed) -->
+      <div id="cf-scene-bg" aria-hidden="true"></div>
+
       <!-- Garden -->
       <span class="cf-ground" aria-hidden="true"></span>
       <span class="cf-flower cf-flower-1" data-e="🌸" aria-hidden="true"></span>
@@ -429,6 +565,9 @@
     <div class="cf-toggles">
       <button id="cf-daynight" aria-pressed="false" aria-label="Дан и ноћ"></button>
       <button id="cf-rain-btn" data-e="🌧️" aria-pressed="false" aria-label="Киша"></button>
+      <button id="cf-pond-path" data-e="🛤️" aria-label="Пут до понда"></button>
+      <button id="cf-wood-path" data-e="🌳" aria-label="Пут до шуме"></button>
+      <button id="cf-workshop-path" data-e="🛠️" aria-label="Пут до радионице"></button>
     </div>
     <button id="cf-friends" aria-label="Мачке пријатељи"></button>
     <div id="cf-book" role="dialog" aria-modal="true" aria-label="Мачке пријатељи" hidden>
@@ -450,7 +589,31 @@
     <button id="cf-fishing-spot" aria-label="Пецај рибу"></button>
     <div id="cf-fish-basket" aria-hidden="true"></div>
     <button id="cf-pond-back" aria-label="Назад у село"></button>
-    <button id="cf-pond-path" aria-label="Вир"></button>
+    <div id="cf-woodland-scene" aria-hidden="true">
+      <span class="cf-wood-tree cf-wood-tree-1" data-e="🌲" aria-hidden="true"></span>
+      <span class="cf-wood-tree cf-wood-tree-2" data-e="🌲" aria-hidden="true"></span>
+      <span class="cf-wood-tree cf-wood-tree-3" data-e="🌲" aria-hidden="true"></span>
+      <span class="cf-wood-bush cf-wood-bush-1" data-e="🌿" aria-hidden="true"></span>
+      <span class="cf-wood-bush cf-wood-bush-2" data-e="🌿" aria-hidden="true"></span>
+      <span class="cf-wood-log cf-wood-log-1" data-e="🪵" aria-hidden="true"></span>
+      <span class="cf-wood-log cf-wood-log-2" data-e="🪵" aria-hidden="true"></span>
+    </div>
+    <button id="cf-gather-spot" aria-label="Сакупи дрва"></button>
+    <div id="cf-wood-basket" aria-hidden="true"></div>
+    <button id="cf-wood-back" aria-label="Назад у село"></button>
+    <!-- Phase 3 workshop scene (plan §3.4): hidden by default, shown when
+         data-scene="workshop". Open-front wooden workshop with workbench,
+         wood pile + keepsake tray, recipe cards, craft button. -->
+    <div id="cf-workshop-scene" aria-hidden="true">
+      <span class="cf-workbench" aria-hidden="true"></span>
+      <span class="cf-wood-pile cf-wood-pile-1" data-e="🪵" aria-hidden="true"></span>
+      <span class="cf-wood-pile cf-wood-pile-2" data-e="🪵" aria-hidden="true"></span>
+      <span class="cf-keep-tray cf-keep-tray-1" data-e="🌸" aria-hidden="true"></span>
+      <span class="cf-keep-tray cf-keep-tray-2" data-e="🌷" aria-hidden="true"></span>
+    </div>
+    <div id="cf-recipe-grid"></div>
+    <button id="cf-craft-btn" aria-label="Скрапи"></button>
+    <button id="cf-workshop-back" aria-label="Назад у село"></button>
   </div>
 </div>
 <script src="../data/serbian.js"></script>

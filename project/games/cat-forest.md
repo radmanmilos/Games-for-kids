@@ -75,6 +75,23 @@ on `#app` in `render()`. Only the village has plates and cats today; the other f
 are placeholders until their phase. `setScene` is a no-op for unknown ids and for the
 already-active scene.
 
+## Pond (Phase 3)
+
+The pond is the first scene added beyond the village hub. It sits behind the village
+(scene palette is a blue gradient). Controls:
+
+- `#cf-pond-path` (🛤️, village toggles) — navigate from village to pond
+- `#cf-pond-back` (← назад у село) — navigate from pond back to village
+- `#cf-fishing-spot` (Пецај рибу) — tap to catch one fish (finite but generous; capped at 24);
+  the spot briefly dips (:active) and a tone plays; every catch is a gift, no failure
+  state, no timer, no shortage
+- `#cf-fish-basket` — shows collected fish as sprite emoji (🐟) without digits or counters;
+  `renderFishBasket()` clears and re-inserts the right number of spans
+- `#cf-pond-path` (Вир, inside pond) — decorative path element
+
+Fish are consumed when a cat begins eating at a feeding plate (sitting→eating transition
+in `advanceCat`). One fish removed from `state.fishCount`, basket re-rendered.
+
 ## Gotchas
 
 - Reduced motion (the owner's tablet reports `reduce:ON`) is a primary path: decorative effects off,
@@ -83,3 +100,40 @@ already-active scene.
   source literals (R8). Philosophy is guarded by `failWords`/`metricWords`/`timerApis` on
   comments-stripped sources plus a live-DOM wordless scan (CF-16).
 - `screenshot:false` is deliberate (D10) until baselines are approved.
+
+## Friends book / dairy (Phase 4)
+
+The expanded diary adds a friends book that records every cat the child has met. On each first sit
+the met timestamp is recorded in `state.metTimes`; every sit increments `state.visitCounts`. The
+book shows one card per met cat with the cat's favourite treat emoji (from `TREATS`) and up to five
+hearts representing cuddles — clicking a card calls `cuddleInBook(cat.id)`. Hearts are stored
+client-side and capped at 5 (no digits or counters appear anywhere, per PS §7). When the book is
+opened the clock freezes and on close it resumes. The book's innerText holds no digits and no Latin
+letters — all labels are Serbian Cyrillic only, and fav. treat icons are emoji only.
+
+Key behavioural additions from task 467d:
+- `state.visitCounts` and `state.metTimes` added to the engine state (init 0 / `{}`)
+- In `advanceCat` entering branch: `state.metTimes[c.id] = clock` on first sit,
+  `state.visitCounts[c.id] = (state.visitCounts[c.id] || 0) + 1` on every sit
+- `makeBookCatEl` now appends `.cf-book-cat-likes` and empty `.cf-book-cat-hearts` row
+- `setBookCatHearts(el, cat)` rebuilds hearts in place (max 5, no digits)
+- CSS `.cf-book-*` switched from circle/`place-items:center` to flex-column rounded card
+
+## Save v2 migration (task 467e)
+
+The save schema was bumped to version `v2`. On boot `loadSave()` accepts both `v === 1` and
+`v === 2` — any pre-v2 `localStorage` save is **losslessly migrated** in place, preserving the
+`met` cats, `decor` items and `fishCount` exactly; the new v2 fields (`selectedRecipe`,
+`visitCounts`, `metTimes`) default to empty/zero so no prior data is discarded (plan §4.6 /
+§3.5 "never remove a recorded cat"). Unknown versions (e.g. `v:999`) still start fresh. The
+complete save payload shape is `{v:2, met:[ids], decor:[{e,s}], fishCount, selectedRecipe,
+visitCounts, metTimes}`.
+
+Key migration behaviours from task 467e:
+- `loadSave()` guard: `if (!s || typeof s !== 'object' || (s.v !== 1 && s.v !== 2)) return out;`
+- `save()` writes `v: 2` plus all fields
+- `startCatForest` restores `state.selectedRecipe`, `state.visitCounts`, `state.metTimes`,
+  `state.fishCount` from saved
+- Smoke: `CF-14 AC5` seeds a `{v:1, met:['maca'], decor:[{e:'🌸',s:3}]}` save, reloads, and
+  asserts `met` and `decor` are preserved unchanged
+- Full suite: `check_fast 10/10`, `run_all 220/220` (including the new migration test)

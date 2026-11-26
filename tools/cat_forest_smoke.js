@@ -1371,7 +1371,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     const sel = m[1].split('\n').pop().trim();
     if (sel) cf12Anim.push(sel);
   }
-  const cf12Known = ['.cf-gift', '.cf-decor-item', '.cf-fish-sprite', '.cf-treat.cf-bounce', '#cf-tray.cf-hint', '#cf-rain i'];
+  const cf12Known = ['.cf-gift', '.cf-decor-item', '.cf-fish-sprite', '.cf-wood-sprite', '.cf-treat.cf-bounce', '#cf-tray.cf-hint', '#cf-rain i'];
   const cf12Unknown = cf12Anim.filter(s => cf12Known.indexOf(s) === -1);
   check('every animation: selector on the page is classified by the audit (AC2)',
     cf12Anim.length >= 5 && cf12Unknown.length === 0,
@@ -1611,7 +1611,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   await cf13Mot.close();
 
   /* ---- CF-14: persistence — save / load / reset (D4, TD §9) --------------
-     One key (`catForestSave`) holds {v:1, met, decor}; it is written on a
+      One key (`catForestSave`) holds {v:2, met, decor, fishCount, selectedRecipe, visitCounts, metTimes}; it is written on a
      cat's first sit and on a decoration landing, loaded (validated, never
      throwing) at boot, and wiped by the parent reset through
      localStorage.clear(). Every start() launches a fresh browser PROFILE, so
@@ -1663,9 +1663,9 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     cf14Pre.keys.length >= 2 && cf14Pre.keys.every(k => k === 'catForestSave')
       && cf14Pre.met.length >= 1 && cf14Pre.decor.length >= 1,
     JSON.stringify({ keys: cf14Pre.keys, met: cf14Pre.met, decor: cf14Pre.decor.length }));
-  check('CF-14: the save payload is exactly {v:1, met:[ids], decor:[{e,s}]}',
-    cf14Raw && cf14Raw.v === 1 && Array.isArray(cf14Raw.met) && Array.isArray(cf14Raw.decor)
-      && Object.keys(cf14Raw).sort().join(',') === 'decor,fishCount,met,v'
+  check('CF-14: the save payload is exactly {v:2, met:[ids], decor:[{e,s}], fishCount, selectedRecipe, visitCounts, metTimes}',
+    cf14Raw && cf14Raw.v === 2 && Array.isArray(cf14Raw.met) && Array.isArray(cf14Raw.decor)
+      && Object.keys(cf14Raw).sort().join(',') === 'decor,fishCount,met,metTimes,selectedRecipe,v,visitCounts'
       && cf14Raw.met.every(id => typeof id === 'string')
       && cf14Raw.decor.every(d => d && typeof d.e === 'string' && (d.s | 0) === d.s),
     cf14Pre.raw);
@@ -1702,14 +1702,14 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   check('CF-14 AC2: corrupt JSON boots clean with fresh state (never throws)',
     cf14Bad1.met.length === 0 && cf14Bad1.decor.length === 0, JSON.stringify(cf14Bad1));
 
-  await cf14C.evalv(`localStorage.setItem('catForestSave', JSON.stringify({ v: 2, met: ['maca'], decor: [] })); true`);
+  await cf14C.evalv(`localStorage.setItem('catForestSave', JSON.stringify({ v: 999, met: ['maca'], decor: [] })); true`);
   const cf14Bad2 = await cf14Reload(cf14C);
   check('CF-14 AC2: a wrong save version is ignored (fresh start)',
     cf14Bad2.met.length === 0 && cf14Bad2.decor.length === 0, JSON.stringify(cf14Bad2));
 
   const cf14Big = [];
   for (let i = 0; i < 20; i++) cf14Big.push({ e: '🌸', s: i % 14 });
-  await cf14C.evalv(`localStorage.setItem('catForestSave', JSON.stringify({ v: 1,
+  await cf14C.evalv(`localStorage.setItem('catForestSave', JSON.stringify({ v: 2,
     met: ['maca', 'bogus-cat', 42, null, 'maca'],
     decor: [{ e: '🌸', s: 3 }, { e: '💥', s: 4 }, { e: '🌷', s: 99 }, { e: '🍀', s: -1 },
       { e: '🍄', s: 7.5 }, null, 'x'].concat(${JSON.stringify(cf14Big)}) })); true`);
@@ -1728,6 +1728,21 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     cf14Bad4.met.length === 0 && cf14Bad4.decor.length === 0 && cf14KeyGone,
     JSON.stringify(cf14Bad4));
   await cf14C.close();
+
+  /* NEW: AC5 — a v1 save migrates to v2 without losing met cats or decor
+     (plan §4.6 / §3.5 "never remove a recorded cat").  Saves a v1 payload,
+      boots, reloads, and checks that every met and every decor item survived
+      the migration.  Only unknown versions (e.g. v:999) truly start fresh. */
+  const cf14Mig = await bootFresh('cf14-migrate');
+  await cf14Mig.evalv(`localStorage.setItem('catForestSave', JSON.stringify({ v: 1,
+    met: ['maca'], decor: [{ e: '🌸', s: 3 }] })); true`);
+  const cf14MigState = await cf14Reload(cf14Mig);
+  check('CF-14 AC5: v1 save migrates to v2 preserving met and decor',
+    JSON.stringify(cf14MigState.met) === '["maca"]'
+      && JSON.stringify(cf14MigState.decor) === JSON.stringify([{ e: '🌸', s: 3 }])
+      && cf14MigState.met.length === 1 && cf14MigState.decor.length === 1,
+    JSON.stringify(cf14MigState));
+  await cf14Mig.close();
 
   /* AC4: a storage that throws must cost the child nothing — the visit and
      the collection run to completion with setItem raising every call. */

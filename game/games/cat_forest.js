@@ -77,6 +77,18 @@
 
   var GIFTS = ['🌸', '🌷', '🍄', '🍀', '🦋'];
 
+  /* Phase 3 workshop recipes: crafted decorations from gathered materials.
+     Each recipe declares wood/fish cost and the resulting decoration emoji.
+     All recipes visible from start; no locked recipes. Instant craft, no timer. */
+  var RECIPES = [
+    { id: 'pot',      emoji: '🪴', name: 'Сакуса',     wood: 1, fish: 0 }, // potted plant
+    { id: 'birdhouse', emoji: '🏠', name: 'Кућица',     wood: 2, fish: 0 }, // birdhouse
+    { id: 'lantern',  emoji: '🏮', name: 'Лампион',     wood: 1, fish: 1 }, // lantern
+    { id: 'bench',    emoji: '🪑', name: 'Клупа',       wood: 2, fish: 1 }, // garden bench
+    { id: 'fence',    emoji: '🚧', name: 'Ограда',      wood: 3, fish: 0 }, // fence section
+    { id: 'chime',    emoji: '🎐', name: 'Ветручар',    wood: 1, fish: 1 }  // wind chime
+  ];
+
   /* Phase 2 (plan §8 Phase 2): the village hub. The three fixed feeding places
      live in this table — they are STABLE stage-fraction anchors, so a tap on
      porch.feed.1 lands at the same stage fraction on a 390×844 phone and a
@@ -127,12 +139,21 @@
       met: [],
       lastVisitorId: null,
       visitsThisSession: 0,
+      /* Phase 3 diary: total visits per cat (persisted) for the expanded book. */
+      visitCounts: {},
+      /* Phase 3 diary: first-meet clock timestamp per cat. */
+      metTimes: {},
       idle: { sinceMs: 0, hints: 0, firstDone: false },
       fx: { count: 0, parts: [] },
       scene: DEFAULT_SCENE,
       /* Catches made at the pond (Phase 3). Starts at 0; every successful
          catch +1, and a fish set on a plate is not consumed twice. */
       fishCount: 0,
+      /* Wood gathered at the woodland (Phase 3). Starts at 0; every successful
+         gather +1. No spending mechanic yet — collection itself is the reward. */
+      woodCount: 0,
+      /* Phase 3 workshop: the recipe currently selected on the workbench. */
+      selectedRecipe: null,
       /* Transient picture hints (no text): a gentle bounce of the tray or of the
          selected treat. Kept in state and timed by the clock so step() can drive
          it in tests; not part of the TD §8 snapshot. */
@@ -346,13 +367,20 @@
       c.dur = phaseDur('sitting');
       if (state.met.indexOf(c.id) === -1) { // first sit = met (TD §5)
         state.met.push(c.id);
+        state.metTimes[c.id] = state.clock;
         save(); // CF-14: a cat first sitting is one of the two save points
         var here = catPos(c); // CF-09 step 5: one decorative sparkle burst around the cat
         spawnFx(here.x, here.y, '✨', FX_BURST);
       }
+      // Increment visit count for this cat (every sit = a visit)
+      state.visitCounts[c.id] = (state.visitCounts[c.id] || 0) + 1;
     } else if (c.phase === 'sitting') {
       c.phase = 'eating';
       c.dur = phaseDur('eating');
+      if (state.fishCount > 0) {
+        state.fishCount--;
+        renderFishBasket();
+      }
     } else if (c.phase === 'eating') {
       endEating(c);
       c.phase = 'leaving';
@@ -477,12 +505,23 @@
     // Phase 2: entering the village leaves every layer intact. Later phases
     // render scene-specific layers here (pond fishing UI, workshop recipes,
     // the diary overlay) and cancel them in exitScene.
+    if (name === 'workshop') renderRecipeGrid();
     return true;
   }
 
   function exitScene(name) {
     // Nothing transient to cancel in the village today; state (resources,
     // cats, met cats, saved decor) is always preserved across scene switches.
+    // If leaving workshop, clear recipe selection.
+    if (name === 'workshop') {
+      state.selectedRecipe = null;
+      if (els.recipeGrid) {
+        var cards = els.recipeGrid.querySelectorAll('.cf-recipe-card');
+        for (var i = 0; i < cards.length; i++) {
+          cards[i].classList.remove('selected');
+        }
+      }
+    }
     return true;
   }
 
@@ -567,7 +606,20 @@
       plateTreats: [].slice.call(document.querySelectorAll('#cf-plates .cf-plate-treat')),
       pondSpot: document.getElementById('cf-fishing-spot'),
       fishBasket: document.getElementById('cf-fish-basket'),
-      pondScene: document.getElementById('cf-pond-scene')
+      pondScene: document.getElementById('cf-pond-scene'),
+      sceneBg: document.getElementById('cf-scene-bg'),
+      pondBack: document.getElementById('cf-pond-back'),
+      pondPath: document.getElementById('cf-pond-path'),
+      woodScene: document.getElementById('cf-woodland-scene'),
+      woodSpot: document.getElementById('cf-gather-spot'),
+      woodBasket: document.getElementById('cf-wood-basket'),
+      woodBack: document.getElementById('cf-wood-back'),
+      woodPath: document.getElementById('cf-wood-path'),
+      workshopScene: document.getElementById('cf-workshop-scene'),
+      recipeGrid: document.getElementById('cf-recipe-grid'),
+      craftBtn: document.getElementById('cf-craft-btn'),
+      workshopBack: document.getElementById('cf-workshop-back'),
+      workshopPath: document.getElementById('cf-workshop-path')
     };
   }
 
@@ -631,6 +683,10 @@
     if (els.dayNight) els.dayNight.setAttribute('aria-pressed', state.time === 'night' ? 'true' : 'false');
     /* CF-12: the rain switch mirrors state.weather the same way. */
     if (els.rainBtn) els.rainBtn.setAttribute('aria-pressed', state.weather === 'rain' ? 'true' : 'false');
+    /* CF-19: per-scene background is driven by CSS (data-scene -> #cf-scene-bg
+     gradients). Painted WebP scene assets live under game/assets/scenes/ and
+     will be wired here once generated through the project's approved pipeline
+     (currently no Cloudflare credentials in this environment). */
 
     for (var i = 0; i < els.treats.length; i++) {
       var el = els.treats[i];
@@ -694,11 +750,14 @@
   }
 
 /* CF-13 step 2: the fish basket shows up to this many sprites; the internal
-     count stays generous and never discards a catch (plan §3.2). A module
-     constant, not a CF property — it is a visual cap, not a gameplay rule. */
-  var FISH_BASKET_CAP = 24;
+   count stays generous and never discards a catch (plan §3.2). A module
+   constant, not a CF property — it is a visual cap, not a gameplay rule. */
+var FISH_BASKET_CAP = 24;
 
-  function renderFishBasket() {
+/* Wood basket capacity — generous for collection, no gameplay limit. */
+var WOOD_BASKET_CAP = 50;
+
+function renderFishBasket() {
     if (!els || !els.fishBasket) return;
     var shown = state.fishCount;
     if (shown > FISH_BASKET_CAP) shown = FISH_BASKET_CAP;
@@ -713,11 +772,75 @@
     }
   }
 
-  /* ---- cat rendering (CF-07; TD §7/§10) ---------------------------------
+  function renderWoodBasket() {
+    if (!els || !els.woodBasket) return;
+    var shown = state.woodCount;
+    if (shown > WOOD_BASKET_CAP) shown = WOOD_BASKET_CAP;
+    var sig = 'n' + shown;
+    if (els.woodBasket.getAttribute('data-sig') === sig) return;
+    els.woodBasket.setAttribute('data-sig', sig);
+    while (els.woodBasket.firstChild) els.woodBasket.removeChild(els.woodBasket.firstChild);
+    for (var i = 0; i < shown; i++) {
+      var sp = document.createElement('span');
+      sp.className = 'cf-wood-sprite';
+      els.woodBasket.appendChild(sp);
+    }
+  }
+
+  /* Phase 3 workshop: render the recipe grid with available cards. */
+  function renderRecipeGrid() {
+    if (!els || !els.recipeGrid) return;
+    els.recipeGrid.innerHTML = '';
+    for (var i = 0; i < RECIPES.length; i++) {
+      var r = RECIPES[i];
+      var card = document.createElement('div');
+      card.className = 'cf-recipe-card';
+      card.innerHTML = '<div class="cf-recipe-emoji">' + r.emoji + '</div><div class="cf-recipe-name">' + r.name + '</div>';
+      card.dataset.id = r.id;
+      card.addEventListener('click', function () { selectRecipe(this.dataset.id); });
+      els.recipeGrid.appendChild(card);
+    }
+  }
+
+  function selectRecipe(id) {
+    state.selectedRecipe = id;
+    // Update visual selection
+    var cards = els.recipeGrid.querySelectorAll('.cf-recipe-card');
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].classList.toggle('selected', cards[i].dataset.id === id);
+    }
+  }
+
+  function craftNow() {
+    if (!state.selectedRecipe) return;
+    var recipe = RECIPES.find(function (r) { return r.id === state.selectedRecipe; });
+    if (!recipe) return;
+    if (state.woodCount < recipe.wood || state.fishCount < recipe.fish) return;
+    // Consume materials
+    state.woodCount -= recipe.wood;
+    state.fishCount -= recipe.fish;
+    // Add crafted decoration to forest
+    // Use the next available decor slot from DECOR_SLOTS
+    var slot = state.decor.length % CF.DECOR_MAX;
+    state.decor.push({ uid: ++uidSeq, e: recipe.emoji, s: slot });
+    if (state.decor.length > CF.DECOR_MAX) state.decor.shift(); // forest never fills up
+    renderFishBasket();
+    renderWoodBasket();
+    renderRecipeGrid();
+    // Visual: brief workbench animation feedback
+    // Clear selection
+    state.selectedRecipe = null;
+    var cards = els.recipeGrid.querySelectorAll('.cf-recipe-card');
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].classList.remove('selected');
+    }
+  }
+
+/* ---- cat rendering (CF-07; TD §7/§10) ---------------------------------
    render() projects each actor's fraction of its phase to a position; CSS
    only scales the body for facing and bobs it while walking, so step() stays
    exact and positions never come from a transition. */
-  function geomPlate(idx) {
+function geomPlate(idx) {
     return (geom && geom.plates[idx]) || { x: 0.3 + idx * 0.2, y: 0.48 };
   }
 
@@ -1367,6 +1490,26 @@
       if (!cat) continue;
       var el = bookCatEls[id];
       if (!el) { el = makeBookCatEl(cat); bookCatEls[id] = el; grid.appendChild(el); }
+      /* The card survives across renders, so only the hearts row needs a
+         refresh: visits grow while the book stays closed. */
+      setBookCatHearts(el, cat);
+    }
+  }
+
+  /* Rebuild the hearts row in place (no new nodes when the count is unchanged,
+     so focus on the card survives a cuddle's render). */
+  function setBookCatHearts(el, cat) {
+    var heartsRow = el.querySelector('.cf-book-cat-hearts');
+    if (!heartsRow) return;
+    var visits = state.visitCounts[cat.id] || 0;
+    var hearts = visits > 5 ? 5 : visits;
+    while (heartsRow.childNodes.length > hearts) heartsRow.removeChild(heartsRow.lastChild);
+    for (var i = heartsRow.childNodes.length; i < hearts; i++) {
+      var hr = document.createElement('span');
+      hr.className = 'cf-book-cat-heart';
+      hr.setAttribute('data-e', '❤️');
+      if (window.Art && window.Art.fillAttr) window.Art.fillAttr(hr, 'data-e', '❤️');
+      heartsRow.appendChild(hr);
     }
   }
 
@@ -1408,6 +1551,26 @@
       else acc.setAttribute('data-e', cat.acc);
       el.appendChild(acc);
     }
+    /* Phase 3 diary: show cat's favorite treats and visit count as hearts. */
+    var likesRow = document.createElement('div');
+    likesRow.className = 'cf-book-cat-likes';
+    for (var li = 0; li < cat.likes.length; li++) {
+      var treatEmoji = null;
+      for (var ti = 0; ti < TREATS.length; ti++) {
+        if (TREATS[ti].id === cat.likes[li]) { treatEmoji = TREATS[ti].emoji; break; }
+      }
+      if (treatEmoji) {
+        var lt = document.createElement('span');
+        lt.className = 'cf-book-cat-like';
+        lt.setAttribute('data-e', treatEmoji);
+        if (window.Art && window.Art.fillAttr) window.Art.fillAttr(lt, 'data-e', treatEmoji);
+        likesRow.appendChild(lt);
+      }
+    }
+    el.appendChild(likesRow);
+    var heartsRow = document.createElement('div');
+    heartsRow.className = 'cf-book-cat-hearts';
+    el.appendChild(heartsRow);
     el.addEventListener('click', function () { cuddleInBook(cat.id); });
     return el;
   }
@@ -1416,35 +1579,36 @@
      Only two facts survive closing the app: which cats the child has met and
      where the forest grew — cats on stage, plates, selection, time and
      weather are transient by design (regression risk, card). One key,
-     `{v:1, met:[ids], decor:[{e,s}]}`. Every storage call is try/catch'd: a
-     private-mode or quota failure must never cost the child a working game
-     (racing3d.mjs:138-159 idiom). Saves happen on a cat's first sit and on a
-     decoration landing — never in the render loop. The parent's reset
+     `{v:2, met:[ids], decor:[{e,s}], fishCount, selectedRecipe, visitCounts, metTimes}`.
+     Every storage call is try/catch'd: a private-mode or quota failure must
+     never cost the child a working game (racing3d.mjs:138-159 idiom). Saves
+     happen on a cat's first sit and on a decoration landing — never in the
+     render loop. The parent's reset
      («Обриши локални напредак», parent.html:471-477) is localStorage.clear(),
      so it wipes this key too: no extra reset wiring exists anywhere. */
   var SAVE_KEY = 'catForestSave';
 
   function loadSave() {
-    var out = { met: [], decor: [], fishCount: 0 };
+    var out = { met: [], decor: [], fishCount: 0, selectedRecipe: null, visitCounts: {}, metTimes: {} };
     try {
       var raw = localStorage.getItem(SAVE_KEY);
       if (!raw) return out;
       var s = JSON.parse(raw);
-      /* Wrong version or shape → a fresh start (TD §9), never a throw. */
-      if (!s || typeof s !== 'object' || s.v !== 1) return out;
+      /* Unknown version or shape → a fresh start (TD §9), never a throw.
+         v1 migrates to v2 in place: met cats, forest decor and fish are
+         preserved (plan §4.6 / §3.5 "never remove a recorded cat"); the new
+         v2 fields simply default empty. */
+      if (!s || typeof s !== 'object' || (s.v !== 1 && s.v !== 2)) return out;
       var i, id, d;
       if (s.met instanceof Array) {
         for (i = 0; i < s.met.length; i++) {
           id = s.met[i];
-          /* Unknown ids are dropped; duplicates collapse (card step 2). */
           if (typeof id === 'string' && catById(id) && out.met.indexOf(id) === -1) out.met.push(id);
         }
       }
       if (s.decor instanceof Array) {
         for (i = 0; i < s.decor.length && out.decor.length < CF.DECOR_MAX; i++) {
           d = s.decor[i];
-          /* Known gift emoji and a valid integer slot only; the loop bound
-             clamps an oversized forest to DECOR_MAX. */
           if (d && typeof d === 'object' && GIFTS.indexOf(d.e) !== -1 &&
               typeof d.s === 'number' && (d.s | 0) === d.s && d.s >= 0 && d.s < CF.DECOR_MAX) {
             out.decor.push({ uid: ++uidSeq, e: d.e, s: d.s });
@@ -1454,6 +1618,23 @@
       if (typeof s.fishCount === 'number' && (s.fishCount | 0) === s.fishCount && s.fishCount >= 0) {
         out.fishCount = s.fishCount;
       }
+      if (typeof s.selectedRecipe === 'string' && GIFTS.indexOf(s.selectedRecipe) !== -1) {
+        out.selectedRecipe = s.selectedRecipe;
+      }
+      if (typeof s.visitCounts === 'object') {
+        for (var vk in s.visitCounts) {
+          if (typeof s.visitCounts[vk] === 'number' && (s.visitCounts[vk] | 0) === s.visitCounts[vk] && s.visitCounts[vk] >= 0) {
+            out.visitCounts[vk] = s.visitCounts[vk];
+          }
+        }
+      }
+      if (typeof s.metTimes === 'object') {
+        for (var vkt in s.metTimes) {
+          if (typeof s.metTimes[vkt] === 'number' && s.metTimes[vkt] >= 0) {
+            out.metTimes[vkt] = s.metTimes[vkt];
+          }
+        }
+      }
     } catch (e) { /* corrupt or unavailable storage: fresh start */ }
     return out;
   }
@@ -1461,9 +1642,12 @@
   function save() {
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify({
-        v: 1,
+        v: 2,
         met: state.met.slice(),
         decor: state.decor.map(function (d) { return { e: d.e, s: d.s }; }),
+        selectedRecipe: state.selectedRecipe,
+        visitCounts: state.visitCounts,
+        metTimes: state.metTimes,
         fishCount: state.fishCount
       }));
     } catch (e) { /* private mode / quota: play on */ }
@@ -1522,6 +1706,10 @@
     var saved = loadSave();
     state.met = saved.met;
     state.decor = saved.decor;
+    state.selectedRecipe = saved.selectedRecipe;
+    state.visitCounts = saved.visitCounts;
+    state.metTimes = saved.metTimes;
+    state.fishCount = saved.fishCount;
 
     cacheEls();
     paintStaticGlyphs();
@@ -1582,14 +1770,35 @@
     els.app.addEventListener('pointerdown', onAppPointerDown); // CF-10: any real touch restarts the idle windows
     els.friends.addEventListener('click', openBook);   // CF-15
     els.bookClose.addEventListener('click', closeBook); // CF-15
+    els.pondBack.addEventListener('click', function () { setScene('village'); });
+    els.pondPath.addEventListener('click', function () { setScene('pond'); });
+    els.woodBack.addEventListener('click', function () { setScene('village'); });
+    els.woodPath.addEventListener('click', function () { setScene('woodland'); });
+    els.workshopBack.addEventListener('click', function () { setScene('village'); });
+    els.workshopPath.addEventListener('click', function () { setScene('workshop'); });
+    if (els.craftBtn) els.craftBtn.addEventListener('click', function () { craftNow(); });
+
+    /* Phase 3 woodland gathering: tap the gather spot → wood +1 in the basket.
+       Generous collection; no failure state, no timer, no shortage. */
+    els.woodSpot.addEventListener('click', function () {
+      if (state.woodCount < WOOD_BASKET_CAP) {
+        state.woodCount++;
+        renderWoodBasket();
+      }
+      if (window.tone) {
+        window.tone(700, 0.08, 0, 'sine', 0.15);
+        window.tone(500, 0.08, 0.05, 'sine', 0.2);
+      }
+    });
 
     /* CF-13 step 2: pond fishing interaction.
        Tap the fishing spot → increment fish count; a fish sprite is added to the
-       basket. No failure state, no timer, no shortage — every catch is a gift.
-       The basket shows the collected fish as sprites; no digits, no counters. */
+       basket; every catch is a gift. No failure state, no timer, no shortage. */
     els.pondSpot.addEventListener('click', function () {
-      state.fishCount++;
-      renderFishBasket();
+      if (state.fishCount < FISH_BASKET_CAP) {
+        state.fishCount++;
+        renderFishBasket();
+      }
       if (window.tone) {
         window.tone(880, 0.1, 0, 'sine', 0.15);
         window.tone(660, 0.1, 0.08, 'sine', 0.2);
