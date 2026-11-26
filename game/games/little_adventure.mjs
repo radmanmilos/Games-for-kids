@@ -367,6 +367,21 @@ window.startlittle_adventure = function startlittle_adventure() {
     const particles = [];
     for (let i = 0; i < partCount; i++) particles.push({ alive: false, x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, life: 0, color: 0xFFD23F, additive: false });
 
+    // Q-11 sword trail ribbon (6-segment ring buffer)
+    const swordTrailSegs = 6;
+    const swordTrailPos = new Float32Array((swordTrailSegs + 1) * 2 * 3);
+    const swordTrailGeo = new THREE.BufferGeometry();
+    swordTrailGeo.setAttribute('position', new THREE.BufferAttribute(swordTrailPos, 3));
+    const swordTrailIdx = [];
+    for (let i = 0; i < swordTrailSegs; i++) { const a = i * 2, b = a + 1, c = a + 2, d = a + 3; swordTrailIdx.push(a, b, c, b, d, c); }
+    swordTrailGeo.setIndex(swordTrailIdx);
+    const swordTrailMat = new THREE.MeshBasicMaterial({ color: 0xFFF3DC, transparent: true, opacity: 0.0, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending });
+    const swordTrail = new THREE.Mesh(swordTrailGeo, swordTrailMat);
+    swordTrail.frustumCulled = false; swordTrail.visible = false;
+    scene.add(swordTrail);
+    const swordTrailPts = [];
+    for (let i = 0; i <= swordTrailSegs; i++) swordTrailPts.push({ a: new THREE.Vector3(), b: new THREE.Vector3() });
+
     // Beacon + arrow (Q-20 readability)
     const beacon = new THREE.Group();
     const beaconRay = new THREE.Mesh(new THREE.ConeGeometry(1.2, 7, 16, 1, true), new THREE.MeshBasicMaterial({ color: 0xFFE89A, transparent: true, opacity: 0.12, side: THREE.DoubleSide, depthWrite: false }));
@@ -1108,6 +1123,31 @@ window.startlittle_adventure = function startlittle_adventure() {
             shieldP.position.z = 0.1 + st * 0.04;
             shieldP.rotation.x = st ? -0.6 : 0;
             shieldP.scale.setScalar(s.hero.shield ? 1.15 : 1);
+          }
+          // Q-11 sword trail ribbon (6-segment ring buffer)
+          const swordP = heroMesh.userData.pivots.sword;
+          const swinging = (s.hero.swingT || 0) > 0 && !reducedMotion;
+          if (swordP && swinging) {
+            heroMesh.updateMatrixWorld(true);
+            const tip = new THREE.Vector3(0, 0.78, 0).applyMatrix4(swordP.matrixWorld);
+            const base = new THREE.Vector3(0, 0.08, 0).applyMatrix4(swordP.matrixWorld);
+            if (!swordTrail.visible || swordTrailMat.opacity < 0.05) {
+              for (let i = 0; i < swordTrailPts.length; i++) swordTrailPts[i] = { a: base.clone(), b: tip.clone() };
+            }
+            swordTrailPts.pop();
+            swordTrailPts.unshift({ a: base, b: tip });
+            for (let i = 0; i <= swordTrailSegs; i++) {
+              const p = swordTrailPts[i] || swordTrailPts[swordTrailPts.length - 1];
+              swordTrailPos[i*6] = p.a.x; swordTrailPos[i*6+1] = p.a.y; swordTrailPos[i*6+2] = p.a.z;
+              swordTrailPos[i*6+3] = p.b.x; swordTrailPos[i*6+4] = p.b.y; swordTrailPos[i*6+5] = p.b.z;
+            }
+            swordTrailGeo.attributes.position.needsUpdate = true;
+            swordTrailGeo.computeVertexNormals();
+            swordTrailMat.opacity = 0.28;
+            swordTrail.visible = true;
+          } else {
+            swordTrailMat.opacity *= 0.82;
+            if (swordTrailMat.opacity < 0.02) { swordTrail.visible = false; swordTrailMat.opacity = 0; }
           }
         } else {
           const armR = heroMesh.getObjectByName('armR');
