@@ -36,15 +36,27 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00â
 | Q-19 | 4 | Shadows | Q-18 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | Dir shadow map 1024 PCFSoft, bias tuned, hero/actor cast by tier, ground receiveShadow, blob shadows hidden on med/high. Shadow screenshots captured (`shots/q19/`). Remaining: tablet perf/acne visual USER-RUN. |
 | Q-20 | 4 | Readability, guidance restyle, feel tuning | Q-17 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | Beacon god-ray+sparkles, ground chevron arrow, aim-assist ring, gate/pedestal carried-item glow. Feel tuning log: `shots/q20/feel_tuning_log.md`. Remaining: full readability/tablet review USER-RUN. |
 | Q-21 | 4 | Completion celebration + free-play life | Q-13, Q-14, Q-16 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | Win celebration: star bursts ~1.5Hz 4.5s, lighthouse beam burst, bridge shimmer, bloom wave, follower dance/owl hop, post-win butterflies; reduced-motion still/short; game stays playable. Remaining: QG review artifacts, flashing USER-RUN check. |
-| Q-22 | 4 | Full verification + golden shots (QG6) | Q-17..Q-21 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | LA quality 46/46, LA smoke 44/44, touch_interruption LA 6/6, golden shots 78 PNGs (`shots/golden/`), ASSET_BUDGET refreshed. check_release sh_217a73d33001xlET8sVGtFKAa0 FAILED smoke battery only on racing3d_smoke.js (39/40, drift timing) - standalone racing3d_smoke.js rerun PASS 40/40; runtime_error_smoke 34/0 in same run; classified flaky/unrelated to LA. visual_compare LA baseline not created (tool requires full approved registered set/all 5 viewports). Offline second-visit, full S1-S10/shell rubric report, tablet/perf/audio/listening/playtest/readability USER-RUN, QG6 user approval still pending. |
+| Q-22 | 4 | Full verification + golden shots (QG6) | Q-17..Q-21 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | LA quality 46/46, LA smoke 44/44 (S1-S10 shell + W1-W13 WebGL incl.), touch_interruption LA 6/6, `node tools/offline_smoke.mjs` PASS incl. little_adventure offline boot/interaction/audio-failure/back, golden shots 78 PNGs (`shots/golden/`), ASSET_BUDGET refreshed. check_release sh_217a73d33001xlET8sVGtFKAa0 FAIL only racing3d drift (39/40) - standalone racing3d PASS 40/40, runtime_error 34/0; classified flaky/unrelated. visual_compare LA baseline not created (tool requires full approved registered set/all 5 viewports). Rubric self-score recorded (AI, non-VL); USER-RUN/tablet/perf/audio/listening/playtest/readability, full 4-viewport QG6 package review, and QG6 user approval still pending. |
 | Q-23 | 4 | Docs + release prep | Q-22 + QG6 | | NEW | | | |
 | Q-24 | 4 | Playtest rounds (QG7) | Q-23 | | NEW | | | |
 
-## Rubric scores (RV Â§5)
+## Rubric scores (RV ï¿½5)
 
-| Moment | Char | Anim | World | FX | Audio | UI | Clarity | Perf | Scorer |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Baseline (Q-00) | | | | | | | | | |
+AI self-score 2026-11-26 (OpenCode/Big Pickle, non-VL; visual categories need VL/user confirmation; USER-RUN items unverified):
+
+| Category | Score | Evidence / caveat |
+| --- | --- | --- |
+| Character appeal | 3/5 (AI est.) | Procedural rigs/shapes improved by Q-cards; no VL/user visual approval. |
+| Animation | 3/5 (AI est.) | Anim/fx modules, filmstrips generated; no VL/user motion review. |
+| World & lighting | 3/5 (AI est.) | Terrain/water/zone work landed; no VL/user/tablet look review. |
+| Effects & juice | 4/5 (AI est.) | Event-driven particles, additive pools, ambient/celebration FX; tablet feel USER-RUN. |
+| Audio | 3/5 (UNVERIFIED) | SFX/music/ducking wired, audio smokes/quality checks pass; pleasantness/listening USER-RUN. |
+| UI/UX | 3/5 (AI est.) | Start/pause/sound/hint polish, S7-S9 checks green; tablet readability/comfort USER-RUN. |
+| Clarity for the child | 3/5 (UNVERIFIED) | Beacon/arrow/owl/hints implemented; real child playtest USER-RUN. |
+| Stability & performance | 4/5 (partial) | LA quality/smoke/touch/offline PASS, check_release LA-unrelated flaky only; tablet 60/30fps/leak USER-RUN. |
+
+Target remains: every category >=4, none <3; QG6 user approval pending.
+
 
 ## Log
 
