@@ -122,6 +122,10 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     const r = await h.evalv(`(function(){ try { window.__little_adventure.photo(${JSON.stringify(name)}); return window.__little_adventure.state().webgl === true; } catch(e){ return false; } })()`);
     if (r !== true) { photoOk = false; console.log('  photo failed:', name, r); }
   }
+  // Q-08: decoration placement exclusion (seeded, deterministic)
+  const decoRaw = await h.evalv('(()=>{ const d=window.__laDeco; if(!d) return null; let bad=0; for(const p of d.placements){ for(const f of d.forbidden){ if(Math.hypot(p.x-f.x,p.z-f.z)<f.r){ bad++; break; } } } return {bad,n:d.placements.length}; })()');
+  check('Q-08: decoration placements outside forbidden zones', decoRaw && decoRaw.bad === 0 && decoRaw.n > 100, decoRaw ? `bad=${decoRaw.bad} n=${decoRaw.n}` : 'missing');
+
   check('Q-00: photo() works for presets', photoOk, '');
 
   // W3: closed gate blocks

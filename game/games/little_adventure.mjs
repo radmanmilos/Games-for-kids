@@ -384,32 +384,40 @@ window.startlittle_adventure = function startlittle_adventure() {
       (cfg.pedestals || []).forEach((p) => addForbidden(p.pos[0], p.pos[1], 0.6));
       (cfg.bushes || []).forEach((b) => addForbidden(b.pos[0], b.pos[1], 0.6));
 
-      function collectPositions(count) {
+      function collectPositions(count, opts) {
         const positions = [];
         const rotations = [];
+        const scales = [];
+        const o = opts || {};
         let tries = 0;
-        while (positions.length < count && tries < count * 20) {
+        while (positions.length < count && tries < count * 30) {
           tries++;
           const x = (rng() * 44) - 22;
           const z = (rng() * 90) - 76;
           if (Math.abs(x) < 3) continue;
+          if (o.zMin != null && z < o.zMin) continue;
+          if (o.zMax != null && z > o.zMax) continue;
           let ok = true;
           for (const f of forbidden) {
-            if (Math.hypot(x - f.x, z - f.z) < f.r) { ok = false; break; }
+            if (Math.hypot(x - f.x, z - f.z) < (f.r + (o.extraR || 0))) { ok = false; break; }
           }
           if (!ok) continue;
           positions.push({ x, z });
           rotations.push(rng() * Math.PI * 2);
+          scales.push(0.85 + rng() * 0.4);
         }
-        return { positions, rotations };
+        return { positions, rotations, scales };
       }
 
-      function makeInstanced(geometry, material, placement, y) {
+      function makeInstanced(geometry, material, placement, y, yFn) {
         const mesh = new THREE.InstancedMesh(geometry, material, placement.positions.length);
         const dummy = new THREE.Object3D();
         placement.positions.forEach((p, i) => {
-          dummy.position.set(p.x, y, p.z);
+          const yy = yFn ? yFn(p.x, p.z, y) : y;
+          dummy.position.set(p.x, yy, p.z);
           dummy.rotation.y = placement.rotations[i];
+          const sc = (placement.scales && placement.scales[i]) || 1;
+          dummy.scale.setScalar(sc);
           dummy.updateMatrix();
           mesh.setMatrixAt(i, dummy.matrix);
         });
@@ -418,24 +426,54 @@ window.startlittle_adventure = function startlittle_adventure() {
         return mesh;
       }
 
-      const treePlacement = collectPositions(60);
       const mToon = (c) => mats ? mats.toon(c, { flat: true }) : new THREE.MeshLambertMaterial({ color: c, flatShading: true });
-      const treeTrunk = makeInstanced(new THREE.CylinderGeometry(0.12, 0.18, 0.9, 6), mToon(0xA66B3A), treePlacement, 0.45);
-      const treeCrown = makeInstanced(new THREE.ConeGeometry(0.7, 1.4, 8), mToon(0x2E7D32), treePlacement, 1.6);
-      scene.add(treeTrunk);
-      scene.add(treeCrown);
+      // Q-08: zone vegetation/props
+      const decoPlacements = [];
+      const trackDeco = (pl) => { (pl.positions || []).forEach((p) => decoPlacements.push(p)); return pl; };
+      const treeA = trackDeco(collectPositions(35, { zMin: -16, zMax: 8 }));
+      const treeB = trackDeco(collectPositions(25, { zMin: -46, zMax: -16 }));
+      const treeC = trackDeco(collectPositions(18, { zMin: -80, zMax: -46 }));
+      const addTrees = (pl, crownColor, trunkColor) => {
+        const tr = makeInstanced(new THREE.CylinderGeometry(0.12, 0.18, 0.9, 6), mToon(trunkColor), pl, 0, (x,z)=>hAt(x,z)+0.45);
+        const cr = makeInstanced(new THREE.ConeGeometry(0.7, 1.4, 8), mToon(crownColor), pl, 0, (x,z)=>hAt(x,z)+1.6);
+        scene.add(tr); scene.add(cr);
+      };
+      addTrees(treeA, 0x2E7D32, 0xA66B3A);
+      addTrees(treeB, 0x3E8E41, 0x8D5A2B);
+      addTrees(treeC, 0x6A8EAE, 0x7A6A5A);
 
-      const tuftPlacement = collectPositions(120);
-      const tuftMesh = makeInstanced(new THREE.IcosahedronGeometry(0.5, 0), mToon(0x6FB35A), tuftPlacement, 0.35);
-      scene.add(tuftMesh);
+      const tuftPlacement = trackDeco(collectPositions(100));
+      const tuftMat = mToon(0x6FB35A);
+      tuftMat.onBeforeCompile = (shader) => {
+        shader.uniforms.uTime = waterUniforms.uTime;
+        shader.vertexShader = 'uniform float uTime;\n' + shader.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\nfloat wy = max(0.0, transformed.y);\nfloat wind = ' + (reducedMotion ? '0.0' : '1.0') + ';\ntransformed.x += sin(uTime * 1.2 + instanceMatrix[3][0] * 0.3) * wy * 0.08 * wind;');
+      };
+      tuftMat.customProgramCacheKey = () => 'la-tuft-wind';
+      scene.add(makeInstanced(new THREE.IcosahedronGeometry(0.45, 0), tuftMat, tuftPlacement, 0, (x,z)=>hAt(x,z)+0.3));
 
-      const flowerPlacement = collectPositions(80);
-      const flowerMesh = makeInstanced(new THREE.SphereGeometry(0.12, 6, 4), mToon(0xFFD23F), flowerPlacement, 0.3);
-      scene.add(flowerMesh);
+      const flowerColors = [0xFFD23F, 0xFF8A80, 0xB388FF, 0x80D8FF, 0xFFFFFF];
+      flowerColors.forEach((fc, i) => {
+        const fp = trackDeco(collectPositions(14, { zMin: i < 3 ? -46 : -80, zMax: i < 3 ? 8 : -46 }));
+        scene.add(makeInstanced(new THREE.SphereGeometry(0.11, 6, 4), mToon(fc), fp, 0, (x,z)=>hAt(x,z)+0.25));
+      });
 
-      const rockPlacement = collectPositions(30);
-      const rockMesh = makeInstanced(new THREE.DodecahedronGeometry(0.4, 0), mToon(0x9AA0A6), rockPlacement, 0.2);
-      scene.add(rockMesh);
+      const rockPl = trackDeco(collectPositions(26));
+      scene.add(makeInstanced(new THREE.DodecahedronGeometry(0.38, 0), mToon(0x9AA0A6), rockPl, 0, (x,z)=>hAt(x,z)+0.18));
+
+      const mushPl = trackDeco(collectPositions(18, { zMin: -46, zMax: -16 }));
+      scene.add(makeInstanced(new THREE.CylinderGeometry(0.04, 0.06, 0.18, 6), mToon(0xE8D5B5), mushPl, 0, (x,z)=>hAt(x,z)+0.09));
+      scene.add(makeInstanced(new THREE.SphereGeometry(0.12, 6, 4, 0, Math.PI*2, 0, Math.PI/2), mToon(0xD84315), mushPl, 0, (x,z)=>hAt(x,z)+0.18));
+
+      const logPl = trackDeco(collectPositions(10, { zMin: -46, zMax: -16 }));
+      scene.add(makeInstanced(new THREE.CylinderGeometry(0.12, 0.14, 1.2, 6), mToon(0x8D6E63), logPl, 0, (x,z)=>hAt(x,z)+0.12));
+
+      const lanternPl = trackDeco(collectPositions(8, { zMin: -80, zMax: -46 }));
+      scene.add(makeInstanced(new THREE.CylinderGeometry(0.08, 0.08, 0.5, 6), mToon(0x8D6E63), lanternPl, 0, (x,z)=>hAt(x,z)+0.45));
+      scene.add(makeInstanced(new THREE.SphereGeometry(0.1, 6, 4), new THREE.MeshBasicMaterial({ color: 0xFFD54F, transparent: true, opacity: 0.8 }), lanternPl, 0, (x,z)=>hAt(x,z)+0.75));
+
+      const runePl = trackDeco(collectPositions(10, { zMin: -80, zMax: -46 }));
+      scene.add(makeInstanced(new THREE.BoxGeometry(0.25, 1.2, 0.25), mToon(0x607D8B), runePl, 0, (x,z)=>hAt(x,z)+0.6));
+      window.__laDeco = { forbidden: forbidden.map((f) => ({ x: f.x, z: f.z, r: f.r })), placements: decoPlacements.map((p) => ({ x: p.x, z: p.z })) };
 
       // Static structures + actor refs
       (cfg.gates || []).forEach((g) => {

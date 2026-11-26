@@ -22,7 +22,7 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00â
 | Q-05 | 1 | Sky, clouds, sun, fog | Q-03 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | Sky dome, sun sprite, 10 instanced clouds with drift. Look unreviewed. |
 | Q-06 | 1 | Terrain, island, beach, path | Q-04 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | terrain.js deterministic heightAt/maskAt wired to hero/actors/static props; ground replaced with terrain BufferGeometry mesh. Look gate: screenshots captured for user review. |
 | Q-07 | 1 | Water | Q-06 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | Shader-patched water with wave displacement, shore foam approximation, tint; time uniform frozen when paused, slowed for reduced motion. Remaining: maskAt-baked foam, low-tier sparkle sprites, tablet perf USER-RUN. |
-| Q-08 | 1 | Vegetation + props (QG2) | Q-06 | yes | NEW | | | |
+| Q-08 | 1 | Vegetation + props (QG2) | Q-06 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | Zone-aware seeded instanced vegetation/props (trees/tufts/flowers/rocks/mushrooms/logs/lanterns/runes), wind sway (reduced-motion frozen), exclusion placement smoke check, review screenshots captured. Remaining: landmark props per zone, builders extraction to keep mjs <=900, full TDQ9 tier/zone budget proof, QG2 look review artifact confirmation. |
 | Q-09 | 2 | Animation toolkit + filmstrip mode | Q-02 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | anim module + 9 Node tests; sheet() hook builds placeholder filmstrip clones in renderer (camera guarded). Visual filmstrip review still pending. |
 | Q-10 | 2 | Hero v2 rig + face + outlines | Q-04, Q-09 | yes | NEW | | | |
 | Q-11 | 2 | Hero animation set (QG3) | Q-10 | yes | NEW | | | |
@@ -84,3 +84,4 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00â
 - 2026-11-26 - OpenCode/Big Pickle - Q-07: shader-patched water (waves/foam/tint, paused-frozen, reduced-motion slowed); Q-17: added S7/S8/S9 shell smoke checks.
 - 2026-11-26 - OpenCode/Big Pickle - Q-20: beacon god-ray+sparkles, ground chevron arrow, aim-assist ring, gate/pedestal carried-item emissive glow.
 - 2026-11-26 - OpenCode/Big Pickle - Q-16/Q-18: EVENT_TABLE SFX coverage smoke check, befriend sparkle layer, quality(tier) switch smoke; tablet items remain USER-RUN.
+- 2026-11-26 - OpenCode/Big Pickle - Q-08: zone-aware seeded instanced vegetation/props (trees A/B/C, wind-sway tufts reduced-motion frozen, 5 flower colors, rocks, mushrooms, logs, lantern+glow, rune columns), `window.__laDeco` debug, LA smoke placement exclusion check; review screenshots refreshed. Remaining: landmarks, builder extraction (mjs >900), TDQ9 full tier proof, QG2 artifact confirmation.
