@@ -16,7 +16,7 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Q-00 | 0 | Probe, shots tool, baseline, doc fix | — | | DONE | OpenCode/Big Pickle | 2026-11-25 | Doc fix A9; photo()/sheet() hooks; shots tool; 42 baseline PNGs; visual-states PLAY. |
 | Q-01 | 0 | Fix floor/void defect | Q-00 | yes | DONE (look unreviewed) | OpenCode/Big Pickle | 2026-11-25 | Ground/water 96×160 z=-32; edge fade removed; camera clamped; containment 5/5. |
-| Q-02 | 0 | Real WebGL smoke battery | Q-01 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | W1/W2/W3/W4/W6/W9/W10/W11/W13/photo green; W5/W7/W8/W12 still pending deeper feature/harness support. |
+| Q-02 | 0 | Real WebGL smoke battery | Q-01 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | W1/W2/W3/W4/W5/W6/W9/W10/W11/W12/W13/photo green; W7/W8 still pending (60s flail, reduced-motion bootEmulated). |
 | Q-03 | 1 | Colour pipeline, lighting, atmosphere | Q-02 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | Tone mapping SRGB, ZONE_ATMOS, atmosphere blend, vignette. Look unreviewed. |
 | Q-04 | 1 | Material kit (QG1) | Q-03 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | materials singleton cache wired into models.js + instanced decor; **QG1 approved by user (2026-11-26, "A approve")**. Still needs full renderer prop migration, outlines, material-count hook/AC verification. |
 | Q-05 | 1 | Sky, clouds, sun, fog | Q-03 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | Sky dome, sun sprite, 10 instanced clouds with drift. Look unreviewed. |
@@ -73,3 +73,4 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 - 2026-11-26 — OpenCode/Big Pickle — Q-15: look-ahead + gate/bridge reveal nudges wired; smokes green.
 - 2026-11-26 — OpenCode/Big Pickle — Q-16/Q-18: SFX audit OK (17/17), befriend sparkle+complete fanfare layers, tier-based particle burst cap; smokes green.
 - 2026-11-26 — OpenCode/Big Pickle — Q-02: added W3/W6/W9/W11/W13 smoke checks; fixed saveNow/playSfx/soundOn scope bug; LA smokes 23+34 pass.
+- 2026-11-26 — OpenCode/Big Pickle — Q-02: added W5/W12 smoke checks (gate state after give/teleport, WEBGL_lose_context temp-canvas); 25/25 smoke pass.

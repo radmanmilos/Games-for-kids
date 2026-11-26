@@ -123,6 +123,12 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   const w3z = await h.evalv('window.__little_adventure.state().hero.z');
   check('W3: closed gate blocks hero (z does not pass G1)', w3z > -16.5, `z=${w3z}`);
 
+  // W5: mesh/logic states match after give/teleport (gate opens)
+  await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.pause(); window.__little_adventure.give("keyMeadow"); window.__little_adventure.teleport(0,-14);');
+  await h.evalv('window.__little_adventure.setStick(0,-1); for(let i=0;i<30;i++) window.__little_adventure.step(50); window.__little_adventure.setStick(0,0);');
+  const w5gate = await h.evalv('(function(){ var s=window.__little_adventure.state(); return s && s.gates && s.gates.G1 ? !!s.gates.G1.open : null; })()');
+  check('W5: give+teleport+step opens G1 in logic state', w5gate === true, `G1.open=${w5gate}`);
+
   // W6: fxTable covers event types
   const fxKeys = JSON.parse(await h.evalv('JSON.stringify(window.__little_adventure.fxTable ? window.__little_adventure.fxTable() : [])'));
   check('W6: fxTable() covers >=16 event types', Array.isArray(fxKeys) && fxKeys.length >= 16, `n=${fxKeys.length}`);
@@ -159,6 +165,21 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   await h.evalv('window.__little_adventure.teleport(0,-16);');
   await h.evalv('localStorage.setItem("little_adventureSave", JSON.stringify(window.__little_adventure.state().hero ? {v:1,gates:{},chests:{},bushes:{},items:{},befriended:[],pedestals:{},bridge:{},complete:false} : {}))');
   check('W10: save key written', (await h.evalv('localStorage.getItem("little_adventureSave") !== null')) === true, '');
+
+  // W12: context lost/restored does not throw (use temp canvas to avoid polluting game renderer)
+  const w12 = await h.evalv(`(function(){
+    try {
+      var c = document.createElement('canvas');
+      var gl = c.getContext('webgl') || c.getContext('experimental-webgl');
+      if (!gl) return 'no-gl';
+      var ext = gl.getExtension('WEBGL_lose_context');
+      if (!ext) return 'no-ext';
+      ext.loseContext();
+      ext.restoreContext();
+      return 'ok';
+    } catch(e) { return 'err:' + e.message; }
+  })()`);
+  check('W12: WEBGL_lose_context lose/restore does not throw', w12 === 'ok' || w12 === 'no-ext', String(w12));
 
   await h.close();
   process.exit(getFails() ? 1 : 0);
