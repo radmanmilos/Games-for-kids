@@ -132,6 +132,20 @@ function check(name, ok, info) {
   const nudge = FX.cameraNudge({ x: 0, z: 0 }, { x: 10, z: 0 }, 6, false);
   check('Q-15: cameraNudge moves toward thing', nudge.x > 0, nudge.x);
 
+  // Characters (Q-10) - face atlas + pivot contract
+  const charWin = loadClassic('games/little_adventure-characters.js');
+  const CH = charWin.little_adventureCharacters;
+  check('Q-10: characters module loads', !!CH, 'little_adventureCharacters');
+  check('Q-10: HERO_PIVOTS has 27 entries', Array.isArray(CH.HERO_PIVOTS) && CH.HERO_PIVOTS.length === 27, CH.HERO_PIVOTS && CH.HERO_PIVOTS.length);
+  const requiredPivots = ['root','hips','torso','head','face','hat','hatTip1','hatTip2','hatTip3','scarf1','scarf2','scarf3','armL','forearmL','handL','armR','forearmR','handR','legL','shinL','footL','legR','shinR','footR','sword','shield','shadow'];
+  check('Q-10: HERO_PIVOTS contains AD3 names', requiredPivots.every((p) => CH.HERO_PIVOTS.includes(p)), 'missing=' + requiredPivots.filter((p) => !CH.HERO_PIVOTS.includes(p)).join(','));
+  // fake ctx for face painter
+  const calls = [];
+  const fakeCtx = { fillStyle: '', strokeStyle: '', lineWidth: 1, lineCap: '', beginPath(){calls.push('bp');}, arc(){calls.push('arc');}, fill(){calls.push('fill');}, stroke(){calls.push('stroke');}, moveTo(){}, lineTo(){}, clearRect(){calls.push('clear');} };
+  const faceInfo = CH.paintFaceAtlas(fakeCtx, 256);
+  check('Q-10: face atlas paints 8 cells', faceInfo && faceInfo.cells && faceInfo.cells.length === 8, faceInfo && faceInfo.cells && faceInfo.cells.length);
+  check('Q-10: face atlas draws highlights (arcs)', calls.filter((c)=>c==='arc').length >= 32, calls.filter((c)=>c==='arc').length);
+
   // evalHero swing envelope (Q-11)
   const heroState = { hero: { vx: 0, vz: 0, facing: 0, swingT: 350, cooldown: 0, shield: false, bumpT: 0 } };
   const p0 = A.evalHero(heroState, 0, { motionScale: 1 });

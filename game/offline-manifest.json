@@ -1980,8 +1980,8 @@
     "size": 3660
   },
   "games/little_adventure-characters.js": {
-    "sha256": "eccd8b2de6e4cfd6730e9c95125df50a4bf282a57a9c155488a5634b00a64d0a",
-    "size": 5758
+    "sha256": "ea477a0f7c65780fffeed13440f4e562fe51875fac3ad03e1ffee28b22880d3c",
+    "size": 13238
   },
   "games/little_adventure-config.js": {
     "sha256": "08b5f9c7d564aec42f18ff539c6f67cfe918f543c9810372dfc759acb6bda622",
@@ -2124,8 +2124,8 @@
     "size": 14166
   },
   "pages/little_adventure.html": {
-    "sha256": "43ae002be01026bbff143c4ecfd3a5c793af89c36bfb1c2cef5d8ecb650d9fcf",
-    "size": 8777
+    "sha256": "7bad48c3b311f5372d20cf10dc79f721bcceaeda930874d6f559ffd439198eba",
+    "size": 9023
   },
   "pages/matching_game.html": {
     "sha256": "7a73924813a6c965f45915665cc74ef9db993d377e3fb28d019b9385d3f4f49a",
