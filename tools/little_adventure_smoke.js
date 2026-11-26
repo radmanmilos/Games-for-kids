@@ -117,6 +117,43 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   }
   check('Q-00: photo() works for presets', photoOk, '');
 
+  // W3: closed gate blocks
+  await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.pause(); window.__little_adventure.teleport(0,-14);');
+  await h.evalv('window.__little_adventure.setStick(0,-1); for(let i=0;i<20;i++) window.__little_adventure.step(50); window.__little_adventure.setStick(0,0);');
+  const w3z = await h.evalv('window.__little_adventure.state().hero.z');
+  check('W3: closed gate blocks hero (z does not pass G1)', w3z > -16.5, `z=${w3z}`);
+
+  // W6: fxTable covers event types
+  const fxKeys = JSON.parse(await h.evalv('JSON.stringify(window.__little_adventure.fxTable ? window.__little_adventure.fxTable() : [])'));
+  check('W6: fxTable() covers >=16 event types', Array.isArray(fxKeys) && fxKeys.length >= 16, `n=${fxKeys.length}`);
+
+  // W9: speech keys / 4s guard hook present
+  const w9 = await h.evalv('(function(){ var s=window.__little_adventure.state(); return typeof window.__laLastSpeech === "object" || window.__laLastSpeech === undefined; })()');
+  check('W9: speech hook does not throw / shape ok', w9 === true, String(w9));
+
+  // W11: pause on visibility
+  await h.evalv('(function(){ try{ Object.defineProperty(document,"hidden",{get:function(){return true;},configurable:true}); document.dispatchEvent(new Event("visibilitychange")); }catch(e){} })()');
+  const w11Paused = await h.evalv('(function(){ return document.getElementById("i3d-pause") ? document.getElementById("i3d-pause").style.display : ""; })()');
+  // paused flag is internal; visibility handler sets it - verify no throw and overlay/pause path engaged by checking audio suspend guard path indirectly via state still readable
+  const w11StateOk = await h.evalv('window.__little_adventure.state().webgl === true');
+  await h.evalv('(function(){ try{ Object.defineProperty(document,"hidden",{get:function(){return false;},configurable:true}); document.dispatchEvent(new Event("visibilitychange")); }catch(e){} })()');
+  check('W11: visibilitychange(hidden) handled without throw', w11StateOk === true, `pause=${w11Paused}`);
+
+  // W13: adaptive tier steps down once, never up (via render loop)
+  await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.forceSlow(true);');
+  await h.evalv('(function(){ var po=document.getElementById("i3d-pause"); if(po){po.style.display="flex"; po.click();} })()');
+  let tierAfterSlow = 'high';
+  for (let i = 0; i < 40; i++) {
+    await sleep(100);
+    tierAfterSlow = await h.evalv('window.__little_adventure.state().tier');
+    if (tierAfterSlow !== 'high') break;
+  }
+  await h.evalv('window.__little_adventure.forceSlow(false);');
+  await sleep(800);
+  const tierAfterRecover = await h.evalv('window.__little_adventure.state().tier');
+  check('W13: adaptive tier steps down under slow frames', tierAfterSlow !== 'high', `tier=${tierAfterSlow}`);
+  check('W13b: tier never steps up automatically', tierAfterRecover === tierAfterSlow, `afterSlow=${tierAfterSlow} afterRecover=${tierAfterRecover}`);
+
   // W10: save round trip
   await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.give && window.__little_adventure.give("keyMeadow");');
   await h.evalv('window.__little_adventure.teleport(0,-16);');

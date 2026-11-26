@@ -233,6 +233,42 @@ window.startlittle_adventure = function startlittle_adventure() {
     let currentPhoto = null;
     let currentSheet = null;
     let camNudge = null; // Q-15: {x,z,tLeft}
+    let soundOn = true;
+    // Save helpers (IS-15)
+    const SAVE_KEY = 'little_adventureSave';
+    function loadSave() {
+      try {
+        const raw = localStorage.getItem(SAVE_KEY);
+        if (!raw) return null;
+        const obj = JSON.parse(raw);
+        return logic.validateSave ? logic.validateSave(obj, cfg) : obj;
+      } catch (e) { return null; }
+    }
+    function saveNow() {
+      if (!game) return;
+      try { localStorage.setItem(SAVE_KEY, JSON.stringify(game.save())); } catch (e) {}
+    }
+    function playSfx(name) {
+      if (!soundOn || !window.audioBuses) return;
+      const A = window.little_adventureAudio;
+      const recipe = A && A.SFX ? A.SFX[name] : null;
+      if (!recipe) return;
+      const pv = recipe.pitchVar || 0;
+      const jitter = pv ? (1 + (Math.random() * 2 - 1) * pv) : 1;
+      for (const l of recipe.layers) {
+        if (l.type === 'tone' && window.audioBuses.playSweep) {
+          window.audioBuses.playSweep('sfx', (l.f0 || 440) * jitter, (l.f1 || l.f0 || 440) * jitter, l.dur, 'sine', l.gain || 0.1, 0);
+        } else if (l.type === 'noise' && window.audioBuses.playTone) {
+          window.audioBuses.playTone('sfx', 180 * jitter, l.dur || 0.05, 'triangle', (l.gain || 0.05) * 0.6, 0);
+        }
+      }
+      if (name === 'befriend' && window.audioBuses.playSweep) {
+        window.audioBuses.playSweep('sfx', 880, 1320, 0.18, 'sine', 0.08, 0.05);
+      }
+      if (name === 'complete' && window.audioBuses.playSweep) {
+        [523, 659, 784, 1047].forEach((f, i) => window.audioBuses.playSweep('sfx', f, f * 1.5, 0.2, 'sine', 0.07, i * 0.08));
+      }
+    }
     const input = { sx: 0, sy: 0, swing: false, shield: false };
     let keyX = 0, keyY = 0;
     let forceSlow = false;
@@ -449,24 +485,11 @@ window.startlittle_adventure = function startlittle_adventure() {
       addBlobShadow(heroMesh);
 
       paused = true;
-      // Save helpers (IS-15)
-      const SAVE_KEY = 'little_adventureSave';
-      function loadSave() {
-        try {
-          const raw = localStorage.getItem(SAVE_KEY);
-          if (!raw) return null;
-          const obj = JSON.parse(raw);
-          return logic.validateSave ? logic.validateSave(obj, cfg) : obj;
-        } catch (e) { return null; }
-      }
-      function saveNow() {
-        if (!game) return;
-        try { localStorage.setItem(SAVE_KEY, JSON.stringify(game.save())); } catch (e) {}
-      }
+      // (Save helpers moved to top-level scope for updateActors access)
       // Sound toggle (Q-16, separate key to avoid logic.js validateSave contract change)
       const SOUND_KEY = 'little_adventureSound';
       const soundBtn = document.getElementById('i3d-sound-btn');
-      let soundOn = true;
+      soundOn = true;
       try { soundOn = localStorage.getItem(SOUND_KEY) !== '0'; } catch (e) { soundOn = true; }
       function applySound(on) {
         soundOn = !!on;
@@ -481,28 +504,6 @@ window.startlittle_adventure = function startlittle_adventure() {
       }
       applySound(soundOn);
       if (soundBtn) soundBtn.addEventListener('click', () => applySound(!soundOn));
-
-      function playSfx(name) {
-        if (!soundOn || !window.audioBuses) return;
-        const A = window.little_adventureAudio;
-        const recipe = A && A.SFX ? A.SFX[name] : null;
-        if (!recipe) return;
-        const pv = recipe.pitchVar || 0;
-        const jitter = pv ? (1 + (Math.random() * 2 - 1) * pv) : 1;
-        for (const l of recipe.layers) {
-          if (l.type === 'tone' && window.audioBuses.playSweep) {
-            window.audioBuses.playSweep('sfx', (l.f0 || 440) * jitter, (l.f1 || l.f0 || 440) * jitter, l.dur, 'sine', l.gain || 0.1, 0);
-          } else if (l.type === 'noise' && window.audioBuses.playTone) {
-            window.audioBuses.playTone('sfx', 180 * jitter, l.dur || 0.05, 'triangle', (l.gain || 0.05) * 0.6, 0);
-          }
-        }
-        if (name === 'befriend' && window.audioBuses.playSweep) {
-          window.audioBuses.playSweep('sfx', 880, 1320, 0.18, 'sine', 0.08, 0.05);
-        }
-        if (name === 'complete' && window.audioBuses.playSweep) {
-          [523, 659, 784, 1047].forEach((f, i) => window.audioBuses.playSweep('sfx', f, f * 1.5, 0.2, 'sine', 0.07, i * 0.08));
-        }
-      }
 
       // Q-16 thin music/ambient/footstep player (no-gate slice; full polish later)
       const ZONE_LETTERS = ['A', 'B', 'C'];

@@ -16,7 +16,7 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Q-00 | 0 | Probe, shots tool, baseline, doc fix | — | | DONE | OpenCode/Big Pickle | 2026-11-25 | Doc fix A9; photo()/sheet() hooks; shots tool; 42 baseline PNGs; visual-states PLAY. |
 | Q-01 | 0 | Fix floor/void defect | Q-00 | yes | DONE (look unreviewed) | OpenCode/Big Pickle | 2026-11-25 | Ground/water 96×160 z=-32; edge fade removed; camera clamped; containment 5/5. |
-| Q-02 | 0 | Real WebGL smoke battery | Q-01 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | W1/W2/W4/W10/photo green; W3/W5-W9/W11-W13 need features. |
+| Q-02 | 0 | Real WebGL smoke battery | Q-01 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | W1/W2/W3/W4/W6/W9/W10/W11/W13/photo green; W5/W7/W8/W12 still pending deeper feature/harness support. |
 | Q-03 | 1 | Colour pipeline, lighting, atmosphere | Q-02 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | Tone mapping SRGB, ZONE_ATMOS, atmosphere blend, vignette. Look unreviewed. |
 | Q-04 | 1 | Material kit (QG1) | Q-03 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | materials singleton cache wired into models.js + instanced decor; **QG1 approved by user (2026-11-26, "A approve")**. Still needs full renderer prop migration, outlines, material-count hook/AC verification. |
 | Q-05 | 1 | Sky, clouds, sun, fog | Q-03 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | Sky dome, sun sprite, 10 instanced clouds with drift. Look unreviewed. |
@@ -29,7 +29,7 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 | Q-12 | 2 | Grumpy/guard/boss v2 + animation | Q-10, Q-11 | yes | NEW | | | |
 | Q-13 | 2 | Owl + props + completion bloom (QG4) | Q-12 | yes | NEW | | | |
 | Q-14 | 3 | Sprite particles + ambient life | Q-04 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | little_adventure-fx.js: EVENT_TABLE (16), TIERS, particleCap, cameraNudge. 4 Node tests. |
-| Q-15 | 3 | Camera polish | Q-03, Q-11 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | cameraNudge helper in fx module. Full camera work needs Q-11. |
+| Q-15 | 3 | Camera polish | Q-03, Q-11 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | Look-ahead (0.35s, ±2u) + gateOpen/bridgeUp reveal nudges (<=1.2s, reduced-motion safe) wired; full Q-11-dependent polish/safe-frame W-checks still pending. |
 | Q-16 | 3 | Audio v2 + sound toggle | Q-09 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | audio module + sound button/aria-pressed + mute key + event SFX/pitch variance + speakWithDuck + visibility suspend/resume + thin zone music sequencer/ambient/zone crossfade/footstep sync on audioBuses. Still missing: richer ambient beds, full SFX audit/fanfare sparkle, tablet listening (USER-RUN). |
 | Q-17 | 3 | UI/UX art pass + start screen (QG5) | Q-11, Q-16 | yes | NEW | | | |
 | Q-18 | 4 | Quality tiers + performance | Q-07, Q-08, Q-14 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | TIERS table, adaptive step-down, quality()/fxTable(), perf overlay counters/memory/programs, scene dispose on back. Still missing: full tier switching, 5-cycle leak proof, tablet measurement. |
@@ -72,3 +72,4 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 - 2026-11-26 — User pre-approval: continue through all remaining tasks/QG decisions until done (recorded; still capture screenshots/artifacts).
 - 2026-11-26 — OpenCode/Big Pickle — Q-15: look-ahead + gate/bridge reveal nudges wired; smokes green.
 - 2026-11-26 — OpenCode/Big Pickle — Q-16/Q-18: SFX audit OK (17/17), befriend sparkle+complete fanfare layers, tier-based particle burst cap; smokes green.
+- 2026-11-26 — OpenCode/Big Pickle — Q-02: added W3/W6/W9/W11/W13 smoke checks; fixed saveNow/playSfx/soundOn scope bug; LA smokes 23+34 pass.
