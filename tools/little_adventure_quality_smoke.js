@@ -149,21 +149,85 @@ function check(name, ok, info) {
   check('Q-10: face atlas paints 8 cells', faceInfo && faceInfo.cells && faceInfo.cells.length === 8, faceInfo && faceInfo.cells && faceInfo.cells.length);
   check('Q-10: face atlas draws highlights (arcs)', calls.filter((c)=>c==='arc').length >= 32, calls.filter((c)=>c==='arc').length);
 
-  // evalHero swing envelope (Q-11)
-  const heroState = { hero: { vx: 0, vz: 0, facing: 0, swingT: 350, cooldown: 0, shield: false, bumpT: 0 } };
-  const p0 = A.evalHero(heroState, 0, { motionScale: 1 });
-  const pMid = A.evalHero({ hero: { ...heroState.hero, swingT: 350 * (1 - 0.26) } }, 0, { motionScale: 1 });
-  const pEnd = A.evalHero({ hero: { ...heroState.hero, swingT: 0 } }, 0, { motionScale: 1 });
-  check('Q-11: evalHero returns armR', p0.armR != null);
+  // Minimal THREE mock for triangle counting (Q-10 AC)
+  function makeMockThree() {
+    class V3 { constructor(x=0,y=0,z=0){this.x=x;this.y=y;this.z=z;} set(x,y,z){this.x=x;this.y=y;this.z=z;return this;} setScalar(s){this.x=s;this.y=s;this.z=s;return this;} clone(){return new V3(this.x,this.y,this.z);} copy(v){this.x=v.x;this.y=v.y;this.z=v.z;return this;} multiplyScalar(s){this.x*=s;this.y*=s;this.z*=s;return this;} }
+    class Obj3D {
+      constructor(){ this.position=new V3(); this.rotation={x:0,y:0,z:0}; this.scale=new V3(1,1,1); this.children=[]; this.parent=null; this.name=''; this.visible=true; this.userData={}; this.renderOrder=0; this.castShadow=false; this.receiveShadow=false; }
+      add(o){ if(o&&o!==this){ o.parent=this; this.children.push(o); } return this; }
+      remove(o){ const i=this.children.indexOf(o); if(i>=0){ this.children.splice(i,1); o.parent=null; } return this; }
+      clone(){ const c=new this.constructor(); c.position=this.position.clone(); c.rotation={...this.rotation}; c.scale=this.scale.clone(); c.name=this.name; c.visible=this.visible; c.userData={}; return c; }
+      traverse(fn){ fn(this); for(const c of this.children) c.traverse(fn); }
+      getObjectByName(n){ if(this.name===n) return this; for(const c of this.children){ const r=c.getObjectByName(n); if(r) return r; } return undefined; }
+    }
+    class Group extends Obj3D {}
+    class Mesh extends Obj3D { constructor(g,m){ super(); this.geometry=g; this.material=m; this.isMesh=true; } clone(){ const c=new Mesh(this.geometry,this.material); c.position=this.position.clone(); c.rotation={...this.rotation}; c.scale=this.scale.clone(); c.name=this.name; c.visible=this.visible; c.userData={}; return c; } }
+    function triGeom(tris){ return { _tris: tris, isBufferGeometry:true }; }
+    class SphereGeometry { constructor(r,w=8,h=6){ this._tris = Math.max(0, 2*w*(h-1)); } }
+    class BoxGeometry { constructor(){ this._tris = 12; } }
+    class CapsuleGeometry { constructor(r,len,capSeg=4,radSeg=8){ this._tris = radSeg * (4*capSeg + 2); } }
+    class CylinderGeometry { constructor(rt,rb,h,rs=8,hs=1,open=false){ this._tris = rs*hs*2 + (open?0:(rt>0?rs:0)+(rb>0?rs:0)); } }
+    class ConeGeometry { constructor(r,h,rs=8,hs=1,open=false){ this._tris = rs*hs*2 + (open?0:rs); } }
+    class CircleGeometry { constructor(r,seg=8){ this._tris = Math.max(0, seg-2); } }
+    class PlaneGeometry { constructor(){ this._tris = 2; } }
+    class RingGeometry { constructor(ri,ro,ts=8){ this._tris = ts*2; } }
+    class TorusGeometry { constructor(r,t,rs=8,ts=6){ this._tris = rs*ts*2; } }
+    class Mat { constructor(p={}){ Object.assign(this,p); this.color={r:1,g:1,b:1,setHex(){return this;},set(){return this;}}; this.map=null; } clone(){ return new Mat(this); } }
+    class MeshToonMaterial extends Mat {}
+    class MeshBasicMaterial extends Mat {}
+    class MeshLambertMaterial extends Mat {}
+    class CanvasTexture { constructor(c){ this.image=c; this.colorSpace=null; this.needsUpdate=false; this.offset={x:0,y:0,set(x,y){this.x=x;this.y=y;}}; this.repeat={x:1,y:1,set(x,y){this.x=x;this.y=y;}}; } clone(){ const t=new CanvasTexture(this.image); t.offset={...this.offset,set(x,y){this.x=x;this.y=y;}}; t.repeat={...this.repeat,set(x,y){this.x=x;this.y=y;}}; return t; } }
+    return { Group, Mesh, SphereGeometry, BoxGeometry, CapsuleGeometry, CylinderGeometry, ConeGeometry, CircleGeometry, PlaneGeometry, RingGeometry, TorusGeometry, MeshToonMaterial, MeshBasicMaterial, MeshLambertMaterial, CanvasTexture, SRGBColorSpace:'srgb', BackSide:1, DoubleSide:2 };
+  }
+  function countTris(obj) {
+    let t = 0;
+    obj.traverse((n) => { if (n.isMesh && n.geometry && typeof n.geometry._tris === 'number') t += n.geometry._tris; });
+    return t;
+  }
+  const THREE = makeMockThree();
+  // characters.js expects document.createElement('canvas') for face texture
+  if (typeof global.document === 'undefined') {
+    global.document = { createElement(tag) { if (tag === 'canvas') return { width:0, height:0, getContext(){ return fakeCtx; } }; return {}; } };
+  }
+  const chars = CH.create(THREE, { toon(c, o){ return new THREE.MeshToonMaterial({ color:c, ...(o||{}) }); } });
+  const hero2 = chars.makeHero2();
+  const grumpy2 = chars.makeGrumpy2('normal');
+  const owl2 = chars.makeOwl2();
+  const heroTris = countTris(hero2);
+  const grumpyTris = countTris(grumpy2);
+  const owlTris = countTris(owl2);
+  check('Q-10: hero2 triangles <= 2500', heroTris <= 2500, heroTris);
+  check('Q-10: grumpy2 triangles <= 1200', grumpyTris <= 1200, grumpyTris);
+  check('Q-10: owl2 triangles <= 1200', owlTris <= 1200, owlTris);
+
+  // evalHero swing envelope (Q-11) — AD §4 phases at swingFrac 0/0.26/0.57/1 within 5°
+  const deg5 = 5 * Math.PI / 180;
+  function heroAtFrac(frac) {
+    return A.evalHero({ hero: { vx: 0, vz: 0, facing: 0, swingFrac: frac, cooldown: 0, shield: false, bumpT: 0 } }, 0, { motionScale: 1 });
+  }
+  const hs0 = heroAtFrac(0), hsA = heroAtFrac(0.26), hsS = heroAtFrac(0.57), hs1 = heroAtFrac(1);
+  check('Q-11: swing frac 0 armR ~0deg', Math.abs((hs0.armR && hs0.armR.rx) || 0) <= deg5, ((hs0.armR||{}).rx));
+  check('Q-11: swing frac 0.26 armR ~-25deg', Math.abs(((hsA.armR||{}).rx || 0) - (-25*Math.PI/180)) <= deg5, ((hsA.armR||{}).rx));
+  check('Q-11: swing frac 0.57 armR ~85deg', Math.abs(((hsS.armR||{}).rx || 0) - (85*Math.PI/180)) <= deg5, ((hsS.armR||{}).rx));
+  check('Q-11: swing frac 1 armR ~0deg', Math.abs(((hs1.armR||{}).rx || 0)) <= deg5, ((hs1.armR||{}).rx));
+  // pose continuity (no jump > 25° between 16ms steps)
+  let heroContOk = true;
+  for (let i = 0; i < 60; i++) {
+    const tA = i / 60, tB = (i + 1) / 60;
+    const a = A.evalHero({ hero: { vx: 3, vz: 0, facing: 0, swingFrac: tA, cooldown: 0, shield: false, bumpT: 0 } }, tA, { motionScale: 1 });
+    const b = A.evalHero({ hero: { vx: 3, vz: 0, facing: 0, swingFrac: tB, cooldown: 0, shield: false, bumpT: 0 } }, tB, { motionScale: 1 });
+    for (const k of Object.keys(a)) { const va=a[k]||{}, vb=b[k]||{}; for (const ax of ['rx','ry','rz']) { if (Math.abs((va[ax]||0)-(vb[ax]||0)) > 25*Math.PI/180) heroContOk = false; } }
+  }
+  check('Q-11: hero pose continuity (16ms, <25deg)', heroContOk, heroContOk);
   // reduced motion scales amplitudes
-  const pRM = A.evalHero(heroState, 0, { motionScale: 0.4 });
-  check('Q-11: reduced motion scales armR (0.4x)', Math.abs(pRM.armR.rx) <= Math.abs(p0.armR.rx) * 0.45 + 0.01);
+  const pRM = A.evalHero({ hero: { vx: 0, vz: 0, facing: 0, swingFrac: 0.57, cooldown: 0, shield: false, bumpT: 0 } }, 0, { motionScale: 0.4 });
+  check('Q-11: reduced motion scales armR (0.4x)', Math.abs((pRM.armR||{}).rx || 0) <= Math.abs((hsS.armR||{}).rx || 0) * 0.41 + 0.01, (pRM.armR||{}).rx);
   // no NaN
-  check('Q-11: evalHero no NaN', !Object.values(p0).some((v) => Object.values(v).some((n) => isNaN(n))));
-  // evalGrumpy
+  const p0 = heroAtFrac(0.1);
+  check('Q-11: evalHero no NaN', !Object.values(p0).some((v) => v && typeof v === 'object' && Object.values(v).some((n) => typeof n === 'number' && isNaN(n))));
+  // evalGrumpy / evalOwl basic
   const gp = A.evalGrumpy({ state: 'idle', hp: 3, mood: 1 }, 0, { motionScale: 1 });
   check('Q-11: evalGrumpy returns root', gp.root != null);
-  // evalOwl
   const op = A.evalOwl({ pos: [-5, 4] }, { x: 0, z: 0 }, true, 0, { motionScale: 1 });
   check('Q-11: evalOwl returns head', op.head != null);
 
@@ -176,10 +240,26 @@ function check(name, ok, info) {
   for (let i = 0; i < 60; i++) {
     const a = A.evalGrumpy({ state: 'approach', hp: 3, mood: 1 }, i/60, { motionScale: 1 });
     const b = A.evalGrumpy({ state: 'approach', hp: 3, mood: 1 }, (i+1)/60, { motionScale: 1 });
-    const keys = Object.keys(a);
-    for (const k of keys) { const va=a[k]||{}, vb=b[k]||{}; for (const ax of ['rx','ry','rz','px','py','pz']) { if (Math.abs((va[ax]||0)-(vb[ax]||0)) > 0.8) gContOk = false; } }
+    for (const k of Object.keys(a)) { const va=a[k]||{}, vb=b[k]||{}; for (const ax of ['rx','ry','rz','px','py','pz']) { if (Math.abs((va[ax]||0)-(vb[ax]||0)) > 0.8) gContOk = false; } }
   }
   check('Q-12: evalGrumpy continuity (16ms steps)', gContOk, gContOk);
+  // volume preservation during squash/stretch (sx*sy*sz within 0.15 of 1)
+  let volOk = true, squashSeen = false;
+  for (const kind of ['hit', 'befriend']) {
+    for (let i = 0; i <= 20; i++) {
+      const elapsed = kind === 'hit' ? i * 20 : i * 20; // ms
+      const g = { state: kind === 'hit' ? 'retreat' : 'happy', hp: 3, mood: kind === 'befriend' ? 100 : 1,
+        hitT: kind === 'hit' ? Math.max(0, 430 - elapsed) : 0,
+        befriendT: kind === 'befriend' ? Math.max(0, 400 - elapsed) : 0 };
+      const p = A.evalGrumpy(g, i / 20, { motionScale: 1 });
+      const b = p.body || {};
+      const sx = b.sx == null ? 1 : b.sx, sy = b.sy == null ? 1 : b.sy, sz = b.sz == null ? 1 : b.sz;
+      const vol = sx * sy * sz;
+      if (Math.abs(vol - 1) > 0.15) volOk = false;
+      if (Math.abs(sy - 1) > 0.05) squashSeen = true;
+    }
+  }
+  check('Q-12: evalGrumpy squash/stretch volume-preserving', volOk && squashSeen, 'volOk=' + volOk + ' squashSeen=' + squashSeen);
 
   // Q-13 owl2 contract
   check('Q-13: OWL_PIVOTS has 10 entries', Array.isArray(CH.OWL_PIVOTS) && CH.OWL_PIVOTS.length === 10, CH.OWL_PIVOTS && CH.OWL_PIVOTS.length);

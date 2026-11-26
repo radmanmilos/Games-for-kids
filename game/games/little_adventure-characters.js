@@ -130,27 +130,27 @@
       const bootMat = mat('boot', 0x8B5A2B);
       const beltMat = mat('trim', 0xD4A017);
 
-      const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.45, 16), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.18 }));
+      const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.45, 12), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.18 }));
       shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.02; shadow.name = 'shadow'; root.add(shadow); pivots.shadow = shadow;
 
       const hips = new THREE.Group(); hips.name = 'hips'; hips.position.y = 0.72; root.add(hips); pivots.hips = hips;
       const torso = new THREE.Group(); torso.name = 'torso'; torso.position.y = 0.1; hips.add(torso); pivots.torso = torso;
-      const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.24, 0.42, 4, 8), bodyMat); body.position.y = 0.28; body.castShadow = true; torso.add(body); addOutline(body, 0.03);
-      const belt = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.08, 12), beltMat); belt.position.y = 0.08; torso.add(belt);
+      const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.24, 0.42, 4, 6), bodyMat); body.position.y = 0.28; body.castShadow = true; torso.add(body); addOutline(body, 0.03);
+      const belt = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.08, 10), beltMat); belt.position.y = 0.08; torso.add(belt);
 
       const head = new THREE.Group(); head.name = 'head'; head.position.y = 0.72; torso.add(head); pivots.head = head;
-      const headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.31, 16, 14), skinMat); headMesh.scale.set(1.05, 1, 1); headMesh.castShadow = true; head.add(headMesh); addOutline(headMesh, 0.03);
+      const headMesh = new THREE.Mesh(new THREE.SphereGeometry(0.31, 12, 10), skinMat); headMesh.scale.set(1.05, 1, 1); headMesh.castShadow = true; head.add(headMesh); addOutline(headMesh, 0.03);
       const face = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.21), new THREE.MeshBasicMaterial({ map: faceTex.texture.clone(), transparent: true }));
       face.position.set(0, 0.02, 0.27); face.name = 'face'; head.add(face); pivots.face = face;
       setFaceCell(face, 'open');
 
       const hat = new THREE.Group(); hat.name = 'hat'; hat.position.y = 0.2; head.add(hat); pivots.hat = hat;
-      const hatBrim = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.06, 12), hatMat); hatBrim.position.y = 0.02; hat.add(hatBrim);
-      const hatCone = new THREE.Mesh(new THREE.ConeGeometry(0.26, 0.45, 12), hatMat); hatCone.position.y = 0.28; hatCone.castShadow = true; hat.add(hatCone); addOutline(hatCone, 0.03);
+      const hatBrim = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.36, 0.06, 10), hatMat); hatBrim.position.y = 0.02; hat.add(hatBrim);
+      const hatCone = new THREE.Mesh(new THREE.ConeGeometry(0.26, 0.45, 10), hatMat); hatCone.position.y = 0.28; hatCone.castShadow = true; hat.add(hatCone); addOutline(hatCone, 0.03);
       let prevTip = hat;
       for (let i = 1; i <= 3; i++) {
         const tip = new THREE.Group(); tip.name = 'hatTip' + i; tip.position.y = i === 1 ? 0.5 : 0.08; prevTip.add(tip); pivots['hatTip' + i] = tip;
-        const seg = new THREE.Mesh(new THREE.SphereGeometry(0.04 - i * 0.008, 8, 8), mToon(i === 3 ? 0xFFF3DC : 0x4FB06A)); tip.add(seg);
+        const seg = new THREE.Mesh(new THREE.SphereGeometry(0.04 - i * 0.008, 6, 5), mToon(i === 3 ? 0xFFF3DC : 0x4FB06A)); tip.add(seg);
         prevTip = tip;
       }
 
@@ -165,11 +165,11 @@
       function makeArm(side) {
         const s = side === 'L' ? -1 : 1;
         const arm = new THREE.Group(); arm.name = 'arm' + side; arm.position.set(s * 0.32, 0.5, 0); torso.add(arm); pivots['arm' + side] = arm;
-        const upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.22, 4, 8), bodyMat); upper.position.y = -0.14; upper.castShadow = true; arm.add(upper);
+        const upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.22, 3, 6), bodyMat); upper.position.y = -0.14; upper.castShadow = true; arm.add(upper);
         const forearm = new THREE.Group(); forearm.name = 'forearm' + side; forearm.position.y = -0.28; arm.add(forearm); pivots['forearm' + side] = forearm;
-        const lower = new THREE.Mesh(new THREE.CapsuleGeometry(0.065, 0.2, 4, 8), skinMat); lower.position.y = -0.12; forearm.add(lower);
+        const lower = new THREE.Mesh(new THREE.CapsuleGeometry(0.065, 0.2, 3, 6), skinMat); lower.position.y = -0.12; forearm.add(lower);
         const hand = new THREE.Group(); hand.name = 'hand' + side; hand.position.y = -0.25; forearm.add(hand); pivots['hand' + side] = hand;
-        const mitten = new THREE.Mesh(new THREE.SphereGeometry(0.085, 10, 8), mToon(0xFFF3DC)); hand.add(mitten);
+        const mitten = new THREE.Mesh(new THREE.SphereGeometry(0.085, 8, 6), mToon(0xFFF3DC)); hand.add(mitten);
         return { arm, forearm, hand };
       }
       const armL = makeArm('L');
@@ -178,9 +178,9 @@
       function makeLeg(side) {
         const s = side === 'L' ? -1 : 1;
         const leg = new THREE.Group(); leg.name = 'leg' + side; leg.position.set(s * 0.12, -0.02, 0); hips.add(leg); pivots['leg' + side] = leg;
-        const upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.085, 0.22, 4, 8), mToon(0x6FB35A)); upper.position.y = -0.16; upper.castShadow = true; leg.add(upper);
+        const upper = new THREE.Mesh(new THREE.CapsuleGeometry(0.085, 0.22, 3, 6), mToon(0x6FB35A)); upper.position.y = -0.16; upper.castShadow = true; leg.add(upper);
         const shin = new THREE.Group(); shin.name = 'shin' + side; shin.position.y = -0.3; leg.add(shin); pivots['shin' + side] = shin;
-        const lower = new THREE.Mesh(new THREE.CapsuleGeometry(0.075, 0.2, 4, 8), mToon(0x5FA04A)); lower.position.y = -0.13; shin.add(lower);
+        const lower = new THREE.Mesh(new THREE.CapsuleGeometry(0.075, 0.2, 3, 6), mToon(0x5FA04A)); lower.position.y = -0.13; shin.add(lower);
         const foot = new THREE.Group(); foot.name = 'foot' + side; foot.position.y = -0.26; shin.add(foot); pivots['foot' + side] = foot;
         const boot = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.1, 0.22), bootMat); boot.position.set(0, -0.03, 0.03); boot.castShadow = true; foot.add(boot);
         return { leg, shin, foot };
@@ -191,13 +191,13 @@
       const sword = new THREE.Group(); sword.name = 'sword'; sword.position.set(0, -0.02, 0.08); sword.rotation.x = Math.PI / 2; armR.hand.add(sword); pivots.sword = sword;
       const blade = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.7, 0.03), mToon(0xD8C49A)); blade.position.y = 0.42; blade.castShadow = true; sword.add(blade); addOutline(blade, 0.03);
       const guard = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.05, 0.06), mToon(0xD4A017)); guard.position.y = 0.06; sword.add(guard);
-      const grip = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.16, 8), mToon(0x8B5A2B)); grip.position.y = -0.04; sword.add(grip);
+      const grip = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.16, 6), mToon(0x8B5A2B)); grip.position.y = -0.04; sword.add(grip);
 
       // shield as child of forearmL
       const shield = new THREE.Group(); shield.name = 'shield'; shield.position.set(0.02, -0.12, 0.1); shield.rotation.y = -0.3; armL.forearm.add(shield); pivots.shield = shield;
-      const shieldMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.06, 16), mToon(0x5B4B8A)); shieldMesh.rotation.x = Math.PI / 2; shieldMesh.castShadow = true; shield.add(shieldMesh); addOutline(shieldMesh, 0.03);
-      const shieldBoss = new THREE.Mesh(new THREE.SphereGeometry(0.07, 10, 8), mToon(0xD4A017)); shieldBoss.position.z = 0.04; shield.add(shieldBoss);
-      const shieldRim = new THREE.Mesh(new THREE.TorusGeometry(0.27, 0.02, 8, 20), mToon(0xFFF3DC)); shieldRim.rotation.x = Math.PI / 2; shield.add(shieldRim);
+      const shieldMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.06, 12), mToon(0x5B4B8A)); shieldMesh.rotation.x = Math.PI / 2; shieldMesh.castShadow = true; shield.add(shieldMesh); addOutline(shieldMesh, 0.03);
+      const shieldBoss = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 6), mToon(0xD4A017)); shieldBoss.position.z = 0.04; shield.add(shieldBoss);
+      const shieldRim = new THREE.Mesh(new THREE.TorusGeometry(0.27, 0.02, 6, 12), mToon(0xFFF3DC)); shieldRim.rotation.x = Math.PI / 2; shield.add(shieldRim);
 
       // rest pose snapshot
       const rest = {};
@@ -224,29 +224,29 @@
       root.scale.setScalar(scale);
       const bodyMat = mat('body', 0xC9708F);
       const bellyMat = mat('belly', 0xE6A3BA);
-      const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.5, 16), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.18 }));
+      const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.5, 12), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.18 }));
       shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.02; root.add(shadow); pivots.shadow = shadow;
       const body = new THREE.Group(); body.name = 'body'; body.position.y = 0.55; root.add(body); pivots.body = body;
-      const blob = new THREE.Mesh(new THREE.SphereGeometry(0.55, 16, 14), bodyMat); blob.scale.set(1, 0.85, 1); blob.castShadow = true; body.add(blob); addOutline(blob, 0.03);
-      const belly = new THREE.Mesh(new THREE.SphereGeometry(0.38, 14, 12), bellyMat); belly.position.set(0, -0.05, 0.18); belly.scale.set(1, 0.85, 0.7); body.add(belly);
+      const blob = new THREE.Mesh(new THREE.SphereGeometry(0.55, 12, 10), bodyMat); blob.scale.set(1, 0.85, 1); blob.castShadow = true; body.add(blob); addOutline(blob, 0.03);
+      const belly = new THREE.Mesh(new THREE.SphereGeometry(0.38, 10, 8), bellyMat); belly.position.set(0, -0.05, 0.18); belly.scale.set(1, 0.85, 0.7); body.add(belly);
       const face = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.25), new THREE.MeshBasicMaterial({ map: faceTex.texture.clone(), transparent: true }));
       face.position.set(0, 0.05, 0.45); body.add(face); pivots.face = face;
       setFaceCell(face, 'grumpy');
       function mkFoot(side) {
         const s = side === 'L' ? -1 : 1;
         const f = new THREE.Group(); f.name = 'feet' + side; f.position.set(s * 0.22, -0.42, 0.05); body.add(f); pivots['feet' + side] = f;
-        const m = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 8), mToon(0xA85A78)); m.scale.set(1.2, 0.7, 1.4); f.add(m);
+        const m = new THREE.Mesh(new THREE.SphereGeometry(0.12, 7, 6), mToon(0xA85A78)); m.scale.set(1.2, 0.7, 1.4); f.add(m);
       }
       mkFoot('L'); mkFoot('R');
       function mkArm(side) {
         const s = side === 'L' ? -1 : 1;
         const a = new THREE.Group(); a.name = 'arm' + side; a.position.set(s * 0.5, 0, 0.1); body.add(a); pivots['arm' + side] = a;
-        const m = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.18, 4, 8), bodyMat); m.rotation.z = s * 0.6; m.position.set(s * 0.08, -0.08, 0); a.add(m);
+        const m = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.18, 3, 6), bodyMat); m.rotation.z = s * 0.6; m.position.set(s * 0.08, -0.08, 0); a.add(m);
       }
       mkArm('L'); mkArm('R');
       for (let i = 1; i <= 3; i++) {
         const t = new THREE.Group(); t.name = 'tuft' + i; t.position.set((i - 2) * 0.12, 0.42, -0.05); body.add(t); pivots['tuft' + i] = t;
-        const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), mToon(0x6FB35A)); leaf.scale.set(0.7, 1.4, 0.7); t.add(leaf);
+        const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.07, 6, 5), mToon(0x6FB35A)); leaf.scale.set(0.7, 1.4, 0.7); t.add(leaf);
       }
       const crown = new THREE.Group(); crown.name = 'crown'; crown.position.y = 0.55; crown.visible = !!isBoss; body.add(crown); pivots.crown = crown;
       if (isBoss) {
@@ -274,20 +274,20 @@
       const root = new THREE.Group(); root.name = 'owl2';
       const pivots = {};
       const mat = (k, c, o) => { const m = mToon(c, o); (root.userData.materials = root.userData.materials || {})[k] = m; return m; };
-      const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.35, 16), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.18 }));
+      const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.35, 12), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.18 }));
       shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.02; root.add(shadow); pivots.shadow = shadow;
       const body = new THREE.Group(); body.name = 'body'; body.position.y = 0.5; root.add(body); pivots.body = body;
-      const bMesh = new THREE.Mesh(new THREE.SphereGeometry(0.38, 16, 14), mat('body', 0x9A6B3F)); bMesh.scale.set(1, 1.15, 0.95); bMesh.castShadow = true; body.add(bMesh); addOutline(bMesh, 0.03);
-      const chest = new THREE.Mesh(new THREE.SphereGeometry(0.26, 14, 12), mat('belly', 0xE8D5B5)); chest.position.set(0, -0.05, 0.18); chest.scale.set(1, 1.1, 0.6); body.add(chest);
+      const bMesh = new THREE.Mesh(new THREE.SphereGeometry(0.38, 10, 8), mat('body', 0x9A6B3F)); bMesh.scale.set(1, 1.15, 0.95); bMesh.castShadow = true; body.add(bMesh); addOutline(bMesh, 0.03);
+      const chest = new THREE.Mesh(new THREE.SphereGeometry(0.26, 8, 6), mat('belly', 0xE8D5B5)); chest.position.set(0, -0.05, 0.18); chest.scale.set(1, 1.1, 0.6); body.add(chest);
       const head = new THREE.Group(); head.name = 'head'; head.position.y = 0.42; body.add(head); pivots.head = head;
-      const hMesh = new THREE.Mesh(new THREE.SphereGeometry(0.3, 16, 14), mat('head', 0x9A6B3F)); hMesh.castShadow = true; head.add(hMesh); addOutline(hMesh, 0.03);
+      const hMesh = new THREE.Mesh(new THREE.SphereGeometry(0.3, 10, 8), mat('head', 0x9A6B3F)); hMesh.castShadow = true; head.add(hMesh); addOutline(hMesh, 0.03);
       const eyeWMat = mToon(0xFFFFFF); const eyePMat = mToon(0x2C2137);
       function mkEye(side) {
         const s = side === 'L' ? -1 : 1;
         const e = new THREE.Group(); e.name = 'eye' + side; e.position.set(s * 0.11, 0.03, 0.24); head.add(e); pivots['eye' + side] = e;
-        const w = new THREE.Mesh(new THREE.CircleGeometry(0.09, 12), eyeWMat); e.add(w);
-        const p = new THREE.Mesh(new THREE.CircleGeometry(0.045, 12), eyePMat); p.position.z = 0.01; e.add(p);
-        const hl = new THREE.Mesh(new THREE.CircleGeometry(0.015, 8), mToon(0xFFFFFF)); hl.position.set(-0.015, 0.015, 0.02); e.add(hl);
+        const w = new THREE.Mesh(new THREE.CircleGeometry(0.09, 10), eyeWMat); e.add(w);
+        const p = new THREE.Mesh(new THREE.CircleGeometry(0.045, 10), eyePMat); p.position.z = 0.01; e.add(p);
+        const hl = new THREE.Mesh(new THREE.CircleGeometry(0.015, 6), mToon(0xFFFFFF)); hl.position.set(-0.015, 0.015, 0.02); e.add(hl);
         const lid = new THREE.Group(); lid.name = 'lid' + side; lid.position.set(0, 0.09, 0.01); e.add(lid); pivots['lid' + side] = lid;
         const lidM = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.1, 0.02), mat('head', 0x9A6B3F));
         lidM.position.y = -0.05; lid.add(lidM);
@@ -295,11 +295,11 @@
         return e;
       }
       mkEye('L'); mkEye('R');
-      const beak = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.09, 6), mToon(0xE89B3C)); beak.position.set(0, -0.04, 0.29); beak.rotation.x = Math.PI / 2; head.add(beak);
+      const beak = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.09, 5), mToon(0xE89B3C)); beak.position.set(0, -0.04, 0.29); beak.rotation.x = Math.PI / 2; head.add(beak);
       function mkWing(side) {
         const s = side === 'L' ? -1 : 1;
         const w = new THREE.Group(); w.name = 'wing' + side; w.position.set(s * 0.34, 0.15, 0); body.add(w); pivots['wing' + side] = w;
-        const wm = new THREE.Mesh(new THREE.SphereGeometry(0.16, 10, 8), mat('wing', 0x8A5E33)); wm.scale.set(0.5, 1.2, 0.8); w.add(wm);
+        const wm = new THREE.Mesh(new THREE.SphereGeometry(0.16, 8, 6), mat('wing', 0x8A5E33)); wm.scale.set(0.5, 1.2, 0.8); w.add(wm);
       }
       mkWing('L'); mkWing('R');
       const tail = new THREE.Group(); tail.name = 'tail'; tail.position.set(0, -0.2, -0.28); body.add(tail); pivots.tail = tail;

@@ -89,13 +89,23 @@
     const s = (state && state.hero) ? state.hero : (state || {});
     const speed = Math.hypot(s.vx || 0, s.vz || 0);
     const speed01 = Math.min(1, speed / 5.0);
-    const swingFrac = s.swingT ? 1 - (s.swingT / 350) : 0;
+    const swingFrac = s.swingFrac != null ? s.swingFrac : (s.swingT ? 1 - (s.swingT / 350) : 0);
     const swingPhase = Math.max(0, Math.min(1, swingFrac));
-    // swing 3-phase: windup (0-0.26), strike (0.26-0.57), recover (0.57-1)
+    // AD §4 swing 3-phase: windup 0-0.26 (0 -> -25deg), strike 0.26-0.57 (-25 -> 85deg), recover 0.57-1 (85 -> 0deg)
+    const DEG = Math.PI / 180;
     let armR = 0;
-    if (swingPhase > 0 && swingPhase < 0.26) armR = -0.6 * (swingPhase / 0.26) * ms;
-    else if (swingPhase < 0.57) armR = (-0.6 + (swingPhase - 0.26) / 0.31 * 2.2) * ms;
-    else armR = (1.6 - (swingPhase - 0.57) / 0.43 * 1.6) * ms;
+    if (swingPhase > 0 && swingPhase < 0.26) {
+      armR = (-25 * DEG) * (swingPhase / 0.26) * ms;
+    } else if (swingPhase >= 0.26 && swingPhase < 0.57) {
+      armR = (-25 * DEG + (85 * DEG - (-25 * DEG)) * ((swingPhase - 0.26) / 0.31)) * ms;
+    } else if (swingPhase >= 0.57 && swingPhase < 1) {
+      const t = (swingPhase - 0.57) / 0.43;
+      // overshoot 10deg past 0 then settle
+      const over = 10 * DEG * Math.sin(t * Math.PI) * (1 - t);
+      armR = (85 * DEG * (1 - t) + over) * ms;
+    } else if (swingPhase >= 1) {
+      armR = 0;
+    }
     const walkPhase = (t * speed01 * 2) % (Math.PI * 2);
     const legSwing = Math.sin(walkPhase) * 0.4 * speed01 * ms;
     const idleBob = Math.sin(t * 2) * 0.02 * (1 - speed01) * ms;
@@ -122,11 +132,32 @@
     const state = (g && g.state) || 'idle';
     const idle = Math.sin(t * 1.2) * 0.03 * ms;
     const hop = state === 'approach' ? Math.abs(Math.sin(t * 4)) * 0.15 * ms : 0;
+    const body = { sx: 1, sy: 1, sz: 1 };
+    // Hit squash: 0.7 in 80ms, outElastic back over 350ms (AD §4) — volume-preserving
+    const hitT = g && g.hitT > 0 ? (430 - g.hitT) : -1;
+    if (hitT >= 0 && hitT <= 430) {
+      let sy = 1;
+      if (hitT < 80) sy = 1 - 0.3 * (hitT / 80);
+      else { const u = Math.min(1, (hitT - 80) / 350); sy = 0.7 + (1 - 0.7) * A.outElastic(u); }
+      sy = 1 + (sy - 1) * ms;
+      const sxz = sy > 0.01 ? 1 / Math.sqrt(sy) : 1;
+      body.sx = sxz; body.sy = sy; body.sz = sxz;
+    }
+    // Befriend elastic pop: scale 1.25->1 over 400ms, volume-preserving
+    const befT = g && g.befriendT > 0 ? (400 - g.befriendT) : -1;
+    if (befT >= 0 && befT <= 400) {
+      const u = Math.min(1, befT / 400);
+      let sy = 1.25 - 0.25 * A.outElastic(u);
+      sy = 1 + (sy - 1) * ms;
+      const sxz = sy > 0.01 ? 1 / Math.sqrt(sy) : 1;
+      body.sx = sxz; body.sy = sy; body.sz = sxz;
+    }
     return {
       root: { py: idle + hop },
+      body: body,
       head: { ry: Math.sin(t * 0.8) * 0.1 * ms },
-      armL: { rx: state === 'hit' ? -0.6 * ms : 0 },
-      armR: { rx: state === 'hit' ? 0.6 * ms : 0 }
+      armL: { rx: state === 'hit' || state === 'retreat' ? -0.6 * ms : 0 },
+      armR: { rx: state === 'hit' || state === 'retreat' ? 0.6 * ms : 0 }
     };
   };
 

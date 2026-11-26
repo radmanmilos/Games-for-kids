@@ -1972,16 +1972,16 @@
     "size": 114533
   },
   "games/little_adventure-anim.js": {
-    "sha256": "47cfb7da8562ba63dc037f7897264a140639141fa09a2b573d7966c8ba46a35c",
-    "size": 6002
+    "sha256": "9d432c6aacd997bde712615983bc92957fcbf283f4750f043205f805557fbe1b",
+    "size": 7427
   },
   "games/little_adventure-audio.js": {
     "sha256": "a2faa770c20489a40f81e910b6e6c4058b3c67a824947fd58e65d5963785e0df",
     "size": 3660
   },
   "games/little_adventure-characters.js": {
-    "sha256": "ef0bb95472f8bcd861b44f5edd9907709c09750da449dc855b83491a5d7b1c5d",
-    "size": 21508
+    "sha256": "93b75baf72f12f98947bd18959913c4b5bc85f8301d339f366a59664e875d7f8",
+    "size": 21499
   },
   "games/little_adventure-config.js": {
     "sha256": "08b5f9c7d564aec42f18ff539c6f67cfe918f543c9810372dfc759acb6bda622",
@@ -1992,8 +1992,8 @@
     "size": 4292
   },
   "games/little_adventure-logic.js": {
-    "sha256": "6716fac5a8db639a0afc152b1c48fdb5ac28d7b0725b4b52ef677f9d04413ebc",
-    "size": 32710
+    "sha256": "206e611b293562a720ce67ac923a7632663d37b08fd82580065b877b5ef5841a",
+    "size": 32875
   },
   "games/little_adventure-materials.js": {
     "sha256": "bbd9c62a8e82df14a1cce7585a5c97d9715f20a7e687b2ea55ba5d90b37581f6",

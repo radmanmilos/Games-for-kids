@@ -226,7 +226,7 @@
         homeX: g.home[0], homeZ: g.home[1],
         zMin: zr.zMin, zMax: zr.zMax,
         wanderAngle: rng() * 2 * Math.PI, wanderTimer: 0,
-        retreatT: 0, respawnTimer: 0, bumpCooldown: 0
+        retreatT: 0, respawnTimer: 0, bumpCooldown: 0, hitT: 0, befriendT: 0
       });
     });
 
@@ -352,7 +352,7 @@
         gr.hp -= 1;
         pushEvent({ type: 'hit', id: gr.id });
         if (gr.hp <= 0) {
-          gr.state = 'happy'; gr.mood = 100;
+          gr.state = 'happy'; gr.mood = 100; gr.befriendT = 400; gr.hitT = 0;
           pushEvent({ type: 'befriend', id: gr.id });
           if (gr.drops && items[gr.drops] && items[gr.drops].state === 'hidden') {
             items[gr.drops].state = 'world';
@@ -360,7 +360,7 @@
             pushEvent({ type: 'itemSpawn', id: gr.drops });
           }
         } else {
-          gr.state = 'retreat'; gr.retreatT = retreatMs;
+          gr.state = 'retreat'; gr.retreatT = retreatMs; gr.hitT = 430;
         }
       }
     }
@@ -369,6 +369,8 @@
       for (var i = 0; i < grumpies.length; i++) {
         var gr = grumpies[i];
         if (gr.bumpCooldown > 0) gr.bumpCooldown -= dtMs;
+        if (gr.hitT > 0) gr.hitT -= dtMs;
+        if (gr.befriendT > 0) gr.befriendT -= dtMs;
 
         if (gr.state === 'happy') {
           gr.mood -= dtSec * 50;
