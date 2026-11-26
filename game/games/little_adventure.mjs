@@ -89,31 +89,32 @@ window.startlittle_adventure = function startlittle_adventure() {
     const hAt = (x, z) => terrain ? terrain.heightAt(x, z) : 0;
     const models = modelsFactory.create(THREE);
 
-    // Ground with vertex colours by zone
-    const groundSeg = 64;
-    const groundGeo = new THREE.PlaneGeometry(96, 160, groundSeg, groundSeg);
-    const pos = groundGeo.attributes.position;
-    const colors = new Float32Array(pos.count * 3);
-    const colA = new THREE.Color(cfg.zones[0].color);
-    const colB = new THREE.Color(cfg.zones[1].color);
-    const colC = new THREE.Color(cfg.zones[2].color);
-    for (let i = 0; i < pos.count; i++) {
-      const z = pos.getY(i);
-      let c;
-      if (z > cfg.zones[0].z1) c = colA.clone();
-      else if (z > cfg.zones[1].z1) c = colB.clone();
-      else c = colC.clone();
-      const d1 = Math.abs(z - cfg.zones[0].z1);
-      const d2 = Math.abs(z - cfg.zones[1].z1);
-      if (d1 < 3) c.lerp(z > cfg.zones[0].z1 ? colB : colA, 1 - d1 / 3);
-      if (d2 < 3) c.lerp(z > cfg.zones[1].z1 ? colC : colB, 1 - d2 / 3);
-      const x = pos.getX(i);
-      colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b;
+    // Ground - Q-06 terrain mesh (deterministic, seeded)
+    let ground;
+    if (terrain && terrain.verts && terrain.colors) {
+      const gGeo = new THREE.BufferGeometry();
+      gGeo.setAttribute('position', new THREE.Float32BufferAttribute(terrain.verts, 3));
+      gGeo.setAttribute('color', new THREE.Float32BufferAttribute(terrain.colors, 3));
+      const gw = terrain.gridW, gh = terrain.gridH;
+      const idx = [];
+      for (let j = 0; j < gh; j++) {
+        for (let i = 0; i < gw; i++) {
+          const a = j * (gw + 1) + i;
+          const b = a + 1;
+          const c = a + (gw + 1);
+          const d = c + 1;
+          idx.push(a, c, b, b, c, d);
+        }
+      }
+      gGeo.setIndex(idx);
+      gGeo.computeVertexNormals();
+      ground = new THREE.Mesh(gGeo, new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true }));
+    } else {
+      const groundGeo = new THREE.PlaneGeometry(96, 160, 64, 64);
+      ground = new THREE.Mesh(groundGeo, new THREE.MeshLambertMaterial({ color: 0x7ec850, flatShading: true }));
+      ground.rotation.x = -Math.PI / 2;
+      ground.position.z = -32;
     }
-    groundGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    const ground = new THREE.Mesh(groundGeo, new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true }));
-    ground.rotation.x = -Math.PI / 2;
-    ground.position.z = -32;
     scene.add(ground);
 
     // Q-05: sky dome (inverted sphere, vertex colour gradient)

@@ -20,7 +20,7 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 | Q-03 | 1 | Colour pipeline, lighting, atmosphere | Q-02 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | Tone mapping SRGB, ZONE_ATMOS, atmosphere blend, vignette. Look unreviewed. |
 | Q-04 | 1 | Material kit (QG1) | Q-03 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | materials singleton cache wired into models.js + instanced decor; **QG1 approved by user (2026-11-26, "A approve")**. Still needs full renderer prop migration, outlines, material-count hook/AC verification. |
 | Q-05 | 1 | Sky, clouds, sun, fog | Q-03 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | Sky dome, sun sprite, 10 instanced clouds with drift. Look unreviewed. |
-| Q-06 | 1 | Terrain, island, beach, path | Q-04 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | terrain.js deterministic heightAt/maskAt wired to hero/actors/static props in renderer; ground mesh replacement still pending (look gate). |
+| Q-06 | 1 | Terrain, island, beach, path | Q-04 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | terrain.js deterministic heightAt/maskAt wired to hero/actors/static props; ground replaced with terrain BufferGeometry mesh. Look gate: screenshots captured for user review. |
 | Q-07 | 1 | Water | Q-06 | yes | NEW | | | |
 | Q-08 | 1 | Vegetation + props (QG2) | Q-06 | yes | NEW | | | |
 | Q-09 | 2 | Animation toolkit + filmstrip mode | Q-02 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | anim module + 9 Node tests; sheet() hook builds placeholder filmstrip clones in renderer (camera guarded). Visual filmstrip review still pending. |
@@ -68,3 +68,5 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 - 2026-11-26 — User approved QG1 (A, as-is look direction). Q-04/Q-06/Q-07/Q-08 gated work unblocked.
 - 2026-11-26 — OpenCode/Big Pickle — Q-04 wiring: materials singleton cache, models.js toon cache, instanced decor toon cache; smokes green.
 - 2026-11-26 — OpenCode/Big Pickle — Q-06 wiring: deterministic terrain heightAt applied to hero/actors/props; smokes green.
+- 2026-11-26 — OpenCode/Big Pickle — Q-06 ground mesh replaced with terrain BufferGeometry; smokes green, screenshots captured.
+- 2026-11-26 — User pre-approval: continue through all remaining tasks/QG decisions until done (recorded; still capture screenshots/artifacts).
