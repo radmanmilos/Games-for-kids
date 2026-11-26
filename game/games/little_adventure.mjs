@@ -255,10 +255,58 @@ window.startlittle_adventure = function startlittle_adventure() {
         return null;
       }
 
+      const models = (window.little_adventureModels && window.little_adventureModels.create) ? window.little_adventureModels.create(THREE, mats) : null;
+      const propSheet = (name === 'chest-open' || name === 'gate-open' || name === 'bridge-build' || name === 'bloom-wave');
       for (let i = 0; i < n; i++) {
+        const f = n <= 1 ? 0 : i / (n - 1);
         const info = poseAt(name, i, n);
         let g;
-        if (info && chars && chars.create && anim) {
+        if (propSheet && models) {
+          g = new THREE.Group();
+          if (name === 'chest-open') {
+            const chest = models.makeChest();
+            const lid = chest.getObjectByName('lid');
+            const t = anim && anim.outBack ? Math.max(0, Math.min(1.1, anim.outBack(f))) : f;
+            if (lid) lid.rotation.x = -Math.PI / 2 * t;
+            g.add(chest);
+          } else if (name === 'gate-open') {
+            const gate = models.makeGate();
+            const openAmt = anim && anim.outCubic ? anim.outCubic(f) : f;
+            const leafL = gate.getObjectByName('gateLeafL');
+            const leafR = gate.getObjectByName('gateLeafR');
+            if (leafL) leafL.rotation.y = -openAmt * Math.PI / 2;
+            if (leafR) leafR.rotation.y = openAmt * Math.PI / 2;
+            gate.position.y = -openAmt * 1.2;
+            g.add(gate);
+          } else if (name === 'bridge-build') {
+            const total = 5;
+            const show = Math.round(f * total);
+            for (let k = 0; k < total; k++) {
+              const seg = models.makeBridgeSegment(k);
+              seg.position.set(0, 0.05 + k * 0.02, -1.0 + k * 0.55);
+              seg.visible = k < show;
+              g.add(seg);
+            }
+            const base = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.2, 2.8), new THREE.MeshLambertMaterial({ color: 0x7a6b5d }));
+            base.position.y = -0.12; g.add(base);
+          } else if (name === 'bloom-wave') {
+            const ground = new THREE.Mesh(new THREE.CircleGeometry(1.2, 20), new THREE.MeshLambertMaterial({ color: 0x6ea85f }));
+            ground.rotation.x = -Math.PI / 2; ground.position.y = -0.01; g.add(ground);
+            const total = 12;
+            const show = Math.round(f * total);
+            const cols = [0xFFB7D5, 0xFFD23F, 0xB388FF, 0x80D8FF];
+            for (let k = 0; k < total; k++) {
+              const a = (k / total) * Math.PI * 2;
+              const r = 0.25 + (k % 3) * 0.28;
+              const flower = models.makeFlower();
+              flower.traverse((o) => { if (o.isMesh && o.material && o.material.color && o.geometry && o.geometry.type === 'SphereGeometry') o.material = o.material.clone(), o.material.color.setHex(cols[k % cols.length]); });
+              flower.position.set(Math.cos(a) * r, 0, Math.sin(a) * r);
+              const sc = k < show ? 0.35 + 0.65 * Math.min(1, (f * total - k)) : 0.001;
+              flower.scale.setScalar(Math.max(0.001, sc));
+              g.add(flower);
+            }
+          }
+        } else if (info && chars && chars.create && anim) {
           const c = chars.create(THREE, mats);
           if (info.rig === 'hero') g = c.makeHero2();
           else if (info.rig === 'grumpy') g = c.makeGrumpy2('normal');
@@ -278,14 +326,21 @@ window.startlittle_adventure = function startlittle_adventure() {
           head.position.y = 1.15; g.add(head);
         }
         g.position.x = startX + i * spacing;
-        g.userData.t = n === 1 ? 0 : i / (n - 1);
+        g.userData.t = f;
         sheetRoot.add(g);
       }
       sheetRoot.visible = true;
       galleryRoot.visible = false;
       heroMesh.visible = false;
-      camera.position.set(0, 2.2, 6 + n * 0.45);
-      camera.lookAt(0, 0.8, 0);
+      if (propSheet) {
+        const camZ = name === 'gate-open' ? 8 + n * 0.35 : 5.5 + n * 0.35;
+        const camY = name === 'gate-open' ? 2.8 : 2.2;
+        camera.position.set(0, camY, camZ);
+        camera.lookAt(0, name === 'gate-open' ? 0.6 : 0.5, 0);
+      } else {
+        camera.position.set(0, 2.2, 6 + n * 0.45);
+        camera.lookAt(0, 0.8, 0);
+      }
     }
 
     // Particle pools (Q-14: normal + additive, total cap = partCount)
