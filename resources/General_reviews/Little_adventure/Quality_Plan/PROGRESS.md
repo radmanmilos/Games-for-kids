@@ -18,7 +18,7 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 | Q-01 | 0 | Fix floor/void defect | Q-00 | yes | DONE (look unreviewed) | OpenCode/Big Pickle | 2026-11-25 | Ground/water 96×160 z=-32; edge fade removed; camera clamped; containment 5/5. |
 | Q-02 | 0 | Real WebGL smoke battery | Q-01 | | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | W1/W2/W4/W10/photo green; W3/W5-W9/W11-W13 need features. |
 | Q-03 | 1 | Colour pipeline, lighting, atmosphere | Q-02 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | Tone mapping SRGB, ZONE_ATMOS, atmosphere blend, vignette. Look unreviewed. |
-| Q-04 | 1 | Material kit (QG1) | Q-03 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | little_adventure-materials.js: toon ramp, cache, outline, AO, wind. QG1 user approval pending. |
+| Q-04 | 1 | Material kit (QG1) | Q-03 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-26 | materials singleton cache wired into models.js + instanced decor; **QG1 approved by user (2026-11-26, "A approve")**. Still needs full renderer prop migration, outlines, material-count hook/AC verification. |
 | Q-05 | 1 | Sky, clouds, sun, fog | Q-03 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | Sky dome, sun sprite, 10 instanced clouds with drift. Look unreviewed. |
 | Q-06 | 1 | Terrain, island, beach, path | Q-04 | yes | DONE (partial) | OpenCode/Big Pickle | 2026-11-25 | little_adventure-terrain.js: heightAt, maskAt, pathAt, vertex data. 6 Node tests green. Not wired into renderer. |
 | Q-07 | 1 | Water | Q-06 | yes | NEW | | | |
@@ -65,3 +65,5 @@ Base: `main`, manifest 3.0.25. Original package ledger: `../PROGRESS.md` (IS-00�
 - 2026-11-26 — OpenCode/Big Pickle — Q-18 small: renderer.info memory/programs exposed in state/perf overlay; check_fast green.
 - 2026-11-26 — OpenCode/Big Pickle — Q-16: thin zone music sequencer/ambient/crossfade/footstep sync wired in renderer (audioBuses, mute/visibility respected); LA smokes 19+34 pass.
 - 2026-11-26 — OpenCode/Big Pickle — Q-18: scene dispose pass on back; smokes green.
+- 2026-11-26 — User approved QG1 (A, as-is look direction). Q-04/Q-06/Q-07/Q-08 gated work unblocked.
+- 2026-11-26 — OpenCode/Big Pickle — Q-04 wiring: materials singleton cache, models.js toon cache, instanced decor toon cache; smokes green.

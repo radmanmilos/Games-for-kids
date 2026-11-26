@@ -82,6 +82,8 @@ window.startlittle_adventure = function startlittle_adventure() {
     // initial
     if (zoneAtmos.length) applyAtmos(zoneAtmos[0]);
 
+    const mats = (window.little_adventureMaterials && window.little_adventureMaterials.create)
+      ? window.little_adventureMaterials.create(THREE) : null;
     const models = modelsFactory.create(THREE);
 
     // Ground with vertex colours by zone
@@ -330,21 +332,22 @@ window.startlittle_adventure = function startlittle_adventure() {
       }
 
       const treePlacement = collectPositions(60);
-      const treeTrunk = makeInstanced(new THREE.CylinderGeometry(0.12, 0.18, 0.9, 6), new THREE.MeshLambertMaterial({ color: 0xA66B3A, flatShading: true }), treePlacement, 0.45);
-      const treeCrown = makeInstanced(new THREE.ConeGeometry(0.7, 1.4, 8), new THREE.MeshLambertMaterial({ color: 0x2E7D32, flatShading: true }), treePlacement, 1.6);
+      const mToon = (c) => mats ? mats.toon(c, { flat: true }) : new THREE.MeshLambertMaterial({ color: c, flatShading: true });
+      const treeTrunk = makeInstanced(new THREE.CylinderGeometry(0.12, 0.18, 0.9, 6), mToon(0xA66B3A), treePlacement, 0.45);
+      const treeCrown = makeInstanced(new THREE.ConeGeometry(0.7, 1.4, 8), mToon(0x2E7D32), treePlacement, 1.6);
       scene.add(treeTrunk);
       scene.add(treeCrown);
 
       const tuftPlacement = collectPositions(120);
-      const tuftMesh = makeInstanced(new THREE.IcosahedronGeometry(0.5, 0), new THREE.MeshLambertMaterial({ color: 0x6FB35A, flatShading: true }), tuftPlacement, 0.35);
+      const tuftMesh = makeInstanced(new THREE.IcosahedronGeometry(0.5, 0), mToon(0x6FB35A), tuftPlacement, 0.35);
       scene.add(tuftMesh);
 
       const flowerPlacement = collectPositions(80);
-      const flowerMesh = makeInstanced(new THREE.SphereGeometry(0.12, 6, 4), new THREE.MeshLambertMaterial({ color: 0xFFD23F, flatShading: true }), flowerPlacement, 0.3);
+      const flowerMesh = makeInstanced(new THREE.SphereGeometry(0.12, 6, 4), mToon(0xFFD23F), flowerPlacement, 0.3);
       scene.add(flowerMesh);
 
       const rockPlacement = collectPositions(30);
-      const rockMesh = makeInstanced(new THREE.DodecahedronGeometry(0.4, 0), new THREE.MeshLambertMaterial({ color: 0x9AA0A6, flatShading: true }), rockPlacement, 0.2);
+      const rockMesh = makeInstanced(new THREE.DodecahedronGeometry(0.4, 0), mToon(0x9AA0A6), rockPlacement, 0.2);
       scene.add(rockMesh);
 
       // Static structures + actor refs

@@ -1996,20 +1996,20 @@
     "size": 32679
   },
   "games/little_adventure-materials.js": {
-    "sha256": "e5490d69602d3cba67a64452fbed47f4e9bc8be941a6e3c6791d5ec84f408d50",
-    "size": 2696
+    "sha256": "bbd9c62a8e82df14a1cce7585a5c97d9715f20a7e687b2ea55ba5d90b37581f6",
+    "size": 2799
   },
   "games/little_adventure-models.js": {
-    "sha256": "2fbafba154722c87db3c4afbb50ee23bb0b24ebdf969535a3bbb9abff1422d2b",
-    "size": 12052
+    "sha256": "be7eeed8a7d1942fd4441dcb2c81af65bceae24280dbc1cab70c77c3b2fe410f",
+    "size": 11938
   },
   "games/little_adventure-terrain.js": {
     "sha256": "51fbd817ce7c7520f4d17c358c87aeaa742e8aaace1888e6e1ecd3acc4d39c9b",
     "size": 2903
   },
   "games/little_adventure.mjs": {
-    "sha256": "deabbe87fa8005c7c8a3efb136e1750b154b8f27d41debaa351e1b2fe996fe8f",
-    "size": 43883
+    "sha256": "2370e2c5673b654c90c8cd0a3ebbb7b377b805d00720b037ee718b84f3a98c4c",
+    "size": 43900
   },
   "games/maze.js": {
     "sha256": "78fc91cd8afbc36f55d5a339ccd66431577b104b70219592841b52e3023800c0",

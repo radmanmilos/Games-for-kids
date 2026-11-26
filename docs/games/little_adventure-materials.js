@@ -1,7 +1,9 @@
 /* little_adventure-materials.js — material kit (toon ramp, shared cache, outline, AO, wind). */
 (function () {
   'use strict';
+  let _kit = null;
   function create(THREE) {
+    if (_kit && _kit._THREE === THREE) return _kit;
     // 3-step toon ramp
     const rampData = new Uint8Array([60, 140, 220]);
     const rampTex = new THREE.DataTexture(rampData, 3, 1, THREE.RedFormat);
@@ -62,7 +64,8 @@
       return material;
     }
     function materialCount() { return cache.size; }
-    return { toon, standard, outlineOf, withVertexAO, windPatch, materialCount, _ramp: rampTex, _cache: cache };
+    _kit = { toon, standard, outlineOf, withVertexAO, windPatch, materialCount, _ramp: rampTex, _cache: cache, _THREE: THREE };
+    return _kit;
   }
   window.little_adventureMaterials = { create };
 })();
