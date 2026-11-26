@@ -4,6 +4,7 @@
 
   const FACE_CELLS = ['open', 'blink', 'happy', 'surprised', 'grumpy', 'strain', 'talk-a', 'talk-b'];
   const HERO_PIVOTS = ['root','hips','torso','head','face','hat','hatTip1','hatTip2','hatTip3','scarf1','scarf2','scarf3','armL','forearmL','handL','armR','forearmR','handR','legL','shinL','footL','legR','shinR','footR','sword','shield','shadow'];
+  const GRUMPY_PIVOTS = ['root','body','face','feetL','feetR','armL','armR','tuft1','tuft2','tuft3','crown','shadow'];
 
   function paintFaceAtlas(ctx, size) {
     const w = size || 256, h = Math.floor(w / 2);
@@ -212,8 +213,64 @@
       return root;
     }
 
-    return { makeHero2, paintFaceAtlas, makeFaceTexture: () => makeFaceTexture(THREE, 256), setFaceCell, applyPose, FACE_CELLS, HERO_PIVOTS };
+    function makeGrumpy2(role) {
+      const isBoss = role === 'boss';
+      const isGuard = role === 'guard';
+      const root = new THREE.Group(); root.name = 'grumpy2';
+      const pivots = {};
+      const mat = (k, c, o) => { const m = mToon(c, o); (root.userData.materials = root.userData.materials || {})[k] = m; return m; };
+      const scale = isBoss ? 1.8 : 1;
+      root.scale.setScalar(scale);
+      const bodyMat = mat('body', 0xC9708F);
+      const bellyMat = mat('belly', 0xE6A3BA);
+      const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.5, 16), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.18 }));
+      shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.02; root.add(shadow); pivots.shadow = shadow;
+      const body = new THREE.Group(); body.name = 'body'; body.position.y = 0.55; root.add(body); pivots.body = body;
+      const blob = new THREE.Mesh(new THREE.SphereGeometry(0.55, 16, 14), bodyMat); blob.scale.set(1, 0.85, 1); blob.castShadow = true; body.add(blob); addOutline(blob, 0.03);
+      const belly = new THREE.Mesh(new THREE.SphereGeometry(0.38, 14, 12), bellyMat); belly.position.set(0, -0.05, 0.18); belly.scale.set(1, 0.85, 0.7); body.add(belly);
+      const face = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.25), new THREE.MeshBasicMaterial({ map: faceTex.texture.clone(), transparent: true }));
+      face.position.set(0, 0.05, 0.45); body.add(face); pivots.face = face;
+      setFaceCell(face, 'grumpy');
+      function mkFoot(side) {
+        const s = side === 'L' ? -1 : 1;
+        const f = new THREE.Group(); f.name = 'feet' + side; f.position.set(s * 0.22, -0.42, 0.05); body.add(f); pivots['feet' + side] = f;
+        const m = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 8), mToon(0xA85A78)); m.scale.set(1.2, 0.7, 1.4); f.add(m);
+      }
+      mkFoot('L'); mkFoot('R');
+      function mkArm(side) {
+        const s = side === 'L' ? -1 : 1;
+        const a = new THREE.Group(); a.name = 'arm' + side; a.position.set(s * 0.5, 0, 0.1); body.add(a); pivots['arm' + side] = a;
+        const m = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.18, 4, 8), bodyMat); m.rotation.z = s * 0.6; m.position.set(s * 0.08, -0.08, 0); a.add(m);
+      }
+      mkArm('L'); mkArm('R');
+      for (let i = 1; i <= 3; i++) {
+        const t = new THREE.Group(); t.name = 'tuft' + i; t.position.set((i - 2) * 0.12, 0.42, -0.05); body.add(t); pivots['tuft' + i] = t;
+        const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), mToon(0x6FB35A)); leaf.scale.set(0.7, 1.4, 0.7); t.add(leaf);
+      }
+      const crown = new THREE.Group(); crown.name = 'crown'; crown.position.y = 0.55; crown.visible = !!isBoss; body.add(crown); pivots.crown = crown;
+      if (isBoss) {
+        for (let i = 0; i < 3; i++) {
+          const c = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.2, 6), mToon(0xD4A017));
+          c.position.set((i - 1) * 0.14, 0.1, 0); c.rotation.z = (i - 1) * -0.15; crown.add(c);
+        }
+      }
+      if (isGuard) {
+        const helm = new THREE.Mesh(new THREE.SphereGeometry(0.58, 14, 10, 0, Math.PI * 2, 0, Math.PI / 2), mToon(0x7BA05B));
+        helm.position.y = 0.18; body.add(helm);
+      }
+      const rest = {};
+      Object.keys(pivots).forEach((k) => { const p = pivots[k]; rest[k] = { rot: { x: p.rotation.x, y: p.rotation.y, z: p.rotation.z }, pos: { x: p.position.x, y: p.position.y, z: p.position.z }, scl: { x: p.scale.x, y: p.scale.y, z: p.scale.z } }; });
+      root.userData.pivots = pivots;
+      root.userData.rest = rest;
+      root.userData.faceTex = faceTex;
+      root.userData.setFace = (name) => setFaceCell(face, name);
+      root.userData.role = role || 'normal';
+      root.traverse((o) => { if (o.isMesh) { o.castShadow = o.castShadow || false; o.receiveShadow = false; } });
+      return root;
+    }
+
+    return { makeHero2, makeGrumpy2, paintFaceAtlas, makeFaceTexture: () => makeFaceTexture(THREE, 256), setFaceCell, applyPose, FACE_CELLS, HERO_PIVOTS, GRUMPY_PIVOTS };
   }
 
-  window.little_adventureCharacters = { create, paintFaceAtlas, FACE_CELLS, HERO_PIVOTS };
+  window.little_adventureCharacters = { create, paintFaceAtlas, FACE_CELLS, HERO_PIVOTS, GRUMPY_PIVOTS };
 })();

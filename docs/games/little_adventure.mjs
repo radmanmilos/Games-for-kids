@@ -354,11 +354,13 @@ window.startlittle_adventure = function startlittle_adventure() {
     let dragHint = null;
     let hideDragHint = () => {};
     let maybeShowDragHint = () => {};
+    const chars = (window.little_adventureCharacters && window.little_adventureCharacters.create) ? window.little_adventureCharacters.create(THREE, mats) : null;
     if (gallery) {
-      const charsG = (window.little_adventureCharacters && window.little_adventureCharacters.create) ? window.little_adventureCharacters.create(THREE, mats) : null;
       const items = [
-        models.makeHero(), ...(charsG ? [charsG.makeHero2()] : []), models.makeOwl(), models.makeGrumpy('normal'), models.makeGrumpy('normal'),
-        models.makeGrumpy('guard'), models.makeGrumpy('boss'), models.makeKey(),
+        models.makeHero(), ...(chars ? [chars.makeHero2()] : []), models.makeOwl(),
+        models.makeGrumpy('normal'), ...(chars && chars.makeGrumpy2 ? [chars.makeGrumpy2('normal')] : []),
+        models.makeGrumpy('guard'), ...(chars && chars.makeGrumpy2 ? [chars.makeGrumpy2('guard')] : []),
+        models.makeGrumpy('boss'), ...(chars && chars.makeGrumpy2 ? [chars.makeGrumpy2('boss')] : []), models.makeKey(),
         models.makeGem('red'), models.makeGem('green'), models.makeGem('blue'),
         models.makeChest(), models.makeGate(), models.makePedestal('red'),
         models.makePedestal('green'), models.makePedestal('blue'), models.makeStatue(),
@@ -545,7 +547,7 @@ window.startlittle_adventure = function startlittle_adventure() {
 
       // Grumpies
       (cfg.grumpies || []).forEach((g) => {
-        const m = models.makeGrumpy(g.role);
+        const m = (chars && chars.makeGrumpy2) ? chars.makeGrumpy2(g.role) : models.makeGrumpy(g.role);
         m.position.set(g.home[0], hAt(g.home[0], g.home[1]), g.home[1]);
         scene.add(m);
         grumpyMeshes[g.id] = m;
@@ -571,8 +573,7 @@ window.startlittle_adventure = function startlittle_adventure() {
 
       // Hero
       game = logic.createGame(cfg, 7);
-      const chars = (window.little_adventureCharacters && window.little_adventureCharacters.create) ? window.little_adventureCharacters.create(THREE, mats) : null;
-      const heroMesh = chars ? chars.makeHero2() : models.makeHero();
+      const heroMesh = (chars && chars.makeHero2) ? chars.makeHero2() : models.makeHero();
       heroMesh.traverse((o) => { if (o.isMesh) { o.castShadow = true; } });
       scene.add(heroMesh);
       window.__laHeroMesh = heroMesh;
@@ -957,13 +958,23 @@ window.startlittle_adventure = function startlittle_adventure() {
         if (!m) return;
         m.position.set(g.x, hAt(g.x, g.z), g.z);
         const happy = g.state === 'happy';
-        if (m.children.length && m.children[0].isMesh && m.children[0].material && m.children[0].material.color) {
-          m.children[0].material.color.setHex(happy ? 0xFFD86B : 0xC06C84);
+        const anim = window.little_adventureAnim;
+        const ch = window.little_adventureCharacters;
+        if (m.userData && m.userData.pivots && anim && anim.evalGrumpy && ch && ch.applyPose) {
+          const pose = anim.evalGrumpy(g, s.t / 1000, { motionScale: reducedMotion ? 0.4 : 1 });
+          ch.applyPose(m, pose);
+          if (m.userData.setFace) m.userData.setFace(happy ? 'happy' : (g.state === 'hit' ? 'strain' : 'grumpy'));
+          const matsU = m.userData.materials || {};
+          if (matsU.body && matsU.body.color) matsU.body.color.setHex(happy ? 0xFFD86B : 0xC9708F);
+          if (matsU.belly && matsU.belly.color) matsU.belly.color.setHex(happy ? 0xFFF0A8 : 0xE6A3BA);
+          const bodyP = m.userData.pivots.body;
+          if (bodyP) bodyP.rotation.y = (g.facing || 0);
+        } else {
+          if (m.children.length && m.children[0].isMesh && m.children[0].material && m.children[0].material.color) {
+            m.children[0].material.color.setHex(happy ? 0xFFD86B : 0xC06C84);
+          }
+          m.traverse((o) => { if (o.name === 'smile') o.visible = happy; if (o.name === 'eyebrows') o.visible = !happy; });
         }
-        m.traverse((o) => {
-          if (o.name === 'smile') o.visible = happy;
-          if (o.name === 'eyebrows') o.visible = !happy;
-        });
       });
 
       // items

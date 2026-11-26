@@ -164,5 +164,19 @@ function check(name, ok, info) {
   const op = A.evalOwl({ pos: [-5, 4] }, { x: 0, z: 0 }, true, 0, { motionScale: 1 });
   check('Q-11: evalOwl returns head', op.head != null);
 
+  // Q-12 grumpy2 contract
+  check('Q-12: GRUMPY_PIVOTS has 12 entries', Array.isArray(CH.GRUMPY_PIVOTS) && CH.GRUMPY_PIVOTS.length === 12, CH.GRUMPY_PIVOTS && CH.GRUMPY_PIVOTS.length);
+  const gReq = ['root','body','face','feetL','feetR','armL','armR','tuft1','tuft2','tuft3','crown','shadow'];
+  check('Q-12: GRUMPY_PIVOTS contains AD3 names', gReq.every((p) => CH.GRUMPY_PIVOTS.includes(p)), 'missing=' + gReq.filter((p)=>!CH.GRUMPY_PIVOTS.includes(p)).join(','));
+  // evalGrumpy continuity (no big jump over 16ms)
+  let gContOk = true;
+  for (let i = 0; i < 60; i++) {
+    const a = A.evalGrumpy({ state: 'approach', hp: 3, mood: 1 }, i/60, { motionScale: 1 });
+    const b = A.evalGrumpy({ state: 'approach', hp: 3, mood: 1 }, (i+1)/60, { motionScale: 1 });
+    const keys = Object.keys(a);
+    for (const k of keys) { const va=a[k]||{}, vb=b[k]||{}; for (const ax of ['rx','ry','rz','px','py','pz']) { if (Math.abs((va[ax]||0)-(vb[ax]||0)) > 0.8) gContOk = false; } }
+  }
+  check('Q-12: evalGrumpy continuity (16ms steps)', gContOk, gContOk);
+
   process.exit(fails ? 1 : 0);
 })();
