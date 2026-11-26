@@ -193,6 +193,36 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   })()`);
   check('W12: WEBGL_lose_context lose/restore does not throw', w12 === 'ok' || w12 === 'no-ext', String(w12));
 
+  // Q-15: hero stays inside 90% safe frame at extreme points
+  await h.evalv('window.__little_adventure.seed(7); window.__little_adventure.pause();');
+  const w15pts = [[-20,0],[20,0],[0,-70],[0,10]];
+  let w15ok = true, w15detail = [];
+  for (const [px,pz] of w15pts) {
+    await h.evalv(`window.__little_adventure.teleport(${px},${pz}); window.__little_adventure.step(16);`);
+    await sleep(120);
+    const p = JSON.parse(await h.evalv(`JSON.stringify(window.__little_adventure.project(${px},0.8,${pz}))`));
+    const inSafe = Math.abs(p.x) <= 0.9 && Math.abs(p.y) <= 0.9 && p.z < 1;
+    if (!inSafe) { w15ok = false; w15detail.push(`${px},${pz}->${p.x.toFixed(2)},${p.y.toFixed(2)},${p.z.toFixed(2)}`); }
+  }
+  check('Q-15: hero stays inside 90% safe frame at extreme points', w15ok, w15detail.join(' | ') || 'ok');
+
+  // Q-18: no leak after 5 open/close cycles (reload proxy)
+  let q18mem = [];
+  for (let c = 0; c < 5; c++) {
+    if (c > 0) {
+      await h.navigate(`http://127.0.0.1:${h.port}/pages/little_adventure.html`);
+      let readyR = false;
+      for (let i = 0; i < 40 && !readyR; i++) { readyR = await h.evalv(`typeof window.startlittle_adventure === 'function'`); if (!readyR) await sleep(250); }
+      await h.evalv('(function(){ var b=document.getElementById("i3d-btn-new"); if(b) b.click(); })()');
+      await sleep(500);
+    }
+    const m = JSON.parse(await h.evalv('JSON.stringify({tex: window.__little_adventure.state().textures, geo: window.__little_adventure.state().geometries, prog: window.__little_adventure.state().programs})'));
+    q18mem.push(m);
+  }
+  const q18base = q18mem[0], q18last = q18mem[q18mem.length - 1];
+  const q18ok = q18last.tex <= q18base.tex + 5 && q18last.geo <= q18base.geo + 10 && q18last.prog <= q18base.prog + 2;
+  check('Q-18: no leak after 5 open/close cycles (reload proxy)', q18ok, `base=${JSON.stringify(q18base)} last=${JSON.stringify(q18last)}`);
+
   // W8: reduced-motion response (motionScale) via bootEmulated
   let w8ok = false, w8detail = 'not-run';
   try {

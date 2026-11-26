@@ -1121,6 +1121,7 @@ const offc = cfg.camera.offset;
       give: (id) => { if (game && game.debug) game.debug.give(id); },
       save: () => (game ? game.save() : null),
       load: (snap) => { if (game && snap) game.load(snap); },
+      project: (x, y, z) => { const v = new THREE.Vector3(x, y, z); v.project(camera); return { x: v.x, y: v.y, z: v.z }; },
       setHits: (id, n) => { if (game && game.debug) game.debug.setHits(id, n); },
       reset: () => { if (game) game = logic.createGame(cfg, 7); },
       forceSlow: (b) => { forceSlow = !!b; },
