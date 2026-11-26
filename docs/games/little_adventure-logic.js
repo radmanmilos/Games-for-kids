@@ -628,7 +628,7 @@
         carry: carry.slice(), items: {}, grumpies: [],
         gates: {}, chests: {}, bushes: {}, pedestals: {},
         acorns: [], bridge: { built: bridge.built, t: bridge.t },
-        owl: { talkT: owl.talkT }, complete: complete, zone: zone
+        owl: { talkT: owl.talkT }, statue: { nextT: nextAcornT }, complete: complete, zone: zone
       };
       for (var iid in items) s.items[iid] = { state: items[iid].state, x: items[iid].x, z: items[iid].z };
       for (var i = 0; i < grumpies.length; i++) {

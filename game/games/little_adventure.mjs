@@ -265,6 +265,7 @@ window.startlittle_adventure = function startlittle_adventure() {
     let currentSheet = null;
     let camNudge = null; // Q-15: {x,z,tLeft}
     let winFX = null; // Q-21: {t, nextBurst}
+    let bloom = null; // Q-21: {mesh, t}
     let soundOn = true;
     // Save helpers (IS-15)
     const SAVE_KEY = 'little_adventureSave';
@@ -341,6 +342,7 @@ window.startlittle_adventure = function startlittle_adventure() {
     let statueMesh = null;
     let lighthouseMesh = null;
     let lighthouseLight = null;
+    let lighthouseBeam = null;
     const bridgeSegments = [];
     const acornMeshes = [];
     const blobShadows = [];
@@ -523,7 +525,7 @@ window.startlittle_adventure = function startlittle_adventure() {
         shadowActors.push(lighthouseMesh);
         lighthouseMesh.position.set(cfg.lighthouse.pos[0], hAt(cfg.lighthouse.pos[0], cfg.lighthouse.pos[1]), cfg.lighthouse.pos[1]);
         scene.add(lighthouseMesh);
-        lighthouseLight = lighthouseMesh.children[lighthouseMesh.children.length - 1];
+        lighthouseMesh.traverse((o) => { if (o.name === 'lhLight') lighthouseLight = o; if (o.name === 'lhBeam') lighthouseBeam = o; });
       }
       (cfg.bushes || []).forEach((b) => {
         const m = models.makeBush();
@@ -786,7 +788,20 @@ window.startlittle_adventure = function startlittle_adventure() {
         // save on milestones
         if (['gateOpen','chestOpen','bushCut','pedestalFill','complete','befriend'].indexOf(ev.type) !== -1) saveNow();
         playSfx(ev.type);
-        if (ev.type === 'complete' && !winFX) winFX = { t: 0, nextBurst: 0 };
+        if (ev.type === 'complete' && !winFX) {
+          winFX = { t: 0, nextBurst: 0 };
+          if (!bloom) {
+            const bCount = tier === 'low' ? 12 : 24;
+            const bGeo = new THREE.CircleGeometry(0.18, 6);
+            const bMat = new THREE.MeshBasicMaterial({ color: 0xFFB7D5, transparent: true, opacity: 0.9 });
+            bloom = { mesh: new THREE.InstancedMesh(bGeo, bMat, bCount), t: reducedMotion ? 99 : 0, count: bCount };
+            bloom.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+            const dummy = new THREE.Object3D();
+            for (let i = 0; i < bCount; i++) { dummy.position.set(0,-10,0); dummy.scale.setScalar(0.001); dummy.updateMatrix(); bloom.mesh.setMatrixAt(i, dummy.matrix); }
+            bloom.mesh.instanceMatrix.needsUpdate = true;
+            scene.add(bloom.mesh);
+          }
+        }
         // Q-15: reveal nudge on gateOpen/bridgeUp
         if (!reducedMotion && (ev.type === 'gateOpen' || ev.type === 'bridgeUp')) {
           let nx = s.hero.x, nz = s.hero.z;
@@ -843,6 +858,7 @@ window.startlittle_adventure = function startlittle_adventure() {
       // Q-21 completion celebration (soft, <=2Hz bursts, playable after)
       if (winFX) {
         winFX.t += dt;
+        if (winFX.ox == null) { winFX.ox = s.hero.x; winFX.oz = s.hero.z; }
         if (!reducedMotion && winFX.t < 4.5 && winFX.t >= winFX.nextBurst) {
           winFX.nextBurst += 0.65; // ~1.5Hz
           const colors = [0xFFD23F, 0xFF8A80, 0x80D8FF, 0xB388FF, 0xFFFFFF];
@@ -860,6 +876,25 @@ window.startlittle_adventure = function startlittle_adventure() {
               bn++;
             }
           }
+        }
+        if (bloom && bloom.mesh) {
+          bloom.t += dt;
+          const dummy = bloom._dummy || (bloom._dummy = new THREE.Object3D());
+          for (let i = 0; i < bloom.count; i++) {
+            const a = (i / bloom.count) * Math.PI * 2;
+            const r = 2.5 + (i % 5) * 0.9;
+            const x = winFX.ox + Math.cos(a) * r;
+            const z = winFX.oz + Math.sin(a) * r;
+            const d = r;
+            const grow = Math.max(0, Math.min(1, (bloom.t * 2.2) - d * 0.15));
+            const sc = grow * (0.8 + (i % 3) * 0.2);
+            dummy.position.set(x, hAt(x, z) + 0.03, z);
+            dummy.rotation.set(-Math.PI / 2, 0, a);
+            dummy.scale.setScalar(Math.max(0.001, sc));
+            dummy.updateMatrix();
+            bloom.mesh.setMatrixAt(i, dummy.matrix);
+          }
+          bloom.mesh.instanceMatrix.needsUpdate = true;
         }
         if (winFX.t > 6) winFX = { t: 6, nextBurst: 999, done: true };
       }
@@ -989,6 +1024,7 @@ window.startlittle_adventure = function startlittle_adventure() {
         const ch = window.little_adventureCharacters;
         if (m.userData && m.userData.pivots && anim && anim.evalGrumpy && ch && ch.applyPose) {
           const pose = anim.evalGrumpy(g, s.t / 1000, { motionScale: reducedMotion ? 0.4 : 1 });
+          if (winFX && happy && !reducedMotion) { pose.root = pose.root || {}; pose.root.py = (pose.root.py || 0) + Math.abs(Math.sin(s.t * 0.008 + (g.x || 0))) * 0.12; }
           ch.applyPose(m, pose);
           if (m.userData.setFace) m.userData.setFace(happy ? 'happy' : (g.state === 'hit' ? 'strain' : 'grumpy'));
           const matsU = m.userData.materials || {};
@@ -1007,7 +1043,9 @@ window.startlittle_adventure = function startlittle_adventure() {
       // owl
       if (owlMesh && owlMesh.userData && owlMesh.userData.pivots && window.little_adventureAnim && window.little_adventureAnim.evalOwl && window.little_adventureCharacters && window.little_adventureCharacters.applyPose) {
         const owlCfgNow = (cfg.npcs || [])[0];
-        const owlPose = window.little_adventureAnim.evalOwl(owlCfgNow, { x: s.hero.x, z: s.hero.z }, !!s.lastSpeech, s.t / 1000, { motionScale: reducedMotion ? 0.4 : 1 });
+        const owlCelebrate = !!(winFX && !reducedMotion);
+        const owlPose = window.little_adventureAnim.evalOwl(owlCfgNow, { x: s.hero.x, z: s.hero.z }, !!s.lastSpeech || owlCelebrate, s.t / 1000, { motionScale: reducedMotion ? 0.4 : 1 });
+        if (owlCelebrate) { owlPose.root = owlPose.root || {}; owlPose.root.py = (owlPose.root.py || 0) + Math.abs(Math.sin(s.t * 0.01)) * 0.08; }
         window.little_adventureCharacters.applyPose(owlMesh, owlPose);
       }
 
@@ -1049,6 +1087,9 @@ window.startlittle_adventure = function startlittle_adventure() {
         const openT = s.gates[id].openT || 0;
         const openAmt = s.gates[id].open ? (openT > 0 ? Math.min(openT / 500, 1) : 1) : 0;
         m.position.y = -openAmt * 1.2;
+        const leafL = m.getObjectByName('gateLeafL'); const leafR = m.getObjectByName('gateLeafR');
+        if (leafL) leafL.rotation.y = -openAmt * Math.PI / 2;
+        if (leafR) leafR.rotation.y = openAmt * Math.PI / 2;
         const gDef = (cfg.gates || []).find(g => g.id === id);
         const nearKey = gDef && !s.gates[id].open && (s.carry || []).indexOf(gDef.needs) !== -1 && Math.hypot(s.hero.x - gDef.pos[0], s.hero.z - gDef.pos[1]) < 6;
         m.traverse(o => { if (o.isMesh && o.material && 'emissive' in o.material) { if (!o.userData.ownMat) { o.material = o.material.clone(); o.userData.ownMat = true; } o.material.emissive.setHex(nearKey ? 0x664400 : 0x000000); } });
@@ -1093,12 +1134,41 @@ window.startlittle_adventure = function startlittle_adventure() {
           const threshold = (i + 1) * 300;
           const y = s.bridge.t > threshold ? 0 : -2;
           m.position.y += (y - m.position.y) * 0.1;
+          if (winFX && m.material) {
+            if (!m.userData.ownMat) { m.material = m.material.clone(); m.userData.ownMat = true; }
+            if ('emissive' in m.material) m.material.emissive.setHex(0x221100);
+            if ('emissiveIntensity' in m.material) m.material.emissiveIntensity = 0.35 + 0.15 * Math.sin(s.t * 0.008 + i);
+          }
         });
       }
       // lighthouse light
       if (lighthouseLight) {
         lighthouseLight.visible = !!(s.bridge && s.bridge.built);
-        if (lighthouseLight.visible) lighthouseLight.rotation.y += dt * 0.8;
+        if (lighthouseLight.visible) {
+          if (!lighthouseLight.userData.ownMat && lighthouseLight.material) { lighthouseLight.material = lighthouseLight.material.clone(); lighthouseLight.userData.ownMat = true; }
+          if (lighthouseLight.material && 'emissiveIntensity' in lighthouseLight.material) lighthouseLight.material.emissiveIntensity = winFX ? 0.9 : 0.4;
+        }
+      }
+      if (lighthouseBeam) {
+        const beamOn = !!(s.bridge && s.bridge.built);
+        lighthouseBeam.visible = beamOn;
+        if (lighthouseBeam.material) {
+          if (!lighthouseBeam.userData.ownMat) { lighthouseBeam.material = lighthouseBeam.material.clone(); lighthouseBeam.userData.ownMat = true; }
+          lighthouseBeam.material.opacity = beamOn ? (winFX ? 0.28 : 0.08) : 0;
+        }
+        if (beamOn) lighthouseBeam.rotation.z += dt * (winFX ? 1.8 : 0.8);
+      }
+
+      // statue mouth charge-glow (Q-13 AC)
+      if (statueMesh && s.statue) {
+        const mouth = statueMesh.getObjectByName('statueMouth');
+        if (mouth && mouth.material) {
+          if (!mouth.userData.ownMat) { mouth.material = mouth.material.clone(); mouth.userData.ownMat = true; }
+          const nt = s.statue.nextT || 0;
+          const glow = nt < 800 ? (1 - nt / 800) : 0;
+          mouth.material.emissive.setHex(glow > 0 ? 0xFF6622 : 0x331100);
+          if ('emissiveIntensity' in mouth.material) mouth.material.emissiveIntensity = 0.2 + glow * 1.2;
+        }
       }
 
       // blob shadows

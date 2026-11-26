@@ -150,10 +150,11 @@
         const postGeo = new THREE.CylinderGeometry(0.12, 0.12, 1.2, 6);
         const p1 = mesh(postGeo, mat( P.wood)); p1.position.set(-2.5, 0.6, 0); g.add(p1);
         const p2 = mesh(postGeo, mat( P.wood)); p2.position.set(2.5, 0.6, 0); g.add(p2);
-        for (let i = 0; i < 3; i++) {
-          const bar = mesh(new THREE.BoxGeometry(5, 0.15, 0.15), mat( P.wood));
-          bar.position.set(0, 0.3 + i * 0.3, 0); g.add(bar);
-        }
+        const leafL = new THREE.Group(); leafL.name = 'gateLeafL'; leafL.position.set(-2.4, 0, 0); g.add(leafL);
+        const leafR = new THREE.Group(); leafR.name = 'gateLeafR'; leafR.position.set(2.4, 0, 0); g.add(leafR);
+        const leafGeo = new THREE.BoxGeometry(2.3, 1.0, 0.12);
+        const l1 = mesh(leafGeo, mat(P.wood)); l1.position.set(1.15, 0.6, 0); leafL.add(l1);
+        const l2 = mesh(leafGeo, mat(P.wood)); l2.position.set(-1.15, 0.6, 0); leafR.add(l2);
         return g;
       }
 
@@ -170,8 +171,8 @@
         const g = group();
         const col = mesh(new THREE.CylinderGeometry(0.25, 0.3, 1.2, 8), mat( P.stone));
         col.position.y = 0.6; g.add(col);
-        const mouth = mesh(new THREE.TorusGeometry(0.2, 0.05, 6, 10), mat( P.grey));
-        mouth.position.set(0, 0.9, 0.26); mouth.rotation.x = Math.PI / 2; g.add(mouth);
+        const mouth = mesh(new THREE.TorusGeometry(0.2, 0.05, 6, 10), mat( P.grey, { emissive: 0x331100, emissiveIntensity: 0.2 }));
+        mouth.name = 'statueMouth'; mouth.position.set(0, 0.9, 0.26); mouth.rotation.x = Math.PI / 2; g.add(mouth);
         return g;
       }
 
@@ -193,7 +194,9 @@
         const c3 = mesh(new THREE.CylinderGeometry(0.3, 0.35, 1.2, 8), mat( P.red));
         c3.position.y = 3.0; g.add(c3);
         const light = mesh(new THREE.SphereGeometry(0.35, 8, 6), mat( P.gold, { emissive: P.gold, emissiveIntensity: 0.4 }));
-        light.position.y = 4.0; g.add(light);
+        light.name = 'lhLight'; light.position.y = 4.0; g.add(light);
+        const beam = mesh(new THREE.ConeGeometry(1.8, 8, 12, 1, true), mat( P.gold, { transparent: true, opacity: 0, emissive: P.gold, emissiveIntensity: 0.3 }));
+        beam.name = 'lhBeam'; beam.position.set(0, 4.0, 4.0); beam.rotation.x = Math.PI / 2; g.add(beam);
         return g;
       }
 
