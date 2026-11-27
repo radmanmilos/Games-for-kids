@@ -32,7 +32,7 @@
 /* CF-19: per-scene painted full-bleed background (opaque scene art in
    game/assets/scenes/). Sits under the scenery/foreground layers; each scene
    switches it via render() (`data-scene` -> #cf-scene-bg). */
-  #cf-scene-bg{position:absolute;inset:0;z-index:1;pointer-events:none;background-color:#EAE2D2;
+  #cf-scene-bg{position:absolute;inset:0;z-index:-1;pointer-events:none;background-color:#EAE2D2;
     background-size:cover;background-position:center;background-repeat:no-repeat;}
   /* Scene-specific gradient fallbacks (replaced by painted WebP when generated) */
   #app[data-scene="village"] #cf-scene-bg{background-image:linear-gradient(180deg,#F0D8A8 0%,#E8C88A 40%,#B8D698 100%);}
@@ -321,7 +321,7 @@
   #app[data-scene="pond"] #cf-friends{display:none;}
   #app[data-scene="pond"] .cf-toggles{display:none;}
   /* Phase 3: the whole pond scene is hidden unless we are AT the pond. */
-  #cf-pond-scene,#cf-fishing-spot,#cf-fish-basket,#cf-pond-back,#cf-pond-path{display:none!important;}
+  #cf-pond-scene,#cf-fishing-spot,#cf-fish-basket,#cf-pond-back,#cf-pond-path{display:none;}
 
   #cf-pond-scene{position:absolute;inset:0;z-index:2;pointer-events:none;}
   .cf-pond-water{position:absolute;left:10%;right:10%;bottom:4%;top:22%;
@@ -391,7 +391,7 @@
   #app[data-scene="woodland"] #cf-pond-back{display:none;}
   #app[data-scene="woodland"] #cf-pond-path{display:none;}
   /* The whole woodland scene is hidden unless we are AT the woodland. */
-  #cf-woodland-scene,#cf-gather-spot,#cf-wood-basket,#cf-wood-back{display:none!important;}
+  #cf-woodland-scene,#cf-gather-spot,#cf-wood-basket,#cf-wood-back{display:none;}
 
   #cf-woodland-scene{position:absolute;inset:0;z-index:2;pointer-events:none;}
   .cf-wood-tree{position:absolute;bottom:8%;font-size:12vmin;line-height:1;font-variant-emoji:emoji;}
@@ -470,7 +470,7 @@
   #app[data-scene="workshop"] #cf-wood-back{display:none;}
   #app[data-scene="workshop"] #cf-workshop-path{display:none;}
   /* The whole workshop scene is hidden unless we are AT the workshop. */
-  #cf-workshop-scene,#cf-recipe-grid,#cf-craft-btn,#cf-workshop-back{display:none!important;}
+  #cf-workshop-scene,#cf-recipe-grid,#cf-craft-btn,#cf-workshop-back{display:none;}
 
   #cf-workshop-scene{position:relative;z-index:2;}
   #cf-workshop-scene .cf-workbench{position:absolute;left:50%;top:30%;transform:translateX(-50%);width:clamp(120px,28vmin,200px);height:clamp(80px,18vmin,120px);border:2px solid rgba(74,63,107,.4);border-radius:6px;background:#fff8f0;pointer-events:none;}
