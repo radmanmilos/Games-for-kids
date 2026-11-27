@@ -1611,7 +1611,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   await cf13Mot.close();
 
   /* ---- CF-14: persistence — save / load / reset (D4, TD §9) --------------
-      One key (`catForestSave`) holds {v:2, met, decor, fishCount, selectedRecipe, visitCounts, metTimes}; it is written on a
+      One key (`catForestSave`) holds {v:2, met, decor, fishCount, woodCount, selectedRecipe, visitCounts, metTimes}; it is written on a
      cat's first sit and on a decoration landing, loaded (validated, never
      throwing) at boot, and wiped by the parent reset through
      localStorage.clear(). Every start() launches a fresh browser PROFILE, so
@@ -1626,6 +1626,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     await hh.evalv(`window.__catForest.pause(true); true`);
     return hh.evalv(`(() => { const s = window.__catForest.state();
       return { met: s.met, decor: s.decor.map(d => ({ e: d.e, s: d.s })),
+        fishCount: s.fishCount, woodCount: s.woodCount,
         nodes: document.querySelectorAll('#cf-decor .cf-decor-item').length }; })()`);
   };
 
@@ -1647,7 +1648,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
 
   /* AC5 + the save shape, gathered on the page that also feeds AC1: every
      localStorage.setItem call made during a whole visit + collection is
-     recorded, and the raw save must carry exactly v/met/decor. */
+     recorded, and the raw save must carry the complete v2 resource state. */
   const cf14H = await bootFresh('cf14-save');
   const cf14Pre = await cf14H.evalv(`(() => {
     window.__savedKeys = [];
@@ -1665,9 +1666,10 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     JSON.stringify({ keys: cf14Pre.keys, met: cf14Pre.met, decor: cf14Pre.decor.length }));
   check('CF-14: the save payload is exactly {v:2, met:[ids], decor:[{e,s}], fishCount, selectedRecipe, visitCounts, metTimes}',
     cf14Raw && cf14Raw.v === 2 && Array.isArray(cf14Raw.met) && Array.isArray(cf14Raw.decor)
-      && Object.keys(cf14Raw).sort().join(',') === 'decor,fishCount,met,metTimes,selectedRecipe,v,visitCounts'
+      && Object.keys(cf14Raw).sort().join(',') === 'decor,fishCount,met,metTimes,selectedRecipe,v,visitCounts,woodCount'
       && cf14Raw.met.every(id => typeof id === 'string')
-      && cf14Raw.decor.every(d => d && typeof d.e === 'string' && (d.s | 0) === d.s),
+      && cf14Raw.decor.every(d => d && typeof d.e === 'string' && (d.s | 0) === d.s)
+      && Number.isInteger(cf14Raw.fishCount) && Number.isInteger(cf14Raw.woodCount),
     cf14Pre.raw);
 
   /* AC1: reload the page — met and decor come back, and the forest is
@@ -1676,7 +1678,8 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   check('CF-14 AC1: after a reload met and decor are restored (state + DOM)',
     JSON.stringify(cf14Post.met) === JSON.stringify(cf14Raw.met)
       && JSON.stringify(cf14Post.decor) === JSON.stringify(cf14Raw.decor)
-      && cf14Post.nodes === cf14Raw.decor.length,
+      && cf14Post.nodes === cf14Raw.decor.length
+      && cf14Post.fishCount === cf14Raw.fishCount && cf14Post.woodCount === cf14Raw.woodCount,
     JSON.stringify({ saved: cf14Raw, restored: cf14Post }));
 
   /* reset (TD §8): the world AND the save are gone; the element maps must
@@ -1743,6 +1746,27 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
       && cf14MigState.met.length === 1 && cf14MigState.decor.length === 1,
     JSON.stringify(cf14MigState));
   await cf14Mig.close();
+
+  /* Resource/workshop regression: crafted output and remaining wood survive reload. */
+  const cf14Craft = await bootFresh('cf14-craft-persist');
+  const cf14CraftBefore = await cf14Craft.evalv(`(() => {
+    const hk = window.__catForest;
+    hk.setResources(0, 4);
+    const selected = hk.selectRecipe('pot');
+    hk.craftNow();
+    const state = hk.state();
+    return { selected, woodCount: state.woodCount,
+      decor: state.decor.map(d => ({ e: d.e, s: d.s })) };
+  })()`);
+  const cf14CraftAfter = await cf14Reload(cf14Craft);
+  check('CF-14 regression: crafting saves wood and crafted decor survives reload',
+    cf14CraftBefore.selected === true && cf14CraftBefore.woodCount === 3
+      && cf14CraftBefore.decor.some(d => d.e === '🪴')
+      && cf14CraftAfter.woodCount === 3
+      && cf14CraftAfter.decor.some(d => d.e === '🪴')
+      && cf14CraftAfter.nodes === cf14CraftAfter.decor.length,
+    JSON.stringify({ before: cf14CraftBefore, after: cf14CraftAfter }));
+  await cf14Craft.close();
 
   /* AC4: a storage that throws must cost the child nothing — the visit and
      the collection run to completion with setItem raising every call. */
