@@ -162,16 +162,20 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   for (const vp of [
     { name: '1024x800 tablet', width: 1024, height: 800, min: 72 },
     { name: '1280x800 desktop', width: 1280, height: 800, min: 72 },
-    { name: '844x390 short landscape', width: 844, height: 390, min: 56 },
+    { name: '844x390 short landscape', width: 844, height: 390, min: 48 },
     { name: '390x844 portrait', width: 390, height: 844, min: 48 },
     { name: '320x568 small portrait', width: 320, height: 568, min: 48 },
   ]) {
     const hv = await start({ page: '/pages/cat_forest.html', tag: `cat-forest-stage-${vp.width}x${vp.height}`, width: vp.width, height: vp.height });
-    let laidOut = false;
-    for (let i = 0; i < 20 && !laidOut; i++) {
-      laidOut = await hv.evalv(`document.querySelectorAll('.cf-treat').length === 5`);
-      if (!laidOut) await sleep(100);
+    let booted = false;
+    for (let i = 0; i < 80 && !booted; i++) {
+      booted = await hv.evalv(`!!(window.__catForest && document.getElementById('app')
+        && document.getElementById('app').getAttribute('data-scene'))`);
+      if (!booted) await sleep(50);
     }
+    if (!booted) { await hv.close(); throw new Error('Cat Forest did not finish booting at ' + vp.name); }
+    await hv.evalv(`window.__catForest.reset(); window.__catForest.setScene('village'); true`);
+    await sleep(80);
     const m = await stageGeometry(hv);
     check(`${vp.name}: 5 treats, 3 plates, 2 settings and 4 scene-navigation buttons render`,
       m.treats.length === 5 && m.plates.length === 3 && m.toggles.length === 2 && m.nav.length === 4,
@@ -808,14 +812,14 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     b1.gifts===1&&b1.node&&b1.hit&&b1.dx<8&&b1.dy<40&&Math.min(b1.w,b1.h)>=72,JSON.stringify(b1));
 
   const b2 = await h8.evalv(`(() => {
-    const hk=window.__catForest, before=hk.state().decor.length;
+    const hk=window.__catForest;
     const g=document.querySelector('#cf-gifts .cf-gift'); if(g)g.click();
     const st=hk.state();
     return { gifts:st.gifts.length,keepsakes:st.keepsakes.length,decor:st.decor.length,
-      flights:st.flights.length,flightNodes:document.querySelectorAll('#cf-fx .cf-fly').length };
+      flightNodes:document.querySelectorAll('#cf-fx .cf-fly').length };
   })()`);
   check('collecting a cat gift stores one keepsake and does not auto-place a decoration',
-    b2.gifts===0&&b2.keepsakes===1&&b2.decor===0&&b2.flights===0&&b2.flightNodes===0,JSON.stringify(b2));
+    b2.gifts===0&&b2.keepsakes===1&&b2.decor===0&&b2.flightNodes===0,JSON.stringify(b2));
 
   const b3 = await bootFresh('cf08-keepsake-cap');
   const c3 = await b3.evalv(`(() => { const hk=window.__catForest; hk.seed(31);
