@@ -803,12 +803,14 @@ function renderFishBasket() {
   }
 
   function selectRecipe(id) {
+    if (!RECIPES.some(function (r) { return r.id === id; })) return false;
     state.selectedRecipe = id;
     // Update visual selection
     var cards = els.recipeGrid.querySelectorAll('.cf-recipe-card');
     for (var i = 0; i < cards.length; i++) {
       cards[i].classList.toggle('selected', cards[i].dataset.id === id);
     }
+    return true;
   }
 
   function craftNow() {
@@ -834,6 +836,7 @@ function renderFishBasket() {
     for (var i = 0; i < cards.length; i++) {
       cards[i].classList.remove('selected');
     }
+    save();
   }
 
 /* ---- cat rendering (CF-07; TD §7/§10) ---------------------------------
@@ -1589,7 +1592,7 @@ function geomPlate(idx) {
   var SAVE_KEY = 'catForestSave';
 
   function loadSave() {
-    var out = { met: [], decor: [], fishCount: 0, selectedRecipe: null, visitCounts: {}, metTimes: {} };
+    var out = { met: [], decor: [], fishCount: 0, woodCount: 0, selectedRecipe: null, visitCounts: {}, metTimes: {} };
     try {
       var raw = localStorage.getItem(SAVE_KEY);
       if (!raw) return out;
@@ -1609,16 +1612,19 @@ function geomPlate(idx) {
       if (s.decor instanceof Array) {
         for (i = 0; i < s.decor.length && out.decor.length < CF.DECOR_MAX; i++) {
           d = s.decor[i];
-          if (d && typeof d === 'object' && GIFTS.indexOf(d.e) !== -1 &&
+          if (d && typeof d === 'object' && (GIFTS.indexOf(d.e) !== -1 || RECIPES.some(function (r) { return r.emoji === d.e; })) &&
               typeof d.s === 'number' && (d.s | 0) === d.s && d.s >= 0 && d.s < CF.DECOR_MAX) {
             out.decor.push({ uid: ++uidSeq, e: d.e, s: d.s });
           }
         }
       }
       if (typeof s.fishCount === 'number' && (s.fishCount | 0) === s.fishCount && s.fishCount >= 0) {
-        out.fishCount = s.fishCount;
+        out.fishCount = Math.min(s.fishCount, FISH_BASKET_CAP);
       }
-      if (typeof s.selectedRecipe === 'string' && GIFTS.indexOf(s.selectedRecipe) !== -1) {
+      if (typeof s.woodCount === 'number' && (s.woodCount | 0) === s.woodCount && s.woodCount >= 0) {
+        out.woodCount = Math.min(s.woodCount, WOOD_BASKET_CAP);
+      }
+      if (typeof s.selectedRecipe === 'string' && RECIPES.some(function (r) { return r.id === s.selectedRecipe; })) {
         out.selectedRecipe = s.selectedRecipe;
       }
       if (typeof s.visitCounts === 'object') {
@@ -1648,7 +1654,8 @@ function geomPlate(idx) {
         selectedRecipe: state.selectedRecipe,
         visitCounts: state.visitCounts,
         metTimes: state.metTimes,
-        fishCount: state.fishCount
+        fishCount: state.fishCount,
+        woodCount: state.woodCount
       }));
     } catch (e) { /* private mode / quota: play on */ }
   }
@@ -1687,6 +1694,9 @@ function geomPlate(idx) {
         return { e: d.e, s: d.s };
       }),
       met: state.met.slice(),
+      fishCount: state.fishCount,
+      woodCount: state.woodCount,
+      selectedRecipe: state.selectedRecipe,
       idle: { sinceMs: state.idle.sinceMs, hints: state.idle.hints, firstDone: state.idle.firstDone },
       timers: {
         arrive: state.plates.filter(function (p) { return p.state === 'treat'; }).map(function (p) { return p.arriveMs; }),
@@ -1710,6 +1720,7 @@ function geomPlate(idx) {
     state.visitCounts = saved.visitCounts;
     state.metTimes = saved.metTimes;
     state.fishCount = saved.fishCount;
+    state.woodCount = saved.woodCount;
 
     cacheEls();
     paintStaticGlyphs();
@@ -1750,6 +1761,14 @@ function geomPlate(idx) {
       reset: reset,           // CF-14: clear state and storage (TD §8)
       openBook: openBook,     // CF-15: the exact functions the buttons call
       closeBook: closeBook,
+      /* Test-only helpers for deterministic resource/workshop persistence coverage. */
+      setResources: function (fish, wood) {
+        state.fishCount = Math.max(0, Math.min(FISH_BASKET_CAP, fish | 0));
+        state.woodCount = Math.max(0, Math.min(WOOD_BASKET_CAP, wood | 0));
+        renderFishBasket(); renderWoodBasket(); save();
+      },
+      selectRecipe: selectRecipe,
+      craftNow: craftNow,
       /* Read-only view of the DATA tables so the smoke can assert the roster
          (AC5). Inspection only — nothing here changes behaviour. */
       data: { treats: TREATS, cats: CATS, gifts: GIFTS, anchors: FEED_ANCHORS }
@@ -1784,6 +1803,7 @@ function geomPlate(idx) {
       if (state.woodCount < WOOD_BASKET_CAP) {
         state.woodCount++;
         renderWoodBasket();
+        save();
       }
       if (window.tone) {
         window.tone(700, 0.08, 0, 'sine', 0.15);
@@ -1798,6 +1818,7 @@ function geomPlate(idx) {
       if (state.fishCount < FISH_BASKET_CAP) {
         state.fishCount++;
         renderFishBasket();
+        save();
       }
       if (window.tone) {
         window.tone(880, 0.1, 0, 'sine', 0.15);
