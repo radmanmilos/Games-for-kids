@@ -3,7 +3,7 @@
 Updated: 2026-11-28
 Repository: `radmanmilos/Games-for-kids`
 Branch: `main`
-Verified base for the current follow-up: `376ad2596d2488b5dd384d39be985f40fd6848b0`.
+Verified base for current follow-up: `231a2a7c14ba902bb000f9ba87d18eec52984da5`.
 
 ## Release/version
 
@@ -17,10 +17,11 @@ Verified base for the current follow-up: `376ad2596d2488b5dd384d39be985f40fd6848
 
 - User-approved scope: village, pond, woodland, workshop, keepsake crafting, reversible fixed-anchor decoration and expanded cat diary.
 - Main implementation commit `611af17` adds four local scene illustrations, responsive scene navigation, compact baskets, keepsake recipes, crafted storage, save migration v3, smoke coverage, deterministic visual states and the CI screenshot-review job.
-- **Verified CI:** Fast passed all 10 stages, including generated-artifact mirror and offline-inventory checks.
-- **First CI run:** Cat Forest browser smoke failed at boot (18 checks passed, 3 failed) because five cat-render helpers were accidentally omitted; they were restored in commit `376ad25`.
-- **Second CI run:** Cat Forest now boots and runs the full smoke suite: 225 passed, 6 failed. The remaining failures were geometry-test readiness/scene isolation, 320px treat sizing and an assertion reading an internal `flights` field not exposed by the JSON-safe state snapshot. These are corrected in the current follow-up; rerun is pending.
-- The visual screenshot job is configured for the standard review battery: phone portrait, phone landscape, tablet portrait and tablet landscape. It has not run because the required smoke/release gates have not passed. No current screenshots have yet been captured or reviewed.
+- Cat-render boot helpers were restored in commit `376ad25`.
+- Viewport setup, 320px touch sizing and a test snapshot assertion were corrected in commit `231a2a7`.
+- **CI history:** first two Fast gates passed 10/10. The first browser run failed at boot because of omitted cat-render helpers. The second browser run booted and ran 231 checks (225 passed, 6 failed) due to viewport readiness/scene isolation, small-screen sizing and an internal snapshot assertion.
+- **Latest CI run (231a2a7):** Fast failed syntax (duplicate `booted` binding) and offline inventory (stale SHA-256 for Cat Forest engine/page; sizes matched). All other Fast stages passed, including generated artifacts, art integrity and hub smoke. The current follow-up fixes the variable binding and regenerates offline hashes from exact committed bytes; rerun pending.
+- The visual screenshot job has not run because the required smoke/release gates have not passed. The configured review battery is phone portrait, phone landscape, tablet portrait and tablet landscape. No current screenshots have been captured or reviewed.
 - Save schema v3 is required because the live pre-overhaul source already used v2. Existing v2 data migrates; v1 is discarded as explicitly approved.
 - Real-device performance, audio/readability, reduced-motion, and child playtesting still require owner-run verification.
 

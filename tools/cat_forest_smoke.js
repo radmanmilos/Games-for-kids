@@ -167,13 +167,13 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     { name: '320x568 small portrait', width: 320, height: 568, min: 48 },
   ]) {
     const hv = await start({ page: '/pages/cat_forest.html', tag: `cat-forest-stage-${vp.width}x${vp.height}`, width: vp.width, height: vp.height });
-    let booted = false;
-    for (let i = 0; i < 80 && !booted; i++) {
-      booted = await hv.evalv(`!!(window.__catForest && document.getElementById('app')
+    let viewportBooted = false;
+    for (let i = 0; i < 80 && !viewportBooted; i++) {
+      viewportBooted = await hv.evalv(`!!(window.__catForest && document.getElementById('app')
         && document.getElementById('app').getAttribute('data-scene'))`);
-      if (!booted) await sleep(50);
+      if (!viewportBooted) await sleep(50);
     }
-    if (!booted) { await hv.close(); throw new Error('Cat Forest did not finish booting at ' + vp.name); }
+    if (!viewportBooted) { await hv.close(); throw new Error('Cat Forest did not finish booting at ' + vp.name); }
     await hv.evalv(`window.__catForest.reset(); window.__catForest.setScene('village'); true`);
     await sleep(80);
     const m = await stageGeometry(hv);
