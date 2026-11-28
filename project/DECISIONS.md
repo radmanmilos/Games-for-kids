@@ -89,6 +89,15 @@ Source: user 2026-11-26 explicit approval of all 5 expansion mechanics; save mig
 - **Accepted audit exception (CF-17, task 279):** the short-landscape audit prints one WARN, "no header text visible" — the page is deliberately wordless (TP §4, "no visible text at all"), so this WARN is correct-by-design and is not to be "fixed" by adding a heading. 0 FAIL.
 - **Documented footguns (CF-19):** a screenshot/state hook must *poll to* a named phase — a cat is `sitting` only ~5350–6250 ms, so any fixed long `step(N)` captures an empty stage. New doc: `project/games/cat-forest.md`.
 
+
+### Implementation resolution — task 467 (2026-11-28)
+
+- The expanded village implementation writes **save schema v3**. The live pre-overhaul engine already used v2, so reusing v2 would collide with real deployed saves. Existing v2 saves migrate to v3; the older v1 base-game save is discarded as approved in the 2026-11-26 expansion decision.
+- v2 migration preserves discovered cats and gathered fish/wood. Up to four existing decorations move to the four fixed garden anchors; any overflow moves to crafted storage. No saved decoration is destroyed.
+- The diary is implemented as an overlay, not a fifth world scene. It shows discovered cats with visible Serbian Cyrillic names, facts and favourite-place/treat indicators; it does not show counters or hidden-cat placeholders.
+- Four original local SVG scene illustrations are used for village, pond, woodland and workshop. They are offline assets and are styled to the approved warm palette, layered composition and paper/wash finish. They are implementation assets, not a replacement for the approved prototype references; visual acceptance remains subject to the task 467 screenshot review.
+- No change to the approved product constraints: no currency, timers, fail states, locks, pressure, ads, purchases or network dependency.
+
 ## Production assets — decisions (2026-10-31, task 296)
 
 - **Python in dev toolchain:** kept. cutout.py runs on Python 3.14 with pillow/numpy/scipy/scikit-image/rembg/onnxruntime (dev-time only; nothing ships in the app). A Node port would lose the ML shadow guide.

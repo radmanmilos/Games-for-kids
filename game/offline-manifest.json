@@ -1591,6 +1591,22 @@
     "sha256": "f7cee3c7533449a1505cc12cb5128b89e3d4fd3d7ea62b05f9f5464a217472ee",
     "size": 687458
   },
+  "assets/scenes/cat-forest-pond.svg": {
+    "sha256": "988c492fdd42b27ce4116c823f15b7e9a2adc39a302145f82220f8612984c1ef",
+    "size": 3732
+  },
+  "assets/scenes/cat-forest-village.svg": {
+    "sha256": "103a23c3085e5c2e78c40da20c38bf964597ace15c1a1eeaae9ee6a0339e3624",
+    "size": 4233
+  },
+  "assets/scenes/cat-forest-woodland.svg": {
+    "sha256": "1451157b5d30e77362cc74dc3e11827d118ddba38d514def6efd333bfc3333c7",
+    "size": 3167
+  },
+  "assets/scenes/cat-forest-workshop.svg": {
+    "sha256": "a9cd4b348e95155b176d52f2b7acd1f4a46ead2a2de0e9b15212dd07449fb97b",
+    "size": 3726
+  },
   "assets/scenes/night-sky.png": {
     "sha256": "f0acbb0ca7d2bbf33e794cb5a024136b0b01271c06ad3b932e1993652a08fae8",
     "size": 2018229
@@ -1936,8 +1952,8 @@
     "size": 20395
   },
   "games/cat_forest.js": {
-    "sha256": "9cc4f412f978e63093e98c7e2c9a5620c036da2844d7de10667b62c21e9edb36",
-    "size": 78390
+    "sha256": "8f628bbf852bf5167b46c4adfa98cd9da6581505fa13e08896a24fb4558e359d",
+    "size": 83703
   },
   "games/classroom.js": {
     "sha256": "12d741c329ab9e7f85439dc1fd9136b740910f36e7ea6f363657deb7093f6713",
@@ -2076,8 +2092,8 @@
     "size": 19519
   },
   "manifest.json": {
-    "sha256": "336fa432bb1008206121206e1ee82036477605cc7e97dccb59ecfa05a4d93a61",
-    "size": 578
+    "sha256": "9e501386596e4c93077904cafe3455b3f0bbbcaf37bbd54feaa5cc9610746d1e",
+    "size": 620
   },
   "pages/animal_counting.html": {
     "sha256": "9107c99164fb09338703016dfa3a0118e2bf0bce9bf4de891e61180b2fb41c28",
@@ -2096,8 +2112,8 @@
     "size": 14607
   },
   "pages/cat_forest.html": {
-    "sha256": "aa008d88d27b3a7082a0816103a489835e08ad7a6e539a8dbea1ffd0cda5015c",
-    "size": 40385
+    "sha256": "a8cfa54687003f4724e5347482c21077fa225f77577e0ad3779fdb286d14a817",
+    "size": 33482
   },
   "pages/classroom.html": {
     "sha256": "7a9245cc1193d5c9a3ff7662399632a9cbb144269138954d2ee044cd913d2b16",
@@ -2268,8 +2284,8 @@
     "size": 1046
   },
   "sw-cache-list.json": {
-    "sha256": "50ced629a4b279b37c59f939ce7114ef8fcfdca7574e77da6c126459ee9077bb",
-    "size": 18774
+    "sha256": "f2d302e54debdb5b9efc1a42edf37b997d11ee63f9b1fcf11c71d42ad08e29d5",
+    "size": 18941
   },
   "sw.js": {
     "sha256": "515475c345e9c8cecbea720342c53481b728727786da24290a8f4f5e92ba4c05",

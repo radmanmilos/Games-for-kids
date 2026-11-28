@@ -186,7 +186,55 @@ jobs:
         run: node tools/guards/games_map_negtest.js
 
   # ---------------------------------------------------------------------------
-  # Job D — extended / manual. Expensive, so it never runs on every push.
+  # Job D — Cat Forest visual review. Runs only when its visible source or
+  # deterministic state map changes on main. The stable review battery is
+  # refreshed and committed before Pages deploys.
+  # ---------------------------------------------------------------------------
+  visual:
+    name: Cat Forest visual review (4 viewports, 7 states)
+    if: ${{ always() && !failure() && !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/main' && (contains(github.event.head_commit.modified, 'game/pages/cat_forest.html') || contains(github.event.head_commit.modified, 'game/games/cat_forest.js') || contains(github.event.head_commit.modified, 'tools/visual-states.json') || contains(github.event.head_commit.modified, 'tools/screenshot.js')) }}
+    needs: [setup, fast, smoke, release]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    concurrency:
+      group: cat-forest-review-main
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Capture village and all scene states at four viewports
+        run: |
+          node tools/screenshot.js --review=Screenshot_Review --pages=cat_forest --task=467
+          node tools/screenshot.js --review=Screenshot_Review --pages=cat_forest --task=467 --state=INIT
+          node tools/screenshot.js --review=Screenshot_Review --pages=cat_forest --task=467 --state=PLAY
+          node tools/screenshot.js --review=Screenshot_Review --pages=cat_forest --task=467 --state=POND
+          node tools/screenshot.js --review=Screenshot_Review --pages=cat_forest --task=467 --state=WOODLAND
+          node tools/screenshot.js --review=Screenshot_Review --pages=cat_forest --task=467 --state=WORKSHOP
+          node tools/screenshot.js --review=Screenshot_Review --pages=cat_forest --task=467 --state=DECOR
+          node tools/screenshot.js --review=Screenshot_Review --pages=cat_forest --task=467 --state=DIARY
+        timeout-minutes: 25
+      - name: Commit refreshed review screenshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add resources/General_reviews/Screenshot_Review
+          if git diff --cached --quiet; then
+            echo "Cat Forest review screenshots are already current."
+          else
+            git commit -m "chore(cat-forest): refresh visual review battery [skip ci]"
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
+          fi
+
+  # ---------------------------------------------------------------------------
+  # Job E — extended / manual. Expensive, so it never runs on every push.
   # ---------------------------------------------------------------------------
   extended:
     name: Extended (Chromium + WebKit device matrix)
@@ -207,7 +255,7 @@ jobs:
         timeout-minutes: 25
 
   # ---------------------------------------------------------------------------
-  # Job E — pages. Publishing used to be GitHub's INTERNAL "pages build
+  # Job F — pages. Publishing used to be GitHub's INTERNAL "pages build
   # deployment" (Pages source = branch main//docs): it fired on every push and
   # no workflow could gate it, so a red run still went live. The source is now
   # "GitHub Actions" (repo setting, switched with task 274) and this job is the
@@ -221,12 +269,12 @@ jobs:
   #   - the event/ref guard keeps PR runs and the weekly schedule from
   #     deploying.
   # `needs` exposes DIRECT dependencies only (lesson project/lessons/
-  # ci-offline.md) — this job reads no needs.*.outputs, so listing all five
+  # ci-offline.md) — this job reads no needs.*.outputs, so listing all six
   # jobs is purely the gate itself, and tools/validate_workflow.js pins it.
   # ---------------------------------------------------------------------------
   pages:
     name: Deploy Pages (docs/ only when every gate is green)
-    needs: [setup, fast, smoke, release, extended]
+    needs: [setup, fast, smoke, release, visual, extended]
     if: ${{ always() && !failure() && !cancelled() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-24.04
     # Never let a stuck publisher hold the group; queue order keeps an older

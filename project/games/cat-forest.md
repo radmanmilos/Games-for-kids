@@ -1,139 +1,118 @@
 # 🐱 Мачја шума (Cat Forest)
 
-A toddler port of the "Secret Cat Forest" idea: feed visiting emoji cats; their gifts grow a forest.
-Approved plan package: `resources/General_reviews/Cat_Forest/` (cards `03_TASKS.md`, ledger `PROGRESS.md`).
+**Current implementation:** expanded village, pond, woodland, workshop and cat diary (task 467).
+**Runtime:** offline-only; no external libraries, network requests, ads, purchases, currency or pressure mechanics.
 
-Purpose and rules (product decisions, `project/DECISIONS.md`):
-no currency, shop, XP, levels, locks, score, counters, timers, fail states, notifications or offline
-earnings. No visible text at all — speech and `aria-label`s are Serbian Cyrillic only. Emoji art only:
-**no image or audio assets, no new libraries, no network**. Day/night and rain are child toggles and
-never affect a reward. The Friends book «Мачке пријатељи» shows met cats only (no silhouettes, no counts).
+## Product rules
 
-## Where
+- Calm, cozy, forgiving experience for young children. No coins, gems, XP, levels, locks, score, visible counters, timers, fail states, offline earnings or notifications.
+- Essential interactions work with simple taps and forgiving touch targets. No essential instruction is delivered only through sound.
+- All child-facing visible text, accessible labels and speech are Serbian Cyrillic.
+- Day/night and rain are optional settings; they do not change rewards or progression.
+- Cats remain friendly and safe. The child may explore, gather, craft, decorate, feed and revisit without losing collected items.
 
-- Engine: `game/games/cat_forest.js` (`window.startCatForest`, sets `window.__catForest`)
-- Page: `game/pages/cat_forest.html` · Registry: `game/data/app-registry.js` (`cat_forest`,
-  `screenshot:false`, `offline:true`, `toddler:true`, `hubOrder:12`) · Title: `game/data/serbian.js`
-- Smoke: `tools/cat_forest_smoke.js` · Review: `resources/General_reviews/Cat_Forest/`
+## Runtime files
 
-## Constants and data (the only place to tune)
+- Engine: `game/games/cat_forest.js` (`window.startCatForest`, deterministic `window.__catForest` test hook)
+- Page: `game/pages/cat_forest.html`
+- Scene illustrations: `game/assets/scenes/cat-forest-{village,pond,woodland,workshop}.svg`
+- Registry: `game/data/app-registry.js` (`cat_forest`, offline/toddler)
+- Smoke: `tools/cat_forest_smoke.js`
+- Deterministic visual states: `tools/visual-states.json` (`INIT`, `PLAY`, `POND`, `WOODLAND`, `WORKSHOP`, `DECOR`, `DIARY`)
+- Review battery: `resources/General_reviews/Screenshot_Review/`
+- Product/visual decisions: `project/DECISIONS.md`, `resources/General_reviews/Cat_Forest/`
 
-Every tunable is `CF` at the top of the engine (`PLATES:3`, `MAX_CATS:3`, arrive/enter/sit/eat/leave
-windows, `GIFT_CAP:5`, `DECOR_MAX:14`, `RAIN_DROPS:24`, `PARTICLE_CAP:12`, `DROP_PAD:24`,
-`DRAG_START_PX:8`, `DT_CLAMP_MS:100`, `STEP_MS:50`). Do not copy the numbers into prose — read `CF`.
-Data lists are `TREATS` (🐟🥛🍗🍣🍪), `CATS` (10; each has `likes`, `weight`, optional `acc`,
-`fallbackEmoji`, `night`, `needsAllPlates`) and `GIFTS` (🌸🌷🍄🍀🦋).
+## Scenes and interactions
 
-## Adding a cat or a treat (data-only)
+### Village
 
-1. Append one row to `TREATS` or `CATS` in `cat_forest.js` — ASCII `id`, emoji, approved Cyrillic
-   `name`, and for a cat `likes`/`weight` plus any optional flags. Nothing else changes.
-2. Add a smoke assertion for the new row if it carries new behaviour; keep `CF` untouched unless tuning.
-3. `node tools/cat_forest_smoke.js`, then `bash tools/sync-docs.sh` (docs/ mirrors `game/`).
+- Three feeding plates remain at fixed stage-fraction anchors in `FEED_ANCHORS`: x = 0.26 / 0.50 / 0.74, y = 0.62.
+- Cats visit, eat, rest and leave gifts. Feeding consumes one gathered fish when the cat begins eating.
+- Four fixed decoration anchors (`DECOR_ANCHORS`) sit at the garden edges. An empty anchor accepts the selected crafted item; tapping a placed item with no selection returns it to storage. Replacing an occupied anchor returns the previous decoration to storage; nothing is destroyed.
+- The village is the default scene. The bottom navigation gives direct access to the pond, woodland, workshop and diary.
 
-## Test hook (`window.__catForest`, TD §8) — the engine never reads it
+### Pond
 
-`state()` snapshot · `seed(n)` deterministic RNG · `rand(n)` · `pause()` / `step(ms)` (game clock;
-`pause` is the harness rAF gate) · `place(treat, plate)` · `forceCat(id, plate)` · `pick(...)` ·
-`previewPick()` · `setTime()` / `setWeather()` · `reset()` · `openBook()` / `closeBook()` ·
-`data {treats, cats, gifts, anchors}`.
-Determinism recipe used by the smoke and by `tools/visual-states.json` `PLAY`: `seed(7)` →
-`place('fish', 0)` → poll `step(50)` until a cat is `sitting` (it is `sitting` only ~5350–6250 ms,
-so a fixed long step overshoots to an empty stage).
+- `#cf-fishing-spot` gathers one fish per tap, up to `FISH_BASKET_CAP` (24).
+- `#cf-fish-basket` shows a small visual sample; no numeric count is displayed.
+- Fish are consumed once when a cat begins eating, not when a treat is merely placed.
 
-## Wiring and persistence
+### Woodland
 
-Plate states are `empty` → `treat` (placed) → `occupied` (cat seated); never `filled`.
-The seated cat is lifted above its plate so the treat stays visible; the lift scales with the
-measured cat/plate/stage sizes (task 388) so a short phone-landscape stage no longer crowds
-the first feeding station. A 12 px gap is kept between the cat's feet and the plate's top edge.
-Speech goes through `window.audioBuses.speakWithDuck`/`window.speech` and is best-effort (R3) — the
-game is fully playable silently. Save is one key `catForestSave` = `{v:1, met:[ids], decor:[{e,s}]}`;
-cats on stage, plates, selection, clock and weather are transient by design. `parent.html`'s existing
-reset clears it. `state.book` freezes `step()` and the rAF `frame()` while the book is open;
-`render()` always runs.
+- `#cf-gather-spot` gathers one wood per tap, up to `WOOD_BASKET_CAP` (50).
+- `#cf-wood-basket` shows a small visual sample without digits or counters.
 
-## Village hub (Phase 2, plan §7.2)
+### Workshop
 
-The three feeding stations are fixed **stage-fraction anchors** in `FEED_ANCHORS`:
+- Six recipes are visible from the start; none are locked and crafting is instant.
+- Each recipe consumes its listed wood amount and one specific cat-gift keepsake (`RECIPES[].gift`). Fish are not a crafting ingredient.
+- A crafted item enters the crafted tray/storage. The child selects it, returns to the village and taps one of the four fixed garden anchors.
+- Selecting a new item and tapping an occupied anchor replaces the old item and returns the old one to storage. Removing a placed item also returns it to storage.
 
-| id | x | y | plate |
-|---|---|---|---|
-| `porch.feed.1` | 0.26 | 0.62 | 0 |
-| `porch.feed.2` | 0.50 | 0.62 | 1 |
-| `porch.feed.3` | 0.74 | 0.62 | 2 |
+### Cat diary
 
-`#cf-plates` fills the stage and each `.cf-plate` is absolutely placed at its anchor
-percentage (`left:26%/50%/74%; top:62%`), so a tap on `porch.feed.1` lands at the same
-stage fraction on a 390×844 phone and a 1280×800 desktop — no feeding anchor moves
-between viewport sizes (the Phase 2 exit gate). The house sits above them in
-`#cf-scenery` (CSS shapes, aria-hidden, no visible text).
+- The diary is an overlay, not a fifth world scene.
+- It shows discovered cats only: large portrait, visible Serbian Cyrillic name, a short fact, favourite place and favourite treat indicators.
+- No unseen-cat silhouettes, empty slots for undiscovered cats, completion totals, percentages or visit-count hearts are shown.
+- Tapping a discovered cat card still offers the gentle cuddle interaction.
 
-A scene state machine owns the main view: `SCENES = ['village','pond','woodland','workshop','diary']`,
-`DEFAULT_SCENE = 'village'`, `state.scene`, `enterScene/exitScene/setScene`, and `data-scene`
-on `#app` in `render()`. Only the village has plates and cats today; the other four
-are placeholders until their phase. `setScene` is a no-op for unknown ids and for the
-already-active scene.
+## Visual system and responsive UI
 
-## Pond (Phase 3)
+- Four separate local SVG scene illustrations are loaded by `SCENE_ART` into `#cf-scene-bg`. They use the approved warm wood, cream, terracotta, sage and dusty-blue palette, organic layered silhouettes, soft gradients and a subtle paper-grain/wash treatment.
+- The scene image is an actual `img` element (not a CSS-only background) so loading can be awaited by screenshot capture and is included in the offline inventory.
+- Scene navigation is a persistent bottom row. Day/night and rain remain separate top-right controls. Scene-specific return-to-village buttons appear in the pond, woodland and workshop.
+- Inventory is represented by compact baskets and a short sample of resource sprites, not long horizontal rows of dozens of tiny icons.
+- Reduced-motion mode removes non-essential movement and transitions while preserving every interaction and its feedback.
 
-The pond is the first scene added beyond the village hub. It sits behind the village
-(scene palette is a blue gradient). Controls:
+## Tunable data
 
-- `#cf-pond-path` (🛤️, village toggles) — navigate from village to pond
-- `#cf-pond-back` (← назад у село) — navigate from pond back to village
-- `#cf-fishing-spot` (Пецај рибу) — tap to catch one fish (finite but generous; capped at 24);
-  the spot briefly dips (:active) and a tone plays; every catch is a gift, no failure
-  state, no timer, no shortage
-- `#cf-fish-basket` — shows collected fish as sprite emoji (🐟) without digits or counters;
-  `renderFishBasket()` clears and re-inserts the right number of spans
-- `#cf-pond-path` (Вир, inside pond) — decorative path element
+The engine owns the only source of tunables and data:
+- `CF`: timing, touch thresholds, visitor/gift limits, animation and particle budgets.
+- `TREATS`: five feeding treats.
+- `CATS`: ten cat definitions; each includes a Serbian Cyrillic name, short diary fact and favourite place.
+- `GIFTS`: five keepsake types.
+- `RECIPES`: six wood + keepsake recipes.
+- `FEED_ANCHORS`: three fixed feeding positions.
+- `DECOR_ANCHORS`: four fixed garden decoration positions.
+- `SCENES` / `SCENE_ART`: four navigable world scenes and their local SVG paths.
 
-Fish are consumed when a cat begins eating at a feeding plate (sitting→eating transition
-in `advanceCat`). One fish removed from `state.fishCount`, basket re-rendered.
+## Persistence: `catForestSave` schema v3
 
-## Gotchas
+The current save is:
 
-- Reduced motion (the owner's tablet reports `reduce:ON`) is a primary path: decorative effects off,
-  essential motion kept. Assert with `bootEmulated`, not the host default.
-- Foil the hook instead of the DOM when asserting engine behaviour; keep assertions on behaviour, not
-  source literals (R8). Philosophy is guarded by `failWords`/`metricWords`/`timerApis` on
-  comments-stripped sources plus a live-DOM wordless scan (CF-16).
-- `screenshot:false` is deliberate (D10) until baselines are approved.
+```js
+{
+  v: 3,
+  met: [/* discovered cat ids */],
+  resources: { fish, wood },
+  keepsakes: [/* cat-gift emoji */],
+  crafted: [{ id, e }],
+  placedDecorations: [{ id, e, s }],
+  scene,
+  settings: { time, weather },
+  visitCounts,
+  metTimes
+}
+```
 
-## Friends book / dairy (Phase 4)
+- Gathered fish and wood, collected keepsakes, crafted inventory, placed decorations, selected scene and day/weather settings persist.
+- Cat positions, active visits, plate contents, transient selection, selected recipe and selected crafted item remain transient.
+- The code that existed immediately before this overhaul already wrote a live v2 save. Therefore the expanded format uses **v3**, rather than reusing v2 and misreading existing data.
+- Live v2 saves migrate to v3: discovered cats and fish/wood resources are preserved; up to four old decorations are assigned to fixed anchors; overflow decorations are moved into crafted storage. Existing v2 data is not silently discarded.
+- The older v1 base-game save is intentionally discarded on this full-overhaul version bump, as explicitly approved in the 2026-11-26 expansion decision.
+- Invalid JSON and unknown versions safely start fresh. Storage failures never block play.
+- Parent reset clears the existing local storage key.
 
-The expanded diary adds a friends book that records every cat the child has met. On each first sit
-the met timestamp is recorded in `state.metTimes`; every sit increments `state.visitCounts`. The
-book shows one card per met cat with the cat's favourite treat emoji (from `TREATS`) and up to five
-hearts representing cuddles — clicking a card calls `cuddleInBook(cat.id)`. Hearts are stored
-client-side and capped at 5 (no digits or counters appear anywhere, per PS §7). When the book is
-opened the clock freezes and on close it resumes. The book's innerText holds no digits and no Latin
-letters — all labels are Serbian Cyrillic only, and fav. treat icons are emoji only.
+## Test hook
 
-Key behavioural additions from task 467d:
-- `state.visitCounts` and `state.metTimes` added to the engine state (init 0 / `{}`)
-- In `advanceCat` entering branch: `state.metTimes[c.id] = clock` on first sit,
-  `state.visitCounts[c.id] = (state.visitCounts[c.id] || 0) + 1` on every sit
-- `makeBookCatEl` now appends `.cf-book-cat-likes` and empty `.cf-book-cat-hearts` row
-- `setBookCatHearts(el, cat)` rebuilds hearts in place (max 5, no digits)
-- CSS `.cf-book-*` switched from circle/`place-items:center` to flex-column rounded card
+The test hook is not used by runtime gameplay. It exposes deterministic controls including `seed`, `pause`, `step`, `place`, `setResources`, `selectRecipe`, `craftNow`, `selectCrafted`, `placeCrafted`, `removeDecoration`, `setScene`, `setMet`, `setTime`, `setWeather` and `reset`.
 
-## Save v2 migration (task 467e)
+The cat-visit timing guard remains important: a cat is in the `sitting` phase only for a short interval, so smoke and screenshot hooks must poll for the named phase instead of using a fixed long step.
 
-The save schema was bumped to version `v2`. On boot `loadSave()` accepts both `v === 1` and
-`v === 2` — any pre-v2 `localStorage` save is **losslessly migrated** in place, preserving the
-`met` cats, `decor` items and `fishCount` exactly; the new v2 fields (`selectedRecipe`,
-`visitCounts`, `metTimes`) default to empty/zero so no prior data is discarded (plan §4.6 /
-§3.5 "never remove a recorded cat"). Unknown versions (e.g. `v:999`) still start fresh. The
-complete save payload shape is `{v:2, met:[ids], decor:[{e,s}], fishCount, selectedRecipe,
-visitCounts, metTimes}`.
+## Verification and release status
 
-Key migration behaviours from task 467e:
-- `loadSave()` guard: `if (!s || typeof s !== 'object' || (s.v !== 1 && s.v !== 2)) return out;`
-- `save()` writes `v: 2` plus all fields
-- `startCatForest` restores `state.selectedRecipe`, `state.visitCounts`, `state.metTimes`,
-  `state.fishCount` from saved
-- Smoke: `CF-14 AC5` seeds a `{v:1, met:['maca'], decor:[{e:'🌸',s:3}]}` save, reloads, and
-  asserts `met` and `decor` are preserved unchanged
-- Full suite: `check_fast 10/10`, `run_all 220/220` (including the new migration test)
+- Targeted smoke: `node tools/cat_forest_smoke.js`.
+- Fast project gate: `node tools/check_fast.js` (includes syntax, registry, generated-artifact and offline-inventory checks).
+- Release gate: `node tools/run_all.js offline_smoke.mjs --concurrency 1` plus the configured Cat Forest smoke matrix.
+- Screenshot capture: `node tools/screenshot.js --review=Screenshot_Review --pages=cat_forest --task=467`, plus the named visual states.
+- The screenshot review is required at phone portrait, phone landscape, tablet and desktop. Automated screenshot capture does not replace real-device performance or child playtesting.

@@ -33,7 +33,7 @@
     LEAVE_MAX: 3000,
     UNLIKED_FACTOR: 0.25,
     GIFT_CAP: 5,
-    DECOR_MAX: 14,
+    DECOR_MAX: 4,
     GIFT_FLY_MS: 600,
     PARTICLE_CAP: 12,
     SPEECH_GAP_MS: 1500,
@@ -63,30 +63,28 @@
   /* `acc` is the accessory drawn over the body emoji; `fallbackEmoji` covers
      devices that do not render the 🐈‍⬛ ZWJ glyph as one (D7, probed later). */
   var CATS = [
-    { id: 'maca',   name: 'Маца',     emoji: '🐱', art: 'cat-forest-cat', acc: null, likes: ['fish', 'milk'],      weight: 1.0 },
-    { id: 'puhko',  name: 'Пухко',    emoji: '🐈', acc: null, likes: ['milk', 'cookie'],    weight: 1.0 },
-    { id: 'mica',   name: 'Мица',     emoji: '🐱', art: 'cat-forest-cat', acc: '🎀', likes: ['cookie', 'chicken'], weight: 0.8 },
-    { id: 'sef',    name: 'Шеф',      emoji: '🐈', acc: '🎩', likes: ['chicken', 'sushi'],  weight: 0.7 },
-    { id: 'cveta',  name: 'Цвета',    emoji: '🐱', art: 'cat-forest-cat', acc: '🌸', likes: ['milk', 'sushi'],     weight: 0.7 },
-    { id: 'tigar',  name: 'Тигар',    emoji: '🐯', acc: null, likes: ['chicken', 'fish'],   weight: 0.5 },
-    { id: 'tacka',  name: 'Тачка',    emoji: '🐆', acc: null, likes: ['sushi', 'fish'],     weight: 0.5 },
-    { id: 'senka',  name: 'Сенка',    emoji: '🐈‍⬛', fallbackEmoji: '🐱', acc: null, likes: ['fish'], weight: 1.0, night: true },
-    { id: 'zvezda', name: 'Звездица', emoji: '🐈', acc: '⭐', likes: ['milk', 'sushi'],     weight: 0.7, night: true },
-    { id: 'kralj',  name: 'Краљ',     emoji: '🦁', art: 'cat-forest-lion', acc: '👑', likes: [],                    weight: 0.4, needsAllPlates: true }
+    { id: 'maca',   name: 'Маца', fact: 'Воли мирно јутро и меко ћебе.', place: 'Трем',     emoji: '🐱', art: 'cat-forest-cat', acc: null, likes: ['fish', 'milk'],      weight: 1.0 },
+    { id: 'puhko',  name: 'Пухко', fact: 'Најрадије дрема на сунцу.', place: 'Сунчани праг',    emoji: '🐈', acc: null, likes: ['milk', 'cookie'],    weight: 1.0 },
+    { id: 'mica',   name: 'Мица', fact: 'Радознала је и воли цвеће.', place: 'Башта',     emoji: '🐱', art: 'cat-forest-cat', acc: '🎀', likes: ['cookie', 'chicken'], weight: 0.8 },
+    { id: 'sef',    name: 'Шеф', fact: 'Пажљиво посматра птице.', place: 'Клупица',      emoji: '🐈', acc: '🎩', likes: ['chicken', 'sushi'],  weight: 0.7 },
+    { id: 'cveta',  name: 'Цвета', fact: 'Воли мирисно цвеће.', place: 'Цветни кутак',    emoji: '🐱', art: 'cat-forest-cat', acc: '🌸', likes: ['milk', 'sushi'],     weight: 0.7 },
+    { id: 'tigar',  name: 'Тигар', fact: 'Воли да истражује стазице.', place: 'Шумска стаза',    emoji: '🐯', acc: null, likes: ['chicken', 'fish'],   weight: 0.5 },
+    { id: 'tacka',  name: 'Тачка', fact: 'Тиха је и воли сенку дрвећа.', place: 'Хладовина',    emoji: '🐆', acc: null, likes: ['sushi', 'fish'],     weight: 0.5 },
+    { id: 'senka',  name: 'Сенка', fact: 'Највише воли мирне ноћи.', place: 'Под звездама',    emoji: '🐈‍⬛', fallbackEmoji: '🐱', acc: null, likes: ['fish'], weight: 1.0, night: true },
+    { id: 'zvezda', name: 'Звездица', fact: 'Радује се светлуцавим звездама.', place: 'Ноћна башта', emoji: '🐈', acc: '⭐', likes: ['milk', 'sushi'],     weight: 0.7, night: true },
+    { id: 'kralj',  name: 'Краљ', fact: 'Воли друштво и дуге дремке.', place: 'Топли праг',     emoji: '🦁', art: 'cat-forest-lion', acc: '👑', likes: [],                    weight: 0.4, needsAllPlates: true }
   ];
 
   var GIFTS = ['🌸', '🌷', '🍄', '🍀', '🦋'];
 
-  /* Phase 3 workshop recipes: crafted decorations from gathered materials.
-     Each recipe declares wood/fish cost and the resulting decoration emoji.
-     All recipes visible from start; no locked recipes. Instant craft, no timer. */
+  /* Workshop recipes use gathered wood and a specific keepsake left by a cat. */
   var RECIPES = [
-    { id: 'pot',      emoji: '🪴', name: 'Сакуса',     wood: 1, fish: 0 }, // potted plant
-    { id: 'birdhouse', emoji: '🏠', name: 'Кућица',     wood: 2, fish: 0 }, // birdhouse
-    { id: 'lantern',  emoji: '🏮', name: 'Лампион',     wood: 1, fish: 1 }, // lantern
-    { id: 'bench',    emoji: '🪑', name: 'Клупа',       wood: 2, fish: 1 }, // garden bench
-    { id: 'fence',    emoji: '🚧', name: 'Ограда',      wood: 3, fish: 0 }, // fence section
-    { id: 'chime',    emoji: '🎐', name: 'Ветручар',    wood: 1, fish: 1 }  // wind chime
+    { id: 'pot', emoji: '🪴', name: 'Саксија', wood: 1, gift: '🌸' },
+    { id: 'birdhouse', emoji: '🏠', name: 'Кућица', wood: 2, gift: '🍀' },
+    { id: 'lantern', emoji: '🏮', name: 'Фењер', wood: 1, gift: '🦋' },
+    { id: 'bench', emoji: '🪑', name: 'Клупа', wood: 2, gift: '🌷' },
+    { id: 'fence', emoji: '🌿', name: 'Зелена оградица', wood: 3, gift: '🍄' },
+    { id: 'chime', emoji: '🎐', name: 'Звонце', wood: 1, gift: '🌸' }
   ];
 
   /* Phase 2 (plan §8 Phase 2): the village hub. The three fixed feeding places
@@ -110,8 +108,20 @@
      workshop and the diary each get their own palette without touching the
      engine's render() projection. Pond/woodland/workshop/diary arrive in
      later phases; the village is the only scene with plates and cats today. */
-  var SCENES = ['village', 'pond', 'woodland', 'workshop', 'diary'];
+  var SCENES = ['village', 'pond', 'woodland', 'workshop'];
+  var SCENE_ART = {
+    village: '../assets/scenes/cat-forest-village.svg',
+    pond: '../assets/scenes/cat-forest-pond.svg',
+    woodland: '../assets/scenes/cat-forest-woodland.svg',
+    workshop: '../assets/scenes/cat-forest-workshop.svg'
+  };
   var DEFAULT_SCENE = 'village';
+  var DECOR_ANCHORS = [
+    { id: 'garden.left.high', x: 0.10, y: 0.48 },
+    { id: 'garden.right.high', x: 0.90, y: 0.48 },
+    { id: 'garden.left.low', x: 0.10, y: 0.68 },
+    { id: 'garden.right.low', x: 0.90, y: 0.68 }
+  ];
 
   var started = false;
 
@@ -152,8 +162,11 @@
       /* Wood gathered at the woodland (Phase 3). Starts at 0; every successful
          gather +1. No spending mechanic yet — collection itself is the reward. */
       woodCount: 0,
-      /* Phase 3 workshop: the recipe currently selected on the workbench. */
+      /* Workshop: cat keepsakes, crafted storage and the selected item. */
+      keepsakes: [],
+      crafted: [],
       selectedRecipe: null,
+      selectedCraftedId: null,
       /* Transient picture hints (no text): a gentle bounce of the tray or of the
          selected treat. Kept in state and timed by the clock so step() can drive
          it in tests; not part of the TD §8 snapshot. */
@@ -380,6 +393,7 @@
       if (state.fishCount > 0) {
         state.fishCount--;
         renderFishBasket();
+        save();
       }
     } else if (c.phase === 'eating') {
       endEating(c);
@@ -462,6 +476,7 @@
   function setTime(t) {
     if (t !== 'day' && t !== 'night') return false;
     state.time = t;
+    save();
     render();
     return true;
   }
@@ -487,6 +502,7 @@
   function setWeather(w) {
     if (w !== 'clear' && w !== 'rain') return false;
     state.weather = w;
+    save();
     render();
     return true;
   }
@@ -531,6 +547,7 @@
     exitScene(state.scene);
     state.scene = name;
     enterScene(name);
+    save();
     render();
     return true;
   }
@@ -619,7 +636,10 @@
       recipeGrid: document.getElementById('cf-recipe-grid'),
       craftBtn: document.getElementById('cf-craft-btn'),
       workshopBack: document.getElementById('cf-workshop-back'),
-      workshopPath: document.getElementById('cf-workshop-path')
+      workshopPath: document.getElementById('cf-workshop-path'),
+      keepsakeBasket: document.getElementById('cf-keepsake-basket'),
+      craftedTray: document.getElementById('cf-crafted-tray'),
+      anchors: [].slice.call(document.querySelectorAll('#cf-placement-anchors .cf-anchor'))
     };
   }
 
@@ -675,18 +695,21 @@
     if (!els || !els.app) return;
     els.app.setAttribute('data-time', state.time);
     els.app.setAttribute('data-weather', state.weather);
-    /* Phase 2: the scene id drives a palette/segment class on #app without
-       touching render()'s projection; later scenes read their CSS here. */
+    /* The scene id selects the corresponding illustrated background and controls. */
     els.app.setAttribute('data-scene', state.scene);
+    if (els.sceneBg) {
+      var sceneArt = SCENE_ART[state.scene] || SCENE_ART.village;
+      if (els.sceneBg.getAttribute('src') !== sceneArt) els.sceneBg.setAttribute('src', sceneArt);
+    }
     /* CF-11: the toggle's pressed state mirrors the world; the glyph and the
        whole night palette hang off data-time in CSS. */
     if (els.dayNight) els.dayNight.setAttribute('aria-pressed', state.time === 'night' ? 'true' : 'false');
     /* CF-12: the rain switch mirrors state.weather the same way. */
     if (els.rainBtn) els.rainBtn.setAttribute('aria-pressed', state.weather === 'rain' ? 'true' : 'false');
-    /* CF-19: per-scene background is driven by CSS (data-scene -> #cf-scene-bg
-     gradients). Painted WebP scene assets live under game/assets/scenes/ and
-     will be wired here once generated through the project's approved pipeline
-     (currently no Cloudflare credentials in this environment). */
+    /* Scene art is an offline SVG background selected by the data-scene attribute. */
+    if (els.pondPath) els.pondPath.setAttribute('aria-pressed', state.scene === 'pond' ? 'true' : 'false');
+    if (els.woodPath) els.woodPath.setAttribute('aria-pressed', state.scene === 'woodland' ? 'true' : 'false');
+    if (els.workshopPath) els.workshopPath.setAttribute('aria-pressed', state.scene === 'workshop' ? 'true' : 'false');
 
     for (var i = 0; i < els.treats.length; i++) {
       var el = els.treats[i];
@@ -722,6 +745,11 @@
     }
 
     renderDecor();
+    renderFishBasket();
+    renderWoodBasket();
+    renderKeepsakeBasket();
+    renderCraftedTray();
+    renderRecipeGrid();
     renderCats();
     renderGifts();
     renderFlights();
@@ -757,198 +785,175 @@ var FISH_BASKET_CAP = 24;
 /* Wood basket capacity — generous for collection, no gameplay limit. */
 var WOOD_BASKET_CAP = 50;
 
-function renderFishBasket() {
-    if (!els || !els.fishBasket) return;
-    var shown = state.fishCount;
-    if (shown > FISH_BASKET_CAP) shown = FISH_BASKET_CAP;
+  var RESOURCE_VISUAL_CAP = 4;
+
+  function renderResourceBasket(node, count, className, glyph) {
+    if (!node) return;
+    var shown = Math.min(count, RESOURCE_VISUAL_CAP);
     var sig = 'n' + shown;
-    if (els.fishBasket.getAttribute('data-sig') === sig) return;
-    els.fishBasket.setAttribute('data-sig', sig);
-    while (els.fishBasket.firstChild) els.fishBasket.removeChild(els.fishBasket.firstChild);
+    if (node.getAttribute('data-sig') === sig) return;
+    node.setAttribute('data-sig', sig);
+    while (node.firstChild) node.removeChild(node.firstChild);
     for (var i = 0; i < shown; i++) {
-      var sp = document.createElement('span');
-      sp.className = 'cf-fish-sprite';
-      els.fishBasket.appendChild(sp);
+      var item = document.createElement('span');
+      item.className = className;
+      item.setAttribute('aria-hidden', 'true');
+      item.setAttribute('data-e', glyph);
+      if (window.Art && window.Art.fillAttr) window.Art.fillAttr(item, 'data-e', glyph);
+      node.appendChild(item);
     }
   }
 
-  function renderWoodBasket() {
-    if (!els || !els.woodBasket) return;
-    var shown = state.woodCount;
-    if (shown > WOOD_BASKET_CAP) shown = WOOD_BASKET_CAP;
-    var sig = 'n' + shown;
-    if (els.woodBasket.getAttribute('data-sig') === sig) return;
-    els.woodBasket.setAttribute('data-sig', sig);
-    while (els.woodBasket.firstChild) els.woodBasket.removeChild(els.woodBasket.firstChild);
-    for (var i = 0; i < shown; i++) {
-      var sp = document.createElement('span');
-      sp.className = 'cf-wood-sprite';
-      els.woodBasket.appendChild(sp);
+  function renderFishBasket() { if (els) renderResourceBasket(els.fishBasket, state.fishCount, 'cf-fish-sprite', '🐟'); }
+  function renderWoodBasket() { if (els) renderResourceBasket(els.woodBasket, state.woodCount, 'cf-wood-sprite', '🪵'); }
+
+  function renderKeepsakeBasket() {
+    if (!els || !els.keepsakeBasket) return;
+    var icons = [];
+    for (var k = 0; k < state.keepsakes.length; k++) if (icons.indexOf(state.keepsakes[k]) === -1) icons.push(state.keepsakes[k]);
+    var sig = icons.join('|');
+    if (els.keepsakeBasket.getAttribute('data-sig') === sig) return;
+    els.keepsakeBasket.setAttribute('data-sig', sig);
+    while (els.keepsakeBasket.firstChild) els.keepsakeBasket.removeChild(els.keepsakeBasket.firstChild);
+    for (var i = 0; i < icons.length; i++) {
+      var item = document.createElement('span');
+      item.className = 'cf-keepsake-sprite';
+      item.setAttribute('data-e', icons[i]);
+      if (window.Art && window.Art.fillAttr) window.Art.fillAttr(item, 'data-e', icons[i]);
+      els.keepsakeBasket.appendChild(item);
     }
   }
 
-  /* Phase 3 workshop: render the recipe grid with available cards. */
+  function recipeCanCraft(recipe) {
+    return !!recipe && state.woodCount >= recipe.wood && state.keepsakes.indexOf(recipe.gift) !== -1;
+  }
+
   function renderRecipeGrid() {
     if (!els || !els.recipeGrid) return;
-    els.recipeGrid.innerHTML = '';
+    var sig = JSON.stringify([state.selectedRecipe, state.woodCount, state.keepsakes]);
+    if (els.recipeGrid.getAttribute('data-sig') === sig) return;
+    els.recipeGrid.setAttribute('data-sig', sig);
+    while (els.recipeGrid.firstChild) els.recipeGrid.removeChild(els.recipeGrid.firstChild);
     for (var i = 0; i < RECIPES.length; i++) {
-      var r = RECIPES[i];
-      var card = document.createElement('div');
-      card.className = 'cf-recipe-card';
-      card.innerHTML = '<div class="cf-recipe-emoji">' + r.emoji + '</div><div class="cf-recipe-name">' + r.name + '</div>';
-      card.dataset.id = r.id;
-      card.addEventListener('click', function () { selectRecipe(this.dataset.id); });
-      els.recipeGrid.appendChild(card);
+      (function (r) {
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'cf-recipe-card';
+        card.dataset.id = r.id;
+        card.setAttribute('aria-pressed', state.selectedRecipe === r.id ? 'true' : 'false');
+        card.setAttribute('aria-label', 'Изабери: ' + r.name);
+        var art = document.createElement('span');
+        art.className = 'cf-recipe-emoji';
+        art.setAttribute('data-e', r.emoji);
+        if (window.Art && window.Art.fillAttr) window.Art.fillAttr(art, 'data-e', r.emoji);
+        var name = document.createElement('span');
+        name.className = 'cf-recipe-name';
+        name.textContent = r.name;
+        var cost = document.createElement('span');
+        cost.className = 'cf-recipe-cost';
+        for (var w = 0; w < r.wood; w++) {
+          var wood = document.createElement('span');
+          wood.setAttribute('data-e', '🪵');
+          if (window.Art && window.Art.fillAttr) window.Art.fillAttr(wood, 'data-e', '🪵');
+          cost.appendChild(wood);
+        }
+        var gift = document.createElement('span');
+        gift.setAttribute('data-e', r.gift);
+        if (window.Art && window.Art.fillAttr) window.Art.fillAttr(gift, 'data-e', r.gift);
+        cost.appendChild(gift);
+        card.appendChild(art); card.appendChild(name); card.appendChild(cost);
+        card.classList.toggle('selected', state.selectedRecipe === r.id);
+        card.classList.toggle('unavailable', !recipeCanCraft(r));
+        card.addEventListener('click', function () { selectRecipe(r.id); });
+        els.recipeGrid.appendChild(card);
+      })(RECIPES[i]);
     }
+    if (els.craftBtn) els.craftBtn.disabled = !recipeCanCraft(RECIPES.filter(function (r) { return r.id === state.selectedRecipe; })[0]);
   }
 
   function selectRecipe(id) {
     if (!RECIPES.some(function (r) { return r.id === id; })) return false;
     state.selectedRecipe = id;
-    // Update visual selection
-    var cards = els.recipeGrid.querySelectorAll('.cf-recipe-card');
-    for (var i = 0; i < cards.length; i++) {
-      cards[i].classList.toggle('selected', cards[i].dataset.id === id);
+    renderRecipeGrid();
+    return true;
+  }
+
+  function selectCrafted(uid) {
+    if (!state.crafted.some(function (item) { return item.uid === uid; })) return false;
+    state.selectedCraftedId = uid;
+    renderCraftedTray();
+    render();
+    return true;
+  }
+
+  function renderCraftedTray() {
+    if (!els || !els.craftedTray) return;
+    var sig = JSON.stringify([state.crafted.map(function (x) { return [x.uid, x.emoji]; }), state.selectedCraftedId]);
+    if (els.craftedTray.getAttribute('data-sig') === sig) return;
+    els.craftedTray.setAttribute('data-sig', sig);
+    while (els.craftedTray.firstChild) els.craftedTray.removeChild(els.craftedTray.firstChild);
+    for (var i = 0; i < state.crafted.length; i++) {
+      (function (item) {
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'cf-crafted-item';
+        card.setAttribute('aria-label', 'Изабери украс');
+        card.setAttribute('aria-pressed', state.selectedCraftedId === item.uid ? 'true' : 'false');
+        card.dataset.uid = String(item.uid);
+        card.setAttribute('data-e', item.emoji);
+        if (window.Art && window.Art.fillAttr) window.Art.fillAttr(card, 'data-e', item.emoji);
+        card.classList.toggle('selected', state.selectedCraftedId === item.uid);
+        card.addEventListener('click', function () { selectCrafted(item.uid); });
+        els.craftedTray.appendChild(card);
+      })(state.crafted[i]);
     }
+  }
+
+  function placeCrafted(anchorIndex) {
+    if (!DECOR_ANCHORS[anchorIndex] || state.selectedCraftedId === null) return false;
+    var itemIndex = state.crafted.findIndex(function (item) { return item.uid === state.selectedCraftedId; });
+    if (itemIndex === -1) return false;
+    var item = state.crafted[itemIndex];
+    var oldIndex = state.decor.findIndex(function (d) { return d.s === anchorIndex; });
+    if (oldIndex !== -1) {
+      var old = state.decor.splice(oldIndex, 1)[0];
+      state.crafted.push({ uid: ++uidSeq, id: old.id || ('stored-' + old.uid), emoji: old.e });
+    }
+    state.crafted.splice(itemIndex, 1);
+    state.decor.push({ uid: item.uid, id: item.id, e: item.emoji, s: anchorIndex });
+    state.selectedCraftedId = null;
+    save();
+    render();
+    return true;
+  }
+
+  function removeDecoration(anchorIndex) {
+    var index = state.decor.findIndex(function (d) { return d.s === anchorIndex; });
+    if (index === -1) return false;
+    var old = state.decor.splice(index, 1)[0];
+    state.crafted.push({ uid: ++uidSeq, id: old.id || ('stored-' + old.uid), emoji: old.e });
+    save();
+    render();
     return true;
   }
 
   function craftNow() {
-    if (!state.selectedRecipe) return;
-    var recipe = RECIPES.find(function (r) { return r.id === state.selectedRecipe; });
-    if (!recipe) return;
-    if (state.woodCount < recipe.wood || state.fishCount < recipe.fish) return;
-    // Consume materials
+    var recipe = RECIPES.filter(function (r) { return r.id === state.selectedRecipe; })[0];
+    if (!recipeCanCraft(recipe)) return false;
+    var giftIndex = state.keepsakes.indexOf(recipe.gift);
+    if (giftIndex === -1) return false;
     state.woodCount -= recipe.wood;
-    state.fishCount -= recipe.fish;
-    // Add crafted decoration to forest
-    // Use the next available decor slot from DECOR_SLOTS
-    var slot = state.decor.length % CF.DECOR_MAX;
-    state.decor.push({ uid: ++uidSeq, e: recipe.emoji, s: slot });
-    if (state.decor.length > CF.DECOR_MAX) state.decor.shift(); // forest never fills up
-    renderFishBasket();
-    renderWoodBasket();
-    renderRecipeGrid();
-    // Visual: brief workbench animation feedback
-    // Clear selection
+    state.keepsakes.splice(giftIndex, 1);
+    var item = { uid: ++uidSeq, id: recipe.id, emoji: recipe.emoji };
+    state.crafted.push(item);
+    state.selectedCraftedId = item.uid;
     state.selectedRecipe = null;
-    var cards = els.recipeGrid.querySelectorAll('.cf-recipe-card');
-    for (var i = 0; i < cards.length; i++) {
-      cards[i].classList.remove('selected');
-    }
     save();
+    render();
+    return true;
   }
 
-/* ---- cat rendering (CF-07; TD §7/§10) ---------------------------------
-   render() projects each actor's fraction of its phase to a position; CSS
-   only scales the body for facing and bobs it while walking, so step() stays
-   exact and positions never come from a transition. */
-function geomPlate(idx) {
-    return (geom && geom.plates[idx]) || { x: 0.3 + idx * 0.2, y: 0.48 };
-  }
-
-  function catDir(c) {
-    if (c.phase === 'leaving') return geomPlate(c.plate).x < 0.5 ? -1 : 1; // walk out the nearer edge
-    return c.side === 'L' ? 1 : -1;
-  }
-
-  function catPos(c) {
-    var plate = geomPlate(c.plate);
-    var p = c.dur > 0 ? c.t / c.dur : 1;
-    if (p < 0) p = 0; else if (p > 1) p = 1;
-    var x;
-    if (c.phase === 'entering') {
-      var from = c.side === 'L' ? -EDGE_FRAC : 1 + EDGE_FRAC;
-      x = from + (plate.x - from) * easeOut(p);
-    } else if (c.phase === 'leaving') {
-      var to = plate.x < 0.5 ? -EDGE_FRAC : 1 + EDGE_FRAC;
-      x = plate.x + (to - plate.x) * easeIn(p);
-    } else {
-      x = plate.x;
-    }
-    return { x: x, y: plate.y - liftFrac }; // lifted so the treat on the plate stays visible
-  }
-
-  function makeCatEl(c) {
-    var cat = catById(c.id);
-    var el = document.createElement('button');
-    el.type = 'button';
-    el.className = 'cf-cat';
-    el.setAttribute('data-cat', c.id);
-    el.setAttribute('aria-label', cat ? cat.name : '');
-    var body = document.createElement('span');
-    body.className = 'cf-cat-body';
-    if (cat && cat.art && window.Art && window.Art.stemUrl) {
-      var u = window.Art.stemUrl(cat.art);
-      var oldImg = body.querySelector(':scope > img.art');
-      if (u) {
-        var img = oldImg || document.createElement('img');
-        img.className = 'art';
-        img.alt = '';
-        img.draggable = false;
-        img.src = u;
-        if (!oldImg) body.insertBefore(img, body.firstChild);
-        body.classList.add('art-painted');
-      } else {
-        if (oldImg) oldImg.remove();
-        body.classList.remove('art-painted');
-      }
-      body.dataset.emoji = cat.emoji || '';
-      body.setAttribute('data-e', cat.emoji || '');
-    } else if (window.Art && window.Art.fillAttr) {
-      window.Art.fillAttr(body, 'data-e', cat ? cat.emoji : '');
-    } else {
-      body.setAttribute('data-e', cat ? cat.emoji : '');
-    }
-    el.appendChild(body);
-    if (cat && cat.acc) {
-      var acc = document.createElement('span');
-      acc.className = 'cf-cat-acc';
-      if (window.Art && window.Art.fillAttr) window.Art.fillAttr(acc, 'data-e', cat.acc);
-      else acc.setAttribute('data-e', cat.acc);
-      el.appendChild(acc);
-    }
-    el.addEventListener('click', function () { cuddle(c); }); // CF-09: any visible phase is a safe cuddle
-    return el;
-  }
-
-  function renderCats() {
-    if (!els || !els.cats) return;
-    if (!geom) measure();
-    var alive = {}, i, uid;
-    for (i = 0; i < state.cats.length; i++) alive[state.cats[i].uid] = true;
-    for (uid in catEls) {
-      if (!alive[uid]) { // gone: drop the node (no leaks, TD §10)
-        if (catEls[uid].parentNode) catEls[uid].parentNode.removeChild(catEls[uid]);
-        delete catEls[uid];
-      }
-    }
-    // Create/append any missing cat elements first so their boxes can be
-    // measured — the lift (catH/plateH/stageH) only becomes exact once a cat
-    // node exists in the layout. Positioning happens after re-measure() below.
-    for (i = 0; i < state.cats.length; i++) {
-      var c = state.cats[i];
-      var el = catEls[c.uid];
-      if (!el) { el = makeCatEl(c); catEls[c.uid] = el; els.cats.appendChild(el); }
-    }
-    // Re-measure now that cat boxes exist so liftFrac uses a real catH.
-    measure();
-    for (i = 0; i < state.cats.length; i++) {
-      var c = state.cats[i];
-      var el = catEls[c.uid];
-      var pos = catPos(c);
-      el.style.left = (pos.x * 100) + '%';
-      el.style.top = (pos.y * 100) + '%';
-      el.style.setProperty('--dir', String(catDir(c)));
-      /* Walk-bob: a per-frame transform value from the game clock (never a CSS
-         animation loop), zero while sitting/eating and under reduced motion. */
-      var moving = c.phase === 'entering' || c.phase === 'leaving';
-      var bob = moving && !reduceMotion ? Math.sin((state.clock + c.uid * 90) / 110) * -BOB_PX : 0;
-      el.style.setProperty('--bob', bob.toFixed(2) + 'px');
-    }
-  }
-
-  /* ---- gifts, the growing forest and particles (CF-08; TD §5, §7, §10) --
+/* ---- gifts, the growing forest and particles (CF-08; TD §5, §7, §10) --
      A finished visit leaves a gift on the freed plate; tapping it flies the
      gift to the next decor slot and it becomes scenery. Everything is
      logic-driven off the game clock (a one-shot decor fade-in is the only CSS
@@ -990,27 +995,20 @@ function geomPlate(idx) {
      capped gift leaves with the normal animation (CF-08 step 2). */
   function collectGift(gift) {
     var i = state.gifts.indexOf(gift);
-    if (i === -1) return;
+    if (i === -1) return false;
     state.gifts.splice(i, 1);
+    state.keepsakes.push(gift.emoji);
     var plate = geomPlate(gift.plate);
-    var from = { x: plate.x, y: plate.y - DECOR_LIFT };
-    var slot = decorOrder[state.decorCollected % CF.DECOR_MAX];
-    state.decorCollected++;
-    spendSparkle(from.x, from.y - 0.02);
+    spendSparkle(plate.x, plate.y - DECOR_LIFT - 0.02);
     if (window.softPop && giftEls[gift.uid]) window.softPop(giftEls[gift.uid]);
     if (window.tone) {
       window.tone(880, 0.09, 0, 'sine', 0.18);
       window.tone(1174, 0.1, 0.07, 'sine', 0.12);
     }
-    if (reduceMotion) {
-      landDecor(gift.emoji, slot); // no flight: the gift fades, the decoration fades in
-    } else {
-      state.flights.push({
-        uid: ++uidSeq, emoji: gift.emoji, from: from,
-        to: { x: DECOR_SLOTS[slot].x, y: DECOR_SLOTS[slot].y },
-        t: 0, dur: CF.GIFT_FLY_MS, slot: slot
-      });
-    }
+    renderKeepsakeBasket();
+    renderRecipeGrid();
+    save();
+    return true;
   }
 
   function landDecor(emoji, slot) {
@@ -1128,17 +1126,35 @@ function geomPlate(idx) {
   }
 
   function renderDecor() {
-    if (!els || !els.decor) return;
-    var alive = {}, i, uid;
-    for (i = 0; i < state.decor.length; i++) alive[state.decor[i].uid] = true;
-    for (uid in decorEls) if (!alive[uid]) { removeNode(decorEls[uid]); delete decorEls[uid]; }
-    for (i = 0; i < state.decor.length; i++) {
-      var d = state.decor[i], el = decorEls[d.uid];
-      if (!el) { el = makeDecorEl(d.e); decorEls[d.uid] = el; els.decor.appendChild(el); }
-      var s = DECOR_SLOTS[d.s] || DECOR_SLOTS[0];
-      el.style.left = (s.x * 100) + '%';
-      el.style.top = (s.y * 100) + '%';
+    if (!els || !els.anchors) return;
+    for (var i = 0; i < els.anchors.length; i++) {
+      var button = els.anchors[i];
+      var anchor = DECOR_ANCHORS[i];
+      if (anchor) {
+        button.style.left = (anchor.x * 100) + '%';
+        button.style.top = (anchor.y * 100) + '%';
+      }
+      var item = state.decor.filter(function (d) { return d.s === i; })[0] || null;
+      button.classList.toggle('has-decor', !!item);
+      button.setAttribute('aria-label', item ? 'Украс баште' : 'Постави украс');
+      button.setAttribute('aria-pressed', item ? 'true' : 'false');
+      var anchorVisible = !!item || state.selectedCraftedId !== null;
+      button.tabIndex = anchorVisible ? 0 : -1;
+      button.setAttribute('aria-hidden', anchorVisible ? 'false' : 'true');
+      if (item) {
+        if (window.Art && window.Art.fillAttr) window.Art.fillAttr(button, 'data-e', item.e);
+        else button.setAttribute('data-e', item.e);
+      } else {
+        if (window.Art && window.Art.fillAttr) window.Art.fillAttr(button, 'data-e', '');
+        else {
+          button.removeAttribute('data-e');
+          var oldArt = button.querySelector(':scope > img.art');
+          if (oldArt) oldArt.remove();
+          button.classList.remove('art-painted');
+        }
+      }
     }
+    if (els.app) els.app.setAttribute('data-selected-craft', state.selectedCraftedId !== null ? 'true' : 'false');
   }
 
   function renderFx() {
@@ -1493,9 +1509,7 @@ function geomPlate(idx) {
       if (!cat) continue;
       var el = bookCatEls[id];
       if (!el) { el = makeBookCatEl(cat); bookCatEls[id] = el; grid.appendChild(el); }
-      /* The card survives across renders, so only the hearts row needs a
-         refresh: visits grow while the book stays closed. */
-      setBookCatHearts(el, cat);
+      /* Discovered-cat cards are stable until the book closes. */
     }
   }
 
@@ -1521,7 +1535,7 @@ function geomPlate(idx) {
     el.type = 'button';
     el.className = 'cf-book-cat';
     el.setAttribute('data-cat', cat.id);
-    el.setAttribute('aria-label', cat.name);
+    el.setAttribute('aria-label', cat.name + '. ' + (cat.fact || ''));
     var body = document.createElement('span');
     body.className = 'cf-book-cat-body';
     if (cat.art && window.Art && window.Art.stemUrl) {
@@ -1554,7 +1568,19 @@ function geomPlate(idx) {
       else acc.setAttribute('data-e', cat.acc);
       el.appendChild(acc);
     }
-    /* Phase 3 diary: show cat's favorite treats and visit count as hearts. */
+    var name = document.createElement('span');
+    name.className = 'cf-book-cat-name';
+    name.textContent = cat.name;
+    el.appendChild(name);
+    var fact = document.createElement('span');
+    fact.className = 'cf-book-cat-fact';
+    fact.textContent = cat.fact || 'Воли мирне дане.';
+    el.appendChild(fact);
+    var place = document.createElement('span');
+    place.className = 'cf-book-cat-place';
+    place.textContent = cat.place || 'Башта';
+    el.appendChild(place);
+    /* Favourite treats are optional visual clues, never a progress score. */
     var likesRow = document.createElement('div');
     likesRow.className = 'cf-book-cat-likes';
     for (var li = 0; li < cat.likes.length; li++) {
@@ -1571,91 +1597,108 @@ function geomPlate(idx) {
       }
     }
     el.appendChild(likesRow);
-    var heartsRow = document.createElement('div');
-    heartsRow.className = 'cf-book-cat-hearts';
-    el.appendChild(heartsRow);
     el.addEventListener('click', function () { cuddleInBook(cat.id); });
     return el;
   }
 
-  /* ---- persistence (CF-14; TD §9, D4) ------------------------------------
-     Only two facts survive closing the app: which cats the child has met and
-     where the forest grew — cats on stage, plates, selection, time and
-     weather are transient by design (regression risk, card). One key,
-     `{v:2, met:[ids], decor:[{e,s}], fishCount, selectedRecipe, visitCounts, metTimes}`.
-     Every storage call is try/catch'd: a private-mode or quota failure must
-     never cost the child a working game (racing3d.mjs:138-159 idiom). Saves
-     happen on a cat's first sit and on a decoration landing — never in the
-     render loop. The parent's reset
-     («Обриши локални напредак», parent.html:471-477) is localStorage.clear(),
-     so it wipes this key too: no extra reset wiring exists anywhere. */
+  /* ---- persistence: schema v3 for the expanded village -----------------
+     v2 is migrated without losing discovered cats, fish, wood or decorations.
+     v1 is intentionally discarded on this full-overhaul version bump. */
   var SAVE_KEY = 'catForestSave';
 
   function loadSave() {
-    var out = { met: [], decor: [], fishCount: 0, woodCount: 0, selectedRecipe: null, visitCounts: {}, metTimes: {} };
+    var out = {
+      met: [], decor: [], fishCount: 0, woodCount: 0, keepsakes: [], crafted: [],
+      scene: DEFAULT_SCENE, time: 'day', weather: 'clear', visitCounts: {}, metTimes: {}
+    };
     try {
       var raw = localStorage.getItem(SAVE_KEY);
       if (!raw) return out;
       var s = JSON.parse(raw);
-      /* Unknown version or shape → a fresh start (TD §9), never a throw.
-         v1 migrates to v2 in place: met cats, forest decor and fish are
-         preserved (plan §4.6 / §3.5 "never remove a recorded cat"); the new
-         v2 fields simply default empty. */
-      if (!s || typeof s !== 'object' || (s.v !== 1 && s.v !== 2)) return out;
-      var i, id, d;
-      if (s.met instanceof Array) {
+      if (!s || typeof s !== 'object' || (s.v !== 2 && s.v !== 3)) return out;
+      var i, id, d, slot, used = {};
+      if (Array.isArray(s.met)) {
         for (i = 0; i < s.met.length; i++) {
           id = s.met[i];
           if (typeof id === 'string' && catById(id) && out.met.indexOf(id) === -1) out.met.push(id);
         }
       }
-      if (s.decor instanceof Array) {
-        for (i = 0; i < s.decor.length && out.decor.length < CF.DECOR_MAX; i++) {
-          d = s.decor[i];
-          if (d && typeof d === 'object' && (GIFTS.indexOf(d.e) !== -1 || RECIPES.some(function (r) { return r.emoji === d.e; })) &&
-              typeof d.s === 'number' && (d.s | 0) === d.s && d.s >= 0 && d.s < CF.DECOR_MAX) {
-            out.decor.push({ uid: ++uidSeq, e: d.e, s: d.s });
+      var resources = s.v === 3 && s.resources && typeof s.resources === 'object' ? s.resources : s;
+      if (Number.isInteger(resources.fish) && resources.fish >= 0) out.fishCount = Math.min(resources.fish, FISH_BASKET_CAP);
+      else if (Number.isInteger(s.fishCount) && s.fishCount >= 0) out.fishCount = Math.min(s.fishCount, FISH_BASKET_CAP);
+      if (Number.isInteger(resources.wood) && resources.wood >= 0) out.woodCount = Math.min(resources.wood, WOOD_BASKET_CAP);
+      else if (Number.isInteger(s.woodCount) && s.woodCount >= 0) out.woodCount = Math.min(s.woodCount, WOOD_BASKET_CAP);
+
+      if (s.v === 3) {
+        if (Array.isArray(s.keepsakes)) {
+          for (i = 0; i < s.keepsakes.length; i++) if (GIFTS.indexOf(s.keepsakes[i]) !== -1) out.keepsakes.push(s.keepsakes[i]);
+        }
+        if (Array.isArray(s.crafted)) {
+          for (i = 0; i < s.crafted.length; i++) {
+            d = s.crafted[i];
+            if (d && typeof d === 'object' && typeof d.e === 'string' &&
+                (RECIPES.some(function (r) { return r.emoji === d.e; }) || GIFTS.indexOf(d.e) !== -1)) {
+              out.crafted.push({ uid: ++uidSeq, id: typeof d.id === 'string' ? d.id : 'stored-' + i, emoji: d.e });
+            }
+          }
+        }
+        if (Array.isArray(s.placedDecorations)) {
+          for (i = 0; i < s.placedDecorations.length; i++) {
+            d = s.placedDecorations[i];
+            if (!d || typeof d !== 'object' || typeof d.e !== 'string' ||
+                (RECIPES.every(function (r) { return r.emoji !== d.e; }) && GIFTS.indexOf(d.e) === -1) ||
+                !Number.isInteger(d.s) || d.s < 0 || d.s >= DECOR_ANCHORS.length || used[d.s]) continue;
+            used[d.s] = true;
+            out.decor.push({ uid: ++uidSeq, id: typeof d.id === 'string' ? d.id : 'placed-' + i, e: d.e, s: d.s });
+          }
+        }
+        if (SCENES.indexOf(s.scene) !== -1) out.scene = s.scene;
+        if (s.settings && typeof s.settings === 'object') {
+          if (s.settings.time === 'day' || s.settings.time === 'night') out.time = s.settings.time;
+          if (s.settings.weather === 'clear' || s.settings.weather === 'rain') out.weather = s.settings.weather;
+        }
+      } else {
+        /* v2 -> v3: retain old garden decorations at stable anchors; extras
+           move into storage instead of being discarded. */
+        if (Array.isArray(s.decor)) {
+          for (i = 0; i < s.decor.length; i++) {
+            d = s.decor[i];
+            if (!d || typeof d !== 'object' || typeof d.e !== 'string' ||
+                (RECIPES.every(function (r) { return r.emoji !== d.e; }) && GIFTS.indexOf(d.e) === -1)) continue;
+            slot = -1;
+            for (var a = 0; a < DECOR_ANCHORS.length; a++) if (!used[a]) { slot = a; break; }
+            if (slot !== -1) {
+              used[slot] = true;
+              out.decor.push({ uid: ++uidSeq, id: 'legacy-' + i, e: d.e, s: slot });
+            } else {
+              out.crafted.push({ uid: ++uidSeq, id: 'legacy-' + i, emoji: d.e });
+            }
           }
         }
       }
-      if (typeof s.fishCount === 'number' && (s.fishCount | 0) === s.fishCount && s.fishCount >= 0) {
-        out.fishCount = Math.min(s.fishCount, FISH_BASKET_CAP);
+      if (s.visitCounts && typeof s.visitCounts === 'object') {
+        for (var vk in s.visitCounts) if (catById(vk) && Number.isInteger(s.visitCounts[vk]) && s.visitCounts[vk] >= 0) out.visitCounts[vk] = s.visitCounts[vk];
       }
-      if (typeof s.woodCount === 'number' && (s.woodCount | 0) === s.woodCount && s.woodCount >= 0) {
-        out.woodCount = Math.min(s.woodCount, WOOD_BASKET_CAP);
+      if (s.metTimes && typeof s.metTimes === 'object') {
+        for (var vkt in s.metTimes) if (catById(vkt) && typeof s.metTimes[vkt] === 'number' && s.metTimes[vkt] >= 0) out.metTimes[vkt] = s.metTimes[vkt];
       }
-      if (typeof s.selectedRecipe === 'string' && RECIPES.some(function (r) { return r.id === s.selectedRecipe; })) {
-        out.selectedRecipe = s.selectedRecipe;
-      }
-      if (typeof s.visitCounts === 'object') {
-        for (var vk in s.visitCounts) {
-          if (typeof s.visitCounts[vk] === 'number' && (s.visitCounts[vk] | 0) === s.visitCounts[vk] && s.visitCounts[vk] >= 0) {
-            out.visitCounts[vk] = s.visitCounts[vk];
-          }
-        }
-      }
-      if (typeof s.metTimes === 'object') {
-        for (var vkt in s.metTimes) {
-          if (typeof s.metTimes[vkt] === 'number' && s.metTimes[vkt] >= 0) {
-            out.metTimes[vkt] = s.metTimes[vkt];
-          }
-        }
-      }
-    } catch (e) { /* corrupt or unavailable storage: fresh start */ }
+    } catch (e) { /* malformed or unavailable storage: fresh start */ }
     return out;
   }
 
   function save() {
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify({
-        v: 2,
+        v: 3,
         met: state.met.slice(),
-        decor: state.decor.map(function (d) { return { e: d.e, s: d.s }; }),
-        selectedRecipe: state.selectedRecipe,
+        resources: { fish: state.fishCount, wood: state.woodCount },
+        keepsakes: state.keepsakes.slice(),
+        crafted: state.crafted.map(function (d) { return { id: d.id, e: d.emoji }; }),
+        placedDecorations: state.decor.map(function (d) { return { id: d.id, e: d.e, s: d.s }; }),
+        scene: state.scene,
+        settings: { time: state.time, weather: state.weather },
         visitCounts: state.visitCounts,
-        metTimes: state.metTimes,
-        fishCount: state.fishCount,
-        woodCount: state.woodCount
+        metTimes: state.metTimes
       }));
     } catch (e) { /* private mode / quota: play on */ }
   }
@@ -1696,7 +1739,12 @@ function geomPlate(idx) {
       met: state.met.slice(),
       fishCount: state.fishCount,
       woodCount: state.woodCount,
+      keepsakes: state.keepsakes.slice(),
+      crafted: state.crafted.map(function (item) { return { uid: item.uid, id: item.id, emoji: item.emoji }; }),
+      placedDecorations: state.decor.map(function (d) { return { e: d.e, s: d.s }; }),
+      scene: state.scene,
       selectedRecipe: state.selectedRecipe,
+      selectedCraftedId: state.selectedCraftedId,
       idle: { sinceMs: state.idle.sinceMs, hints: state.idle.hints, firstDone: state.idle.firstDone },
       timers: {
         arrive: state.plates.filter(function (p) { return p.state === 'treat'; }).map(function (p) { return p.arriveMs; }),
@@ -1716,11 +1764,15 @@ function geomPlate(idx) {
     var saved = loadSave();
     state.met = saved.met;
     state.decor = saved.decor;
-    state.selectedRecipe = saved.selectedRecipe;
+    state.keepsakes = saved.keepsakes;
+    state.crafted = saved.crafted;
     state.visitCounts = saved.visitCounts;
     state.metTimes = saved.metTimes;
     state.fishCount = saved.fishCount;
     state.woodCount = saved.woodCount;
+    state.scene = saved.scene;
+    state.time = saved.time;
+    state.weather = saved.weather;
 
     cacheEls();
     paintStaticGlyphs();
@@ -1762,16 +1814,26 @@ function geomPlate(idx) {
       openBook: openBook,     // CF-15: the exact functions the buttons call
       closeBook: closeBook,
       /* Test-only helpers for deterministic resource/workshop persistence coverage. */
-      setResources: function (fish, wood) {
+      setResources: function (fish, wood, keepsakes) {
         state.fishCount = Math.max(0, Math.min(FISH_BASKET_CAP, fish | 0));
         state.woodCount = Math.max(0, Math.min(WOOD_BASKET_CAP, wood | 0));
-        renderFishBasket(); renderWoodBasket(); save();
+        if (Array.isArray(keepsakes)) state.keepsakes = keepsakes.filter(function (g) { return GIFTS.indexOf(g) !== -1; });
+        else if (Number.isInteger(keepsakes) && keepsakes > 0) state.keepsakes = Array(keepsakes).fill('🌸');
+        render(); save();
       },
       selectRecipe: selectRecipe,
       craftNow: craftNow,
+      selectCrafted: selectCrafted,
+      placeCrafted: placeCrafted,
+      removeDecoration: removeDecoration,
+      setScene: setScene,
+      setMet: function (ids) {
+        state.met = (ids || []).filter(function (id, i, list) { return catById(id) && list.indexOf(id) === i; });
+        save(); renderBook(); return state.met.length;
+      },
       /* Read-only view of the DATA tables so the smoke can assert the roster
          (AC5). Inspection only — nothing here changes behaviour. */
-      data: { treats: TREATS, cats: CATS, gifts: GIFTS, anchors: FEED_ANCHORS }
+      data: { treats: TREATS, cats: CATS, gifts: GIFTS, recipes: RECIPES, anchors: FEED_ANCHORS, decorAnchors: DECOR_ANCHORS }
     };
 
     els.treats.forEach(function (el) {
@@ -1796,6 +1858,13 @@ function geomPlate(idx) {
     els.workshopBack.addEventListener('click', function () { setScene('village'); });
     els.workshopPath.addEventListener('click', function () { setScene('workshop'); });
     if (els.craftBtn) els.craftBtn.addEventListener('click', function () { craftNow(); });
+    if (els.anchors) els.anchors.forEach(function (el) {
+      el.addEventListener('click', function () {
+        var index = Number(this.getAttribute('data-anchor'));
+        if (state.selectedCraftedId !== null) placeCrafted(index);
+        else removeDecoration(index);
+      });
+    });
 
     /* Phase 3 woodland gathering: tap the gather spot → wood +1 in the basket.
        Generous collection; no failure state, no timer, no shortage. */
@@ -1803,6 +1872,7 @@ function geomPlate(idx) {
       if (state.woodCount < WOOD_BASKET_CAP) {
         state.woodCount++;
         renderWoodBasket();
+        renderRecipeGrid();
         save();
       }
       if (window.tone) {

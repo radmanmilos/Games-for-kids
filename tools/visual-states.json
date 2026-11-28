@@ -33,8 +33,13 @@
     "PLAY": "(() => { const i = document.querySelector('.sort-item'); if (!i) return false; i.click(); return i.classList.contains('sort-selected'); })()"
   },
   "cat_forest": {
-    "INIT": "true",
-    "PLAY": "(() => { const hk = window.__catForest; if (!hk) return false; hk.seed(7); hk.place('fish', 0); let g = 0; while (g++ < 400 && !hk.state().cats.some(c => c.phase === 'sitting')) hk.step(50); return hk.state().cats.some(c => c.phase === 'sitting'); })()"
+    "INIT": "(() => { const hk=window.__catForest; hk.reset(); return true; })()",
+    "PLAY": "(() => { const hk=window.__catForest; hk.reset(); hk.seed(7); hk.place('fish', 0); let g = 0; while (g++ < 400 && !hk.state().cats.some(c => c.phase === 'sitting')) hk.step(50); return hk.state().cats.some(c => c.phase === 'sitting'); })()",
+    "POND": "(() => { const hk=window.__catForest; hk.reset(); hk.setResources(12,0,[]); hk.setScene('pond'); return true; })()",
+    "WOODLAND": "(() => { const hk=window.__catForest; hk.reset(); hk.setResources(0,18,[]); hk.setScene('woodland'); return true; })()",
+    "WORKSHOP": "(() => { const hk=window.__catForest; hk.reset(); hk.setResources(0,8,['🌸','🍀','🦋','🌷','🍄']); hk.setScene('workshop'); hk.selectRecipe('bench'); hk.craftNow(); return true; })()",
+    "DECOR": "(() => { const hk=window.__catForest; hk.reset(); hk.setResources(0,5,['🌸','🍀']); hk.selectRecipe('pot'); hk.craftNow(); hk.placeCrafted(0); hk.selectRecipe('birdhouse'); hk.craftNow(); hk.placeCrafted(1); hk.setScene('village'); return true; })()",
+    "DIARY": "(() => { const hk=window.__catForest; hk.reset(); hk.setMet(['maca','mica','puhko','senka']); document.getElementById('cf-friends').click(); return !document.getElementById('cf-book').hidden; })()"
   },
   "phonics": {
     "INIT": "true",
@@ -57,7 +62,7 @@
   "dino": {
     "INIT": "true"
   },
-"driving": {
+  "driving": {
     "INIT": "true",
     "WORLD_1": "(() => { const a = window.__adv; if (!a) return false; for (let i = 0; i < 1; i++) a.nextLevel(); return true; })()",
     "WORLD_2": "(() => { const a = window.__adv; if (!a) return false; for (let i = 0; i < 2; i++) a.nextLevel(); return true; })()",
@@ -68,7 +73,7 @@
     "WORLD_7": "(() => { const a = window.__adv; if (!a) return false; for (let i = 0; i < 7; i++) a.nextLevel(); return true; })()",
     "WORLD_8": "(() => { const a = window.__adv; if (!a) return false; for (let i = 0; i < 8; i++) a.nextLevel(); return true; })()",
     "WORLD_9": "(() => { const a = window.__adv; if (!a) return false; for (let i = 0; i < 9; i++) a.nextLevel(); return true; })()"
-},
+  },
   "ocean": {
     "INIT": "true"
   },

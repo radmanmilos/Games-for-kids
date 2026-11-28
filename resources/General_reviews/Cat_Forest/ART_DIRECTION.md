@@ -73,3 +73,16 @@ Keep overall scenes soft; keep controls high-contrast (plan §5.6).
 - One tail per cat; no M/letter forehead markings; no collars with text.
 - Baskets read as fish baskets, not bowls/buckets.
 - Decorations are single objects, no clutter, no baked-in sky/ground line.
+
+
+## Task 467 — scene implementation note (2026-11-28)
+
+Four original, local SVG scene illustrations now provide the village, pond,
+woodland and workshop backdrops under `game/assets/scenes/`. They use the
+guide's warm wood, cream, terracotta, sage and dusty-blue palette, layered
+diorama composition, organic silhouettes, soft shading and a subtle paper/wash
+treatment. These are watercolor-inspired vector scene paintings, not emoji
+artwork and not raster cut-outs. The four approved prototypes above remain the
+visual reference. The new scene set must be judged from the refreshed
+four-viewport Screenshot_Review battery before the owner flips the registry's
+`screenshot:false` baseline gate; screenshot capture alone is not approval.

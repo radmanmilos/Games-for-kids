@@ -65,17 +65,14 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   const hook = await h.evalv(`typeof window.__catForest.state === 'function' && typeof window.__catForest.state() === 'object'`);
   check('the test hook exposes state() as a JSON-safe snapshot (TD §8)', hook === true, String(hook));
 
-  // T326: the static decor (trees, stars) paints through CSS
-  // `::before{content:attr(data-e)}`; an empty attribute renders NOTHING, so
-  // every static glyph site must carry its glyph (T301 blanked these).
+  // The four scenes use separate offline watercolor SVG backgrounds.
   const staticGlyphs = JSON.parse(await h.evalv(`JSON.stringify({
-    trees: [...document.querySelectorAll('.cf-tree')].map(e => e.getAttribute('data-e') || ''),
+    src: document.getElementById('cf-scene-bg').getAttribute('src'),
     stars: [...document.querySelectorAll('.cf-star')].map(e => e.getAttribute('data-e') || '')
   })`));
-  check('static decor keeps its glyph (trees + stars are not blank)',
-    staticGlyphs.trees.length > 0 && staticGlyphs.stars.length > 0 &&
-    staticGlyphs.trees.every(Boolean) && staticGlyphs.stars.every(Boolean),
-    JSON.stringify(staticGlyphs));
+  check('the village loads its own scene illustration and stars retain their glyphs',
+    staticGlyphs.src.includes('cat-forest-village.svg') && staticGlyphs.stars.length > 0
+      && staticGlyphs.stars.every(Boolean), JSON.stringify(staticGlyphs));
 
   const g = await backGeometry(h);
   check('the back control is inside the viewport and hit-testable', g.found && g.inside && g.hit, JSON.stringify(g));
@@ -136,6 +133,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
       treats: all('.cf-treat').map(box),
       plates: all('.cf-plate').map(box),
       toggles: all('#cf-daynight, #cf-rain-btn').map(box),
+      nav: all('#cf-world-nav button').map(box),
       scrollW: document.documentElement.scrollWidth, scrollH: document.documentElement.scrollHeight,
       vw: innerWidth, vh: innerHeight,
       text: document.body.innerText.trim(),
@@ -152,7 +150,8 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     { name: '1024x800 tablet', width: 1024, height: 800, min: 72 },
     { name: '1280x800 desktop', width: 1280, height: 800, min: 72 },
     { name: '844x390 short landscape', width: 844, height: 390, min: 56 },
-    { name: '390x844 portrait', width: 390, height: 844, min: 56 },
+    { name: '390x844 portrait', width: 390, height: 844, min: 48 },
+    { name: '320x568 small portrait', width: 320, height: 568, min: 48 },
   ]) {
     const hv = await start({ page: '/pages/cat_forest.html', tag: `cat-forest-stage-${vp.width}x${vp.height}`, width: vp.width, height: vp.height });
     let laidOut = false;
@@ -161,18 +160,20 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
       if (!laidOut) await sleep(100);
     }
     const m = await stageGeometry(hv);
-    check(`${vp.name}: 5 treats, 3 plates and 2 toggles render`,
-      m.treats.length === 5 && m.plates.length === 3 && m.toggles.length === 2,
-      `treats=${m.treats.length} plates=${m.plates.length} toggles=${m.toggles.length}`);
+    check(`${vp.name}: 5 treats, 3 plates, 2 settings and 4 scene-navigation buttons render`,
+      m.treats.length === 5 && m.plates.length === 3 && m.toggles.length === 2 && m.nav.length === 4,
+      `treats=${m.treats.length} plates=${m.plates.length} toggles=${m.toggles.length} nav=${m.nav.length}`);
     check(`${vp.name}: every control is inside the viewport and hit-testable`,
-      [...m.treats, ...m.plates, ...m.toggles].every(b => b.inside && b.hit),
-      JSON.stringify([...m.treats, ...m.plates, ...m.toggles]));
+      [...m.treats, ...m.plates, ...m.toggles, ...m.nav].every(b => b.inside && b.hit),
+      JSON.stringify([...m.treats, ...m.plates, ...m.toggles, ...m.nav]));
     check(`${vp.name}: treats and plates are at least ${vp.min}px`,
       [...m.treats, ...m.plates].every(b => Math.min(b.w, b.h) >= vp.min),
       [...m.treats, ...m.plates].map(b => `${Math.round(b.w)}x${Math.round(b.h)}`).join(' '));
-    check(`${vp.name}: toggles are at least 56px`,
-      m.toggles.every(b => Math.min(b.w, b.h) >= 56),
-      m.toggles.map(b => `${Math.round(b.w)}x${Math.round(b.h)}`).join(' '));
+    check(`${vp.name}: settings are >=56px and scene navigation is >=48px`,
+      m.toggles.every(b => Math.min(b.w,b.h)>=56)
+        && m.nav.every(b => b.inside && b.hit && Math.min(b.w,b.h)>=48),
+      JSON.stringify({toggles:m.toggles.map(b=>[Math.round(b.w),Math.round(b.h)]),
+        nav:m.nav.map(b=>[Math.round(b.w),Math.round(b.h),b.inside,b.hit])}));
     check(`${vp.name}: the stage does not scroll`, m.scrollW <= m.vw + 1 && m.scrollH <= m.vh + 1,
       `${m.scrollW}x${m.scrollH} in ${m.vw}x${m.vh}`);
     check(`${vp.name}: no visible text (body.innerText is empty)`, m.text === '', JSON.stringify(m.text));
@@ -261,7 +262,7 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     EAT_MIN: 8000, EAT_MAX: 14000,
     LEAVE_MIN: 2200, LEAVE_MAX: 3000,
     UNLIKED_FACTOR: 0.25,
-    GIFT_CAP: 5, DECOR_MAX: 14, GIFT_FLY_MS: 600, PARTICLE_CAP: 12,
+    GIFT_CAP: 5, DECOR_MAX: 4, GIFT_FLY_MS: 600, PARTICLE_CAP: 12,
     SPEECH_GAP_MS: 1500, MEOW_GAP_MS: 300,
     IDLE_HINT_MS: 10000, FIRST_HINT_MS: 1500, HINT_MS: 1200, HINT_REPEAT_MAX: 3,
     RAIN_DROPS: 24, DROP_PAD: 24, DRAG_START_PX: 8,
@@ -748,11 +749,11 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
   await h7.close();
   await h4.close();
 
-  /* ---- CF-08: gifts and the growing forest (TP §3.7) ---------------------
-     A finished visit leaves a gift on the freed plate; tapping it flies to the
-     next decor slot and becomes scenery. Each scenario is one fresh page.
-     Headless Chrome defaults prefers-reduced-motion to reduce, so the mode is
-     pinned explicitly and the page is reloaded for the engine to read it. */
+  /* ---- CF-08: cat gifts become keepsakes; crafting and placement are reversible ----
+     A finished visit leaves a gift on its plate. Collecting stores it as a
+     keepsake; it does not place scenery automatically. The workbench consumes
+     wood + the matching keepsake, and the four fixed garden anchors return an
+     old decoration to storage when replaced. */
   const bootEmulated = async (tag, width, height, value) => {
     const hh = await start({ page: '/pages/cat_forest.html', tag, width: width || 1024, height: height || 800 });
     await hh.c.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] });
@@ -764,47 +765,6 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     return hh;
   };
 
-  const h8 = await bootEmulated('cf08-gifts', 1024, 800, 'no-preference');
-
-  const b1 = await h8.evalv(`(() => {
-    const hk = window.__catForest; hk.seed(21);
-    hk.place('fish', 0);
-    for (let i = 0; i < 400 && hk.state().cats.length === 0; i++) hk.step(50);
-    for (let i = 0; i < 2000 && hk.state().cats.length; i++) hk.step(50);
-    const s = hk.state();
-    const g = document.querySelector('#cf-gifts .cf-gift');
-    const pr = document.querySelector('.cf-plate[data-plate="0"]').getBoundingClientRect();
-    if (!g) return { gifts: s.gifts.length, node: false };
-    const r = g.getBoundingClientRect();
-    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-    const hit = document.elementFromPoint(cx, cy);
-    return { gifts: s.gifts.length, node: true, hit: !!(hit && (hit === g || g.contains(hit))),
-      dx: Math.round(Math.abs(cx - (pr.left + pr.width / 2))), dy: Math.round(Math.abs(cy - (pr.top + pr.height / 2))),
-      w: Math.round(r.width), h: Math.round(r.height) };
-  })()`);
-  check('after a visit one gift exists at the plate position and is hit-testable (AC1)',
-    b1.gifts === 1 && b1.node && b1.hit && b1.dx < 8 && b1.dy < 40 && Math.min(b1.w, b1.h) >= 72,
-    JSON.stringify(b1));
-
-  const b2 = await h8.evalv(`(() => {
-    const hk = window.__catForest;
-    const before = hk.state().decor.length;
-    const g = document.querySelector('#cf-gifts .cf-gift');
-    if (g) g.click();
-    const removed = hk.state().gifts.length;
-    hk.step(50); // one render so the flight node exists
-    const flying = document.querySelectorAll('#cf-fx .cf-fly').length;
-    hk.step(hk.state().config.GIFT_FLY_MS + 200);
-    const s = hk.state();
-    return { before: before, removed: removed, after: s.decor.length, gifts: s.gifts.length,
-      flying: flying, fly: document.querySelectorAll('#cf-fx .cf-fly').length,
-      nodes: document.querySelectorAll('#cf-decor .cf-decor-item').length };
-  })()`);
-  check('tapping the gift removes it, it flies, and the forest grows by one decoration (AC2)',
-    b2.removed === 0 && b2.flying === 1 && b2.after === b2.before + 1 && b2.gifts === 0
-      && b2.fly === 0 && b2.nodes === b2.after, JSON.stringify(b2));
-
-  /* A visit is driven only by the game clock; collecting taps the real button. */
   const VISIT = `const treats = ['fish','milk','chicken','sushi','cookie'];
     const visit = () => {
       const empty = hk.state().plates.filter(p => p.state === 'empty');
@@ -815,80 +775,129 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     };
     const collectFirst = () => {
       const g = document.querySelector('#cf-gifts .cf-gift');
-      if (g) { g.click(); hk.step(hk.state().config.GIFT_FLY_MS + 200); }
+      if (g) { g.click(); hk.step(50); }
     };`;
 
-  /* AC3: six visits without collecting — the uncollected cap auto-collects the
-     oldest so the child is never blocked. */
-  const b3 = await bootFresh('cf08-cap');
-  const c3 = await b3.evalv(`(() => { const hk = window.__catForest; hk.seed(31);
-    ${VISIT}
-    const counts = [];
-    for (let n = 0; n < 6; n++) { visit(); counts.push(hk.state().gifts.length); }
-    hk.step(700);
-    return { counts: counts, gifts: hk.state().gifts.length,
-      nodes: document.querySelectorAll('#cf-gifts .cf-gift').length, decor: hk.state().decor.length };
+  const h8 = await bootEmulated('cf08-keepsakes', 1024, 800, 'no-preference');
+  const b1 = await h8.evalv(`(() => {
+    const hk = window.__catForest; hk.seed(21); hk.place('fish', 0);
+    for (let i = 0; i < 400 && hk.state().cats.length === 0; i++) hk.step(50);
+    for (let i = 0; i < 4000 && hk.state().cats.length; i++) hk.step(50);
+    const s = hk.state(), g = document.querySelector('#cf-gifts .cf-gift');
+    const pr = document.querySelector('.cf-plate[data-plate="0"]').getBoundingClientRect();
+    if (!g) return { gifts:s.gifts.length, node:false };
+    const r=g.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2, hit=document.elementFromPoint(cx,cy);
+    return { gifts:s.gifts.length,node:true,hit:!!(hit&&(hit===g||g.contains(hit))),
+      dx:Math.round(Math.abs(cx-(pr.left+pr.width/2))),dy:Math.round(Math.abs(cy-(pr.top+pr.height/2))),
+      w:Math.round(r.width),h:Math.round(r.height) };
   })()`);
-  check('six visits leave at most five uncollected gifts — the oldest auto-collects (AC3)',
-    c3.counts.every(c => c <= 5) && c3.gifts === 5 && c3.nodes === c3.gifts && c3.decor >= 1,
-    JSON.stringify(c3));
+  check('a finished visit leaves one tappable gift at its feeding place',
+    b1.gifts===1&&b1.node&&b1.hit&&b1.dx<8&&b1.dy<40&&Math.min(b1.w,b1.h)>=72,JSON.stringify(b1));
 
-  /* AC4: the decor cap means the forest never fills up, and the shuffled slots
-     stay distinct while it grows. */
-  const b4 = await bootFresh('cf08-decor');
-  const c4 = await b4.evalv(`(() => { const hk = window.__catForest; hk.seed(41);
-    ${VISIT}
-    const marks = [];
-    for (let n = 0; n < 16; n++) { visit(); collectFirst(); marks.push(hk.state().decor.length); }
-    return { marks: marks, decor: hk.state().decor.length,
-      nodes: document.querySelectorAll('#cf-decor .cf-decor-item').length,
-      slots: hk.state().decor.map(d => d.s) };
+  const b2 = await h8.evalv(`(() => {
+    const hk=window.__catForest, before=hk.state().decor.length;
+    const g=document.querySelector('#cf-gifts .cf-gift'); if(g)g.click();
+    const st=hk.state();
+    return { gifts:st.gifts.length,keepsakes:st.keepsakes.length,decor:st.decor.length,
+      flights:st.flights.length,flightNodes:document.querySelectorAll('#cf-fx .cf-fly').length };
   })()`);
-  check('with 14 decorations, collecting one more keeps 14 (AC4)',
-    c4.decor === 14 && c4.nodes === 14 && c4.marks.indexOf(15) === -1
-      && new Set(c4.slots).size === c4.slots.length,
-    JSON.stringify({ decor: c4.decor, nodes: c4.nodes, saw15: c4.marks.indexOf(15) !== -1 }));
+  check('collecting a cat gift stores one keepsake and does not auto-place a decoration',
+    b2.gifts===0&&b2.keepsakes===1&&b2.decor===0&&b2.flights===0&&b2.flightNodes===0,JSON.stringify(b2));
 
-  /* AC5: with a full forest the decorations never block a control (they are
-     aria-hidden and pointer-events:none). */
-  for (const vp of [{ name: '1024x800 tablet', width: 1024, height: 800 },
-    { name: '844x390 short landscape', width: 844, height: 390 }]) {
-    const hv = await bootFresh(`cf08-geom-${vp.width}`, vp.width, vp.height);
-    const seeded = await hv.evalv(`(() => { const hk = window.__catForest; hk.seed(51);
-      ${VISIT}
-      for (let n = 0; n < 15; n++) { visit(); collectFirst(); }
-      return hk.state().decor.length; })()`);
-    const m = await stageGeometry(hv);
-    check(`${vp.name}: with 14 decorations every treat, plate and toggle is still hit-testable (AC5)`,
-      seeded === 14 && [...m.treats, ...m.plates, ...m.toggles].every(b => b.inside && b.hit),
-      `decor=${seeded} ` + JSON.stringify([...m.treats, ...m.plates, ...m.toggles]));
-    await hv.close();
+  const b3 = await bootFresh('cf08-keepsake-cap');
+  const c3 = await b3.evalv(`(() => { const hk=window.__catForest; hk.seed(31);
+    ${VISIT}
+    const counts=[];
+    for(let n=0;n<6;n++){visit();counts.push(hk.state().gifts.length);}
+    return {counts,gifts:hk.state().gifts.length,keepsakes:hk.state().keepsakes.length,
+      nodes:document.querySelectorAll('#cf-gifts .cf-gift').length};
+  })()`);
+  check('six uncollected visits keep the gift pile to five and safely collect the oldest',
+    c3.counts.every(c=>c<=5)&&c3.gifts===5&&c3.nodes===5&&c3.keepsakes>=1,JSON.stringify(c3));
+
+  const b4 = await bootFresh('cf08-fixed-anchors');
+  const c4 = await b4.evalv(`(() => { const hk=window.__catForest;
+    hk.setResources(0,6,['🌸','🍀']);
+    const selectedPot=hk.selectRecipe('pot'), craftedPot=hk.craftNow();
+    const visibleAfterCraft=document.querySelectorAll('#cf-placement-anchors .cf-anchor[aria-hidden="false"]').length;
+    const placedPot=hk.placeCrafted(0);
+    const selectedBird=hk.selectRecipe('birdhouse'), craftedBird=hk.craftNow(), replaced=hk.placeCrafted(0);
+    const st=hk.state(), placed=st.decor.map(d=>({e:d.e,s:d.s})), stored=st.crafted.map(d=>d.emoji);
+    const removed=hk.removeDecoration(0), after=hk.state(), empty=document.querySelector('#cf-placement-anchors .cf-anchor[data-anchor="0"]');
+    return {selectedPot,craftedPot,visibleAfterCraft,placedPot,selectedBird,craftedBird,replaced,removed,
+      decor:placed,crafted:stored,afterDecor:after.decor.length,afterCrafted:after.crafted.map(d=>d.emoji),
+      anchors:document.querySelectorAll('#cf-placement-anchors .cf-anchor').length,
+      anchorNodes:document.querySelectorAll('#cf-placement-anchors .cf-anchor.has-decor').length,
+      emptyAnchorImages:empty?empty.querySelectorAll('img').length:-1,
+      emptyAnchorGlyph:empty?empty.getAttribute('data-e'):null,
+      emptyAnchorHidden:empty?empty.getAttribute('aria-hidden'):null,emptyAnchorTabIndex:empty?empty.tabIndex:null,
+      wood:st.woodCount,keepsakes:st.keepsakes.length};
+  })()`);
+  check('wood + matching cat keepsake craft instantly; replacement and removal return items to storage without ghost art',
+    c4.selectedPot&&c4.craftedPot&&c4.visibleAfterCraft===4&&c4.placedPot&&c4.selectedBird&&c4.craftedBird&&c4.replaced&&c4.removed
+      &&JSON.stringify(c4.decor)==='[{"e":"🏠","s":0}]'&&JSON.stringify(c4.crafted)==='["🪴"]'
+      &&c4.afterDecor===0&&JSON.stringify(c4.afterCrafted.sort())==='["🏠","🪴"]'
+      &&c4.anchors===4&&c4.anchorNodes===0&&c4.emptyAnchorImages===0
+      &&(c4.emptyAnchorGlyph===null||c4.emptyAnchorGlyph==='')&&c4.emptyAnchorHidden==='true'&&c4.emptyAnchorTabIndex===-1&&c4.wood===3&&c4.keepsakes===0,JSON.stringify(c4));
+
+  const b5 = await bootFresh('cf08-resource-baskets');
+  const c5 = await b5.evalv(`(() => { const hk=window.__catForest;
+    hk.setResources(24,50,['🌸','🌸','🍀','🌷','🦋']); hk.setScene('workshop');
+    const style=document.getElementById('cf-scene-bg').getAttribute('src');
+    return {fish:document.querySelectorAll('#cf-fish-basket .cf-fish-sprite').length,
+      wood:document.querySelectorAll('#cf-wood-basket .cf-wood-sprite').length,
+      keepsakes:document.querySelectorAll('#cf-keepsake-basket .cf-keepsake-sprite').length,
+      scene:style};
+  })()`);
+  check('resource baskets show a small visual sample, unique keepsake types and the correct scene art',
+    c5.fish===4&&c5.wood===4&&c5.keepsakes===4&&c5.scene.includes('cat-forest-workshop.svg'),JSON.stringify(c5));
+
+  const b6 = await bootFresh('cf08-scene-art');
+  const c6 = await b6.evalv(`(() => { const hk=window.__catForest, out={};
+    hk.setResources(0,2,['🌸']); hk.selectRecipe('pot'); hk.craftNow();
+    for(const scene of ['village','pond','woodland','workshop']){
+      hk.setScene(scene);
+      const style=id=>getComputedStyle(document.getElementById(id)).display;
+      out[scene]={src:document.getElementById('cf-scene-bg').getAttribute('src'),
+        tray:style('cf-tray'),plates:style('cf-plates'),craft:style('cf-craft-btn'),
+        crafted:style('cf-crafted-tray'),recipes:style('cf-recipe-grid'),
+        fishing:style('cf-fishing-spot'),gather:style('cf-gather-spot'),
+        nav:style('cf-world-nav')};
+    }
+    return out;
+  })()`);
+  check('all four scenes load their own illustration and show only their relevant controls',
+    c6.village.src.includes('cat-forest-village.svg')&&c6.pond.src.includes('cat-forest-pond.svg')
+      &&c6.woodland.src.includes('cat-forest-woodland.svg')&&c6.workshop.src.includes('cat-forest-workshop.svg')
+      &&c6.village.tray==='flex'&&c6.village.plates!=='none'&&c6.village.craft==='none'
+      &&c6.pond.tray==='none'&&c6.pond.plates==='none'&&c6.pond.fishing==='grid'
+      &&c6.woodland.tray==='none'&&c6.woodland.plates==='none'&&c6.woodland.gather==='grid'
+      &&c6.workshop.tray==='none'&&c6.workshop.plates==='none'&&c6.workshop.craft==='grid'
+      &&c6.workshop.crafted==='flex'&&c6.workshop.recipes==='grid'
+      &&['village','pond','woodland','workshop'].every(k=>c6[k].nav!=='none'),JSON.stringify(c6));
+  const c6Loaded={};
+  for(const scene of ['village','pond','woodland','workshop']){
+    await b6.evalv(`window.__catForest.setScene('${scene}'); true`);
+    await sleep(220);
+    c6Loaded[scene]=await b6.evalv(`(() => { const img=document.getElementById('cf-scene-bg');
+      return {src:img.getAttribute('src'),complete:img.complete,w:img.naturalWidth,h:img.naturalHeight}; })()`);
   }
+  check('each local scene SVG actually loads at its intrinsic dimensions',
+    Object.values(c6Loaded).every(x=>x.complete&&x.w===1600&&x.h===1000),JSON.stringify(c6Loaded));
 
-  /* Reduced motion (CF-08 step 5): no flight — the gift is collected and the
-     decoration appears at once, and no fly node is ever created. */
-  const h8r = await bootEmulated('cf08-reduce', 1024, 800, 'reduce');
-  const r5 = await h8r.evalv(`(() => { const hk = window.__catForest; hk.seed(61);
+  const h8r = await bootEmulated('cf08-reduce',1024,800,'reduce');
+  const r5 = await h8r.evalv(`(() => { const hk=window.__catForest; hk.seed(61);
     ${VISIT}
-    visit();
-    const before = hk.state().decor.length;
-    collectFirst();
-    hk.step(50);
-    return { before: before, decor: hk.state().decor.length,
-      gifts: hk.state().gifts.length, flying: document.querySelectorAll('#cf-fx .cf-fly').length };
+    visit(); const before=hk.state().decor.length; collectFirst();
+    return {before,decor:hk.state().decor.length,gifts:hk.state().gifts.length,
+      keepsakes:hk.state().keepsakes.length,flights:document.querySelectorAll('#cf-fx .cf-fly').length};
   })()`);
-  check('under reduced motion the gift is collected with no flight (CF-08 step 5)',
-    r5.decor === r5.before + 1 && r5.gifts === 0 && r5.flying === 0, JSON.stringify(r5));
-  await h8r.close();
+  check('reduced motion keeps collection immediate and lossless — no flight animation',
+    r5.decor===r5.before&&r5.gifts===0&&r5.keepsakes===1&&r5.flights===0,JSON.stringify(r5));
 
-  /* AC6: no counter ever reaches the child — the DOM text stays digit-free. */
-  const c6 = await h8.evalv(`document.body.innerText.trim()`);
-  check('no number, score or counter reaches the child (AC6: body.innerText has no digits)',
-    c6 === '' || !/\d/.test(c6), JSON.stringify(c6));
-
-  await b3.close();
-  await b4.close();
-  await h8.close();
+  const c7 = await h8.evalv(`document.body.innerText.trim()`);
+  check('the village remains wordless and has no visible numeric counters',c7===''||!/[0-9]/.test(c7),JSON.stringify(c7));
+  await h8.close(); await b3.close(); await b4.close(); await b5.close(); await b6.close(); await h8r.close();
 
   /* ---- CF-09: cuddle tap (TP §3.8) --------------------------------------
      Tapping any visible cat is joyful and always safe: hearts, a throttled
@@ -1610,28 +1619,20 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     +cf13After === 0, `mid=${cf13Gliding} after=${cf13After}`);
   await cf13Mot.close();
 
-  /* ---- CF-14: persistence — save / load / reset (D4, TD §9) --------------
-      One key (`catForestSave`) holds {v:2, met, decor, fishCount, woodCount, selectedRecipe, visitCounts, metTimes}; it is written on a
-     cat's first sit and on a decoration landing, loaded (validated, never
-     throwing) at boot, and wiped by the parent reset through
-     localStorage.clear(). Every start() launches a fresh browser PROFILE, so
-     storage starts empty; a navigate() on the same handle is the reload the
-     card's ACs talk about and keeps storage intact. All scenarios pin the
-     media nothing here depends on motion — bootFresh is enough (the visit
-     recipe ends with a step past GIFT_FLY_MS, so flight and no-flight both
-     land the decoration before the assertion). */
+  /* ---- CF-14: v3 persistence, v2 migration and reset -------------------
+     One key stores resources, keepsakes, crafted inventory, fixed placements,
+     scene and settings. The retired v1 save is discarded; live v2 saves are
+     migrated without losing cats, gathered resources or old decorations. */
   const cf14Reload = async hh => {
     await hh.navigate(`http://127.0.0.1:${hh.port}/pages/cat_forest.html`);
     await bootedOn(hh);
     await hh.evalv(`window.__catForest.pause(true); true`);
-    return hh.evalv(`(() => { const s = window.__catForest.state();
-      return { met: s.met, decor: s.decor.map(d => ({ e: d.e, s: d.s })),
-        fishCount: s.fishCount, woodCount: s.woodCount,
-        nodes: document.querySelectorAll('#cf-decor .cf-decor-item').length }; })()`);
+    return hh.evalv(`(() => { const s=window.__catForest.state();
+      return {met:s.met,decor:s.decor.map(d=>({e:d.e,s:d.s})),fishCount:s.fishCount,woodCount:s.woodCount,
+        keepsakes:s.keepsakes,crafted:s.crafted.map(d=>d.emoji),scene:s.scene,time:s.time,weather:s.weather,
+        nodes:document.querySelectorAll('#cf-placement-anchors .cf-anchor.has-decor').length}; })()`);
   };
 
-  /* CF-15: reload a page and open the book the way the child does, so the
-     restored `met` array is what the grid is built from. */
   const cf15ReloadBook = async hh => {
     await hh.navigate(`http://127.0.0.1:${hh.port}/pages/cat_forest.html`);
     await bootedOn(hh);
@@ -1639,147 +1640,99 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     await hh.evalv(`window.__catForest.pause(true); true`);
     return hh.evalv(`(() => {
       document.getElementById('cf-friends').click();
-      const book = document.getElementById('cf-book');
-      return { met: window.__catForest.state().met,
-        cats: book.querySelectorAll('.cf-book-cat').length,
-        empties: book.querySelectorAll('.cf-book-empty').length,
-        hidden: book.hidden }; })()`);
+      const book=document.getElementById('cf-book');
+      return {met:window.__catForest.state().met,cats:book.querySelectorAll('.cf-book-cat').length,
+        empties:book.querySelectorAll('.cf-book-empty').length,hidden:book.hidden}; })()`);
   };
 
-  /* AC5 + the save shape, gathered on the page that also feeds AC1: every
-     localStorage.setItem call made during a whole visit + collection is
-     recorded, and the raw save must carry the complete v2 resource state. */
-  const cf14H = await bootFresh('cf14-save');
+  const cf14H = await bootFresh('cf14-v3-save');
   const cf14Pre = await cf14H.evalv(`(() => {
-    window.__savedKeys = [];
-    const orig = localStorage.setItem.bind(localStorage);
-    localStorage.setItem = function (k, v) { window.__savedKeys.push(String(k)); return orig(k, v); };
-    const hk = window.__catForest; hk.seed(17);
+    window.__savedKeys=[];
+    const orig=localStorage.setItem.bind(localStorage);
+    localStorage.setItem=function(k,v){window.__savedKeys.push(String(k));return orig(k,v);};
+    const hk=window.__catForest; hk.seed(17); hk.setResources(2,5,['🌸','🍀']);
     ${VISIT}
     visit(); collectFirst();
-    return { met: hk.state().met, decor: hk.state().decor.map(d => ({ e: d.e, s: d.s })),
-      keys: window.__savedKeys.slice(), raw: localStorage.getItem('catForestSave') }; })()`);
-  const cf14Raw = JSON.parse(cf14Pre.raw);
-  check('CF-14 AC5: a visit + collection writes only the catForestSave key (met grows)',
-    cf14Pre.keys.length >= 2 && cf14Pre.keys.every(k => k === 'catForestSave')
-      && cf14Pre.met.length >= 1 && cf14Pre.decor.length >= 1,
-    JSON.stringify({ keys: cf14Pre.keys, met: cf14Pre.met, decor: cf14Pre.decor.length }));
-  check('CF-14: the save payload is exactly {v:2, met:[ids], decor:[{e,s}], fishCount, selectedRecipe, visitCounts, metTimes}',
-    cf14Raw && cf14Raw.v === 2 && Array.isArray(cf14Raw.met) && Array.isArray(cf14Raw.decor)
-      && Object.keys(cf14Raw).sort().join(',') === 'decor,fishCount,met,metTimes,selectedRecipe,v,visitCounts,woodCount'
-      && cf14Raw.met.every(id => typeof id === 'string')
-      && cf14Raw.decor.every(d => d && typeof d.e === 'string' && (d.s | 0) === d.s)
-      && Number.isInteger(cf14Raw.fishCount) && Number.isInteger(cf14Raw.woodCount),
+    const selected=hk.selectRecipe('pot'),crafted=hk.craftNow(),placed=hk.placeCrafted(0);
+    hk.setScene('pond'); hk.setTime('night'); hk.setWeather('rain');
+    return {state:hk.state(),keys:window.__savedKeys.slice(),raw:localStorage.getItem('catForestSave'),
+      selected,crafted,placed};
+  })()`);
+  const cf14Raw=JSON.parse(cf14Pre.raw);
+  check('a visit, resource changes, keepsake collection, crafting and placement write only catForestSave',
+    cf14Pre.keys.length>=5&&cf14Pre.keys.every(k=>k==='catForestSave')
+      &&cf14Pre.state.met.length>=1&&cf14Pre.selected&&cf14Pre.crafted&&cf14Pre.placed,
+    JSON.stringify({keys:cf14Pre.keys,met:cf14Pre.state.met.length}));
+
+  check('save v3 contains the complete approved resource, inventory, placement, scene and settings schema',
+    cf14Raw&&cf14Raw.v===3
+      &&Object.keys(cf14Raw).sort().join(',')==='crafted,keepsakes,met,metTimes,placedDecorations,resources,scene,settings,v,visitCounts'
+      &&Array.isArray(cf14Raw.met)&&cf14Raw.met.every(id=>typeof id==='string')
+      &&Number.isInteger(cf14Raw.resources.fish)&&Number.isInteger(cf14Raw.resources.wood)
+      &&Array.isArray(cf14Raw.keepsakes)&&Array.isArray(cf14Raw.crafted)
+      &&Array.isArray(cf14Raw.placedDecorations)&&cf14Raw.placedDecorations.some(d=>d.e==='🪴'&&d.s===0)
+      &&cf14Raw.scene==='pond'&&cf14Raw.settings.time==='night'&&cf14Raw.settings.weather==='rain',
     cf14Pre.raw);
 
-  /* AC1: reload the page — met and decor come back, and the forest is
-     projected to the DOM again (decor node count = restored entries). */
-  const cf14Post = await cf14Reload(cf14H);
-  check('CF-14 AC1: after a reload met and decor are restored (state + DOM)',
-    JSON.stringify(cf14Post.met) === JSON.stringify(cf14Raw.met)
-      && JSON.stringify(cf14Post.decor) === JSON.stringify(cf14Raw.decor)
-      && cf14Post.nodes === cf14Raw.decor.length
-      && cf14Post.fishCount === cf14Raw.fishCount && cf14Post.woodCount === cf14Raw.woodCount,
-    JSON.stringify({ saved: cf14Raw, restored: cf14Post }));
+  const cf14Post=await cf14Reload(cf14H);
+  check('reload restores the met cat, consumed fish balance, wood, keepsakes, fixed decoration, scene and settings',
+    JSON.stringify(cf14Post.met)===JSON.stringify(cf14Raw.met)
+      &&cf14Post.fishCount===cf14Raw.resources.fish&&cf14Post.woodCount===cf14Raw.resources.wood
+      &&JSON.stringify(cf14Post.keepsakes)===JSON.stringify(cf14Raw.keepsakes)
+      &&JSON.stringify(cf14Post.decor)===JSON.stringify(cf14Raw.placedDecorations.map(d=>({e:d.e,s:d.s})))
+      &&cf14Post.nodes===cf14Raw.placedDecorations.length
+      &&cf14Post.scene==='pond'&&cf14Post.time==='night'&&cf14Post.weather==='rain',
+    JSON.stringify({saved:cf14Raw,restored:cf14Post}));
 
-  /* reset (TD §8): the world AND the save are gone; the element maps must
-     NOT be cleared by hand — render() sweeps every stale node itself. */
-  const cf14Reset = await cf14H.evalv(`(() => {
-    window.__catForest.reset();
-    const s = window.__catForest.state();
-    return { fn: typeof window.__catForest.reset === 'function',
-      met: s.met.length, decor: s.decor.length, cats: s.cats.length,
-      plates: s.plates.filter(p => p.state !== 'empty').length,
-      raw: localStorage.getItem('catForestSave'),
-      nodes: document.querySelectorAll('#cf-decor .cf-decor-item').length }; })()`);
-  check('CF-14 reset(): state, save and the projected DOM are all cleared (TD §8)',
-    cf14Reset.fn && cf14Reset.met === 0 && cf14Reset.decor === 0 && cf14Reset.cats === 0
-      && cf14Reset.plates === 0 && cf14Reset.raw === null && cf14Reset.nodes === 0,
-    JSON.stringify(cf14Reset));
+  const cf14Reset=await cf14H.evalv(`(() => {
+    window.__catForest.reset(); const s=window.__catForest.state();
+    return {met:s.met.length,decor:s.decor.length,crafted:s.crafted.length,keepsakes:s.keepsakes.length,
+      cats:s.cats.length,raw:localStorage.getItem('catForestSave'),
+      anchors:document.querySelectorAll('#cf-placement-anchors .cf-anchor.has-decor').length}; })()`);
+  check('reset clears saved and in-memory resources, inventory, placements and visitors',
+    cf14Reset.met===0&&cf14Reset.decor===0&&cf14Reset.crafted===0&&cf14Reset.keepsakes===0
+      &&cf14Reset.cats===0&&cf14Reset.raw===null&&cf14Reset.anchors===0,JSON.stringify(cf14Reset));
   await cf14H.close();
 
-  /* AC2: four poisoned saves, one fresh profile — each boots clean. */
-  const cf14C = await bootFresh('cf14-corrupt');
-  await cf14C.evalv(`localStorage.setItem('catForestSave', '{"v":1,"met":'); true`); // truncated JSON
-  const cf14Bad1 = await cf14Reload(cf14C);
-  check('CF-14 AC2: corrupt JSON boots clean with fresh state (never throws)',
-    cf14Bad1.met.length === 0 && cf14Bad1.decor.length === 0, JSON.stringify(cf14Bad1));
+  const cf14C=await bootFresh('cf14-corrupt');
+  await cf14C.evalv(`localStorage.setItem('catForestSave','{"v":3,"met":'); true`);
+  const cf14Bad1=await cf14Reload(cf14C);
+  check('corrupt JSON boots a clean fresh state without throwing',cf14Bad1.met.length===0&&cf14Bad1.decor.length===0,JSON.stringify(cf14Bad1));
+  await cf14C.evalv(`localStorage.setItem('catForestSave',JSON.stringify({v:999,met:['maca'],placedDecorations:[]})); true`);
+  const cf14Bad2=await cf14Reload(cf14C);
+  check('unknown save versions are ignored',cf14Bad2.met.length===0&&cf14Bad2.decor.length===0,JSON.stringify(cf14Bad2));
 
-  await cf14C.evalv(`localStorage.setItem('catForestSave', JSON.stringify({ v: 999, met: ['maca'], decor: [] })); true`);
-  const cf14Bad2 = await cf14Reload(cf14C);
-  check('CF-14 AC2: a wrong save version is ignored (fresh start)',
-    cf14Bad2.met.length === 0 && cf14Bad2.decor.length === 0, JSON.stringify(cf14Bad2));
+  await cf14C.evalv(`localStorage.setItem('catForestSave',JSON.stringify({v:1,met:['maca'],decor:[{e:'🌸',s:0}]})); true`);
+  const cf14V1=await cf14Reload(cf14C);
+  check('retired v1 saves are discarded on the full-overhaul version bump',
+    cf14V1.met.length===0&&cf14V1.decor.length===0,JSON.stringify(cf14V1));
 
-  const cf14Big = [];
-  for (let i = 0; i < 20; i++) cf14Big.push({ e: '🌸', s: i % 14 });
-  await cf14C.evalv(`localStorage.setItem('catForestSave', JSON.stringify({ v: 2,
-    met: ['maca', 'bogus-cat', 42, null, 'maca'],
-    decor: [{ e: '🌸', s: 3 }, { e: '💥', s: 4 }, { e: '🌷', s: 99 }, { e: '🍀', s: -1 },
-      { e: '🍄', s: 7.5 }, null, 'x'].concat(${JSON.stringify(cf14Big)}) })); true`);
-  const cf14Bad3 = await cf14Reload(cf14C);
-  check('CF-14 AC2: unknown ids/bad entries drop, the valid rest restores, decor clamps to 14',
-    JSON.stringify(cf14Bad3.met) === '["maca"]' && cf14Bad3.decor.length === 14
-      && cf14Bad3.decor.every(d => ['🌸', '🌷', '🍄', '🍀', '🦋'].includes(d.e)
-        && (d.s | 0) === d.s && d.s >= 0 && d.s < 14),
-    JSON.stringify(cf14Bad3));
-
-  /* AC3: the parent reset path — localStorage.clear(), then a fresh start. */
+  const oldDecor=[{e:'🌸',s:3},{e:'🌷',s:7},{e:'🍄',s:9},{e:'🍀',s:11},{e:'🦋',s:12},{e:'🪴',s:13}];
+  await cf14C.evalv(`localStorage.setItem('catForestSave',JSON.stringify({v:2,met:['maca','bogus-cat','maca'],
+    decor:${JSON.stringify(oldDecor)},fishCount:9,woodCount:7,selectedRecipe:'pot'})); true`);
+  const cf14V2=await cf14Reload(cf14C);
+  const cf14Migrated=await cf14C.evalv(`(() => {window.__catForest.setTime('night');return JSON.parse(localStorage.getItem('catForestSave'));})()`);
+  check('live v2 saves migrate cats/resources, place four old decorations and keep overflow in storage',
+    JSON.stringify(cf14V2.met)==='["maca"]'&&cf14V2.fishCount===9&&cf14V2.woodCount===7
+      &&cf14V2.decor.length===4&&cf14V2.crafted.length===2
+      &&cf14Migrated.v===3&&cf14Migrated.placedDecorations.length===4&&cf14Migrated.crafted.length===2,
+    JSON.stringify({restored:cf14V2,migrated:cf14Migrated}));
   await cf14C.evalv(`localStorage.clear(); true`);
-  const cf14Bad4 = await cf14Reload(cf14C);
-  const cf14KeyGone = await cf14C.evalv(`localStorage.getItem('catForestSave') === null`);
-  check('CF-14 AC3: localStorage.clear() then reload boots a fresh state, save key gone',
-    cf14Bad4.met.length === 0 && cf14Bad4.decor.length === 0 && cf14KeyGone,
-    JSON.stringify(cf14Bad4));
+  const cf14Cleared=await cf14Reload(cf14C);
+  check('parent localStorage.clear() path boots a clean state',cf14Cleared.met.length===0&&cf14Cleared.decor.length===0,JSON.stringify(cf14Cleared));
   await cf14C.close();
 
-  /* NEW: AC5 — a v1 save migrates to v2 without losing met cats or decor
-     (plan §4.6 / §3.5 "never remove a recorded cat").  Saves a v1 payload,
-      boots, reloads, and checks that every met and every decor item survived
-      the migration.  Only unknown versions (e.g. v:999) truly start fresh. */
-  const cf14Mig = await bootFresh('cf14-migrate');
-  await cf14Mig.evalv(`localStorage.setItem('catForestSave', JSON.stringify({ v: 1,
-    met: ['maca'], decor: [{ e: '🌸', s: 3 }] })); true`);
-  const cf14MigState = await cf14Reload(cf14Mig);
-  check('CF-14 AC5: v1 save migrates to v2 preserving met and decor',
-    JSON.stringify(cf14MigState.met) === '["maca"]'
-      && JSON.stringify(cf14MigState.decor) === JSON.stringify([{ e: '🌸', s: 3 }])
-      && cf14MigState.met.length === 1 && cf14MigState.decor.length === 1,
-    JSON.stringify(cf14MigState));
-  await cf14Mig.close();
-
-  /* Resource/workshop regression: crafted output and remaining wood survive reload. */
-  const cf14Craft = await bootFresh('cf14-craft-persist');
-  const cf14CraftBefore = await cf14Craft.evalv(`(() => {
-    const hk = window.__catForest;
-    hk.setResources(0, 4);
-    const selected = hk.selectRecipe('pot');
-    hk.craftNow();
-    const state = hk.state();
-    return { selected, woodCount: state.woodCount,
-      decor: state.decor.map(d => ({ e: d.e, s: d.s })) };
-  })()`);
-  const cf14CraftAfter = await cf14Reload(cf14Craft);
-  check('CF-14 regression: crafting saves wood and crafted decor survives reload',
-    cf14CraftBefore.selected === true && cf14CraftBefore.woodCount === 3
-      && cf14CraftBefore.decor.some(d => d.e === '🪴')
-      && cf14CraftAfter.woodCount === 3
-      && cf14CraftAfter.decor.some(d => d.e === '🪴')
-      && cf14CraftAfter.nodes === cf14CraftAfter.decor.length,
-    JSON.stringify({ before: cf14CraftBefore, after: cf14CraftAfter }));
-  await cf14Craft.close();
-
-  /* AC4: a storage that throws must cost the child nothing — the visit and
-     the collection run to completion with setItem raising every call. */
-  const cf14T = await bootFresh('cf14-throw');
-  const cf14Run = await cf14T.evalv(`(() => {
-    localStorage.setItem = function () { throw new Error('quota'); };
-    const hk = window.__catForest; hk.seed(19);
+  const cf14T=await bootFresh('cf14-storage-failure');
+  const cf14Run=await cf14T.evalv(`(() => {
+    localStorage.setItem=function(){throw new Error('quota');};
+    const hk=window.__catForest;hk.seed(19);hk.setResources(0,2,['🌸']);
     ${VISIT}
-    visit(); collectFirst();
-    return { met: hk.state().met.length, decor: hk.state().decor.length,
-      text: document.body.innerText.trim() }; })()`);
-  check('CF-14 AC4: with localStorage.setItem throwing the game still runs (AC4)',
-    cf14Run.met >= 1 && cf14Run.decor >= 1 && cf14Run.text === '', JSON.stringify(cf14Run));
+    visit();collectFirst();hk.selectRecipe('pot');hk.craftNow();hk.placeCrafted(0);
+    return {met:hk.state().met.length,keepsakes:hk.state().keepsakes.length,
+      decor:hk.state().decor.length,crafted:hk.state().crafted.length,text:document.body.innerText.trim()};
+  })()`);
+  check('storage quota failures never block play, collection, crafting or placement',
+    cf14Run.met>=1&&cf14Run.keepsakes>=0&&cf14Run.decor===1&&cf14Run.text==='',JSON.stringify(cf14Run));
   await cf14T.close();
 
   /* ---- CF-15: the «Мачке пријатељи» book (PS §7, D3) ---------------------
@@ -1823,9 +1776,9 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     return { before: before, opened: opened, clockMoved: clockAfter - clockBefore,
       resumed: resumed, closed: closed };
   })()`);
-  check('CF-15 AC1: an empty book shows only 🐾 — no cat cards, no text (PS §7)',
-    cf15Open.opened.empties === 1 && cf15Open.opened.cats === 0 && cf15Open.opened.text === ''
-      && cf15Open.before.hidden === true,
+  check('CF-15 AC1: an empty diary shows its Serbian title and a paw — no cat cards or counters',
+    cf15Open.opened.empties === 1 && cf15Open.opened.cats === 0
+      && cf15Open.opened.text === 'Моји мачји пријатељи' && cf15Open.before.hidden === true,
     JSON.stringify(cf15Open.opened));
   check('CF-15 AC2: opening freezes the clock (step is a no-op) and close resumes it',
     cf15Open.before.book === false && cf15Open.opened.book === true
@@ -1862,6 +1815,9 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     if (cats[0]) cats[0].click();
     return { met: metBefore, cats: cats.length,
       labels: cats.map(c => c.getAttribute('aria-label')),
+      names: cats.map(c => (c.querySelector('.cf-book-cat-name') || {}).textContent || ''),
+      facts: cats.map(c => (c.querySelector('.cf-book-cat-fact') || {}).textContent || ''),
+      places: cats.map(c => (c.querySelector('.cf-book-cat-place') || {}).textContent || ''),
       accs: cats.map(c => (c.querySelector('.cf-book-cat-acc') || {}).textContent || ''),
       hearts: document.querySelectorAll('#cf-fx .cf-party').length - heartsBefore,
       spoke: (window.__spoke || 0) - spoke0,
@@ -1870,10 +1826,12 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
       boxes: cats.map(box), close: box(document.getElementById('cf-book-close')),
       vw: innerWidth, vh: innerHeight };
   })()`);
-  check('CF-15 AC1: the book shows exactly the met cats (one card per friend, no extras)',
+  check('CF-15 AC1: the book shows exactly the met cats with a visible name, fact and place',
     cf15Pop.met.length >= 2 && cf15Pop.cats === cf15Pop.met.length
-      && cf15Pop.labels.length === cf15Pop.cats,
-    JSON.stringify({ met: cf15Pop.met, cats: cf15Pop.cats, labels: cf15Pop.labels }));
+      && cf15Pop.labels.length === cf15Pop.cats
+      && cf15Pop.names.every(Boolean) && cf15Pop.facts.every(Boolean) && cf15Pop.places.every(Boolean),
+    JSON.stringify({ met: cf15Pop.met, cats: cf15Pop.cats, names: cf15Pop.names,
+      facts: cf15Pop.facts, places: cf15Pop.places }));
   check('CF-15 AC4: the book\'s innerText holds no digits and no Latin letters (PS §7)',
     cf15Pop.digits === false && cf15Pop.latin === false,
     JSON.stringify({ digits: cf15Pop.digits, latin: cf15Pop.latin }));

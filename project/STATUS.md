@@ -1,39 +1,33 @@
 # Project status
 
-**Last verified:** 2026-11-26 (OpenCode/Big Pickle) — CI run 45858181902 fully green (Fast, both LA smokes, sw_update, Release QA, Deploy Pages)
-**Repository:** radmanmilos/Games-for-kids
-**Current branch:** `main`
-**Version:** `3.0.26` (Q-23 minor bump chosen by user 2026-11-26)
+Updated: 2026-11-28
+Repository: `radmanmilos/Games-for-kids`
+Branch: `main`
+Verified main head before task 467 implementation: `97dbb3fa243bba1cf5567ca38fd15a6e4de2ee35`.
 
-## Little Adventure (task 453, IN PROGRESS)
+## Release/version
 
-- Quality Plan automatable work is complete through Q-22; Q-23 docs prep is done; Q-24 is user-led playtest (parked).
-- Base game IS-00..IS-19 complete; IS-20 playtest user-led.
-- All 21 Q-cards have shipped code: Q-00..Q-22 DONE (partial where a look/device gate remains), Q-23 IN PROGRESS (docs done, version bump user-gated), Q-24 NEW (user-led).
-- Latest proofs: quality smoke **56/56**, LA WebGL smoke **49/49**, touch-interruption **6/6**, offline smoke PASS (570/570 cached), golden shots **78 PNGs**, Screenshot_Review **4 viewports**, `check_fast` **10/10**, `check_release` LA scope green (racing3d drift flake standalone PASS 40/40, unrelated).
-- Q-04 deviation recorded: literal <=40 material instances unreachable with approved palette (53 cached variants / ~101 unique scene materials); enforced perf ceiling is shader programs <=40 (13 measured).
-- Full Q-22 verification matrix, rubric self-score and USER-RUN list: `resources/General_reviews/Little_adventure/Quality_Plan/PROGRESS.md`.
+- Deployed baseline: `3.0.28`.
+- Cat Forest full-overhaul candidate: `4.0.0` (A-version bump per the approved full-overhaul rule).
+- Candidate is not a release until generated-artifact, offline, smoke, release and screenshot gates pass.
 
-### Gates
+## Cat Forest — task 467
 
-- QG1: **approved** by user (2026-11-26).
-- QG2–QG7 / per-card look gates: decisions **pre-approved** by user, but artifacts exist and VL/user look review remains **UNVERIFIED** — not self-approved.
-- USER-RUN (unverified): tablet perf/fps/leak/shadow-acne/flashing, visual/audio listening, real-child playtest/readability, QG6 4-viewport package review + release sign-off.
-- `visual_compare` LA baseline: SKIP (tool requires the full approved registered set at all 5 viewports).
+**Status: IN PROGRESS**
 
-## Cat Forest (task 454, IN PROGRESS)
+- Scope is the user-approved 2026-11-26 expansion: village, pond, woodland, workshop, keepsake crafting, reversible fixed-anchor decoration and the expanded cat diary.
+- Implementation is prepared as one cohesive commit from main head `97dbb3f`.
+- Four original local SVG scene illustrations, persistent bottom navigation, scene-specific return controls and compact visual resource baskets are being integrated.
+- Crafting consumes wood plus the matching cat-gift keepsake. Fish is reserved for feeding; one fish is consumed when eating begins.
+- Save schema is v3 because the live pre-overhaul source already used v2. Existing v2 data migrates; v1 is discarded as explicitly approved.
+- Targeted smoke coverage and deterministic visual states are updated. CI is configured to capture the stable Screenshot_Review battery at phone portrait, phone landscape, tablet and desktop.
+- Source parsing and visual-state JSON parsing were checked. Browser execution, full smoke, release checks, screenshot capture and visual review are still pending.
 
-- Base game feature-complete CF-21; merge of `claude/cat-forest-village` (Phase 2 village hub + Phase 3 pond) DONE; painted cat/lion art gaps DONE; screenshot flip DONE.
-- Full validation green: `check_fast` 10/10, `cat_forest` smoke 218/218, `check_release` green.
-- CF-22 real-tablet play-test: DEFERRED (user-led, real device).
+## Other project work
 
-## Next steps
+- Little Explorer: Q-plan implementation is reported complete through Q-23. Remaining owner-run work is tablet performance/visual/audio/readability checks, flashing/leak/acne checks, real-child playtesting, QG6 four-viewport package review and release sign-off. Do not mark these owner-run gates complete without evidence.
+- Continue to use `project/PROCESS.md` and `AGENTS.md` for task lifecycle, generated docs, screenshot refresh and verification.
 
-1. User: give QG6 release sign-off (Q-23 minor bump 3.0.26 applied 2026-11-26).
-2. User: run the tablet/audio/child playtest items and report observations for Q-24; AI then changes config/data first, logs each change and re-runs shots + smokes.
-3. No automatic commit/push to `main` by the AI; the user publishes explicitly.
+## Known process note
 
-## Repo hygiene
-
-- `docs/` mirrors `game/` (571 files); offline manifest/cache list rebuilt 2026-11-26.
-- `node tools/archive_tasks.js` and `node tools/check_docs.js` run at the task boundary.
+The earlier Cat Forest resource-persistence repair was pushed separately before the larger refactor was ready. The full refactor is built from the then-current main head; no history rewrite is planned. The user explicitly authorized work on main. The visual-review workflow may commit only refreshed review artifacts after the automated gates pass.
