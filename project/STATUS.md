@@ -3,7 +3,7 @@
 Updated: 2026-11-28
 Repository: `radmanmilos/Games-for-kids`
 Branch: `main`
-Verified main head before task 467 implementation: `97dbb3fa243bba1cf5567ca38fd15a6e4de2ee35`.
+Verified base for the follow-up fix: `611af17f37dc7365cb75de1749448948a60cb207`.
 
 ## Release/version
 
@@ -15,13 +15,13 @@ Verified main head before task 467 implementation: `97dbb3fa243bba1cf5567ca38fd1
 
 **Status: IN PROGRESS**
 
-- Scope is the user-approved 2026-11-26 expansion: village, pond, woodland, workshop, keepsake crafting, reversible fixed-anchor decoration and the expanded cat diary.
-- Implementation is prepared as one cohesive commit from main head `97dbb3f`.
-- Four original local SVG scene illustrations, persistent bottom navigation, scene-specific return controls and compact visual resource baskets are being integrated.
-- Crafting consumes wood plus the matching cat-gift keepsake. Fish is reserved for feeding; one fish is consumed when eating begins.
-- Save schema is v3 because the live pre-overhaul source already used v2. Existing v2 data migrates; v1 is discarded as explicitly approved.
-- Targeted smoke coverage and deterministic visual states are updated. CI is configured to capture the stable Screenshot_Review battery at phone portrait, phone landscape, tablet and desktop.
-- Source parsing and visual-state JSON parsing were checked. Browser execution, full smoke, release checks, screenshot capture and visual review are still pending.
+- User-approved scope: village, pond, woodland, workshop, keepsake crafting, reversible fixed-anchor decoration and expanded cat diary.
+- Main implementation commit `611af17` adds four local scene illustrations, responsive scene navigation, compact baskets, keepsake recipes, crafted storage, save migration v3, smoke coverage, deterministic visual states and the CI screenshot-review job.
+- **Verified CI:** Fast passed all 10 stages, including generated-artifact mirror and offline-inventory checks.
+- **Failed CI:** Cat Forest browser smoke failed at boot (18 checks passed, 3 failed). The cause was five accidentally omitted cat-render helpers (`geomPlate`, `catDir`, `catPos`, `makeCatEl`, `renderCats`). They have been restored from the previous working source in this follow-up fix; the next CI run must confirm the repair.
+- The visual screenshot job did not run because the required smoke/release gates did not pass. No current screenshots have yet been captured or reviewed.
+- Save schema v3 is required because the live pre-overhaul source already used v2. Existing v2 data migrates; v1 is discarded as explicitly approved.
+- Real-device performance, audio/readability, reduced-motion, and child playtesting still require owner-run verification.
 
 ## Other project work
 

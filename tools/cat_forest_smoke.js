@@ -57,13 +57,26 @@ const backGeometry = async hh => JSON.parse(await hh.evalv(`JSON.stringify((() =
     if (!ready) await sleep(200);
   }
   check('cat forest booted (startCatForest + __catForest present)', ready);
+  if (!ready) {
+    const diag = await h.evalv(`JSON.stringify({start:typeof window.startCatForest,hook:!!window.__catForest,
+      stage:!!document.getElementById('cf-stage'),sceneImage:!!document.getElementById('cf-scene-bg'),
+      readyState:document.readyState})`);
+    await h.close();
+    throw new Error('Cat Forest boot failed; diagnostics: ' + diag);
+  }
   await h.evalv(STUB);
 
   // The test hook is the contract every later card's determinism rests on (TD §8):
   // assert only that state() exists and returns an object, never its stub payload —
   // CF-04 replaces the payload and a value assertion here would go stale.
-  const hook = await h.evalv(`typeof window.__catForest.state === 'function' && typeof window.__catForest.state() === 'object'`);
+  const hook = await h.evalv(`!!(window.__catForest && typeof window.__catForest.state === 'function'
+    && typeof window.__catForest.state() === 'object')`);
   check('the test hook exposes state() as a JSON-safe snapshot (TD §8)', hook === true, String(hook));
+  if (!hook) {
+    const diag = await h.evalv(`JSON.stringify({hook:!!window.__catForest,keys:window.__catForest?Object.keys(window.__catForest):[]})`);
+    await h.close();
+    throw new Error('Cat Forest test hook missing; diagnostics: ' + diag);
+  }
 
   // The four scenes use separate offline watercolor SVG backgrounds.
   const staticGlyphs = JSON.parse(await h.evalv(`JSON.stringify({

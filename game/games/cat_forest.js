@@ -691,6 +691,111 @@
     geom = { plates: plates };
   }
 
+function geomPlate(idx) {
+    return (geom && geom.plates[idx]) || { x: 0.3 + idx * 0.2, y: 0.48 };
+  }
+
+  function catDir(c) {
+    if (c.phase === 'leaving') return geomPlate(c.plate).x < 0.5 ? -1 : 1; // walk out the nearer edge
+    return c.side === 'L' ? 1 : -1;
+  }
+
+  function catPos(c) {
+    var plate = geomPlate(c.plate);
+    var p = c.dur > 0 ? c.t / c.dur : 1;
+    if (p < 0) p = 0; else if (p > 1) p = 1;
+    var x;
+    if (c.phase === 'entering') {
+      var from = c.side === 'L' ? -EDGE_FRAC : 1 + EDGE_FRAC;
+      x = from + (plate.x - from) * easeOut(p);
+    } else if (c.phase === 'leaving') {
+      var to = plate.x < 0.5 ? -EDGE_FRAC : 1 + EDGE_FRAC;
+      x = plate.x + (to - plate.x) * easeIn(p);
+    } else {
+      x = plate.x;
+    }
+    return { x: x, y: plate.y - liftFrac }; // lifted so the treat on the plate stays visible
+  }
+
+  function makeCatEl(c) {
+    var cat = catById(c.id);
+    var el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'cf-cat';
+    el.setAttribute('data-cat', c.id);
+    el.setAttribute('aria-label', cat ? cat.name : '');
+    var body = document.createElement('span');
+    body.className = 'cf-cat-body';
+    if (cat && cat.art && window.Art && window.Art.stemUrl) {
+      var u = window.Art.stemUrl(cat.art);
+      var oldImg = body.querySelector(':scope > img.art');
+      if (u) {
+        var img = oldImg || document.createElement('img');
+        img.className = 'art';
+        img.alt = '';
+        img.draggable = false;
+        img.src = u;
+        if (!oldImg) body.insertBefore(img, body.firstChild);
+        body.classList.add('art-painted');
+      } else {
+        if (oldImg) oldImg.remove();
+        body.classList.remove('art-painted');
+      }
+      body.dataset.emoji = cat.emoji || '';
+      body.setAttribute('data-e', cat.emoji || '');
+    } else if (window.Art && window.Art.fillAttr) {
+      window.Art.fillAttr(body, 'data-e', cat ? cat.emoji : '');
+    } else {
+      body.setAttribute('data-e', cat ? cat.emoji : '');
+    }
+    el.appendChild(body);
+    if (cat && cat.acc) {
+      var acc = document.createElement('span');
+      acc.className = 'cf-cat-acc';
+      if (window.Art && window.Art.fillAttr) window.Art.fillAttr(acc, 'data-e', cat.acc);
+      else acc.setAttribute('data-e', cat.acc);
+      el.appendChild(acc);
+    }
+    el.addEventListener('click', function () { cuddle(c); }); // CF-09: any visible phase is a safe cuddle
+    return el;
+  }
+
+  function renderCats() {
+    if (!els || !els.cats) return;
+    if (!geom) measure();
+    var alive = {}, i, uid;
+    for (i = 0; i < state.cats.length; i++) alive[state.cats[i].uid] = true;
+    for (uid in catEls) {
+      if (!alive[uid]) { // gone: drop the node (no leaks, TD §10)
+        if (catEls[uid].parentNode) catEls[uid].parentNode.removeChild(catEls[uid]);
+        delete catEls[uid];
+      }
+    }
+    // Create/append any missing cat elements first so their boxes can be
+    // measured — the lift (catH/plateH/stageH) only becomes exact once a cat
+    // node exists in the layout. Positioning happens after re-measure() below.
+    for (i = 0; i < state.cats.length; i++) {
+      var c = state.cats[i];
+      var el = catEls[c.uid];
+      if (!el) { el = makeCatEl(c); catEls[c.uid] = el; els.cats.appendChild(el); }
+    }
+    // Re-measure now that cat boxes exist so liftFrac uses a real catH.
+    measure();
+    for (i = 0; i < state.cats.length; i++) {
+      var c = state.cats[i];
+      var el = catEls[c.uid];
+      var pos = catPos(c);
+      el.style.left = (pos.x * 100) + '%';
+      el.style.top = (pos.y * 100) + '%';
+      el.style.setProperty('--dir', String(catDir(c)));
+      /* Walk-bob: a per-frame transform value from the game clock (never a CSS
+         animation loop), zero while sitting/eating and under reduced motion. */
+      var moving = c.phase === 'entering' || c.phase === 'leaving';
+      var bob = moving && !reduceMotion ? Math.sin((state.clock + c.uid * 90) / 110) * -BOB_PX : 0;
+      el.style.setProperty('--bob', bob.toFixed(2) + 'px');
+    }
+  }
+
   function render() {
     if (!els || !els.app) return;
     els.app.setAttribute('data-time', state.time);
